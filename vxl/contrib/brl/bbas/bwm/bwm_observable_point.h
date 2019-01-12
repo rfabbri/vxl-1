@@ -20,7 +20,9 @@
 #include <string>
 #include "bwm_observable.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vgl/vgl_point_3d.h>
 #include <vsol/vsol_point_3d_sptr.h>
@@ -29,7 +31,7 @@
 class bwm_observable_point : public bwm_observable
 {
  public:
-  bwm_observable_point() : object_(VXL_NULLPTR) {}
+  bwm_observable_point() : object_(nullptr) {}
   ~bwm_observable_point() {}
 
   std::string type_name() const { return "bwm_observable_point"; }

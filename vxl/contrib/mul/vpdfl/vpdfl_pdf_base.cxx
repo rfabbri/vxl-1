@@ -1,7 +1,4 @@
 // This is mul/vpdfl/vpdfl_pdf_base.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Tim Cootes
@@ -15,8 +12,10 @@
 #include <queue>
 #include "vpdfl_pdf_base.h"
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vsl/vsl_indent.h>
 #include <vsl/vsl_binary_loader.h>
 
@@ -24,15 +23,11 @@
 
 //=======================================================================
 
-vpdfl_pdf_base::vpdfl_pdf_base()
-{
-}
+vpdfl_pdf_base::vpdfl_pdf_base() = default;
 
 //=======================================================================
 
-vpdfl_pdf_base::~vpdfl_pdf_base()
-{
-}
+vpdfl_pdf_base::~vpdfl_pdf_base() = default;
 
 //=======================================================================
 
@@ -49,7 +44,7 @@ double vpdfl_pdf_base::log_prob_thresh(double pass_proportion) const
 
   // The number of samples on the less likely side of the boundary.
   // Increase the number for greater reliabililty
-  const unsigned n_stat = 20;
+  constexpr unsigned n_stat = 20;
 
   double /* above, */ below, lP;
   unsigned int nSamples, i;
@@ -284,4 +279,3 @@ std::ostream& operator<<(std::ostream& os,const vpdfl_pdf_base* b)
   vsl_print_summary(os,b);
   return os;
 }
-

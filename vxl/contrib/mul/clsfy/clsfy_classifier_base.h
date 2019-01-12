@@ -18,7 +18,9 @@
 #include <vnl/vnl_vector.h>
 #include <mbl/mbl_data_wrapper.h>
 #include <vsl/vsl_binary_io.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //:  A common interface for 1-out-of-N classifiers
 // This class takes a vector and classifies into one of
@@ -32,10 +34,10 @@ class clsfy_classifier_base
  public:
 
   // Dflt constructor
-   clsfy_classifier_base() {}
+   clsfy_classifier_base() = default;
 
   // Destructor
-   virtual ~clsfy_classifier_base() {}
+   virtual ~clsfy_classifier_base() = default;
 
   //: Classify the input vector
   // returns a number between 0 and nClasses-1 inclusive to represent the most likely class

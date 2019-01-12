@@ -13,8 +13,10 @@
 #include <vgl/vgl_homg_line_2d.h>
 #include <vgl/io/vgl_io_conic.h>
 #include <vgl/algo/vgl_homg_operators_2d.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 //---------------------------------------------------------------------------
 //: Are `x' and `y' almost equal ?
@@ -520,7 +522,7 @@ vsol_conic_2d::intersection(vsol_line_2d const& l) const
   std::list<vgl_homg_point_2d<double> > vv =
     vgl_homg_operators_2d<double>::intersection(*this,line);
   std::list<vsol_point_2d_sptr> v;
-  std::list<vgl_homg_point_2d<double> >::iterator it = vv.begin();
+  auto it = vv.begin();
   for (; !(it == vv.end()); ++it) {
     if ((*it).w() != 0)  v.push_back(new vsol_point_2d((*it)));
   }
@@ -536,7 +538,7 @@ vsol_conic_2d::intersection(vsol_conic_2d const& c) const
   std::list<vgl_homg_point_2d<double> > vv =
     vgl_homg_operators_2d<double>::intersection(*this,c);
   std::list<vsol_point_2d_sptr> v;
-  std::list<vgl_homg_point_2d<double> >::iterator it = vv.begin();
+  auto it = vv.begin();
   for (; !(it == vv.end()); ++it) {
     if ((*it).w() != 0)  v.push_back(new vsol_point_2d((*it)));
   }
@@ -572,9 +574,9 @@ vsol_conic_2d::closest_point_on_curve(vsol_point_2d_sptr const& pt) const
     candidates = conic.intersection(*this);
   }
   // And find the intersection point closest to the given location:
-  vsol_point_2d_sptr p = VXL_NULLPTR;
+  vsol_point_2d_sptr p = nullptr;
   double dist = 1e31; // infinity
-  std::list<vsol_point_2d_sptr>::iterator it = candidates.begin();
+  auto it = candidates.begin();
   for (; it != candidates.end(); ++it) {
     double d = (*it)->distance(pt);
     if (d < dist) { p = (*it); dist = d; }
@@ -612,7 +614,7 @@ vsol_line_2d_sptr vsol_conic_2d::axis() const
     vgl_vector_2d<double> v(wd,ht);
     return new vsol_line_2d(v,new vsol_point_2d(cx,cy));
   }
-  else return VXL_NULLPTR;
+  else return nullptr;
 }
 
 //----------------------------------------------------------------
@@ -687,6 +689,5 @@ vsl_b_read(vsl_b_istream &is, vsol_conic_2d* &c)
     c->b_read(is);
   }
   else
-    c = VXL_NULLPTR;
+    c = nullptr;
 }
-

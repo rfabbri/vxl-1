@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <testlib/testlib_test.h>
 #include <vul/vul_file.h>
 #include <vpl/vpl.h> // vpl_unlink()
@@ -55,7 +57,7 @@ static void test_cam_iostream()
     open = cam_istr.is_open();
     TEST("open input camera stream", open, true);
     bool read = false;
-    vpgl_perspective_camera<double>* c = VXL_NULLPTR;
+    vpgl_perspective_camera<double>* c = nullptr;
     c = cam_istr.read_camera();
     if(c){
       std::cout << "Camera from stream \n" << *c << '\n';

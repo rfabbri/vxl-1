@@ -8,7 +8,9 @@
 #include <boxm2/boxm2_block.h>
 #include <boxm2/boxm2_data_traits.h>
 #include <vgl/vgl_point_3d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 // forward declare rsdl_kd_tree so we can use pointers to it
 class rsdl_kd_tree;
@@ -22,7 +24,7 @@ class boxm2_vecf_landmark_mapper
 {
   public:
   boxm2_vecf_landmark_mapper(std::vector<vgl_point_3d<double> > const& control_pts_source,
-                             std::vector<vgl_point_3d<double> > const& control_pts_target,
+                             std::vector<vgl_point_3d<double> >  control_pts_target,
                              F weight_function,
                              int n_nearest = 3);
 
@@ -43,17 +45,17 @@ template<class F>
 class boxm2_vecf_landmark_warp : public boxm2_vecf_vector_field<boxm2_vecf_landmark_mapper<F> >
 {
   public:
-    boxm2_vecf_landmark_warp(std::vector<vgl_point_3d<double> > const& control_pts_source,
-                             std::vector<vgl_point_3d<double> > const& control_pts_target,
+    boxm2_vecf_landmark_warp(std::vector<vgl_point_3d<double> >  control_pts_source,
+                             std::vector<vgl_point_3d<double> >  control_pts_target,
                              F weight_function);
 
   private:
     typedef boxm2_vecf_landmark_mapper<F> MAPPER_T;
 
     //: Create a function object that maps source pts to target pts.
-    virtual MAPPER_T make_forward_mapper(boxm2_scene_sptr source, boxm2_block_id const& blk_id);
+    MAPPER_T make_forward_mapper(boxm2_scene_sptr source, boxm2_block_id const& blk_id) override;
     //: Create a function object that maps target pts to source pts.
-    virtual MAPPER_T make_inverse_mapper(boxm2_scene_sptr target, boxm2_block_id const& blk_id);
+    MAPPER_T make_inverse_mapper(boxm2_scene_sptr target, boxm2_block_id const& blk_id) override;
 
     //: data
     const std::vector<vgl_point_3d<double> > control_pts_source_;

@@ -1,7 +1,4 @@
 // This is core/vil/vil_save.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 //
@@ -16,7 +13,9 @@
 #include <iostream>
 #include "vil_save.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vxl_config.h> // for vxl_byte
 
 #include <vil/vil_open.h>
@@ -91,8 +90,8 @@ char const *vil_save_guess_file_format(char const* filename)
   }
   else {
     std::string ext_lower_case(dot);  // make a copy to convert the extension to lower case
-    for (unsigned int i=0; i<ext_lower_case.size(); ++i)
-      ext_lower_case[i] = (char)std::tolower(ext_lower_case[i]);
+    for (char & i : ext_lower_case)
+      i = (char)std::tolower(i);
     // translate common extensions into known file formats.
     if (false) { }
 #define macro(ext, fmt) else if ( ext_lower_case == "." #ext ) file_format = #fmt
@@ -153,7 +152,7 @@ bool vil_save_image_resource(const vil_image_resource_sptr &ir, char const* file
 
 
 
-#if defined(VCL_WIN32) && VXL_USE_WIN_WCHAR_T
+#if defined(_WIN32) && VXL_USE_WIN_WCHAR_T
 //  --------------------------------------------------------------------------------
 //  Windows' wchar_t overloading version
 //
@@ -283,5 +282,4 @@ bool vil_save_image_resource(const vil_image_resource_sptr &ir, wchar_t const* f
   return vil_save_image_resource(ir, filename, vil_save_guess_file_format(filename));
 }
 
-#endif //defined(VCL_WIN32) && VXL_USE_WIN_WCHAR_T
-
+#endif //defined(_WIN32) && VXL_USE_WIN_WCHAR_T

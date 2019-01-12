@@ -2,10 +2,12 @@
 #define bstm_util_h
 //:
 // \file
+#include <iostream>
 #include <bstm/bstm_scene.h>
 #include <bstm/io/bstm_cache.h>
-#include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_point_3d.h>
 #include <vil/vil_image_view.h>
 #include <vil/vil_load.h>
@@ -42,7 +44,7 @@ public:
                                 int &appTypeSize);
 
   static vil_image_view_base_sptr
-  prepare_input_image(vil_image_view_base_sptr loaded_image,
+  prepare_input_image(const vil_image_view_base_sptr& loaded_image,
                       bool force_grey = true);
   static vil_image_view_base_sptr prepare_input_image(std::string filename,
                                                       bool force_grey = true) {

@@ -1,9 +1,6 @@
 // This is core/vil1/vil1_new.h
 #ifndef vil1_new_h_
 #define vil1_new_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Make a new image.
@@ -34,17 +31,17 @@ vil1_image vil1_new(vil1_stream* os,
                     int components,
                     int bits_per_component,
                     vil1_component_format format,
-                    char const* file_format = VXL_NULLPTR);
+                    char const* file_format = nullptr);
 
 //: Make a new image.
 vil1_image vil1_new(char const* filename,
                     int width, int height,
                     vil1_image const &prototype,
-                    char const* format = VXL_NULLPTR);
+                    char const* format = nullptr);
 
 vil1_image vil1_new(vil1_stream* os,
                     int width, int height,
                     vil1_image const& prototype,
-                    char const* file_format = VXL_NULLPTR);
+                    char const* file_format = nullptr);
 
 #endif // vil1_new_h_

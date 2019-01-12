@@ -15,7 +15,9 @@
 #include <iosfwd>
 #include "rgtl_compact_tree_index.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Represent the logical index of an octree cell in D dimensions.
 //

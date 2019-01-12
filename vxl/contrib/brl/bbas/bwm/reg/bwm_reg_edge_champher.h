@@ -19,7 +19,9 @@
 //-----------------------------------------------------------------------------
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_array_2d.h>
 #include <vnl/vnl_numeric_traits.h>
 #include <vsol/vsol_digital_curve_2d.h>
@@ -62,7 +64,7 @@ class bwm_reg_edge_champher
     if ( (col<ncols_-1) && (row<nrows_-1) )
       return edges_[row+1][col+1];
     else
-      return VXL_NULLPTR;
+      return nullptr;
   }
 
   //: the index of the vertex of the digital curve inserted at (col, row)

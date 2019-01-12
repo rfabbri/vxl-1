@@ -8,8 +8,10 @@
 // \author Tim Cootes
 
 #include <vsl/vsl_binary_loader.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <vil/vil_resample_bilin.h>
 #include <vil/io/vil_io_image_view.h>
@@ -46,9 +48,7 @@ void mfpf_grad_corr2d::set_defaults()
 // Destructor
 //=======================================================================
 
-mfpf_grad_corr2d::~mfpf_grad_corr2d()
-{
-}
+mfpf_grad_corr2d::~mfpf_grad_corr2d() = default;
 
 //: Define filter kernel to search with
 void mfpf_grad_corr2d::set(const vil_image_view<double>& kx,
@@ -594,5 +594,3 @@ bool mfpf_grad_corr2d::operator==(const mfpf_grad_corr2d& nc) const
   if (vil_math_ssd(kernel_x_,nc.kernel_x_,double(0))>1e-4) return false;
   return (vil_math_ssd(kernel_y_,nc.kernel_y_,double(0))<1e-4);
 }
-
-

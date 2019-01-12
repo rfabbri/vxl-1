@@ -10,10 +10,12 @@
 #include <vipl/section/vipl_section_descriptor.h>
 #include <vipl/filter/vipl_filter_abs.h> // for default def of FILTER_IMPTR_INC_REFCOUNT
 #if 0
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #endif
 
-#ifdef VCL_VC
+#ifdef _MSC_VER
 // Disable complaints about empty controlled statements (from blank macro expansion)
 # pragma warning( push )
 # pragma warning( disable : 4390 )
@@ -36,7 +38,7 @@ template < class DataType >
 #endif
 }
 
-#ifdef VCL_VC
+#ifdef _MSC_VER
 // Disable complaints about empty controlled statements (from blank macro expansion)
 # pragma warning( pop )
 # pragma warning( disable : 4390 )
@@ -69,8 +71,8 @@ template < class DataType >
 
 template < class DataType >
   vipl_section_iterator< DataType > ::vipl_section_iterator()
-  : hsreal_descriptor(VXL_NULLPTR),
-    hscontainer(VXL_NULLPTR),
+  : hsreal_descriptor(nullptr),
+    hscontainer(nullptr),
     hsincr_count(0)
 // C++ auto-generated low-level constructor
 {
@@ -78,8 +80,8 @@ template < class DataType >
 
 template < class DataType >
   vipl_section_iterator< DataType > ::vipl_section_iterator(const vipl_section_iterator< DataType > &t)
-  : hsreal_descriptor(VXL_NULLPTR),
-    hscontainer(VXL_NULLPTR),
+  : hsreal_descriptor(nullptr),
+    hscontainer(nullptr),
     hsincr_count(t.hsincr_count)
 // C++ auto-generated low-level copy constructor
 {

@@ -1,7 +1,9 @@
 // This is mul/mbl/tests/test_read_props.cxx
 #include <iostream>
 #include <sstream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <mbl/mbl_read_props.h>
 
@@ -26,8 +28,6 @@ void test_read_props1()
   std::cout << "\n************************\n"
            <<   " Testing mbl_read_props\n"
            <<   "************************\n";
-
-#if VCL_HAS_WORKING_STRINGSTREAM
   {
     std::cout << "\nCase 1\n";
     std::istringstream ss("{}");
@@ -247,9 +247,6 @@ void test_read_props1()
 
 
   std::cout << "\n\n";
-#else // VCL_HAS_WORKING_STRINGSTREAM
-  std::cout << "\nTests not run since this compiler has no fully functional std:stringstream\n\n";
-#endif // VCL_HAS_WORKING_STRINGSTREAM
 }
 
 void test_read_props_ws()
@@ -257,8 +254,6 @@ void test_read_props_ws()
   std::cout << "\n***************************\n"
            <<   " Testing mbl_read_props_ws\n"
            <<   "***************************\n";
-
-#if VCL_HAS_WORKING_STRINGSTREAM
   {
     std::cout << "\nCase 1\n";
     std::istringstream ss("{}");
@@ -479,9 +474,6 @@ void test_read_props_ws()
   }
 
   std::cout << "\n\n";
-#else // VCL_HAS_WORKING_STRINGSTREAM
-  std::cout << "\nTests not run since this compiler has no fully functional std:stringstream\n\n";
-#endif // VCL_HAS_WORKING_STRINGSTREAM
 }
 
 void test_read_props()

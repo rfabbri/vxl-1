@@ -32,8 +32,10 @@
 #include <cstddef>
 #include <iostream>
 #include <vxl_config.h>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include "vsl_binary_io.h"
 
 // Both VXL_LITTLE_ENDIAN && VXL_BIG_ENDIAN should be defined
@@ -139,7 +141,7 @@ macro (int);
 macro (unsigned int);
 macro (long);
 macro (unsigned long);
-#if VXL_HAS_INT_64 && !VXL_INT_64_IS_LONG
+#if VXL_INT_64_IS_LONGLONG
 macro (vxl_int_64);
 macro (vxl_uint_64);
 #endif
@@ -484,7 +486,7 @@ inline std::size_t vsl_convert_from_arbitrary_length(const unsigned char* buffer
 
 /////////////////////////////////////////////////////////////////////////
 
-#if VXL_HAS_INT_64 && !VXL_INT_64_IS_LONG
+#if VXL_INT_64_IS_LONGLONG
 
 //: Decode a buffer of arbitrary length integers
 // Converts from the integers from the arbitrary length format into

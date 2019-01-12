@@ -7,7 +7,9 @@
 
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Store information about position of a row of pixels in an image
 //  Pixels are ([ilo,ihi],y)
@@ -38,7 +40,7 @@ inline std::ostream& operator<<(std::ostream& os, vil_chord c)
 inline unsigned vil_area(const std::vector<vil_chord>& region)
 {
   unsigned A=0;
-  for (unsigned i=0;i<region.size();++i) A+=region[i].length();
+  for (auto i : region) A+=i.length();
   return A;
 }
 

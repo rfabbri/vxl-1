@@ -1,4 +1,7 @@
 // This is brl/bseg/boxm2/ocl/algo/boxm2_ocl_remove_low_nobs.cxx
+#include <fstream>
+#include <iostream>
+#include <algorithm>
 #include "boxm2_ocl_remove_low_nobs.h"
 //:
 // \file
@@ -7,8 +10,9 @@
 // \author J.L. Mundy
 // \date March 12, 2016
 
-#include <vcl_fstream.h>
-#include <vcl_algorithm.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/ocl/boxm2_opencl_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -26,21 +30,21 @@
 
 //: Map of kernels should persist between process executions
 
-vcl_map<vcl_string, vcl_vector<bocl_kernel*> > boxm2_ocl_remove_low_nobs::remove_low_nobs_kernels_;
+std::map<std::string, std::vector<bocl_kernel*> > boxm2_ocl_remove_low_nobs::remove_low_nobs_kernels_;
 
-bool boxm2_ocl_remove_low_nobs::remove_low_nobs(boxm2_scene_sptr         scene,
-                                                bocl_device_sptr         device,
-                                                boxm2_opencl_cache_sptr  opencl_cache,
+bool boxm2_ocl_remove_low_nobs::remove_low_nobs(const boxm2_scene_sptr&         scene,
+                                                const bocl_device_sptr&         device,
+                                                const boxm2_opencl_cache_sptr&  opencl_cache,
                                                 float                    nobs_threshold_multiplier)
 
 {
     float transfer_time = 0.0f;
     float gpu_time = 0.0f;
-    vcl_size_t local_threads[1] = { 64 };
-    vcl_size_t global_threads[1] = { 64 };
+    std::size_t local_threads[1] = { 64 };
+    std::size_t global_threads[1] = { 64 };
     //cache size sanity check
-    vcl_size_t binCache = opencl_cache.ptr()->bytes_in_cache();
-    vcl_cout << "remove nobs MBs in cache: " << binCache / (1024.0*1024.0) << vcl_endl;
+    std::size_t binCache = opencl_cache.ptr()->bytes_in_cache();
+    std::cout << "remove nobs MBs in cache: " << binCache / (1024.0*1024.0) << std::endl;
     // create a command queue.
     int status = 0;
     cl_command_queue queue = clCreateCommandQueue(device->context(),
@@ -49,9 +53,9 @@ bool boxm2_ocl_remove_low_nobs::remove_low_nobs(boxm2_scene_sptr         scene,
                                                     &status);
     if (status != 0)
         return false;
-    vcl_vector<boxm2_block_id> blks_order;
+    std::vector<boxm2_block_id> blks_order;
     blks_order = scene->get_block_ids();
-    vcl_vector<boxm2_block_id>::iterator  id;
+    std::vector<boxm2_block_id>::iterator  id;
     // compile the kernel if not already compiled
     //: Initialize Cumulative factor
     bocl_kernel * kern = get_remove_low_nobs_kernels(device)[0];
@@ -62,17 +66,17 @@ bool boxm2_ocl_remove_low_nobs::remove_low_nobs(boxm2_scene_sptr         scene,
 
     // histogram of total number of observations of each cell
     unsigned nbins = 50;
-    vcl_vector<float> hist(nbins,0.0f);
+    std::vector<float> hist(nbins,0.0f);
     short interval= 2;
     for (id = blks_order.begin(); id != blks_order.end(); ++id){
       bocl_mem* nobs  = opencl_cache->get_data<BOXM2_NUM_OBS>(scene, *id);
       if(!nobs){
-        vcl_cout << "Fatal! - no number of observation data assigned for block " << *id << '\n';
+        std::cout << "Fatal! - no number of observation data assigned for block " << *id << '\n';
         return false;
       }
       unsigned nobs_size = static_cast<unsigned>(boxm2_data_info::datasize(boxm2_data_traits<BOXM2_NUM_OBS>::prefix()));
       unsigned n = static_cast<unsigned>(nobs->num_bytes())/nobs_size;
-      cl_short4* nobs_ptr = (cl_short4*) nobs->cpu_buffer();
+      auto* nobs_ptr = (cl_short4*) nobs->cpu_buffer();
       //upcount the matched histogram bins
       for(unsigned i = 0; i<n; ++i){
         // number of observations for each mog component
@@ -105,12 +109,12 @@ bool boxm2_ocl_remove_low_nobs::remove_low_nobs(boxm2_scene_sptr         scene,
     float nobs_threshold = mean*nobs_threshold_multiplier;
 
     // display the histogram
-    vcl_cout << "Histogram of nobs: mean = " << mean << " nobs threshold = " << nobs_threshold << '\n';
-    vcl_cout << "Nobs  p(Nobs) \n";
+    std::cout << "Histogram of nobs: mean = " << mean << " nobs threshold = " << nobs_threshold << '\n';
+    std::cout << "Nobs  p(Nobs) \n";
     for(unsigned i = 0; i< nbins; ++i)
       if(hist[i]>0.0f)
-        vcl_cout << i*interval << ' ' << hist[i] << '\n';
-    vcl_cout << '\n';
+        std::cout << i*interval << ' ' << hist[i] << '\n';
+    std::cout << '\n';
     //
     // set up memory for kernel argument, nobs_threshold
     //
@@ -130,13 +134,13 @@ bool boxm2_ocl_remove_low_nobs::remove_low_nobs(boxm2_scene_sptr         scene,
         bocl_mem* alpha = opencl_cache->get_data<BOXM2_ALPHA>(scene, *id);
         bocl_mem* nobs  = opencl_cache->get_data<BOXM2_NUM_OBS>(scene, *id);
 
-        boxm2_scene_info* info_buffer = (boxm2_scene_info*)blk_info->cpu_buffer();
+        auto* info_buffer = (boxm2_scene_info*)blk_info->cpu_buffer();
         int alphaTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_ALPHA>::prefix());
         info_buffer->data_buffer_length = (int)(alpha->num_bytes() / alphaTypeSize);
         blk_info->write_to_buffer((queue));
         //set workspace
-        vcl_size_t ltr[] = { 4, 4, 4 };
-        vcl_size_t gtr[] = { RoundUp(mdata.sub_block_num_.x(), static_cast<int>(ltr[0])),
+        std::size_t ltr[] = { 4, 4, 4 };
+        std::size_t gtr[] = { RoundUp(mdata.sub_block_num_.x(), static_cast<int>(ltr[0])),
                              RoundUp(mdata.sub_block_num_.y(), static_cast<int>(ltr[1])),
                              RoundUp(mdata.sub_block_num_.z(), static_cast<int>(ltr[2])) };
         kern->set_arg(blk_info);
@@ -164,17 +168,17 @@ bool boxm2_ocl_remove_low_nobs::remove_low_nobs(boxm2_scene_sptr         scene,
 
 
 
-vcl_vector<bocl_kernel*>& boxm2_ocl_remove_low_nobs::get_remove_low_nobs_kernels(bocl_device_sptr device, vcl_string opts)
+std::vector<bocl_kernel*>& boxm2_ocl_remove_low_nobs::get_remove_low_nobs_kernels(const bocl_device_sptr& device, const std::string& opts)
 {
     // compile kernels if not already compiled
-    vcl_string identifier = device->device_identifier() + opts;
+    std::string identifier = device->device_identifier() + opts;
     if (remove_low_nobs_kernels_.find(identifier) != remove_low_nobs_kernels_.end())
         return remove_low_nobs_kernels_[identifier];
 
     //otherwise compile the kernels
-    vcl_cout << "=== boxm2_ocl_update_process::compiling kernels on device " << identifier << "===" << vcl_endl;
-    vcl_vector<vcl_string> src_paths;
-    vcl_string source_dir = boxm2_ocl_util::ocl_src_root();
+    std::cout << "=== boxm2_ocl_update_process::compiling kernels on device " << identifier << "===" << std::endl;
+    std::vector<std::string> src_paths;
+    std::string source_dir = boxm2_ocl_util::ocl_src_root();
     src_paths.push_back(source_dir + "scene_info.cl");
     src_paths.push_back(source_dir + "pixel_conversion.cl");
     src_paths.push_back(source_dir + "bit/bit_tree_library_functions.cl");
@@ -185,10 +189,10 @@ vcl_vector<bocl_kernel*>& boxm2_ocl_remove_low_nobs::get_remove_low_nobs_kernels
     src_paths.push_back(source_dir + "bit/update_kernels.cl");
 
     //populate vector of kernels
-    vcl_vector<bocl_kernel*> vec_kernels;
-    vcl_string options = "-D REMOVE_LOW_NOBS";
-    bocl_kernel* remove_low_nobs = new bocl_kernel();
-    vcl_string remove_low_nobs_opts = options;
+    std::vector<bocl_kernel*> vec_kernels;
+    std::string options = "-D REMOVE_LOW_NOBS";
+    auto* remove_low_nobs = new bocl_kernel();
+    const std::string& remove_low_nobs_opts = options;
     remove_low_nobs->create_kernel(&device->context(), device->device_id(), src_paths, "remove_low_nobs_main", remove_low_nobs_opts, "update::remove_low_nobs");
     vec_kernels.push_back(remove_low_nobs);
     //store and return

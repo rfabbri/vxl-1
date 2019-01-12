@@ -3,8 +3,10 @@
 #include <string>
 #include <testlib/testlib_test.h>
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <bil/algo/bil_detect_ridges.h>
 

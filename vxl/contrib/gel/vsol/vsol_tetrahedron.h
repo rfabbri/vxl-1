@@ -22,7 +22,9 @@
 #include <iosfwd>
 #include <vsol/vsol_polyhedron.h>
 #include <vsol/vsol_point_3d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class vsol_tetrahedron : public vsol_polyhedron
 {
@@ -47,13 +49,13 @@ class vsol_tetrahedron : public vsol_polyhedron
   //---------------------------------------------------------------------------
   //: Destructor
   //---------------------------------------------------------------------------
-  virtual ~vsol_tetrahedron() {}
+  ~vsol_tetrahedron() override = default;
 
   //---------------------------------------------------------------------------
   //: Clone `this': creation of a new object and initialization
   //  See Prototype pattern
   //---------------------------------------------------------------------------
-  virtual vsol_spatial_object_3d* clone(void) const { return new vsol_tetrahedron(*this); }
+  vsol_spatial_object_3d* clone(void) const override { return new vsol_tetrahedron(*this); }
 
   //***************************************************************************
   // Access
@@ -86,7 +88,7 @@ class vsol_tetrahedron : public vsol_polyhedron
   //---------------------------------------------------------------------------
   //: Return the volume of `this'
   //---------------------------------------------------------------------------
-  virtual double volume(void) const;
+  double volume(void) const override;
 
   //***************************************************************************
   // Element change
@@ -95,22 +97,22 @@ class vsol_tetrahedron : public vsol_polyhedron
   //---------------------------------------------------------------------------
   //: Set the first vertex
   //---------------------------------------------------------------------------
-  void set_p0(vsol_point_3d_sptr new_p0);
+  void set_p0(const vsol_point_3d_sptr& new_p0);
 
   //---------------------------------------------------------------------------
   //: Set the second vertex
   //---------------------------------------------------------------------------
-  void set_p1(vsol_point_3d_sptr new_p1);
+  void set_p1(const vsol_point_3d_sptr& new_p1);
 
   //---------------------------------------------------------------------------
   //: Set the third vertex
   //---------------------------------------------------------------------------
-  void set_p2(vsol_point_3d_sptr new_p2);
+  void set_p2(const vsol_point_3d_sptr& new_p2);
 
   //---------------------------------------------------------------------------
   //: Set the last vertex
   //---------------------------------------------------------------------------
-  void set_p3(vsol_point_3d_sptr new_p3);
+  void set_p3(const vsol_point_3d_sptr& new_p3);
 
   //***************************************************************************
   // Basic operations
@@ -119,18 +121,18 @@ class vsol_tetrahedron : public vsol_polyhedron
   //---------------------------------------------------------------------------
   //: Is `p' in `this' ?
   //---------------------------------------------------------------------------
-  virtual bool in(vsol_point_3d_sptr const &p) const;
+  bool in(vsol_point_3d_sptr const &p) const override;
 
   //---------------------------------------------------------------------------
   //: output description to stream
   //---------------------------------------------------------------------------
-  void describe(std::ostream &strm, int blanking=0) const;
+  void describe(std::ostream &strm, int blanking=0) const override;
 
   //: Return a platform independent string identifying the class
-  virtual std::string is_a() const { return std::string("vsol_tetrahedron"); }
+  std::string is_a() const override { return std::string("vsol_tetrahedron"); }
 
   //: Return true if the argument matches the string identifying the class or any parent class
-  virtual bool is_class(const std::string& cls) const
+  bool is_class(const std::string& cls) const override
   { return cls==is_a() || vsol_polyhedron::is_class(cls); }
 };
 

@@ -20,18 +20,20 @@
 #include <vgl/vgl_polygon_scan_iterator.h>
 #include <core/bbas_pro/bbas_1d_array_float.h>
 #include <vil/vil_math.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //:
 //  Take a colored segmentation output and map it to volm labels
 bool volm_generate_height_map_from_ply_process_cons(bprb_func_process& pro)
 {
   std::vector<std::string> input_types;
-  input_types.push_back("vcl_string");  // path to ply files
-  input_types.push_back("unsigned");  // ni
-  input_types.push_back("unsigned");  // nj
+  input_types.emplace_back("vcl_string");  // path to ply files
+  input_types.emplace_back("unsigned");  // ni
+  input_types.emplace_back("unsigned");  // nj
   std::vector<std::string> output_types;
-  output_types.push_back("vil_image_view_base_sptr"); // output height map
+  output_types.emplace_back("vil_image_view_base_sptr"); // output height map
   return pro.set_input_types(input_types)
       && pro.set_output_types(output_types);
 }
@@ -46,8 +48,8 @@ bool volm_generate_height_map_from_ply_process(bprb_func_process& pro)
 
   // get the inputs
   std::string path = pro.get_input<std::string>(0);
-  unsigned ni = pro.get_input<unsigned>(1);
-  unsigned nj = pro.get_input<unsigned>(2);
+  auto ni = pro.get_input<unsigned>(1);
+  auto nj = pro.get_input<unsigned>(2);
 
   vil_image_view<float> out_map(ni, nj);
   out_map.fill(0.0f);
@@ -58,9 +60,9 @@ bool volm_generate_height_map_from_ply_process(bprb_func_process& pro)
     std::string name(ply_it());
     std::cout << " name: " << name << std::endl;
 
-    bmsh3d_mesh_mc *  bmesh = new bmsh3d_mesh_mc();
+    auto *  bmesh = new bmsh3d_mesh_mc();
     bmsh3d_load_ply(bmesh,name.c_str());
-    std::map <int, bmsh3d_face*>::iterator it = bmesh->facemap().begin();
+    auto it = bmesh->facemap().begin();
     for (; it != bmesh->facemap().end(); it++) {
       int id = (*it).first;
       bmsh3d_face* tmpF = (*it).second;
@@ -104,18 +106,18 @@ bool volm_generate_height_map_from_ply_process(bprb_func_process& pro)
 bool volm_generate_height_map_plot_process_cons(bprb_func_process& pro)
 {
   std::vector<std::string> input_types;
-  input_types.push_back("vil_image_view_base_sptr");  // gt height map
-  input_types.push_back("vil_image_view_base_sptr");  // input height map
-  input_types.push_back("float");  // initial height difference
-  input_types.push_back("float");  // final height difference
-  input_types.push_back("float");  // height increments
-  input_types.push_back("float");  // fix the ground truth height
+  input_types.emplace_back("vil_image_view_base_sptr");  // gt height map
+  input_types.emplace_back("vil_image_view_base_sptr");  // input height map
+  input_types.emplace_back("float");  // initial height difference
+  input_types.emplace_back("float");  // final height difference
+  input_types.emplace_back("float");  // height increments
+  input_types.emplace_back("float");  // fix the ground truth height
 
   std::vector<std::string> output_types;
-  output_types.push_back("bbas_1d_array_float_sptr");  // #correct rate
-  output_types.push_back("bbas_1d_array_float_sptr");  // #height difs
-  output_types.push_back("vil_image_view_base_sptr");  // output image with pixels given by threshold of 0.8 tpr marked red
-  output_types.push_back("vil_image_view_base_sptr");  // output image with pixels as difference in value between gt and input height maps
+  output_types.emplace_back("bbas_1d_array_float_sptr");  // #correct rate
+  output_types.emplace_back("bbas_1d_array_float_sptr");  // #height difs
+  output_types.emplace_back("vil_image_view_base_sptr");  // output image with pixels given by threshold of 0.8 tpr marked red
+  output_types.emplace_back("vil_image_view_base_sptr");  // output image with pixels as difference in value between gt and input height maps
 
   return pro.set_input_types(input_types)
       && pro.set_output_types(output_types);
@@ -132,10 +134,10 @@ bool volm_generate_height_map_plot_process(bprb_func_process& pro)
   // get the inputs
   vil_image_view_base_sptr gt_height_sptr = pro.get_input<vil_image_view_base_sptr>(0);
   vil_image_view_base_sptr height_map_sptr = pro.get_input<vil_image_view_base_sptr>(1);
-  float dif_init = pro.get_input<float>(2);
-  float dif_final = pro.get_input<float>(3);
-  float dif_increments = pro.get_input<float>(4);
-  float gt_fix = pro.get_input<float>(5);
+  auto dif_init = pro.get_input<float>(2);
+  auto dif_final = pro.get_input<float>(3);
+  auto dif_increments = pro.get_input<float>(4);
+  auto gt_fix = pro.get_input<float>(5);
 
   vil_image_view<float> gt_height(gt_height_sptr);
   std::cout << "gt ni: " << gt_height.ni() << " nj: " << gt_height.nj() << std::endl;
@@ -162,7 +164,7 @@ bool volm_generate_height_map_plot_process(bprb_func_process& pro)
   vil_image_view<float> height_out_dif(height.ni(), height.nj());
   for (unsigned i = 0; i < height.ni(); i++)
     for (unsigned j = 0; j < height.nj(); j++) {
-      unsigned char val = vxl_byte(((height(i,j)-min_val)/dif_min_max)*255);
+      auto val = vxl_byte(((height(i,j)-min_val)/dif_min_max)*255);
       vil_rgb<vxl_byte> col(val, val, val);
       height_out(i,j) = col;
       height_out_dif(i,j) = std::numeric_limits<float>::quiet_NaN();
@@ -175,8 +177,8 @@ bool volm_generate_height_map_plot_process(bprb_func_process& pro)
     numPoints++;
   }
 
-  bbas_1d_array_float * height_difs = new bbas_1d_array_float(numPoints);
-  bbas_1d_array_float * correct_rate = new bbas_1d_array_float(numPoints);
+  auto * height_difs = new bbas_1d_array_float(numPoints);
+  auto * correct_rate = new bbas_1d_array_float(numPoints);
 
   for (unsigned int pnt=0; pnt<numPoints; pnt++) {
     correct_rate->data_array[pnt]=0.0f;
@@ -257,10 +259,10 @@ bool volm_find_min_max_height_process(bprb_func_process& pro)
   }
   // get inputs
   unsigned in_i = 0;
-  double ll_lon = pro.get_input<double>(in_i++);
-  double ll_lat = pro.get_input<double>(in_i++);
-  double ur_lon = pro.get_input<double>(in_i++);
-  double ur_lat = pro.get_input<double>(in_i++);
+  auto ll_lon = pro.get_input<double>(in_i++);
+  auto ll_lat = pro.get_input<double>(in_i++);
+  auto ur_lon = pro.get_input<double>(in_i++);
+  auto ur_lat = pro.get_input<double>(in_i++);
   std::string dem_folder = pro.get_input<std::string>(in_i++);
 
   // load DEM images

@@ -6,12 +6,14 @@
 // \brief Base for objects which compute a cost function for one basis direction
 
 #include <string>
-#include <vcl_memory.h>
 #include <iostream>
+#include <memory>
 #include <iosfwd>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_fwd.h>
 #include <vnl/vnl_vector.h>
-#include <vcl_compiler.h>
 
 //: Base for objects which compute a cost function for one basis direction.
 // We assume that the component analysis aims to choose a set of orthogonal
@@ -42,7 +44,7 @@ class mcal_single_basis_cost
   // \param[in] unit_basis   Unit vector defining basis direction
   // \param[in] projections  Projections of the dataset onto this basis vector
   virtual double cost(const vnl_vector<double>& unit_basis,
-                      const vnl_vector<double>& projections) =0;
+                      const vnl_vector<double>& projections) = 0;
 
   //: Compute component of the cost function from given basis vector
   // Only relevant if can_use_variance() is true.  This allows more
@@ -76,7 +78,7 @@ class mcal_single_basis_cost
   virtual void config_from_stream(std::istream &);
 
   //: Create a concrete mcal_single_basis_cost object, from a text specification.
-  static vcl_unique_ptr<mcal_single_basis_cost> create_from_stream(std::istream &is);
+  static std::unique_ptr<mcal_single_basis_cost> create_from_stream(std::istream &is);
 };
 
 //: Allows derived class to be loaded by base-class pointer

@@ -5,7 +5,9 @@
 // \file
 
 #include <bprb/bprb_parameters.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpgl/vpgl_camera_double_sptr.h>
 #include <vpgl/vpgl_local_rational_camera.h>
 
@@ -15,12 +17,12 @@ bool vpgl_load_local_rational_camera_process_cons(bprb_func_process& pro)
   //this process takes one input: local rational camera filename
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("vcl_string");
+  input_types.emplace_back("vcl_string");
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   std::vector<std::string> output_types;
-  output_types.push_back("vpgl_camera_double_sptr");  //camera output
+  output_types.emplace_back("vpgl_camera_double_sptr");  //camera output
   ok = pro.set_output_types(output_types);
   if (!ok) return ok;
 

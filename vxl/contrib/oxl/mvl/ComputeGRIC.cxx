@@ -4,11 +4,13 @@
 #include <mvl/FMatrixComputeMLESAC.h>
 #include <mvl/HMatrix2DComputeMLESAC.h>
 #include <mvl/HomgInterestPointSet.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 ComputeGRIC::ComputeGRIC(double std) : std_(std) {}
 
-ComputeGRIC::~ComputeGRIC(){}
+ComputeGRIC::~ComputeGRIC()= default;
 
 bool ComputeGRIC::compute(PairMatchSetCorner* matches) {
 
@@ -19,7 +21,7 @@ bool ComputeGRIC::compute(PairMatchSetCorner* matches) {
 
   // Compute the two differing relations using MLE
   F_.reset(new FMatrix);
-  vcl_unique_ptr<FMatrixComputeRobust> computor1(new FMatrixComputeMLESAC(true, std_));
+  std::unique_ptr<FMatrixComputeRobust> computor1(new FMatrixComputeMLESAC(true, std_));
   computor1->compute(matches_copy1, F_.get());
   residualsF_ = computor1->get_residuals();
   inliersF_ = computor1->get_inliers();
@@ -27,7 +29,7 @@ bool ComputeGRIC::compute(PairMatchSetCorner* matches) {
   computor1.reset();
 
   H_.reset(new HMatrix2D);
-  vcl_unique_ptr<HMatrix2DComputeRobust> computor2(new HMatrix2DComputeMLESAC(std_));
+  std::unique_ptr<HMatrix2DComputeRobust> computor2(new HMatrix2DComputeMLESAC(std_));
   computor2->compute(matches_copy2, H_.get());
   residualsH_ = computor2->get_residuals();
   inliersH_ = computor2->get_inliers();
@@ -63,8 +65,8 @@ bool ComputeGRIC::compute(PairMatchSetCorner* matches) {
   double l1 = std::log(4.0), l2 = std::log(4.0*n), l3 = 2.0;
   double GRICF = 0.0;
   double thresh = l3*(r - df);
-  for (unsigned int i = 0; i < residualsF_.size(); i++) {
-    double t = residualsF_[i] / std_;
+  for (double i : residualsF_) {
+    double t = i / std_;
     if (t < thresh)
       GRICF += t;
     else
@@ -74,8 +76,8 @@ bool ComputeGRIC::compute(PairMatchSetCorner* matches) {
   std::cerr << "GRICF : " << GRICF << std::endl;
   double GRICH = 0.0;
   thresh = l3*(r - dh);
-  for (unsigned int i = 0; i < residualsH_.size(); i++) {
-    double t = residualsH_[i] / std_;
+  for (double i : residualsH_) {
+    double t = i / std_;
     if (t < thresh)
       GRICH += t;
     else

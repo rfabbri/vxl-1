@@ -2,7 +2,9 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vnl/vnl_numeric_traits.h>
 #include <vsol/vsol_point_2d_sptr.h>
@@ -21,8 +23,7 @@
 
 // Destructor
 bsol_algs::~bsol_algs()
-{
-}
+= default;
 
 //-----------------------------------------------------------------------------
 //: Compute a bounding box for a set of vsol_point_2ds.
@@ -31,9 +32,8 @@ vbl_bounding_box<double,2> bsol_algs::
 bounding_box(std::vector<vsol_point_2d_sptr> const& points)
 {
   vbl_bounding_box<double, 2> b;
-  for (std::vector<vsol_point_2d_sptr>::const_iterator pit = points.begin();
-       pit != points.end(); pit++)
-    b.update((*pit)->x(), (*pit)->y());
+  for (const auto & point : points)
+    b.update(point->x(), point->y());
   return b;
 }
 
@@ -44,11 +44,10 @@ vbl_bounding_box<double,2>  bsol_algs::
 bounding_box(std::vector<vsol_line_2d_sptr> const & lines)
 {
   vbl_bounding_box<double, 2> b;
-  for (std::vector<vsol_line_2d_sptr>::const_iterator lit = lines.begin();
-       lit != lines.end(); lit++)
+  for (const auto & line : lines)
   {
-    vsol_point_2d_sptr p0 = (*lit)->p0();
-    vsol_point_2d_sptr p1 = (*lit)->p1();
+    vsol_point_2d_sptr p0 = line->p0();
+    vsol_point_2d_sptr p1 = line->p1();
     b.update(p0->x(), p0->y());
     b.update(p1->x(), p1->y());
   }
@@ -62,9 +61,8 @@ vbl_bounding_box<double,3> bsol_algs::
 bounding_box(std::vector<vsol_point_3d_sptr> const& points)
 {
   vbl_bounding_box<double, 3> b;
-  for (std::vector<vsol_point_3d_sptr>::const_iterator pit = points.begin();
-       pit != points.end(); pit++)
-    b.update((*pit)->x(), (*pit)->y(), (*pit)->z());
+  for (const auto & point : points)
+    b.update(point->x(), point->y(), point->z());
   return b;
 }
 
@@ -172,14 +170,13 @@ bool bsol_algs::hull_of_poly_set(std::vector<vsol_polygon_2d_sptr> const& polys,
   if (!polys.size())
     return false;
   std::vector<vgl_point_2d<double> > points;
-  for (std::vector<vsol_polygon_2d_sptr>::const_iterator pit = polys.begin();
-       pit != polys.end(); pit++)
+  for (const auto & poly : polys)
   {
-    if (!(*pit))
+    if (!poly)
       return false;
-    for (unsigned int i=0; i<(*pit)->size(); ++i)
-      points.push_back(vgl_point_2d<double>((*pit)->vertex(i)->x(),
-                                            (*pit)->vertex(i)->y()));
+    for (unsigned int i=0; i<poly->size(); ++i)
+      points.emplace_back(poly->vertex(i)->x(),
+                                            poly->vertex(i)->y());
   }
   vgl_convex_hull_2d<double> ch(points);
   vgl_polygon<double> h = ch.hull();
@@ -222,10 +219,9 @@ vsol_polygon_2d_sptr bsol_algs::poly_from_vgl(vgl_polygon<double> const& poly)
   if (poly.num_sheets() != 1)
     return out;
   std::vector<vgl_point_2d<double> > sheet = poly[0];
-  for (std::vector<vgl_point_2d<double> >::iterator pit = sheet.begin();
-       pit != sheet.end(); pit++)
+  for (auto & pit : sheet)
   {
-    vsol_point_2d_sptr p = new vsol_point_2d((*pit).x(), (*pit).y());
+    vsol_point_2d_sptr p = new vsol_point_2d(pit.x(), pit.y());
     pts.push_back(p);
   }
   out = new vsol_polygon_2d(pts);
@@ -259,15 +255,14 @@ bsol_algs::closest_point(vsol_point_2d_sptr const& p,
     return cp;
   double dmin_sq = vnl_numeric_traits<double>::maxval;
   double x = p->x(), y = p->y();
-  for (std::vector<vsol_point_2d_sptr>::const_iterator pit = point_set.begin();
-       pit!=point_set.end(); pit++)
+  for (const auto & pit : point_set)
   {
-    double xs = (*pit)->x(), ys = (*pit)->y();
+    double xs = pit->x(), ys = pit->y();
     double dsq = (x-xs)*(x-xs)+(y-ys)*(y-ys);
     if (dsq<dmin_sq)
     {
       dmin_sq = dsq;
-      cp = *pit;
+      cp = pit;
     }
   }
   d = std::sqrt(dmin_sq);
@@ -286,15 +281,14 @@ bsol_algs::closest_point(vsol_point_3d_sptr const& p,
     return cp;
   double dmin_sq = vnl_numeric_traits<double>::maxval;
   double x = p->x(), y = p->y(), z = p->z();
-  for (std::vector<vsol_point_3d_sptr>::const_iterator pit = point_set.begin();
-       pit!=point_set.end(); pit++)
+  for (const auto & pit : point_set)
   {
-    double xs = (*pit)->x(), ys = (*pit)->y(), zs = (*pit)->z();
+    double xs = pit->x(), ys = pit->y(), zs = pit->z();
     double dsq = (x-xs)*(x-xs) + (y-ys)*(y-ys) + (z-zs)*(z-zs);
     if (dsq<dmin_sq)
     {
       dmin_sq = dsq;
-      cp = *pit;
+      cp = pit;
     }
   }
   d = std::sqrt(dmin_sq);

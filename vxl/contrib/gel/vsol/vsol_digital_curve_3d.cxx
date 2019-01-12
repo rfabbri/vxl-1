@@ -10,16 +10,17 @@
 #include <vgl/vgl_vector_3d.h>
 #include <vgl/vgl_distance.h>
 #include <vsl/vsl_vector_io.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 // Copy constructor
 vsol_digital_curve_3d::vsol_digital_curve_3d(const vsol_digital_curve_3d &other)
   : vsol_curve_3d(other), samples_()
 {
-  for (std::vector<vsol_point_3d_sptr>::const_iterator itr=other.samples_.begin();
-       itr != other.samples_.end();  ++itr)
-    this->samples_.push_back(new vsol_point_3d(**itr));
+  for (const auto & sample : other.samples_)
+    this->samples_.push_back(new vsol_point_3d(*sample));
 }
 
 //: Clone `this': creation of a new object and initialization
@@ -33,7 +34,7 @@ vsol_spatial_object_3d* vsol_digital_curve_3d::clone(void) const
 vsol_point_3d_sptr vsol_digital_curve_3d::p0(void) const
 {
   if (samples_.empty())
-    return VXL_NULLPTR;
+    return nullptr;
   else
     return samples_.front();
 }
@@ -42,7 +43,7 @@ vsol_point_3d_sptr vsol_digital_curve_3d::p0(void) const
 vsol_point_3d_sptr vsol_digital_curve_3d::p1(void) const
 {
   if (samples_.empty())
-    return VXL_NULLPTR;
+    return nullptr;
   else
     return samples_.back();
 }
@@ -108,7 +109,7 @@ bool vsol_digital_curve_3d::operator==(vsol_spatial_object_3d const& obj) const
 double vsol_digital_curve_3d::length(void) const
 {
   double curve_length = 0.0;
-  for ( std::vector<vsol_point_3d_sptr>::const_iterator itr=samples_.begin();
+  for ( auto itr=samples_.begin();
         itr+1 != samples_.end();  ++itr )
   {
     curve_length += ((*(itr+1))->get_p() - (*itr)->get_p()).length();
@@ -195,7 +196,7 @@ void vsol_digital_curve_3d::print_summary(std::ostream &os) const
 void
 vsl_b_write(vsl_b_ostream &os, vsol_digital_curve_3d const* p)
 {
-  if (p==VXL_NULLPTR) {
+  if (p==nullptr) {
     vsl_b_write(os, false); // Indicate null pointer stored
   }
   else {
@@ -217,7 +218,7 @@ vsl_b_read(vsl_b_istream &is, vsol_digital_curve_3d* &p)
     p->b_read(is);
   }
   else
-    p = VXL_NULLPTR;
+    p = nullptr;
 }
 
 void vsol_digital_curve_3d::describe(std::ostream &strm, int blanking) const

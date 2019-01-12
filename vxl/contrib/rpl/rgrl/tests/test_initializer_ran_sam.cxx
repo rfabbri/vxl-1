@@ -3,7 +3,9 @@
 #include <cmath>
 #include <testlib/testlib_test.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vnl/vnl_matrix.h>
 #include <vnl/vnl_vector.h>
@@ -25,10 +27,10 @@
 
 static
 rgrl_match_set_sptr
-generate_match_set(rgrl_transformation_sptr trans)
+generate_match_set(const rgrl_transformation_sptr& trans)
 {
-  rgrl_trans_affine* xform = dynamic_cast<rgrl_trans_affine*>(trans.as_pointer());
-  vnl_matrix<double> A = xform->A();
+  auto* xform = dynamic_cast<rgrl_trans_affine*>(trans.as_pointer());
+  const vnl_matrix<double>& A = xform->A();
   vnl_vector<double> t = xform->t();
 
   //generate 15 correct matches
@@ -158,7 +160,7 @@ generate_match_set(rgrl_transformation_sptr trans)
 
   rgrl_match_set_sptr ms = new rgrl_match_set( rgrl_feature_point::type_id() );
   for ( unsigned i=0; i < from_pts.size(); ++i ) {
-    ms->add_feature_and_match( from_pts[i], VXL_NULLPTR, to_pts[i] );
+    ms->add_feature_and_match( from_pts[i], nullptr, to_pts[i] );
   }
 
   return ms;
@@ -166,11 +168,11 @@ generate_match_set(rgrl_transformation_sptr trans)
 
 static
 rgrl_match_set_sptr
-generate_ambiguous_match_set(rgrl_transformation_sptr trans)
+generate_ambiguous_match_set(const rgrl_transformation_sptr& trans)
 {
   //generate 15 correct matches, with 5 having incorrect 2nd match
-  rgrl_trans_affine* xform = dynamic_cast<rgrl_trans_affine*>(trans.as_pointer());
-  vnl_matrix<double> A = xform->A();
+  auto* xform = dynamic_cast<rgrl_trans_affine*>(trans.as_pointer());
+  const vnl_matrix<double>& A = xform->A();
   vnl_vector<double> t = xform->t();
 
   //generate 15 correct matches
@@ -239,7 +241,7 @@ generate_ambiguous_match_set(rgrl_transformation_sptr trans)
 
   rgrl_match_set_sptr ms = new rgrl_match_set( rgrl_feature_point::type_id() );
   for ( unsigned i=0; i < from_pts.size(); ++i ) {
-    ms->add_feature_and_match( from_pts[i], VXL_NULLPTR, to_pts[i] );
+    ms->add_feature_and_match( from_pts[i], nullptr, to_pts[i] );
   }
 
   //another 5 matches, each with 2 matches, one correct and one incorrect
@@ -287,7 +289,7 @@ generate_ambiguous_match_set(rgrl_transformation_sptr trans)
   }
 
   for ( unsigned i=0; i < from_pts_II.size(); ++i ) {
-    ms->add_feature_and_matches( from_pts_II[i], VXL_NULLPTR, to_pts_II[i] );
+    ms->add_feature_and_matches( from_pts_II[i], nullptr, to_pts_II[i] );
   }
 
   return ms;
@@ -322,17 +324,17 @@ gen_num_samples(unsigned int total_matches, unsigned int unique_matches, bool al
 
 static
 void
-test_on_matches(rgrl_transformation_sptr xform, rgrl_match_set_sptr matches, unsigned int total_matches)
+test_on_matches(const rgrl_transformation_sptr& xform, const rgrl_match_set_sptr& matches, unsigned int total_matches)
 {
   rgrl_mask_sptr from_roi = new rgrl_mask_box( vnl_double_2(-50.0, -50.0).as_ref(),
                                                vnl_double_2(100.0, 100.0).as_ref());
-  rgrl_mask_sptr to_roi = from_roi;
+  const rgrl_mask_sptr& to_roi = from_roi;
   rgrl_estimator_sptr est = new rgrl_est_affine(2);
   rgrl_view_sptr  view = new rgrl_view( from_roi, to_roi, from_roi->bounding_box(), from_roi->bounding_box(), est, xform, 0 );
-  vcl_unique_ptr<rrel_objective> obj( new rrel_muset_obj(matches->from_size()) );
-  rgrl_scale_estimator_unwgted_sptr scale_est = new rgrl_scale_est_closest( vcl_move(obj) );
+  std::unique_ptr<rrel_objective> obj( new rrel_muset_obj(matches->from_size()) );
+  rgrl_scale_estimator_unwgted_sptr scale_est = new rgrl_scale_est_closest( std::move(obj) );
 
-  rgrl_initializer_ran_sam* init = new rgrl_initializer_ran_sam();
+  auto* init = new rgrl_initializer_ran_sam();
   init->set_sampling_params();
   init->set_data(matches, scale_est, view);
   //rgrl_initializer_sptr init(init_ran_sam);
@@ -347,7 +349,7 @@ test_on_matches(rgrl_transformation_sptr xform, rgrl_match_set_sptr matches, uns
   TEST("Total number of samples for not gen_all", init->samples_tested(), total_samples);
 
   rgrl_trans_affine* estimated_aff = dynamic_cast<rgrl_trans_affine*>(v->xform_estimate().as_pointer());
-  rgrl_trans_affine* org_aff = dynamic_cast<rgrl_trans_affine*>(xform.as_pointer());
+  auto* org_aff = dynamic_cast<rgrl_trans_affine*>(xform.as_pointer());
   TEST("Transformation for not gen_all",
        estimated_aff &&
        close( org_aff->A(), estimated_aff->A() ) &&

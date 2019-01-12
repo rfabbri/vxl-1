@@ -1,6 +1,8 @@
 #include <iostream>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vpgl/algo/vpgl_fm_compute_8_point.h>
 #include <vpgl/algo/vpgl_fm_compute_2_point.h>
@@ -21,19 +23,19 @@ static void test_fm_compute()
   vpgl_fundamental_matrix<double> fm1( C1r, C1l );
   std::cerr << "Break 1:\n" << fm1.get_matrix(); //DEBUG
   std::vector< vgl_homg_point_3d<double> > p1w;
-  p1w.push_back( vgl_homg_point_3d<double>( 2, -1, 5 ) );
-  p1w.push_back( vgl_homg_point_3d<double>( 1, 10, 0 ) );
-  p1w.push_back( vgl_homg_point_3d<double>( -5, -7, 1 ) );
-  p1w.push_back( vgl_homg_point_3d<double>( 0, 8, 10 ) );
-  p1w.push_back( vgl_homg_point_3d<double>( 1, 2, 3 ) );
-  p1w.push_back( vgl_homg_point_3d<double>( -4, -10, 0 ) );
-  p1w.push_back( vgl_homg_point_3d<double>( 6, 8, -5 ) );
-  p1w.push_back( vgl_homg_point_3d<double>( -2, 0, -1 ) );
+  p1w.emplace_back( 2, -1, 5 );
+  p1w.emplace_back( 1, 10, 0 );
+  p1w.emplace_back( -5, -7, 1 );
+  p1w.emplace_back( 0, 8, 10 );
+  p1w.emplace_back( 1, 2, 3 );
+  p1w.emplace_back( -4, -10, 0 );
+  p1w.emplace_back( 6, 8, -5 );
+  p1w.emplace_back( -2, 0, -1 );
 
   std::vector< vgl_homg_point_2d<double> > p1r, p1l;
-  for ( unsigned i = 0; i < p1w.size(); i++ ) {
-    p1r.push_back( C1r.project( p1w[i] ) );
-    p1l.push_back( C1l.project( p1w[i] ) );
+  for (const auto & i : p1w) {
+    p1r.push_back( C1r.project( i ) );
+    p1l.push_back( C1l.project( i ) );
   }
 
   vpgl_fm_compute_8_point fmc;

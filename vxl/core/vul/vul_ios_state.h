@@ -1,9 +1,6 @@
 // This is core/vul/vul_ios_state.h
 #ifndef vul_ios_state_h_
 #define vul_ios_state_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief saves and restores stream state
@@ -44,7 +41,9 @@
 // DEALINGS IN THE SOFTWARE.
 
 #include <ios>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Use RAII to save and restore precision and other state on an iostream
 class vul_ios_state_saver

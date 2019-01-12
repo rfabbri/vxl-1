@@ -14,7 +14,9 @@
 
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_array_2d.h>
 
 //: Defines functions associated with a templated borgefors distance map.
@@ -68,7 +70,7 @@ class rsdl_borgefors
   void set(int org_x, int org_y, int size_x, int size_y,
            iterator_type begin, iterator_type end,
            vbl_array_2d<int> index_map,
-           vbl_array_2d<int>* distance_map = VXL_NULLPTR );
+           vbl_array_2d<int>* distance_map = nullptr );
 
   //: resets the data members
   void reset();
@@ -99,9 +101,9 @@ class rsdl_borgefors
 
  private:
   //: copy constructor, not implemented
-  rsdl_borgefors(const rsdl_borgefors<T>& old);
+  rsdl_borgefors(const rsdl_borgefors<T>& old) = delete;
   //: assignment operator, not implemented
-  rsdl_borgefors<T>& operator=(const rsdl_borgefors<T>& rhs);
+  rsdl_borgefors<T>& operator=(const rsdl_borgefors<T>& rhs) = delete;
 
   void initialize(iterator_type  begin, iterator_type end);
   void chamfer34();

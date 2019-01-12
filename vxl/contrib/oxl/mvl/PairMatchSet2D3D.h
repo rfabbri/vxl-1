@@ -1,9 +1,6 @@
 // This is oxl/mvl/PairMatchSet2D3D.h
 #ifndef PairMatchSet2D3D_h_
 #define PairMatchSet2D3D_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 //  \file
 // \author
@@ -28,14 +25,14 @@ class PairMatchSet2D3D : public PairMatchSet
   PairMatchSet2D3D(const HomgInterestPointSet* corners, std::vector<HomgPoint3D>* structure);
   PairMatchSet2D3D(const PairMatchSet2D3D& that);
   PairMatchSet2D3D& operator=(const PairMatchSet2D3D&);
- ~PairMatchSet2D3D();
+ ~PairMatchSet2D3D() override;
 
   // Computations--------------------------------------------------------------
 
   // Data Access---------------------------------------------------------------
 
   // Data Control--------------------------------------------------------------
-  bool is_set() const { return (corners_ != VXL_NULLPTR) && (structure_ != VXL_NULLPTR); }
+  bool is_set() const { return (corners_ != nullptr) && (structure_ != nullptr); }
   void set(const HomgInterestPointSet* corners, std::vector<HomgPoint3D>* structure);
   void set(int corners_size, std::vector<HomgPoint3D>* structure);
 

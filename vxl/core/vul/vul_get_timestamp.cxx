@@ -1,7 +1,4 @@
 // This is core/vul/vul_get_timestamp.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
@@ -11,9 +8,11 @@
 #include <iomanip>
 #include "vul_get_timestamp.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
-#if defined(VCL_WIN32) && !defined(__CYGWIN__)
+#if defined(_WIN32) && !defined(__CYGWIN__)
 #include <direct.h>
 #else
 #include <unistd.h> // for struct timeval
@@ -23,22 +22,21 @@
 
 // for vul_get_time_string()
 #include <vul/vul_string.h>
-#include <vcl_compiler.h>
 //
 
-#if !defined(VCL_WIN32) || defined(__CYGWIN__)
+#if !defined(_WIN32) || defined(__CYGWIN__)
 // POSIX
 void vul_get_timestamp(int &secs, int &msecs)
 {
   struct timeval  timestamp;
-  struct timezone* dummy = VXL_NULLPTR;
+  struct timezone* dummy = nullptr;
   gettimeofday(&timestamp, dummy);
 
   secs = timestamp.tv_sec;
   msecs = timestamp.tv_usec/1000;
 }
 #else
-// VCL_WIN32 and not __CYGWIN__
+// _WIN32 and not __CYGWIN__
 void vul_get_timestamp(int &secs, int &msecs)
 {
   struct _timeb real;
@@ -95,4 +93,3 @@ std::string vul_get_time_as_string(vul_time_style style/*default=vul_asc*/)
 
   return timestr;
 }
-

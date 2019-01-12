@@ -17,8 +17,10 @@
 #include <vector>
 #include <iostream>
 #include <vbl/vbl_array_3d.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <bsta/bsta_joint_histogram_3d_base.h>
 template <class T> class bsta_joint_histogram_3d :
 public bsta_joint_histogram_3d_base
@@ -46,7 +48,7 @@ public bsta_joint_histogram_3d_base
                     const unsigned nbins_c,
                     const T min_prob = 0.0);
 
- ~bsta_joint_histogram_3d() {}
+ ~bsta_joint_histogram_3d() override = default;
 
  //: legacy use where a, b and c, have the same bin granularity
  unsigned nbins() const {

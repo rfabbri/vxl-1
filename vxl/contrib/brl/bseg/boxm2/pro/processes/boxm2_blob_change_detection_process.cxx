@@ -13,12 +13,14 @@
 #include <boxm2/util/boxm2_detect_change_blobs.h>
 #include <vil/vil_image_view.h>
 #include <vil/vil_save.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 namespace boxm2_blob_change_detection_process_globals
 {
-  const unsigned n_inputs_ = 4;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 4;
+  constexpr unsigned n_outputs_ = 1;
 
   const float EPSILON = .02f;
 }
@@ -58,22 +60,22 @@ bool boxm2_blob_change_detection_process(bprb_func_process& pro)
   //get the inputs
   unsigned i = 0;
   vil_image_view_base_sptr  change_img = pro.get_input<vil_image_view_base_sptr>(i++);
-  float                     thresh     = pro.get_input<float>(i++);
+  auto                     thresh = pro.get_input<float>(i++);
   vil_image_view_base_sptr  depth_img1 = pro.get_input<vil_image_view_base_sptr>(i++);
   vil_image_view_base_sptr  depth_img2 = pro.get_input<vil_image_view_base_sptr>(i++);
 
   //cast to float image
-  vil_image_view<float>* change = dynamic_cast<vil_image_view<float>*>(change_img.ptr());
+  auto* change = dynamic_cast<vil_image_view<float>*>(change_img.ptr());
   if ( !change ) {
     std::cout<<"Detection Map cannot be converted to float image"<<std::endl;
     return false;
   }
-  vil_image_view<float>* depth1 = dynamic_cast<vil_image_view<float>*>(depth_img1.ptr());
+  auto* depth1 = dynamic_cast<vil_image_view<float>*>(depth_img1.ptr());
   if ( !depth1 ) {
     std::cout<<"Detection Map cannot be converted to float image"<<std::endl;
     return false;
   }
-  vil_image_view<float>* depth2 = dynamic_cast<vil_image_view<float>*>(depth_img2.ptr());
+  auto* depth2 = dynamic_cast<vil_image_view<float>*>(depth_img2.ptr());
   if ( !depth2 ) {
     std::cout<<"Detection Map cannot be converted to float image"<<std::endl;
     return false;
@@ -99,7 +101,7 @@ bool boxm2_blob_change_detection_process(bprb_func_process& pro)
   boxm2_util_detect_change_blobs( *change,thresh,blobs );
 
   //create a blob image
-  vil_image_view<vxl_byte>* blobImg = new vil_image_view<vxl_byte>(change_img->ni(), change_img->nj());
+  auto* blobImg = new vil_image_view<vxl_byte>(change_img->ni(), change_img->nj());
   blobImg->fill(0);
   std::vector<boxm2_change_blob>::iterator iter;
   for (iter=blobs.begin(); iter!=blobs.end(); ++iter)
@@ -125,4 +127,3 @@ bool boxm2_blob_change_detection_process(bprb_func_process& pro)
   pro.set_output_val<vil_image_view_base_sptr>(i, blobImg);
   return true;
 }
-

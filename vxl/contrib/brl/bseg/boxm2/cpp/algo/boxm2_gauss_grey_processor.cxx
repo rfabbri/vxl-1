@@ -7,7 +7,9 @@
 #define TMATCH 2.5f
 
 #include <boxm2/boxm2_util.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <bsta/bsta_distribution.h>
 #include <bsta/bsta_gauss_sf1.h>
@@ -90,10 +92,10 @@ void compute_gaussian_params(std::vector<float> const& obs, std::vector<float> c
 void boxm2_gauss_grey_processor::compute_app_model(vnl_vector_fixed<unsigned char, 2> & app,
                                                    std::vector<float> const& obs,
                                                    std::vector<float> const& vis,
-                                                   bsta_sigma_normalizer_sptr n_table,
+                                                   const bsta_sigma_normalizer_sptr&  /*n_table*/,
                                                    float min_sigma)
 {
-  const float big_sigma = (float)vnl_math::sqrt1_2; // maximum possible std. dev for set of samples drawn from [0 1]
+  const auto big_sigma = (float)vnl_math::sqrt1_2; // maximum possible std. dev for set of samples drawn from [0 1]
 
   const unsigned int nobs = obs.size();
   if (nobs == 0) {
@@ -141,14 +143,14 @@ void boxm2_gauss_grey_processor::compute_app_model(vnl_vector_fixed<unsigned cha
                                                    std::vector<float> const& obs,
                                                    std::vector<float> const& pre,
                                                    std::vector<float> const& vis,
-                                                   bsta_sigma_normalizer_sptr n_table,
+                                                   const bsta_sigma_normalizer_sptr& n_table,
                                                    float min_sigma)
 {
   bsta_gauss_sf1 model_bsta(apm[0]/255.0f,(apm[1]/255.0f)*(apm[1]/255.0f));
 
   // initialize from scratch in every iteration
   //bsta_gauss_sf1 model_bsta(0.5f,(0.3f)*(0.3f));
-  const float big_sigma = (float)vnl_math::sqrt1_2; // maximum possible std. dev for set of samples drawn from [0 1]
+  const auto big_sigma = (float)vnl_math::sqrt1_2; // maximum possible std. dev for set of samples drawn from [0 1]
   unsigned int nobs = obs.size();
   // check for some simple cases first
   if (nobs == 0) {
@@ -171,8 +173,8 @@ void boxm2_gauss_grey_processor::compute_app_model(vnl_vector_fixed<unsigned cha
   bsta_fit_gaussian(obs,vis,pre,model_bsta,min_var_EM);
   // compute expected number of observations
   float expected_nobs = 0.0f;
-  for (unsigned int i=0; i<vis.size(); ++i) {
-    expected_nobs += vis[i];
+  for (float vi : vis) {
+    expected_nobs += vi;
   }
   // normalize sigma
   const float norm_factor = n_table->normalization_factor(expected_nobs);
@@ -213,7 +215,7 @@ void update_gauss(float & x, float & rho, float & mu, float &  sigma,float min_s
 
 void boxm2_gauss_grey_processor::update_app_model(vnl_vector_fixed<unsigned char, 2> & apm,
                                                   vnl_vector_fixed<float, 4> & nobs,
-                                                  float x, float w, float init_sigma,float min_sigma)
+                                                  float x, float w, float  /*init_sigma*/,float min_sigma)
 {
   float mu = apm[0]/255.0f;
   float sigma = apm[1]/255.0f;
@@ -222,4 +224,3 @@ void boxm2_gauss_grey_processor::update_app_model(vnl_vector_fixed<unsigned char
   apm[1] = (unsigned char)std::floor(sigma*255.0f);
   nobs[0] += 1;
 }
-

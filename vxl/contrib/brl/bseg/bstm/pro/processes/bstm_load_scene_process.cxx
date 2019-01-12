@@ -10,13 +10,15 @@
 #include <fstream>
 #include <bprb/bprb_func_process.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bstm/bstm_scene.h>
 
 namespace bstm_load_scene_process_globals
 {
-  const unsigned n_inputs_ = 1;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 1;
+  constexpr unsigned n_outputs_ = 1;
 }
 bool bstm_load_scene_process_cons(bprb_func_process& pro)
 {

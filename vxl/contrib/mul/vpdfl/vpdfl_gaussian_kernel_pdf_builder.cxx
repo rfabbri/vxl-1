@@ -1,13 +1,12 @@
 // This is mul/vpdfl/vpdfl_gaussian_kernel_pdf_builder.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 
 #include <iostream>
 #include <string>
 #include "vpdfl_gaussian_kernel_pdf_builder.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vpdfl/vpdfl_gaussian_kernel_pdf.h>
 
@@ -15,17 +14,13 @@
 // Dflt ctor
 //=======================================================================
 
-vpdfl_gaussian_kernel_pdf_builder::vpdfl_gaussian_kernel_pdf_builder()
-{
-}
+vpdfl_gaussian_kernel_pdf_builder::vpdfl_gaussian_kernel_pdf_builder() = default;
 
 //=======================================================================
 // Destructor
 //=======================================================================
 
-vpdfl_gaussian_kernel_pdf_builder::~vpdfl_gaussian_kernel_pdf_builder()
-{
-}
+vpdfl_gaussian_kernel_pdf_builder::~vpdfl_gaussian_kernel_pdf_builder() = default;
 
 
 vpdfl_pdf_base* vpdfl_gaussian_kernel_pdf_builder::new_model() const
@@ -60,5 +55,3 @@ vpdfl_builder_base* vpdfl_gaussian_kernel_pdf_builder::clone() const
 {
   return new vpdfl_gaussian_kernel_pdf_builder(*this);
 }
-
-

@@ -3,7 +3,9 @@
 #include "bsol_distance_histogram.h"
 //:
 // \file
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_numeric_traits.h>
 #include <vgl/vgl_homg_line_2d.h>
@@ -74,8 +76,7 @@ bsol_distance_histogram(const int nbins,
 
 //: Destructor
 bsol_distance_histogram::~bsol_distance_histogram()
-{
-}
+= default;
 
 
 //---------------------------------------------------------------------

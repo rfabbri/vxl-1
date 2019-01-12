@@ -2,7 +2,9 @@
 #include "vil_io_image_view_base.h"
 //:
 // \file
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_binary_io.h>
 #include <vil/vil_image_view_base.h>
 #include <vil/vil_image_view.h>
@@ -113,44 +115,44 @@ void vsl_b_read(vsl_b_istream& is, vil_image_view_base_sptr &view_base)
     switch (chunk->pixel_format()) {
 #if VXL_HAS_INT_64
      case VIL_PIXEL_FORMAT_UINT_64: {
-       const vxl_uint_64* data = reinterpret_cast<const vxl_uint_64*>(chunk->data());
+       const auto* data = reinterpret_cast<const vxl_uint_64*>(chunk->data());
        view_base = new vil_image_view<vxl_uint_64>(chunk,data+offset,ni,nj,np,istep,jstep,pstep);
        break; }
      case VIL_PIXEL_FORMAT_INT_64: {
-       const vxl_int_64* data = reinterpret_cast<const vxl_int_64*>(chunk->data());
+       const auto* data = reinterpret_cast<const vxl_int_64*>(chunk->data());
        view_base = new vil_image_view<vxl_int_64>(chunk,data+offset,ni,nj,np,istep,jstep,pstep);
        break; }
 #endif
      case VIL_PIXEL_FORMAT_UINT_32: {
-       const vxl_uint_32* data = reinterpret_cast<const vxl_uint_32*>(chunk->data());
+       const auto* data = reinterpret_cast<const vxl_uint_32*>(chunk->data());
        view_base = new vil_image_view<vxl_uint_32>(chunk,data+offset,ni,nj,np,istep,jstep,pstep);
        break; }
    case VIL_PIXEL_FORMAT_INT_32: {
-       const vxl_int_32* data = reinterpret_cast<const vxl_int_32*>(chunk->data());
+       const auto* data = reinterpret_cast<const vxl_int_32*>(chunk->data());
        view_base = new vil_image_view<vxl_int_32>(chunk,data+offset,ni,nj,np,istep,jstep,pstep);
        break; }
    case VIL_PIXEL_FORMAT_UINT_16: {
-       const vxl_uint_16* data = reinterpret_cast<const vxl_uint_16*>(chunk->data());
+       const auto* data = reinterpret_cast<const vxl_uint_16*>(chunk->data());
        view_base = new vil_image_view<vxl_uint_16>(chunk,data+offset,ni,nj,np,istep,jstep,pstep);
        break; }
    case VIL_PIXEL_FORMAT_INT_16: {
-       const vxl_int_16* data = reinterpret_cast<const vxl_int_16*>(chunk->data());
+       const auto* data = reinterpret_cast<const vxl_int_16*>(chunk->data());
        view_base = new vil_image_view<vxl_int_16>(chunk,data+offset,ni,nj,np,istep,jstep,pstep);
        break; }
    case VIL_PIXEL_FORMAT_BYTE: {
-       const vxl_byte* data = reinterpret_cast<const vxl_byte*>(chunk->data());
+       const auto* data = reinterpret_cast<const vxl_byte*>(chunk->data());
        view_base = new vil_image_view<vxl_byte>(chunk,data+offset,ni,nj,np,istep,jstep,pstep);
        break; }
    case VIL_PIXEL_FORMAT_SBYTE: {
-       const vxl_sbyte* data = reinterpret_cast<const vxl_sbyte*>(chunk->data());
+       const auto* data = reinterpret_cast<const vxl_sbyte*>(chunk->data());
        view_base = new vil_image_view<vxl_sbyte>(chunk,data+offset,ni,nj,np,istep,jstep,pstep);
        break; }
    case VIL_PIXEL_FORMAT_FLOAT: {
-       const float* data = reinterpret_cast<const float*>(chunk->data());
+       const auto* data = reinterpret_cast<const float*>(chunk->data());
        view_base = new vil_image_view<float>(chunk,data+offset,ni,nj,np,istep,jstep,pstep);
        break; }
    case VIL_PIXEL_FORMAT_DOUBLE: {
-       const double* data = reinterpret_cast<const double*>(chunk->data());
+       const auto* data = reinterpret_cast<const double*>(chunk->data());
        view_base = new vil_image_view<double>(chunk,data+offset,ni,nj,np,istep,jstep,pstep);
        break; }
    case VIL_PIXEL_FORMAT_BOOL: {
@@ -159,11 +161,11 @@ void vsl_b_read(vsl_b_istream& is, vil_image_view_base_sptr &view_base)
        break; }
     // No version 1 complex images were ever written. Now added. It should work. Fix if necessary
    case VIL_PIXEL_FORMAT_COMPLEX_FLOAT: {
-       const std::complex<float>* data = reinterpret_cast<const std::complex<float>*>(chunk->data());
+       const auto* data = reinterpret_cast<const std::complex<float>*>(chunk->data());
        view_base = new vil_image_view<std::complex<float> >(chunk,data+offset,ni,nj,np,istep,jstep,pstep);
        break; }
    case VIL_PIXEL_FORMAT_COMPLEX_DOUBLE: {
-       const std::complex<double>* data = reinterpret_cast<const std::complex<double>*>(chunk->data());
+       const auto* data = reinterpret_cast<const std::complex<double>*>(chunk->data());
        view_base = new vil_image_view<std::complex<double> >(chunk,data+offset,ni,nj,np,istep,jstep,pstep);
        break; }
    default: {
@@ -177,13 +179,13 @@ void vsl_b_read(vsl_b_istream& is, vil_image_view_base_sptr &view_base)
 }
 
 template <>
-void vsl_b_write(vsl_b_ostream & os, vil_image_resource_sptr const& view)
+void vsl_b_write(vsl_b_ostream &  /*os*/, vil_image_resource_sptr const&  /*view*/)
 {
   std::cerr << "warning: vsl_b_write not implemented for vil_image_resource_sptr\n";
 }
 
 template <>
-void vsl_b_read(vsl_b_istream & is, vil_image_resource_sptr &view)
+void vsl_b_read(vsl_b_istream &  /*is*/, vil_image_resource_sptr & /*view*/)
 {
   std::cerr << "warning: vsl_b_read not implemented for vil_image_resource_sptr\n";
 }

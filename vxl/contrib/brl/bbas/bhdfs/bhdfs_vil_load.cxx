@@ -1,7 +1,4 @@
 // This is brl/bbas/bhdfs/bhdfs_vil_load.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 
@@ -22,7 +19,6 @@ vil_image_resource_sptr bhdfs_vil_load_image_resource_raw(char const* filename,
   vil_image_resource_sptr isp = 0;
   if (is)
   {
-#ifdef VCL_HAS_EXCEPTIONS
     try
     {
       isp = vil_load_image_resource_raw(is.as_pointer(), verbose);
@@ -31,9 +27,6 @@ vil_image_resource_sptr bhdfs_vil_load_image_resource_raw(char const* filename,
     {
       throw vil_exception_corrupt_image_file(e.function_name, e.file_type, filename, e.details);
     }
-#else
-    isp = vil_load_image_resource_raw(is.as_pointer(), verbose);
-#endif
   }
 
   if (!isp && verbose)
@@ -112,7 +105,7 @@ vil_image_view_base_sptr bhdfs_vil_load(const char *file, bool verbose)
   return data -> get_view();
 }
 
-#if defined(VCL_WIN32) && VXL_USE_WIN_WCHAR_T
+#if defined(_WIN32) && VXL_USE_WIN_WCHAR_T
 //  --------------------------------------------------------------------------------
 //  Windows' wchar_t overloading version
 //
@@ -152,5 +145,4 @@ vil_image_view_base_sptr vil_load(const wchar_t *file, bool verbose)
 }
 #endif // 0
 
-#endif //defined(VCL_WIN32) && VXL_USE_WIN_WCHAR_T
-
+#endif //defined(_WIN32) && VXL_USE_WIN_WCHAR_T

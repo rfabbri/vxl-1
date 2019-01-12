@@ -19,7 +19,9 @@
 // \endverbatim
 
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: A templated smart pointer class
 // This class requires that the class being templated over has
@@ -34,10 +36,10 @@
 template <class T>
 class vil_smart_ptr
 {
-  VCL_SAFE_BOOL_DEFINE;
+
  public:
   vil_smart_ptr ()
-    :  ptr_(VXL_NULLPTR) { }
+    :  ptr_(nullptr) { }
 
   vil_smart_ptr (vil_smart_ptr<T> const &p)
     :  ptr_(p.as_pointer()) { if (ptr_) ref(ptr_); }
@@ -50,7 +52,7 @@ class vil_smart_ptr
     // the strange order of events in this function is to avoid
     // heap corruption if unref() causes *this to be deleted.
     T *old_ptr = ptr_;
-    ptr_ = VXL_NULLPTR;
+    ptr_ = nullptr;
     if (old_ptr)
       unref(old_ptr);
   }
@@ -83,12 +85,12 @@ class vil_smart_ptr
   }
 
   //: Cast to bool
-  operator safe_bool () const
-    { return (ptr_ != VXL_NULLPTR) ? VCL_SAFE_BOOL_TRUE : VXL_NULLPTR; }
+  explicit operator bool () const
+    { return (ptr_ != nullptr) ? true : false; }
 
   //: Inverse bool
   bool operator!() const
-    { return (ptr_ != VXL_NULLPTR) ? false : true; }
+    { return (ptr_ != nullptr) ? false : true; }
 
   //: Dereferencing the pointer
   T &operator * () const { return *ptr_; }

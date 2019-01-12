@@ -3,12 +3,14 @@
 // \author J.L. Mundy
 // \date 10/12/14
 
-#include <vcl_memory.h>
 #include <iostream>
+#include <memory>
 #include <fstream>
 #include <vector>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
 #include <vil/vil_image_view.h>
 #include <vil/vil_save.h>
 #include <vil/vil_load.h>
@@ -19,6 +21,7 @@
 #include <boxm2/boxm2_util.h>
 #include <vul/vul_file.h>
 #include "../boxm2_vecf_ocl_filter.h"
+
 typedef vnl_vector_fixed<unsigned char, 16> uchar16;
 void test_filter()
 {
@@ -52,4 +55,3 @@ void test_filter()
 }
 
 TESTMAIN( test_filter );
-

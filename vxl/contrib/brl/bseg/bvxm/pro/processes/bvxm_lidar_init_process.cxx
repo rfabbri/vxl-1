@@ -8,7 +8,10 @@
 #include <bvxm/bvxm_util.h>
 #include <vpgl/file_formats/vpgl_geo_camera.h>
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vgl/vgl_box_2d.h>
 #include <vgl/vgl_box_3d.h>
@@ -90,8 +93,8 @@ bool bvxm_lidar_init_process(bprb_func_process& pro)
     return false;
   }
 
-  vil_image_view_base_sptr roi_first=VXL_NULLPTR, roi_second=VXL_NULLPTR;
-  vpgl_geo_camera *cam_first=VXL_NULLPTR, *cam_second=VXL_NULLPTR;
+  vil_image_view_base_sptr roi_first=nullptr, roi_second=nullptr;
+  vpgl_geo_camera *cam_first=nullptr, *cam_second=nullptr;
 
   if (!lidar_init(first_ret, world_params, roi_first, cam_first)) {
     std::cout << "bvxm_lidar_init_process -- The process has failed!\n";
@@ -105,7 +108,7 @@ bool bvxm_lidar_init_process(bprb_func_process& pro)
     }
   }
 
-  vil_image_view_base_sptr mask=VXL_NULLPTR;
+  vil_image_view_base_sptr mask=nullptr;
   if (!gen_mask(roi_first, cam_first, roi_second, cam_second, mask, thresh)) {
     std::cout << "bvxm_lidar_init_process -- The process has failed!\n";
     return false;
@@ -124,8 +127,8 @@ bool bvxm_lidar_init_process(bprb_func_process& pro)
 }
 
 
-bool bvxm_lidar_init_process_globals::lidar_init( vil_image_resource_sptr lidar,
-                                                  bvxm_world_params_sptr params,
+bool bvxm_lidar_init_process_globals::lidar_init( const vil_image_resource_sptr& lidar,
+                                                  const bvxm_world_params_sptr& params,
                                                   vil_image_view_base_sptr& roi,
                                                   vpgl_geo_camera*& camera)
 {
@@ -137,7 +140,7 @@ bool bvxm_lidar_init_process_globals::lidar_init( vil_image_resource_sptr lidar,
   }
 
 #if HAS_GEOTIFF
-  vil_tiff_image* tiff_img = static_cast<vil_tiff_image*> (lidar.as_pointer());
+  auto* tiff_img = static_cast<vil_tiff_image*> (lidar.as_pointer());
 
   if (vpgl_geo_camera::init_geo_camera(tiff_img, params->lvcs(), camera))
   {
@@ -148,10 +151,10 @@ bool bvxm_lidar_init_process_globals::lidar_init( vil_image_resource_sptr lidar,
     // backproject the 3D world coordinates on the image
     vgl_box_3d<double> world = params->world_box_local();
     std::vector<vgl_point_3d<double> > corners = bvxm_util::corners_of_box_3d<double>(world);
-    for (unsigned i=0; i<corners.size(); i++) {
-      double x = corners[i].x();
-      double y = corners[i].y();
-      double z = corners[i].z();
+    for (auto & corner : corners) {
+      double x = corner.x();
+      double y = corner.y();
+      double z = corner.z();
       double u,v;
       camera->project(x,y,z,u,v);
       vgl_point_2d<double> p(u,v);
@@ -193,9 +196,9 @@ bool bvxm_lidar_init_process_globals::lidar_init( vil_image_resource_sptr lidar,
 #endif // HAS_GEOTIFF
 }
 
-bool bvxm_lidar_init_process_globals::gen_mask( vil_image_view_base_sptr roi_first,
+bool bvxm_lidar_init_process_globals::gen_mask( const vil_image_view_base_sptr& roi_first,
                                                 vpgl_geo_camera* cam_first,
-                                                vil_image_view_base_sptr roi_second,
+                                                const vil_image_view_base_sptr& roi_second,
                                                 vpgl_geo_camera* cam_second,
                                                 vil_image_view_base_sptr& mask,
                                                 double thresh)
@@ -211,10 +214,10 @@ bool bvxm_lidar_init_process_globals::gen_mask( vil_image_view_base_sptr roi_fir
     return false;
   }
 
-  vil_image_view<bool>* view = new vil_image_view<bool>(roi_first->ni(), roi_first->nj());
+  auto* view = new vil_image_view<bool>(roi_first->ni(), roi_first->nj());
   // if there is no second camera and image, just use one
   if (!roi_second || !cam_second) {
-    view->fill(0);
+    view->fill(false);
     mask = view;
   }
   else {
@@ -222,8 +225,8 @@ bool bvxm_lidar_init_process_globals::gen_mask( vil_image_view_base_sptr roi_fir
     assert(roi_first->nj() == roi_second->nj());
 
     if (roi_first->pixel_format() == VIL_PIXEL_FORMAT_FLOAT) {
-      vil_image_view<float>* view1 = static_cast<vil_image_view<float>*> (roi_first.as_pointer());
-      vil_image_view<float>* view2 = static_cast<vil_image_view<float>*> (roi_second.as_pointer());
+      auto* view1 = static_cast<vil_image_view<float>*> (roi_first.as_pointer());
+      auto* view2 = static_cast<vil_image_view<float>*> (roi_second.as_pointer());
       // compare the cameras, they should be the same
       for (unsigned i=0; i<roi_first->ni(); i++)
         for (unsigned j=0; j<roi_first->nj(); j++) {

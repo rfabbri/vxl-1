@@ -4,21 +4,23 @@
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
-#include <vcl_compiler.h>
+#include <vector>
+#include <cmath>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <testlib/testlib_test.h>
 #include <vgl/vgl_affine_coordinates.h>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_box_2d.h>
 #include <vgl/vgl_pointset_3d.h>
-#include <vector>
-#include <cmath>
 static double rnd(double r){
   double b = (2.0*r*double(rand())/RAND_MAX) - r;
   return b;
 }
 static vgl_vector_2d<double>  rand_vector(double r){
-  return vgl_vector_2d<double>(rnd(r), rnd(r));
+  return {rnd(r), rnd(r)};
 }
 static vgl_point_3d<double> trans_3d(std::vector<std::vector<double> > const&  T,
                                      std::vector<double> const& t, vgl_point_3d<double> const& P){
@@ -26,13 +28,13 @@ static vgl_point_3d<double> trans_3d(std::vector<std::vector<double> > const&  T
   double py = T[1][0]*P.x() +  T[1][1]*P.y() + T[1][2]*P.z();
   double pz = T[2][0]*P.x() +  T[2][1]*P.y() + T[2][2]*P.z();
   px += t[0]; py+=t[1]; pz += t[2];
-  return vgl_point_3d<double>(px, py, pz);
+  return {px, py, pz};
 }
 // C is a 2x3 affine camera matrix without the translation column, t is the 2x1 translation vector
 static vgl_point_2d<double> proj_3d(std::vector<std::vector<double> > const&  C, std::vector<double> const& t, vgl_point_3d<double> const& P){
   double px = C[0][0]*P.x() + C[0][1]*P.y() +  C[0][2]*P.z() + t[0];
   double py = C[1][0]*P.x() + C[1][1]*P.y() +  C[1][2]*P.z() + t[1];
-  return vgl_point_2d<double>(px, py);
+  return {px, py};
 }
 static void test_all()
 {
@@ -109,11 +111,11 @@ static void test_all()
   std::vector<std::vector<double> > C2 = C1;
   C2[0][0]=1.5;    C2[0][1]=0.707; C2[0][2] = 4.0;
   C2[1][0]=-0.707; C2[1][1]=0.5;   C2[1][2] = 5.0;
-  for(unsigned i = 0; i<Ppts.size(); ++i){
-    vgl_point_2d<double> p1 = proj_3d(C1, tc, Ppts[i]);
+  for(const auto & Ppt : Ppts){
+    vgl_point_2d<double> p1 = proj_3d(C1, tc, Ppt);
     p1.set(p1.x(), p1.y());
     ppts1.push_back(p1);
-    vgl_point_2d<double> p2 = proj_3d(C2, tc, Ppts[i]);
+    vgl_point_2d<double> p2 = proj_3d(C2, tc, Ppt);
     ppts2.push_back(p2);
   }
   std::vector<vgl_point_3d<double> > recon_affine_pts;
@@ -185,10 +187,10 @@ static void test_all()
   //rotate 15deg about Y
   CC1[0][0] = 0.9659258;//sqrt(2.0)/2.0;
   CC2[0][2] = 0.2588190;//CC1[0][0];
-  for(unsigned i = 0; i<Cpts.size(); ++i){
-    vgl_point_2d<double> p1 = proj_3d(CC1, tcc, Cpts[i]);
+  for(const auto & Cpt : Cpts){
+    vgl_point_2d<double> p1 = proj_3d(CC1, tcc, Cpt);
     cpts1.push_back(p1);
-    vgl_point_2d<double> p2 = proj_3d(CC2, tcc, Cpts[i]);
+    vgl_point_2d<double> p2 = proj_3d(CC2, tcc, Cpt);
     cpts2.push_back(p2);
   }
 

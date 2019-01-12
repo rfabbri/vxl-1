@@ -18,7 +18,9 @@
 #include "bocl_cl.h"
 #include "bocl_utils.h"
 #include "bocl_kernel.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //makes a bocl_mem a sptr
 #include <vbl/vbl_ref_count.h>
@@ -36,7 +38,7 @@ class bocl_mem : public vbl_ref_count
 
   //: constructor that takes the context to start with
   bocl_mem(const cl_context& context, void* buffer, unsigned num_bytes, std::string id);
-  ~bocl_mem();
+  ~bocl_mem() override;
 
   //: creates the memory for buffer (create from command queue as welll)
   bool create_buffer(const cl_mem_flags& flags);
@@ -125,7 +127,7 @@ class bocl_mem : public vbl_ref_count
   bool is_gl_;
 
   //compile kernels and cache
-  bocl_kernel* get_set_kernel(cl_device_id dev_id, cl_context context, std::string type="float");
+  bocl_kernel* get_set_kernel(cl_device_id dev_id, cl_context context, const std::string& type="float");
 
   //map keeps track of all kernels compiled and cached
   static std::map<std::string, bocl_kernel*> set_kernels_;
@@ -145,9 +147,9 @@ bool bocl_mem::fill(const cl_command_queue& cmd_queue, T val, std::string type_s
   cl_device_id dev_id;
   cl_context context;
   /* cl_int status = */ clGetCommandQueueInfo(cmd_queue, CL_QUEUE_DEVICE,
-                                              sizeof(dev_id), &dev_id, VXL_NULLPTR);
+                                              sizeof(dev_id), &dev_id, nullptr);
   /* cl_int status = */ clGetCommandQueueInfo(cmd_queue, CL_QUEUE_CONTEXT,
-                                              sizeof(context), &context, VXL_NULLPTR);
+                                              sizeof(context), &context, nullptr);
 
   //grab kernel
   bocl_kernel* fillKernel = this->get_set_kernel(dev_id, context, type_string);

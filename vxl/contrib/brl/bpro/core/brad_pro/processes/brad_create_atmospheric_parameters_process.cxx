@@ -6,7 +6,9 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Constructor
 bool brad_create_atmospheric_parameters_process_cons(bprb_func_process& pro)
@@ -14,15 +16,15 @@ bool brad_create_atmospheric_parameters_process_cons(bprb_func_process& pro)
   //input
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("float");
-  input_types.push_back("float");
-  input_types.push_back("float");
+  input_types.emplace_back("float");
+  input_types.emplace_back("float");
+  input_types.emplace_back("float");
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   //output
   std::vector<std::string> output_types;
-  output_types.push_back("brad_atmospheric_parameters_sptr");
+  output_types.emplace_back("brad_atmospheric_parameters_sptr");
   ok = pro.set_output_types(output_types);
   if (!ok) return ok;
   return true;
@@ -38,9 +40,9 @@ bool brad_create_atmospheric_parameters_process(bprb_func_process& pro)
   }
 
   // get the inputs
-  float airlight = pro.get_input<float>(0);
-  float skylight = pro.get_input<float>(1);
-  float optical_depth = pro.get_input<float>(2);
+  auto airlight = pro.get_input<float>(0);
+  auto skylight = pro.get_input<float>(1);
+  auto optical_depth = pro.get_input<float>(2);
 
   brad_atmospheric_parameters_sptr metadata = new brad_atmospheric_parameters();
   metadata->airlight_ = airlight;
@@ -51,4 +53,3 @@ bool brad_create_atmospheric_parameters_process(bprb_func_process& pro)
 
   return true;
 }
-

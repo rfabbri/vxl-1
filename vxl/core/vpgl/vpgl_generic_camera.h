@@ -31,7 +31,9 @@
 #include <vgl/vgl_ray_3d.h>
 #include <vgl/vgl_point_3d.h>
 #include <vpgl/vpgl_camera.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 template <class T>
 class vpgl_generic_camera : public vpgl_camera<T>
@@ -42,12 +44,12 @@ class vpgl_generic_camera : public vpgl_camera<T>
   vpgl_generic_camera( vbl_array_2d<vgl_ray_3d<T> > const& rays);
   vpgl_generic_camera( std::vector<vbl_array_2d<vgl_ray_3d<T> > > const& rays,
                                               std::vector<int> nrs,   std::vector<int> ncs  );
-  virtual ~vpgl_generic_camera() {}
+  ~vpgl_generic_camera() override = default;
 
-  virtual std::string type_name() const { return "vpgl_generic_camera"; }
+  std::string type_name() const override { return "vpgl_generic_camera"; }
 
   //: The generic camera interface. u represents image column, v image row. Finds projection using a pyramid search over the rays and so not particularly efficient.
-  virtual void project(const T x, const T y, const T z, T& u, T& v) const;
+  void project(const T x, const T y, const T z, T& u, T& v) const override;
 
   //: the number of columns (u coordinate) in the ray image
   unsigned cols(int level) const {return rays_[level].cols();}
@@ -111,7 +113,7 @@ class vpgl_generic_camera : public vpgl_camera<T>
 
   //: a pyramid data structure for the rays to support efficient projection
   // (level == 0 is the highest resolution)
-  int n_levels_;
+  unsigned long n_levels_;
   //: num rows at each resolution level
   std::vector<int> nr_;
   //: num cols at each resolution level

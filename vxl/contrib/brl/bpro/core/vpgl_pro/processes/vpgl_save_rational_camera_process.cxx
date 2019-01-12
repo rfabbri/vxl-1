@@ -5,7 +5,9 @@
 // \file
 
 #include <bprb/bprb_parameters.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpgl/vpgl_camera.h>
 #include <vpgl/vpgl_rational_camera.h>
 #include <vpgl/vpgl_local_rational_camera.h>
@@ -17,8 +19,8 @@ bool vpgl_save_rational_camera_process_cons(bprb_func_process& pro)
   //input[0]: the camera
   //input[1]: the filename
   std::vector<std::string> input_types;
-  input_types.push_back("vpgl_camera_double_sptr");
-  input_types.push_back("vcl_string");
+  input_types.emplace_back("vpgl_camera_double_sptr");
+  input_types.emplace_back("vcl_string");
   return pro.set_input_types(input_types);
 }
 
@@ -35,10 +37,10 @@ bool vpgl_save_rational_camera_process(bprb_func_process& pro)
   vpgl_camera_double_sptr camera = pro.get_input<vpgl_camera_double_sptr>(0);
   std::string camera_filename = pro.get_input<std::string>(1);
 
-  vpgl_local_rational_camera<double> *cam = dynamic_cast<vpgl_local_rational_camera<double>*>(camera.as_pointer());
+  auto *cam = dynamic_cast<vpgl_local_rational_camera<double>*>(camera.as_pointer());
 
   if (!cam) {
-   vpgl_rational_camera<double> *cam2 = dynamic_cast<vpgl_rational_camera<double>*>(camera.as_pointer());
+   auto *cam2 = dynamic_cast<vpgl_rational_camera<double>*>(camera.as_pointer());
 
     if (!cam2) {
       std::cerr << "error: could not convert camera input to a vpgl_rational_camera or local rational camera\n";
@@ -57,4 +59,3 @@ bool vpgl_save_rational_camera_process(bprb_func_process& pro)
 
   return true;
 }
-

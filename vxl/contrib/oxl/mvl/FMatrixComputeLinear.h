@@ -1,9 +1,6 @@
 // This is oxl/mvl/FMatrixComputeLinear.h
 #ifndef FMatrixComputeLinear_h_
 #define FMatrixComputeLinear_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Hartley 8-point fundamental matrix fit
@@ -54,17 +51,17 @@ class FMatrixComputeLinear : public FMatrixCompute
   // Return false if the calculation fails or there are fewer than eight point
   // matches in the list.
   //
-  bool compute(PairMatchSetCorner&, FMatrix* F);
+  bool compute(PairMatchSetCorner&, FMatrix* F) override;
 
   //: Interface to above using arrays of HomgPoint2D.
   //  Makes a PairMatchSetCorner, and then calls the compute method above.
-  bool compute(std::vector<HomgPoint2D>&, std::vector<HomgPoint2D>&, FMatrix* F);
+  bool compute(std::vector<HomgPoint2D>&, std::vector<HomgPoint2D>&, FMatrix* F) override;
 
   //: Interface to above using arrays of vgl_homg_point_2d.
   //  Makes a PairMatchSetCorner, and then calls the compute method above.
   bool compute(std::vector<vgl_homg_point_2d<double> >&,
                std::vector<vgl_homg_point_2d<double> >&,
-               FMatrix& F);
+               FMatrix& F) override;
 
   //: Interface to above using preconditioned points
   bool compute_preconditioned(std::vector<HomgPoint2D>&, std::vector<HomgPoint2D>&, FMatrix* F);

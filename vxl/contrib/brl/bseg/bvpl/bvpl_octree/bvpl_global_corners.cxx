@@ -20,7 +20,9 @@
 
 #include <vul/vul_file.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 //: Constructor  from xml file
@@ -56,7 +58,7 @@ bvpl_global_corners::bvpl_global_corners(const std::string &path)
 
   for (unsigned si = 0; si < nscenes; si++)
   {
-    bxml_element* scenes_elm = dynamic_cast<bxml_element*>(scenes_data[si].ptr());
+    auto* scenes_elm = dynamic_cast<bxml_element*>(scenes_data[si].ptr());
     int id = -1;
     scenes_elm->get_attribute("id", id);
     scenes_elm->get_attribute("aux_dir", aux_dirs_[id]);
@@ -72,7 +74,7 @@ bvpl_global_corners::bvpl_global_corners(const std::string &path)
   bxml_data_sptr params_data = bxml_find_by_name(root, params_query);
   if (params_data)
   {
-    bxml_element* params_elm = dynamic_cast<bxml_element*>(params_data.ptr());
+    auto* params_elm = dynamic_cast<bxml_element*>(params_data.ptr());
 
     params_elm->get_attribute("harris_k", harris_k_);
     std::cout << "Harris_k is " << harris_k_ << '\n';
@@ -85,7 +87,7 @@ bvpl_global_corners::bvpl_global_corners(const std::string &path)
 
 //: Compute Harris' measure extension to 3-d as proposed by:
 //  I. Laptev. On space-time interest points. Int. J. Computer Vision, 64(2):107--123, 2005
-void bvpl_global_corners::compute_laptev_corners(bvpl_global_taylor_sptr global_taylor,int scene_id, int block_i, int block_j, int block_k)
+void bvpl_global_corners::compute_laptev_corners(const bvpl_global_taylor_sptr& global_taylor,int scene_id, int block_i, int block_j, int block_k)
 {
   typedef boct_tree<short,vnl_vector_fixed<double,10> > taylor_tree_type;
   typedef boct_tree_cell<short,vnl_vector_fixed<double,10> > taylor_cell_type;
@@ -93,8 +95,8 @@ void bvpl_global_corners::compute_laptev_corners(bvpl_global_taylor_sptr global_
   boxm_scene_base_sptr proj_scene_base =global_taylor->load_projection_scene(scene_id);
   boxm_scene_base_sptr valid_scene_base = global_taylor->load_valid_scene(scene_id);
 
-  boxm_scene<taylor_tree_type>* proj_scene = dynamic_cast<boxm_scene<taylor_tree_type>*>(proj_scene_base.as_pointer());
-  boxm_scene<boct_tree<short, bool> >* valid_scene = dynamic_cast<boxm_scene<boct_tree<short, bool> >*> (valid_scene_base.as_pointer());
+  auto* proj_scene = dynamic_cast<boxm_scene<taylor_tree_type>*>(proj_scene_base.as_pointer());
+  auto* valid_scene = dynamic_cast<boxm_scene<boct_tree<short, bool> >*> (valid_scene_base.as_pointer());
   boxm_scene<boct_tree<short, float> >* corner_scene =
   new boxm_scene<boct_tree<short, float> >(valid_scene->lvcs(), valid_scene->origin(), valid_scene->block_dim(), valid_scene->world_dim(), valid_scene->max_level(), valid_scene->init_level());
   corner_scene->set_appearance_model(BOXM_FLOAT);
@@ -132,7 +134,7 @@ void bvpl_global_corners::compute_laptev_corners(bvpl_global_taylor_sptr global_
 
 //: Compute corner measure extension to 3-d as proposed by:
 // P. Beaudet, Rotationally invariant image operators, in Proc. 4th Int. Joint Conf. Patt. Recog. 1978.
-void bvpl_global_corners::compute_beaudet_corners(bvpl_global_taylor_sptr global_taylor,int scene_id, int block_i, int block_j, int block_k)
+void bvpl_global_corners::compute_beaudet_corners(const bvpl_global_taylor_sptr& global_taylor,int scene_id, int block_i, int block_j, int block_k)
 {
   typedef boct_tree<short,vnl_vector_fixed<double,10> > taylor_tree_type;
   typedef boct_tree_cell<short,vnl_vector_fixed<double,10> > taylor_cell_type;
@@ -140,8 +142,8 @@ void bvpl_global_corners::compute_beaudet_corners(bvpl_global_taylor_sptr global
   boxm_scene_base_sptr proj_scene_base =global_taylor->load_projection_scene(scene_id);
   boxm_scene_base_sptr valid_scene_base = global_taylor->load_valid_scene(scene_id);
 
-  boxm_scene<taylor_tree_type>* proj_scene = dynamic_cast<boxm_scene<taylor_tree_type>*>(proj_scene_base.as_pointer());
-  boxm_scene<boct_tree<short, bool> >* valid_scene = dynamic_cast<boxm_scene<boct_tree<short, bool> >*> (valid_scene_base.as_pointer());
+  auto* proj_scene = dynamic_cast<boxm_scene<taylor_tree_type>*>(proj_scene_base.as_pointer());
+  auto* valid_scene = dynamic_cast<boxm_scene<boct_tree<short, bool> >*> (valid_scene_base.as_pointer());
   boxm_scene<boct_tree<short, float> >* corner_scene =
   new boxm_scene<boct_tree<short, float> >(valid_scene->lvcs(), valid_scene->origin(), valid_scene->block_dim(), valid_scene->world_dim(), valid_scene->max_level(), valid_scene->init_level());
   corner_scene->set_appearance_model(BOXM_FLOAT);
@@ -173,20 +175,19 @@ void bvpl_global_corners::compute_beaudet_corners(bvpl_global_taylor_sptr global
 
 //: Threshold a percentage of corners, based of the Harris' measure extension to 3-d proposed by:
 //  I. Laptev. On space-time interest points. Int. J. Computer Vision, 64(2):107--123, 2005
-void bvpl_global_corners::threshold_laptev_corners(bvpl_global_taylor_sptr global_taylor,int scene_id, float harris_thresh, std::string output_path)
+void bvpl_global_corners::threshold_laptev_corners(const bvpl_global_taylor_sptr& global_taylor,int scene_id, float harris_thresh, const std::string& output_path)
 {
   typedef boct_tree<short,vnl_vector_fixed<double,10> > taylor_tree_type;
-  typedef boct_tree_cell<short,vnl_vector_fixed<double,10> > taylor_cell_type;
 
   boxm_scene_base_sptr valid_scene_base = global_taylor->load_valid_scene(scene_id);
   boxm_scene_base_sptr corner_scene_base = this->load_corner_scene(scene_id);
   boxm_scene_base_sptr proj_scene_base =global_taylor->load_projection_scene(scene_id);
 
-  boxm_scene<taylor_tree_type>* proj_scene = dynamic_cast<boxm_scene<taylor_tree_type>*>(proj_scene_base.as_pointer());
+  auto* proj_scene = dynamic_cast<boxm_scene<taylor_tree_type>*>(proj_scene_base.as_pointer());
 
-  boxm_scene<boct_tree<short, bool> >* valid_scene = dynamic_cast<boxm_scene<boct_tree<short, bool> >*> (valid_scene_base.as_pointer());
+  auto* valid_scene = dynamic_cast<boxm_scene<boct_tree<short, bool> >*> (valid_scene_base.as_pointer());
 
-  boxm_scene<boct_tree<short, float> >* corner_scene = dynamic_cast<boxm_scene<boct_tree<short, float> >*> (corner_scene_base.as_pointer());
+  auto* corner_scene = dynamic_cast<boxm_scene<boct_tree<short, float> >*> (corner_scene_base.as_pointer());
 
   if (!(vul_file::exists(output_path) && vul_file::is_directory(output_path)))
     vul_file::make_directory(output_path);
@@ -273,17 +274,16 @@ void bvpl_global_corners::threshold_laptev_corners(bvpl_global_taylor_sptr globa
 }
 
 //: Take a histogram of corners and get different values for percentage of thresholds
-void bvpl_global_corners::explore_corner_statistics(bvpl_global_taylor_sptr global_taylor,int scene_id)
+void bvpl_global_corners::explore_corner_statistics(const bvpl_global_taylor_sptr& global_taylor,int scene_id)
 {
   typedef boct_tree<short,vnl_vector_fixed<double,10> > taylor_tree_type;
-  typedef boct_tree_cell<short,vnl_vector_fixed<double,10> > taylor_cell_type;
 
   boxm_scene_base_sptr valid_scene_base = global_taylor->load_valid_scene(scene_id);
   boxm_scene_base_sptr corner_scene_base = this->load_corner_scene(scene_id);
 
-  boxm_scene<boct_tree<short, bool> >* valid_scene = dynamic_cast<boxm_scene<boct_tree<short, bool> >*> (valid_scene_base.as_pointer());
+  auto* valid_scene = dynamic_cast<boxm_scene<boct_tree<short, bool> >*> (valid_scene_base.as_pointer());
 
-  boxm_scene<boct_tree<short, float> >* corner_scene = dynamic_cast<boxm_scene<boct_tree<short, float> >*> (corner_scene_base.as_pointer());
+  auto* corner_scene = dynamic_cast<boxm_scene<boct_tree<short, float> >*> (corner_scene_base.as_pointer());
 
   if (!( valid_scene && corner_scene))
   {
@@ -305,7 +305,7 @@ void bvpl_global_corners::explore_corner_statistics(bvpl_global_taylor_sptr glob
   corners_it.begin();
 
   float cell_count = 0;
-  float max = (float)(*corners_it)->data();
+  auto max = (float)(*corners_it)->data();
   float min = max;
   float this_val = max;
   while ( !(valid_it.end() || corners_it.end()) )
@@ -338,7 +338,7 @@ void bvpl_global_corners::explore_corner_statistics(bvpl_global_taylor_sptr glob
     ++corners_it;
   }
 
-  unsigned int nbins = (unsigned int)std::floor(std::sqrt(cell_count));
+  auto nbins = (unsigned int)std::floor(std::sqrt(cell_count));
   bsta_histogram<float>  corner_hist(min, max, nbins);
   valid_it.begin();
   corners_it.begin();
@@ -373,8 +373,8 @@ void bvpl_global_corners::explore_corner_statistics(bvpl_global_taylor_sptr glob
   float threshold[] = {0.01f, 0.02f, 0.05f, 0.1f, 0.2f, 0.5f, 0.8f};
   std::ofstream ofs(file.c_str());
   ofs.precision(7);
-  for (unsigned i = 0; i < 7; i++) {
-    ofs << threshold[i] << ' ' << corner_hist.value_with_area_above(threshold[i]) << '\n';
+  for (float i : threshold) {
+    ofs << i << ' ' << corner_hist.value_with_area_above(i) << '\n';
   }
 
   //clean memory
@@ -389,7 +389,7 @@ boxm_scene_base_sptr bvpl_global_corners::load_corner_scene(int scene_id)
   if (scene_id<0 || scene_id>((int)aux_dirs_.size() -1))
   {
     std::cerr << "Error in bvpl_global_corners::load_corner_scene: Invalid scene id\n";
-    return VXL_NULLPTR;
+    return nullptr;
   }
   //load scene
   boxm_scene_base_sptr scene_base = new boxm_scene_base();
@@ -399,14 +399,14 @@ boxm_scene_base_sptr bvpl_global_corners::load_corner_scene(int scene_id)
   scene_base->load_scene(aux_scene_ss.str(), scene_parser);
 
   //cast scene
-  boxm_scene<boct_tree<short, float > > *scene= new boxm_scene<boct_tree<short, float > >();
+  auto *scene= new boxm_scene<boct_tree<short, float > >();
   if (scene_base->appearence_model() == BOXM_FLOAT){
     scene->load_scene(scene_parser);
     scene_base = scene;
   }
   else {
     std::cerr << "Error in bvpl_global_corners::load_corner_scene: Invalid appearance model\n";
-    return VXL_NULLPTR;
+    return nullptr;
   }
 
   return scene_base;
@@ -418,7 +418,7 @@ boxm_scene_base_sptr bvpl_global_corners::load_valid_scene (int scene_id)
   if (scene_id<0 || scene_id>((int)aux_dirs_.size() -1))
   {
     std::cerr << "Error in bvpl_global_corners::load_scene: Invalid scene id\n";
-    return VXL_NULLPTR;
+    return nullptr;
   }
   //load scene
   boxm_scene_base_sptr aux_scene_base = new boxm_scene_base();
@@ -428,14 +428,14 @@ boxm_scene_base_sptr bvpl_global_corners::load_valid_scene (int scene_id)
   aux_scene_base->load_scene(aux_scene_ss.str(), aux_parser);
 
   //cast scene
-  boxm_scene<boct_tree<short, bool > > *aux_scene= new boxm_scene<boct_tree<short, bool > >();
+  auto *aux_scene= new boxm_scene<boct_tree<short, bool > >();
   if (aux_scene_base->appearence_model() == BOXM_BOOL){
     aux_scene->load_scene(aux_parser);
     aux_scene_base = aux_scene;
   }
   else {
     std::cerr << "Error in bvpl_global_corners::load_aux_scene: Invalid appearance model\n";
-    return VXL_NULLPTR;
+    return nullptr;
   }
 
   return aux_scene_base;
@@ -473,4 +473,3 @@ void bvpl_global_corners::xml_write()
   bxml_write(os, doc);
   os.close();
 }
-

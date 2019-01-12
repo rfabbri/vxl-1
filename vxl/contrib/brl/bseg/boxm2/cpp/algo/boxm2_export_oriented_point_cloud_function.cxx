@@ -5,7 +5,10 @@
 //:
 // \file
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/algo/vnl_symmetric_eigensystem.h>
 
 #include <rply.h>   //.ply parser
@@ -13,20 +16,20 @@
 #include <boxm2/cpp/algo/boxm2_mog3_grey_processor.h>
 
 
-void boxm2_export_oriented_point_cloud_function::exportPointCloudXYZ(const boxm2_scene_sptr& scene, boxm2_block_metadata data, boxm2_block* blk,
+void boxm2_export_oriented_point_cloud_function::exportPointCloudXYZ(const boxm2_scene_sptr& scene, const boxm2_block_metadata&  /*data*/, boxm2_block* blk,
                                                                      boxm2_data_base* alpha, boxm2_data_base* vis, boxm2_data_base* vis_sum, boxm2_data_base* exp,boxm2_data_base* nobs,
                                                                      boxm2_data_base* points, boxm2_data_base* normals,
                                                                      boxm2_data_base* ray_dir_sum, std::ofstream& file,
                                                                      bool output_aux, float vis_t, float nmag_t, float prob_t, float exp_t, vgl_box_3d<double> bb)
 {
-  boxm2_data_traits<BOXM2_ALPHA>::datatype *     alpha_data = (boxm2_data_traits<BOXM2_ALPHA>::datatype*) alpha->data_buffer();
-  boxm2_data_traits<BOXM2_POINT>::datatype *     points_data = (boxm2_data_traits<BOXM2_POINT>::datatype*) points->data_buffer();
-  boxm2_data_traits<BOXM2_NORMAL>::datatype *    normals_data = (boxm2_data_traits<BOXM2_NORMAL>::datatype*) normals->data_buffer();
-  boxm2_data_traits<BOXM2_VIS_SCORE>::datatype * vis_data = (boxm2_data_traits<BOXM2_VIS_SCORE>::datatype*) vis->data_buffer();
-  boxm2_data_traits<BOXM2_VIS_SCORE>::datatype * vis_sum_data = (boxm2_data_traits<BOXM2_VIS_SCORE>::datatype*) vis_sum->data_buffer();
-  boxm2_data_traits<BOXM2_EXPECTATION>::datatype *  exp_data = (boxm2_data_traits<BOXM2_EXPECTATION>::datatype*) exp->data_buffer();
-  boxm2_data_traits<BOXM2_NUM_OBS_SINGLE_INT>::datatype *  nobs_data = (boxm2_data_traits<BOXM2_NUM_OBS_SINGLE_INT>::datatype*) nobs->data_buffer();
-  boxm2_data_traits<BOXM2_RAY_DIR>::datatype *  ray_dir_sum_data = (boxm2_data_traits<BOXM2_RAY_DIR>::datatype*) ray_dir_sum->data_buffer();
+  auto *     alpha_data = (boxm2_data_traits<BOXM2_ALPHA>::datatype*) alpha->data_buffer();
+  auto *     points_data = (boxm2_data_traits<BOXM2_POINT>::datatype*) points->data_buffer();
+  auto *    normals_data = (boxm2_data_traits<BOXM2_NORMAL>::datatype*) normals->data_buffer();
+  auto * vis_data = (boxm2_data_traits<BOXM2_VIS_SCORE>::datatype*) vis->data_buffer();
+  auto * vis_sum_data = (boxm2_data_traits<BOXM2_VIS_SCORE>::datatype*) vis_sum->data_buffer();
+  auto *  exp_data = (boxm2_data_traits<BOXM2_EXPECTATION>::datatype*) exp->data_buffer();
+  auto *  nobs_data = (boxm2_data_traits<BOXM2_NUM_OBS_SINGLE_INT>::datatype*) nobs->data_buffer();
+  auto *  ray_dir_sum_data = (boxm2_data_traits<BOXM2_RAY_DIR>::datatype*) ray_dir_sum->data_buffer();
 
   file << std::fixed;
   int pointTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_POINT>::prefix());
@@ -66,16 +69,16 @@ void boxm2_export_oriented_point_cloud_function::exportPointCloudXYZ(const boxm2
   }
 }
 
-void boxm2_export_oriented_point_cloud_function::exportPointCloudPLY(const boxm2_scene_sptr& scene, boxm2_block_metadata data, boxm2_block* blk,
+void boxm2_export_oriented_point_cloud_function::exportPointCloudPLY(const boxm2_scene_sptr& scene, const boxm2_block_metadata&  /*data*/, boxm2_block* blk,
                                             boxm2_data_base* alpha, boxm2_data_base* vis,
                                             boxm2_data_base* points, boxm2_data_base* normals,
                                             std::ofstream& file,
                                             bool output_aux, float vis_t, float nmag_t, float prob_t, vgl_box_3d<double> bb, unsigned& num_vertices)
 {
-  boxm2_data_traits<BOXM2_ALPHA>::datatype *   alpha_data = (boxm2_data_traits<BOXM2_ALPHA>::datatype*) alpha->data_buffer();
-  boxm2_data_traits<BOXM2_POINT>::datatype *   points_data = (boxm2_data_traits<BOXM2_POINT>::datatype*) points->data_buffer();
-  boxm2_data_traits<BOXM2_NORMAL>::datatype *  normals_data = (boxm2_data_traits<BOXM2_NORMAL>::datatype*) normals->data_buffer();
-  boxm2_data_traits<BOXM2_VIS_SCORE>::datatype * vis_data = (boxm2_data_traits<BOXM2_VIS_SCORE>::datatype*) vis->data_buffer();
+  auto *   alpha_data = (boxm2_data_traits<BOXM2_ALPHA>::datatype*) alpha->data_buffer();
+  auto *   points_data = (boxm2_data_traits<BOXM2_POINT>::datatype*) points->data_buffer();
+  auto *  normals_data = (boxm2_data_traits<BOXM2_NORMAL>::datatype*) normals->data_buffer();
+  auto * vis_data = (boxm2_data_traits<BOXM2_VIS_SCORE>::datatype*) vis->data_buffer();
 
   file << std::fixed;
   int pointTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_POINT>::prefix());
@@ -113,14 +116,14 @@ void boxm2_export_oriented_point_cloud_function::exportPointCloudPLY(const boxm2
   }
 }
 
-void boxm2_export_oriented_point_cloud_function::exportPointCloudPLY(const boxm2_scene_sptr& scene, boxm2_block_metadata data, boxm2_block* blk,
+void boxm2_export_oriented_point_cloud_function::exportPointCloudPLY(const boxm2_scene_sptr&  /*scene*/, const boxm2_block_metadata&  /*data*/, boxm2_block*  /*blk*/,
                                                                      boxm2_data_base* mog, boxm2_data_base* alpha,
                                                                      boxm2_data_base* points, boxm2_data_base* covariances, std::ofstream& file,
-                                                                     float prob_t, float LE_t, float CE_t, vgl_box_3d<double> bb, unsigned& num_vertices, std::string datatype)
+                                                                     float prob_t, float LE_t, float CE_t, vgl_box_3d<double> bb, unsigned& num_vertices, const std::string& datatype)
 {
-  boxm2_data_traits<BOXM2_POINT>::datatype *   points_data = (boxm2_data_traits<BOXM2_POINT>::datatype*) points->data_buffer();
-  boxm2_data_traits<BOXM2_COVARIANCE>::datatype *  covs_data = (boxm2_data_traits<BOXM2_COVARIANCE>::datatype*) covariances->data_buffer();
-  boxm2_data_traits<BOXM2_ALPHA>::datatype     *   alpha_data   = (boxm2_data_traits<BOXM2_ALPHA>::datatype*) alpha->data_buffer();
+  auto *   points_data = (boxm2_data_traits<BOXM2_POINT>::datatype*) points->data_buffer();
+  auto *  covs_data = (boxm2_data_traits<BOXM2_COVARIANCE>::datatype*) covariances->data_buffer();
+  auto     *   alpha_data   = (boxm2_data_traits<BOXM2_ALPHA>::datatype*) alpha->data_buffer();
 
   file << std::fixed;
   int pointTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_POINT>::prefix());
@@ -162,7 +165,7 @@ void boxm2_export_oriented_point_cloud_function::exportPointCloudPLY(const boxm2
 
           if(datatype == boxm2_data_traits<BOXM2_MOG3_GREY>::prefix() )
           {
-            boxm2_data_traits<BOXM2_MOG3_GREY>::datatype * mog_data = (boxm2_data_traits<BOXM2_MOG3_GREY>::datatype*) mog->data_buffer();
+            auto * mog_data = (boxm2_data_traits<BOXM2_MOG3_GREY>::datatype*) mog->data_buffer();
             exp_color = boxm2_processor_type<BOXM2_MOG3_GREY>::type::expected_color(mog_data[currIdx]);
             int col = (int)(exp_color*255);
             col = col > 255 ? 255 : col;
@@ -170,7 +173,7 @@ void boxm2_export_oriented_point_cloud_function::exportPointCloudPLY(const boxm2
           }
           else if ( datatype == boxm2_data_traits<BOXM2_GAUSS_RGB>::prefix() )
           {
-            boxm2_data_traits<BOXM2_GAUSS_RGB>::datatype *color_data = (boxm2_data_traits<BOXM2_GAUSS_RGB>::datatype*) mog->data_buffer();
+            auto *color_data = (boxm2_data_traits<BOXM2_GAUSS_RGB>::datatype*) mog->data_buffer();
             vnl_vector_fixed<float,3> exp_color = boxm2_processor_type<BOXM2_GAUSS_RGB>::type::expected_color(color_data[currIdx]);
 
             int col0 = (int)(exp_color[0]*255);
@@ -193,13 +196,13 @@ void boxm2_export_oriented_point_cloud_function::exportPointCloudPLY(const boxm2
     //}
   }
 }
-void boxm2_export_oriented_point_cloud_function::exportColorPointCloudPLY(const boxm2_scene_sptr& scene, boxm2_block_metadata data, boxm2_block* blk,
-                                                                        boxm2_data_base* mog, boxm2_data_base* alpha,std::string datatype ,
+void boxm2_export_oriented_point_cloud_function::exportColorPointCloudPLY(const boxm2_scene_sptr&  /*scene*/, const boxm2_block_metadata&  /*data*/, boxm2_block*  /*blk*/,
+                                                                        boxm2_data_base* mog, boxm2_data_base* alpha,const std::string& datatype ,
                                                                         boxm2_data_base* points,std::ofstream& file,float prob_t,vgl_box_3d<double> bb, unsigned& num_vertices)
 {
-    boxm2_data_traits<BOXM2_POINT>::datatype     *   points_data  = (boxm2_data_traits<BOXM2_POINT>::datatype*) points->data_buffer();
+    auto     *   points_data  = (boxm2_data_traits<BOXM2_POINT>::datatype*) points->data_buffer();
 
-    boxm2_data_traits<BOXM2_ALPHA>::datatype     *   alpha_data   = (boxm2_data_traits<BOXM2_ALPHA>::datatype*) alpha->data_buffer();
+    auto     *   alpha_data   = (boxm2_data_traits<BOXM2_ALPHA>::datatype*) alpha->data_buffer();
     file << std::fixed;
     int pointTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_POINT>::prefix());
     //check for invalid parameters
@@ -223,7 +226,7 @@ void boxm2_export_oriented_point_cloud_function::exportColorPointCloudPLY(const 
 
                 if(datatype == boxm2_data_traits<BOXM2_MOG3_GREY>::prefix() )
                 {
-                    boxm2_data_traits<BOXM2_MOG3_GREY>::datatype *   mog_data     = (boxm2_data_traits<BOXM2_MOG3_GREY>::datatype*) mog->data_buffer();
+                    auto *   mog_data     = (boxm2_data_traits<BOXM2_MOG3_GREY>::datatype*) mog->data_buffer();
                     float exp_color  = boxm2_processor_type<BOXM2_MOG3_GREY>::type::expected_color(mog_data[currIdx]);
                     int col = (int)(exp_color*255);
                     col = col > 255 ? 255 : col;
@@ -231,7 +234,7 @@ void boxm2_export_oriented_point_cloud_function::exportColorPointCloudPLY(const 
                 }
                 else if ( datatype == boxm2_data_traits<BOXM2_GAUSS_RGB>::prefix() )
                 {
-                    boxm2_data_traits<BOXM2_GAUSS_RGB>::datatype *   color_data     = (boxm2_data_traits<BOXM2_GAUSS_RGB>::datatype*) mog->data_buffer();
+                    auto *   color_data     = (boxm2_data_traits<BOXM2_GAUSS_RGB>::datatype*) mog->data_buffer();
                     vnl_vector_fixed<float,3> exp_color = boxm2_processor_type<BOXM2_GAUSS_RGB>::type::expected_color(color_data[currIdx]);
 
                     int col0 = (int)(exp_color[0]*255);
@@ -258,7 +261,7 @@ bool boxm2_export_oriented_point_cloud_function::calculateProbOfPoint(const boxm
                                                                       const vnl_vector_fixed<float, 4>& point,
                                                                       const vnl_vector_fixed<float, 9>& cov,
                                                                       const float& alpha,
-                                                                      float& prob, double& color, vnl_vector_fixed<double, 3>& axes, double& LE, double& CE)
+                                                                      float& prob, double&  /*color*/, vnl_vector_fixed<double, 3>& axes, double& LE, double& CE)
 {
   vgl_point_3d<double> local;
   boxm2_block_id id;
@@ -356,7 +359,7 @@ bool boxm2_export_oriented_point_cloud_function::calculateProbOfPoint(const boxm
   boct_bit_tree tree(treebits.data_block(),mdata.max_level_);
   int bit_index=tree.traverse(local);
   int depth=tree.depth_at(bit_index);
-  float side_len=static_cast<float>(mdata.sub_block_dim_.x()/((float)(1<<depth)));
+  auto side_len=static_cast<float>(mdata.sub_block_dim_.x()/((float)(1<<depth)));
 
   prob=1.0f-std::exp(-alpha*side_len);
   return true;
@@ -403,7 +406,7 @@ int boxm2_plyio_vertex_cb(p_ply_argument argument)
   void* temp;
   ply_get_argument_user_data(argument, &temp, &index);
 
-  ply_bb_reader* parsed_ply =  (ply_bb_reader*) temp;
+  auto* parsed_ply =  (ply_bb_reader*) temp;
 
   switch (index)
   {
@@ -430,7 +433,7 @@ void boxm2_export_oriented_point_cloud_function::readBBFromPLY(const std::string
   ply_bb_reader parsed_ply;
   parsed_ply.bbox = box;
 
-  p_ply ply = ply_open(filename.c_str(), VXL_NULLPTR, 0, VXL_NULLPTR);
+  p_ply ply = ply_open(filename.c_str(), nullptr, 0, nullptr);
   if (!ply) {
     std::cout << "File " << filename << " doesn't exist.";
   }
@@ -450,4 +453,3 @@ void boxm2_export_oriented_point_cloud_function::readBBFromPLY(const std::string
 
   box=parsed_ply.bbox;
 }
-

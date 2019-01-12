@@ -18,8 +18,10 @@
     (wxObjectEventFunction)(wxEventFunction)wxStaticCastEvent(wxCommandEventFunction, &func)
 #endif
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 //-------------------------------------------------------------------------
 // Private helpers - declarations.
@@ -33,7 +35,7 @@ namespace
 //-------------------------------------------------------------------------
 // vgui_wx_menu implementation - construction & destruction.
 //-------------------------------------------------------------------------
-const int vgui_wx_menu::MENU_ID_OFFSET = 1000;
+constexpr int vgui_wx_menu::MENU_ID_OFFSET = 1000;
 
 vgui_wx_menu::vgui_wx_menu(void)
   : item_count_(-1)

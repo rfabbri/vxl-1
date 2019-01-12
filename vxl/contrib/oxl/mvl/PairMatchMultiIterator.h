@@ -1,9 +1,6 @@
 // This is oxl/mvl/PairMatchMultiIterator.h
 #ifndef PairMatchMultiIterator_h_
 #define PairMatchMultiIterator_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 //  \file
 // \brief Iterator for PairMatchMulti
@@ -19,7 +16,9 @@
 #include <map>
 #include <iostream>
 #include <cstdlib>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 class PairMatchMulti;
 
 // conceptually a list of tuples (index1, index2, strength)
@@ -33,7 +32,7 @@ class vcl_multimap_uint_uint : public std::multimap<unsigned,unsigned, std::less
 
 class PairMatchMultiIterator
 {
-  VCL_SAFE_BOOL_DEFINE;
+
   vcl_multimap_uint_uint::const_iterator first_;
   vcl_multimap_uint_uint::const_iterator last_;
  public:
@@ -49,8 +48,8 @@ class PairMatchMultiIterator
   PairMatchMultiIterator(PairMatchMulti const& pmm);
 
   //: Return true if the iterator is still valid.
-  operator safe_bool () const
-    { return (first_ != last_)? VCL_SAFE_BOOL_TRUE : VXL_NULLPTR; }
+  explicit operator bool () const
+    { return (first_ != last_)? true : false; }
 
   //: Return false if the iterator is still valid.
   bool operator!() const

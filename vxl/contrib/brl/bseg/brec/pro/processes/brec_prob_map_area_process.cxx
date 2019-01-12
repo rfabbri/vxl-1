@@ -15,7 +15,9 @@
 #include <iostream>
 #include <bprb/bprb_func_process.h>
 #include <bprb/bprb_parameters.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <brdb/brdb_value.h>
 #include <vil/vil_image_view.h>
 #include <vil/vil_convert.h>
@@ -28,16 +30,16 @@ bool brec_prob_map_area_process_cons(bprb_func_process& pro)
   //input
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("vil_image_view_base_sptr"); //input probability frame
-  input_types.push_back("vil_image_view_base_sptr"); //input probability frame's mask
-  input_types.push_back("unsigned"); // size of the inner-square to measure area (e.g. 5 means 5x5 area mask)
+  input_types.emplace_back("vil_image_view_base_sptr"); //input probability frame
+  input_types.emplace_back("vil_image_view_base_sptr"); //input probability frame's mask
+  input_types.emplace_back("unsigned"); // size of the inner-square to measure area (e.g. 5 means 5x5 area mask)
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   //output
   std::vector<std::string> output_types;
-  output_types.push_back("vil_image_view_base_sptr");
-  output_types.push_back("vil_image_view_base_sptr");
+  output_types.emplace_back("vil_image_view_base_sptr");
+  output_types.emplace_back("vil_image_view_base_sptr");
   ok = pro.set_output_types(output_types);
   return ok;
 }
@@ -62,7 +64,7 @@ bool brec_prob_map_area_process(bprb_func_process& pro)
   temp = pro.get_input<vil_image_view_base_sptr>(i++);
   vil_image_view<bool> input_mask = *vil_convert_cast(bool(), temp);
 
-  unsigned c_size = pro.get_input<unsigned>(i++);
+  auto c_size = pro.get_input<unsigned>(i++);
 
   vil_image_view<float> out(ni, nj, 1);
   out.fill(0);
@@ -83,9 +85,9 @@ bool brec_prob_map_area_process(bprb_func_process& pro)
         float sum = 0.0f;
         bool all_inside = true;
 
-        for (unsigned t = 0; t < neighborhood.size(); t++) {
-          int ii = i+neighborhood[t].first;
-          int jj = j+neighborhood[t].second;
+        for (auto & t : neighborhood) {
+          int ii = i+t.first;
+          int jj = j+t.second;
           if (ii >= 0 && jj >= 0 && ii < (int)ni && jj < (int)nj) {
             if (!input_mask(ii, jj)) {
               all_inside = false;
@@ -117,4 +119,3 @@ bool brec_prob_map_area_process(bprb_func_process& pro)
 
   return true;
 }
-

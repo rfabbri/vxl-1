@@ -1,6 +1,7 @@
-#include <vector>
-#include <iostream>
 #include <algorithm>
+#include <iostream>
+#include <utility>
+#include <vector>
 #include "rgrl_match_set.h"
 //:
 // \file
@@ -15,13 +16,15 @@
 #include <rgrl/rgrl_feature_sptr.h>
 #include <rgrl/rgrl_transformation.h>
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 rgrl_match_set::
 rgrl_match_set(  )
-  : from_type_( VXL_NULLPTR ),
-    to_type_( VXL_NULLPTR ),
+  : from_type_( nullptr ),
+    to_type_( nullptr ),
     num_constraints_per_match_( 0 )
 {
 }
@@ -37,12 +40,12 @@ rgrl_match_set( const std::type_info& feature_type )
 rgrl_match_set::
 rgrl_match_set( const std::type_info& from_type,
                 const std::type_info& to_type,
-                const rgrl_feature_set_label& from_label,
-                const rgrl_feature_set_label& to_label )
+                rgrl_feature_set_label  from_label,
+                rgrl_feature_set_label  to_label )
   : from_type_( &from_type ),
     to_type_( &to_type ),
-    from_label_( from_label ),
-    to_label_( to_label ),
+    from_label_(std::move( from_label )),
+    to_label_(std::move( to_label )),
     num_constraints_per_match_( 0 )
 {
 }
@@ -60,7 +63,7 @@ rgrl_match_set::const_from_iterator
 rgrl_match_set::
 from_begin() const
 {
-  return const_from_iterator( this, 0 );
+  return { this, 0 };
 }
 
 
@@ -68,7 +71,7 @@ rgrl_match_set::const_from_iterator
 rgrl_match_set::
 from_end() const
 {
-  return const_from_iterator( this, from_features_.size() );
+  return { this, from_features_.size() };
 }
 
 
@@ -76,7 +79,7 @@ rgrl_match_set::from_iterator
 rgrl_match_set::
 from_begin()
 {
-  return from_iterator( this, 0 );
+  return { this, 0 };
 }
 
 
@@ -84,7 +87,7 @@ rgrl_match_set::from_iterator
 rgrl_match_set::
 from_end()
 {
-  return from_iterator( this, from_features_.size() );
+  return { this, from_features_.size() };
 }
 
 
@@ -100,8 +103,8 @@ clear()
 
 void
 rgrl_match_set ::
-add_feature_and_matches( rgrl_feature_sptr                      from_feature,
-                         rgrl_feature_sptr                      mapped_feature,
+add_feature_and_matches( const rgrl_feature_sptr&                      from_feature,
+                         const rgrl_feature_sptr&                      mapped_feature,
                          std::vector< rgrl_feature_sptr > const& matching_to )
 {
   std::vector< rgrl_feature_sptr >::const_iterator to_itr;
@@ -132,8 +135,8 @@ add_feature_and_matches( rgrl_feature_sptr                      from_feature,
 
 void
 rgrl_match_set ::
-add_feature_matches_and_weights( rgrl_feature_sptr                      from_feature,
-                                 rgrl_feature_sptr                      mapped_feature,
+add_feature_matches_and_weights( const rgrl_feature_sptr&                      from_feature,
+                                 const rgrl_feature_sptr&                      mapped_feature,
                                  std::vector< rgrl_feature_sptr > const& matching_to,
                                  std::vector< double > const&            signature_weights )
 {
@@ -170,8 +173,8 @@ add_feature_matches_and_weights( rgrl_feature_sptr                      from_fea
 
 void
 rgrl_match_set ::
-add_feature_matches_and_weights( rgrl_feature_sptr                      from_feature,
-                                 rgrl_feature_sptr                      mapped_feature,
+add_feature_matches_and_weights( const rgrl_feature_sptr&                      from_feature,
+                                 const rgrl_feature_sptr&                      mapped_feature,
                                  std::vector< rgrl_feature_sptr > const& matching_to,
                                  std::vector< double > const&            sig_wgts,
                                  std::vector< double > const&            geo_wgts,
@@ -201,7 +204,7 @@ add_feature_matches_and_weights( rgrl_feature_sptr                      from_fea
   //
   std::vector<match_info> blank;
   matches_and_weights_.push_back( blank );
-  std::vector< std::vector< match_info > >::reverse_iterator back_it
+  auto back_it
     = matches_and_weights_.rbegin();
 
   const unsigned size = matching_to.size();
@@ -214,8 +217,8 @@ add_feature_matches_and_weights( rgrl_feature_sptr                      from_fea
 
 void
 rgrl_match_set ::
-add_feature_and_match( rgrl_feature_sptr from_feature,
-                       rgrl_feature_sptr mapped_feature,
+add_feature_and_match( const rgrl_feature_sptr& from_feature,
+                       const rgrl_feature_sptr& mapped_feature,
                        rgrl_feature_sptr matching_to,
                        double            wgt )
 {
@@ -230,7 +233,7 @@ add_feature_and_match( rgrl_feature_sptr from_feature,
   xformed_from_features_.push_back( mapped_feature );
 
   std::vector<match_info> match;
-  match.push_back( match_info( matching_to, wgt, wgt, wgt ) );
+  match.emplace_back( matching_to, wgt, wgt, wgt );
   matches_and_weights_.push_back( match );
 }
 
@@ -372,16 +375,16 @@ write_sorted( std::ostream& os ) const
   std::vector< sort_node > nodes;
 
   for( unsigned i=0; i<from_features_.size(); ++i ){
-    nodes.push_back( sort_node( i, from_features_[i] ) );
+    nodes.emplace_back( i, from_features_[i] );
   }
   std::sort( nodes.begin(), nodes.end() );
 
   os << from_features_.size() << std::endl;
 
   unsigned index;
-  for( unsigned i=0; i<nodes.size(); ++i ){
+  for(auto & node : nodes){
 
-    index = nodes[i].ind_;
+    index = node.ind_;
 
     // output the index(th) match
     from_features_[index]->write( os );
@@ -391,14 +394,13 @@ write_sorted( std::ostream& os ) const
     // to size
     os << this_match.size() << std::endl;
 
-    typedef std::vector<match_info>::const_iterator MIter;
-    for( MIter ti=this_match.begin(); ti!=this_match.end(); ++ti )  {
-      os << ti->signature_weight << ' '
-         << ti->geometric_weight << ' '
-         << ti->cumulative_weight << std::endl;
+    for(const auto & ti : this_match)  {
+      os << ti.signature_weight << ' '
+         << ti.geometric_weight << ' '
+         << ti.cumulative_weight << std::endl;
 
       // to feature
-      ti->to_feature->write( os );
+      ti.to_feature->write( os );
     }
     os << std::endl;
   }
@@ -512,7 +514,7 @@ operator>> ( std::istream& is, rgrl_match_set& set )
 //
 
 rgrl_match_set::match_info::
-match_info( rgrl_feature_sptr to_feat )
+match_info( const rgrl_feature_sptr& to_feat )
   : to_feature( to_feat ),
     geometric_weight( -1.0 ),
     signature_weight( 1.0 ),
@@ -522,7 +524,7 @@ match_info( rgrl_feature_sptr to_feat )
 
 
 rgrl_match_set::match_info::
-match_info( rgrl_feature_sptr to_feat,
+match_info( const rgrl_feature_sptr& to_feat,
             double geometric_wgt,
             double signature_wgt,
             double cumulative_wgt )
@@ -535,7 +537,7 @@ match_info( rgrl_feature_sptr to_feat,
 
 
 rgrl_match_set::match_info::
-match_info( rgrl_feature_sptr to_feat,
+match_info( const rgrl_feature_sptr& to_feat,
             double signature_wgt )
   : to_feature( to_feat ),
     geometric_weight( -1.0 ),
@@ -550,9 +552,7 @@ match_info( rgrl_feature_sptr to_feat,
 //
 
 rgrl_match_set_from_iterator::
-rgrl_match_set_from_iterator()
-{
-};
+rgrl_match_set_from_iterator() = default;;
 
 
 rgrl_match_set_from_iterator&
@@ -650,9 +650,7 @@ rgrl_match_set_from_iterator( rgrl_match_set* ms,
 
 
 rgrl_match_set_from_to_iterator::
-rgrl_match_set_from_to_iterator()
-{
-};
+rgrl_match_set_from_to_iterator() = default;;
 
 
 rgrl_match_set_from_to_iterator&
@@ -756,9 +754,7 @@ rgrl_match_set_from_to_iterator( MatchInfoIter const& itr )
 //
 
 rgrl_match_set_const_from_iterator::
-rgrl_match_set_const_from_iterator()
-{
-};
+rgrl_match_set_const_from_iterator() = default;;
 
 rgrl_match_set_const_from_iterator::
 rgrl_match_set_const_from_iterator( rgrl_match_set_from_iterator const& from_iter )
@@ -862,9 +858,7 @@ rgrl_match_set_const_from_iterator( rgrl_match_set const* ms,
 //
 
 rgrl_match_set_const_from_to_iterator::
-rgrl_match_set_const_from_to_iterator()
-{
-};
+rgrl_match_set_const_from_to_iterator() = default;;
 
 //: copy constructor
 //  it is used to convert from_to_iterator to const type

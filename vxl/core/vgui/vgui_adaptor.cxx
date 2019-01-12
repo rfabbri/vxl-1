@@ -6,8 +6,10 @@
 // \author fsm
 // \brief  See vgui_adaptor.h for a description of this file.
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vgui/vgui_gl.h>
 
@@ -24,7 +26,7 @@
 #include <vgui/internals/vgui_adaptor_tableau.h>
 
 
-vgui_adaptor *vgui_adaptor::current = VXL_NULLPTR;
+vgui_adaptor *vgui_adaptor::current = nullptr;
 static int adaptor_count = 0;
 
 //-----------------------------------------------------------------------------
@@ -33,7 +35,7 @@ vgui_adaptor::vgui_adaptor()
   : nested_popups(false)
   , default_items(true)
   , use_double_buffering(true)
-  , the_tableau(VXL_NULLPTR)
+  , the_tableau(nullptr)
 {
   ++adaptor_count;
 
@@ -49,7 +51,7 @@ vgui_adaptor::vgui_adaptor()
 //: Destructor - quits application if all adaptors have been deleted.
 vgui_adaptor::~vgui_adaptor()
 {
-  set_tableau(VXL_NULLPTR);
+  set_tableau(nullptr);
   the_tableau->unref();
 
   --adaptor_count;
@@ -199,7 +201,7 @@ bool vgui_adaptor::dispatch_to_tableau(vgui_event const &e)
   vgui_macro_report_errors;
 
   // sanity check the 'origin' field :
-  if (e.origin == VXL_NULLPTR)
+  if (e.origin == nullptr)
     const_cast<vgui_event&>(e).origin = this;
   else
     assert(e.origin == this);
@@ -217,7 +219,7 @@ bool vgui_adaptor::dispatch_to_tableau(vgui_event const &e)
 vgui_window *vgui_adaptor::get_window() const
 {
   vgui_macro_warning << "get_window() not implemented\n";
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 //-----------------------------------------------------------------------------

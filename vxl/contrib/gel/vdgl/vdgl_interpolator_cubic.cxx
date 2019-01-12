@@ -1,15 +1,14 @@
 // This is gel/vdgl/vdgl_interpolator_cubic.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 
 #include <iostream>
 #include <cmath>
 #include "vdgl_interpolator_cubic.h"
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_matrix_fixed.h>
 #include <vnl/vnl_vector_fixed.h>
 #include <vnl/vnl_math.h>
@@ -21,15 +20,13 @@
 #include <vdgl/vdgl_edgel_chain.h>
 
 
-vdgl_interpolator_cubic::vdgl_interpolator_cubic(vdgl_edgel_chain_sptr chain)
+vdgl_interpolator_cubic::vdgl_interpolator_cubic(const vdgl_edgel_chain_sptr& chain)
   : vdgl_interpolator(chain)
 {
   recompute_all();
 }
 
-vdgl_interpolator_cubic::~vdgl_interpolator_cubic()
-{
-}
+vdgl_interpolator_cubic::~vdgl_interpolator_cubic() = default;
 
 
 double vdgl_interpolator_cubic::get_x(double index)
@@ -328,7 +325,7 @@ closest_point_on_curve ( vsol_point_2d_sptr p )
 {
   unsigned int n = chain_->size();
   if (n==0)
-    return VXL_NULLPTR;
+    return nullptr;
   double px = p->x(), py = p->y(), dmin = vnl_numeric_traits<double>::maxval;
   int imin = 0;
   for (unsigned int i = 0; i<n; i++)

@@ -3,7 +3,9 @@
 #include <limits>
 #include <vector>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil3d/algo/vil3d_distance_transform.h>
 #include <vil3d/vil3d_print.h>
 #include <vil/vil_rgb.h>
@@ -25,8 +27,8 @@ void test_signed_distance_transform()
 
   // put single mask in centre
   {
-    mask.fill(0);
-    mask(2,2,2)=1;
+    mask.fill(false);
+    mask(2,2,2)=true;
 
     float li=5.0f;
     float lj=7.0f;
@@ -51,15 +53,15 @@ void test_signed_distance_transform()
 
   // put 2*2*2 block of mask points in corner
   {
-    mask.fill(0);
-    mask(0,0,0)=1;
-    mask(1,0,0)=1;
-    mask(0,1,0)=1;
-    mask(0,0,1)=1;
-    mask(1,1,0)=1;
-    mask(1,0,1)=1;
-    mask(0,1,1)=1;
-    mask(1,1,1)=1;
+    mask.fill(false);
+    mask(0,0,0)=true;
+    mask(1,0,0)=true;
+    mask(0,1,0)=true;
+    mask(0,0,1)=true;
+    mask(1,1,0)=true;
+    mask(1,0,1)=true;
+    mask(0,1,1)=true;
+    mask(1,1,1)=true;
 
     float li=3.0f;
     float lj=4.0f;
@@ -108,10 +110,10 @@ void test_distance_transform()
   planes.push_back(7);
 
   // create two rectangular planes
-  for (unsigned num=0; num<planes.size(); ++num) {
+  for (int plane : planes) {
     for (unsigned i=b1; i<=b2; ++i) {
       for (unsigned j=b1; j<=b2; ++j) {
-        image(i,j,planes[num])=0;
+        image(i,j,plane)=0;
       }
     }
   }
@@ -123,10 +125,10 @@ void test_distance_transform()
         vgl_point_3d<float> v1((float)(i),(float)(j),(float)(k));
 
         // find the distance to the planes
-        for (unsigned num=0; num<planes.size(); ++num) {
+        for (int & plane : planes) {
           for (unsigned i1=b1; i1<=b2; ++i1) {
             for (unsigned j1=b1; j1<=b2; ++j1) {
-              vgl_point_3d<float> v2((float)(i1),(float)(j1),(float)(planes[num]));
+              vgl_point_3d<float> v2((float)(i1),(float)(j1),(float)plane);
               double diff=vgl_distance(v1,v2);
               if (diff < min) {
                 min=diff;

@@ -1,7 +1,4 @@
 // This is mul/vpdfl/vpdfl_kernel_pdf_builder.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Tim Cootes
@@ -15,8 +12,10 @@
 #include <vector>
 #include "vpdfl_kernel_pdf_builder.h"
 //
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <mbl/mbl_data_wrapper.h>
 #include <mbl/mbl_data_array_wrapper.h>
@@ -46,9 +45,7 @@ vpdfl_kernel_pdf_builder::vpdfl_kernel_pdf_builder()
 // Destructor
 //=======================================================================
 
-vpdfl_kernel_pdf_builder::~vpdfl_kernel_pdf_builder()
-{
-}
+vpdfl_kernel_pdf_builder::~vpdfl_kernel_pdf_builder() = default;
 
 //=======================================================================
 
@@ -156,7 +153,7 @@ void vpdfl_kernel_pdf_builder::build(vpdfl_pdf_base& model, mbl_data_wrapper<vnl
 
   if (data.is_class("mbl_data_array_wrapper<T>"))
   {
-    mbl_data_array_wrapper<vnl_vector<double> >& data_array =
+    auto& data_array =
                    static_cast<mbl_data_array_wrapper<vnl_vector<double> >&>( data);
     build_from_array(model,data_array.data(),n);
     return;
@@ -423,4 +420,3 @@ void vpdfl_kernel_pdf_builder::config_from_stream(std::istream & is)
     throw mbl_exception_parse_error(e.what());
   }
 }
-

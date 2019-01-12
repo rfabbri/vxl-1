@@ -1,7 +1,4 @@
 // This is core/vgui/impl/gtk/vgui_gtk_window.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Philip C. Pritchett, RRG, University of Oxford
@@ -20,7 +17,9 @@
 #include "vgui_gtk_utils.h"
 #include "vgui_gtk_statusbar.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 static bool debug = false;
 

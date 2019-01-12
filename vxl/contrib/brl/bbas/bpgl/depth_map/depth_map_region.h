@@ -18,7 +18,9 @@
 #include <limits>
 #include <string>
 #include <vbl/vbl_ref_count.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsol/vsol_point_2d_sptr.h>
 #include <vsol/vsol_polygon_2d_sptr.h>
 #include <vsol/vsol_polygon_3d_sptr.h>
@@ -40,7 +42,7 @@ class depth_map_region : public vbl_ref_count
   depth_map_region(vsol_polygon_2d_sptr const& region,
                    vgl_plane_3d<double> const& region_plane,
                    double const& min_depth, double const& max_depth,
-                   std::string const& name,
+                   std::string  name,
                    depth_map_region::orientation orient,
                    unsigned const& land_id = 0,
                    double const& height = -1.0,
@@ -50,7 +52,7 @@ class depth_map_region : public vbl_ref_count
   //: constructor for a fixed plane, e.g. the ground plane
   depth_map_region(vsol_polygon_2d_sptr const& region,
                    vgl_plane_3d<double> const& region_plane,
-                   std::string const& name,
+                   std::string  name,
                    depth_map_region::orientation orient,
                    unsigned const& land_id = 0);
 

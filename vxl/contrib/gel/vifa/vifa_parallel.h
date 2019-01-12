@@ -17,7 +17,9 @@
 
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vtol/vtol_intensity_face_sptr.h>
 #include <vtol/vtol_edge_2d.h>
 #include <vifa/vifa_histogram.h>
@@ -40,12 +42,12 @@ class vifa_parallel: public vifa_parallel_params
   //: Face-based constructor
   vifa_parallel(iface_list&      faces,
                 bool             contrast_weighted,
-                vifa_parallel_params*  params = VXL_NULLPTR
+                vifa_parallel_params*  params = nullptr
                );
 
   //: Orientation-based constructor
   vifa_parallel(std::vector<float>&  pixel_orientations,
-                vifa_parallel_params*  params = VXL_NULLPTR
+                vifa_parallel_params*  params = nullptr
                );
 
   //: Constructor based on line statistics
@@ -54,7 +56,7 @@ class vifa_parallel: public vifa_parallel_params
                );
 
   //: Destructor
-  ~vifa_parallel(void);
+  ~vifa_parallel(void) override;
 
   void  reset(void);
 
@@ -77,7 +79,7 @@ class vifa_parallel: public vifa_parallel_params
   float           map_x(float  raw_x);
   vifa_histogram* normalize_histogram(vifa_histogram*  h);
   float           find_peak(float&  max_value);
-  vtol_intensity_face_sptr get_adjacent_iface(vtol_intensity_face_sptr known_face,
+  vtol_intensity_face_sptr get_adjacent_iface(const vtol_intensity_face_sptr& known_face,
                                               vtol_edge_2d*            e);
 };
 

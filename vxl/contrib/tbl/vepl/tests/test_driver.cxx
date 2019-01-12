@@ -6,7 +6,9 @@
 #include <vil/vil_new.h>
 #include <vil/vil_image_view.h>
 #include <vxl_config.h> // for vxl_byte etc.
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 DECLARE(vepl_test_dilate_disk);
 DECLARE(vepl_test_dyadic);
@@ -139,8 +141,8 @@ vil_image_resource_sptr CreateTestdoubleImage(int wd, int ht)
 }
 
 // Compare two images and return true if their difference is not v
-bool difference(vil_image_resource_sptr a,
-                vil_image_resource_sptr b,
+bool difference(const vil_image_resource_sptr& a,
+                const vil_image_resource_sptr& b,
                 vxl_uint_32 v, std::string const& m, bool exact)
 {
   unsigned int sx = a->ni(),  sy = a->nj(), sp = a->nplanes();

@@ -1,7 +1,4 @@
 // This is mul/vpdfl/vpdfl_pc_gaussian_builder.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \brief Interface for Multi-variate Principle Component gaussian PDF Builder.
@@ -20,8 +17,10 @@
 #include <cstdlib>
 #include "vpdfl_pc_gaussian_builder.h"
 //
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <mbl/mbl_data_wrapper.h>
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_c_vector.h>
@@ -45,9 +44,7 @@ vpdfl_pc_gaussian_builder::vpdfl_pc_gaussian_builder() :
 
 //=======================================================================
 
-vpdfl_pc_gaussian_builder::~vpdfl_pc_gaussian_builder()
-{
-}
+vpdfl_pc_gaussian_builder::~vpdfl_pc_gaussian_builder() = default;
 
 //=======================================================================
 

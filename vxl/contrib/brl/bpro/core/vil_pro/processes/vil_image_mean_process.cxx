@@ -8,7 +8,9 @@
 #include <vil/vil_math.h>
 #include <vil/vil_image_view.h>
 #include <vil/vil_convert.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 //: Constructor
@@ -16,9 +18,9 @@ bool vil_image_mean_process_cons(bprb_func_process& pro)
 {
   //this process takes one input: the image
   std::vector<std::string> input_types;
-  input_types.push_back("vil_image_view_base_sptr");
+  input_types.emplace_back("vil_image_view_base_sptr");
   std::vector<std::string> output_types;
-  output_types.push_back("float");  // mean
+  output_types.emplace_back("float");  // mean
   return pro.set_input_types(input_types)
      &&  pro.set_output_types(output_types);
 }
@@ -45,4 +47,3 @@ bool vil_image_mean_process(bprb_func_process& pro)
 
   return true;
 }
-

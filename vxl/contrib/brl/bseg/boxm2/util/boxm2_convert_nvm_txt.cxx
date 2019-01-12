@@ -2,13 +2,17 @@
 #include "boxm2_point_util.h"
 //:
 // \file
-#include <vsph/vsph_camera_bounds.h>
-#include <vgl/vgl_box_3d.h>
+#include <cassert>
+#include <utility>
 #include <vgl/algo/vgl_rotation_3d.h>
+#include <vgl/vgl_box_3d.h>
 #include <vnl/vnl_double_3.h>
 #include <vnl/vnl_matrix_fixed.h>
 #include <vnl/vnl_quaternion.h>
-#include <vcl_cassert.h>
+#include <vsph/vsph_camera_bounds.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_file.h>
 
 //: Main boxm2_convert_nvm_txt function
@@ -19,13 +23,13 @@ void boxm2_util_convert_nvm_txt(std::string nvm_file,
                                     std::map<std::string, std::string >& img_name_mapping)
 {
 
-  boxm2_convert_nvm_txt b2s(nvm_file, img_dir);
+  boxm2_convert_nvm_txt b2s(std::move(nvm_file), std::move(img_dir));
   cams        = b2s.get_cams();
   img_name_mapping = b2s.get_img_name_mapping();
 }
 
 // reads bundler file and populates list of cameras, and a scene bounding box
-boxm2_convert_nvm_txt::boxm2_convert_nvm_txt(std::string nvm_file, std::string img_dir)
+boxm2_convert_nvm_txt::boxm2_convert_nvm_txt(const std::string& nvm_file, const std::string& img_dir)
 {
   img_dir_ = img_dir;
   nvm_file_ = nvm_file;
@@ -51,7 +55,7 @@ boxm2_convert_nvm_txt::boxm2_convert_nvm_txt(std::string nvm_file, std::string i
   for (unsigned i = 0; i < cams_.size(); ++i) {
     std::string old_file_name = vul_file::strip_directory(old_names_[i]) ;
     std::cout << "Old file name " <<  old_file_name << std::endl;
-    CamType* cam = new CamType(cams_[i]);
+    auto* cam = new CamType(cams_[i]);
     final_cams_[old_file_name] = cam;
     img_name_map_[old_file_name] = names_[i];
   }
@@ -115,7 +119,7 @@ bool boxm2_convert_nvm_txt::read_cameras(std::ifstream& in)
     std::getline(in, token);
     for (int j = 0; j < 4; ++j) in >> q[j]; //quaternion rot
     std::getline(in, token);
-    for (int j = 0; j < 9; ++j) in >> q[j]; //rot matrix
+    for (double & j : q) in >> j; //rot matrix
     std::getline(in, token);
     std::getline(in, token);
 
@@ -136,5 +140,3 @@ bool boxm2_convert_nvm_txt::read_cameras(std::ifstream& in)
   }
   return true;
 }
-
-

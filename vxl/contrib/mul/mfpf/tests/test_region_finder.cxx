@@ -12,7 +12,9 @@
 //
 //=======================================================================
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_binary_loader.h>
 #include <mfpf/mfpf_add_all_loaders.h>
 #include <mfpf/mfpf_region_finder.h>
@@ -138,13 +140,13 @@ void test_region_finder()
           "  cost_builder: mfpf_sad_vec_cost_builder { min_mad: 1.1 }\n"
           "}\n");
 
-    vcl_unique_ptr<mfpf_point_finder_builder>
+    std::unique_ptr<mfpf_point_finder_builder>
             pf = mfpf_point_finder_builder::create_from_stream(ss);
 
     TEST("Correct Point Finder Builder", pf->is_a(),"mfpf_region_finder_builder");
     if (pf->is_a()=="mfpf_region_finder_builder")
     {
-      mfpf_region_finder_builder &a_pf = static_cast<mfpf_region_finder_builder&>(*pf);
+      auto &a_pf = static_cast<mfpf_region_finder_builder&>(*pf);
       std::cout<<a_pf<<std::endl;
       TEST("search_ni configured",a_pf.search_ni(),17);
       TEST("search_nj configured",a_pf.search_nj(),15);
@@ -169,13 +171,13 @@ void test_region_finder()
           "  cost_builder: mfpf_sad_vec_cost_builder { min_mad: 1.2 }\n"
           "}\n");
 
-    vcl_unique_ptr<mfpf_point_finder_builder>
+    std::unique_ptr<mfpf_point_finder_builder>
             pf = mfpf_point_finder_builder::create_from_stream(ss);
 
     TEST("Correct Point Finder Builder", pf->is_a(),"mfpf_region_finder_builder");
     if (pf->is_a()=="mfpf_region_finder_builder")
     {
-      mfpf_region_finder_builder &a_pf = static_cast<mfpf_region_finder_builder&>(*pf);
+      auto &a_pf = static_cast<mfpf_region_finder_builder&>(*pf);
       std::cout<<a_pf<<std::endl;
       TEST("search_ni configured",a_pf.search_ni(),17);
       TEST("search_nj configured",a_pf.search_nj(),15);
@@ -208,7 +210,7 @@ void test_region_finder()
     bfs_out.close();
 
     mfpf_region_finder region_finder_in;
-    mfpf_point_finder *base_ptr_in = VXL_NULLPTR;
+    mfpf_point_finder *base_ptr_in = nullptr;
 
     vsl_b_ifstream bfs_in("test_region_finder.bvl.tmp");
     TEST ("Opened test_region_finder.bvl.tmp for reading", (!bfs_in), false);

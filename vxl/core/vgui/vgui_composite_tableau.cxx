@@ -1,7 +1,4 @@
 // This is core/vgui/vgui_composite_tableau.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Philip C. Pritchett, RRG, University of Oxford
@@ -14,7 +11,9 @@
 #include <vector>
 #include "vgui_composite_tableau.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vgui/vgui.h>
 #include <vgui/vgui_gl.h>

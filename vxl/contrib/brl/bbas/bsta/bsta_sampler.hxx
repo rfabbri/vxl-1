@@ -11,7 +11,9 @@
 #include <algorithm>
 #include "bsta_sampler.h"
 #include <vnl/vnl_random.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 template<class T>
 vnl_random bsta_sampler<T>::default_rand = vnl_random();

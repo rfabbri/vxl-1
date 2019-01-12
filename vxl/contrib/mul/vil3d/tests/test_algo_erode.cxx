@@ -1,7 +1,9 @@
 // This is mul/vil3d/tests/test_algo_erode.cxx
 #include <iostream>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil3d/algo/vil3d_erode.h>
 
 static inline void print_image(const vil3d_image_view<float>& im)

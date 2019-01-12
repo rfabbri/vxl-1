@@ -1,7 +1,4 @@
 // This is oxl/mvl/RawPMatrixStore.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author
@@ -16,7 +13,9 @@
 #include <fstream>
 #include <string>
 #include "RawPMatrixStore.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <mvl/PMatrix.h>
 
 #include <mvl/FileNameGenerator.h>
@@ -57,10 +56,10 @@ bool RawPMatrixStore::Save(int)
 PMatrix_sptr RawPMatrixStore::Get(int i)
 {
   if (i< 0)
-    return VXL_NULLPTR;
+    return nullptr;
 
   if (!check_index(i))
-    return VXL_NULLPTR;
+    return nullptr;
 
   if (!pmatrix_[i])
     Load(i);

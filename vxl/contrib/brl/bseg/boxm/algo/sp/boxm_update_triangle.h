@@ -16,7 +16,9 @@
 #include <vpgl/vpgl_perspective_camera.h>
 #include <vil/vil_math.h>
 #include <vul/vul_timer.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: functor used for normalizing cell_expected image
 template <class T_loc, class T_data>
@@ -58,9 +60,9 @@ void boxm_update_triangle_pass1(boxm_scene<boct_tree<T_loc, T_data > > &scene,
   while (block_vis_iter.next())
   {
     std::vector<vgl_point_3d<int> > block_indices = block_vis_iter.frontier_indices();
-    for (unsigned i=0; i<block_indices.size(); i++) // code for each block
+    for (auto & block_indice : block_indices) // code for each block
     {
-      scene.load_block(block_indices[i].x(),block_indices[i].y(),block_indices[i].z());
+      scene.load_block(block_indice.x(),block_indice.y(),block_indice.z());
       boxm_block<tree_type> * curr_block=scene.get_active_block();
       // project vertices to the image determine which faces of the cell are visible
       boxm_cell_vis_graph_iterator<T_loc,T_data > frontier_it(cam,curr_block->get_tree(),ni,nj);
@@ -195,8 +197,8 @@ void boxm_update_triangle_pass2(boxm_scene<boct_tree<T_loc, T_data > > &scene,
   boxm_block_vis_graph_iterator<boct_tree<T_loc,T_data > > block_vis_iter(cam, &scene, ni,nj);
   while (block_vis_iter.next()) {
     std::vector<vgl_point_3d<int> > block_indices = block_vis_iter.frontier_indices();
-    for (unsigned i=0; i<block_indices.size(); i++) { // code for each block
-      scene.load_block(block_indices[i].x(),block_indices[i].y(),block_indices[i].z());
+    for (auto & block_indice : block_indices) { // code for each block
+      scene.load_block(block_indice.x(),block_indice.y(),block_indice.z());
       boxm_block<tree_type> * curr_block=scene.get_active_block();
       boxm_cell_vis_graph_iterator<T_loc, T_data > frontier_it(cam,curr_block->get_tree(),ni,nj);
 

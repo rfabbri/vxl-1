@@ -1,7 +1,9 @@
 // This is mul/vil3d/tests/test_resample.cxx
 #include <iostream>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil3d/vil3d_resample_simple.h>
 #include <vil3d/vil3d_resample_trilinear.h>
 #include <vil3d/vil3d_resample_tricubic.h>

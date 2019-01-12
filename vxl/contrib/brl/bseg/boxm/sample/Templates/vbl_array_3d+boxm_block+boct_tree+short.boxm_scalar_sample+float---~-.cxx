@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_array_3d.hxx>
 #include <vgl/io/vgl_io_point_3d.h>
 #include <boxm/boxm_block.hxx>
@@ -9,5 +11,3 @@
 
 typedef boct_tree<short, boxm_scalar_sample<float> > tree_type;
 VBL_ARRAY_3D_INSTANTIATE(boxm_block<tree_type>*);
-
-

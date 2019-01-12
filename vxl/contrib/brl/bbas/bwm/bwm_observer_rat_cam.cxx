@@ -36,7 +36,9 @@
 #include <vpgl/algo/vpgl_backproject.h>
 
 #include <vul/vul_file.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <bmsh3d/bmsh3d_textured_mesh_mc.h>
 #include <vpgl/vpgl_local_rational_camera.h>
@@ -62,7 +64,7 @@ vpgl_camera<double>* bwm_observer_rat_cam::read_camera(std::string cam_path,
   }
   if (!cam) {
     bwm_utils::show_error("[" + cam_path + "] is not a valid rational camera path");
-    return VXL_NULLPTR;
+    return nullptr;
   }
   return cam;
 }
@@ -180,7 +182,7 @@ void bwm_observer_rat_cam::center_pos()
   vgui_dialog params ("Geographic Coordinates");
   double lat=41.830939, lon=-71.394178, elev=0;
 
-  if (viewer_ == VXL_NULLPTR) {
+  if (viewer_ == nullptr) {
     std::cerr << "viewer2D tableau is not found in the parents\n";
     return;
   }
@@ -1138,7 +1140,7 @@ void bwm_observer_rat_cam::project_edges_from_master()
     return;
   }
   // First determine if the master has a selected box
-  bgui_vsol_soview2D_polygon* box = VXL_NULLPTR;
+  bgui_vsol_soview2D_polygon* box = nullptr;
   bool selected =
     mobs->get_selected_box(box);
   if (!selected)

@@ -1,12 +1,15 @@
 // This is brl/bseg/betr/pro/processes/betr_execute_event_trigger_multi_with_chimg_process.cxx
 #include <iostream>
 #include <fstream>
+#include <string>
 #include <bprb/bprb_func_process.h>
 #include <bpro/core/bbas_pro/bbas_1d_array_double.h>
 #include <bpro/core/bbas_pro/bbas_1d_array_string.h>
 #include <bpro/core/bbas_pro/bbas_1d_array_byte.h>
 #include <bpro/core/bbas_pro/bbas_1d_array_int.h>
-#include <vcl_string.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_point_2d.h>
 #include <vil/vil_image_view.h>
 //:
@@ -14,15 +17,13 @@
 // \brief  A process for executing an event_trigger (process change)
 //
 
-
-#include <vcl_compiler.h>
 #include <betr/betr_event_trigger.h>
 #include <vgl/vgl_point_3d.h>
 
 namespace betr_execute_event_trigger_multi_with_chimg_process_globals
 {
-  const unsigned n_inputs_  = 3;
-  const unsigned n_outputs_ = 4;
+  constexpr unsigned n_inputs_ = 3;
+  constexpr unsigned n_outputs_ = 4;
 }
 
 bool betr_execute_event_trigger_multi_with_chimg_process_cons(bprb_func_process& pro)
@@ -31,9 +32,9 @@ bool betr_execute_event_trigger_multi_with_chimg_process_cons(bprb_func_process&
 
   //process takes 2 inputs
   std::vector<std::string> input_types_(n_inputs_);
-  input_types_[0]  = "betr_event_trigger_sptr"; //event_trigger
-  input_types_[1]  = "vcl_string"; //algorithm name
-  input_types_[2]  = "vcl_string"; //json prarameters
+  input_types_[0] = "betr_event_trigger_sptr"; //event_trigger
+  input_types_[1] = "vcl_string"; //algorithm name
+  input_types_[2] = "vcl_string"; //json prarameters
   // process has 4 outputs
   std::vector<std::string> output_types_(n_outputs_);
   output_types_[0] = "bbas_1d_array_double_sptr"; // change probability
@@ -65,7 +66,7 @@ bool betr_execute_event_trigger_multi_with_chimg_process(bprb_func_process& pro)
   bbas_1d_array_double_sptr change_probs = new bbas_1d_array_double(n);
   bbas_1d_array_int_sptr dims_offset = new bbas_1d_array_int(4*n);
   unsigned j = 0;
-  for(std::map<std::string, betr_geo_object_3d_sptr>::const_iterator oit = evt_objs.begin();
+  for(auto oit = evt_objs.begin();
       oit != evt_objs.end(); ++oit, ++j)
     evt_names->data_array[j]=oit->first;
   std::vector<double> prob_change;
@@ -82,7 +83,7 @@ bool betr_execute_event_trigger_multi_with_chimg_process(bprb_func_process& pro)
     if(!imgr)
       continue;
     unsigned ni = imgr->ni(), nj = imgr->nj();
-    unsigned area  = ni*nj;
+    unsigned area = ni*nj;
     area_total += area;
     dims_offset->data_array[k]=ni;
     dims_offset->data_array[k+1]=nj;
@@ -102,7 +103,7 @@ bool betr_execute_event_trigger_multi_with_chimg_process(bprb_func_process& pro)
         pix->data_array[byte_index++]= view(i,j);
   }
   j = 0;
-  for(std::vector<double>::iterator pit = prob_change.begin();
+  for(auto pit = prob_change.begin();
       pit != prob_change.end(); ++pit, ++j)
     change_probs->data_array[j]=*pit;
   pro.set_output_val<bbas_1d_array_double_sptr>(0, change_probs);

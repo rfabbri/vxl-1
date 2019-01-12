@@ -5,8 +5,10 @@
 //:
 //  \file
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vnl/vnl_math.h>
 
@@ -32,7 +34,7 @@ osl_fit_lines::osl_fit_lines(osl_fit_lines_params const & params,
 
 osl_fit_lines::~osl_fit_lines()
 {
-  delete data_; data_ = VXL_NULLPTR;
+  delete data_; data_ = nullptr;
 }
 
 //-----------------------------------------------------------------------------
@@ -50,14 +52,12 @@ void osl_fit_lines::simple_fit_to_list(std::list<osl_edge *> *myedges,
 {
   int edge_no = 0;
   std::list<osl_edgel_chain*> curves;
-  for (std::list<osl_edge*>::iterator i=myedges->begin(); i!=myedges->end(); ++i)
+  for (auto edge : *myedges)
   {
-    osl_edge *edge = *i;
-
     bool angle_ok = true;
     {
       osl_edgel_chain *dc = edge;//->GetCurve()->CastToDigitalCurve();
-      assert(dc!=VXL_NULLPTR);
+      assert(dc!=nullptr);
       bool success = false;
 
       // If the osl_edgel_chain is long enough fit
@@ -88,7 +88,7 @@ void osl_fit_lines::simple_fit_to_list(std::list<osl_edge *> *myedges,
         }
         data_->Fit();
         float mean_cost = MyGetCost(data_, 0, dc->size(), dc);
-        float ls_cost = (float)data_->GetCost();
+        auto ls_cost = (float)data_->GetCost();
         if ((use_square_fit_ && ls_cost < threshold_) ||
             (!use_square_fit_ && mean_cost < threshold_ && angle_ok))
         {
@@ -107,7 +107,7 @@ void osl_fit_lines::simple_fit_to_list(std::list<osl_edge *> *myedges,
         // the original curve. However, the start and end point of
         // the curve will not be the same as the curve data.
         //was:edge->SetCurve(mycurve);
-        osl_edge *newedge = new osl_edge(*mycurve, edge->GetV1(), edge->GetV2());
+        auto *newedge = new osl_edge(*mycurve, edge->GetV1(), edge->GetV2());
         delete mycurve;
         edge->unref();
         edge = newedge;
@@ -140,9 +140,8 @@ void osl_fit_lines::incremental_fit_to_list(std::list<osl_edge *> *myedges,
   // a number of straight lines to it
 
   outedges->clear();
-  for (std::list<osl_edge*>::iterator iter=myedges->begin(); iter!=myedges->end(); ++iter)
+  for (auto edge : *myedges)
   {
-    osl_edge *edge = *iter;
     ++edge_no;
 
     std::list<osl_edgel_chain*> curves;
@@ -206,7 +205,7 @@ void osl_fit_lines::MeanIncrementalFit(std::list<osl_edgel_chain*> *curves_, osl
   float new_cost, new_est_cost;
   // Get the digital curve
   osl_edgel_chain *dc = edge;//->GetCurve()->CastToDigitalCurve();
-  assert(dc!=VXL_NULLPTR);
+  assert(dc!=nullptr);
 
   // If the EdgelChain is long enough fit
   if ( dc->size() < min_fit_length_ )
@@ -357,7 +356,7 @@ void osl_fit_lines::MeanIncrementalFit(std::list<osl_edgel_chain*> *curves_, osl
   unsigned int length = dc->size() - old_finish_;
   if ( curves_->size() && length )
   {
-    osl_edgel_chain *ndc = new osl_edgel_chain(length);
+    auto *ndc = new osl_edgel_chain(length);
     for (i=0,j=old_finish_;j<dc->size();i++,j++)
     {
       ndc->SetX(dc->GetX(j),i);
@@ -382,7 +381,7 @@ void osl_fit_lines::SquareIncrementalFit(std::list<osl_edgel_chain*> *curves_, o
 #endif
   // Get the digital curve
   osl_edgel_chain *dc = edge;//->GetCurve()->CastToDigitalCurve();
-  assert(dc!=VXL_NULLPTR);
+  assert(dc!=nullptr);
 
   // If the EdgelChain is long enough fit
   if ( dc->size() < min_fit_length_ )
@@ -506,7 +505,7 @@ void osl_fit_lines::SquareIncrementalFit(std::list<osl_edgel_chain*> *curves_, o
   unsigned int length = dc->size() - old_finish_;
   if ( curves_->size() && length )
   {
-    osl_edgel_chain *ndc = new osl_edgel_chain(length);
+    auto *ndc = new osl_edgel_chain(length);
     for (i=0,j=old_finish_;j<dc->size();i++,j++)
     {
       ndc->SetX(dc->GetX(j),i);
@@ -531,7 +530,7 @@ void osl_fit_lines::OutputLine(std::list<osl_edgel_chain*> *curves_,
   int length = start - old_finish_;
   if ( length > 0 )
   {
-    osl_edgel_chain *ndc = new osl_edgel_chain(length);
+    auto *ndc = new osl_edgel_chain(length);
     for (int i=0,j=old_finish_;j<start;i++,j++)
     {
       ndc->SetX(dc->GetX(j),i);
@@ -544,7 +543,7 @@ void osl_fit_lines::OutputLine(std::list<osl_edgel_chain*> *curves_,
   old_finish_ = finish;
 
   // Create an osl_edgel_chain from the fit
-  osl_edgel_chain *line = new osl_edgel_chain(finish-start);
+  auto *line = new osl_edgel_chain(finish-start);
   for (int i=0,j=start;j<finish;i++,j++) {  // Copy the edgels into the new chain
     line->SetX(dc->GetX(j),i);
     line->SetY(dc->GetY(j),i);
@@ -594,7 +593,7 @@ void osl_fit_lines::MergeLines(std::list<osl_edgel_chain*> *curves_)
   else
   {
     // FIXME: what if endpoints are equal?
-    osl_edgel_chain *dc = new osl_edgel_chain(dc1->size() + dc2->size());
+    auto *dc = new osl_edgel_chain(dc1->size() + dc2->size());
     for (unsigned int i=0; i<dc1->size(); ++i)
     {
       dc->SetX(dc1->GetX(i), i);

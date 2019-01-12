@@ -1,7 +1,4 @@
 // This is core/vgui/vgui_event_condition.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
@@ -11,7 +8,9 @@
 #include <sstream>
 #include "vgui_event_condition.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgui/vgui_event.h>
 
 //----------------------------------------------------------------------------

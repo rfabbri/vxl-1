@@ -16,9 +16,12 @@
 
 #include <iostream>
 #include <string>
+#include <utility>
 #include <vector>
 #include <vbl/vbl_ref_count.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <volm/volm_geo_index.h>
 #include <volm/volm_geo_index_sptr.h>
 
@@ -27,7 +30,7 @@ class volm_desc_indexer : public vbl_ref_count
 {
 public:
   // constructor
-  volm_desc_indexer(std::string const& out_index_folder) : out_index_folder_(out_index_folder) {}
+  volm_desc_indexer(std::string  out_index_folder) : out_index_folder_(std::move(out_index_folder)) {}
 
   //: load the volm_geo_index for given tile
   bool load_tile_hypos(std::string const& geo_hypo_folder, int tile_id);

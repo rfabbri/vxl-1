@@ -4,7 +4,9 @@
 // \author Tim Cootes - Manchester
 
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vxl_config.h> // for vxl_byte
 #include <vnl/vnl_vector.h>
 #include <vgl/vgl_point_2d.h>

@@ -8,10 +8,12 @@
 
 #include <iostream>
 #include <map>
-#include <vcl_memory.h>
+#include <memory>
 #include <string>
 #include <sstream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <mbl/mbl_exception.h>
 #include <mbl/mbl_cloneable_ptr.h>
 #include <mbl/mbl_export.h>
@@ -40,7 +42,7 @@
 // mbl_cloneables_factory<vimt_image>::add(vimt_image_2d());
 // mbl_cloneables_factory<vimt_image>::add(vimt_image_3d());
 //
-// vcl_unique_ptr<vimt_image> p = mbl_cloneables_factory<vimt_image>::get_clone("vimt_image_2d()");
+// std::unique_ptr<vimt_image> p = mbl_cloneables_factory<vimt_image>::get_clone("vimt_image_2d()");
 // assert(dynamic_cast<vimt_image_2d>(p));
 // \endcode
 
@@ -70,7 +72,7 @@ class mbl_cloneables_factory
 
   //: Get a pointer to a new copy of the object identified by name.
   // An exception will be thrown if name does not exist.
-  static vcl_unique_ptr<BASE > get_clone(const std::string & name);
+  static std::unique_ptr<BASE > get_clone(const std::string & name);
 };
 
 // Macro to instantiate template, and initialise singleton data item.
@@ -83,8 +85,8 @@ template class mbl_cloneables_factory< T >; \
 template<>\
   std::map<std::string, mbl_cloneable_ptr<T > >& mbl_cloneables_factory< T >::objects() \
   { \
-    static vcl_unique_ptr<std::map<std::string, mbl_cloneable_ptr<T > > > objects_; \
-    if (objects_.get() == VXL_NULLPTR) \
+    static std::unique_ptr<std::map<std::string, mbl_cloneable_ptr<T > > > objects_; \
+    if (objects_.get() == nullptr) \
       objects_.reset(new MAP); \
     return *objects_; \
   }

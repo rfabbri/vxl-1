@@ -18,8 +18,8 @@
 
 namespace bvpl_create_generic_kernel_vector_process_globals
 {
-  const unsigned n_inputs_ = 8;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 8;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 
@@ -97,7 +97,7 @@ bool bvpl_create_generic_kernel_vector_process(bprb_func_process& pro)
 
   //if got to here is because we didn't meet available conditions
   std::cerr << "Error: No vector could be created for specified factory and directions " <<std::endl;
-  pro.set_output_val<bvpl_kernel_vector_sptr>(0, VXL_NULLPTR);
+  pro.set_output_val<bvpl_kernel_vector_sptr>(0, nullptr);
   return false;
 }
 
@@ -105,8 +105,8 @@ bool bvpl_create_generic_kernel_vector_process(bprb_func_process& pro)
 // write the vectors to txt files
 namespace bvpl_write_generic_kernel_vector_process_globals
 {
-  const unsigned n_inputs_ = 2;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 2;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 
@@ -137,7 +137,7 @@ bool bvpl_write_generic_kernel_vector_process(bprb_func_process& pro)
   bvpl_kernel_vector_sptr kernels = pro.get_input<bvpl_kernel_vector_sptr>(0);
   std::string output_prefix =pro.get_input<std::string>(1);
 
-  std::vector< bvpl_kernel_sptr >::iterator iter = kernels->begin();
+  auto iter = kernels->begin();
   unsigned id = 1;
   for ( ; iter != kernels->end(); iter++, id++) {
     bvpl_kernel_sptr k = *iter;
@@ -151,4 +151,3 @@ bool bvpl_write_generic_kernel_vector_process(bprb_func_process& pro)
 
   return true;
 }
-

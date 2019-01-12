@@ -22,7 +22,9 @@
 #include <vil/vil_image_view.h>
 #include <vil/vil_pyramid_image_view.h>
 #include <vsl/vsl_binary_io.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class icam_depth_trans_pyramid
 {
@@ -50,7 +52,7 @@ class icam_depth_trans_pyramid
                            vgl_vector_3d<double> const& trans,
                            unsigned n_levels,
                            bool adjust_to_fl = false);
-  ~icam_depth_trans_pyramid() {}
+  ~icam_depth_trans_pyramid() = default;
   //: determines the number of pyramid levels to reduce the smallest image dimension to greater than or equal to \a min_size
   static unsigned required_levels(unsigned ni,unsigned nj,
                                   unsigned min_size = 127);
@@ -103,4 +105,3 @@ class icam_depth_trans_pyramid
 };
 
 #endif // icam_depth_trans_pyramid_h_
-

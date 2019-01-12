@@ -3,8 +3,10 @@
 #include <algorithm>
 #include "rgrl_convergence_on_median_error.h"
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include "rgrl_match_set.h"
 #include "rgrl_set_of.h"
@@ -40,7 +42,7 @@ compute_status( rgrl_converge_status_sptr               prev_status,
     rgrl_match_set const& ms = *current_match_sets[ds];
     for ( from_iter fitr = ms.from_begin(); fitr != ms.from_end(); ++fitr ) {
       //rgrl_feature_sptr mapped = fitr.from_feature()->transform( *current_xform );
-      rgrl_feature_sptr mapped = fitr.mapped_from_feature();
+      const rgrl_feature_sptr& mapped = fitr.mapped_from_feature();
       for ( to_iter titr = fitr.begin(); titr != fitr.end(); ++titr ) {
         errors.push_back( titr.to_feature()->geometric_error( *mapped ) );
       }
@@ -53,7 +55,7 @@ compute_status( rgrl_converge_status_sptr               prev_status,
   //        of the transformed data points
   //
   assert ( errors.size() > 0 );
-  std::vector<double>::iterator middle = errors.begin() + errors.size()/2;
+  auto middle = errors.begin() + errors.size()/2;
   std::nth_element( errors.begin(), middle, errors.end() );
 
   double scaling = 1;

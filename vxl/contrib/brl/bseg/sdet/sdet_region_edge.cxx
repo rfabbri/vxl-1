@@ -4,17 +4,18 @@
 #include "sdet_region_edge.h"
 //:
 // \file
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vtol/vtol_edge_2d.h>
 
-sdet_region_edge::sdet_region_edge(vtol_edge_2d_sptr e)
+sdet_region_edge::sdet_region_edge(const vtol_edge_2d_sptr& e)
 : edge_(e)
 {
 }
 
 sdet_region_edge::~sdet_region_edge()
-{
-}
+= default;
 
 bool sdet_region_edge::is_vertex() const
 {
@@ -66,4 +67,3 @@ void sdet_region_edge::Prop(sdet_region_edge_sptr const& re, unsigned int label,
   //set the new label onto this
   this->SetNewLabel(label);
 }
-

@@ -13,8 +13,10 @@
 
 #include <iostream>
 #include <map>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <bgrl2/bgrl2_hg_vertex.h>
 #include <bgrl2/bgrl2_hg_edge.h>
@@ -37,7 +39,7 @@ class bgrl2_hg_graph
     //  instead, use find to avoid inserting NULL objects
     std::map<int, bgrl2_hg_vertex*>::iterator V_it = vertices_.find (i);
     if (V_it == vertices_.end())
-      return VXL_NULLPTR;
+      return nullptr;
 
     bgrl2_hg_vertex* vertex = (*V_it).second;
     return vertex;
@@ -49,7 +51,7 @@ class bgrl2_hg_graph
   bgrl2_hg_edge* edges (const int i) {
     std::map<int, bgrl2_hg_edge*>::iterator E_it = edges_.find (i);
     if (E_it == edges_.end())
-      return VXL_NULLPTR;
+      return nullptr;
 
     bgrl2_hg_edge* edge = (*E_it).second;
     return edge;
@@ -103,8 +105,7 @@ class bgrl2_hg_graph
   virtual bool topo_remove_edge (int id);
 
   bgrl2_hg_graph ()
-  {
-  }
+  = default;
 
   virtual ~bgrl2_hg_graph()
   {

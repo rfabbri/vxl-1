@@ -22,7 +22,9 @@
 #include <vil/vil_image_view.h>
 #include <vil/vil_image_resource.h>
 #include <vil/vil_load.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 //#include <vil/vil_resample_bilin.h>
 #include <vil/vil_convert.h>
 #include <vil/vil_new.h>
@@ -35,8 +37,8 @@
 
 namespace boxm2_dem_to_xyz_process_globals
 {
-  const unsigned n_inputs_ = 5;
-  const unsigned n_outputs_ = 3;
+  constexpr unsigned n_inputs_ = 5;
+  constexpr unsigned n_outputs_ = 3;
 }
 
 bool boxm2_dem_to_xyz_process_cons(bprb_func_process& pro)
@@ -104,13 +106,13 @@ bool boxm2_dem_to_xyz_process(bprb_func_process& pro)
   boxm2_scene_sptr scene = pro.get_input<boxm2_scene_sptr>(0);
   vpgl_lvcs_sptr lvcs = new vpgl_lvcs(scene->lvcs());
   std::string geotiff_fname = pro.get_input<std::string>(1);
-  double geoid_height = pro.get_input<double>(2);
+  auto geoid_height = pro.get_input<double>(2);
   vpgl_camera_double_sptr cam = pro.get_input<vpgl_camera_double_sptr>(3);
-  float fill_in_value = pro.get_input<float>(4);
+  auto fill_in_value = pro.get_input<float>(4);
 
   vil_image_resource_sptr dem_res = vil_load_image_resource(geotiff_fname.c_str());
 
-  vpgl_geo_camera* geocam = VXL_NULLPTR;
+  vpgl_geo_camera* geocam = nullptr;
   if (cam && (geocam = dynamic_cast<vpgl_geo_camera*> (cam.ptr())) ) {
     std::cout << "Using the loaded camera!\n";
   }
@@ -146,13 +148,13 @@ bool boxm2_dem_to_xyz_process(bprb_func_process& pro)
 
   vil_image_view_base_sptr dem_view_float;
   vil_image_view_base_sptr dem_view_base = dem_res->get_view(0, orig_dem_ni, 0, orig_dem_nj);
-  vil_image_view<float>* dem_view = dynamic_cast<vil_image_view<float>*>(dem_view_base.ptr());
+  auto* dem_view = dynamic_cast<vil_image_view<float>*>(dem_view_base.ptr());
   if (!dem_view) {
     vil_image_view<float> temp(dem_view_base->ni(), dem_view_base->nj(), 1);
 
-    vil_image_view<vxl_int_16>* dem_view_int = dynamic_cast<vil_image_view<vxl_int_16>*>(dem_view_base.ptr());
+    auto* dem_view_int = dynamic_cast<vil_image_view<vxl_int_16>*>(dem_view_base.ptr());
     if (!dem_view_int) {
-      vil_image_view<vxl_byte>* dem_view_byte = dynamic_cast<vil_image_view<vxl_byte>*>(dem_view_base.ptr());
+      auto* dem_view_byte = dynamic_cast<vil_image_view<vxl_byte>*>(dem_view_base.ptr());
       if (!dem_view_byte) {
         std::cerr << "Error: boxm2_dem_to_xyz_process: The image pixel format: " << dem_view_base->pixel_format() << " is not supported!\n";
         return false;
@@ -181,9 +183,9 @@ bool boxm2_dem_to_xyz_process(bprb_func_process& pro)
   std::cout <<"ni: " << ni << " nj: " << nj << std::endl;
 
   // create x y z images
-  vil_image_view<float>* out_img_x = new vil_image_view<float>(ni, nj, 1);
-  vil_image_view<float>* out_img_y = new vil_image_view<float>(ni, nj, 1);
-  vil_image_view<float>* out_img_z = new vil_image_view<float>(ni, nj, 1);
+  auto* out_img_x = new vil_image_view<float>(ni, nj, 1);
+  auto* out_img_y = new vil_image_view<float>(ni, nj, 1);
+  auto* out_img_z = new vil_image_view<float>(ni, nj, 1);
   // initialize the image by scene origin
   double orig_lat, orig_lon, orig_elev;
   out_img_x->fill(-10.0f);
@@ -208,8 +210,8 @@ bool boxm2_dem_to_xyz_process(bprb_func_process& pro)
 
   for (int i = 0; i < ni; ++i)
     for (int j = 0; j < nj; ++j) {
-      float local_x = (float)(i*vox_length+scene_bbox.min_x()+vox_length/2.0);
-      float local_y = (float)(scene_bbox.max_y()-j*vox_length+vox_length/2.0);
+      auto local_x = (float)(i*vox_length+scene_bbox.min_x()+vox_length/2.0);
+      auto local_y = (float)(scene_bbox.max_y()-j*vox_length+vox_length/2.0);
       (*out_img_x)(i,j) = local_x;
       (*out_img_y)(i,j) = local_y;
 
@@ -235,8 +237,8 @@ bool boxm2_dem_to_xyz_process(bprb_func_process& pro)
 
 namespace boxm2_shadow_heights_to_xyz_process_globals
 {
-  const unsigned n_inputs_ = 5;
-  const unsigned n_outputs_ = 3;
+  constexpr unsigned n_inputs_ = 5;
+  constexpr unsigned n_outputs_ = 3;
 }
 
 bool boxm2_shadow_heights_to_xyz_process_cons(bprb_func_process& pro)
@@ -274,9 +276,9 @@ bool boxm2_shadow_heights_to_xyz_process(bprb_func_process& pro)
   vil_image_view_base_sptr img = pro.get_input<vil_image_view_base_sptr>(1);
   vpgl_camera_double_sptr cam = pro.get_input<vpgl_camera_double_sptr>(2);
   std::string geotiff_fname = pro.get_input<std::string>(3);
-  double scale = pro.get_input<double>(4);
+  auto scale = pro.get_input<double>(4);
 
-  vpgl_generic_camera<double>* gcam=dynamic_cast<vpgl_generic_camera<double>*> (cam.ptr());
+  auto* gcam=dynamic_cast<vpgl_generic_camera<double>*> (cam.ptr());
 
   vil_image_view<float> height_img(img);
   unsigned ni = height_img.ni();
@@ -289,7 +291,7 @@ bool boxm2_shadow_heights_to_xyz_process(bprb_func_process& pro)
   }
 
   vil_image_resource_sptr dem_res = vil_load_image_resource(geotiff_fname.c_str());
-  vpgl_geo_camera* geocam = VXL_NULLPTR;
+  vpgl_geo_camera* geocam = nullptr;
   vpgl_geo_camera::init_geo_camera(dem_res, lvcs, geocam);
 
   vgl_box_3d<double> scene_bbox = scene->bounding_box();
@@ -312,23 +314,23 @@ bool boxm2_shadow_heights_to_xyz_process(bprb_func_process& pro)
   unsigned int dem_ni = max_i - min_i + 1;
   unsigned int dem_nj = max_j - min_j + 1;
   vil_image_view_base_sptr dem_view_base = dem_res->get_view((unsigned int)min_i, dem_ni, (unsigned int)min_j, dem_nj);
-  vil_image_view<float>* dem_view = dynamic_cast<vil_image_view<float>*>(dem_view_base.ptr());
+  auto* dem_view = dynamic_cast<vil_image_view<float>*>(dem_view_base.ptr());
   if (!dem_view) {
       std::cerr << "Error: boxm2_dem_to_xyz_process: could not cast first return image to a vil_image_view<float>\n";
       return false;
   }
   std::cout << "dem resolution is: " << dem_ni << " by " << dem_nj << std::endl;
 
-  vil_image_view<float>* out_img = new vil_image_view<float>(ni, nj, 1);
+  auto* out_img = new vil_image_view<float>(ni, nj, 1);
   vil_image_resource_sptr out_img_res = vil_new_image_resource_of_view(*out_img);
 
   if (!upsample_dem(out_img_res, ni, nj, dem_view, dem_ni, dem_nj))
     return false;
 
   // create x y z images
-  vil_image_view<float>* out_img_x = new vil_image_view<float>(ni, nj, 1);
-  vil_image_view<float>* out_img_y = new vil_image_view<float>(ni, nj, 1);
-  vil_image_view<float>* out_img_z = new vil_image_view<float>(ni, nj, 1);
+  auto* out_img_x = new vil_image_view<float>(ni, nj, 1);
+  auto* out_img_y = new vil_image_view<float>(ni, nj, 1);
+  auto* out_img_z = new vil_image_view<float>(ni, nj, 1);
 
   double lon,lat,gz;
   lvcs->local_to_global(0,0,0,vpgl_lvcs::wgs84,lon, lat, gz);
@@ -354,8 +356,8 @@ bool boxm2_shadow_heights_to_xyz_process(bprb_func_process& pro)
 
 namespace boxm2_dem_to_xyz_process2_globals
 {
-  const unsigned n_inputs_ = 5;
-  const unsigned n_outputs_ = 3;
+  constexpr unsigned n_inputs_ = 5;
+  constexpr unsigned n_outputs_ = 3;
 }
 
 bool boxm2_dem_to_xyz_process2_cons(bprb_func_process& pro)
@@ -405,7 +407,7 @@ bool boxm2_dem_to_xyz_process2(bprb_func_process& pro)
 
   vil_image_resource_sptr dem_res = vil_load_image_resource(geotiff_fname.c_str());
 
-  vpgl_geo_camera* geocam = VXL_NULLPTR;
+  vpgl_geo_camera* geocam = nullptr;
   if ( cam && (geocam = dynamic_cast<vpgl_geo_camera*> (cam.ptr())) ) {
     std::cout << "Using the loaded camera!\n";
   }
@@ -454,13 +456,13 @@ bool boxm2_dem_to_xyz_process2(bprb_func_process& pro)
            <<"\nmin_i: " << min_i << " min_j: " << min_j << " ni: " << ni << " nj: " << nj << std::endl;
 
   vil_image_view_base_sptr dem_view_base = dem_res->get_view(min_i, ni, min_j, nj);
-  vil_image_view<float>* dem_view = dynamic_cast<vil_image_view<float>*>(dem_view_base.ptr());
+  auto* dem_view = dynamic_cast<vil_image_view<float>*>(dem_view_base.ptr());
   if (!dem_view) {
     vil_image_view<float> temp(dem_view_base->ni(), dem_view_base->nj(), 1);
 
-    vil_image_view<vxl_int_16>* dem_view_int = dynamic_cast<vil_image_view<vxl_int_16>*>(dem_view_base.ptr());
+    auto* dem_view_int = dynamic_cast<vil_image_view<vxl_int_16>*>(dem_view_base.ptr());
     if (!dem_view_int) {
-      vil_image_view<vxl_byte>* dem_view_byte = dynamic_cast<vil_image_view<vxl_byte>*>(dem_view_base.ptr());
+      auto* dem_view_byte = dynamic_cast<vil_image_view<vxl_byte>*>(dem_view_base.ptr());
       if (!dem_view_byte) {
         std::cerr << "Error: boxm2_dem_to_xyz_process: The image pixel format: " << dem_view_base->pixel_format() << " is not supported!\n";
         return false;
@@ -480,9 +482,9 @@ bool boxm2_dem_to_xyz_process2(bprb_func_process& pro)
            <<"ni: " << ni << " nj: " << nj << std::endl;
 
   // create x y z images
-  vil_image_view<float>* out_img_x = new vil_image_view<float>(ni, nj, 1);
-  vil_image_view<float>* out_img_y = new vil_image_view<float>(ni, nj, 1);
-  vil_image_view<float>* out_img_z = new vil_image_view<float>(ni, nj, 1);
+  auto* out_img_x = new vil_image_view<float>(ni, nj, 1);
+  auto* out_img_y = new vil_image_view<float>(ni, nj, 1);
+  auto* out_img_z = new vil_image_view<float>(ni, nj, 1);
   out_img_x->fill((float)(scene_bbox.min_x())-10.0f);  // local coord system min z
   out_img_y->fill((float)(scene_bbox.min_y())-10.0f);  // local coord system min z
   out_img_z->fill((float)(scene_bbox.min_z())-1.0f);  // local coord system min z
@@ -514,8 +516,8 @@ bool boxm2_dem_to_xyz_process2(bprb_func_process& pro)
 
 namespace boxm2_initialize_ground_xyz_process_globals
 {
-  const unsigned n_inputs_ = 2;
-  const unsigned n_outputs_ = 3;
+  constexpr unsigned n_inputs_ = 2;
+  constexpr unsigned n_outputs_ = 3;
 }
 
 bool boxm2_initialize_ground_xyz_process_cons(bprb_func_process& pro)
@@ -560,9 +562,9 @@ bool boxm2_initialize_ground_xyz_process(bprb_func_process& pro)
   std::cout <<"image size needs ni: " << ni << " nj: " << nj << " to support voxel res: " << vox_length << std::endl;
 
   // create x y z images
-  vil_image_view<float>* out_img_x = new vil_image_view<float>(ni, nj, 1);
-  vil_image_view<float>* out_img_y = new vil_image_view<float>(ni, nj, 1);
-  vil_image_view<float>* out_img_z = new vil_image_view<float>(ni, nj, 1);
+  auto* out_img_x = new vil_image_view<float>(ni, nj, 1);
+  auto* out_img_y = new vil_image_view<float>(ni, nj, 1);
+  auto* out_img_z = new vil_image_view<float>(ni, nj, 1);
   out_img_x->fill((float)(scene_bbox.min_x())-10.0f);  // local coord system min z
   out_img_y->fill((float)(scene_bbox.min_y())-10.0f);  // local coord system min z
   out_img_z->fill((float)(scene_bbox.min_z())-1.0f);  // local coord system min z

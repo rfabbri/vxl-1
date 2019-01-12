@@ -12,12 +12,14 @@
 #include <vil/vil_image_view.h>
 #include <vil/vil_chord.h>
 #include <bbas_pro/bbas_1d_array_float.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 namespace brip_blob_intersection_process_globals
 {
-  const unsigned n_inputs_ = 2;
-  const unsigned n_outputs_ = 3;
+  constexpr unsigned n_inputs_ = 2;
+  constexpr unsigned n_outputs_ = 3;
 }
 
 //: Constructor
@@ -27,13 +29,13 @@ bool brip_blob_intersection_process_cons(bprb_func_process& pro)
 
   // this process takes 2 inputs:
   std::vector<std::string> input_types;
-  input_types.push_back("vil_image_view_base_sptr");  // modeled blob map
-  input_types.push_back("vil_image_view_base_sptr");  // ground truth map
+  input_types.emplace_back("vil_image_view_base_sptr");  // modeled blob map
+  input_types.emplace_back("vil_image_view_base_sptr");  // ground truth map
   // this process takes 3 outputs:
   std::vector<std::string> output_types;
-  output_types.push_back("int");  // num true positives
-  output_types.push_back("int");  // num false positives
-  output_types.push_back("int");  // num blobs in GT
+  output_types.emplace_back("int");  // num true positives
+  output_types.emplace_back("int");  // num false positives
+  output_types.emplace_back("int");  // num blobs in GT
 
   return pro.set_input_types(input_types)
       && pro.set_output_types(output_types);
@@ -52,7 +54,7 @@ bool brip_blob_intersection_process(bprb_func_process& pro)
 
   // get the inputs
   vil_image_view_base_sptr blob_sptr = pro.get_input<vil_image_view_base_sptr>(0);
-  vil_image_view_base_sptr gt_sptr   = pro.get_input<vil_image_view_base_sptr>(1);
+  vil_image_view_base_sptr gt_sptr = pro.get_input<vil_image_view_base_sptr>(1);
 
   // check bounds to make sure they match
   if (blob_sptr->ni() != gt_sptr->ni() || blob_sptr->nj() != gt_sptr->nj()) {
@@ -61,12 +63,12 @@ bool brip_blob_intersection_process(bprb_func_process& pro)
   }
 
   // cast to usable image views
-  vil_image_view<vxl_byte> * gt_uchar = dynamic_cast<vil_image_view<vxl_byte> *>(gt_sptr.ptr());
+  auto * gt_uchar = dynamic_cast<vil_image_view<vxl_byte> *>(gt_sptr.ptr());
   if ( !gt_uchar ) {
     std::cout<<"brip_blob_intersection_process:: gt map is not an unsigned char map"<<std::endl;
     return false;
   }
-  vil_image_view<unsigned char> * blob_uchar =dynamic_cast<vil_image_view<unsigned char> *>(blob_sptr.ptr());
+  auto * blob_uchar =dynamic_cast<vil_image_view<unsigned char> *>(blob_sptr.ptr());
   if (!blob_uchar) {
     std::cout<<"brip_blob_intersection_process:: blob map is not an unsigned char map"<<std::endl;
     return false;
@@ -77,7 +79,7 @@ bool brip_blob_intersection_process(bprb_func_process& pro)
                         blob_map(gt_uchar->ni(), gt_uchar->nj());
   for (unsigned int i=0; i<gt_uchar->ni(); ++i)
     for (unsigned int j=0; j<gt_uchar->nj(); ++j) {
-      gt_map(i,j)   = (*gt_uchar)(i,j) == 0 ? false : true;
+      gt_map(i,j) = (*gt_uchar)(i,j) == 0 ? false : true;
       blob_map(i,j) = (*blob_uchar)(i,j) == 0 ? false : true;
     }
 
@@ -98,10 +100,9 @@ bool brip_blob_intersection_process(bprb_func_process& pro)
   int numTP=0;
   bool* trueBlobs = new bool[mp_blobs.size()];
   std::fill(trueBlobs, trueBlobs+mp_blobs.size(), false);
-  for (unsigned int i=0; i<gt_blobs.size(); ++i) {
+  for (auto gt_blob : gt_blobs) {
     bool gt_blob_found = false;
     for (unsigned int j=0; j<mp_blobs.size(); ++j) {
-      blob_t gt_blob = gt_blobs[i];
       blob_t mp_blob = mp_blobs[j];
 
       // determine if gt_blob[i] intersects with mp_blob[j]
@@ -156,4 +157,3 @@ bool brip_blob_intersection_process(bprb_func_process& pro)
   pro.set_output_val<int>(2, gt_blobs.size());
   return true;
 }
-

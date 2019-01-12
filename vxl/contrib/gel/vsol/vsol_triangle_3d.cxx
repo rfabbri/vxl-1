@@ -3,8 +3,10 @@
 #include "vsol_triangle_3d.h"
 //:
 // \file
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsol/vsol_point_3d.h>
 #include <vgl/vgl_vector_3d.h>
 #include <vnl/vnl_math.h>
@@ -29,17 +31,12 @@ vsol_triangle_3d::vsol_triangle_3d(vsol_point_3d_sptr const& new_p0,
 //---------------------------------------------------------------------------
 // Copy constructor
 //---------------------------------------------------------------------------
-vsol_triangle_3d::vsol_triangle_3d(vsol_triangle_3d const& other)
-  : vsol_polygon_3d(other)
-{
-}
+vsol_triangle_3d::vsol_triangle_3d(vsol_triangle_3d const& other) = default;
 
 //---------------------------------------------------------------------------
 // Destructor
 //---------------------------------------------------------------------------
-vsol_triangle_3d::~vsol_triangle_3d()
-{
-}
+vsol_triangle_3d::~vsol_triangle_3d() = default;
 
 //---------------------------------------------------------------------------
 //: Clone `this': creation of a new object and initialization
@@ -273,5 +270,5 @@ vsl_b_read(vsl_b_istream &is, vsol_triangle_3d* &t)
     t->b_read(is);
   }
   else
-    t = VXL_NULLPTR;
+    t = nullptr;
 }

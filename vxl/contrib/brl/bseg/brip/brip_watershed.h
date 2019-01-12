@@ -33,7 +33,9 @@
 #include <iostream>
 #include <map>
 #include <queue>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_array_2d.h>
 #include <vil1/vil1_image.h>
 #include <vil1/vil1_memory_image_of.h>
@@ -46,7 +48,7 @@ class brip_watershed : public brip_watershed_params
   enum label {UNLABELED = 0, BOUNDARY=1};
   //:Constructors/destructor
   brip_watershed(brip_watershed_params const& bwp);
-  ~brip_watershed();
+  ~brip_watershed() override;
   //: Accessors/Mutators
   void set_image(vil1_memory_image_of<float> const& image);
   static unsigned int min_region_label() {return BOUNDARY + 1;}

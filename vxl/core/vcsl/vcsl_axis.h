@@ -12,11 +12,14 @@
 // \endverbatim
 
 #include <string>
+#include <utility>
 #include <vbl/vbl_ref_count.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vcsl/vcsl_axis_sptr.h>
-#include <vcsl/vcsl_unit_sptr.h>
 #include <vcsl/vcsl_dimension_sptr.h>
-#include <vcl_compiler.h>
+#include <vcsl/vcsl_unit_sptr.h>
 
 //: Axis descriptor: a dimension, a unit, a label
 class vcsl_axis
@@ -41,15 +44,15 @@ class vcsl_axis
   //: Constructor from dimension, unit and label
   vcsl_axis(vcsl_dimension_sptr const& new_dimension,
             vcsl_unit_sptr const& new_unit,
-            std::string const& new_label)
-    : dimension_(new_dimension), unit_(new_unit), label_(new_label) {}
+            std::string  new_label)
+    : dimension_(new_dimension), unit_(new_unit), label_(std::move(new_label)) {}
 
   // Copy constructor
   vcsl_axis(const vcsl_axis &a)
     : vbl_ref_count(),dimension_(a.dimension_),unit_(a.unit_),label_(a.label_){}
 
   // Destructor
-  ~vcsl_axis() {}
+  ~vcsl_axis() override = default;
 
   //***************************************************************************
   // Status report

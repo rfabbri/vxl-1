@@ -1,9 +1,6 @@
 // This is core/vidl/vidl_pixel_iterator.h
 #ifndef vidl_pixel_iterator_h_
 #define vidl_pixel_iterator_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Iterators over pixels in a frame
@@ -31,7 +28,7 @@ class vidl_pixel_iterator
 {
   public:
     //: Destructor
-    virtual ~vidl_pixel_iterator(){}
+    virtual ~vidl_pixel_iterator()= default;
     //: Return the pixel format
     virtual vidl_pixel_format pixel_format() const = 0;
     //: Pre-increment: step to the next pixel
@@ -58,4 +55,3 @@ bool vidl_has_pixel_iterator(vidl_pixel_format FMT);
 
 
 #endif // vidl_pixel_iterator_h_
-

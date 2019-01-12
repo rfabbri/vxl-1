@@ -1,9 +1,6 @@
 // This is core/vul/vul_temp_filename.h
 #ifndef vul_temp_filename_h_
 #define vul_temp_filename_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief  Generates a temporary filename.
@@ -13,7 +10,9 @@
 // tmpnam being unsafe.
 
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Generates a temporary filename.
 // There is a possible race condition, in that some other process may

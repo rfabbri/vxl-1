@@ -10,7 +10,9 @@
 // \author Vishal Jain
 // \date Nov 13, 2013
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/ocl/boxm2_opencl_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -33,8 +35,8 @@
 
 namespace boxm2_ocl_fuse_based_visibility_process_globals
 {
-  const unsigned int n_inputs_  = 4;
-  const unsigned int n_outputs_ = 0;
+  constexpr unsigned int n_inputs_ = 4;
+  constexpr unsigned int n_outputs_ = 0;
 }
 
 bool boxm2_ocl_fuse_based_visibility_process_cons(bprb_func_process& pro)
@@ -77,8 +79,8 @@ bool boxm2_ocl_fuse_based_visibility_process(bprb_func_process& pro)
 }
 namespace boxm2_ocl_fuse_based_orientation_process_globals
 {
-  const unsigned int n_inputs_  = 4;
-  const unsigned int n_outputs_ = 0;
+  constexpr unsigned int n_inputs_ = 4;
+  constexpr unsigned int n_outputs_ = 0;
 }
 
 bool boxm2_ocl_fuse_based_orientation_process_cons(bprb_func_process& pro)
@@ -121,8 +123,8 @@ bool boxm2_ocl_fuse_based_orientation_process(bprb_func_process& pro)
 }
 namespace boxm2_ocl_fuse_surface_density_process_globals
 {
-  const unsigned int n_inputs_  = 4;
-  const unsigned int n_outputs_ = 0;
+  constexpr unsigned int n_inputs_ = 4;
+  constexpr unsigned int n_outputs_ = 0;
 }
 
 bool boxm2_ocl_fuse_surface_density_process_cons(bprb_func_process& pro)

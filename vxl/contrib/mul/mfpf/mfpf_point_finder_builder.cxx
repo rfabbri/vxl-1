@@ -13,7 +13,9 @@
 #include <mbl/mbl_parse_block.h>
 #include <mbl/mbl_read_props.h>
 #include <mbl/mbl_cloneables_factory.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <mfpf/mfpf_point_finder.h>
 #include <vul/vul_string.h>
@@ -33,9 +35,7 @@ mfpf_point_finder_builder::mfpf_point_finder_builder()
 // Destructor
 //=======================================================================
 
-mfpf_point_finder_builder::~mfpf_point_finder_builder()
-{
-}
+mfpf_point_finder_builder::~mfpf_point_finder_builder() = default;
 
 //: Size of step between sample points
 void mfpf_point_finder_builder::set_step_size(double s)
@@ -73,9 +73,9 @@ unsigned mfpf_point_finder_builder::model_dim()
 }
 
 //: Get sample of region around specified point in image
-void mfpf_point_finder_builder::get_sample_vector(const vimt_image_2d_of<float>& image,
-                                                  const vgl_point_2d<double>& p,
-                                                  const vgl_vector_2d<double>& u,
+void mfpf_point_finder_builder::get_sample_vector(const vimt_image_2d_of<float>&  /*image*/,
+                                                  const vgl_point_2d<double>&  /*p*/,
+                                                  const vgl_vector_2d<double>&  /*u*/,
                                                   std::vector<double>& v)
 {
   // Return empty vector
@@ -151,12 +151,12 @@ bool mfpf_point_finder_builder::set_from_stream(std::istream &is)
 }
 
 //: Create a concrete object, from a text specification.
-vcl_unique_ptr<mfpf_point_finder_builder> mfpf_point_finder_builder::
+std::unique_ptr<mfpf_point_finder_builder> mfpf_point_finder_builder::
   create_from_stream(std::istream &is)
 {
   std::string name;
   is >> name;
-  vcl_unique_ptr<mfpf_point_finder_builder> opt;
+  std::unique_ptr<mfpf_point_finder_builder> opt;
   try {
     opt = mbl_cloneables_factory<mfpf_point_finder_builder>::get_clone(name);
   }

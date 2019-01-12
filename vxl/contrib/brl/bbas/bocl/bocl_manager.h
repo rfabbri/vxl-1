@@ -20,7 +20,9 @@
 #include "bocl_cl.h"
 #include "bocl_device.h"
 #include "bocl_device_info.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #if !defined(__APPLE__)
 #include <malloc.h>
 #endif
@@ -122,7 +124,7 @@ class bocl_manager_child: public bocl_manager<bocl_manager_child>
   friend class bocl_manager<bocl_manager_child>;
  private:
   bocl_manager_child() : bocl_manager<bocl_manager_child>() {}
-  virtual ~bocl_manager_child() {}
+  ~bocl_manager_child() override = default;
 };
 
 //: Binary write boxm2_scene scene to stream

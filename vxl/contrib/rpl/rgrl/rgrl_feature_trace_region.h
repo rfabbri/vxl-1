@@ -9,7 +9,9 @@
 #include <vector>
 #include <rgrl/rgrl_feature_trace_pt.h>
 #include <rgrl/rgrl_feature_region.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Represent a point along a trace (of a vessel, neuron, etc.)
 //
@@ -35,7 +37,7 @@ class rgrl_feature_trace_region
 
   //: The result is a rgrl_feature_trace_region, without transforming the radius/length parameters
   rgrl_feature_sptr
-  transform( rgrl_transformation const& xform ) const;
+  transform( rgrl_transformation const& xform ) const override;
 
   //: The result is a rgrl_feature_trace_region, with a transformation of the radius/length parameters
   rgrl_feature_sptr
@@ -52,7 +54,7 @@ class rgrl_feature_trace_region
 //    feature_vector
 //    boundary_points(vnl_vector<double> const& in_direction) const;
 
-  unsigned int num_constraints() const;
+  unsigned int num_constraints() const override;
 
   // Defines type-related functions
   rgrl_type_macro( rgrl_feature_trace_region, rgrl_feature_trace_pt );
@@ -61,7 +63,7 @@ class rgrl_feature_trace_region
   double region_radius() const { return region_radius_; }
 
   //:  Extract the pixel coordinates within the oriented rectangular solid defined by the feature.
-  virtual void generate_pixel_coordinates( vnl_vector< double > const& spacing_ratio );
+  void generate_pixel_coordinates( vnl_vector< double > const& spacing_ratio ) override;
 
   //  Chuck's note:  I am beginning to wonder if we are trying to do
   //  too much here.  Perhaps we should be make a subclass for the

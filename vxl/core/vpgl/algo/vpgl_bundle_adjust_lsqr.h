@@ -21,7 +21,9 @@
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_homg_point_3d.h>
 #include <vpgl/vpgl_perspective_camera.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 //: base class bundle adjustment sparse least squares function
@@ -34,7 +36,7 @@ class vpgl_bundle_adjust_lsqr : public vnl_sparse_lst_sqr_function
   vpgl_bundle_adjust_lsqr(unsigned int num_params_per_a,
                           unsigned int num_params_per_b,
                           unsigned int num_params_c,
-                          const std::vector<vgl_point_2d<double> >& image_points,
+                          std::vector<vgl_point_2d<double> >  image_points,
                           const std::vector<std::vector<bool> >& mask);
 
   //: Constructor
@@ -49,7 +51,7 @@ class vpgl_bundle_adjust_lsqr : public vnl_sparse_lst_sqr_function
                           const std::vector<std::vector<bool> >& mask);
 
   // Destructor
-  virtual ~vpgl_bundle_adjust_lsqr() {}
+  ~vpgl_bundle_adjust_lsqr() override = default;
 
   //: Compute all the reprojection errors
   //  Given the parameter vectors a, b, and c, compute the vector of residuals e.
@@ -57,28 +59,34 @@ class vpgl_bundle_adjust_lsqr : public vnl_sparse_lst_sqr_function
   //  The parameters in for each camera are in a.
   //  The 3D point parameters are in b.
   //  Global parameters are in c.
-  virtual void f(vnl_vector<double> const& a,
+  void f(vnl_vector<double> const& a,
                  vnl_vector<double> const& b,
                  vnl_vector<double> const& c,
-                 vnl_vector<double>& e);
+                 vnl_vector<double>& e) override;
 
   //: Compute the residuals from the ith component of a, the jth component of b, and all of c.
   //  This function is not normally used because f() has a
   //  self-contained efficient implementation.
   //  It is used for finite-differencing if the gradient is marked as unavailable
-  virtual void fij(int i, int j,
+  void fij(int i, int j,
                    vnl_vector<double> const& ai,
                    vnl_vector<double> const& bj,
                    vnl_vector<double> const& c,
-                   vnl_vector<double>& fij);
+                   vnl_vector<double>& fij) override;
 
   //: Compute the sparse Jacobian in block form.
-  virtual void jac_blocks(vnl_vector<double> const& a,
+  void jac_blocks(vnl_vector<double> const& a,
                           vnl_vector<double> const& b,
                           vnl_vector<double> const& c,
                           std::vector<vnl_matrix<double> >& A,
                           std::vector<vnl_matrix<double> >& B,
-                          std::vector<vnl_matrix<double> >& C);
+                          std::vector<vnl_matrix<double> >& C) override;
+
+
+  /* parent class has different signatures for these functions */
+  using vnl_sparse_lst_sqr_function::jac_Aij;
+  using vnl_sparse_lst_sqr_function::jac_Bij;
+  using vnl_sparse_lst_sqr_function::jac_Cij;
 
   //: compute the Jacobian Aij
   virtual void jac_Aij(unsigned int i,
@@ -113,7 +121,7 @@ class vpgl_bundle_adjust_lsqr : public vnl_sparse_lst_sqr_function
                          vnl_vector<double> const& bj,
                          vnl_vector<double> const& c,
                          vnl_vector<double> const& fij,
-                         double& weight);
+                         double& weight) override;
 
   //: set the residual scale for the robust estimation
   void set_residual_scale(double scale) { scale2_ = scale*scale; }

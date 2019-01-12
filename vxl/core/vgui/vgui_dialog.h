@@ -1,9 +1,6 @@
 // This is core/vgui/vgui_dialog.h
 #ifndef vgui_dialog_h_
 #define vgui_dialog_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author Philip C. Pritchett, Robotics Research Group, University of Oxford
@@ -24,7 +21,9 @@
 
 #include <string>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgui/vgui_tableau.h>
 #include <vgui/vgui_command_sptr.h>
 

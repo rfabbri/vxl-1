@@ -1,7 +1,4 @@
 // This is core/vul/io/vul_io_user_info.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 #include <iostream>
@@ -12,7 +9,7 @@
 //: Binary save self to stream.
 void vsl_b_write(vsl_b_ostream &os, const vul_user_info & p)
 {
-  const short io_version_no = 1;
+  constexpr short io_version_no = 1;
   vsl_b_write(os, io_version_no);
   vsl_b_write(os, p.uid);
   vsl_b_write(os, p.gid);

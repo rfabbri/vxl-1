@@ -4,15 +4,17 @@
 #include <bprb/bprb_func_process.h>
 #include <bpro/core/bbas_pro/bbas_1d_array_float.h>
 #include <brad/brad_phongs_model_est.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/algo/vnl_levenberg_marquardt.h>
 #include <vnl/vnl_math.h>
 //:
 // \file
 namespace brad_estimate_empty_process_globals
 {
-    const unsigned n_inputs_  = 4;
-    const unsigned n_outputs_ = 1;
+    constexpr unsigned n_inputs_ = 4;
+    constexpr unsigned n_outputs_ = 1;
 }
 
 
@@ -80,9 +82,9 @@ bool brad_estimate_empty_process(bprb_func_process& pro)
         unsigned index = i + 1;
         if (i == Iobs.size()-1)
             index =0;
-        float gradI = (float)std::fabs(Iobs[i]-Iobs[index]);
+        auto gradI = (float)std::fabs(Iobs[i]-Iobs[index]);
 
-        int bin_index  = (int) std::floor(gradI*8);
+        int bin_index = (int) std::floor(gradI*8);
         bin_index = bin_index>7 ? 7:bin_index;
         temp_histogram[bin_index] += (float)std::min(vis[i],vis[index]);
         sum += (float)std::min(vis[i],vis[index]);
@@ -100,4 +102,3 @@ bool brad_estimate_empty_process(bprb_func_process& pro)
 
     return true;
 }
-

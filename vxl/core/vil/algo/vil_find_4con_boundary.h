@@ -3,8 +3,10 @@
 
 #include <vector>
 #include <vil/vil_image_view.h>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //:
 // \file

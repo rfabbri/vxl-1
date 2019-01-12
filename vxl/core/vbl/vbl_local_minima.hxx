@@ -4,8 +4,10 @@
 #include <limits>
 #include "vbl_local_minima.h"
 //
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 template <class T>
 bool local_minima(vbl_array_1d<T> const& in, vbl_array_1d<T>& minima, T thresh)

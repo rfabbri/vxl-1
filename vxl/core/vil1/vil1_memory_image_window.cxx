@@ -1,7 +1,4 @@
 // This is core/vil1/vil1_memory_image_window.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Andrew W. Fitzgibbon, Oxford RRG
@@ -10,7 +7,9 @@
 
 #include <cmath>
 #include "vil1_memory_image_window.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 vil1_memory_image_window::vil1_memory_image_window(
            const vil1_memory_image_of<vxl_byte>& image,

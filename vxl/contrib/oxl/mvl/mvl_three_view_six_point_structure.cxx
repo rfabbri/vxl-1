@@ -1,7 +1,4 @@
 // This is oxl/mvl/mvl_three_view_six_point_structure.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
@@ -10,7 +7,9 @@
 #include <cmath>
 #include "mvl_three_view_six_point_structure.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vnl/algo/vnl_svd.h>
 #include <vnl/algo/vnl_rpoly_roots.h>
@@ -76,7 +75,7 @@ bool mvl_three_view_six_point_structure::compute()
       if (! mvl_five_point_camera_pencil_parameters(A[i], B[i],
                                                     solution[k].Q,
                                                     u[i][5], v[i][5],
-                                                    st, VXL_NULLPTR))
+                                                    st, nullptr))
         solution[k].valid = false;
       else
         solution[k].P[i] = st[0] * A[i] + st[1] * B[i];

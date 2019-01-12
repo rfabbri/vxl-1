@@ -20,10 +20,10 @@
 // global variables
 namespace vil_grey_to_rgb_process_globals
 {
-  const unsigned  n_inputs_ = 2;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned  n_inputs_ = 2;
+  constexpr unsigned n_outputs_ = 1;
 
-  std::map<float, vil_rgb<vxl_byte> > get_color_id(std::string color_text)
+  std::map<float, vil_rgb<vxl_byte> > get_color_id(const std::string& color_text)
   {
     std::map<float, vil_rgb<vxl_byte> > color_map;
     unsigned id;
@@ -77,19 +77,19 @@ bool vil_grey_to_rgb_process(bprb_func_process& pro)
   }
   std::map<float, vil_rgb<vxl_byte> > color_map = get_color_id(color_text);
 
-  for (std::map<float, vil_rgb<vxl_byte> >::iterator mit = color_map.begin(); mit != color_map.end(); ++mit)
-    std::cout << " id = " << mit->first << " --> color = " << mit->second << std::endl;
+  for (auto & mit : color_map)
+    std::cout << " id = " << mit.first << " --> color = " << mit.second << std::endl;
 
   // load the input image and transfer it to type float
   unsigned ni, nj;
   ni = img->ni();  nj = img->nj();
 
-  vil_image_view<float>* in_img = dynamic_cast<vil_image_view<float>* >(img.ptr());
+  auto* in_img = dynamic_cast<vil_image_view<float>* >(img.ptr());
   if (!in_img) {
     vil_image_view<float> temp(img->ni(), img->nj(), 1);
-    vil_image_view<vxl_int_16>* img_view_int = dynamic_cast<vil_image_view<vxl_int_16>*>(img.ptr());
+    auto* img_view_int = dynamic_cast<vil_image_view<vxl_int_16>*>(img.ptr());
     if (!img_view_int) {
-      vil_image_view<vxl_byte>* img_view_byte = dynamic_cast<vil_image_view<vxl_byte>*>(img.ptr());
+      auto* img_view_byte = dynamic_cast<vil_image_view<vxl_byte>*>(img.ptr());
       if (!img_view_byte) {
         std::cerr << pro.name() << ": The image pixel format: " << img->pixel_format() << " is not supported!\n";
         return false;
@@ -103,7 +103,7 @@ bool vil_grey_to_rgb_process(bprb_func_process& pro)
   }
 
   // generate a color rgb image
-  vil_image_view<vil_rgb<vxl_byte> >* out_img = new vil_image_view<vil_rgb<vxl_byte> >(ni,nj);
+  auto* out_img = new vil_image_view<vil_rgb<vxl_byte> >(ni,nj);
   out_img->fill(vil_rgb<vxl_byte>(0,0,0));
   for (unsigned i = 0; i < ni; i++)
     for (unsigned j = 0; j < nj; j++) {

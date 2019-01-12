@@ -1,15 +1,14 @@
 // This is core/vsl/vsl_indent.h
 #ifndef vsl_indent_h_
 #define vsl_indent_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author Tim Cootes
 
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Put indents into output streams, to produce more legible printed output
 //  Its use is best described by example:

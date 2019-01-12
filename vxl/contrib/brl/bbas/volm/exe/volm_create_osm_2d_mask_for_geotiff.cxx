@@ -30,8 +30,9 @@
 #include <bkml/bkml_write.h>
 #include <bkml/bkml_parser.h>
 #include <vul/vul_file_iterator.h>
-#include <volm/volm_osm_parser.h>
 #include <brip/brip_line_generator.h>
+
+#include <utility>
 
 bool find_key_value_from_tags(std::string const& key, std::string const& value,
                               std::vector<std::pair<std::string, std::string> >& tags,
@@ -42,7 +43,7 @@ bool find_key_value_from_tags(std::string const& key, std::string const& value,
     name = "all=all";
     return true;
   }
-  for (std::vector<std::pair<std::string, std::string> >::iterator vit = tags.begin(); ( vit != tags.end() && !found); ++vit)
+  for (auto vit = tags.begin(); ( vit != tags.end() && !found); ++vit)
   {
     if (key.compare("all") == 0 && value.compare(vit->second) == 0)
     {  found = true;  name = vit->first + "=" + vit->second; }
@@ -54,9 +55,9 @@ bool find_key_value_from_tags(std::string const& key, std::string const& value,
   return found;
 }
 
-static void error(std::string log_file, std::string msg)
+static void error(std::string log_file, const std::string& msg)
 {
-  std::cerr << msg;  volm_io::write_post_processing_log(log_file, msg);
+  std::cerr << msg;  volm_io::write_post_processing_log(std::move(log_file), msg);
 }
 using namespace std;
 int main(int argc, char** argv)
@@ -119,20 +120,20 @@ int main(int argc, char** argv)
     volm_osm_parser::parse_polygons(osm_polys, osm_poly_keys, osm_file());
     std::cout << osm_polys.size() << " regions are parsed from osm file" << std::flush << std::endl;
 
-    unsigned num_lines = (unsigned)osm_lines.size();
+    auto num_lines = (unsigned)osm_lines.size();
     for (unsigned i = 0; i < num_lines; i++) {
       vector<pair<string, string> > curr_keys = osm_line_keys[i];
       string name, description;
       bool found = find_key_value_from_tags(key(), value(), curr_keys, name);
       if (found) { // mark these pixels in the image
         vector<vgl_point_2d<double> > line;
-        for (vector<vgl_point_2d<double> >::iterator vit = osm_lines[i].begin(); vit != osm_lines[i].end(); ++vit) {
-          double lon = vit->x(); double lat = vit->y();
+        for (auto & vit : osm_lines[i]) {
+          double lon = vit.x(); double lat = vit.y();
           double u,v;
           cam->global_to_img(lon, lat, 0.0, u, v);
 
           if (u >= 0 && u < ni && v >= 0 && v < nj) {
-            line.push_back(vgl_point_2d<double>(u,v));
+            line.emplace_back(u,v);
             cout << u << " " << v << " " << endl;
           }
         }
@@ -163,21 +164,21 @@ int main(int argc, char** argv)
         vgl_polygon<double> img_poly;
         vector<vgl_point_2d<double> > sheet;
         vgl_point_2d<double> s = line[0];
-        sheet.push_back(vgl_point_2d<double>(0, s.y()));
+        sheet.emplace_back(0, s.y());
         //sheet.push_back(vgl_point_2d<double>(s.x(), 0));
         for (int kk = 0; kk < line.size()-1; kk++) {
           vgl_point_2d<double> s, e;
           s = line[kk];  e = line[kk+1];
 
           bool init = true;
-          float xs = static_cast<float>(s.x()), ys = static_cast<float>(s.y());
-          float xe = static_cast<float>(e.x()), ye = static_cast<float>(e.y());
+          auto xs = static_cast<float>(s.x()), ys = static_cast<float>(s.y());
+          auto xe = static_cast<float>(e.x()), ye = static_cast<float>(e.y());
           float x=xs, y=ys;
           //generate the path between two pixels
           while (brip_line_generator::generate(init, xs, ys, xe, ye, x, y))
           {
-            unsigned u = static_cast<unsigned>(x), v = static_cast<unsigned>(y);
-            sheet.push_back(vgl_point_2d<double>(x,y));
+            auto u = static_cast<unsigned>(x), v = static_cast<unsigned>(y);
+            sheet.emplace_back(x,y);
             if ( u >= 0 && v >= 0 && u < output_img.ni() && v < output_img.nj()) {
               output_img(u,v) = vil_rgb<vxl_byte>(255,255,255);
             }
@@ -185,11 +186,11 @@ int main(int argc, char** argv)
         }
 
         vgl_point_2d<double> e = line[line.size()-1];
-        sheet.push_back(vgl_point_2d<double>(e.x(),0));
+        sheet.emplace_back(e.x(),0);
         //sheet.push_back(vgl_point_2d<double>(0,e.y()));
-        sheet.push_back(vgl_point_2d<double>(ni-1, nj-1));
+        sheet.emplace_back(ni-1, nj-1);
         //sheet.push_back(vgl_point_2d<double>(0, nj));
-        sheet.push_back(vgl_point_2d<double>(0, nj));
+        sheet.emplace_back(0, nj);
         //sheet.push_back(vgl_point_2d<double>(0, 0));
         img_poly.push_back(sheet);
         vgl_polygon_scan_iterator<double> it(img_poly, false);
@@ -232,4 +233,3 @@ int main(int argc, char** argv)
 
   return true;
 }
-

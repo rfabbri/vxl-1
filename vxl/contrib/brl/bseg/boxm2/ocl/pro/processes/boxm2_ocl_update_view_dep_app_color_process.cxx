@@ -14,7 +14,9 @@
 // \author Ali Osman Ulusoy
 // \date Nov 20, 2012
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/ocl/boxm2_opencl_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -39,8 +41,8 @@
 
 namespace boxm2_ocl_update_view_dep_app_color_process_globals
 {
-  const unsigned int n_inputs_  = 9;
-  const unsigned int n_outputs_ = 0;
+  constexpr unsigned int n_inputs_ = 9;
+  constexpr unsigned int n_outputs_ = 0;
 }
 
 bool boxm2_ocl_update_view_dep_app_color_process_cons(bprb_func_process& pro)
@@ -97,7 +99,7 @@ bool boxm2_ocl_update_view_dep_app_color_process(bprb_func_process& pro)
   std::string               ident        = pro.get_input<std::string>(i++);
   vil_image_view_base_sptr mask_sptr    = pro.get_input<vil_image_view_base_sptr>(i++);
   bool                     update_alpha = pro.get_input<bool>(i++);
-  float                    mog_var      = pro.get_input<float>(i++);
+  auto                    mog_var      = pro.get_input<float>(i++);
 
 
   return boxm2_ocl_update_view_dep_app_color::update(scene, device, opencl_cache, cam, img, ident, mask_sptr, update_alpha, mog_var);

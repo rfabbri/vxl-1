@@ -1,7 +1,10 @@
 //this is /brl/bseg/bapl/bapl_dsift.cxx
 #include "bapl_dsift.h"
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/algo/vil_orientations.h>
 #include <vnl/vnl_math.h>
 
@@ -62,7 +65,7 @@ std::vector<float> bapl_dsift::dsift( unsigned const& key_x, unsigned const& key
 
               float weight = this->grad_mag_(xc,yc) * interp_x * interp_y * bapl_dsift::gaussian(float(xc-key_x), float(yc-key_y));
 
-              float orient = float(vnl_math::angle_0_to_2pi(this->grad_orient_(xc,yc)-key_orient+vnl_math::pi));
+              auto orient = float(vnl_math::angle_0_to_2pi(this->grad_orient_(xc,yc)-key_orient+vnl_math::pi));
 
               int bin = ((int(orient*15/float(vnl_math::twopi))+1)/2)%8;
               histogram[hi*32+hj*8+bin] += weight;
@@ -114,7 +117,7 @@ vnl_vector<double> bapl_dsift::vnl_dsift( unsigned const& key_x, unsigned const&
               float gw = bapl_dsift::gaussian((xc-float(key_x)), (yc-float(key_y)));
 
               float weight = this->grad_mag_(xc,yc) * interp_x * interp_y * gw;
-              float orient = float(vnl_math::angle_0_to_2pi(this->grad_orient_(xc,yc)-key_orient+vnl_math::pi));
+              auto orient = float(vnl_math::angle_0_to_2pi(this->grad_orient_(xc,yc)-key_orient+vnl_math::pi));
 
               int bin = ((int(orient*15/float(vnl_math::twopi))+1)/2)%8;
               histogram[hi*32+hj*8+bin] += weight;
@@ -130,7 +133,7 @@ vnl_vector<double> bapl_dsift::vnl_dsift( unsigned const& key_x, unsigned const&
 
 void bapl_dsift::b_write(vsl_b_ostream& os) const
 {
-  const short version_no = 1;
+  constexpr short version_no = 1;
   vsl_b_write(os, version_no);
   vsl_b_write(os, this->grad_valid_);
 

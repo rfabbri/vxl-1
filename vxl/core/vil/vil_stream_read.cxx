@@ -1,6 +1,3 @@
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \brief read numbers from vil_stream
@@ -20,7 +17,10 @@
 // \endverbatim
 
 #include "vil_stream_read.h"
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vil/vil_stream.h>
 #include <vxl_config.h>

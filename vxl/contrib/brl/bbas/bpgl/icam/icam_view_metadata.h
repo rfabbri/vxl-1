@@ -18,7 +18,9 @@
 #include "icam_depth_transform.h"
 #include "icam_minimizer.h"
 #include "icam_minimizer_params.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: A class to hold image information of a viewpoint
 class icam_view_metadata
@@ -26,12 +28,12 @@ class icam_view_metadata
  public:
 
    //: default constructor
-   icam_view_metadata() {}
+   icam_view_metadata() = default;
 
-   icam_view_metadata(std::string const& exp_img,
-                      std::string const& dt_path);
+   icam_view_metadata(std::string  exp_img,
+                      std::string  dt_path);
 
-   virtual ~icam_view_metadata() {}
+   virtual ~icam_view_metadata() = default;
 
    virtual void register_image(vil_image_view<float> const& source_img,
                                vpgl_camera_double_sptr camera,
@@ -45,7 +47,7 @@ class icam_view_metadata
 
    //: for debug purposes
    void mapped_image(vil_image_view<float> const& source_img,
-                     vpgl_camera_double_sptr camera,
+                     const vpgl_camera_double_sptr& camera,
                      vgl_rotation_3d<double>& rot,
                      vgl_vector_3d<double>& trans, unsigned level,
                      icam_minimizer_params const& params,
@@ -69,7 +71,7 @@ class icam_view_metadata
    unsigned final_level_;
 
    void create_minimizer(vil_image_view<float>*& exp_img, vil_image_view<double>*& depth_img,
-                         vpgl_camera_double_sptr camera, icam_minimizer_params const& params,
+                         const vpgl_camera_double_sptr& camera, icam_minimizer_params const& params,
                          icam_minimizer*& minimizer);
 };
 
@@ -104,4 +106,3 @@ bool load_image(vil_image_view_base_sptr const& base_img, vil_image_view<T>*& im
 }
 
 #endif // icam_view_metadata_h_
-

@@ -7,12 +7,14 @@
 #include "vil_nitf2_data_mask_table.h"
 
 #include <vil/vil_stream.h>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 vil_nitf2_data_mask_table::vil_nitf2_data_mask_table(
   unsigned int num_blocks_x, unsigned int num_blocks_y,
-  unsigned int num_bands, const std::string i_mode )
+  unsigned int num_bands, const std::string& i_mode )
   : num_blocks_x( num_blocks_x ),
     num_blocks_y( num_blocks_y ),
     num_bands( num_bands ),

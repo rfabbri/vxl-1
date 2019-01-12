@@ -5,8 +5,10 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <imesh/algo/imesh_project.h>
 #include <imesh/imesh_operations.h>
 #include <vil/vil_bilin_interp.h>
@@ -93,7 +95,7 @@ void imesh_render_textured(const imesh_mesh& mesh,
   assert(tex_coords.size() == verts2d.size());
 
   const imesh_face_array_base& faces = mesh.faces();
-  vcl_unique_ptr<imesh_regular_face_array<3> > tri_data;
+  std::unique_ptr<imesh_regular_face_array<3> > tri_data;
   const imesh_regular_face_array<3>* tris;
   if (faces.regularity() != 3) {
     tri_data = imesh_triangulate(faces);
@@ -103,8 +105,7 @@ void imesh_render_textured(const imesh_mesh& mesh,
     tris = static_cast<const imesh_regular_face_array<3>*>(&faces);
   }
 
-  for (unsigned i=0; i<tris->size(); ++i) {
-    const imesh_regular_face<3>& tri = (*tris)[i];
+  for (auto tri : *tris) {
     const vgl_point_2d<double>& v1 = verts2d[tri[0]];
     const vgl_point_2d<double>& v2 = verts2d[tri[1]];
     const vgl_point_2d<double>& v3 = verts2d[tri[2]];

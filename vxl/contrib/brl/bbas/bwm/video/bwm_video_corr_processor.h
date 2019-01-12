@@ -15,7 +15,9 @@
 #include <vector>
 #include <iostream>
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_point_3d.h>
 #include <vnl/vnl_least_squares_function.h>
 #include <vnl/vnl_cost_function.h>
@@ -48,7 +50,7 @@ class bwm_video_corr_lsqr_cost_func : public vnl_least_squares_function
 
   void set_base_image(vil_image_view<float> const& base){base_image_ = base;}
 
-  virtual void f(vnl_vector<double> const& x, vnl_vector<double>& fx);
+  void f(vnl_vector<double> const& x, vnl_vector<double>& fx) override;
  protected:
   vil_image_view<float> base_image_;
   unsigned match_radius_;
@@ -62,10 +64,10 @@ class bwm_video_corr_cost_function: public vnl_cost_function
   bwm_video_corr_cost_function(vil_image_view<float> const& base_image,
                                unsigned match_radius,
                                std::vector<float> corr_window_ab);
-  ~bwm_video_corr_cost_function(){}
+  ~bwm_video_corr_cost_function() override= default;
 
   //: The cost function. x is a 2-element vector holding the corr position
-  virtual double f(vnl_vector<double> const& x);
+  double f(vnl_vector<double> const& x) override;
 
   void set_base_image(vil_image_view<float> const& base){base_image_ = base;}
  protected:
@@ -84,11 +86,11 @@ class bwm_video_corr_processor
 
   //: Constructor - default
   bwm_video_corr_processor() : verbose_(false), site_path_(""), site_name_(""),
-    video_path_(""), camera_path_(""), video_istr_(VXL_NULLPTR), cam_istr_(VXL_NULLPTR),
+    video_path_(""), camera_path_(""), video_istr_(nullptr), cam_istr_(nullptr),
     world_pts_valid_(false){}
 
   //: Destructor
-  ~bwm_video_corr_processor() {}
+  ~bwm_video_corr_processor() = default;
 
   //: Accessors
   void set_site_name(std::string const& site_name) {site_name_=site_name;}
@@ -104,7 +106,7 @@ class bwm_video_corr_processor
   std::vector<vgl_point_3d<double> > world_pts();
 
   //: if the world coordinates are given in global coordinates of satellite cameras, convert them to local coordinate frame of the given lvcs
-  void convert_world_pts_to_local(vpgl_lvcs_sptr lvcs);
+  void convert_world_pts_to_local(const vpgl_lvcs_sptr& lvcs);
 
   std::string site_name() const {return site_name_;}
   std::string video_path() const {return video_path_;}

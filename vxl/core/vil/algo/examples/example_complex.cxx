@@ -6,7 +6,9 @@
 #include <iostream>
 #include <complex>
 #include <vxl_config.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_image_view.h>
 #include <vil/vil_view_as.h>
 #include <vil/vil_print.h>

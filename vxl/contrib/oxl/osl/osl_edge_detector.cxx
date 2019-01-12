@@ -8,8 +8,10 @@
 //:
 // \file
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <osl/osl_canny_base.h>
 #include <osl/osl_kernel.h>
@@ -82,7 +84,7 @@ void osl_edge_detector::detect_edges(vil1_image const &image,
                                      std::list<osl_edge*> *edges,
                                      bool maintain_topology)
 {
-  assert(edges!=VXL_NULLPTR);
+  assert(edges!=nullptr);
 
   //
   xsize_ = image.height();
@@ -185,7 +187,7 @@ void osl_edge_detector::detect_edges(vil1_image const &image,
 void osl_edge_detector::Sub_pixel_interpolation()
 {
   float h1=0.0,h2=0.0; // dummy initialisation values
-  float k = float(vnl_math::deg_per_rad);
+  auto k = float(vnl_math::deg_per_rad);
   int orient;
   float theta,grad;
   float fraction,dnewx=0.0,dnewy=0.0; // dummy initialisation values
@@ -387,19 +389,19 @@ void osl_edge_detector::Set_thresholds()
   int** bdist = Make_int_image(xsize_,ysize_);
   int**a1dist = Make_int_image(xsize_,ysize_);
   int**a2dist = Make_int_image(xsize_,ysize_);
-  osl_canny_base_copy_raw_image(VCL_OVERLOAD_CAST(int const*const*, dist_), fdist, xsize_, ysize_);
-  osl_canny_base_copy_raw_image(VCL_OVERLOAD_CAST(int const*const*, dist_), bdist, xsize_, ysize_);
-  osl_canny_base_copy_raw_image(VCL_OVERLOAD_CAST(int const*const*, dist_),a1dist, xsize_, ysize_);
-  osl_canny_base_copy_raw_image(VCL_OVERLOAD_CAST(int const*const*, dist_),a2dist, xsize_, ysize_);
+  osl_canny_base_copy_raw_image( dist_, fdist, xsize_, ysize_);
+  osl_canny_base_copy_raw_image( dist_, bdist, xsize_, ysize_);
+  osl_canny_base_copy_raw_image( dist_,a1dist, xsize_, ysize_);
+  osl_canny_base_copy_raw_image( dist_,a2dist, xsize_, ysize_);
 
   float** fth = Make_float_image(xsize_,ysize_);
   float** bth = Make_float_image(xsize_,ysize_);
   float**a1th = Make_float_image(xsize_,ysize_);
   float**a2th = Make_float_image(xsize_,ysize_);
-  osl_canny_base_copy_raw_image(VCL_OVERLOAD_CAST(float const *const*, thresh_), fth, xsize_, ysize_);
-  osl_canny_base_copy_raw_image(VCL_OVERLOAD_CAST(float const *const*, thresh_), bth, xsize_, ysize_);
-  osl_canny_base_copy_raw_image(VCL_OVERLOAD_CAST(float const *const*, thresh_),a1th, xsize_, ysize_);
-  osl_canny_base_copy_raw_image(VCL_OVERLOAD_CAST(float const *const*, thresh_),a2th, xsize_, ysize_);
+  osl_canny_base_copy_raw_image( thresh_, fth, xsize_, ysize_);
+  osl_canny_base_copy_raw_image( thresh_, bth, xsize_, ysize_);
+  osl_canny_base_copy_raw_image( thresh_,a1th, xsize_, ysize_);
+  osl_canny_base_copy_raw_image( thresh_,a2th, xsize_, ysize_);
 
   osl_chamfer_Forward (xsize_, ysize_, fdist, fth);
   osl_chamfer_Backward(xsize_, ysize_, bdist, bth);
@@ -510,7 +512,7 @@ void osl_edge_detector::Thin_edges()
   bool do_output = true;
 
   std::cerr << __FILE__ ": Fast Sort\n";
-  osl_edge_detector_xyfloat* edgel_array = new osl_edge_detector_xyfloat[xsize_ * ysize_];
+  auto* edgel_array = new osl_edge_detector_xyfloat[xsize_ * ysize_];
   int count = 1;     // count set to dummy, nonzero value
   while ( count!=0 ) //  Thin until no Pixels are removed
   {
@@ -662,7 +664,7 @@ void osl_edge_detector::Follow_curves(std::list<osl_edge*> *edges)
         continue;
 
       int count=0; // isn't this just "count = grad.size()" ?
-      for (std::list<float>::iterator i=grad.begin(); i!=grad.end(); ++i)
+      for (auto i=grad.begin(); i!=grad.end(); ++i)
         count++;
 
       // If the count is less than two we cannot accept
@@ -672,7 +674,7 @@ void osl_edge_detector::Follow_curves(std::list<osl_edge*> *edges)
         continue;
 
       // Create an osl_edgel_chain
-      osl_edgel_chain *dc = new osl_edgel_chain(count);
+      auto *dc = new osl_edgel_chain(count);
       float *px = dc->GetX();
       float *py = dc->GetY();
       float *pg = dc->GetGrad();
@@ -699,7 +701,7 @@ void osl_edge_detector::Follow_curves(std::list<osl_edge*> *edges)
           *(pg++) = 0.0f;   // Mark the gradient as zero at a junction
         }
         if (theta_[tmpx][tmpy] == DUMMYTHETA) {
-          const float k = float(vnl_math::deg_per_rad);
+          const auto k = float(vnl_math::deg_per_rad);
           theta_[tmpx][tmpy]  = k*(float)std::atan2(dy_[tmpx][y],dx_[tmpx][y]);
         }
 
@@ -717,9 +719,9 @@ void osl_edge_detector::Follow_curves(std::list<osl_edge*> *edges)
 
       else if ( dc->size() > 1 ) {
         // Create an edge for the image topology
-        osl_Vertex *v1 = new osl_Vertex(dc->GetX(0),dc->GetY(0));
+        auto *v1 = new osl_Vertex(dc->GetX(0),dc->GetY(0));
         v1->SetId(vertidcount_++);
-        osl_Vertex *v2 = new osl_Vertex(dc->GetX(dc->size()-1),dc->GetY(dc->size()-1));
+        auto *v2 = new osl_Vertex(dc->GetX(dc->size()-1),dc->GetY(dc->size()-1));
         v2->SetId(vertidcount_++);
         // Check whether each vertex is a junction
         osl_Vertex *V1 = osl_find(vlist_, *v1);
@@ -925,11 +927,11 @@ void osl_edge_detector::Find_junction_clusters()
 
   // Construct the list of junction cluster centres
   vlist_->clear();
-  for (std::list<int>::iterator i=xvertices.begin(), j=yvertices.begin();
+  for (auto i=xvertices.begin(), j=yvertices.begin();
        i!=xvertices.end() && j!=yvertices.end();
        ++i, ++j) {
 
-    osl_Vertex *v = new osl_Vertex( float((*i)/*xvertices.value()*/+xstart_),
+    auto *v = new osl_Vertex( float((*i)/*xvertices.value()*/+xstart_),
                                     float((*j)/*yvertices.value()*/+ystart_));
     vlist_->push_front(v);
     junction_[(*i)/*xvertices.value()*/][(*j)/*yvertices.value()*/] = 2;
@@ -1007,7 +1009,7 @@ void osl_edge_detector::Cluster_centre(std::list<int> &xc,
 
   // Define the centre as the point with the highest gradient value.
   float grad = -1.0;  // Negative is smaller than the smallest norm of gradient
-  for (it i=xc.begin(),j=yc.begin(); i!=xc.end() && j!=yc.end(); ++i, ++j)
+  for (auto i=xc.begin(),j=yc.begin(); i!=xc.end() && j!=yc.end(); ++i, ++j)
     //xc.reset(),yc.reset(); xc.next(),yc.next(); )
     if ( grad_[(*i)/*xc.value()*/][(*j)/*yc.value()*/] > grad ) {
       grad = grad_[(*i)/*xc.value()*/][(*j)/*yc.value()*/];
@@ -1016,7 +1018,7 @@ void osl_edge_detector::Cluster_centre(std::list<int> &xc,
     }
 
   // Set up the (jx_,jy_) arrays to point to the cluster centre
-  for (it i=xc.begin(), j=yc.begin(); i!=xc.end() && j!=yc.end(); ++i, ++j) {
+  for (auto i=xc.begin(), j=yc.begin(); i!=xc.end() && j!=yc.end(); ++i, ++j) {
     //xc.reset(),yc.reset(); xc.next(),yc.next(); )  {
     jx_[(*i)/*xc.value()*/][(*j)/*yc.value()*/] = x0;
     jy_[(*i)/*xc.value()*/][(*j)/*yc.value()*/] = y0;
@@ -1024,4 +1026,3 @@ void osl_edge_detector::Cluster_centre(std::list<int> &xc,
 }
 
 //-----------------------------------------------------------------------------
-

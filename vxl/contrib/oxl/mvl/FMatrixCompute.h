@@ -1,9 +1,6 @@
 // This is oxl/mvl/FMatrixCompute.h
 #ifndef _FMatrixCompute_h
 #define _FMatrixCompute_h
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Base class for fundamental matrix fitters
@@ -34,7 +31,9 @@
 
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <mvl/FMatrix.h>
 #include <vgl/vgl_homg_point_2d.h>
 class HomgPoint2D;

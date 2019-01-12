@@ -5,7 +5,9 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_float_3.h>
 #include <bsta/bsta_gauss_if3.h>
@@ -89,14 +91,14 @@ void bvpl_gauss3d_kernel_factory::create_canonical()
       {
         vnl_float_3 pt(x,y,z);
         float val = gauss_kernel.prob_density(pt);
-        canonical_kernel_.push_back(std::pair<point_3d,dispatch>(point_3d(x,y,z), dispatch(val)));
+        canonical_kernel_.emplace_back(point_3d(x,y,z), dispatch(val));
         l1_norm +=val;
       }
     }
   }
 
   //normalize to L1 norm
-  std::vector<std::pair<vgl_point_3d<float>, bvpl_kernel_dispatch> >::iterator k_it = canonical_kernel_.begin();
+  auto k_it = canonical_kernel_.begin();
   float norm = 0.0;
   for(; k_it != canonical_kernel_.end(); k_it++)
   {

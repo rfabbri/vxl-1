@@ -10,7 +10,9 @@
 #include <boxm2/boxm2_data_traits.h>
 #include <boxm2/boxm2_data.h>
 #include <boxm2/basic/boxm2_block_id.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bbas/baio/baio.h>
 #include <vul/vul_file.h>
 
@@ -37,15 +39,15 @@ class boxm2_asio_mgr
     ~boxm2_asio_mgr();
 
     //: creates a BAIO object that loads block data from disk
-     void load_block(std::string dir, boxm2_block_id block_id,boxm2_block_metadata mdata);
+     void load_block(const std::string& dir, const boxm2_block_id& block_id,const boxm2_block_metadata& mdata);
 
     //: creates a BAIO object that saves block data to disk
-    void save_block(std::string dir, boxm2_block* block );
+    void save_block(const std::string& dir, boxm2_block* block );
 
     //: creates a BAIO object that loads data from disk
     template <boxm2_data_type data_type>
     void load_block_data(std::string dir, boxm2_block_id block_i);
-    void load_block_data_generic(std::string dir, boxm2_block_id block_id, std::string type);
+    void load_block_data_generic(const std::string& dir, const boxm2_block_id& block_id, const std::string& type);
 
     //: creates a BAIO object that saves data to disk
     template <boxm2_data_type data_type>
@@ -62,7 +64,7 @@ class boxm2_asio_mgr
 
     //: access completed data loads
     // \returns a map of data pointers (generic pointers)
-    std::map<boxm2_block_id, boxm2_data_base*> get_loaded_data_generic(std::string prefix);
+    std::map<boxm2_block_id, boxm2_data_base*> get_loaded_data_generic(const std::string& prefix);
 
   private:
 
@@ -168,8 +170,8 @@ std::map<boxm2_block_id, boxm2_data<data_type>* > boxm2_asio_mgr::get_loaded_dat
     }
 
     //delete loaded entries from data list after iterating through the list
-    for (unsigned int i=0; i<to_delete.size(); ++i)
-      data_list.erase(to_delete[i]);
+    for (auto i : to_delete)
+      data_list.erase(i);
   }
   return toReturn;
 }

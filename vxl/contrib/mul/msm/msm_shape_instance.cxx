@@ -13,15 +13,17 @@
 #include <vnl/algo/vnl_cholesky.h>
 #include <vnl/algo/vnl_svd.h>
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 //=======================================================================
 // Dflt ctor
 //=======================================================================
 
 msm_shape_instance::msm_shape_instance()
-  : model_(VXL_NULLPTR)
+  : model_(nullptr)
 {
 }
 
@@ -35,9 +37,7 @@ msm_shape_instance::msm_shape_instance(const msm_shape_model& model)
 // Destructor
 //=======================================================================
 
-msm_shape_instance::~msm_shape_instance()
-{
-}
+msm_shape_instance::~msm_shape_instance() = default;
 
 //: Set up model (retains pointer to model)
 void msm_shape_instance::set_shape_model(const msm_shape_model& model)

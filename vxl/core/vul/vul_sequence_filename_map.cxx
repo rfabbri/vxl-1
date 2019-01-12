@@ -1,7 +1,4 @@
 // This is core/vul/vul_sequence_filename_map.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 
 // Author: David Capel, Oxford RRG
 // Created: 15 April 2000
@@ -12,14 +9,17 @@
 #include <cstdlib>
 #include <iostream>
 #include <string>
+#include <utility>
 #include "vul_sequence_filename_map.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vul/vul_sprintf.h>
 #include <vul/vul_reg_exp.h>
 #include <vul/vul_file_iterator.h>
 
-const bool debug = 0;
+constexpr bool debug = false;
 
 static struct
 {
@@ -44,29 +44,27 @@ vul_sequence_filename_map::vul_sequence_filename_map ()
 {
 }
 
-vul_sequence_filename_map::vul_sequence_filename_map (std::string const & seq_template, std::vector<int> const & indices)
-  : seq_template_(seq_template), indices_(indices), start_(-1), step_(-1), end_(-1)
+vul_sequence_filename_map::vul_sequence_filename_map (std::string  seq_template, std::vector<int>  indices)
+  : seq_template_(std::move(seq_template)), indices_(std::move(indices)), start_(-1), step_(-1), end_(-1)
 {
   parse();
 }
 
-vul_sequence_filename_map::vul_sequence_filename_map (std::string const & seq_template, int start, int end, int step)
-  : seq_template_(seq_template), start_(start), step_(step), end_(end)
+vul_sequence_filename_map::vul_sequence_filename_map (std::string  seq_template, int start, int end, int step)
+  : seq_template_(std::move(seq_template)), start_(start), step_(step), end_(end)
 {
   for (int i=start; i <= end; i+=step)
     indices_.push_back(i);
   parse();
 }
 
-vul_sequence_filename_map::vul_sequence_filename_map (std::string const & seq_template, int step)
-  : seq_template_(seq_template), start_(-1), step_(step), end_(-1)
+vul_sequence_filename_map::vul_sequence_filename_map (std::string  seq_template, int step)
+  : seq_template_(std::move(seq_template)), start_(-1), step_(step), end_(-1)
 {
   parse();
 }
 
-vul_sequence_filename_map::~vul_sequence_filename_map()
-{
-}
+vul_sequence_filename_map::~vul_sequence_filename_map() = default;
 
 std::string vul_sequence_filename_map::name(int frame)
 {

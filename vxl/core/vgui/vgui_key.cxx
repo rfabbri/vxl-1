@@ -1,10 +1,9 @@
 // This is core/vgui/vgui_key.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 #include <iostream>
 #include "vgui_key.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 //:
 // \file
 // \brief  See vgui_key.h for a description of this file.

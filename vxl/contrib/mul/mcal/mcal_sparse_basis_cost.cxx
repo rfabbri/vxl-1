@@ -9,7 +9,9 @@
 // \author Tim Cootes
 // \brief Cost function to promote sparse basis vectors
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vsl/vsl_indent.h>
 #include <vsl/vsl_binary_io.h>
@@ -31,9 +33,7 @@ mcal_sparse_basis_cost::mcal_sparse_basis_cost()
 // Destructor
 //=======================================================================
 
-mcal_sparse_basis_cost::~mcal_sparse_basis_cost()
-{
-}
+mcal_sparse_basis_cost::~mcal_sparse_basis_cost() = default;
 
 //: Weighting for sparseness penalty
 void mcal_sparse_basis_cost::set_alpha(double a)

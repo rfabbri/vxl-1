@@ -32,13 +32,15 @@
 //    what you get from a stop watch timer.
 //
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vcl_sys/time.h>
 # undef __USE_BSD
 
 struct vul_timer_data
 {
-#if !defined(VCL_WIN32) || defined(__CYGWIN__)
+#if !defined(_WIN32) || defined(__CYGWIN__)
   tms usage0;                    // usage mark.
   struct timeval real0;          // wall clock mark.
 #else
@@ -47,12 +49,12 @@ struct vul_timer_data
 #endif
 };
 
-#include <vcl_climits.h>   // for CLK_TCK
+// for CLK_TCK
 
 
-//#define CLK_TCK _sysconf(3) in <limits.h> has error
+//#define CLK_TCK _sysconf(3) in <climits> has error
 
-#if defined(VCL_WIN32) && !defined(__CYGWIN__)
+#if defined(_WIN32) && !defined(__CYGWIN__)
 #include <direct.h> // for sysconf()
 #else
 #include <unistd.h>
@@ -69,14 +71,14 @@ vul_timer::vul_timer()
 vul_timer::~vul_timer()
 {
   delete data;
-  data = VXL_NULLPTR;
+  data = nullptr;
 }
 
 //: Sets the reference time to now.
 
 void vul_timer::mark()
 {
-#if !defined(VCL_WIN32) || defined(__CYGWIN__)
+#if !defined(_WIN32) || defined(__CYGWIN__)
   times(&data->usage0);  // user/system time
 #ifndef SYSV
   struct timezone tz;
@@ -101,7 +103,7 @@ long vul_timer::real()
 {
   long s;
 
-#if !defined(VCL_WIN32) || defined(__CYGWIN__)
+#if !defined(_WIN32) || defined(__CYGWIN__)
   struct timeval  real_time;    // new real time
 #ifndef SYSV
   struct timezone tz;
@@ -134,7 +136,7 @@ long vul_timer::real()
 
 long vul_timer::user()
 {
-#if !defined(VCL_WIN32) || defined(__CYGWIN__)
+#if !defined(_WIN32) || defined(__CYGWIN__)
   tms usage;
   times(&usage);  // new user/system time
   return (usage.tms_utime - data->usage0.tms_utime) * 1000 / CLK_TCK;
@@ -148,7 +150,7 @@ long vul_timer::user()
 
 long vul_timer::system()
 {
-#if !defined(VCL_WIN32) || defined(__CYGWIN__)
+#if !defined(_WIN32) || defined(__CYGWIN__)
   tms usage;
   times(&usage);  // new user/system time
   return (usage.tms_stime - data->usage0.tms_stime) * 1000 / CLK_TCK;
@@ -162,7 +164,7 @@ long vul_timer::system()
 
 long vul_timer::all()
 {
-#if !defined(VCL_WIN32) || defined(__CYGWIN__)
+#if !defined(_WIN32) || defined(__CYGWIN__)
   tms usage;
   times(&usage);  // new user/system time
   return (usage.tms_utime + usage.tms_stime -

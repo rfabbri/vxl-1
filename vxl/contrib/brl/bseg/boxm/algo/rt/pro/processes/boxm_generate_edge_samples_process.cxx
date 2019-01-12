@@ -15,7 +15,9 @@
 #include <bprb/bprb_func_process.h>
 #include <bprb/bprb_parameters.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <boxm/boxm_scene_base.h>
 #include <boxm/boxm_scene.h>
@@ -32,8 +34,8 @@
 
 namespace boxm_generate_edge_samples_process_globals
 {
-  const unsigned n_inputs_ = 5;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 5;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 bool boxm_generate_edge_samples_process_cons(bprb_func_process& pro)
@@ -76,7 +78,7 @@ bool boxm_generate_edge_samples_process(bprb_func_process& pro)
   vpgl_camera_double_sptr camera = pro.get_input<vpgl_camera_double_sptr>(i++);
   boxm_scene_base_sptr scene = pro.get_input<boxm_scene_base_sptr>(i++);
   std::string img_name =  pro.get_input<std::string>(i++);
-  float n_normal = pro.get_input<float>(i++);
+  auto n_normal = pro.get_input<float>(i++);
 
   // get parameters
   int edge_prob_mask_size = 21;
@@ -85,7 +87,7 @@ bool boxm_generate_edge_samples_process(bprb_func_process& pro)
   pro.parameters()->get_value("edge_prob_mask_sigma",edge_prob_mask_sigma);
 
   // check the input validity
-  if ((edge_image == VXL_NULLPTR) || (camera == VXL_NULLPTR) || (scene == VXL_NULLPTR)) {
+  if ((edge_image == nullptr) || (camera == nullptr) || (scene == nullptr)) {
      std::cout << "boxm_generate_edge_samples_process: null input value, cannot run" << std::endl;
      return false;
   }
@@ -103,7 +105,7 @@ bool boxm_generate_edge_samples_process(bprb_func_process& pro)
     if (!scene->multi_bin())
     {
       typedef boct_tree<short, boxm_edge_sample<float> > tree_type;
-      boxm_scene<tree_type> *s = static_cast<boxm_scene<tree_type>*> (scene.as_pointer());
+      auto *s = static_cast<boxm_scene<tree_type>*> (scene.as_pointer());
       boxm_generate_edge_sample_rt<short,boxm_edge_sample<float> > (*s, camera, img, img_name);
     }
     else
@@ -117,7 +119,7 @@ bool boxm_generate_edge_samples_process(bprb_func_process& pro)
     {
       typedef boxm_inf_line_sample<float> sample_type;
       typedef boct_tree<short, sample_type> tree_type;
-      boxm_scene<tree_type> *s = static_cast<boxm_scene<tree_type>*> (scene.as_pointer());
+      auto *s = static_cast<boxm_scene<tree_type>*> (scene.as_pointer());
       // for this case, the image should be with 4 planes, representing plane definitions
       vil_image_view<float> img(edge_image);
       boxm_generate_edge_tangent_sample_rt<short,sample_type> (*s, camera, img, img_name);

@@ -1,10 +1,10 @@
 // This is contrib/brl/bpro/core/vpgl_pro/processes
-#include <vil/vil_config.h>
-#if HAS_GEOTIFF
 #include <iomanip>
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <vil/vil_config.h>
+#if HAS_GEOTIFF
 #include <bprb/bprb_func_process.h>
 //:
 // \file
@@ -22,7 +22,9 @@
 // \endverbatim
 //
 #include <bprb/bprb_parameters.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpgl/vpgl_rational_camera.h>
 #include <vpgl/vpgl_local_rational_camera.h>
 #include <vgl/vgl_point_2d.h>
@@ -102,12 +104,12 @@ bool vpgl_isfm_rational_camera_with_initial_process(bprb_func_process& pro)
   unsigned in_i = 0;
   std::string trackfile   = pro.get_input<std::string>(in_i++);
   std::string dem_folder  = pro.get_input<std::string>(in_i++);
-  double lower_left_lon  = pro.get_input<double>(in_i++);
-  double lower_left_lat  = pro.get_input<double>(in_i++);
-  double upper_right_lon = pro.get_input<double>(in_i++);
-  double upper_right_lat = pro.get_input<double>(in_i++);
-  double height_diff     = pro.get_input<double>(in_i++);
-  float pixel_radius     = pro.get_input<float>(in_i++);
+  auto lower_left_lon  = pro.get_input<double>(in_i++);
+  auto lower_left_lat  = pro.get_input<double>(in_i++);
+  auto upper_right_lon = pro.get_input<double>(in_i++);
+  auto upper_right_lat = pro.get_input<double>(in_i++);
+  auto height_diff     = pro.get_input<double>(in_i++);
+  auto pixel_radius     = pro.get_input<float>(in_i++);
 
   // read the track file
   std::ifstream ifs(trackfile.c_str());
@@ -147,13 +149,13 @@ bool vpgl_isfm_rational_camera_with_initial_process(bprb_func_process& pro)
     ifs >> numfeatures;
     int id; float u, v;
     ifs >> id >> u >> v;  // id is always -1 for uncorrected camera
-    currpts.push_back(vgl_point_2d<double>(u,v));
+    currpts.emplace_back(u,v);
     std::vector<int> ids;
     std::vector<vgl_point_2d<double> > pts;
     for (unsigned int j = 1; j < numfeatures; j++) {
       int id; float u, v;
       ifs >> id >> u >> v;
-      pts.push_back(vgl_point_2d<double>(u, v));
+      pts.emplace_back(u, v);
       ids.push_back(id);
     }
     trackimgids.push_back(ids);
@@ -189,7 +191,7 @@ bool vpgl_isfm_rational_camera_with_initial_process(bprb_func_process& pro)
       std::cerr << pro.name() << ": Given height map " << filename << " is NOT a GeoTiff!\n";
       return false;
     }
-    dem_infos.push_back(std::pair<vil_image_view_base_sptr, vpgl_geo_camera*>(img_r, cam));
+    dem_infos.emplace_back(img_r, cam);
   }
   if (dem_infos.empty()) {
     std::cerr << pro.name() << ": No image in the folder: " << dem_folder << std::endl;
@@ -243,8 +245,8 @@ bool vpgl_isfm_rational_camera_with_initial_process(bprb_func_process& pro)
       continue;
 #if 1
       std::cout << "correspondence adjustment failed for: " << std::endl;
-      for (unsigned ii = 0; ii < corrs.size(); ii++)
-        std::cout << "[" << corrs[ii].x() << "," << corrs[ii].y() << "]\t";
+      for (auto & corr : corrs)
+        std::cout << "[" << corr.x() << "," << corr.y() << "]\t";
       std::cout << '\n';
 #endif
     }
@@ -270,9 +272,9 @@ bool vpgl_isfm_rational_camera_with_initial_process(bprb_func_process& pro)
 
   // remove unrealistic trans
   std::vector<vgl_vector_2d<double> > cam_trans_new;
-  for (unsigned i = 0; i < cam_trans.size(); i++)
-    if (cam_trans[i].x() >= -1000 && cam_trans[i].y() >= -1000)
-      cam_trans_new.push_back(cam_trans[i]);
+  for (auto & cam_tran : cam_trans)
+    if (cam_tran.x() >= -1000 && cam_tran.y() >= -1000)
+      cam_trans_new.push_back(cam_tran);
   if (cam_trans_new.empty()) {
     std::cerr << pro.name() << ": can not find any valid translations, exit without correction!\n";
     return false;
@@ -310,8 +312,8 @@ bool vpgl_isfm_rational_camera_with_initial_process(bprb_func_process& pro)
 
   // use the average correspondence with the most number of inliers to correct camera
   vgl_vector_2d<double> sum(0.0, 0.0);
-  for (unsigned k = 0; k < inliers[max_i].size(); k++)
-    sum += cam_trans_new[inliers[max_i][k]];
+  for (unsigned int k : inliers[max_i])
+    sum += cam_trans_new[k];
   sum /= (double)inliers[max_i].size();
 
   std::cout << "camera: " << uncorrectedcam
@@ -324,9 +326,9 @@ bool vpgl_isfm_rational_camera_with_initial_process(bprb_func_process& pro)
   // evaluate the correction error and inlier percentage
   double error = 0.0;
   vpgl_rational_camera<double> rcam = (*cam);
-  for (unsigned k = 0; k < inliers[max_i].size(); k++) {
-    vgl_point_2d<double> uvp = rcam.project(reconstructed_pts[inliers[max_i][k]]);
-    error += ((img_points[inliers[max_i][k]] - uvp) = sum).sqr_length();
+  for (unsigned int k : inliers[max_i]) {
+    vgl_point_2d<double> uvp = rcam.project(reconstructed_pts[k]);
+    error += ((img_points[k] - uvp) = sum).sqr_length();
   }
   error = std::sqrt(error) / (double)inliers[max_i].size();
   double inlierpercent = (double)max / (double)cam_trans_new.size() * 100;
@@ -350,17 +352,17 @@ bool vpgl_isfm_rational_camera_with_initial_process_globals::find_min_max_height
   // find the corner points
   std::vector<std::pair<unsigned, std::pair<int, int> > > corners;
   std::vector<vgl_point_2d<double> > pts;
-  pts.push_back(vgl_point_2d<double>(ll_lon, ur_lat));
-  pts.push_back(vgl_point_2d<double>(ur_lon, ll_lat));
-  pts.push_back(vgl_point_2d<double>(ll_lon, ll_lat));
-  pts.push_back(vgl_point_2d<double>(ur_lon, ur_lat));
-  for (unsigned k = 0; k < (unsigned)pts.size(); k++)
+  pts.emplace_back(ll_lon, ur_lat);
+  pts.emplace_back(ur_lon, ll_lat);
+  pts.emplace_back(ll_lon, ll_lat);
+  pts.emplace_back(ur_lon, ur_lat);
+  for (auto & pt : pts)
   {
     // find the image
     for (unsigned j = 0; j < (unsigned)infos.size(); j++)
     {
       double u, v;
-      infos[j].second->global_to_img(pts[k].x(), pts[k].y(), 0, u, v);
+      infos[j].second->global_to_img(pt.x(), pt.y(), 0, u, v);
       int uu = (int)std::floor(u+0.5);
       int vv = (int)std::floor(v+0.5);
       if (uu < 0 || vv < 0 || uu >= (int)infos[j].first->ni() || vv >= (int)infos[j].first->nj())
@@ -453,7 +455,7 @@ void vpgl_isfm_rational_camera_with_initial_process_globals::crop_and_find_min_m
                                                                                    unsigned const& img_id, int const& i0, int const& j0, int const& crop_ni, int const& crop_nj,
                                                                                    double& min, double& max)
 {
-  if (vil_image_view<vxl_int_16>* img = dynamic_cast<vil_image_view<vxl_int_16>*>(infos[img_id].first.ptr()))
+  if (auto* img = dynamic_cast<vil_image_view<vxl_int_16>*>(infos[img_id].first.ptr()))
   {
     vil_image_view<vxl_int_16> img_crop = vil_crop(*img, i0, crop_ni, j0, crop_nj);
     for (unsigned ii = 0; ii < img_crop.ni(); ii++) {
@@ -463,7 +465,7 @@ void vpgl_isfm_rational_camera_with_initial_process_globals::crop_and_find_min_m
       }
     }
   }
-  else if (vil_image_view<float>* img = dynamic_cast<vil_image_view<float>*>(infos[img_id].first.ptr()))
+  else if (auto* img = dynamic_cast<vil_image_view<float>*>(infos[img_id].first.ptr()))
   {
     vil_image_view<float> img_crop = vil_crop(*img, i0, crop_ni, j0, crop_nj);
     for (unsigned ii = 0; ii < img_crop.ni(); ii++) {

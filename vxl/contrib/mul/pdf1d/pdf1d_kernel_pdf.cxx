@@ -13,8 +13,10 @@
 #include <cstdlib>
 #include <string>
 #include "pdf1d_kernel_pdf.h"
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vnl/vnl_math.h>
 #include <vnl/io/vnl_io_vector.h>
 #include <mbl/mbl_index_sort.h>
@@ -22,15 +24,11 @@
 
 //=======================================================================
 
-pdf1d_kernel_pdf::pdf1d_kernel_pdf()
-{
-}
+pdf1d_kernel_pdf::pdf1d_kernel_pdf() = default;
 
 //=======================================================================
 
-pdf1d_kernel_pdf::~pdf1d_kernel_pdf()
-{
-}
+pdf1d_kernel_pdf::~pdf1d_kernel_pdf() = default;
 
 //=======================================================================
 //: Initialise so all kernels have the same width
@@ -237,4 +235,3 @@ void pdf1d_kernel_pdf::b_read(vsl_b_istream& bfs)
       return;
   }
 }
-

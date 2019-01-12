@@ -27,7 +27,9 @@
 #include <mbl/mbl_read_props.h>
 #include <vil/vil_load.h>
 #include <vul/vul_string.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_save.h>
 #include <vil/vil_fill.h>
 #include <vil/vil_crop.h>
@@ -230,7 +232,7 @@ void extract_normalised_patches(const vimt_image& image,
                                 std::vector<vil_image_view<float> >& patch,
                                 std::vector<vgl_point_2d<double> >& ref_pts)
 {
-  const vimt_image_2d_of<vxl_byte>& byte_im =
+  const auto& byte_im =
                static_cast<const vimt_image_2d_of<vxl_byte>&>(image);
   int ni = byte_im.image().ni();
   int nj = byte_im.image().nj();
@@ -250,7 +252,7 @@ void extract_normalised_patches(const vimt_image& image,
     // Compute position of reference point relative to corner
     int kx = px-ilo;
     int ky = py-jlo;
-    ref_pts.push_back(vgl_point_2d<double>(kx,ky));
+    ref_pts.emplace_back(kx,ky);
     vil_image_view<float> patch1;
     vil_convert_cast(vil_crop(byte_im.image(),ilo,1+ihi-ilo, jlo,1+jhi-jlo),
                      patch1);
@@ -264,16 +266,16 @@ void draw_tree(vil_image_view<vxl_byte>& image,
                const std::vector<std::pair<int,int> >& pairs)
 {
   // Draw tree into image for display purposes
-  for (unsigned i=0;i<pairs.size();++i)
+  for (const auto & pair : pairs)
     mbl_draw_line(image,
-                  pts[pairs[i].first],
-                  pts[pairs[i].second],vxl_byte(255));
+                  pts[pair.first],
+                  pts[pair.second],vxl_byte(255));
 
   // Write position of selected points into the original image
   // for display purposes.
-  for (unsigned i=0;i<pts.size();++i)
+  for (auto pt : pts)
   {
-    vil_fill_disk(image,pts[i].x(),pts[i].y(),4,vxl_byte(255));
+    vil_fill_disk(image,pt.x(),pt.y(),4,vxl_byte(255));
   }
 }
 
@@ -364,12 +366,12 @@ int main( int argc, char* argv[] )
   if (!fhs_load_arcs(params.arcs_path,pairs)) return 4;
 
   // Check arc ends are all valid points
-  for (unsigned i=0;i<pairs.size();++i)
+  for (auto & pair : pairs)
   {
-    if (pairs[i].first<0 || (unsigned int)(pairs[i].first)>=ref_pts.size())
-    { std::cerr<<"Invalid point index "<<pairs[i].first<<'\n'; return 5; }
-    if (pairs[i].second<0 || (unsigned int)(pairs[i].second)>=ref_pts.size())
-    { std::cerr<<"Invalid point index "<<pairs[i].second<<'\n'; return 5; }
+    if (pair.first<0 || (unsigned int)(pair.first)>=ref_pts.size())
+    { std::cerr<<"Invalid point index "<<pair.first<<'\n'; return 5; }
+    if (pair.second<0 || (unsigned int)(pair.second)>=ref_pts.size())
+    { std::cerr<<"Invalid point index "<<pair.second<<'\n'; return 5; }
   }
 
   // ====================================================================
@@ -407,7 +409,7 @@ int main( int argc, char* argv[] )
   std::vector<vimt_image_2d_of<float> > feature_response(ref_pts.size());
   for (unsigned i=0;i<ref_pts.size();++i)
   {
-    const vimt_image_2d_of<vxl_byte>& byte_im =
+    const auto& byte_im =
        static_cast<const vimt_image_2d_of<vxl_byte>&>(image_pyr2(im_level[i]));
 
     // Compute region over which to search (20% of image, centered on point)

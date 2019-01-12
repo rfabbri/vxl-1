@@ -1,4 +1,5 @@
 // This is vpgl/algo/vpgl_ba_fixed_k_lsqr.cxx
+#include <utility>
 #include "vpgl_ba_fixed_k_lsqr.h"
 //:
 // \file
@@ -7,16 +8,17 @@
 #include <vgl/algo/vgl_rotation_3d.h>
 
 
+
 //: Constructor
 vpgl_ba_fixed_k_lsqr::
-vpgl_ba_fixed_k_lsqr(const std::vector<vpgl_calibration_matrix<double> >& K,
+vpgl_ba_fixed_k_lsqr(std::vector<vpgl_calibration_matrix<double> >  K,
                      const std::vector<vgl_point_2d<double> >& image_points,
                      const std::vector<std::vector<bool> >& mask)
  : vpgl_bundle_adjust_lsqr(6,3,0,image_points,mask),
-   K_(K)
+   K_(std::move(K))
 {
-  for (unsigned int i=0; i<K_.size(); ++i)
-    Km_.push_back(K_[i].get_matrix());
+  for (auto & i : K_)
+    Km_.push_back(i.get_matrix());
 }
 
 
@@ -24,25 +26,25 @@ vpgl_ba_fixed_k_lsqr(const std::vector<vpgl_calibration_matrix<double> >& K,
 //  Each image point is assigned an inverse covariance (error projector) matrix
 // \note image points are not homogeneous because they require finite points to measure projection error
 vpgl_ba_fixed_k_lsqr::
-vpgl_ba_fixed_k_lsqr(const std::vector<vpgl_calibration_matrix<double> >& K,
+vpgl_ba_fixed_k_lsqr(std::vector<vpgl_calibration_matrix<double> >  K,
                      const std::vector<vgl_point_2d<double> >& image_points,
                      const std::vector<vnl_matrix<double> >& inv_covars,
                      const std::vector<std::vector<bool> >& mask)
  : vpgl_bundle_adjust_lsqr(6,3,0,image_points,inv_covars,mask),
-   K_(K)
+   K_(std::move(K))
 {
-  for (unsigned int i=0; i<K_.size(); ++i)
-    Km_.push_back(K_[i].get_matrix());
+  for (auto & i : K_)
+    Km_.push_back(i.get_matrix());
 }
 
 
 //: compute the Jacobian Aij
 void vpgl_ba_fixed_k_lsqr::jac_Aij(unsigned int i,
-                                   unsigned int j,
+                                   unsigned int  /*j*/,
                                    vnl_double_3x4 const& Pi,
                                    vnl_vector<double> const& ai,
                                    vnl_vector<double> const& bj,
-                                   vnl_vector<double> const& c,
+                                   vnl_vector<double> const&  /*c*/,
                                    vnl_matrix<double>& Aij)
 {
   // the translation part
@@ -63,43 +65,43 @@ void vpgl_ba_fixed_k_lsqr::jac_Aij(unsigned int i,
 }
 
 //: compute the Jacobian Bij
-void vpgl_ba_fixed_k_lsqr::jac_Bij(unsigned int i,
-                                   unsigned int j,
+void vpgl_ba_fixed_k_lsqr::jac_Bij(unsigned int  /*i*/,
+                                   unsigned int  /*j*/,
                                    vnl_double_3x4 const& Pi,
-                                   vnl_vector<double> const& ai,
+                                   vnl_vector<double> const&  /*ai*/,
                                    vnl_vector<double> const& bj,
-                                   vnl_vector<double> const& c,
+                                   vnl_vector<double> const&  /*c*/,
                                    vnl_matrix<double>& Bij)
 {
   jac_inhomg_3d_point(Pi, bj, Bij);
 }
 
 //: compute the Jacobian Cij
-void vpgl_ba_fixed_k_lsqr::jac_Cij(unsigned int i,
-                                   unsigned int j,
-                                   vnl_double_3x4 const& Pi,
-                                   vnl_vector<double> const& ai,
-                                   vnl_vector<double> const& bj,
-                                   vnl_vector<double> const& c,
-                                   vnl_matrix<double>& Cij)
+void vpgl_ba_fixed_k_lsqr::jac_Cij(unsigned int  /*i*/,
+                                   unsigned int  /*j*/,
+                                   vnl_double_3x4 const&  /*Pi*/,
+                                   vnl_vector<double> const&  /*ai*/,
+                                   vnl_vector<double> const&  /*bj*/,
+                                   vnl_vector<double> const&  /*c*/,
+                                   vnl_matrix<double>&  /*Cij*/)
 {
   // do nothing, c parameters are not used
 }
 
 //: construct the \param j-th perspective camera from a pointer to the j-th parameters of \param b and parameters \param c
 vgl_homg_point_3d<double>
-vpgl_ba_fixed_k_lsqr::param_to_point(int j,
+vpgl_ba_fixed_k_lsqr::param_to_point(int  /*j*/,
                                      const double* bj,
-                                     const vnl_vector<double>& c) const
+                                     const vnl_vector<double>&  /*c*/) const
 {
-  return vgl_homg_point_3d<double>(bj[0], bj[1], bj[2]);
+  return {bj[0], bj[1], bj[2]};
 }
 
 //: construct the \param j-th perspective camera from a pointer to the j-th parameters of \param b and parameters \param c
 vnl_vector_fixed<double,4>
-vpgl_ba_fixed_k_lsqr::param_to_pt_vector(int j,
+vpgl_ba_fixed_k_lsqr::param_to_pt_vector(int  /*j*/,
                                          const double* bj,
-                                         const vnl_vector<double>& c) const
+                                         const vnl_vector<double>&  /*c*/) const
 {
   return vnl_vector_fixed<double,4>(bj[0], bj[1], bj[2], 1.0);
 }
@@ -108,7 +110,7 @@ vpgl_ba_fixed_k_lsqr::param_to_pt_vector(int j,
 vpgl_perspective_camera<double>
 vpgl_ba_fixed_k_lsqr::param_to_cam(int i,
                                    const double* ai,
-                                   const vnl_vector<double>& c) const
+                                   const vnl_vector<double>&  /*c*/) const
 {
   vnl_vector<double> w(ai,3);
   vgl_homg_point_3d<double> t(ai[3], ai[4], ai[5]);
@@ -119,7 +121,7 @@ vpgl_ba_fixed_k_lsqr::param_to_cam(int i,
 vnl_double_3x4
 vpgl_ba_fixed_k_lsqr::param_to_cam_matrix(int i,
                                           const double* ai,
-                                          const vnl_vector<double>& c) const
+                                          const vnl_vector<double>&  /*c*/) const
 {
   const vnl_vector_ref<double> r(3,const_cast<double*>(ai));
   vnl_double_3x3 M = Km_[i]*rod_to_matrix(r);
@@ -165,4 +167,3 @@ vpgl_ba_fixed_k_lsqr::create_param_vector(const std::vector<vgl_point_3d<double>
   }
   return b;
 }
-

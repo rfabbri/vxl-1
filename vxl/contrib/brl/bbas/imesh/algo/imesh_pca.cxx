@@ -9,8 +9,10 @@
 #include <imesh/imesh_fileio.h>
 #include <vnl/vnl_vector.h>
 #include <vnl/algo/vnl_svd.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 imesh_pca_mesh::imesh_pca_mesh(const std::vector<imesh_mesh>& meshes)
   : imesh_mesh(meshes[0]), mean_verts_(this->vertices().clone())
@@ -85,7 +87,7 @@ imesh_pca_mesh::imesh_pca_mesh(const imesh_pca_mesh& other)
   : imesh_mesh(other),
     std_devs_(other.std_devs_),
     pc_(other.pc_),
-    mean_verts_((other.mean_verts_.get()) ? other.mean_verts_->clone() : VXL_NULLPTR),
+    mean_verts_((other.mean_verts_.get()) ? other.mean_verts_->clone() : nullptr),
     params_(other.params_)
 {
 }
@@ -98,8 +100,8 @@ imesh_pca_mesh& imesh_pca_mesh::operator=(const imesh_pca_mesh& other)
     this->imesh_mesh::operator=(other);
     std_devs_ = other.std_devs_;
     pc_ = other.pc_;
-    mean_verts_ = vcl_unique_ptr<imesh_vertex_array_base>((other.mean_verts_.get()) ?
-                                                        other.mean_verts_->clone() : VXL_NULLPTR);
+    mean_verts_ = std::unique_ptr<imesh_vertex_array_base>((other.mean_verts_.get()) ?
+                                                        other.mean_verts_->clone() : nullptr);
     params_ = other.params_;
   }
   return *this;
@@ -201,7 +203,7 @@ vnl_vector<double>
 imesh_pca_mesh::project(const imesh_vertex_array_base& vertices) const
 {
   assert(dynamic_cast<const imesh_vertex_array<3>*>(&vertices));
-  const imesh_vertex_array<3>& verts =
+  const auto& verts =
       static_cast<const imesh_vertex_array<3>&>(vertices);
 
   const imesh_vertex_array<3>& mverts = this->mean_vertices<3>();
@@ -347,9 +349,9 @@ void imesh_write_pca(const std::string& mesh_file,
   for (unsigned int i=0; i<num_data; ++i)
     mean[i] = mverts[i/3][i%3];
 
-  vcl_unique_ptr<imesh_vertex_array_base> verts(mverts.clone());
-  vcl_unique_ptr<imesh_face_array_base> faces(pmesh.faces().clone());
-  imesh_mesh mean_mesh(vcl_move(verts),vcl_move(faces));
+  std::unique_ptr<imesh_vertex_array_base> verts(mverts.clone());
+  std::unique_ptr<imesh_face_array_base> faces(pmesh.faces().clone());
+  imesh_mesh mean_mesh(std::move(verts),std::move(faces));
 
   imesh_write_pca(pca_file,mean,std_dev,pc);
   imesh_write_obj(mesh_file,mean_mesh);

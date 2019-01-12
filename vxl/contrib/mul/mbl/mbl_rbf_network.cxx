@@ -24,8 +24,10 @@
 //  I'm not sure if this is exactly an RBF network in the original
 //  definition. I'll check one day.
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vsl/vsl_indent.h>
 #include <mbl/mbl_stats_1d.h>
 #include <vnl/algo/vnl_svd.h>
@@ -286,4 +288,3 @@ std::ostream& operator<<(std::ostream& os,const mbl_rbf_network& b)
   vsl_indent_dec(os);
   return os;
 }
-

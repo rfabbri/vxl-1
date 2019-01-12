@@ -7,8 +7,10 @@
 // \author Tim Cootes
 // \brief Use F&H's DP style algorithm to search for global solutions
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_vector_2d.h>
@@ -213,17 +215,17 @@ void fhs_searcher::points_from_root(const vgl_point_2d<double>& root_pt,
 
   // Propagate solution through the tree
   // arc_ ordered so that parents always precede leaves
-  for (std::vector<fhs_arc>::const_iterator a=arc_.begin();a!=arc_.end();++a)
+  for (const auto & a : arc_)
   {
     // Compute mean predicted position for leaf point
-    vgl_point_2d<double> p_j0 = pts[a->i()]
-                                 +vgl_vector_2d<double>(a->dx(),a->dy());
+    vgl_point_2d<double> p_j0 = pts[a.i()]
+                                 +vgl_vector_2d<double>(a.dx(),a.dy());
 
     // Look up position allowing for offset (in image coords)
-    double px = vimt_bilin_interp_safe(pos_im_[a->j()],p_j0,0);
-    double py = vimt_bilin_interp_safe(pos_im_[a->j()],p_j0,1);
+    double px = vimt_bilin_interp_safe(pos_im_[a.j()],p_j0,0);
+    double py = vimt_bilin_interp_safe(pos_im_[a.j()],p_j0,1);
     // Project back to world co-ords
-    pts[a->j()] = pos_im_[a->j()].world2im().inverse()(px,py);
+    pts[a.j()] = pos_im_[a.j()].world2im().inverse()(px,py);
   }
 }
 
@@ -241,7 +243,7 @@ static vgl_point_2d<int> min_image_point(const vil_image_view<float>& image)
       if (*pixel<min_val) {min_val=*pixel, best_i=i; best_j=j; }
   }
 
-  return vgl_point_2d<int>(best_i,best_j);
+  return {static_cast<int>(best_i),static_cast<int>(best_j)};
 }
 
 //: Compute optimal position of all points

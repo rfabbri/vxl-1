@@ -3,7 +3,9 @@
 // their list of choices will be printed to cerr.
 
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_bool_ostream.h>
 #include <vgui/vgui.h>
 #include <vgui/vgui_menu.h>
@@ -89,7 +91,7 @@ static void test_dialog2()
 
   std::string button_txt("close");
   mydialog.set_ok_button(button_txt.c_str());
-  mydialog.set_cancel_button(VXL_NULLPTR);
+  mydialog.set_cancel_button(nullptr);
   mydialog.ask();
 }
 

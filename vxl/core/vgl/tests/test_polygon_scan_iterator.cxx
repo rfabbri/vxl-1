@@ -18,7 +18,9 @@
 #include <testlib/testlib_test.h>
 #include <vgl/vgl_polygon.h>
 #include <vgl/vgl_polygon_scan_iterator.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 typedef vgl_polygon<float>::point_t        Point_type;
 typedef vgl_polygon<float>                 Polygon_type;

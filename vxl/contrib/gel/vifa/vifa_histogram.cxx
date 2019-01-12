@@ -7,7 +7,9 @@
 #include "vifa_histogram.h"
 //:
 // \file
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 static int MEAN_FLAG = 1;
 static int SD_FLAG = 2;
@@ -49,11 +51,11 @@ vifa_histogram::vifa_histogram(int xres, float val1, float val2)
   stats_consistent |= (MEAN_FLAG | SD_FLAG);
   delimiter = ' ';
 
-  if (vals == VXL_NULLPTR || counts == VXL_NULLPTR)
+  if (vals == nullptr || counts == nullptr)
   {
     std::cerr << "vifa_histogram : Ran out of array memory.\n\n";
-    vals = VXL_NULLPTR;
-    counts = VXL_NULLPTR;
+    vals = nullptr;
+    counts = nullptr;
     num = 0;
     vmin = 0;
     vmax = 0;
@@ -104,11 +106,11 @@ vifa_histogram::vifa_histogram(const vifa_histogram& h)
   counts = new float[num];
   float const* his_counts = h.GetCounts();
 
-  if (vals == VXL_NULLPTR || counts == VXL_NULLPTR)
+  if (vals == nullptr || counts == nullptr)
   {
     std::cerr << "vifa_histogram : Ran out of array memory.\n\n";
-    vals = VXL_NULLPTR;
-    counts = VXL_NULLPTR;
+    vals = nullptr;
+    counts = nullptr;
     num = 0;
     vmin = 0;
     vmax = 0;
@@ -195,11 +197,11 @@ vifa_histogram::vifa_histogram(vifa_histogram const* his, float width, bool pres
   vmax =  mean_val + half_range;
   vmin =  mean_val - half_range;
 
-  if (vals == VXL_NULLPTR || counts == VXL_NULLPTR)
+  if (vals == nullptr || counts == nullptr)
   {
     std::cerr << "vifa_histogram : Ran out of array memory.\n\n";
-    vals = VXL_NULLPTR;
-    counts = VXL_NULLPTR;
+    vals = nullptr;
+    counts = nullptr;
     num = 0;
     vmin = 0;
     vmax = 0;
@@ -389,7 +391,7 @@ vifa_histogram* vifa_histogram::Scale(float scale_factor)
 
   // Construct a new histogram
 
-  vifa_histogram* scaled_his = new vifa_histogram(this, delta);
+  auto* scaled_his = new vifa_histogram(this, delta);
   float* new_counts = scaled_his->GetCounts();
   for (int i = 0; i < num; i++)  // Initialize
     new_counts[i] = 0.0f;
@@ -414,7 +416,7 @@ vifa_histogram* vifa_histogram::Scale(float scale_factor)
     }
 
     float fraction = (trans_x - vals[index])/delta;
-    float abs_fraction = (float)std::fabs(fraction);
+    auto abs_fraction = (float)std::fabs(fraction);
     int x_index = GetIndex(x);
     if (x_index < 0)
     {
@@ -461,7 +463,7 @@ vifa_histogram* vifa_histogram::Scale(float scale_factor)
 //            {x | x <= (xi + .5*delta)}
 vifa_histogram* vifa_histogram::Cumulative()
 {
-  vifa_histogram* cum_his = new vifa_histogram(*this);
+  auto* cum_his = new vifa_histogram(*this);
   float* density_counts = this->GetCounts();
   int res = this->GetRes();
 
@@ -637,10 +639,10 @@ vifa_histogram* vifa_histogram::NonMaximumSupress(int radius, bool cyclic)
   if ((2*radius +1)> num/2)
   {
     std::cerr << "In vifa_histogram::NonMaximumSupress(): radius is too large\n";
-    return VXL_NULLPTR;
+    return nullptr;
   }
   // Get the counts array of "this"
-  vifa_histogram* h_new = new vifa_histogram(*this);
+  auto* h_new = new vifa_histogram(*this);
   int n_buckets = h_new->GetRes();
   float* counts_old = this->GetCounts();
 
@@ -1109,8 +1111,8 @@ int vifa_histogram::WritePlot(const char *fname)
 
   int stat_res = this->GetRes();
 
-  float * x = new float[2*stat_res];
-  float * y = new float[2*stat_res];
+  auto * x = new float[2*stat_res];
+  auto * y = new float[2*stat_res];
 
   float * temp_x = this->GetVals();
   float * temp_y = this->GetCounts();

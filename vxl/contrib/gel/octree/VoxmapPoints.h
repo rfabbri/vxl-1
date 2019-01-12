@@ -1,9 +1,6 @@
 // This is gel/octree/VoxmapPoints.h
 #ifndef VoxmapPoints_h_
 #define VoxmapPoints_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author
@@ -15,7 +12,9 @@
 #include <vector>
 #include <vbl/vbl_sparse_array_3d.h>
 #include <vnl/vnl_double_3.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class VoxmapPoints
 {

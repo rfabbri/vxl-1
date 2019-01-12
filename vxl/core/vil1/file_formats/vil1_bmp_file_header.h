@@ -1,15 +1,14 @@
 // This is core/vil1/file_formats/vil1_bmp_file_header.h
 #ifndef vil1_bmp_file_header_h_
 #define vil1_bmp_file_header_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author fsm
 
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 class vil1_stream;
 
 struct vil1_bmp_file_header

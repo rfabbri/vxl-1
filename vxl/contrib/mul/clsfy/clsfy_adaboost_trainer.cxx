@@ -1,7 +1,4 @@
 // This is mul/clsfy/clsfy_adaboost_trainer.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \brief Functions to train classifiers using AdaBoost algorithm
@@ -22,20 +19,18 @@
 #include "clsfy_adaboost_trainer.h"
 
 #include <vsl/vsl_indent.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 //=======================================================================
 
-clsfy_adaboost_trainer::clsfy_adaboost_trainer()
-{
-}
+clsfy_adaboost_trainer::clsfy_adaboost_trainer() = default;
 
 //=======================================================================
 
-clsfy_adaboost_trainer::~clsfy_adaboost_trainer()
-{
-}
+clsfy_adaboost_trainer::~clsfy_adaboost_trainer() = default;
 
 
 //: Extracts the j-th element of each vector in data and puts into v

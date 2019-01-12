@@ -16,9 +16,11 @@
 // Minimal Optimisation. In Advances in Kernel Methods - Support Vector Learning.
 // B. Scholkopf, C. Burges and A. Smola, MIT Press: 185-208. and other papers.
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h>
-#include <vcl_cassert.h>
+#include <cassert>
 
 // Linear SMO
 
@@ -327,7 +329,7 @@ int clsfy_smo_1_lin::calc()
 {
   //Check a bunch of things
 
-  assert (data_ != VXL_NULLPTR); // Check that the data has been set.
+  assert (data_ != nullptr); // Check that the data has been set.
 
   const unsigned long N = data_->size();
   assert(N != 0);     // Check that there is some data.

@@ -8,8 +8,10 @@
 // \brief Functions to smooth an image
 // \author Ian Scott
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vnl/vnl_erf.h>
 #include <vnl/vnl_double_2.h>
 #include <vnl/vnl_real_polynomial.h>

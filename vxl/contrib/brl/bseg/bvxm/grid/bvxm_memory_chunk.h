@@ -29,7 +29,7 @@ class bvxm_memory_chunk : public vbl_ref_count
     bvxm_memory_chunk& operator=(const bvxm_memory_chunk&);
 
     //: Destructor
-    virtual ~bvxm_memory_chunk();
+    ~bvxm_memory_chunk() override;
 
     //: Pointer to first element of data
     void* data() { return data_;}
@@ -47,4 +47,3 @@ class bvxm_memory_chunk : public vbl_ref_count
 typedef vbl_smart_ptr<bvxm_memory_chunk> bvxm_memory_chunk_sptr;
 
 #endif
-

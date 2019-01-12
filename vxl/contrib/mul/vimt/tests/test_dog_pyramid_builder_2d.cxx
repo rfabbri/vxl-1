@@ -2,7 +2,9 @@
 #include <iostream>
 #include <testlib/testlib_test.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpl/vpl.h> // vpl_unlink()
 #include <vimt/vimt_dog_pyramid_builder_2d.h>
 #include <vimt/vimt_image_pyramid.h>
@@ -32,21 +34,21 @@ static void test_dog_pyramid_builder_2d_build(vimt_dog_pyramid_builder_2d<float>
   builder.build_dog(dog_pyr,smooth_pyr,image0,true);
 
   TEST("Found correct number of levels", dog_pyr.n_levels(), 6);
-  const vimt_image_2d_of<float>& v_image0 =
+  const auto& v_image0 =
                  static_cast<const vimt_image_2d_of<float>&>(dog_pyr(0));
   TEST("Base width",v_image0.image().ni(),ni);
   TEST("Base height",v_image0.image().nj(),nj);
 
   for (int L=0;L<smooth_pyr.n_levels();++L)
   {
-    const vimt_image_2d_of<float>& imageL =
+    const auto& imageL =
              static_cast<const vimt_image_2d_of<float>&>(smooth_pyr(L));
 
     vgl_point_2d<double> p = vimt_find_max(imageL);
 
     std::cout<<"Level "<<L<<" smoothed peak point is at "<<p<<std::endl;
 
-    const vimt_image_2d_of<float>& dogL =
+    const auto& dogL =
              static_cast<const vimt_image_2d_of<float>&>(dog_pyr(L));
 
     vgl_point_2d<double> q = vimt_find_max(dogL);
@@ -80,7 +82,7 @@ static void test_dog_pyramid_builder_2d()
   bfs_out.close();
 
   vimt_dog_pyramid_builder_2d<float> builder_in;
-  vimt_image_pyramid_builder* ptr_in=VXL_NULLPTR;
+  vimt_image_pyramid_builder* ptr_in=nullptr;
 
   vsl_b_ifstream bfs_in(test_path);
   TEST(("Opened " + test_path + " for reading").c_str(), (!bfs_in), false);

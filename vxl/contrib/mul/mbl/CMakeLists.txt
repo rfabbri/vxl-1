@@ -26,6 +26,7 @@ set(mbl_sources
   mbl_data_collector_base.cxx           mbl_data_collector_base.h
   mbl_stats_1d.cxx                      mbl_stats_1d.h
   mbl_stats_nd.cxx                      mbl_stats_nd.h
+  mbl_mv_stats.cxx                      mbl_mv_stats.h
   mbl_sum_1d.cxx                        mbl_sum_1d.h
   mbl_parse_block.cxx                   mbl_parse_block.h
                                         mbl_parse_sequence.h
@@ -125,7 +126,11 @@ if(BUILD_TESTING)
   add_subdirectory(tests)
 endif()
 
-if(BUILD_MUL_TOOLS)
+if(VXL_BUILD_MUL_TOOLS)
   add_subdirectory(tools)
   add_subdirectory(examples)
+endif()
+
+if (VXL_BUILD_OBJECT_LIBRARIES)
+  add_library(mbl-obj OBJECT ${mbl_sources})
 endif()

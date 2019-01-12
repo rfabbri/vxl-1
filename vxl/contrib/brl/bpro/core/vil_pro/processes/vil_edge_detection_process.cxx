@@ -6,7 +6,9 @@
 // \file
 // \brief A process that performs edge detection on a grey image and returns the corresponding edge map
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <sdet/sdet_detector.h>
 #include <vil/vil_image_view_base.h>
 #include <vil/vil_image_view.h>
@@ -21,8 +23,8 @@
 //: global variables and functions
 namespace vil_edge_detection_process_globals
 {
-  const unsigned n_inputs_  = 6;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 6;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 //: constructor
@@ -55,14 +57,14 @@ bool vil_edge_detection_process(bprb_func_process& pro)
   // get the inputs
   unsigned in_i = 0;
   vil_image_view_base_sptr in_img_sptr = pro.get_input<vil_image_view_base_sptr>(in_i++);
-  float noise_multiplier = pro.get_input<float>(in_i++);
-  float smooth = pro.get_input<float>(in_i++);
+  auto noise_multiplier = pro.get_input<float>(in_i++);
+  auto smooth = pro.get_input<float>(in_i++);
   bool automatic_threshold = pro.get_input<bool>(in_i++);
   bool junctionp = pro.get_input<bool>(in_i++);
   bool aggressive_junction_closure = pro.get_input<bool>(in_i++);
 
   // input image validity
-  vil_image_view<vxl_byte>* in_img = dynamic_cast<vil_image_view<vxl_byte>*>(in_img_sptr.ptr());
+  auto* in_img = dynamic_cast<vil_image_view<vxl_byte>*>(in_img_sptr.ptr());
   if (!in_img) {
     std::cout << pro.name() << ": Unsupported input image format " << in_img_sptr->pixel_format() << std::endl;
     return false;
@@ -94,9 +96,9 @@ bool vil_edge_detection_process(bprb_func_process& pro)
   vil_image_view<vxl_byte> edge_image(in_img->ni(), in_img->nj());
   edge_image.fill(0);
 
-  for (std::vector<vtol_edge_2d_sptr>::iterator vit = edges->begin();  vit != edges->end();  ++vit)
+  for (auto & edge : *edges)
   {
-    vdgl_digital_curve_sptr dc = ((*vit)->curve())->cast_to_vdgl_digital_curve();
+    vdgl_digital_curve_sptr dc = (edge->curve())->cast_to_vdgl_digital_curve();
     if (!dc)
       continue;
     vdgl_interpolator_sptr intp = dc->get_interpolator();
@@ -126,4 +128,3 @@ bool vil_edge_detection_process(bprb_func_process& pro)
 
   return true;
 }
-

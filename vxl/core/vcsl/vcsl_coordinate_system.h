@@ -18,7 +18,9 @@
 #include <vbl/vbl_ref_count.h>
 #include <vcsl/vcsl_coordinate_system_sptr.h>
 #include <vcsl/vcsl_axis_sptr.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_vector.h>
 class vcsl_spatial;
 
@@ -32,7 +34,7 @@ class vcsl_coordinate_system
 
  protected:
   // Default constructor
-  vcsl_coordinate_system() {}
+  vcsl_coordinate_system() = default;
 
  public:
   // Copy constructor
@@ -40,7 +42,7 @@ class vcsl_coordinate_system
     : vbl_ref_count(), axes_(c.axes_) {}
 
   // Destructor
-  virtual ~vcsl_coordinate_system() {}
+  ~vcsl_coordinate_system() override = default;
 
   //***************************************************************************
   // Status report
@@ -59,7 +61,7 @@ class vcsl_coordinate_system
   //***************************************************************************
   // Because VXL does not necessarily use dynamic_cast<>
   //***************************************************************************
-  virtual const vcsl_spatial *cast_to_spatial() const { return VXL_NULLPTR; }
+  virtual const vcsl_spatial *cast_to_spatial() const { return nullptr; }
 
   //***************************************************************************
   // Conversion

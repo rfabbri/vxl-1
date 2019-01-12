@@ -6,7 +6,9 @@
 #include <brad/brad_sun_pos.h>
 #include <bsta/bsta_spherical_histogram.h>
 #include <vnl/algo/vnl_symmetric_eigensystem.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #ifdef DEBUG
 // illumination directions for longitude = 33.331465, latitude =44.376970 deg

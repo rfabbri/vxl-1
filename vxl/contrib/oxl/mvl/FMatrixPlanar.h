@@ -1,9 +1,6 @@
 // This is oxl/mvl/FMatrixPlanar.h
 #ifndef FMatrixPlanar_h_
 #define FMatrixPlanar_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 
 //--------------------------------------------------------------
 //:
@@ -33,7 +30,7 @@ class FMatrixPlanar : public FMatrix
   FMatrixPlanar();
   FMatrixPlanar(const double* f_matrix);
   FMatrixPlanar(const vnl_double_3x3& f_matrix);
-  ~FMatrixPlanar();
+  ~FMatrixPlanar() override;
 
   // Computations-----------------------------------------------------------
   void init(const FMatrix& F);
@@ -51,8 +48,8 @@ class FMatrixPlanar : public FMatrix
 
   // Data Access------------------------------------------------------------
 
-  bool set (const double* f_matrix );
-  bool set (const vnl_double_3x3& f_matrix );
+  bool set (const double* f_matrix ) override;
+  bool set (const vnl_double_3x3& f_matrix ) override;
   //: Returns the rank2 flag which is always true for FMatrixPlanar.
   inline bool get_rank2_flag (void) const { return true; }
   //: Null function since planar FMatrix has already rank 2.

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <utility>
 #include <vector>
 #include "rrel_linear_regression.h"
 
@@ -6,8 +7,10 @@
 #include <vnl/vnl_vector.h>
 #include <vnl/algo/vnl_svd.h>
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 rrel_linear_regression::rrel_linear_regression( const std::vector< vnl_vector<double> >& pts,
                                                 bool use_intercept )
@@ -57,8 +60,8 @@ rrel_linear_regression::rrel_linear_regression( const std::vector< vnl_vector<do
 
 // ctor that just copies the independent and dependent variables vectors.
 rrel_linear_regression::rrel_linear_regression( const std::vector< vnl_vector<double> >& ind_vars,
-                                                const std::vector< double >& dep_vars )
-  : rand_vars_(dep_vars), ind_vars_(ind_vars)
+                                                std::vector< double >  dep_vars )
+  : rand_vars_(std::move(dep_vars)), ind_vars_(ind_vars)
 {
   set_param_dof( ind_vars_[0].size() );
   if ( param_dof() > ind_vars.size() ) {
@@ -69,9 +72,7 @@ rrel_linear_regression::rrel_linear_regression( const std::vector< vnl_vector<do
 }
 
 
-rrel_linear_regression::~rrel_linear_regression()
-{
-}
+rrel_linear_regression::~rrel_linear_regression() = default;
 
 unsigned int
 rrel_linear_regression::num_samples( ) const

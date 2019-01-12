@@ -1,7 +1,4 @@
 // This is oxl/mvl/FManifoldProject.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 //  \file
 
@@ -22,7 +19,9 @@
 #include <mvl/FMatrix.h>
 #include <mvl/HomgOperator2D.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Construct an FManifoldProject object which will use the given F to correct point pairs.
 FManifoldProject::FManifoldProject(const FMatrix& Fobj)
@@ -31,7 +30,7 @@ FManifoldProject::FManifoldProject(const FMatrix& Fobj)
 }
 
 //: Construct an FManifoldProject object with the intention of later setting its F.
-FManifoldProject::FManifoldProject() {}
+FManifoldProject::FManifoldProject() = default;
 
 //: Use the given F to correct point pairs.
 void FManifoldProject::set_F(const FMatrix& Fobj)
@@ -235,9 +234,7 @@ double FManifoldProject::correct(double   x1, double   y1, double   x2, double  
   vnl_vector<double> realroots = roots.realroots(1e-8);
   int errs = 0;
   bool got_one = false;
-  for (unsigned i = 0; i < realroots.size(); ++i) {
-    double lambda = realroots[i];
-
+  for (double lambda : realroots) {
     // Some roots to the multiplied out poly are not roots to the rational polynomial.
     double RATPOLY_RESIDUAL = (a1/vnl_math::sqr(b1 - lambda) +
                                a2/vnl_math::sqr(b2 - lambda) +
@@ -257,7 +254,7 @@ double FManifoldProject::correct(double   x1, double   y1, double   x2, double  
       HomgPoint2D X1(X[0], X[1]);
       HomgPoint2D X2(X[2], X[3]);
       double EPIDIST = HomgOperator2D::perp_dist_squared(X2, HomgLine2D(F_*X1.get_vector()));
-      if (0 && EPIDIST > 1e-12) {
+      if (false && EPIDIST > 1e-12) {
         // This can happen in reasonable circumstances -- notably when one
         // epipole is at infinity.
         std::cerr << "FManifoldProject: A root has epidist = " << std::sqrt(EPIDIST) << '\n'

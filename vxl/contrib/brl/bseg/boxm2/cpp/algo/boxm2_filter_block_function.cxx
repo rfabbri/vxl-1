@@ -5,7 +5,7 @@
 // \file
 
 //: "default" constructor
-boxm2_filter_block_function::boxm2_filter_block_function(boxm2_scene_sptr scene, boxm2_block_metadata data, boxm2_block* blk, boxm2_data_base* alphas)
+boxm2_filter_block_function::boxm2_filter_block_function(const boxm2_scene_sptr& scene, boxm2_block_metadata data, boxm2_block* blk, boxm2_data_base* alphas)
   : scene_(scene)
 {
   //1. allocate new alpha data array (stays the same size)
@@ -13,11 +13,11 @@ boxm2_filter_block_function::boxm2_filter_block_function(boxm2_scene_sptr scene,
   boxm2_block_id id = blk->block_id();
   std::size_t dataSize = alphas->buffer_length();
   boxm2_data_base* newA = new boxm2_data_base(new char[dataSize], dataSize, id);
-  float*   alpha_cpy = (float*) newA->data_buffer();
+  auto*   alpha_cpy = (float*) newA->data_buffer();
 
   //3d array of trees
   const boxm2_array_3d<uchar16>& trees = blk->trees();
-  float*   alpha_data = (float*) alphas->data_buffer();
+  auto*   alpha_data = (float*) alphas->data_buffer();
 
   //iterate through each block, filtering the root level first
   std::cout<<"Filtering scene: "<<std::flush;
@@ -50,10 +50,9 @@ boxm2_filter_block_function::boxm2_filter_block_function(boxm2_scene_sptr scene,
 
           //get each prob and sort it
           std::vector<float> probs;
-          for (unsigned int i=0; i<neighborPoints.size(); ++i)
+          for (auto abCenter : neighborPoints)
           {
             //load neighbor block/tree
-            vgl_point_3d<double> abCenter = neighborPoints[i];
             vgl_point_3d<int>    blkIdx((int) abCenter.x(),
                                         (int) abCenter.y(),
                                         (int) abCenter.z() );
@@ -141,21 +140,21 @@ boxm2_filter_block_function::neighbors( vgl_point_3d<int>& center, boxm2_array_3
 
   //neighbors along X
   if ( center.x() + 1 < (int)trees.get_row1_count() )
-    toReturn.push_back( vgl_point_3d<int>(center.x()+1, center.y(), center.z()) );
+    toReturn.emplace_back(center.x()+1, center.y(), center.z() );
   if ( center.x() - 1 >= 0 )
-    toReturn.push_back( vgl_point_3d<int>(center.x()-1, center.y(), center.z()) );
+    toReturn.emplace_back(center.x()-1, center.y(), center.z() );
 
   //neighbors along Y
   if ( center.y() + 1 < (int)trees.get_row2_count() )
-    toReturn.push_back( vgl_point_3d<int>(center.x(), center.y()+1, center.z()) );
+    toReturn.emplace_back(center.x(), center.y()+1, center.z() );
   if ( center.y() - 1 >= 0 )
-    toReturn.push_back( vgl_point_3d<int>(center.x(), center.y()-1, center.z()) );
+    toReturn.emplace_back(center.x(), center.y()-1, center.z() );
 
   //neighbors along Z
   if ( center.z() + 1 < (int)trees.get_row3_count() )
-    toReturn.push_back( vgl_point_3d<int>(center.x(), center.y(), center.z()+1) );
+    toReturn.emplace_back(center.x(), center.y(), center.z()+1 );
   if ( center.z() - 1 >= 0 )
-    toReturn.push_back( vgl_point_3d<int>(center.x(), center.y(), center.z()-1) );
+    toReturn.emplace_back(center.x(), center.y(), center.z()-1 );
 
   return toReturn;
 }
@@ -169,21 +168,21 @@ boxm2_filter_block_function::neighbor_points( vgl_point_3d<double>& cellCenter, 
 
   //neighbors along X
   if ( cellCenter.x() + side_len < trees.get_row1_count() )
-    toReturn.push_back( vgl_point_3d<double>(cellCenter.x()+side_len, cellCenter.y(), cellCenter.z()) );
+    toReturn.emplace_back(cellCenter.x()+side_len, cellCenter.y(), cellCenter.z() );
   if ( cellCenter.x() - side_len >= 0 )
-    toReturn.push_back( vgl_point_3d<double>(cellCenter.x()-side_len, cellCenter.y(), cellCenter.z()) );
+    toReturn.emplace_back(cellCenter.x()-side_len, cellCenter.y(), cellCenter.z() );
 
   //neighbors along Y
   if ( cellCenter.y() + side_len < trees.get_row2_count() )
-    toReturn.push_back( vgl_point_3d<double>(cellCenter.x(), cellCenter.y()+side_len, cellCenter.z()) );
+    toReturn.emplace_back(cellCenter.x(), cellCenter.y()+side_len, cellCenter.z() );
   if ( cellCenter.y() - side_len >= 0 )
-    toReturn.push_back( vgl_point_3d<double>(cellCenter.x(), cellCenter.y()-side_len, cellCenter.z()) );
+    toReturn.emplace_back(cellCenter.x(), cellCenter.y()-side_len, cellCenter.z() );
 
   //neighbors along Z
   if ( cellCenter.z() + side_len < trees.get_row3_count() )
-    toReturn.push_back( vgl_point_3d<double>(cellCenter.x(), cellCenter.y(), cellCenter.z()+side_len) );
+    toReturn.emplace_back(cellCenter.x(), cellCenter.y(), cellCenter.z()+side_len );
   if ( cellCenter.z() - side_len >= 0 )
-    toReturn.push_back( vgl_point_3d<double>(cellCenter.x(), cellCenter.y(), cellCenter.z()-side_len) );
+    toReturn.emplace_back(cellCenter.x(), cellCenter.y(), cellCenter.z()-side_len );
 
   return toReturn;
 }

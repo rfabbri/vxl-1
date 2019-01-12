@@ -14,7 +14,9 @@
 // \author Ian Scott
 // Test construction, IO etc.
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpl/vpl.h> // vpl_unlink()
 
 #include <clsfy/clsfy_add_all_loaders.h>
@@ -55,7 +57,7 @@ void test_k_nearest_neighbour()
   clsfy_add_all_loaders();
 
   std::vector<vpdfl_axis_gaussian_sampler *> generator(4);//
-  const unsigned nDims = 2;
+  constexpr unsigned nDims = 2;
   vnl_vector<double> mean0(nDims), var0(nDims), mean1(nDims), var1(nDims), mean2(nDims), var2(nDims), mean3(nDims), var3(nDims);
   vpdfl_axis_gaussian PDF0, PDF1, PDF2, PDF3;
 
@@ -82,8 +84,8 @@ void test_k_nearest_neighbour()
   vnl_random rng;
   rng.reseed(333233);
 
-  const unsigned nSamples = 200;
-  const unsigned nTestSamples = 500;
+  constexpr unsigned nSamples = 200;
+  constexpr unsigned nTestSamples = 500;
 
   std::vector<unsigned> labels(nSamples);
   std::vector<unsigned> testLabels(nTestSamples);
@@ -253,7 +255,7 @@ void test_k_nearest_neighbour()
     knn_build.set_k(5);
 
     std::istringstream ss("clsfy_knn_builder { k: 5 }\n");
-    vcl_unique_ptr<clsfy_builder_base> knn_build_conf =
+    std::unique_ptr<clsfy_builder_base> knn_build_conf =
       clsfy_builder_base::new_builder(ss);
 
     TEST("Builder config knn", mbl_test_summaries_are_equal(knn_build_conf.get(),
@@ -281,7 +283,7 @@ void test_k_nearest_neighbour()
 
   clsfy_k_nearest_neighbour knn_in;
   clsfy_rbf_parzen win_in;
-  clsfy_classifier_base *p_base_class_knn_in=VXL_NULLPTR, *p_base_class_win_in=VXL_NULLPTR;
+  clsfy_classifier_base *p_base_class_knn_in=nullptr, *p_base_class_win_in=nullptr;
 
   vsl_b_ifstream bfs_in(test_path);
   TEST(("Opened " + test_path + " for reading").c_str(), (!bfs_in ), false);

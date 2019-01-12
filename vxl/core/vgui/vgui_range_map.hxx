@@ -5,8 +5,10 @@
 #include <limits>
 #include "vgui_range_map.h"
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 template <class Type>
 void vgui_range_map<Type>::init_map_domain(const Type min, const Type max,

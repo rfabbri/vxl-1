@@ -1,7 +1,4 @@
 // This is core/vil/vil_stream_core.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
@@ -9,8 +6,10 @@
 #include <cstddef>
 #include <limits>
 #include "vil_stream_core.h"
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 vil_stream_core::vil_stream_core(unsigned block_size)
     : curpos_(0), blocksize_(block_size), tailpos_(0)
@@ -20,8 +19,8 @@ vil_stream_core::vil_stream_core(unsigned block_size)
 
 vil_stream_core::~vil_stream_core()
 {
-  for (unsigned i=0; i<block_.size(); ++i)
-    delete [] block_[i];
+  for (auto & i : block_)
+    delete [] i;
   block_.clear();
 }
 

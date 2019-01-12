@@ -17,13 +17,15 @@
 #include <vbl/vbl_ref_count.h>
 #include <vsl/vsl_binary_io.h>
 #include <vsl/vsl_binary_loader.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: base class for images of features
 class bbgm_feature_image_base : public vbl_ref_count
 {
  public:
-  virtual ~bbgm_feature_image_base(){}
+  ~bbgm_feature_image_base() override= default;
 
   //: Binary save self to stream.
   virtual void b_write(vsl_b_ostream &os) const=0;
@@ -45,17 +47,17 @@ class bbgm_feature_image : public bbgm_feature_image_base
 {
  public:
   //: Constructor
-  bbgm_feature_image<f_type_>() {}
+  bbgm_feature_image<f_type_>() = default;
   bbgm_feature_image<f_type_>(unsigned int ni, unsigned int nj): data_(nj,ni) {}
   bbgm_feature_image<f_type_>(unsigned int ni, unsigned int nj,
                               f_type_ const& feature) : data_(nj,ni,feature) {}
 
 
   //: Return the width of the image
-  unsigned int ni() const { return data_.cols(); }
+  unsigned int ni() const override { return data_.cols(); }
 
   //: Return the height
-  unsigned int nj() const { return data_.rows(); }
+  unsigned int nj() const override { return data_.rows(); }
 
   //: resize to ni x nj
   // If already correct size, this function returns quickly
@@ -118,18 +120,18 @@ class bbgm_feature_image : public bbgm_feature_image_base
 
   //: Return a string name
   // \note this is probably not portable
-  virtual std::string is_a() const;
+  std::string is_a() const override;
 
-  virtual bbgm_feature_image_base* clone() const;
+  bbgm_feature_image_base* clone() const override;
 
   //: Return IO version number;
   short version() const;
 
   //: Binary save self to stream.
-  virtual void b_write(vsl_b_ostream &os) const;
+  void b_write(vsl_b_ostream &os) const override;
 
   //: Binary load self from stream.
-  virtual void b_read(vsl_b_istream &is);
+  void b_read(vsl_b_istream &is) override;
 
  private:
   //: the data

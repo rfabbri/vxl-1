@@ -2,7 +2,9 @@
 #include <vector>
 #include <testlib/testlib_test.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <rgrl/rgrl_feature_sptr.h>
 #include <rgrl/rgrl_feature_point.h>
 #include <rgrl/rgrl_feature_set_sptr.h>
@@ -18,8 +20,8 @@ namespace {
 
 bool
 in_vec_2( std::vector< rgrl_feature_sptr > const& vec,
-          rgrl_feature_sptr p1,
-          rgrl_feature_sptr p2 )
+          const rgrl_feature_sptr& p1,
+          const rgrl_feature_sptr& p2 )
 {
   return vec.size() == 2 &&
          ( ( vec[0] == p1 && vec[1] == p2 ) ||

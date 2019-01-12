@@ -16,7 +16,9 @@
 #include <iostream>
 #include <vgl/vgl_box_3d.h>
 #include <boxm/boxm_scene.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 template <class T_data>
@@ -26,7 +28,7 @@ boxm_scene<boct_tree<short, T_data> > *  boxm_crop_scene(boxm_scene<boct_tree<sh
   if (!(scene_in->world_dim().x() == 1 && scene_in->world_dim().y()==1 && scene_in->world_dim().z()==1))
   {
     std::cerr << "In bvxm_crop_scene -- Input scene has more than one block, which is not supported\n";
-    return VXL_NULLPTR;
+    return nullptr;
   }
 
   //get the tree inside the block and locate region

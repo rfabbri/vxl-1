@@ -47,9 +47,9 @@ bool bvxm_dem_to_xyz_process(bprb_func_process& pro)
   unsigned i = 0;
   bvxm_voxel_world_sptr scene = pro.get_input<bvxm_voxel_world_sptr>(i++);
   std::string geotiff_fname = pro.get_input<std::string>(i++);
-  double geoid_height = pro.get_input<double>(i++);
+  auto geoid_height = pro.get_input<double>(i++);
   vpgl_camera_double_sptr cam = pro.get_input<vpgl_camera_double_sptr>(i++);
-  float fill_in_value = pro.get_input<float>(i++);
+  auto fill_in_value = pro.get_input<float>(i++);
 
   // get the lvcs coords for current scene
   bvxm_world_params_sptr params = scene->get_params();
@@ -58,7 +58,7 @@ bool bvxm_dem_to_xyz_process(bprb_func_process& pro)
   // load the image/camera
   vil_image_resource_sptr dem_res = vil_load_image_resource(geotiff_fname.c_str());
 
-  vpgl_geo_camera* geocam = VXL_NULLPTR;
+  vpgl_geo_camera* geocam = nullptr;
   if (cam) {
     std::cout << pro.name() << " -- Using the loaded camera!\n";
     geocam = dynamic_cast<vpgl_geo_camera*> (cam.ptr());
@@ -104,13 +104,13 @@ bool bvxm_dem_to_xyz_process(bprb_func_process& pro)
   }
 
   vil_image_view_base_sptr dem_view_base = dem_res->get_view(0, orig_dem_ni, 0, orig_dem_nj);
-  vil_image_view<float>* dem_view = dynamic_cast<vil_image_view<float>*>(dem_view_base.ptr());
+  auto* dem_view = dynamic_cast<vil_image_view<float>*>(dem_view_base.ptr());
   if (!dem_view) {
     vil_image_view<float> temp(dem_view_base->ni(), dem_view_base->nj(), 1);
 
-    vil_image_view<vxl_int_16>* dem_view_int = dynamic_cast<vil_image_view<vxl_int_16>*>(dem_view_base.ptr());
+    auto* dem_view_int = dynamic_cast<vil_image_view<vxl_int_16>*>(dem_view_base.ptr());
     if (!dem_view_int) {
-      vil_image_view<vxl_byte>* dem_view_byte = dynamic_cast<vil_image_view<vxl_byte>*>(dem_view_base.ptr());
+      auto* dem_view_byte = dynamic_cast<vil_image_view<vxl_byte>*>(dem_view_base.ptr());
       if (!dem_view_byte) {
         std::cerr << "ERROR: " << pro.name() << ": The image pixel format: " << dem_view_base->pixel_format() << " is not supported!\n";
         return false;
@@ -129,9 +129,9 @@ bool bvxm_dem_to_xyz_process(bprb_func_process& pro)
   int nj = (int)num_voxels.y();
 
   // create x y z images
-  vil_image_view<float>* out_img_x = new vil_image_view<float>(ni, nj, 1);
-  vil_image_view<float>* out_img_y = new vil_image_view<float>(ni, nj, 1);
-  vil_image_view<float>* out_img_z = new vil_image_view<float>(ni, nj, 1);
+  auto* out_img_x = new vil_image_view<float>(ni, nj, 1);
+  auto* out_img_y = new vil_image_view<float>(ni, nj, 1);
+  auto* out_img_z = new vil_image_view<float>(ni, nj, 1);
 
   // initialize the image by scene origin
   out_img_x->fill(-10.0f);
@@ -153,8 +153,8 @@ bool bvxm_dem_to_xyz_process(bprb_func_process& pro)
 
   for (int i = 0; i < ni; i++) {
     for (int j = 0; j < nj; j++) {
-      float local_x = (float)(i*voxel_length+scene_bbox.min_x()+voxel_length/2.0f);
-      float local_y = (float)(scene_bbox.max_y()-j*voxel_length+voxel_length/2.0f);
+      auto local_x = (float)(i*voxel_length+scene_bbox.min_x()+voxel_length/2.0f);
+      auto local_y = (float)(scene_bbox.max_y()-j*voxel_length+voxel_length/2.0f);
       (*out_img_x)(i,j) = local_x;
       (*out_img_y)(i,j) = local_y;
       double u, v;
@@ -208,14 +208,14 @@ bool bvxm_dem_to_xyz_process2(bprb_func_process& pro)
   unsigned i = 0;
   bvxm_voxel_world_sptr scene = pro.get_input<bvxm_voxel_world_sptr>(i++);
   std::string geotiff_folder = pro.get_input<std::string>(i++);
-  double geoid_height = pro.get_input<double>(i++);
-  float fill_in_value = pro.get_input<float>(i++);
-  vpgl_camera_double_sptr cam = VXL_NULLPTR;
+  auto geoid_height = pro.get_input<double>(i++);
+  auto fill_in_value = pro.get_input<float>(i++);
+  vpgl_camera_double_sptr cam = nullptr;
 
   std::string file_glob = geotiff_folder + "//*.tif";
   std::vector<std::string> geotiff_img_names;
   for (vul_file_iterator fn = file_glob.c_str(); fn; ++fn)
-    geotiff_img_names.push_back(fn());
+    geotiff_img_names.emplace_back(fn());
   if (geotiff_img_names.empty()) {
     std::cout << "ERROR: " << pro.name() << " -- NO dem images in given folder: " << geotiff_folder << std::endl;
     return false;
@@ -261,12 +261,11 @@ bool bvxm_dem_to_xyz_process2(bprb_func_process& pro)
   // loop over each dem image in the image folder to create x, y, z image
   std::cout << pro.name() << " -- Start to generate xyz images from " << geotiff_img_names.size() << " dem images" << std::endl;
 
-  for (unsigned img_idx = 0; img_idx < geotiff_img_names.size(); img_idx++)
+  for (const auto& dem_img_name : geotiff_img_names)
   {
-    std::string dem_img_name = geotiff_img_names[img_idx];
     // load the camera from image header
     vil_image_resource_sptr dem_res = vil_load_image_resource(dem_img_name.c_str());
-    vpgl_geo_camera* geocam = VXL_NULLPTR;
+    vpgl_geo_camera* geocam = nullptr;
     std::cout << '\t' << pro.name() << " -- Generate xyz images from " << dem_img_name << "..." << std::flush << std::endl;
     vpgl_geo_camera::init_geo_camera(dem_res, lvcs, geocam);
     if (!geocam) {
@@ -291,13 +290,13 @@ bool bvxm_dem_to_xyz_process2(bprb_func_process& pro)
 
     // load the dem image
     vil_image_view_base_sptr dem_view_base = dem_res->get_view(0, orig_dem_ni, 0, orig_dem_nj);
-    vil_image_view<float>* dem_view = dynamic_cast<vil_image_view<float>*>(dem_view_base.ptr());
+    auto* dem_view = dynamic_cast<vil_image_view<float>*>(dem_view_base.ptr());
     if (!dem_view) {
       vil_image_view<float> temp(dem_view_base->ni(), dem_view_base->nj(), 1);
 
-      vil_image_view<vxl_int_16>* dem_view_int = dynamic_cast<vil_image_view<vxl_int_16>*>(dem_view_base.ptr());
+      auto* dem_view_int = dynamic_cast<vil_image_view<vxl_int_16>*>(dem_view_base.ptr());
       if (!dem_view_int) {
-        vil_image_view<vxl_byte>* dem_view_byte = dynamic_cast<vil_image_view<vxl_byte>*>(dem_view_base.ptr());
+        auto* dem_view_byte = dynamic_cast<vil_image_view<vxl_byte>*>(dem_view_base.ptr());
         if (!dem_view_byte) {
           std::cerr << "ERROR: " << pro.name() << ": The image pixel format: " << dem_view_base->pixel_format() << " is not supported!\n";
           return false;
@@ -326,8 +325,8 @@ bool bvxm_dem_to_xyz_process2(bprb_func_process& pro)
 
     for (int i = 0; i < ni; i++) {
       for (int j = 0; j < nj; j++) {
-        float local_x = (float)(i*voxel_length+scene_bbox.min_x()+voxel_length/2.0f);
-        float local_y = (float)(scene_bbox.max_y()-j*voxel_length+voxel_length/2.0f);
+        auto local_x = (float)(i*voxel_length+scene_bbox.min_x()+voxel_length/2.0f);
+        auto local_y = (float)(scene_bbox.max_y()-j*voxel_length+voxel_length/2.0f);
         (img_x)(i,j) = local_x;
         (img_y)(i,j) = local_y;
         double u, v;
@@ -353,9 +352,9 @@ bool bvxm_dem_to_xyz_process2(bprb_func_process& pro)
   }
   std::cout << num_imgs << " are created from " << geotiff_img_names.size() << " ASTER DEM images, combine them now ... " << std::endl;
 
-  vil_image_view<float>* out_img_x = new vil_image_view<float>(ni, nj, 1);
-  vil_image_view<float>* out_img_y = new vil_image_view<float>(ni, nj, 1);
-  vil_image_view<float>* out_img_z = new vil_image_view<float>(ni, nj, 1);
+  auto* out_img_x = new vil_image_view<float>(ni, nj, 1);
+  auto* out_img_y = new vil_image_view<float>(ni, nj, 1);
+  auto* out_img_z = new vil_image_view<float>(ni, nj, 1);
   out_img_x->fill(-10.0f);
   out_img_y->fill(-10.0f);
   out_img_z->fill(-1.0f);

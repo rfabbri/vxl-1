@@ -4,30 +4,33 @@
 // \date   Sept 2003
 
 #include <iostream>
+#include <utility>
 #include "rgrl_est_spline.h"
-#include "rgrl_spline.h"
-#include "rgrl_match_set.h"
-#include "rgrl_trans_spline.h"
 #include "rgrl_cast.h"
-#include <vnl/vnl_math.h>
-#include <vnl/algo/vnl_svd.h>
-#include <vnl/vnl_vector.h>
-#include <vnl/algo/vnl_levenberg_marquardt.h>
-#include <vnl/vnl_least_squares_function.h>
-#include <vnl/vnl_cost_function.h>
-#include <vnl/algo/vnl_conjugate_gradient.h>
+#include "rgrl_match_set.h"
+#include "rgrl_spline.h"
+#include "rgrl_trans_spline.h"
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/algo/vnl_amoeba.h>
-#include <vnl/algo/vnl_powell.h>
+#include <vnl/algo/vnl_conjugate_gradient.h>
 #include <vnl/algo/vnl_lbfgs.h>
-#include <vcl_compiler.h>
+#include <vnl/algo/vnl_levenberg_marquardt.h>
+#include <vnl/algo/vnl_powell.h>
+#include <vnl/algo/vnl_svd.h>
+#include <vnl/vnl_cost_function.h>
+#include <vnl/vnl_least_squares_function.h>
+#include <vnl/vnl_math.h>
+#include <vnl/vnl_vector.h>
 #include <vul/vul_timer.h>
-#include <vcl_cassert.h>
 
 namespace{
   // for Levenberg Marquardt
   struct spline_least_squares_func : public vnl_least_squares_function
   {
-    spline_least_squares_func( rgrl_spline_sptr spline,
+    spline_least_squares_func( const rgrl_spline_sptr& spline,
                                std::vector< vnl_vector< double > > const& pts,
                                vnl_diag_matrix<double> const& wgt,    // ( num of residuals ) x ( num of residuals )
                                vnl_vector<double> const& displacement, // ( num of residuals ) x 1
@@ -43,7 +46,7 @@ namespace{
     }
 
     // x is the parameters
-    void f( vnl_vector< double > const& x, vnl_vector< double > & fx )
+    void f( vnl_vector< double > const& x, vnl_vector< double > & fx ) override
     {
       // x is the dof-reduced parameters. Convert it back to control points
       assert( x.size() == free_control_pt_index_.size() );
@@ -61,7 +64,7 @@ namespace{
     }
 
     // x is the parameters
-    void gradf( vnl_vector< double > const& x, vnl_matrix< double > & jacobian )
+    void gradf( vnl_vector< double > const& x, vnl_matrix< double > & jacobian ) override
     {
       assert( x.size() == free_control_pt_index_.size() );
       vnl_vector< double > c( spline_->num_of_control_points(), 0.0 );
@@ -88,20 +91,20 @@ namespace{
   // for Conjugate Gradient and other optimizers
   struct spline_cost_function : public vnl_cost_function
   {
-    spline_cost_function( rgrl_spline_sptr spline,
+    spline_cost_function( const rgrl_spline_sptr& spline,
                           std::vector< vnl_vector< double > >  pts,
-                          vnl_diag_matrix<double> wgt,    // ( num of residuals ) x ( num of residuals )
-                          vnl_vector<double> displacement ) // ( num of residuals ) x 1
+                          const vnl_diag_matrix<double>& wgt,    // ( num of residuals ) x ( num of residuals )
+                          const vnl_vector<double>& displacement ) // ( num of residuals ) x 1
       : vnl_cost_function( spline->num_of_control_points() ),  //number of unknowns
                            spline_( spline ),
-                           pts_( pts ), wgt_( wgt ), displacement_( displacement )
+                           pts_( std::move(pts) ), wgt_( wgt ), displacement_( displacement )
     {
       assert( pts.size() == wgt.rows() );
       assert( displacement.size() == wgt.rows() );
     }
 
     // x is the parameters
-    double f( vnl_vector< double > const& x )
+    double f( vnl_vector< double > const& x ) override
     {
       double fx = 0;
       spline_->set_control_points( x );
@@ -112,7 +115,7 @@ namespace{
       return fx;
     }
 
-    void gradf (vnl_vector< double > const &x, vnl_vector< double > &gradient )
+    void gradf (vnl_vector< double > const & /*x*/, vnl_vector< double > &gradient ) override
     {
       gradient.fill( 0.0 );
       vnl_vector< double > gr;
@@ -134,32 +137,32 @@ namespace{
 
 rgrl_est_spline::
 rgrl_est_spline( unsigned dof,
-                 rgrl_mask_box const& roi, vnl_vector<double> const& delta,
+                 rgrl_mask_box  roi, vnl_vector<double> const& delta,
                  vnl_vector< unsigned > const& m,
                  bool use_thin_plate, double lambda )
     : rgrl_nonlinear_estimator( dof ),
-      roi_(roi), delta_(delta),
+      roi_(std::move(roi)), delta_(delta),
       m_( m ),
       use_thin_plate_( use_thin_plate ),
       lambda_(lambda),
       optimize_method_( RGRL_LEVENBERG_MARQUARDT ),
-      global_xform_( VXL_NULLPTR )
+      global_xform_( nullptr )
 {
   unsigned num_control = 1;
-  for ( unsigned i=0; i<m.size(); ++i )
-    num_control *= m[i] + 3;
+  for (unsigned int i : m)
+    num_control *= i + 3;
 
   assert( num_control == dof );
 }
 
 rgrl_est_spline::
 rgrl_est_spline( unsigned dof,
-                 rgrl_transformation_sptr global_xform,
-                 rgrl_mask_box const& roi, vnl_vector<double> const& delta,
+                 const rgrl_transformation_sptr& global_xform,
+                 rgrl_mask_box  roi, vnl_vector<double> const& delta,
                  vnl_vector< unsigned > const& m,
                  bool use_thin_plate, double lambda )
   : rgrl_nonlinear_estimator( dof ),
-    roi_(roi), delta_(delta),
+    roi_(std::move(roi)), delta_(delta),
     m_( m ),
     use_thin_plate_( use_thin_plate ),
     lambda_(lambda),
@@ -167,8 +170,8 @@ rgrl_est_spline( unsigned dof,
     global_xform_( global_xform )
 {
   unsigned num_control = 1;
-  for ( unsigned i=0; i<m.size(); ++i )
-    num_control *= m[i] + 3;
+  for (unsigned int i : m)
+    num_control *= i + 3;
 
   std::cerr << "rgrl_est_spline.cxx : number of control points: " << num_control << ", dof=" << dof << '\n';
   assert( num_control == dof );
@@ -210,7 +213,7 @@ estimate( rgrl_set_of<rgrl_match_set_sptr> const& matches,
 
   std::vector< rgrl_spline_sptr > splines( dim );
   if ( cur_transform.is_type( rgrl_trans_spline::type_id() ) ) {
-    rgrl_trans_spline const& cur_trans_spline = dynamic_cast< rgrl_trans_spline const& >(cur_transform);
+    auto const& cur_trans_spline = dynamic_cast< rgrl_trans_spline const& >(cur_transform);
     std::cerr << "delta_: " << delta_ << '\n'
              << "current transformation's delta_: " << cur_trans_spline.get_delta() << '\n';
     if ( ( delta_ - cur_trans_spline.get_delta()/2 ).two_norm() < 1e-5 ) {

@@ -17,7 +17,9 @@
 // \endverbatim
 
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_ref_count.h>
 #include <vbl/vbl_smart_ptr.h>
 
@@ -30,13 +32,13 @@ class bgrl2_edge : public vbl_ref_count
 
  public:
   // Constructor
-  bgrl2_edge() : vbl_ref_count(), source_(VXL_NULLPTR), target_(VXL_NULLPTR) {}
+  bgrl2_edge() : vbl_ref_count(), source_(nullptr), target_(nullptr) {}
 
   // Constructor
   bgrl2_edge(V_sptr v1, V_sptr v2) : vbl_ref_count(), source_(v1), target_(v2) {}
 
   // Destructor
-  virtual ~bgrl2_edge(){}
+  ~bgrl2_edge() override= default;
 
   //: Smart pointer to the vertex where this edge originates
   V_sptr source() const { return source_; }

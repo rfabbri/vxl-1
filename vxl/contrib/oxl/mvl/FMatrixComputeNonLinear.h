@@ -1,9 +1,6 @@
 // This is oxl/mvl/FMatrixComputeNonLinear.h
 #ifndef FMatrixComputeNonLinear_h_
 #define FMatrixComputeNonLinear_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 //    FMatrixComputeNonLinear is a class that contains the functions required for
@@ -18,7 +15,9 @@
 
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_least_squares_function.h>
 #include <vgl/vgl_homg_point_2d.h>
 #include <mvl/AffineMetric.h>
@@ -40,12 +39,11 @@ class FMatrixComputeNonLinear : public vnl_least_squares_function
   bool compute_basis(FMatrix* F, std::vector<int> basis);
 
   // The virtual function from vnl_levenberg_marquardt
-  void f(const vnl_vector<double>& x, vnl_vector<double>& fx);
+  void f(const vnl_vector<double>& x, vnl_vector<double>& fx) override;
 
  private:
   // Data Members--------------------------------------------------------------
   int data_size_;
-  int terminate_count_;
   PairMatchSetCorner& matches_;
   int p_, q_, r_;
   FMatrix F_orig_;

@@ -9,14 +9,16 @@
 // \author Ozge C. Ozcanli
 // \date May 10, 2011
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/io/boxm2_stream_cache.h>
 
 namespace boxm2_create_stream_cache_process_globals
 {
-  const unsigned n_inputs_ = 4;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 4;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 bool boxm2_create_stream_cache_process_cons(bprb_func_process& pro)
@@ -51,7 +53,7 @@ bool boxm2_create_stream_cache_process(bprb_func_process& pro)
   boxm2_scene_sptr scene= pro.get_input<boxm2_scene_sptr>(i++);
   std::string data_type_fname = pro.get_input<std::string>(i++);   // open data streams of this type with each identifier
   std::string identifier_fname= pro.get_input<std::string>(i++);
-  float num_giga = pro.get_input<float>(i++);
+  auto num_giga = pro.get_input<float>(i++);
 
   // extract list of image_ids from file
   std::ifstream ifs(identifier_fname.c_str());
@@ -97,8 +99,8 @@ bool boxm2_create_stream_cache_process(bprb_func_process& pro)
 
 namespace boxm2_stream_cache_close_files_process_globals
 {
-  const unsigned n_inputs_ = 1;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 1;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool boxm2_stream_cache_close_files_process_cons(bprb_func_process& pro)
@@ -129,4 +131,3 @@ bool boxm2_stream_cache_close_files_process(bprb_func_process& pro)
   cache->close_streams();
   return true;
 }
-

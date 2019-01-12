@@ -8,7 +8,9 @@
 // \date August 06, 2007
 
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_least_squares_function.h>
 #include <vpgl/vpgl_rational_camera.h>
@@ -29,16 +31,16 @@ class vpgl_adjust_lsqr : public vnl_least_squares_function
   // \note image points are not homogeneous because require finite points to measure projection error
   vpgl_adjust_lsqr(vpgl_rational_camera<double>  const& rcam,
                    std::vector<vgl_point_2d<double> > const& img_pts,
-                   std::vector<vgl_point_3d<double> > const& geo_pts,
+                   std::vector<vgl_point_3d<double> >  geo_pts,
                    unsigned num_unknowns, unsigned num_residuals);
 
   //: Destructor
-  virtual ~vpgl_adjust_lsqr() {}
+  ~vpgl_adjust_lsqr() override = default;
 
   //: The main function.
   //  Given the parameter vector x, compute the vector of residuals fx.
   //  fx has been sized appropriately before the call.
-  virtual void f(vnl_vector<double> const& x, vnl_vector<double>& fx);
+  void f(vnl_vector<double> const& x, vnl_vector<double>& fx) override;
 
 #if 0
   //: Called after each LM iteration to print debugging etc.
@@ -55,7 +57,7 @@ class vpgl_adjust_lsqr : public vnl_least_squares_function
 class vpgl_rational_adjust
 {
  public:
-  ~vpgl_rational_adjust(){}
+  ~vpgl_rational_adjust()= default;
 
   static bool adjust(vpgl_rational_camera<double> const& initial_rcam,
                      std::vector<vgl_point_2d<double> > img_pts,

@@ -6,23 +6,25 @@
 // \author Andrew Miller
 // \date Dec 15, 2011
 
+#include <iostream>
+#include <string>
+#include <vector>
 #include <bprb/bprb_func_process.h>
-#include <vcl_iostream.h>
-#include <vcl_string.h>
-#include <vcl_vector.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <bstm/bstm_scene.h>
-#include <vcl_compiler.h>
 
 namespace {
-const unsigned n_inputs_ = 1;
-const unsigned n_outputs_ = 6;
+constexpr unsigned n_inputs_ = 1;
+constexpr unsigned n_outputs_ = 6;
 }
 bool bstm_scene_bbox_process_cons(bprb_func_process &pro) {
-  vcl_vector<vcl_string> input_types_(n_inputs_);
+  std::vector<std::string> input_types_(n_inputs_);
   input_types_[0] = "bstm_scene_sptr";
 
-  vcl_vector<vcl_string> output_types_(n_outputs_);
+  std::vector<std::string> output_types_(n_outputs_);
   output_types_[0] = "double"; // minx
   output_types_[1] = "double"; // miny
   output_types_[2] = "double"; // minz
@@ -35,8 +37,8 @@ bool bstm_scene_bbox_process_cons(bprb_func_process &pro) {
 
 bool bstm_scene_bbox_process(bprb_func_process &pro) {
   if (pro.n_inputs() < ::n_inputs_) {
-    vcl_cout << pro.name() << ": The input number should be " << ::n_inputs_
-             << vcl_endl;
+    std::cout << pro.name() << ": The input number should be " << ::n_inputs_
+             << std::endl;
     return false;
   }
 

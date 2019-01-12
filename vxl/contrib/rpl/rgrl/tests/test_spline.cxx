@@ -2,8 +2,10 @@
 #include <testlib/testlib_test.h>
 
 #include <rgrl/rgrl_spline.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vnl/vnl_random.h>
 #include <vnl/vnl_math.h> // for vnl_math::isnan()
 
@@ -15,7 +17,7 @@ spline_1d_value(double u, vnl_vector<double> c)
 {
   if (u < 0 || u+3 > c.size())
     return 0.0;
-  unsigned int f = (unsigned int)std::floor( u );
+  auto f = (unsigned int)std::floor( u );
 
   u -= f; // u is now between 0 and 1
   if (u==0)  // this avoids access to nonexisting c[f+3] when u+3 == c.size()
@@ -266,8 +268,8 @@ test_refine_2d_spline()
   TEST("number of control points is 36", spline.num_of_control_points(), (m[0]+3)*(m[1]+3));
   vnl_vector< double > c( spline.num_of_control_points() );
 
-  for (unsigned i=0; i<c.size(); ++i )
-    c[ i ] = random_.drand32(0,5);
+  for (double & i : c)
+    i = random_.drand32(0,5);
 
   spline.set_control_points( c );
 

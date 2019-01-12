@@ -1,9 +1,6 @@
 // This is mul/vil3d/vil3d_print.h
 #ifndef vil3d_print_h_
 #define vil3d_print_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author Ian Scott, Tim Cootes.
@@ -11,9 +8,11 @@
 #include <iostream>
 #include <vil/vil_print.h>
 #include <vil3d/vil3d_image_view.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
-#ifdef VCL_VC
+#ifdef _MSC_VER
 #  pragma warning( push )
 #  pragma warning( disable: 4244 )  // conversion from ptrdiff_t to int, possible loss of data
 #endif
@@ -50,7 +49,7 @@ inline void vil3d_print_all(std::ostream& os,const vil3d_image_view<T>& view)
   }
 }
 
-#ifdef VCL_VC
+#ifdef _MSC_VER
 #  pragma warning( pop )
 #endif
 

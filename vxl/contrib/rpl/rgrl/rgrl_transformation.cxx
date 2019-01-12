@@ -11,8 +11,10 @@
 #include <vnl/vnl_least_squares_function.h>
 #include <vnl/algo/vnl_levenberg_marquardt.h>
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <vnl/vnl_cross.h>
 #include <vnl/vnl_double_3.h>
@@ -27,9 +29,7 @@ rgrl_transformation( const vnl_matrix<double>& cov )
 }
 
 rgrl_transformation::
-~rgrl_transformation()
-{
-}
+~rgrl_transformation() = default;
 
 void
 rgrl_transformation::
@@ -359,8 +359,8 @@ set_scaling_factors( vnl_vector<double> const& scaling )
 {
   // checking scaling
   // set it to epsilon if scaling is in fact zero
-  for ( unsigned int i=0; i<scaling.size(); ++i )
-    assert( vnl_math::isfinite( scaling[i] ) );
+  for (double i : scaling)
+    assert( vnl_math::isfinite( i ) );
 
   scaling_factors_ = scaling;
 }
@@ -476,10 +476,10 @@ class inverse_mapping_func
   {}
 
   //: obj func value
-  void f(vnl_vector<double> const& x, vnl_vector<double>& fx);
+  void f(vnl_vector<double> const& x, vnl_vector<double>& fx) override;
 
   //: Jacobian
-  void gradf(vnl_vector<double> const& x, vnl_matrix<double>& jacobian);
+  void gradf(vnl_vector<double> const& x, vnl_matrix<double>& jacobian) override;
 
  public:
   const rgrl_transformation* xform_;
@@ -611,6 +611,5 @@ rgrl_transformation::
 inverse_transform() const
 {
   assert( !"Should never reach rgrl_transformation::inverse_transform()" );
-  return VXL_NULLPTR;
+  return nullptr;
 }
-

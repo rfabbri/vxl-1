@@ -12,7 +12,9 @@
 #include <bhdfs/bhdfs_manager.h>
 #include <bhdfs/bhdfs_fstream.h>
 #include <bpro/core/bbas_pro/bbas_1d_array_string.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 //: generate an input file on the output hdfs folder, this file will be streamed to mapper processes
@@ -20,8 +22,8 @@
 // the output file will have <name1> <name2> ... <name n> names on each line depending on this vector's size
 namespace bhdfs_generate_stdin_file_process_globals
 {
-  const unsigned n_inputs_ = 3;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 3;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool bhdfs_generate_stdin_file_process_cons(bprb_func_process& pro)
@@ -124,8 +126,8 @@ bool bhdfs_generate_stdin_file_process(bprb_func_process& pro)
 // this process is necessary because Python mapper cannot write to any path on hdfs
 namespace bhdfs_generate_file_process_globals
 {
-  const unsigned n_inputs_ = 2;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 2;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool bhdfs_generate_file_process_cons(bprb_func_process& pro)
@@ -182,4 +184,3 @@ bool bhdfs_generate_file_process(bprb_func_process& pro)
 
   return true;
 }
-

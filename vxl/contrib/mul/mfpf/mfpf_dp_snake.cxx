@@ -7,7 +7,9 @@
 #include <cmath>
 #include "mfpf_dp_snake.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vsl/vsl_indent.h>
 #include <vsl/vsl_binary_loader.h>
@@ -33,9 +35,7 @@ mfpf_dp_snake::mfpf_dp_snake()
 // Destructor
 //=======================================================================
 
-mfpf_dp_snake::~mfpf_dp_snake()
-{
-}
+mfpf_dp_snake::~mfpf_dp_snake() = default;
 
 //: Finder used to search for good points along profiles
 mfpf_point_finder& mfpf_dp_snake::finder()
@@ -162,7 +162,7 @@ void mfpf_dp_snake::smooth_curve()
 vgl_point_2d<double> mfpf_dp_snake::cog() const
 {
   unsigned n = pts_.size();
-  if (n==0) return vgl_point_2d<double>(0,0);
+  if (n==0) return {0,0};
 
   double xsum=0,ysum=0;
   for (unsigned i=0;i<n;++i)
@@ -170,7 +170,7 @@ vgl_point_2d<double> mfpf_dp_snake::cog() const
     xsum+=pts_[i].x();
     ysum+=pts_[i].y();
   }
-  return vgl_point_2d<double>(xsum/n,ysum/n);
+  return {xsum/n,ysum/n};
 }
 
 //: Mean distance of points to cog()
@@ -296,4 +296,3 @@ void vsl_b_read(vsl_b_istream& bfs, mfpf_dp_snake& b)
 {
   b.b_read(bfs);
 }
-

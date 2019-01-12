@@ -2,10 +2,15 @@
 // Stellar Science Ltd. Co. (stellarscience.com) for
 // Air Force Research Laboratory, 2005.
 
+#include <utility>
 #include "vil_nitf2_field_definition.h"
 #include "vil_nitf2_field_formatter.h"
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+
 
 //==============================================================================
 // Class vil_nitf2_field_definition_node
@@ -13,13 +18,13 @@
 vil_nitf2_field_definition*
 vil_nitf2_field_definition_node::field_definition()
 {
-  return is_field_definition() ? (vil_nitf2_field_definition*)this : VXL_NULLPTR;
+  return is_field_definition() ? (vil_nitf2_field_definition*)this : nullptr;
 }
 
 vil_nitf2_field_definition_repeat_node*
 vil_nitf2_field_definition_node::repeat_node()
 {
-  return is_repeat_node() ? (vil_nitf2_field_definition_repeat_node*)this : VXL_NULLPTR;
+  return is_repeat_node() ? (vil_nitf2_field_definition_repeat_node*)this : nullptr;
 }
 
 //==============================================================================
@@ -35,17 +40,17 @@ vil_nitf2_field_definition(std::string tag,
                            std::string units,
                            std::string description)
   : vil_nitf2_field_definition_node(type_field),
-    tag(tag),
-    pretty_name(pretty_name),
+    tag(std::move(tag)),
+    pretty_name(std::move(pretty_name)),
     formatter(formatter),
     blanks_ok(blanks_ok),
     width_functor(width_functor),
     condition_functor(condition_functor),
-    units(units),
-    description(description)
+    units(std::move(units)),
+    description(std::move(description))
 {
   assert(!tag.empty() && "vil_nitf2_field_definition:: null tag");
-  assert(formatter != VXL_NULLPTR && "vil_nitf2_field_definition:: null formatter");
+  assert(formatter != nullptr && "vil_nitf2_field_definition:: null formatter");
 }
 
 vil_nitf2_field_definition_node* vil_nitf2_field_definition::copy() const
@@ -55,20 +60,20 @@ vil_nitf2_field_definition_node* vil_nitf2_field_definition::copy() const
     pretty_name,
     formatter->copy(),
     blanks_ok,
-    width_functor ? width_functor->copy() : VXL_NULLPTR,
-    condition_functor ? condition_functor->copy() : VXL_NULLPTR,
+    width_functor ? width_functor->copy() : nullptr,
+    condition_functor ? condition_functor->copy() : nullptr,
     units,
     description);
 }
 
 bool vil_nitf2_field_definition::is_required() const
 {
-  return condition_functor == VXL_NULLPTR;
+  return condition_functor == nullptr;
 }
 
 bool vil_nitf2_field_definition::is_variable_width() const
 {
-  return width_functor != VXL_NULLPTR;
+  return width_functor != nullptr;
 }
 
 vil_nitf2_field_definition::~vil_nitf2_field_definition()
@@ -85,10 +90,9 @@ vil_nitf2_field_definitions::vil_nitf2_field_definitions(
   const vil_nitf2_field_definitions& that)
   : std::list<vil_nitf2_field_definition_node*>()
 {
-  for (std::list<vil_nitf2_field_definition_node*>::const_iterator it = that.begin();
-       it != that.end(); ++it)
+  for (auto it : that)
   {
-    push_back((*it)->copy());
+    push_back(it->copy());
   }
 }
 
@@ -104,8 +108,8 @@ vil_nitf2_field_definitions& vil_nitf2_field_definitions::field(
     std::string description)
 {
   push_back(new vil_nitf2_field_definition(
-                  tag, pretty_name, formatter, blanks_ok,
-                  width_functor, condition_functor, units, description));
+                  std::move(tag), std::move(pretty_name), formatter, blanks_ok,
+                  width_functor, condition_functor, std::move(units), std::move(description)));
   return *this;
 }
 
@@ -121,10 +125,9 @@ vil_nitf2_field_definitions::repeat(vil_nitf2_field_functor<int>* repeat_functor
 
 vil_nitf2_field_definitions::~vil_nitf2_field_definitions()
 {
-  for (std::list<vil_nitf2_field_definition_node*>::iterator it = begin();
-       it != end(); ++it)
+  for (auto & it : *this)
   {
-    delete *it;
+    delete it;
   }
 }
 

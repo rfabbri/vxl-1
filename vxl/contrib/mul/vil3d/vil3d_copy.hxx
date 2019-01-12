@@ -1,16 +1,16 @@
 // This is mul/vil3d/vil3d_copy.hxx
 #ifndef vil3d_copy_hxx_
 #define vil3d_copy_hxx_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Ian Scott, ISBE, Manchester
 // \date   2 Feb 2003
 
 #include "vil3d_copy.h"
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil3d/vil3d_image_view.h>
 
 //: Create a copy of the data viewed by this, and return a view of copy.

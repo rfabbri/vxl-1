@@ -5,8 +5,10 @@
 //:
 // \file
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vgui/vgui_menu.h>
 #include <vgui/vgui_command.h>
@@ -761,4 +763,3 @@ bgui3d_examiner_tableau::draw_arrow()
   glVertex3f(1.0f - 1.0f / 3.0f, 0.0f, -0.5f / 4.0f);
   glEnd();
 }
-

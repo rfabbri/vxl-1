@@ -3,7 +3,9 @@
 
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_quaternion.h>
 #include <vnl/vnl_double_3.h>
 #include <vnl/vnl_math.h> // for pi
@@ -24,9 +26,8 @@ static void test_contains()
   std::cout << "oriented box\n " << obox << '\n'
            << "Corners\n";
   std::vector<vgl_point_3d<double> > c = obox.corners();
-  for (std::vector<vgl_point_3d<double> >::iterator pit = c.begin();
-       pit != c.end(); ++pit)
-    std::cout << *pit << '\n';
+  for (auto & pit : c)
+    std::cout << pit << '\n';
   vgl_point_3d<double> tp(0.5, 0.4, -0.1);
   bool inside = obox.contains(tp);
   bool outside = !(obox.contains(1.0, 1.0, 1.0));
@@ -46,7 +47,7 @@ static void test_construct()
   TEST_NEAR("depth",  obox.depth(),  7, 1e-12);
 
   std::vector<vgl_point_3d<double> > c = obox.corners();
-  std::vector<vgl_point_3d<double> >::iterator pit = c.begin();
+  auto pit = c.begin();
   TEST_NEAR("corner 1", (*pit - vgl_point_3d<double>(1,2,3)).length(), 0.0, 1e-12);
   ++pit;
   TEST_NEAR("corner 2", (*pit - vgl_point_3d<double>(1,6,0)).length(), 0.0, 1e-12);

@@ -18,10 +18,31 @@
 #include <vpgl/vpgl_utm.h>
 #include <vgl/vgl_distance.h>
 
+#include <bkml/bkml_parser.h>
+#include <bpgl/bpgl_camera_utils.h>
+#include <vgl/vgl_polygon.h>
+#include <vgl/vgl_intersection.h>
+
+#include <boxm2/io/boxm2_cache.h>
+
+#include <vil/vil_image_view.h>
+#include <vil/vil_image_view_base.h>
+#include <vil/vil_image_resource_sptr.h>
+#include <vpgl/file_formats/vpgl_geo_camera.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <vul/vul_file_iterator.h>
+#include <vil/vil_load.h>
+#include <vil/vil_convert.h>
+#include <vil/vil_crop.h>
+#include <vpgl/vpgl_lvcs.h>
+#include <vpgl/vpgl_lvcs_sptr.h>
+
 namespace boxm2_create_scene_process_globals
 {
-  const unsigned n_inputs_ = 10;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 10;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 bool boxm2_create_scene_process_cons(bprb_func_process& pro)
@@ -68,15 +89,15 @@ bool boxm2_create_scene_process(bprb_func_process& pro)
   std::vector<std::string> appearance(2,"");
   unsigned i = 0;
   std::string datapath = pro.get_input<std::string>(i++);
-  appearance[0]       = pro.get_input<std::string>(i++); //Appearance Model String
-  appearance[1]       = pro.get_input<std::string>(i++); //Occupancy Model String
-  float origin_x      = pro.get_input<float>(i++);
-  float origin_y      = pro.get_input<float>(i++);
-  float origin_z      = pro.get_input<float>(i++);
-  float lon           = pro.get_input<float>(i++);
-  float lat           = pro.get_input<float>(i++);
-  float elev          = pro.get_input<float>(i++);
-  int num_bins        = pro.get_input<int>(i++);
+  appearance[0] = pro.get_input<std::string>(i++); //Appearance Model String
+  appearance[1] = pro.get_input<std::string>(i++); //Occupancy Model String
+  auto origin_x = pro.get_input<float>(i++);
+  auto origin_y = pro.get_input<float>(i++);
+  auto origin_z = pro.get_input<float>(i++);
+  auto lon = pro.get_input<float>(i++);
+  auto lat = pro.get_input<float>(i++);
+  auto elev = pro.get_input<float>(i++);
+  int num_bins = pro.get_input<int>(i++);
 
   if (!vul_file::make_directory_path(datapath.c_str()))
     return false;
@@ -100,8 +121,8 @@ bool boxm2_create_scene_process(bprb_func_process& pro)
 //  lvcs is used to figure out the local origins of the blocks
 namespace boxm2_create_scene_and_blocks_process_globals
 {
-  const unsigned n_inputs_ = 17;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 17;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 bool boxm2_create_scene_and_blocks_process_cons(bprb_func_process& pro)
@@ -150,22 +171,22 @@ bool boxm2_create_scene_and_blocks_process(bprb_func_process& pro)
   std::vector<std::string> appearance(2,"");
   unsigned i = 0;
   std::string datapath = pro.get_input<std::string>(i++);
-  appearance[0]       = pro.get_input<std::string>(i++); //Appearance Model String
-  appearance[1]       = pro.get_input<std::string>(i++); //Occupancy Model String
-  float lon1          = pro.get_input<float>(i++);
-  float lat1          = pro.get_input<float>(i++);
-  float elev1         = pro.get_input<float>(i++);
-  float lon2          = pro.get_input<float>(i++);
-  float lat2          = pro.get_input<float>(i++);
-  float elev2         = pro.get_input<float>(i++);
-  float origin_lon    = pro.get_input<float>(i++);
-  float origin_lat    = pro.get_input<float>(i++);
-  float origin_elev   = pro.get_input<float>(i++);
-  float voxel_size    = pro.get_input<float>(i++);
-  float block_len     = pro.get_input<float>(i++);  // blocks have equal length on x and y direction
-  float block_lenz     = pro.get_input<float>(i++);
-  int num_bins        = pro.get_input<int>(i++);
-  std::string cs_name  = pro.get_input<std::string>(i++);
+  appearance[0] = pro.get_input<std::string>(i++); //Appearance Model String
+  appearance[1] = pro.get_input<std::string>(i++); //Occupancy Model String
+  auto lon1 = pro.get_input<float>(i++);
+  auto lat1 = pro.get_input<float>(i++);
+  auto elev1 = pro.get_input<float>(i++);
+  auto lon2 = pro.get_input<float>(i++);
+  auto lat2 = pro.get_input<float>(i++);
+  auto elev2 = pro.get_input<float>(i++);
+  auto origin_lon = pro.get_input<float>(i++);
+  auto origin_lat = pro.get_input<float>(i++);
+  auto origin_elev = pro.get_input<float>(i++);
+  auto voxel_size = pro.get_input<float>(i++);
+  auto block_len = pro.get_input<float>(i++);  // blocks have equal length on x and y direction
+  auto block_lenz = pro.get_input<float>(i++);
+  int num_bins = pro.get_input<int>(i++);
+  std::string cs_name = pro.get_input<std::string>(i++);
 
   unsigned init_level = 1;
   unsigned max_level = 4;
@@ -230,7 +251,7 @@ bool boxm2_create_scene_and_blocks_process(bprb_func_process& pro)
   int n_subb = num_xy*num_xy*num_z;
   int n_cells_subb = 1+8+64+512;
   int n_bytes_subb = 36*n_cells_subb;  // alpha:4, mog3/gauss:8, num_obs:8,aux:16
-  float bytes = (float)(n_subb*n_bytes_subb);
+  auto bytes = (float)(n_subb*n_bytes_subb);
   std::cout << "memory requirements for a block at finest resolution:\n"
            << n_subb << "=n_subblocks, " << n_bytes_subb << " bytes per sub-block, " << bytes/1000000.0 << " MB per block\n"
            << " including bit tree: " << (bytes + n_subb*16)/1000000 << " MB\n"
@@ -268,8 +289,8 @@ bool boxm2_create_scene_and_blocks_process(bprb_func_process& pro)
 //  The polygon stored in kml should follow counterclockwise
 namespace boxm2_create_poly_scene_and_blocks_process_globals
 {
-  const unsigned n_inputs_ = 13;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 13;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 bool boxm2_create_poly_scene_and_blocks_process_cons(bprb_func_process& pro)
@@ -299,11 +320,6 @@ bool boxm2_create_poly_scene_and_blocks_process_cons(bprb_func_process& pro)
   return pro.set_input_types(input_types_) && pro.set_output_types(output_types_);
 }
 
-#include <bkml/bkml_parser.h>
-#include <bpgl/bpgl_camera_utils.h>
-#include <vgl/vgl_polygon.h>
-#include <vgl/vgl_intersection.h>
-
 bool boxm2_create_poly_scene_and_blocks_process(bprb_func_process& pro)
 {
   using namespace boxm2_create_poly_scene_and_blocks_process_globals;
@@ -316,22 +332,22 @@ bool boxm2_create_poly_scene_and_blocks_process(bprb_func_process& pro)
   std::vector<std::string> appearance(2,"");
   unsigned i = 0;
   std::string datapath = pro.get_input<std::string>(i++);
-  appearance[0]       = pro.get_input<std::string>(i++);
-  appearance[1]       = pro.get_input<std::string>(i++);
+  appearance[0] = pro.get_input<std::string>(i++);
+  appearance[1] = pro.get_input<std::string>(i++);
   std::string poly_kml_name = pro.get_input<std::string>(i++);
-  float origin_lon    = pro.get_input<float>(i++);
-  float origin_lat    = pro.get_input<float>(i++);
-  float origin_elev   = pro.get_input<float>(i++);
-  float scene_height  = pro.get_input<float>(i++);
-  float voxel_size    = pro.get_input<float>(i++);
-  float block_len     = pro.get_input<float>(i++);
-  float block_lenz    = pro.get_input<float>(i++);
-  int   num_bins      = pro.get_input<int>(i++);
-  std::string cs_name  = pro.get_input<std::string>(i++);
+  auto origin_lon = pro.get_input<float>(i++);
+  auto origin_lat = pro.get_input<float>(i++);
+  auto origin_elev = pro.get_input<float>(i++);
+  auto scene_height = pro.get_input<float>(i++);
+  auto voxel_size = pro.get_input<float>(i++);
+  auto block_len = pro.get_input<float>(i++);
+  auto block_lenz = pro.get_input<float>(i++);
+  int   num_bins = pro.get_input<int>(i++);
+  std::string cs_name = pro.get_input<std::string>(i++);
   unsigned init_level = 1;
   unsigned max_level = 4;
   float max_data_mb = 4000.0;
-  float p_init = (float)0.001;
+  auto p_init = (float)0.001;
   // check the parameters has been successfully passed
   std::cout << "input kml file = " << poly_kml_name << '\n'
            << "origin = [" << origin_lon << ',' << origin_lat << ',' << origin_elev << "]\n"
@@ -367,7 +383,7 @@ bool boxm2_create_poly_scene_and_blocks_process(bprb_func_process& pro)
   vgl_polygon<double> poly;
   for (unsigned sh_idx = 0; sh_idx < n_sheets; sh_idx++) {
     poly.new_sheet();
-    unsigned n_verts = (unsigned)poly_deg[sh_idx].size();
+    auto n_verts = (unsigned)poly_deg[sh_idx].size();
     for (unsigned vt_idx = 0; vt_idx < n_verts; vt_idx++) {
       int zone;
       utm.transform(poly_deg[sh_idx][vt_idx].y(), poly_deg[sh_idx][vt_idx].x(), x, y, zone);
@@ -390,7 +406,7 @@ bool boxm2_create_poly_scene_and_blocks_process(bprb_func_process& pro)
   double left = poly[0][0].x();
   double right = poly[0][0].x();
   for (unsigned sh_idx = 0 ; sh_idx < poly.num_sheets(); sh_idx++) {
-    unsigned n_verts = (unsigned)poly[sh_idx].size();
+    auto n_verts = (unsigned)poly[sh_idx].size();
     for (unsigned vt_idx = 0; vt_idx < n_verts; vt_idx++) {
       if (lower > poly[sh_idx][vt_idx].y())  lower = poly[sh_idx][vt_idx].y();
       if (upper < poly[sh_idx][vt_idx].y())  upper = poly[sh_idx][vt_idx].y();
@@ -425,7 +441,7 @@ bool boxm2_create_poly_scene_and_blocks_process(bprb_func_process& pro)
     std::cerr << "input polygon has no inner boundary\n";
   }
   else {
-    n_in  = (unsigned int)parser->polyinner_.size();
+    n_in = (unsigned int)parser->polyinner_.size();
     n_in--;
   }
   // set up the local coordinates system using lvcs(lat, long, altit) and create polygon
@@ -519,9 +535,9 @@ bool boxm2_create_poly_scene_and_blocks_process(bprb_func_process& pro)
   unsigned int num_z = (int)std::ceil(block_lenz/sb_length);
   double bxy = num_xy * sb_length;
   double bz = num_z * sb_length;
-  unsigned int n_x = (unsigned int)std::ceil(lx / bxy);
-  unsigned int n_y = (unsigned int)std::ceil(ly / bxy);
-  unsigned int n_z = (unsigned int)std::ceil(lz / bz);
+  auto n_x = (unsigned int)std::ceil(lx / bxy);
+  auto n_y = (unsigned int)std::ceil(ly / bxy);
+  auto n_z = (unsigned int)std::ceil(lz / bz);
   std::cout << "sb_length: " << sb_length << " block_len_xy: " << block_len << " num_xy: " << num_xy << '\n'
            << "block_len z: " << block_lenz << " num_z: " << num_z << '\n'
            << "num of blocks in x: " << n_x << " y: " << n_y << " n_z: " << n_z << '\n'
@@ -612,8 +628,8 @@ bool boxm2_create_poly_scene_and_blocks_process(bprb_func_process& pro)
 //  lvcs is used to figure out the local origins of the blocks
 namespace boxm2_distribute_scene_blocks_process_globals
 {
-  const unsigned n_inputs_ = 4;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 4;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool boxm2_distribute_scene_blocks_process_cons(bprb_func_process& pro)
@@ -646,7 +662,7 @@ bool boxm2_distribute_scene_blocks_process(bprb_func_process& pro)
   unsigned i = 0;
 
   boxm2_scene_sptr scene = pro.get_input<boxm2_scene_sptr>(i++);
-  double scene_dim = pro.get_input<double>(i++);
+  auto scene_dim = pro.get_input<double>(i++);
   std::string output_path = pro.get_input<std::string>(i++);
   std::string name_prefix = pro.get_input<std::string>(i++);
 
@@ -676,18 +692,18 @@ bool boxm2_distribute_scene_blocks_process(bprb_func_process& pro)
     vgl_box_2d<double> small_scene_box;
     small_scene_box.add(vgl_point_2d<double>(orig.x() + i*scene_dim, orig.y() + j*scene_dim));
     small_scene_box.add(vgl_point_2d<double>(orig.x() + (i+1)*scene_dim, orig.y() + (j+1)*scene_dim));
-    small_scenes.push_back(std::pair<boxm2_scene_sptr, vgl_box_2d<double> >(small_scene, small_scene_box));
+    small_scenes.emplace_back(small_scene, small_scene_box);
   }
   // add the blocks -- makes sure all the blocks are added to one of the scenes
   unsigned cnt = 0;
-  for (std::map<boxm2_block_id, boxm2_block_metadata>::iterator iter = blks.begin(); iter != blks.end(); ++iter)
+  for (auto & blk : blks)
   {
-    boxm2_block_metadata md = iter->second;
-    vgl_point_2d<double> lo(iter->second.local_origin_.x(), iter->second.local_origin_.y());
-    for (unsigned i = 0; i < small_scenes.size(); ++i) {
-      if (small_scenes[i].second.contains(lo)) {
-        std::map<boxm2_block_id, boxm2_block_metadata>& small_scene_blks = small_scenes[i].first->blocks();
-        small_scene_blks[iter->first] = iter->second;
+    boxm2_block_metadata md = blk.second;
+    vgl_point_2d<double> lo(blk.second.local_origin_.x(), blk.second.local_origin_.y());
+    for (auto & small_scene : small_scenes) {
+      if (small_scene.second.contains(lo)) {
+        std::map<boxm2_block_id, boxm2_block_metadata>& small_scene_blks = small_scene.first->blocks();
+        small_scene_blks[blk.first] = blk.second;
         ++cnt;
       }
     }
@@ -723,9 +739,9 @@ bool boxm2_distribute_scene_blocks_process(bprb_func_process& pro)
 
   // elimiate scenes with no blocks
   std::vector<boxm2_scene_sptr> scenes;
-  for (unsigned i = 0; i < small_scenes.size(); ++i) {
-    if (small_scenes[i].first->blocks().size() > 0)
-      scenes.push_back(small_scenes[i].first);
+  for (auto & small_scene : small_scenes) {
+    if (small_scene.first->blocks().size() > 0)
+      scenes.push_back(small_scene.first);
   }
 
   std::cout << output_path + name_prefix + ".xml\n"
@@ -751,8 +767,8 @@ bool boxm2_distribute_scene_blocks_process(bprb_func_process& pro)
 //: A process to prune the blocks which has never been refined, i.e. with the default alpha size
 namespace boxm2_prune_scene_blocks_process_globals
 {
-  const unsigned n_inputs_ = 4;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 4;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool boxm2_prune_scene_blocks_process_cons(bprb_func_process& pro)
@@ -771,7 +787,6 @@ bool boxm2_prune_scene_blocks_process_cons(bprb_func_process& pro)
   return pro.set_input_types(input_types_) && pro.set_output_types(output_types_);
 }
 
-#include <boxm2/io/boxm2_cache.h>
 bool boxm2_prune_scene_blocks_process(bprb_func_process& pro)
 {
   using namespace boxm2_prune_scene_blocks_process_globals;
@@ -805,13 +820,13 @@ bool boxm2_prune_scene_blocks_process(bprb_func_process& pro)
   // load the blocks - check the size and only add the ones which have gone through some refinement
   long min_size = boxm2_data_info::datasize(boxm2_data_traits<BOXM2_ALPHA>::prefix())*size;
   std::cout << " size of alpha block with no refinement: " << min_size << std::endl;
-  for (std::map<boxm2_block_id, boxm2_block_metadata>::iterator iter = blks.begin(); iter != blks.end(); ++iter)
+  for (auto & blk : blks)
   {
-    boxm2_block_id id = iter->first;
+    boxm2_block_id id = blk.first;
     std::cout<<"Block id "<<id<<' ';
     std::stringstream file_name; file_name << scene->data_path() << "alpha_" << id << ".bin";
     long buf_len = vul_file::size(file_name.str());
-    boxm2_block_metadata md = iter->second;
+    boxm2_block_metadata md = blk.second;
 #if 0
     boxm2_data_base *  alph = cache->get_data_base(scene,id,boxm2_data_traits<BOXM2_ALPHA>::prefix(),0,false);
     long buf_len = (long)alph->buffer_length();
@@ -835,23 +850,11 @@ bool boxm2_prune_scene_blocks_process(bprb_func_process& pro)
   return true;
 }
 
-#include <vil/vil_image_view.h>
-#include <vil/vil_image_view_base.h>
-#include <vil/vil_image_resource_sptr.h>
-#include <vpgl/file_formats/vpgl_geo_camera.h>
-#include <vcl_compiler.h>
-#include <vgl/vgl_intersection.h>
-#include <vul/vul_file_iterator.h>
-#include <vil/vil_load.h>
-#include <vil/vil_convert.h>
-#include <vil/vil_crop.h>
-#include <vpgl/vpgl_lvcs.h>
-#include <vpgl/vpgl_lvcs_sptr.h>
 //: A process to prune the blocks which are below the ground surface defined by ASTER DEM
 namespace boxm2_prune_scene_blocks_by_dem_process_globals
 {
-  const unsigned n_inputs_ = 3;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 3;
+  constexpr unsigned n_outputs_ = 1;
 
   //: find the maximum and minimum height from dem images given a region
   bool find_min_max_height(vgl_point_2d<double> const& lower_left, vgl_point_2d<double> const& upper_right,
@@ -894,7 +897,7 @@ bool boxm2_prune_scene_blocks_by_dem_process(bprb_func_process& pro)
   unsigned i = 0;
   boxm2_scene_sptr scene = pro.get_input<boxm2_scene_sptr>(i++);
   std::string dem_root = pro.get_input<std::string>(i++);
-  float elev_cut_off = pro.get_input<float>(i++);
+  auto elev_cut_off = pro.get_input<float>(i++);
 
   vpgl_lvcs lv = scene->lvcs();
   vpgl_lvcs_sptr lvcs_sptr = new vpgl_lvcs(scene->lvcs());
@@ -952,10 +955,10 @@ bool boxm2_prune_scene_blocks_by_dem_process(bprb_func_process& pro)
   double blk_len_z = box.max_z() - box.min_z();
 
   std::cout << "!!! NUMBER OF BLOCKS to be pruned: " << blks.size() << std::endl;
-  for (std::map<boxm2_block_id, boxm2_block_metadata>::iterator mit = blks.begin(); mit != blks.end(); ++mit)
+  for (auto & blk : blks)
   {
-    boxm2_block_id blk_id = mit->first;
-    boxm2_block_metadata md = mit->second;
+    boxm2_block_id blk_id = blk.first;
+    boxm2_block_metadata md = blk.second;
 
     // obtain the min and max elev from dem image using bounding box of current block
     vgl_box_3d<double> blk_box = md.bbox();
@@ -1076,12 +1079,12 @@ void boxm2_prune_scene_blocks_by_dem_process_globals::crop_and_find_min_max(std:
   std::cout << " dem img size: ni = " << (dem_views[img_id])->ni() << " nj = " << (dem_views[img_id])->nj() << std::endl;*/
 
   // load the actual dem image view
-  vil_image_view<float>* dem_view = dynamic_cast<vil_image_view<float>*>(dem_views[img_id].ptr());
+  auto* dem_view = dynamic_cast<vil_image_view<float>*>(dem_views[img_id].ptr());
   if (!dem_view) {
     vil_image_view<float> temp(dem_views[img_id]->ni(), dem_views[img_id]->nj(), 1);
-    vil_image_view<vxl_int_16>* dem_view_int = dynamic_cast<vil_image_view<vxl_int_16>*>(dem_views[img_id].ptr());
+    auto* dem_view_int = dynamic_cast<vil_image_view<vxl_int_16>*>(dem_views[img_id].ptr());
     if (!dem_view_int) {
-      vil_image_view<vxl_byte>* dem_view_byte = dynamic_cast<vil_image_view<vxl_byte>*>(dem_views[img_id].ptr());
+      auto* dem_view_byte = dynamic_cast<vil_image_view<vxl_byte>*>(dem_views[img_id].ptr());
       vil_convert_cast(*dem_view_byte, temp);
     }
     else
@@ -1102,33 +1105,33 @@ void boxm2_prune_scene_blocks_by_dem_process_globals::crop_and_find_min_max(std:
 bool boxm2_prune_scene_blocks_by_dem_process_globals::find_min_max_height(vgl_point_2d<double> const& lower_left, vgl_point_2d<double> const& upper_right,
                                                                           std::vector<vil_image_view_base_sptr>& dem_views,
                                                                           std::vector<vpgl_geo_camera*>& dem_cams,
-                                                                          std::vector<vgl_box_2d<double> >& dem_bbox,
+                                                                          std::vector<vgl_box_2d<double> >&  /*dem_bbox*/,
                                                                           double& min_elev, double& max_elev)
 {
   // find the image of all four corners
   std::vector<std::pair<unsigned, std::pair<int, int> > > corners;
   std::vector<vgl_point_2d<double> > pts;
-  pts.push_back(vgl_point_2d<double>(lower_left.x(), upper_right.y()));
-  pts.push_back(vgl_point_2d<double>(upper_right.x(), lower_left.y()));
+  pts.emplace_back(lower_left.x(), upper_right.y());
+  pts.emplace_back(upper_right.x(), lower_left.y());
   pts.push_back(lower_left);
   pts.push_back(upper_right);
   unsigned num_dem_imgs = dem_views.size();
-  for (unsigned k = 0; k < pts.size(); k++) {
+  for (auto & pt : pts) {
     // find the image
     for (unsigned j = 0; j < num_dem_imgs; j++) {
       double u, v;
-      dem_cams[j]->global_to_img(pts[k].x(), pts[k].y(), 0, u, v);
+      dem_cams[j]->global_to_img(pt.x(), pt.y(), 0, u, v);
       int uu = (int)std::floor(u+0.5);  int vv = (int)std::floor(v+0.5);
       if (uu < 0 || vv < 0 || uu >= (int)dem_views[j]->ni() || vv >= (int)dem_views[j]->nj())
         continue;
-      corners.push_back(std::pair<unsigned, std::pair<int, int> >(j, std::pair<int,int>(uu,vv)));
+      corners.emplace_back(j, std::pair<int,int>(uu,vv));
       break;
     }
   }
   std::cout << " lower_left: " << lower_left << ", upper_right: " << upper_right << std::endl;
   std::cout << " corner: " << std::endl;
-  for (unsigned i = 0; i < corners.size(); i++) {
-    std::cout <<  " dem img id : " << corners[i].first << " pixel: " << corners[i].second.first << "x" << corners[i].second.second << std::endl;
+  for (auto & corner : corners) {
+    std::cout <<  " dem img id : " << corner.first << " pixel: " << corner.second.first << "x" << corner.second.second << std::endl;
   }
   if (corners.size() != 4) {
     std::cerr << "Cannot locate all 4 corners among these DEM tiles!\n";
@@ -1211,15 +1214,12 @@ bool boxm2_prune_scene_blocks_by_dem_process_globals::find_min_max_height(vgl_po
 }
 
 #if 0
-#include <vil/vil_image_view.h>
-#include <vil/vil_load.h>
-#include <vgl/vgl_intersection.h>
 //: A process to change the resolution/refinement of blocks based on the land type
 //: e.g: rural regon like mountain can be low resolution but urban region requires high resolution
 namespace boxm2_change_scene_res_by_geo_cover_process_globals
 {
-  const unsigned n_inputs_ = 3;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 3;
+  constexpr unsigned n_outputs_ = 1;
 
   // function that modify the block metadata accordingly
   void change_block_metadata(boxm2_block_metadata& md, volm_osm_category_io::geo_cover_values const& land_cover, int const& refine_coef)

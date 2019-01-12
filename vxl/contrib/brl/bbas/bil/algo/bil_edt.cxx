@@ -5,7 +5,9 @@
 #include <cmath>
 #include <vector>
 #include "bil_edt.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 //:
 // \file
 // \brief Computes the exact Euclidean distance transform
@@ -581,7 +583,7 @@ bil_edt_signed(
    unsigned ni = input_image.ni(),
             nj = input_image.nj(),
              n = ni*input_image.nj();
-   const float cutoff_margin = 1000.0; // what's this??
+   constexpr float cutoff_margin = 1000.0; // what's this??
    float *signed_edt;
    unsigned i;
 

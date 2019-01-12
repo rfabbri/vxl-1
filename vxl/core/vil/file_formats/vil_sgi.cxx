@@ -1,7 +1,4 @@
 // This is core/vil/file_formats/vil_sgi.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 
 #include <iostream>
 
@@ -24,7 +21,7 @@ vil_image_resource_sptr vil_sgi_file_format::make_input_image(vil_stream* vs)
   if ( hdr.signature_valid() )
     return new vil_sgi_image(vs);
   else
-    return VXL_NULLPTR;
+    return nullptr;
 }
 
 vil_image_resource_sptr vil_sgi_file_format::make_output_image(vil_stream* vs,
@@ -58,7 +55,7 @@ vil_sgi_image::vil_sgi_image(vil_stream* is)
     vil_exception_error(vil_exception_image_io("vil_sgi_image::read_header", "SGI", ""));
 }
 
-bool vil_sgi_image::get_property(char const * tag, void * value) const
+bool vil_sgi_image::get_property(char const *  /*tag*/, void *  /*value*/) const
 {
   return true;
 }
@@ -133,7 +130,7 @@ bool vil_sgi_image::read_header()
     return false;
   }
 
-  // RLE should be added in - FIXME 
+  // RLE should be added in - FIXME
   if ( hdr.storage == 1 )
   {
     where << "The RLE storage format is not yet supported for SGI images\n";
@@ -175,7 +172,7 @@ vil_image_view_base_sptr vil_sgi_image::get_copy_view(
   if (x0+nx > ni() || y0+ny > nj())
   {
     vil_exception_warning(vil_exception_out_of_bounds("vil_sgi_image::get_copy_view"));
-    return VXL_NULLPTR;
+    return nullptr;
   }
 
   // Number of bytes per pixel is equal to the number of channels
@@ -204,7 +201,7 @@ bool vil_sgi_image::put_view(const vil_image_view_base& view,
     vil_exception_warning(vil_exception_pixel_formats_incompatible(VIL_PIXEL_FORMAT_BYTE, view.pixel_format(), "vil_sgi_image::put_view"));
     return false;
   }
-  const vil_image_view<vxl_byte> & view2 = static_cast<const vil_image_view<vxl_byte> &>(view);
+  const auto & view2 = static_cast<const vil_image_view<vxl_byte> &>(view);
 
   for(int i = 0; i < view2.nj(); i++)
   {

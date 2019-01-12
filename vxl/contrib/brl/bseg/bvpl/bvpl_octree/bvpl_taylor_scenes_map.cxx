@@ -19,9 +19,9 @@ bvpl_taylor_scenes_map::bvpl_taylor_scenes_map(bvpl_taylor_basis_loader loader)
   loader.files(kernel_names);
 
   //Load scenes one-by-one an insert them in the map
-  for (unsigned i=0; i<kernel_names.size(); ++i)
+  for (auto & kernel_name : kernel_names)
   {
-    std::string scene_in_file = loader.path() + '/' + kernel_names[i] + "/float_response_scene.xml";
+    std::string scene_in_file = loader.path() + '/' + kernel_name + "/float_response_scene.xml";
     boxm_scene_parser parser;
     boxm_scene_base_sptr scene_ptr=new boxm_scene_base();
     scene_ptr->load_scene(scene_in_file, parser);
@@ -30,15 +30,15 @@ bvpl_taylor_scenes_map::bvpl_taylor_scenes_map(bvpl_taylor_basis_loader loader)
       std::cerr << " bvpl_taylor_scenes, scenes must be of type float\n";
     }
 
-    boxm_scene<tree_type>* scene = new boxm_scene<tree_type>();
+    auto* scene = new boxm_scene<tree_type>();
     scene->load_scene(parser);
     scene_ptr = scene;
 
-    this->scenes_.insert(std::pair<std::string, boxm_scene_base_sptr>( kernel_names[i], scene_ptr));
+    this->scenes_.insert(std::pair<std::string, boxm_scene_base_sptr>( kernel_name, scene_ptr));
   }
 
   // Create a scene to later save the taylor reconstruction (parameters of the  scene are the same as those of the input scene)
-  boxm_scene<tree_type>* scene_in = static_cast<boxm_scene<tree_type>* > (scenes_[kernel_names[0]].as_pointer());
+  auto* scene_in = static_cast<boxm_scene<tree_type>* > (scenes_[kernel_names[0]].as_pointer());
   {
     boxm_scene<tree_type> *scene_out =
     new boxm_scene<tree_type>(scene_in->lvcs(), scene_in->origin(), scene_in->block_dim(), scene_in->world_dim(), scene_in->max_level(), scene_in->init_level());

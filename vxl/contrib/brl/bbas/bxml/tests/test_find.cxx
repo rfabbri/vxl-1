@@ -2,11 +2,13 @@
 #include <sstream>
 #include <testlib/testlib_test.h>
 #include <bxml/bxml_find.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 namespace {
 
-bxml_document make_simple_doc()
+static bxml_document make_simple_doc()
 {
   bxml_document doc;
   bxml_element * root = new bxml_element("root");
@@ -30,8 +32,8 @@ bxml_document make_simple_doc()
   return doc;
 }
 
-
-bxml_document make_long_doc()
+#if 0
+static bxml_document make_long_doc()
 {
   bxml_document doc;
   bxml_element * root = new bxml_element("stream");
@@ -58,6 +60,7 @@ bxml_document make_long_doc()
 
   return doc;
 }
+#endif
 
 }; // namespace
 

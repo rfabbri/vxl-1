@@ -18,7 +18,9 @@
 #include <vil/vil_image_view.h>
 //brdb stuff
 #include <brdb/brdb_value.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 //directory utility
 #include <vcl_where_root_dir.h>
 #include <bocl/bocl_device.h>
@@ -32,10 +34,10 @@
 
 namespace boxm2_ocl_render_expected_depth_process_globals
 {
-  const unsigned n_inputs_ = 6;
-  const unsigned n_outputs_ = 3;
+  constexpr unsigned n_inputs_ = 6;
+  constexpr unsigned n_outputs_ = 3;
   std::size_t local_threads[2]={8,8};
-  void compile_kernel(bocl_device_sptr device,std::vector<bocl_kernel*> & vec_kernels)
+  void compile_kernel(const bocl_device_sptr& device,std::vector<bocl_kernel*> & vec_kernels)
   {
     //gather all render sources... seems like a lot for rendering...
     std::vector<std::string> src_paths;
@@ -56,7 +58,7 @@ namespace boxm2_ocl_render_expected_depth_process_globals
     options += " -D STEP_CELL=step_cell_render_depth2(tblock,linfo->block_len,aux_args.alpha,data_ptr,d*linfo->block_len,aux_args.vis,aux_args.expdepth,aux_args.expdepthsqr,aux_args.probsum,aux_args.t)";
 
     //have kernel construct itself using the context and device
-    bocl_kernel * ray_trace_kernel=new bocl_kernel();
+    auto * ray_trace_kernel=new bocl_kernel();
 
     ray_trace_kernel->create_kernel( &device->context(),
                                      device->device_id(),
@@ -72,7 +74,7 @@ namespace boxm2_ocl_render_expected_depth_process_globals
 
     norm_src_paths.push_back(source_dir + "pixel_conversion.cl");
     norm_src_paths.push_back(source_dir + "bit/normalize_kernels.cl");
-    bocl_kernel * normalize_render_kernel=new bocl_kernel();
+    auto * normalize_render_kernel=new bocl_kernel();
 
     normalize_render_kernel->create_kernel( &device->context(),
                                             device->device_id(),
@@ -128,8 +130,8 @@ bool boxm2_ocl_render_expected_depth_process(bprb_func_process& pro)
 
   boxm2_opencl_cache_sptr opencl_cache= pro.get_input<boxm2_opencl_cache_sptr>(i++);
   vpgl_camera_double_sptr cam= pro.get_input<vpgl_camera_double_sptr>(i++);
-  unsigned ni=pro.get_input<unsigned>(i++);
-  unsigned nj=pro.get_input<unsigned>(i++);
+  auto ni=pro.get_input<unsigned>(i++);
+  auto nj=pro.get_input<unsigned>(i++);
 
   std::string identifier=device->device_identifier();
 
@@ -161,15 +163,15 @@ bool boxm2_ocl_render_expected_depth_process(bprb_func_process& pro)
 
   unsigned cl_ni=RoundUp(ni,local_threads[0]);
   unsigned cl_nj=RoundUp(nj,local_threads[1]);
-  float* buff = new float[cl_ni*cl_nj];
+  auto* buff = new float[cl_ni*cl_nj];
   for (unsigned i=0;i<cl_ni*cl_nj;i++) buff[i]=0.0f;
-  float* var_buff = new float[cl_ni*cl_nj];
+  auto* var_buff = new float[cl_ni*cl_nj];
   for (unsigned i=0;i<cl_ni*cl_nj;i++) var_buff[i]=0.0f;
-  float* vis_buff = new float[cl_ni*cl_nj];
+  auto* vis_buff = new float[cl_ni*cl_nj];
   for (unsigned i=0;i<cl_ni*cl_nj;i++) vis_buff[i]=1.0f;
-  float* prob_buff = new float[cl_ni*cl_nj];
+  auto* prob_buff = new float[cl_ni*cl_nj];
   for (unsigned i=0;i<cl_ni*cl_nj;i++) prob_buff[i]=0.0f;
-  float* t_infinity_buff = new float[cl_ni*cl_nj];
+  auto* t_infinity_buff = new float[cl_ni*cl_nj];
   for (unsigned i=0;i<cl_ni*cl_nj;i++) t_infinity_buff[i]=0.0f;
 
   bocl_mem_sptr exp_image=opencl_cache->alloc_mem(cl_ni*cl_nj*sizeof(float),buff,"exp image buffer");
@@ -188,14 +190,14 @@ bool boxm2_ocl_render_expected_depth_process(bprb_func_process& pro)
   t_infinity->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
 
   //set generic cam
-  cl_float* ray_origins = new cl_float[4*cl_ni*cl_nj];
-  cl_float* ray_directions = new cl_float[4*cl_ni*cl_nj];
+  auto* ray_origins = new cl_float[4*cl_ni*cl_nj];
+  auto* ray_directions = new cl_float[4*cl_ni*cl_nj];
   bocl_mem_sptr ray_o_buff = opencl_cache->alloc_mem(cl_ni*cl_nj * sizeof(cl_float4), ray_origins, "ray_origins buffer");
   bocl_mem_sptr ray_d_buff = opencl_cache->alloc_mem(cl_ni*cl_nj * sizeof(cl_float4), ray_directions, "ray_directions buffer");
   if(cam->type_name() == "vpgl_geo_camera" )
   {
       vpgl_lvcs_sptr lvcs = new vpgl_lvcs(scene->lvcs());
-      vpgl_geo_camera* geocam = static_cast<vpgl_geo_camera*>(cam.ptr());
+      auto* geocam = static_cast<vpgl_geo_camera*>(cam.ptr());
       // crop relevant image data into a view
       vgl_box_3d<double> scene_bbox = scene->bounding_box();
       vgl_box_2d<double> proj_bbox;
@@ -260,7 +262,7 @@ bool boxm2_ocl_render_expected_depth_process(bprb_func_process& pro)
 
   // Output Array
   float output_arr[100];
-  for (int i=0; i<100; ++i) output_arr[i] = 0.0f;
+  for (float & i : output_arr) i = 0.0f;
   bocl_mem_sptr  cl_output=new bocl_mem(device->context(), output_arr, sizeof(float)*100, "output buffer");
   cl_output->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
 
@@ -291,11 +293,11 @@ bool boxm2_ocl_render_expected_depth_process(bprb_func_process& pro)
 
     //write the image values to the buffer
     vul_timer transfer;
-    bocl_mem* blk           = opencl_cache->get_block(scene,*id);
-    bocl_mem* alpha         = opencl_cache->get_data<BOXM2_ALPHA>(scene,*id);
-    bocl_mem * blk_info     = opencl_cache->loaded_block_info();
+    bocl_mem* blk = opencl_cache->get_block(scene,*id);
+    bocl_mem* alpha = opencl_cache->get_data<BOXM2_ALPHA>(scene,*id);
+    bocl_mem * blk_info = opencl_cache->loaded_block_info();
     transfer_time          += (float) transfer.all();
-    subblk_dim              = mdata.sub_block_dim_.x();
+    subblk_dim = mdata.sub_block_dim_.x();
     ////3. SET args
     kern->set_arg( blk_info );
     kern->set_arg( blk );
@@ -353,9 +355,9 @@ bool boxm2_ocl_render_expected_depth_process(bprb_func_process& pro)
 
   clReleaseCommandQueue(queue);
 
-  vil_image_view<float>* exp_img_out=new vil_image_view<float>(ni,nj);
-  vil_image_view<float>* exp_var_out=new vil_image_view<float>(ni,nj);
-  vil_image_view<float>* vis_out=new vil_image_view<float>(ni,nj);
+  auto* exp_img_out=new vil_image_view<float>(ni,nj);
+  auto* exp_var_out=new vil_image_view<float>(ni,nj);
+  auto* vis_out=new vil_image_view<float>(ni,nj);
 
   for (unsigned c=0;c<nj;c++)
   {

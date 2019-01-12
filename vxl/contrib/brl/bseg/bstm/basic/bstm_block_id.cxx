@@ -3,7 +3,9 @@
 #include "bstm_block_id.h"
 //:
 // \file
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: scene output stream operator
 std::ostream& operator <<(std::ostream &s, bstm_block_id const& id)
@@ -20,10 +22,10 @@ std::string bstm_block_id::to_string() const
 }
 
 //: Binary write boxm2_block to stream.
-void vsl_b_write(vsl_b_ostream& os, bstm_block_id_sptr const& sptr) {}
+void vsl_b_write(vsl_b_ostream&  /*os*/, bstm_block_id_sptr const&  /*sptr*/) {}
 
 //: Binary load boxm2_block from stream.
-void vsl_b_read(vsl_b_istream& is, bstm_block_id_sptr& sptr) {}
+void vsl_b_read(vsl_b_istream&  /*is*/, bstm_block_id_sptr&  /*sptr*/) {}
 
 //: Binary load boxm2_block from stream.
-void vsl_b_read(vsl_b_istream& is, bstm_block_id_sptr const& sptr) {}
+void vsl_b_read(vsl_b_istream&  /*is*/, bstm_block_id_sptr const&  /*sptr*/) {}

@@ -4,7 +4,9 @@
 // \file
 
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_binary_io.h>
 #include <vsl/vsl_clipon_binary_loader.h>
 #include <vsl/vsl_clipon_binary_loader.hxx>
@@ -17,7 +19,7 @@ class test2_base_class
   void vtable_hack();
  public:
   //: Destructor
-  virtual ~test2_base_class() {}
+  virtual ~test2_base_class() = default;
 
   virtual int data() const { return 0; }
 
@@ -40,7 +42,7 @@ void test2_base_class::vtable_hack() { }
 class test2_base_class_io
 {
  public:
-  virtual ~test2_base_class_io() {}
+  virtual ~test2_base_class_io() = default;
   virtual test2_base_class* new_object() const =0;
 
   virtual void b_write_by_base(vsl_b_ostream& os, const test2_base_class& base) const =0;
@@ -97,16 +99,16 @@ class test2_derived_class : public test2_base_class
 
   void set_data(int d) { data_=d; }
 
-  virtual int data() const { return data_; }
+  int data() const override { return data_; }
 
   //: Print summary
-  virtual void print_summary(std::ostream& os) const;
+  void print_summary(std::ostream& os) const override;
 
   //: Return a platform independent string identifying the class
-  virtual std::string is_a() const;
+  std::string is_a() const override;
 
   //: Return true if the argument matches this class' or the parent's identifier
-  virtual bool is_class(std::string const& s) const;
+  bool is_class(std::string const& s) const override;
 
  private:
   void vtable_hack();
@@ -144,39 +146,39 @@ void vsl_b_read(vsl_b_istream& is, test2_derived_class& d)
 class test2_derived_class_io: public test2_base_class_io
 {
  public:
-  virtual test2_base_class* new_object() const
+  test2_base_class* new_object() const override
   {
     return new test2_derived_class;
   }
 
-  virtual void b_write_by_base(vsl_b_ostream& os, const test2_base_class& base) const
+  void b_write_by_base(vsl_b_ostream& os, const test2_base_class& base) const override
   {
     vsl_b_write(os,(const test2_derived_class&) base);
   }
 
-  virtual void b_read_by_base(
-    vsl_b_istream& is, test2_base_class& base) const
+  void b_read_by_base(
+    vsl_b_istream& is, test2_base_class& base) const override
   {
     vsl_b_read(is,(test2_derived_class&) base);
   }
 
-  virtual void print_summary_by_base(
-    std::ostream& os, const test2_base_class& base) const
+  void print_summary_by_base(
+    std::ostream& os, const test2_base_class& base) const override
   {
     base.print_summary(os);
   }
 
-  virtual test2_base_class_io* clone() const
+  test2_base_class_io* clone() const override
   {
     return new test2_derived_class_io(*this);
   }
 
-  virtual std::string target_classname() const
+  std::string target_classname() const override
   {
     return std::string("test2_derived_class");
   }
 
-  virtual bool is_io_for(const test2_base_class& base) const
+  bool is_io_for(const test2_base_class& base) const override
   { return base.is_class(target_classname()); }
 };
 
@@ -192,7 +194,7 @@ void test_clipon_polymorphic_io()
 
   test2_derived_class d1_out(1234);
   test2_base_class *b1_out = &d1_out;
-  test2_base_class *b2_out = VXL_NULLPTR;
+  test2_base_class *b2_out = nullptr;
 
   vsl_b_ofstream bfs_out("vsl_clipon_polymorphic_io_test.bvl.tmp");
   TEST("Opened vsl_polymorphic_io_test.bvl.tmp for writing", (!bfs_out), false);
@@ -202,7 +204,7 @@ void test_clipon_polymorphic_io()
   bfs_out.close();
 
   test2_derived_class d1_in(0);
-  test2_base_class *b1_in = VXL_NULLPTR;
+  test2_base_class *b1_in = nullptr;
   test2_base_class *b2_in = new test2_derived_class(7);
 
   vsl_b_ifstream bfs_in("vsl_clipon_polymorphic_io_test.bvl.tmp");

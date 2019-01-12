@@ -21,8 +21,8 @@
 
 namespace bvpl_save_vrml_process_globals
 {
-  const unsigned n_inputs_ = 3;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 3;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 //: process takes 3 inputs and has no outputs.
@@ -71,12 +71,12 @@ bool bvpl_save_vrml_process(bprb_func_process& pro)
 
   std::ofstream ofs(vrml_path.c_str());
 
-  if (boxm_scene<boct_tree<short, bvpl_octree_sample<float> > > *scene_in =
+  if (auto *scene_in =
       dynamic_cast<boxm_scene<boct_tree<short, bvpl_octree_sample<float> > >* > (scene_base.as_pointer()))
   {
     bvpl_octree_vrml_util::write_scene_as_disks(ofs, scene_in, kernel_vector);
   }
-  else if (boxm_scene<boct_tree<short, bvpl_octree_sample<bsta_num_obs<bsta_gauss_sf1> > > > *scene_in =
+  else if (auto *scene_in =
            dynamic_cast<boxm_scene<boct_tree<short, bvpl_octree_sample<bsta_num_obs<bsta_gauss_sf1> > > >* >(scene_base.as_pointer()))
   {
     bvpl_octree_vrml_util::write_scene_as_disks(ofs, scene_in, kernel_vector);
@@ -87,4 +87,3 @@ bool bvpl_save_vrml_process(bprb_func_process& pro)
 
   return true;
 }
-

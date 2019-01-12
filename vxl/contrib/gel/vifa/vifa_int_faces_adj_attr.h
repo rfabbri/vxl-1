@@ -23,7 +23,9 @@
 
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vdgl/vdgl_fit_lines_params.h>
 #include <vtol/vtol_intensity_face_sptr.h>
 #include <vifa/vifa_coll_lines_params.h>
@@ -60,41 +62,41 @@ class vifa_int_faces_adj_attr: public vifa_int_faces_attr
 
  public:
   vifa_int_faces_adj_attr();
-  vifa_int_faces_adj_attr(vtol_intensity_face_sptr  seed,
+  vifa_int_faces_adj_attr(const vtol_intensity_face_sptr&  seed,
                           int              depth,
                           int              size_filter = -1,
-                          vdgl_fit_lines_params*    fitter_params = VXL_NULLPTR,
-                          vifa_group_pgram_params*  gpp_s = VXL_NULLPTR,
-                          vifa_group_pgram_params*  gpp_w = VXL_NULLPTR,
-                          vifa_coll_lines_params*    cpp = VXL_NULLPTR,
-                          vifa_norm_params*      np = VXL_NULLPTR,
-                          vifa_int_face_attr_factory*  factory = VXL_NULLPTR,
+                          vdgl_fit_lines_params*    fitter_params = nullptr,
+                          vifa_group_pgram_params*  gpp_s = nullptr,
+                          vifa_group_pgram_params*  gpp_w = nullptr,
+                          vifa_coll_lines_params*    cpp = nullptr,
+                          vifa_norm_params*      np = nullptr,
+                          vifa_int_face_attr_factory*  factory = nullptr,
                           float          junk_area_percentage = 0.2
                          );
 
-  vifa_int_faces_adj_attr(vtol_intensity_face_sptr  seed,
+  vifa_int_faces_adj_attr(const vtol_intensity_face_sptr&  seed,
                           int                       depth,
                           iface_list&               neighborhood,
                           int                       size_filter  =  -1,
-                          vdgl_fit_lines_params*    fitter_params  =  VXL_NULLPTR,
-                          vifa_group_pgram_params*  gpp_s  =  VXL_NULLPTR,
-                          vifa_group_pgram_params*  gpp_w  =  VXL_NULLPTR,
-                          vifa_coll_lines_params*   cpp  =  VXL_NULLPTR,
-                          vifa_norm_params*         np  =  VXL_NULLPTR,
-                          vifa_int_face_attr_factory*    factory  =  VXL_NULLPTR,
+                          vdgl_fit_lines_params*    fitter_params  =  nullptr,
+                          vifa_group_pgram_params*  gpp_s  =  nullptr,
+                          vifa_group_pgram_params*  gpp_w  =  nullptr,
+                          vifa_coll_lines_params*   cpp  =  nullptr,
+                          vifa_norm_params*         np  =  nullptr,
+                          vifa_int_face_attr_factory*    factory  =  nullptr,
                           float                     junk_area_percentage  =  0.2
                          );
 
-  virtual iface_list&    GetFaces();
+  iface_list&    GetFaces() override;
   iface_list*        GetFaceList();
 
-  virtual bool  ComputeAttributes();
-  virtual bool  GetAttributes(std::vector<float>&  attrs);
+  bool  ComputeAttributes() override;
+  bool  GetAttributes(std::vector<float>&  attrs) override;
   static  void  GetAttributeNames(std::vector<std::string>&  names);
-  virtual bool  GetNativeAttributes(std::vector<float>&  attrs);
+  bool  GetNativeAttributes(std::vector<float>&  attrs) override;
 
   vtol_intensity_face_sptr  GetSeed() { return seed_; }
-  void                      SetSeed(vtol_intensity_face_sptr  seed);
+  void                      SetSeed(const vtol_intensity_face_sptr&  seed);
 
   int    GetDepth() const { return depth_; }
   void   SetDepth(int depth) { depth_ = depth; closure_valid_ = false; }
@@ -119,9 +121,9 @@ class vifa_int_faces_adj_attr: public vifa_int_faces_attr
   float  GetMinRatioAttr(int  attr_index);
 
  protected:
-  virtual void  init();
+  void  init() override;
   bool  add_unique_face(iface_list&               facelist,
-                        vtol_intensity_face_sptr  face,
+                        const vtol_intensity_face_sptr&  face,
                         int                       size_filter);
   void  compute_closure_step(int                       current_depth,
                              vtol_intensity_face_sptr  seed);

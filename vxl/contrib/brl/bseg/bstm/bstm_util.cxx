@@ -37,7 +37,7 @@ bool bstm_util::query_point_color(bstm_scene_sptr &scene,
   int bit_index = tree.traverse(local);
   int depth = tree.depth_at(bit_index);
   int data_offset = tree.get_data_index(bit_index, false);
-  float side_len =
+  auto side_len =
       static_cast<float>(blk_data.sub_block_dim_.x() / ((float)(1 << depth)));
 
   // do the query with data_offset....
@@ -61,9 +61,9 @@ bool bstm_util::query_point_color(bstm_scene_sptr &scene,
   std::vector<std::string> apps = scene->appearances();
   int appTypeSize = 0; // just to avoid compiler warning about using potentially
                        // uninitialised value
-  for (unsigned int i = 0; i < apps.size(); ++i) {
-    if (apps[i] == bstm_data_traits<BSTM_GAUSS_RGB>::prefix()) {
-      data_type = apps[i];
+  for (const auto & app : apps) {
+    if (app == bstm_data_traits<BSTM_GAUSS_RGB>::prefix()) {
+      data_type = app;
       foundDataType = true;
     }
   }
@@ -130,7 +130,7 @@ bool bstm_util::query_point(bstm_scene_sptr &scene,
   boct_bit_tree tree(treebits.data_block(), blk_data.max_level_);
   int bit_index = tree.traverse(local);
   int depth = tree.depth_at(bit_index);
-  float side_len =
+  auto side_len =
       static_cast<float>(blk_data.sub_block_dim_.x() / ((float)(1 << depth)));
   int data_offset = tree.get_data_index(bit_index, false);
 
@@ -171,7 +171,7 @@ bool bstm_util::query_point(bstm_scene_sptr &scene,
   bstm_data_base *alpha_base =
       cache->get_data_base(id, bstm_data_traits<BSTM_ALPHA>::prefix());
 
-  float *alphas = (float *)(alpha_base->data_buffer());
+  auto *alphas = (float *)(alpha_base->data_buffer());
   float alpha = alphas[data_offset_t];
 
   // store cell probability
@@ -191,13 +191,13 @@ bool bstm_util::verify_appearance(const std::vector<std::string> &apps,
                                   std::string &data_type,
                                   int &appTypeSize) {
   bool foundDataType = false;
-  for (unsigned int i = 0; i < apps.size(); ++i) {
+  for (const auto & app : apps) {
     // look for valid types
-    for (unsigned int c = 0; c < valid_types.size(); ++c) {
-      if (apps[i] == valid_types[c]) {
+    for (const auto & valid_type : valid_types) {
+      if (app == valid_type) {
         foundDataType = true;
-        data_type = apps[i];
-        appTypeSize = (int)bstm_data_info::datasize(apps[i]);
+        data_type = app;
+        appTypeSize = (int)bstm_data_info::datasize(app);
       }
     }
   }
@@ -214,7 +214,7 @@ bool bstm_util::verify_appearance(const bstm_scene &scene,
 
 // private helper method prepares an input image to be processed by update
 vil_image_view_base_sptr
-bstm_util::prepare_input_image(vil_image_view_base_sptr loaded_image,
+bstm_util::prepare_input_image(const vil_image_view_base_sptr& loaded_image,
                                bool force_grey) {
   // then it's an RGB image (assumes byte image...)
   if (loaded_image->nplanes() == 3 || loaded_image->nplanes() == 4) {
@@ -225,7 +225,7 @@ bstm_util::prepare_input_image(vil_image_view_base_sptr loaded_image,
           vil_convert_to_n_planes(4, loaded_image);
       vil_image_view_base_sptr comp_image =
           vil_convert_to_component_order(n_planes);
-      vil_image_view<vil_rgba<vxl_byte> > *rgba_view =
+      auto *rgba_view =
           new vil_image_view<vil_rgba<vxl_byte> >(comp_image);
 
       // make sure all alpha values are set to 255 (1)
@@ -237,13 +237,13 @@ bstm_util::prepare_input_image(vil_image_view_base_sptr loaded_image,
       return toReturn;
     } else {
       // load image from file and format it into grey
-      vil_image_view<vxl_byte> *inimg =
+      auto *inimg =
           dynamic_cast<vil_image_view<vxl_byte> *>(loaded_image.ptr());
       vil_image_view<float> gimg(loaded_image->ni(), loaded_image->nj());
       vil_convert_planes_to_grey<vxl_byte, float>(*inimg, gimg);
 
       // stretch it into 0-1 range
-      vil_image_view<float> *floatimg =
+      auto *floatimg =
           new vil_image_view<float>(loaded_image->ni(), loaded_image->nj());
       vil_convert_stretch_range_limited(
           gimg, *floatimg, 0.0f, 255.0f, 0.0f, 1.0f);
@@ -256,18 +256,18 @@ bstm_util::prepare_input_image(vil_image_view_base_sptr loaded_image,
   if (loaded_image->nplanes() == 1) {
     // prepare floatimg for stretched img
     vil_image_view<float> *floatimg;
-    if (vil_image_view<vxl_byte> *img_byte =
+    if (auto *img_byte =
             dynamic_cast<vil_image_view<vxl_byte> *>(loaded_image.ptr())) {
       floatimg =
           new vil_image_view<float>(loaded_image->ni(), loaded_image->nj(), 1);
       vil_convert_stretch_range_limited(
           *img_byte, *floatimg, vxl_byte(0), vxl_byte(255), 0.0f, 1.0f);
-    } else if (vil_image_view<float> *img_float =
+    } else if (auto *img_float =
                    dynamic_cast<vil_image_view<float> *>(loaded_image.ptr())) {
       return vil_image_view_base_sptr(img_float);
     } else {
       std::cerr << "Failed to load image\n";
-      return VXL_NULLPTR;
+      return nullptr;
     }
     vil_image_view_base_sptr toReturn(floatimg);
     return toReturn;
@@ -275,5 +275,5 @@ bstm_util::prepare_input_image(vil_image_view_base_sptr loaded_image,
 
   // otherwise it's messed up, return a null pointer
   std::cerr << "Failed to recognize input image type\n";
-  return VXL_NULLPTR;
+  return nullptr;
 }

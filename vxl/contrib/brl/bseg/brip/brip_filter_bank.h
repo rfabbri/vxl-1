@@ -27,7 +27,9 @@
 #include <iostream>
 #include <vil/vil_image_view.h>
 #include <vil/vil_pyramid_image_view.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class brip_filter_bank
 {
@@ -45,7 +47,7 @@ class brip_filter_bank
                    float lambda1, float theta_interval, float cuttoff_ratio,
                    vil_image_view<float> const& image);
 
-  ~brip_filter_bank() {}
+  ~brip_filter_bank() = default;
   //: set image after construction
   void set_image(vil_image_view<float> const& image);
   //: accessors

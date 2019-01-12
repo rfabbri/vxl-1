@@ -1,7 +1,4 @@
 // This is core/vgui/vgui_observable.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
@@ -10,7 +7,9 @@
 #include <algorithm>
 #include "vgui_observable.h"
 #include <vgui/vgui_observer.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //
 // Base class for classes which want to broadcast messages to vgui_observers

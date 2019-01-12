@@ -11,7 +11,9 @@
 #include <vil/vil_image_view.h>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_vector_2d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Draws value along line between p1 and p2
 //  Effective, but not terribly efficient.
@@ -64,7 +66,7 @@ inline void mbl_draw_line(vil_image_view<T>& image,
   unsigned n = unsigned(1.5+std::max(std::fabs(dp.x()),std::fabs(dp.y())));
   dp/=n;
   unsigned ni=image.ni(), nj=image.nj();
-  const std::ptrdiff_t rstep = 0;
+  constexpr std::ptrdiff_t rstep = 0;
   const std::ptrdiff_t gstep = image.planestep();
   const std::ptrdiff_t bstep =2*gstep;
   for (unsigned i=0;i<=n;++i,p1+=dp)
@@ -80,5 +82,3 @@ inline void mbl_draw_line(vil_image_view<T>& image,
 
 
 #endif // mbl_draw_line_h_
-
-

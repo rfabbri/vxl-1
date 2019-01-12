@@ -8,8 +8,10 @@
 #include "msm_zoom_aligner.h"
 #include <vnl/vnl_vector.h>
 #include <vsl/vsl_binary_loader.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 //=======================================================================
 
@@ -125,7 +127,7 @@ inline vgl_point_2d<double> msm_wtd_cog(const msm_points& pts,
   { cx+=w[0]*v[0]; cy+=w[0]*v[1]; w_sum+=w[0]; }
 
   if (w_sum>0) { cx/=w_sum; cy/=w_sum; }
-  return vgl_point_2d<double>(cx,cy);
+  return {cx,cy};
 }
 
   //: Estimate parameters which map points1 to points2 allowing for weights
@@ -182,7 +184,7 @@ void msm_zoom_aligner::calc_transform_wt_mat(const msm_points& pts1,
   const double* p1 = pts1.vector().begin();
   const double* p2 = pts2.vector().begin();
   const double* p1_end = pts1.vector().end();
-  std::vector<msm_wt_mat_2d>::const_iterator w=wt_mat.begin();
+  auto w=wt_mat.begin();
   for (;p1!=p1_end;p1+=2,p2+=2,++w)
   {
     double wa=w->m11(), wb=w->m12(), wc=w->m22();
@@ -303,6 +305,12 @@ void msm_zoom_aligner::align_set(const std::vector<msm_points>& points,
 
     for (unsigned i=0;i<n_shapes;++i)
     {
+      if (points[i].size()!=ref_mean_shape.size())
+      {
+        std::cerr<<"msm_zoom_aligner::align_set() shape "<<i
+                 <<" has different number of points to first shape"<<std::endl;
+        std::abort();
+      }
       calc_transform_from_ref(ref_mean_shape,points[i],pose_from_ref);
       pose_to_ref[i]=inverse(pose_from_ref);
       average_pose+=pose_from_ref;
@@ -331,5 +339,3 @@ msm_aligner* msm_zoom_aligner::clone() const
 {
   return new msm_zoom_aligner(*this);
 }
-
-

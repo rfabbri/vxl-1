@@ -24,7 +24,9 @@
 // \endverbatim
 
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vil/vil_image_view.h>
 #include <vil/vil_load.h>
@@ -53,15 +55,15 @@
 //: globals variables and functions
 namespace boxm2_roi_init_process_globals
 {
-  const unsigned n_inputs_ = 7;
-  const unsigned n_outputs_ = 3;
+  constexpr unsigned n_inputs_ = 7;
+  constexpr unsigned n_outputs_ = 3;
 
   // === functions ===
 
   //: roi_init function
   bool roi_init(std::string const& image_path,
                 vpgl_rational_camera<double>* camera,
-                boxm2_scene_sptr scene,
+                const boxm2_scene_sptr& scene,
                 float uncertainty,
                 //vil_image_view<unsigned char>* nitf_image_unsigned_char,
                 vil_image_view_base_sptr& img_ptr,
@@ -81,7 +83,7 @@ namespace boxm2_roi_init_process_globals
 //: roi_init function
 bool boxm2_roi_init_process_globals::roi_init( std::string const& image_path,
                                                vpgl_rational_camera<double>* camera,
-                                               boxm2_scene_sptr scene,
+                                               const boxm2_scene_sptr& scene,
                                                float error,
                                                //vil_image_view<unsigned char>* nitf_image_unsigned_char,
                                                vil_image_view_base_sptr& img_ptr,
@@ -102,7 +104,7 @@ bool boxm2_roi_init_process_globals::roi_init( std::string const& image_path,
     return false;
   }
 
-  vil_nitf2_image* nitf =  static_cast<vil_nitf2_image*> (img.ptr());
+  auto* nitf =  static_cast<vil_nitf2_image*> (img.ptr());
 
   vgl_box_3d<double> box = scene->bounding_box();
 
@@ -174,7 +176,7 @@ bool boxm2_roi_init_process_globals::roi_init( std::string const& image_path,
     vil_image_view<vxl_uint_16> nitf_image_vxl_uint_16(roi);
 
     //*nitf_image_unsigned_char = vil_image_view<unsigned char> (roi->ni(),roi->nj(),roi->nplanes());
-    vil_image_view<unsigned char>* nitf_image_unsigned_char = new vil_image_view<unsigned char> (roi->ni(),roi->nj(),roi->nplanes());
+    auto* nitf_image_unsigned_char = new vil_image_view<unsigned char> (roi->ni(),roi->nj(),roi->nplanes());
 
 
     int bigendian = 0;
@@ -189,7 +191,7 @@ bool boxm2_roi_init_process_globals::roi_init( std::string const& image_path,
           vxl_uint_16 curr_pixel_val = nitf_image_vxl_uint_16(m,n,p);
 
           if (bigendian) {
-            unsigned char* arr = (unsigned char*) &curr_pixel_val;
+            auto* arr = (unsigned char*) &curr_pixel_val;
             // [defgh3][5abc]
             // --> [abcdefgh]
             unsigned char big = *arr;
@@ -207,7 +209,7 @@ bool boxm2_roi_init_process_globals::roi_init( std::string const& image_path,
             curr_pixel_val >>= 8;
           }
 
-          unsigned char pixel_val = static_cast<unsigned char> (curr_pixel_val);
+          auto pixel_val = static_cast<unsigned char> (curr_pixel_val);
 
 #if 0
           //This is how Thom use to get the region
@@ -248,13 +250,13 @@ std::vector<vgl_point_3d<double> > boxm2_roi_init_process_globals::corners_of_bo
   std::vector<vgl_point_3d<double> > corners;
 
   corners.push_back(box.min_point());
-  corners.push_back(vgl_point_3d<double> (box.min_x()+box.width(), box.min_y(), box.min_z()));
-  corners.push_back(vgl_point_3d<double> (box.min_x()+box.width(), box.min_y()+box.height(), box.min_z()));
-  corners.push_back(vgl_point_3d<double> (box.min_x(), box.min_y()+box.height(), box.min_z()));
-  corners.push_back(vgl_point_3d<double> (box.min_x(), box.min_y(), box.max_z()));
-  corners.push_back(vgl_point_3d<double> (box.min_x()+box.width(), box.min_y(), box.max_z()));
+  corners.emplace_back(box.min_x()+box.width(), box.min_y(), box.min_z());
+  corners.emplace_back(box.min_x()+box.width(), box.min_y()+box.height(), box.min_z());
+  corners.emplace_back(box.min_x(), box.min_y()+box.height(), box.min_z());
+  corners.emplace_back(box.min_x(), box.min_y(), box.max_z());
+  corners.emplace_back(box.min_x()+box.width(), box.min_y(), box.max_z());
   corners.push_back(box.max_point());
-  corners.push_back(vgl_point_3d<double> (box.min_x(), box.min_y()+box.height(), box.max_z()));
+  corners.emplace_back(box.min_x(), box.min_y()+box.height(), box.max_z());
   return corners;
 }
 
@@ -284,8 +286,7 @@ bool boxm2_roi_init_process_globals::project_box( const vpgl_rational_camera<dou
   std::vector<vgl_point_3d<double> > box_corners = corners_of_box_3d(box);
 
   double lon, lat, gz;
-  for (unsigned i=0; i<cam_corners.size(); i++) {
-    vgl_point_3d<double> cam_corner = cam_corners[i];
+  for (auto cam_corner : cam_corners) {
     lvcs->local_to_global(cam_corner.x(), cam_corner.y(), cam_corner.z(),
                           vpgl_lvcs::wgs84, lon, lat, gz, vpgl_lvcs::DEG, vpgl_lvcs::METERS);
     vpgl_rational_camera<double>* new_cam = cam.clone();
@@ -294,9 +295,9 @@ bool boxm2_roi_init_process_globals::project_box( const vpgl_rational_camera<dou
     new_cam->set_offset(vpgl_rational_camera<double>::Z_INDX, gz);
 
     // project the box
-    for (unsigned int j=0; j < box_corners.size(); j++) {
+    for (auto & box_corner : box_corners) {
       // convert the box corners to world coordinates
-      lvcs->local_to_global(box_corners[j].x(), box_corners[j].y(), box_corners[j].z(),
+      lvcs->local_to_global(box_corner.x(), box_corner.y(), box_corner.z(),
                             vpgl_lvcs::wgs84, lon, lat, gz, vpgl_lvcs::DEG, vpgl_lvcs::METERS);
       vgl_point_2d<double> p2d = new_cam->project(vgl_point_3d<double>(lon, lat, gz));
       roi.add(p2d);
@@ -392,7 +393,7 @@ bool boxm2_roi_init_process(bprb_func_process& pro)
 
   //vil_image_view<unsigned char>* img_ptr = new vil_image_view<unsigned char>();
   vil_image_view_base_sptr img_ptr;
-  vpgl_rational_camera<double>* rat_camera =
+  auto* rat_camera =
     dynamic_cast<vpgl_rational_camera<double>*> (camera.as_pointer());
   if (!rat_camera) {
     std::cerr << "The camera input is not a rational camera\n";
@@ -419,4 +420,3 @@ bool boxm2_roi_init_process(bprb_func_process& pro)
 
   return true;
 }
-

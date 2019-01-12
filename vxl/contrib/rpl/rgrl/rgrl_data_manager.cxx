@@ -14,7 +14,10 @@
 #include <rrel/rrel_lms_obj.h>
 #include <rrel/rrel_tukey_obj.h>
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 // ---------------------------------------------------------------------------
 //                                                  data manager
@@ -29,20 +32,18 @@ rgrl_data_manager( bool multi_stage )
 
 
 rgrl_data_manager::
-~rgrl_data_manager()
-{
-}
+~rgrl_data_manager() = default;
 
 //: For multi-stage
 void
 rgrl_data_manager::
 add_data( unsigned stage,
-          rgrl_feature_set_sptr                    from_set,
-          rgrl_feature_set_sptr                    to_set,
+          const rgrl_feature_set_sptr&                    from_set,
+          const rgrl_feature_set_sptr&                    to_set,
           rgrl_matcher_sptr                        matcher,
           rgrl_weighter_sptr                       weighter,
           rgrl_scale_estimator_unwgted_sptr        unwgted_scale_est,
-          rgrl_scale_estimator_wgted_sptr          wgted_scale_est,
+          const rgrl_scale_estimator_wgted_sptr&          wgted_scale_est,
           const std::string&                        label )
 {
   // Both feature sets are mandatory
@@ -65,12 +66,12 @@ add_data( unsigned stage,
 //: For single-stage
 void
 rgrl_data_manager::
-add_data( rgrl_feature_set_sptr                    from_set,
-          rgrl_feature_set_sptr                    to_set,
-          rgrl_matcher_sptr                        matcher,
-          rgrl_weighter_sptr                       weighter,
-          rgrl_scale_estimator_unwgted_sptr        unwgted_scale_est,
-          rgrl_scale_estimator_wgted_sptr          wgted_scale_est,
+add_data( const rgrl_feature_set_sptr&                    from_set,
+          const rgrl_feature_set_sptr&                    to_set,
+          const rgrl_matcher_sptr&                        matcher,
+          const rgrl_weighter_sptr&                       weighter,
+          const rgrl_scale_estimator_unwgted_sptr&        unwgted_scale_est,
+          const rgrl_scale_estimator_wgted_sptr&          wgted_scale_est,
           const std::string&                        label )
 {
   assert( !multi_stage_ );
@@ -84,7 +85,7 @@ add_data( rgrl_feature_set_sptr                    from_set,
 void
 rgrl_data_manager::
 add_estimator( unsigned                           stage,
-               rgrl_estimator_sptr                estimator)
+               const rgrl_estimator_sptr&                estimator)
 {
   data_.add_estimator(stage, estimator);
 }
@@ -92,7 +93,7 @@ add_estimator( unsigned                           stage,
 //: For single-stage
 void
 rgrl_data_manager::
-add_estimator( rgrl_estimator_sptr                estimator)
+add_estimator( const rgrl_estimator_sptr&                estimator)
 {
   assert( !multi_stage_ );
 
@@ -144,9 +145,8 @@ get_data_at_stage( unsigned stage,
   estimators.clear();
 
   if ( data_.has( stage ) ) {
-    typedef rgrl_data_manager_data_storage::data_vector::const_iterator iter_type;
-    iter_type itr = data_[stage].begin();
-    iter_type end = data_[stage].end();
+    auto itr = data_[stage].begin();
+    auto end = data_[stage].end();
     for ( ; itr != end; ++itr ) {
       from_sets.push_back( itr->from_set );
       to_sets.push_back( itr->to_set );
@@ -192,8 +192,8 @@ get_data_at_stage( unsigned stage,
                                         estimators );
 
   from_set = from_sets[0];
-  to_set   = to_sets[0];
-  matcher  = matchers[0];
+  to_set = to_sets[0];
+  matcher = matchers[0];
   unwgted_scale_est = unwgted_scale_ests[0];
   wgted_scale_est = wgted_scale_ests[0];
   weighter = weighters[0];
@@ -259,15 +259,15 @@ generate_defaults(  rgrl_matcher_sptr                  &matcher,
   //
   // weighter:
   if ( !weighter ) {
-    vcl_unique_ptr<rrel_m_est_obj>  m_est_obj( new rrel_tukey_obj(4) );
-    weighter = new rgrl_weighter_m_est(vcl_move(m_est_obj), false, false);
+    std::unique_ptr<rrel_m_est_obj>  m_est_obj( new rrel_tukey_obj(4) );
+    weighter = new rgrl_weighter_m_est(std::move(m_est_obj), false, false);
     DebugMacro( 1, "Default weighter set to rgrl_weighter_m_est\n");
   }
 
   // unweighted scale estimator:
   if ( !unwgted_scale_est ) {
-    vcl_unique_ptr<rrel_objective> lms_obj( new rrel_lms_obj(1) );
-    unwgted_scale_est = new rgrl_scale_est_closest( vcl_move(lms_obj) );
+    std::unique_ptr<rrel_objective> lms_obj( new rrel_lms_obj(1) );
+    unwgted_scale_est = new rgrl_scale_est_closest( std::move(lms_obj) );
     DebugMacro( 1, "Default unwgted scale estimator set to rgrl_scale_est_closest\n");
   }
 }
@@ -283,8 +283,8 @@ get_label( unsigned stage,
 
   if ( data_.has( stage ) ) {
     typedef rgrl_data_manager_data_storage::data_vector::const_iterator iter_type;
-    iter_type itr = data_[stage].begin();
-    iter_type end = data_[stage].end();
+    auto itr = data_[stage].begin();
+    auto end = data_[stage].end();
     for ( ; itr != end; ++itr ) {
       labels.push_back( itr->label );
     }
@@ -298,8 +298,6 @@ get_label( std::vector<std::string>& labels) const
 {
   assert( !multi_stage_ );
 
-  const unsigned stage = 0;
+  constexpr unsigned stage = 0;
   get_label( stage, labels );
 }
-
-

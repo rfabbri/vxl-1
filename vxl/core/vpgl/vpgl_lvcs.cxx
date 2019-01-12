@@ -3,7 +3,9 @@
 #include "vpgl_lvcs.h"
 //:
 // \file
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_basic_xml_element.h>
 #include <vpgl/vpgl_datum_conversion.h>
 #include <vpgl/vpgl_earth_constants.h>

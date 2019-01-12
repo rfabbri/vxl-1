@@ -5,7 +5,9 @@
 // \file
 
 #include <bprb/bprb_parameters.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bpgl/algo/bpgl_nitf_camera_coverage.h>
 
 //: initialization
@@ -20,14 +22,14 @@ bool vpgl_nitf_camera_coverage_process_cons(bprb_func_process& pro)
   //    Caution: Don't forget that in geo coordinates. x-coord = longitude, y-coord =latitude
   // 3: the filename for output coverage list
   std::vector<std::string> input_types;
-  input_types.push_back("vcl_string");
-  input_types.push_back("vcl_string");
-  input_types.push_back("vcl_string");
+  input_types.emplace_back("vcl_string");
+  input_types.emplace_back("vcl_string");
+  input_types.emplace_back("vcl_string");
   return pro.set_input_types(input_types);
 }
 
 // Get regions from a file.
-void  get_regions(std::string file, std::vector< vgl_point_2d<double> > &region)
+void  get_regions(const std::string& file, std::vector< vgl_point_2d<double> > &region)
 {
   region.clear();
   std::ifstream ifs( file.c_str() );
@@ -35,7 +37,7 @@ void  get_regions(std::string file, std::vector< vgl_point_2d<double> > &region)
   {
     double x, y;
     ifs >> x; ifs >> y;
-    region.push_back( vgl_point_2d<double>( x, y ) );
+    region.emplace_back( x, y );
   }
 }
 

@@ -13,9 +13,10 @@
 
 #include <iostream>
 #include <cstddef>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include "rgtl_serialize_access.h"
-#include <vcl_compiler.h>
 
 //: Store a flagged index for rgtl_compact_tree.
 //
@@ -24,7 +25,7 @@
 // using bit field storage in a single integer.
 class rgtl_compact_tree_link
 {
-  VCL_SAFE_BOOL_DEFINE;
+
 public:
   typedef std::size_t index_type;
 
@@ -38,7 +39,8 @@ public:
   index_type index() const { return i_; }
 
   //: Returns the boolean flag portion of the link.
-  operator safe_bool () const { return f_? VCL_SAFE_BOOL_TRUE : 0; }
+  /* The old 'safe_bool' did implicit conversions, best practice would be to use explicit operator bool */
+  operator bool () const { return f_? true : false; }
 
   //: Returns the inverse of the boolean flag portion of the link.
   bool operator!() const { return !f_; }

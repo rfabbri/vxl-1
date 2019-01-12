@@ -16,7 +16,9 @@
 #include <vector>
 #include <iostream>
 #include "brec_part_base.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include "brec_part_gaussian_sptr.h"
 
 #include <vnl/vnl_vector_fixed.h>
@@ -37,24 +39,24 @@ class brec_part_gaussian : public brec_part_instance
   //: the following constructor should only be used during parsing
   brec_part_gaussian();
 
-  virtual bool mark_receptive_field(vil_image_view<vxl_byte>& img, unsigned plane);
-  virtual bool mark_center(vil_image_view<vxl_byte>& img, unsigned plane);
-  virtual bool mark_receptive_field(vil_image_view<float>& img, float val);
-  virtual bool mark_center(vil_image_view<float>& img, float val);
+  bool mark_receptive_field(vil_image_view<vxl_byte>& img, unsigned plane) override;
+  bool mark_center(vil_image_view<vxl_byte>& img, unsigned plane) override;
+  bool mark_receptive_field(vil_image_view<float>& img, float val) override;
+  bool mark_center(vil_image_view<float>& img, float val) override;
 
-  virtual vnl_vector_fixed<float,2> direction_vector(void);  // return a unit vector that gives direction of this instance in the image
+  vnl_vector_fixed<float,2> direction_vector(void) override;  // return a unit vector that gives direction of this instance in the image
 
   //: Print an ascii summary to the stream
-  virtual void print_summary(std::ostream &os) const
+  void print_summary(std::ostream &os) const override
   {
     os << "x: " << x_ << " y: " << y_ << " strength: " << strength_ << std::endl
        << "lambda0: " << lambda0_ << " lambda1: " << lambda1_ << " theta: " << theta_ << std::endl;
   }
 
-  virtual brec_part_gaussian* cast_to_gaussian(void);
+  brec_part_gaussian* cast_to_gaussian(void) override;
 
-  virtual bxml_data_sptr xml_element();
-  virtual bool xml_parse_element(bxml_data_sptr data);
+  bxml_data_sptr xml_element() override;
+  bool xml_parse_element(bxml_data_sptr data) override;
   void initialize_mask();
 
   //: run the operator on \p mean_img and use the response to construct a response model for this operator
@@ -73,17 +75,17 @@ class brec_part_gaussian : public brec_part_instance
   //: collect operator responses from the input image's foreground regions
   //  The input \p img and the \p fg_prob_img (foreground probability image) are float images with values in [0,1] range
   //  Assumes histogram is initialized
-  virtual bool update_response_hist(vil_image_view<float>& img, vil_image_view<float>& fg_prob_img, vil_image_view<bool>& mask_img, bsta_histogram<float>& fg_h);
+  bool update_response_hist(vil_image_view<float>& img, vil_image_view<float>& fg_prob_img, vil_image_view<bool>& mask_img, bsta_histogram<float>& fg_h) override;
   //: for gaussian operators we use weibull distribution as the parametric model
-  virtual bool fit_distribution_to_response_hist(bsta_histogram<float>& fg_h);
+  bool fit_distribution_to_response_hist(bsta_histogram<float>& fg_h) override;
 
   //: use the background \p mean_img and \p std_dev_img to construct response model for background and calculate posterior ratio of foreground and background
   //  Assumes that \p k_ and \p lambda_ for the foreground response model have already been set
-  virtual bool update_foreground_posterior(vil_image_view<float>& inp,
+  bool update_foreground_posterior(vil_image_view<float>& inp,
                                            vil_image_view<float>& fg_prob_img,
                                            vil_image_view<bool>& mask,
                                            vil_image_view<float>& mean_img,
-                                           vil_image_view<float>& std_dev_img);
+                                           vil_image_view<float>& std_dev_img) override;
 
   //: run the operator on the input \p img rotated by the given angle and save the instances in the input vector
   //  Use the response models saved in the \p model_dir to set the operator response strength which is equivalent to posterior probability of this pixel being foreground given the operator response
@@ -91,7 +93,7 @@ class brec_part_gaussian : public brec_part_instance
   //  \return all the instances which have a posterior larger than zero (--> no thresholding, return "all" the responses)
   //  \p fg_prob_img is the probability of being foreground for each pixel
   //  \p pb_zero is the constant required for the background response model (probability of zero response)
-  bool extract(vil_image_view<float>& img, vil_image_view<float>& fg_prob_img, float rot_angle, std::string model_dir, std::vector<brec_part_instance_sptr>& instances, float prior_class);
+  bool extract(vil_image_view<float>& img, vil_image_view<float>& fg_prob_img, float rot_angle, const std::string& model_dir, std::vector<brec_part_instance_sptr>& instances, float prior_class);
 
   //: extract and set rho to class probability density of the response
   //  Assumes weibull parameters have already been fitted (i.e. fitted_weibull_ = true)
@@ -126,8 +128,8 @@ class brec_part_gaussian : public brec_part_instance
 
 //: extracts only one type of primitive and adds to the part vector
 //  Strength_threshold in [0,1] - min strength to declare the part as detected
-bool extract_gaussian_primitives(vil_image_resource_sptr img, float lambda0, float lambda1, float theta, bool bright, float cutoff_percentage, float strength_threshold, unsigned type, std::vector<brec_part_instance_sptr>& parts);
+bool extract_gaussian_primitives(const vil_image_resource_sptr& img, float lambda0, float lambda1, float theta, bool bright, float cutoff_percentage, float strength_threshold, unsigned type, std::vector<brec_part_instance_sptr>& parts);
 
-bool draw_gauss_to_ps(vul_psfile& ps, brec_part_gaussian_sptr pi, float x, float y, float cr, float cg, float cb);
+bool draw_gauss_to_ps(vul_psfile& ps, const brec_part_gaussian_sptr& pi, float x, float y, float cr, float cg, float cb);
 
 #endif // brec_part_gaussian_h_

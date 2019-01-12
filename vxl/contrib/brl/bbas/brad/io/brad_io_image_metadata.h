@@ -15,7 +15,9 @@
 #include <iostream>
 #include <brad/brad_image_metadata.h>
 #include <vsl/vsl_binary_io.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Binary save brad_image_metadata to stream.
 void
@@ -45,4 +47,3 @@ void vsl_b_read(vsl_b_istream& is, brad_image_metadata_sptr const& sptr);
 
 
 #endif // brad_io_image_metadata_h_
-

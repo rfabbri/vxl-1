@@ -5,7 +5,9 @@
 //
 #define TMATCH 2.5f
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <bsta/bsta_distribution.h>
 #include <bsta/bsta_gauss_sf1.h>
@@ -47,7 +49,6 @@ float  bsta_mog3_grey::gauss_prob_density(float x, float mu, float sigma)
 float  bsta_mog3_grey::prob_density(const vnl_vector_fixed<unsigned char, 8> & mog3, float x)
 {
   float sum = 0.0f;
-  float sum_weights=0.0f;
   float mu0=((float)mog3[0]/255.0f);float sigma0=((float)mog3[1]/255.0f);float w0=((float)mog3[2]/255.0f);
   float mu1=((float)mog3[3]/255.0f);float sigma1=((float)mog3[4]/255.0f);float w1=((float)mog3[5]/255.0f);
   float mu2=((float)mog3[6]/255.0f);float sigma2=((float)mog3[7]/255.0f);float w2=0.0f;
@@ -270,9 +271,9 @@ bsta_mog3_grey::update_gauss_mixture_3(vnl_vector_fixed<unsigned char, 8> & mog3
 }
 
 void bsta_mog3_grey::force_mog3_sigmas_to_value(vnl_vector_fixed<unsigned char, 8> & mog3,float sigma){
-  mog3[1]=(unsigned char)vcl_floor(bsta_clamp(sigma,0,1)*255.0f);
-  mog3[4]=(unsigned char)vcl_floor(bsta_clamp(sigma,0,1)*255.0f);
-  mog3[7]=(unsigned char)vcl_floor(bsta_clamp(sigma,0,1)*255.0f);
+  mog3[1]=(unsigned char)std::floor(bsta_clamp(sigma,0,1)*255.0f);
+  mog3[4]=(unsigned char)std::floor(bsta_clamp(sigma,0,1)*255.0f);
+  mog3[7]=(unsigned char)std::floor(bsta_clamp(sigma,0,1)*255.0f);
 }
 
 bool bsta_mog3_grey::merge_gauss(float mu1,float var1, float w1,
@@ -367,7 +368,7 @@ void  bsta_mog3_grey::merge_mixtures(vnl_vector_fixed<unsigned char, 8> & mog3_1
 void bsta_mog3_grey::compute_app_model(vnl_vector_fixed<unsigned char, 8> & apm,
                                                   std::vector<float> const& obs,
                                                   std::vector<float> const& obs_weights,
-                                                  bsta_sigma_normalizer_sptr n_table,
+                                                  const bsta_sigma_normalizer_sptr& n_table,
                                                   float min_sigma)
 {
   //compute_gauss_mixture_3(apm,obs,obs_weights,n_table,min_sigma);
@@ -379,12 +380,12 @@ void bsta_mog3_grey::compute_app_model(vnl_vector_fixed<unsigned char, 8> & mog3
                                                   std::vector<float> const& obs,
                                                   std::vector<float> const& pre,
                                                   std::vector<float> const& vis,
-                                                  bsta_sigma_normalizer_sptr n_table,
+                                                  const bsta_sigma_normalizer_sptr& n_table,
                                                   float min_sigma)
 {
-  const unsigned int nmodes = 3;
+  constexpr unsigned int nmodes = 3;
   const float min_var = min_sigma*min_sigma;
-  const float big_sigma = (float)vnl_math::sqrt1_2; // maximum possible std. dev for set of samples drawn from [0 1]
+  const auto big_sigma = (float)vnl_math::sqrt1_2; // maximum possible std. dev for set of samples drawn from [0 1]
   const float big_var = big_sigma * big_sigma;
 
   unsigned int nobs = (int)obs.size();
@@ -425,7 +426,7 @@ void bsta_mog3_grey::compute_app_model(vnl_vector_fixed<unsigned char, 8> & mog3
   std::vector<float> mode_weight_sum(nmodes,0.0f);
 
   // run EM algorithm to maximize expected probability of observations
-  const unsigned int max_its = 50;
+  constexpr unsigned int max_its = 50;
   const float max_converged_weight_change = 1e-3f;
 
   for (unsigned int i=0; i<max_its; ++i) {
@@ -538,4 +539,3 @@ void bsta_mog3_grey::compute_app_model(vnl_vector_fixed<unsigned char, 8> & mog3
 
   return;
 }
-

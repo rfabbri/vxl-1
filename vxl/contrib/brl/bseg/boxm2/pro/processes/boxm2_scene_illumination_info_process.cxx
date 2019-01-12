@@ -10,13 +10,15 @@
 #include <fstream>
 #include <bprb/bprb_func_process.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/boxm2_scene.h>
 
 namespace boxm2_scene_illumination_info_process_globals
 {
-  const unsigned n_inputs_ = 1;
-  const unsigned n_outputs_ = 3;
+  constexpr unsigned n_inputs_ = 1;
+  constexpr unsigned n_outputs_ = 3;
 }
 bool boxm2_scene_illumination_info_process_cons(bprb_func_process& pro)
 {

@@ -1,18 +1,15 @@
 // This is mul/vimt/vimt_image.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 
 #include <iostream>
 #include "vimt_image.h"
-#if VCL_CXX_HAS_HEADER_TYPEINFO
-# include <vcl_typeinfo.h>
-#endif
+#include <typeinfo>
 #include <vsl/vsl_indent.h>
 #include <vsl/vsl_binary_loader.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //=======================================================================
 

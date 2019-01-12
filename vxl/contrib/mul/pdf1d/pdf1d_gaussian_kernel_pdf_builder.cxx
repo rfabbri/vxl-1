@@ -3,8 +3,10 @@
 #include <string>
 #include "pdf1d_gaussian_kernel_pdf_builder.h"
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <pdf1d/pdf1d_gaussian_kernel_pdf.h>
 
@@ -12,17 +14,13 @@
 // Dflt ctor
 //=======================================================================
 
-pdf1d_gaussian_kernel_pdf_builder::pdf1d_gaussian_kernel_pdf_builder()
-{
-}
+pdf1d_gaussian_kernel_pdf_builder::pdf1d_gaussian_kernel_pdf_builder() = default;
 
 //=======================================================================
 // Destructor
 //=======================================================================
 
-pdf1d_gaussian_kernel_pdf_builder::~pdf1d_gaussian_kernel_pdf_builder()
-{
-}
+pdf1d_gaussian_kernel_pdf_builder::~pdf1d_gaussian_kernel_pdf_builder() = default;
 
 //=======================================================================
 
@@ -88,5 +86,3 @@ void pdf1d_gaussian_kernel_pdf_builder::print_summary(std::ostream& /*os*/) cons
 {
   std::cerr << "pdf1d_gaussian_kernel_pdf_builder::print_summary() NYI\n";
 }
-
-

@@ -7,8 +7,10 @@
 // \author Tim Cootes
 
 #include <vsl/vsl_binary_loader.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <vil/vil_resample_bilin.h>
 #include <vil/io/vil_io_image_view.h>
@@ -55,9 +57,7 @@ void mfpf_region_finder::set_defaults()
 // Destructor
 //=======================================================================
 
-mfpf_region_finder::~mfpf_region_finder()
-{
-}
+mfpf_region_finder::~mfpf_region_finder() = default;
 
 //: Define region and cost of region
 void mfpf_region_finder::set(const std::vector<mbl_chord>& roi,
@@ -375,27 +375,27 @@ void mfpf_region_finder::get_image_of_model(vimt_image_2d_of<vxl_byte>& image) c
   unsigned q=0;
   if (nplanes==1)
   {
-    for (unsigned k=0;k<roi_.size();++k)
+    for (auto k : roi_)
     {
-      for (int i=roi_[k].start_x();i<=roi_[k].end_x();++i,++q)
-        image.image()(i,roi_[k].y())=vxl_byte(s*(mean[q]-min1));
+      for (int i=k.start_x();i<=k.end_x();++i,++q)
+        image.image()(i,k.y())=vxl_byte(s*(mean[q]-min1));
     }
   }
   else if (draw_only_1st_plane_)
   {
-    for (unsigned k=0;k<roi_.size();++k)
+    for (auto k : roi_)
     {
-      for (int i=roi_[k].start_x();i<=roi_[k].end_x();++i,q+=nplanes)
-        image.image()(i,roi_[k].y())=vxl_byte(s*(mean[q]-min1));
+      for (int i=k.start_x();i<=k.end_x();++i,q+=nplanes)
+        image.image()(i,k.y())=vxl_byte(s*(mean[q]-min1));
     }
   }
   else
   {
       //Compute L2 norm over all planes
-    for (unsigned k=0;k<roi_.size();++k)
+    for (auto k : roi_)
     {
-      for (int i=roi_[k].start_x();i<=roi_[k].end_x();++i,++q)
-        image.image()(i,roi_[k].y())=vxl_byte(s*(meanL2[q]-min1));
+      for (int i=k.start_x();i<=k.end_x();++i,++q)
+        image.image()(i,k.y())=vxl_byte(s*(meanL2[q]-min1));
     }
   }
 
@@ -432,7 +432,7 @@ void mfpf_region_finder::print_summary(std::ostream& os) const
   if (norm_method_==0) os<<vsl_indent()<<"norm: none"<<'\n';
   else                 os<<vsl_indent()<<"norm: linear"<<'\n';
   os <<vsl_indent()<< "cost: ";
-  if (cost_.ptr()==VXL_NULLPTR) os << "--"<<std::endl; else os << cost_<<'\n';
+  if (cost_.ptr()==nullptr) os << "--"<<std::endl; else os << cost_<<'\n';
   os<<vsl_indent();
   mfpf_point_finder::print_summary(os);
   os <<std::endl <<vsl_indent()<<"overlap_f: "<<overlap_f_<<'\n';
@@ -444,9 +444,9 @@ void mfpf_region_finder::print_shape(std::ostream& os) const
 {
   vil_image_view<vxl_byte> im(roi_ni_,roi_nj_);
   im.fill(0);
-  for (unsigned k=0;k<roi_.size();++k)
-    for (int i=roi_[k].start_x();i<=roi_[k].end_x();++i)
-      im(i,roi_[k].y())=1;
+  for (auto k : roi_)
+    for (int i=k.start_x();i<=k.end_x();++i)
+      im(i,k.y())=1;
   for (unsigned j=0;j<im.nj();++j)
   {
     for (unsigned i=0;i<im.ni();++i)
@@ -524,5 +524,3 @@ bool mfpf_region_finder::operator==(const mfpf_region_finder& nc) const
   // Strictly should compare costs
   return true;
 }
-
-

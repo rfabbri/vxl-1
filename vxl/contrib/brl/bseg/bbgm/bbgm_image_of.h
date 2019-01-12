@@ -9,7 +9,9 @@
 
 #include <iostream>
 #include <typeinfo>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_array_2d.h>
 #include <vbl/vbl_ref_count.h>
 #include <vsl/vsl_binary_loader.h>
@@ -18,7 +20,7 @@
 class bbgm_image_base : public vbl_ref_count
 {
   public:
-    virtual ~bbgm_image_base(){}
+    ~bbgm_image_base() override= default;
 
     //: return the type_info for the distribution type
     virtual const std::type_info& dist_typeid() const=0;
@@ -41,12 +43,12 @@ class bbgm_image_of : public bbgm_image_base
 {
  public:
   //: Constructor
-  bbgm_image_of<dist>() {}
+  bbgm_image_of<dist>() = default;
   bbgm_image_of<dist>(unsigned int ni, unsigned int nj,
                       const dist& model) : data_(nj,ni,model) {}
 
   //: return the type_info for the distribution type
-  virtual const std::type_info& dist_typeid() const { return typeid(dist); }
+  const std::type_info& dist_typeid() const override { return typeid(dist); }
 
   //: Return the width of the image
   unsigned int ni() const { return data_.cols(); }
@@ -115,18 +117,18 @@ class bbgm_image_of : public bbgm_image_base
 
   //: Return a string name
   // \note this is probably not portable
-  virtual std::string is_a() const;
+  std::string is_a() const override;
 
-  virtual bbgm_image_base* clone() const;
+  bbgm_image_base* clone() const override;
 
   //: Return IO version number;
   short version() const;
 
   //: Binary save self to stream.
-  virtual void b_write(vsl_b_ostream &os) const;
+  void b_write(vsl_b_ostream &os) const override;
 
   //: Binary load self from stream.
-  virtual void b_read(vsl_b_istream &is);
+  void b_read(vsl_b_istream &is) override;
 
  private:
   //: the data

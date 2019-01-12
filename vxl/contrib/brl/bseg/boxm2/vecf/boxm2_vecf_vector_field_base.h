@@ -3,7 +3,9 @@
 
 #include <iostream>
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_ref_count.h>
 #include <vbl/vbl_smart_ptr.h>
 #include <boxm2/boxm2_scene.h>
@@ -15,7 +17,7 @@ class boxm2_vecf_vector_field_base : public vbl_ref_count
 {
   public:
     //: virtual destructor to ensure proper cleanup of base class pointers
-    virtual ~boxm2_vecf_vector_field_base(){};
+    ~boxm2_vecf_vector_field_base() override= default;;
 
     //: write the locations of the cooresponding target points to source's BOXM2_POINT data
     virtual bool compute_forward_transform(boxm2_scene_sptr source,

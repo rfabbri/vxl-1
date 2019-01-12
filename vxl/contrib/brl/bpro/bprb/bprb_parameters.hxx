@@ -13,7 +13,10 @@
 
 #include "bprb_parameters.h"
 //
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Set the current value to \p val
 template<class T>

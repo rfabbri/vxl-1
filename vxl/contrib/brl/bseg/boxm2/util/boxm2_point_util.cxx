@@ -6,8 +6,10 @@
 #include <vgl/vgl_distance.h>
 #include <vnl/vnl_double_3.h>
 #include <vnl/vnl_quaternion.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 bool boxm2_point_util::fit_plane_ransac(std::vector<vgl_homg_point_3d<double> > & points, vgl_homg_plane_3d<double>  & plane)
 {
@@ -43,9 +45,9 @@ bool boxm2_point_util::fit_plane_ransac(std::vector<vgl_homg_point_3d<double> > 
   }
   vgl_fit_plane_3d<double> fit_plane_inliers;
 
-  for (unsigned i=0;i<best_inliers.size();++i)
+  for (int best_inlier : best_inliers)
   {
-    fit_plane_inliers.add_point(points[best_inliers[i]]);
+    fit_plane_inliers.add_point(points[best_inlier]);
   }
   std::cout<<"Inliers "<<best_inliers.size()<<std::endl;
   if (fit_plane_inliers.fit(23.0, &std::cerr))
@@ -61,9 +63,9 @@ bool boxm2_point_util::axis_align_scene(std::vector<bwm_video_corr_sptr> & corrs
                                         std::vector<vpgl_perspective_camera<double> > & cams)
 {
   std::vector<vgl_homg_point_3d<double> > points;
-  for (unsigned i=0;i<corrs.size();++i)
+  for (auto & corr : corrs)
   {
-    vgl_homg_point_3d<double> homg_world_pt(corrs[i]->world_pt());
+    vgl_homg_point_3d<double> homg_world_pt(corr->world_pt());
     points.push_back(homg_world_pt);
   }
 
@@ -91,25 +93,25 @@ bool boxm2_point_util::axis_align_scene(std::vector<bwm_video_corr_sptr> & corrs
   vgl_rotation_3d<double> rot_scene(plane.normal(),vgl_vector_3d<double>(0,0,1));
 
   double sumx=0,sumy=0,sumz=0;
-  for (unsigned i=0;i<corrs.size();++i)
+  for (auto & corr : corrs)
   {
-    vgl_homg_point_3d<double> p(corrs[i]->world_pt());
+    vgl_homg_point_3d<double> p(corr->world_pt());
     vgl_homg_point_3d<double> pnew=rot_scene*p;
     if (!pnew.ideal())
     {
       vgl_point_3d<double> pnew_nonhomg(pnew.x()/pnew.w(),pnew.y()/pnew.w(),pnew.z()/pnew.w());
       sumx+=pnew_nonhomg.x();sumy+=pnew_nonhomg.y();sumz+=pnew_nonhomg.z();
-      corrs[i]->set_world_pt(pnew_nonhomg);
+      corr->set_world_pt(pnew_nonhomg);
     }
   }
   vgl_point_3d<double> center(sumx/corrs.size(),sumy/corrs.size(),sumz/corrs.size());
   vnl_vector_fixed<double,3> tr(center.x(),center.y(),center.z());
   std::vector<vgl_homg_point_3d<double> > xformed_points;
-  for (unsigned i=0;i<corrs.size();++i)
+  for (auto & corr : corrs)
   {
-    vgl_point_3d<double> p(corrs[i]->world_pt());
-    corrs[i]->set_world_pt(vgl_point_3d<double>(p.x()-center.x(),p.y()-center.y(),p.z()-center.z()));
-    xformed_points.push_back(vgl_homg_point_3d<double>(p.x()-center.x(),p.y()-center.y(),p.z()-center.z()));
+    vgl_point_3d<double> p(corr->world_pt());
+    corr->set_world_pt(vgl_point_3d<double>(p.x()-center.x(),p.y()-center.y(),p.z()-center.z()));
+    xformed_points.emplace_back(p.x()-center.x(),p.y()-center.y(),p.z()-center.z());
   }
   std::vector<vpgl_perspective_camera<double> > new_cams;
   unsigned int up=0;
@@ -124,7 +126,7 @@ bool boxm2_point_util::axis_align_scene(std::vector<bwm_video_corr_sptr> & corrs
     vgl_vector_3d<double> tr_cami=cams[i].get_translation()+translation_vec;
 
 
-    new_cams.push_back(vpgl_perspective_camera<double>(cams[i].get_calibration(),rot_cami,tr_cami));
+    new_cams.emplace_back(cams[i].get_calibration(),rot_cami,tr_cami);
     if (new_cams[i].get_camera_center().z()>0)
       ++up;
   }
@@ -133,14 +135,14 @@ bool boxm2_point_util::axis_align_scene(std::vector<bwm_video_corr_sptr> & corrs
   {
     vnl_quaternion<double> q(vnl_math::pi,0,0);
     vgl_rotation_3d<double> rotx_pi(q);
-    for (unsigned i=0;i<corrs.size();++i)
+    for (auto & corr : corrs)
     {
-      vgl_homg_point_3d<double> p(corrs[i]->world_pt());
+      vgl_homg_point_3d<double> p(corr->world_pt());
       vgl_homg_point_3d<double> pnew=rotx_pi*p;
       if (!pnew.ideal())
       {
         vgl_point_3d<double> pnew_nonhomg(pnew.x()/pnew.w(),pnew.y()/pnew.w(),pnew.z()/pnew.w());
-        corrs[i]->set_world_pt(pnew_nonhomg);
+        corr->set_world_pt(pnew_nonhomg);
       }
     }
     for (unsigned i=0;i<cams.size();++i)
@@ -203,9 +205,8 @@ void boxm2_point_util::calc_projection_error(std::vector<vpgl_perspective_camera
 {
   double err=0;
   double cnt=0;
-  for (unsigned i=0;i<corrs.size();++i)
+  for (const auto& corr : corrs)
   {
-    bwm_video_corr_sptr corr = corrs[i];
     vgl_homg_point_3d<double> wpt(corr->world_pt());
 
     //grab number of views that see this point
@@ -231,7 +232,7 @@ void boxm2_point_util::calc_projection_error(std::vector<vpgl_perspective_camera
         err+=rms;++cnt;
 
         //store view error and counts in a map
-        std::map<unsigned,double>::iterator ve_itr = view_error_map.find(view_number);
+        auto ve_itr = view_error_map.find(view_number);
         if (ve_itr == view_error_map.end())
         {
           view_error_map[view_number]=rms;
@@ -255,7 +256,7 @@ void boxm2_point_util::report_error(std::map<unsigned,double>&   view_error_map,
   std::cout<<"Projection error per camera:"<<std::endl;
   float error  = 0.0;
   float counts = 0.0;
-  std::map<unsigned,double>::iterator ve_itr = view_error_map.begin(),
+  auto ve_itr = view_error_map.begin(),
                                      ve_end = view_error_map.end();
   for (;ve_itr!=ve_end;++ve_itr) {
 //#ifdef DEBUG

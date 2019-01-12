@@ -4,7 +4,9 @@
 // \file
 #include <iostream>
 #include <vsl/vsl_binary_io.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: a point in the spherical coordinate system on the surface of a unit sphere
 // \p theta is elevation with zero at the North Pole, 180 degress at the South Pole
@@ -17,7 +19,7 @@ class vsph_sph_point_2d
 
   vsph_sph_point_2d(double theta, double phi, bool in_radians = true);
 
-  ~vsph_sph_point_2d() {}
+  ~vsph_sph_point_2d() = default;
 
   void set(double theta, double phi, bool in_radians = true)
   { in_radians_ = in_radians; theta_=theta; phi_=phi; }

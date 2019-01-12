@@ -1,7 +1,4 @@
 // This is core/vil/file_formats/vil_iris.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Joris Schouteden
@@ -19,8 +16,10 @@
 #include <iostream>
 #include "vil_iris.h"
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vil/vil_stream.h>
 #include <vil/vil_image_view.h>
@@ -43,7 +42,7 @@ char const* vil_iris_format_tag = "iris";
 vil_image_resource_sptr vil_iris_file_format::make_input_image(vil_stream* is)
 {
   is->seek(0L);
-  if (is->file_size() < 84L) return VXL_NULLPTR;
+  if (is->file_size() < 84L) return nullptr;
   int colormap_;
 
   vxl_sint_16 magic_      = get_short(is);
@@ -58,16 +57,16 @@ vil_image_resource_sptr vil_iris_file_format::make_input_image(vil_stream* is)
 
   is->seek(24L);
   char imagename[81];
-  if (is->read(imagename, 80L) != 80) return VXL_NULLPTR;
+  if (is->read(imagename, 80L) != 80) return nullptr;
 
   colormap_ = get_long(is);
 
-  if (magic_ != 474) return VXL_NULLPTR;
-  if (storage_ != 0 && storage_ != 1) return VXL_NULLPTR;
-  if (colormap_ == 3) return VXL_NULLPTR;
-  if (dimension_ == 3 && colormap_ != 0) return VXL_NULLPTR;
-  if (dimension_ > 3 || dimension_ < 1) return VXL_NULLPTR;
-  if (bytes_per_component < 1 || bytes_per_component > 2) return VXL_NULLPTR;
+  if (magic_ != 474) return nullptr;
+  if (storage_ != 0 && storage_ != 1) return nullptr;
+  if (colormap_ == 3) return nullptr;
+  if (dimension_ == 3 && colormap_ != 0) return nullptr;
+  if (dimension_ > 3 || dimension_ < 1) return nullptr;
+  if (bytes_per_component < 1 || bytes_per_component > 2) return nullptr;
 
   return new vil_iris_generic_image(is,imagename);
 }
@@ -87,7 +86,7 @@ char const* vil_iris_file_format::tag() const
 /////////////////////////////////////////////////////////////////////////////
 
 vil_iris_generic_image::vil_iris_generic_image(vil_stream* is, char const* imagename):
-  starttab_(VXL_NULLPTR), lengthtab_(VXL_NULLPTR), is_(is)
+  starttab_(nullptr), lengthtab_(nullptr), is_(is)
 {
   is_->ref();
   read_header();
@@ -108,7 +107,7 @@ char const* vil_iris_generic_image::file_format() const
 vil_iris_generic_image::vil_iris_generic_image(vil_stream* is,
                                                unsigned int ni, unsigned int nj, unsigned int nplanes,
                                                vil_pixel_format format)
-  : starttab_(VXL_NULLPTR), lengthtab_(VXL_NULLPTR), is_(is), magic_(474), ni_(ni), nj_(nj),
+  : starttab_(nullptr), lengthtab_(nullptr), is_(is), magic_(474), ni_(ni), nj_(nj),
     nplanes_(nplanes), format_(format), pixmin_(0),
     pixmax_(vil_pixel_format_sizeof_components(format)==1 ? 255 : 65535),
     storage_(0), dimension_(nplanes_==1 ? 2 : 3), colormap_(0)
@@ -277,8 +276,8 @@ vil_image_view_base_sptr vil_iris_generic_image::get_section_verbatim(unsigned i
   unsigned int row_len = xs * pix_size;
 
   vil_memory_chunk_sptr buf = new vil_memory_chunk(row_len*ys*nplanes_,format_);
-  vxl_byte* ib = reinterpret_cast<vxl_byte*>(buf->data());
-  vxl_uint_16* ob = reinterpret_cast<vxl_uint_16*>(buf->data());
+  auto* ib = reinterpret_cast<vxl_byte*>(buf->data());
+  auto* ob = reinterpret_cast<vxl_uint_16*>(buf->data());
   vxl_byte* cbi = ib;
 
   // for each channel
@@ -301,7 +300,7 @@ vil_image_view_base_sptr vil_iris_generic_image::get_section_verbatim(unsigned i
   else if (format_ == VIL_PIXEL_FORMAT_UINT_16)
     return new vil_image_view<vxl_uint_16>(buf,ob+xs*(ys-1),xs,ys,nplanes_,1,-int(xs),xs*ys);
   else
-    return VXL_NULLPTR;
+    return nullptr;
 }
 
 
@@ -312,10 +311,10 @@ vil_image_view_base_sptr vil_iris_generic_image::get_section_rle(unsigned int x0
   unsigned int row_len = xs * pix_size;
 
   vil_memory_chunk_sptr buf = new vil_memory_chunk(row_len*ys*nplanes_,format_);
-  vxl_byte* ib = reinterpret_cast<vxl_byte*>(buf->data());
-  vxl_uint_16* ob = reinterpret_cast<vxl_uint_16*>(buf->data());
+  auto* ib = reinterpret_cast<vxl_byte*>(buf->data());
+  auto* ob = reinterpret_cast<vxl_uint_16*>(buf->data());
   vxl_byte* cbi = ib;
-  unsigned char* exrow = new unsigned char[ni_];
+  auto* exrow = new unsigned char[ni_];
 
   // for each channel
   for (unsigned int channel=0; channel<nplanes_; ++channel)
@@ -328,7 +327,7 @@ vil_image_view_base_sptr vil_iris_generic_image::get_section_rle(unsigned int x0
       unsigned long rlelength = lengthtab_[rowno+channel*nj_];
 
       // read rle row into array
-      unsigned char* rlerow = new unsigned char[rlelength];
+      auto* rlerow = new unsigned char[rlelength];
       is_->seek(rleoffset);
       is_->read((void*)rlerow, rlelength);
 
@@ -346,7 +345,7 @@ vil_image_view_base_sptr vil_iris_generic_image::get_section_rle(unsigned int x0
   else if (format_ == VIL_PIXEL_FORMAT_UINT_16)
     return new vil_image_view<vxl_uint_16>(buf,ob+xs*(ys-1),xs,ys,nplanes_,1,-int(xs),xs*ys);
   else
-    return VXL_NULLPTR;
+    return nullptr;
 }
 
 
@@ -363,7 +362,7 @@ bool vil_iris_generic_image::put_view( vil_image_view_base const& buf, unsigned 
            << buf.ni()<<'x'<<buf.nj()<<'x'<< buf.nplanes()<<'p'
            << " at ("<<x0<<','<<y0<<")\n";
 #endif
-  const vil_image_view<unsigned char>& buff = static_cast<vil_image_view<unsigned char> const&>(buf);
+  const auto& buff = static_cast<vil_image_view<unsigned char> const&>(buf);
   const unsigned char* ob = buff.top_left_ptr();
   unsigned int pix_size = vil_pixel_format_sizeof_components(format_);
 
@@ -374,7 +373,7 @@ bool vil_iris_generic_image::put_view( vil_image_view_base const& buf, unsigned 
   if (VXL_LITTLE_ENDIAN && pix_size > 1) // IRIS image data is big-endian
   {
     // buffer for swapping bytes
-    vxl_byte* tempbuf = new vxl_byte[rowsize];
+    auto* tempbuf = new vxl_byte[rowsize];
     // for each channel
     for (unsigned int channel = 0; channel<nplanes_; ++channel) {
       ob += rowskip*buff.nj();
@@ -455,7 +454,7 @@ vxl_sint_16 get_short(vil_stream* file, int location)
   file->read(buff, 2L);
 
   // Decode from two's complement to machine format
-  vxl_uint_16 bits = static_cast<vxl_uint_16>(( buff[0] << 8 ) + buff[1]);
+  auto bits = static_cast<vxl_uint_16>(( buff[0] << 8 ) + buff[1]);
 
   if ( ( bits & 0x8000 ) != 0 )
     return static_cast<vxl_sint_16>(-( ~bits + 1 ));

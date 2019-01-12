@@ -8,7 +8,9 @@
 #include <bsta/bsta_histogram.h>
 #include <bpgl/depth_map/depth_map_scene.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <brdb/brdb_value.h>
 #include <vil/vil_image_view.h>
@@ -42,7 +44,7 @@ bool bpgl_generate_depth_maps_process(bprb_func_process& pro)
 
   //get the inputs
   std::string filename = pro.get_input<std::string>(0);
-  unsigned level = pro.get_input<unsigned>(1);
+  auto level = pro.get_input<unsigned>(1);
   std::string output_folder = pro.get_input<std::string>(2);
   std::string name_prefix = pro.get_input<std::string>(3);
 
@@ -64,4 +66,3 @@ bool bpgl_generate_depth_maps_process(bprb_func_process& pro)
 
   return true;
 }
-

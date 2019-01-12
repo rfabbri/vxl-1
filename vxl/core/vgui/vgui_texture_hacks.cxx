@@ -1,7 +1,4 @@
 // This is core/vgui/vgui_texture_hacks.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
@@ -13,8 +10,10 @@
 #ifdef fsm_fake_gl_texture_calls
 
 #include <dlfcn.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 static bool debug = false;
 #define return_GLboolean(x) return x

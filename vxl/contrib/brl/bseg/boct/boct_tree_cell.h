@@ -13,16 +13,19 @@
 // \endverbatim
 
 #include <iostream>
+#include <utility>
 #include "boct_loc_code.h"
 #include <vgl/vgl_box_3d.h>
 #include <vsl/vsl_binary_io.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #undef DEBUG_LEAKS
 
 template <class T_loc,class T_data>
 struct boct_cell_data {
-  boct_cell_data(vgl_point_3d<double> c, T_loc l, T_data d): centroid_(c), level_(l), data_(d){}
+  boct_cell_data(vgl_point_3d<double> c, T_loc l, T_data d): centroid_(c), level_(l), data_(std::move(d)){}
   vgl_point_3d<double> centroid_;
   T_loc level_;
   T_data data_;
@@ -49,9 +52,9 @@ class boct_tree_cell
   //: Default Constructor
   boct_tree_cell<T_loc,T_data>()
   {
-    children_= VXL_NULLPTR;
-    parent_ = VXL_NULLPTR;
-    vis_node_= VXL_NULLPTR;
+    children_= nullptr;
+    parent_ = nullptr;
+    vis_node_= nullptr;
 #ifdef DEBUG_LEAKS
     n_created_++;
 #endif
@@ -59,7 +62,7 @@ class boct_tree_cell
 
   //: Constructor from locational code and octree cell
   boct_tree_cell<T_loc,T_data>(const boct_loc_code<T_loc>& code, boct_tree_cell<T_loc,T_data>* p)
-  : code_(code), children_(VXL_NULLPTR), parent_(p), vis_node_(VXL_NULLPTR)
+  : code_(code), children_(nullptr), parent_(p), vis_node_(nullptr)
   {
 #ifdef DEBUG_LEAKS
     n_created_++;
@@ -123,7 +126,7 @@ class boct_tree_cell
 
   void set_parent(boct_tree_cell<T_loc,T_data>* p) { parent_ = p; }
   void set_children(unsigned i, boct_tree_cell<T_loc,T_data>* p) { if (children_) children_[i] = *p; else std::cout << "Children should be allocated first" << std::endl; }
-  void set_children_null() { children_=VXL_NULLPTR; }
+  void set_children_null() { children_=nullptr; }
   bool is_leaf();
 
   //: Returns the bounding box of this cell in local coordinates i.e [0,1)x[0,1)x[0,1)
@@ -244,7 +247,7 @@ class boct_cell_vis_graph_node
   boct_cell_vis_graph_node() : incoming_count(0), visible(false) {}
   ~boct_cell_vis_graph_node() {
     for (unsigned i=0;i<outgoing_links.size();++i)
-      outgoing_links[i]=VXL_NULLPTR;
+      outgoing_links[i]=nullptr;
   }
   unsigned int incoming_count;
   std::vector<boct_tree_cell<T_loc,T_data> * > outgoing_links;

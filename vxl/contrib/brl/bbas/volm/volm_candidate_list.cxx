@@ -1,7 +1,10 @@
 #include "volm_candidate_list.h"
 //:
 // \file
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_area.h>
 #include <vgl/vgl_area.hxx>
 
@@ -32,7 +35,7 @@ volm_candidate_list::volm_candidate_list(vil_image_view<vxl_byte> const& image,
     vil_find_4con_boundary_above_threshold(bi,bj,image,vxl_byte(thres_),mit->second.x(),mit->second.y());
     for (unsigned i = 0; i < bi.size(); i++) {
       if (!poly_.contains(bi[i],bj[i]))
-        sheet.push_back(vgl_point_2d<int>(bi[i],bj[i]));
+        sheet.emplace_back(bi[i],bj[i]);
     }
     if(sheet.size() == 0) sheet.push_back(mit->second);
     poly_.push_back(sheet);
@@ -45,13 +48,13 @@ volm_candidate_list::volm_candidate_list(vil_image_view<vxl_byte> const& image,
 
 bool volm_candidate_list::create_expand_polygon(std::vector<vgl_point_2d<int> > const& sheet)
 {
-  unsigned n_points = (unsigned)sheet.size();
+  auto n_points = (unsigned)sheet.size();
   std::vector<vgl_point_2d<double> > points;
   for (unsigned i = 0; i < n_points; i++) {
-    points.push_back(vgl_point_2d<double>(sheet[i].x()+1.0, sheet[i].y()+1.0));
-    points.push_back(vgl_point_2d<double>(sheet[i].x()-1.0, sheet[i].y()+1.0));
-    points.push_back(vgl_point_2d<double>(sheet[i].x()-1.0, sheet[i].y()-1.0));
-    points.push_back(vgl_point_2d<double>(sheet[i].x()-1.0, sheet[i].y()-1.0));
+    points.emplace_back(sheet[i].x()+1.0, sheet[i].y()+1.0);
+    points.emplace_back(sheet[i].x()-1.0, sheet[i].y()+1.0);
+    points.emplace_back(sheet[i].x()-1.0, sheet[i].y()-1.0);
+    points.emplace_back(sheet[i].x()-1.0, sheet[i].y()-1.0);
   }
   vgl_convex_hull_2d<double> ch(points);
   vgl_polygon<double> poly = ch.hull();
@@ -72,7 +75,7 @@ bool volm_candidate_list::top_locations(std::vector<std::vector<vgl_point_2d<int
   }
   // create a bounding box to fetch the maximum
   for (unsigned sh_idx = 0; sh_idx < n_sheet_; sh_idx++) {
-    unsigned n_verts = (unsigned)poly_[sh_idx].size();
+    auto n_verts = (unsigned)poly_[sh_idx].size();
     vgl_box_2d<int> bbox;
     for (unsigned v_idx = 0; v_idx < n_verts; v_idx++)
       bbox.add(poly_[sh_idx][v_idx]);
@@ -107,7 +110,7 @@ bool volm_candidate_list::top_locations(std::vector<std::vector<vgl_point_2d<int
     top_loc_scores[i].assign(size, 127);
   }
   for (unsigned sh_idx = 0; sh_idx < n_sheet_; sh_idx++) {
-    unsigned n_verts = (unsigned)poly_[sh_idx].size();
+    auto n_verts = (unsigned)poly_[sh_idx].size();
     vgl_box_2d<int> bbox;
     for (unsigned v_idx = 0; v_idx < n_verts; v_idx++)
       bbox.add(poly_[sh_idx][v_idx]);
@@ -128,7 +131,7 @@ bool volm_candidate_list::top_locations(std::vector<std::vector<vgl_point_2d<int
       std::cout << "\t score = " << mit->first << ", points = " << mit->second << std::endl;
 #endif
     // fill the top number of points from map
-    mymap::iterator mit = points.begin();
+    auto mit = points.begin();
     if (points.size() < size) {
       unsigned cnt = 0;
       for (; mit != points.end(); ++mit) {
@@ -168,12 +171,12 @@ bool volm_candidate_list::top_locations(std::vector<vgl_point_2d<double> >& top_
     return false;
   for (unsigned i = 0; i < size; i++) {
     double lon, lat;
-    unsigned u = (unsigned)top_locs_pixel[i].x();
-    unsigned v = (unsigned)top_locs_pixel[i].y();
+    auto u = (unsigned)top_locs_pixel[i].x();
+    auto v = (unsigned)top_locs_pixel[i].y();
     if (u > image_.ni() || v > image_.nj() || image_(u,v) < thres_)
       continue;
     tile.img_to_global((unsigned)top_locs_pixel[i].x(), (unsigned)top_locs_pixel[i].y(), lon, lat);
-    top_locs.push_back(vgl_point_2d<double>(lon, lat));
+    top_locs.emplace_back(lon, lat);
   }
   return true;
 }
@@ -182,7 +185,7 @@ bool volm_candidate_list::img_to_golbal(unsigned const& sh_idx, volm_tile& tile,
 {
   if (sh_idx > n_sheet_)
     return false;
-  unsigned n_point = (unsigned)poly_[sh_idx].size();
+  auto n_point = (unsigned)poly_[sh_idx].size();
   double deg_per_half_pixel_i = 1.0 * tile.scale_i()/(tile.ni() - 1);
   double deg_per_half_pixel_j = 1.0 * tile.scale_j()/(tile.nj() - 1);
   std::vector<vgl_point_2d<double> > points;
@@ -190,15 +193,15 @@ bool volm_candidate_list::img_to_golbal(unsigned const& sh_idx, volm_tile& tile,
     double lon, lat;
     tile.img_to_global(poly_[sh_idx][i].x(), poly_[sh_idx][i].y(), lon, lat);
     // expand one pixel location to its 4 corners ( start from top right, arrange counterclock wise
-      points.push_back(vgl_point_2d<double>(lon + deg_per_half_pixel_i, lat + deg_per_half_pixel_j));
-      points.push_back(vgl_point_2d<double>(lon - deg_per_half_pixel_i, lat + deg_per_half_pixel_j));
-      points.push_back(vgl_point_2d<double>(lon - deg_per_half_pixel_i, lat - deg_per_half_pixel_j));
-      points.push_back(vgl_point_2d<double>(lon + deg_per_half_pixel_i, lat - deg_per_half_pixel_j));
+      points.emplace_back(lon + deg_per_half_pixel_i, lat + deg_per_half_pixel_j);
+      points.emplace_back(lon - deg_per_half_pixel_i, lat + deg_per_half_pixel_j);
+      points.emplace_back(lon - deg_per_half_pixel_i, lat - deg_per_half_pixel_j);
+      points.emplace_back(lon + deg_per_half_pixel_i, lat - deg_per_half_pixel_j);
   }
 
   vgl_convex_hull_2d<double> ch(points);
   vgl_polygon<double> poly = ch.hull();
-  std::vector<vgl_point_2d<double> >::iterator vit = poly[0].begin();
+  auto vit = poly[0].begin();
   for (; vit != poly[0].end(); ++vit)
     region_global.push_back(*vit);
   return true;
@@ -247,7 +250,7 @@ bool volm_candidate_list::candidate_list_image(vil_image_view<vxl_byte>& image)
     image.set_size(image_.ni(), image_.nj());
   image.fill((vxl_byte)127);
   for (unsigned sh_idx = 0; sh_idx < n_sheet_; sh_idx++) {
-    unsigned n_verts = (unsigned)poly_[sh_idx].size();
+    auto n_verts = (unsigned)poly_[sh_idx].size();
     for (unsigned v_idx = 0; v_idx < n_verts; v_idx++)
       image(poly_[sh_idx][v_idx].x(), poly_[sh_idx][v_idx].y()) = (vxl_byte)255;
   }
@@ -335,8 +338,8 @@ void volm_candidate_list::write_kml_regions(std::ofstream& str,
         << "            <outerBoundaryIs>\n"
         << "              <LinearRing>\n"
         << "                <coordinates>\n";
-    for (std::vector<vgl_point_2d<double> >::iterator vit = region.begin(); vit != region.end(); ++vit)
-      str << "                " << std::setprecision(12) << vit->x() << ',' << std::setprecision(12) << vit->y() << ",0\n";
+    for (auto & vit : region)
+      str << "                " << std::setprecision(12) << vit.x() << ',' << std::setprecision(12) << vit.y() << ",0\n";
     str << "                " << std::setprecision(12) << region[0].x() << ',' << std::setprecision(12) << region[0].y() << ",0\n";
     str << "                </coordinates>\n"
         << "              </LinearRing>\n"
@@ -404,7 +407,7 @@ void volm_candidate_list::write_kml_regions(std::ofstream& str,
 void volm_candidate_list::write_kml_regions(std::ofstream& str,
                                             std::vector<vgl_point_2d<double> >& region,
                                             vgl_point_2d<double>& top_loc,
-                                            std::vector<vgl_point_2d<double> >& heading,
+                                            std::vector<vgl_point_2d<double> >&  /*heading*/,
                                             std::vector<vgl_point_2d<double> >& viewing,
                                             std::vector<vgl_point_2d<double> >& landmarks,
                                             std::vector<unsigned char>& landmark_types,
@@ -431,8 +434,8 @@ void volm_candidate_list::write_kml_regions(std::ofstream& str,
         << "            <outerBoundaryIs>\n"
         << "              <LinearRing>\n"
         << "                <coordinates>\n";
-    for (std::vector<vgl_point_2d<double> >::iterator vit = region.begin(); vit != region.end(); ++vit)
-      str << "                " << std::setprecision(12) << vit->x() << ',' << std::setprecision(12) << vit->y() << ",0\n";
+    for (auto & vit : region)
+      str << "                " << std::setprecision(12) << vit.x() << ',' << std::setprecision(12) << vit.y() << ",0\n";
     str << "                " << std::setprecision(12) << region[0].x() << ',' << std::setprecision(12) << region[0].y() << ",0\n";
     str << "                </coordinates>\n"
         << "              </LinearRing>\n"
@@ -474,8 +477,8 @@ void volm_candidate_list::write_kml_regions(std::ofstream& str,
         << "            <outerBoundaryIs>\n"
         << "              <LinearRing>\n"
         << "                <coordinates>\n";
-    for (std::vector<vgl_point_2d<double> >::iterator vit = viewing.begin();  vit != viewing.end(); ++vit)
-      str << "              " << std::setprecision(12) << vit->x() << ',' << std::setprecision(12) << vit->y() << ",0\n";
+    for (auto & vit : viewing)
+      str << "              " << std::setprecision(12) << vit.x() << ',' << std::setprecision(12) << vit.y() << ",0\n";
     str << "                </coordinates>\n"
         << "              </LinearRing>\n"
         << "            </outerBoundaryIs>\n"
@@ -517,7 +520,7 @@ bool volm_candidate_list::generate_pin_point_circle(vgl_point_2d<double> const& 
     double dy = radius * std::sin(theta);
     double lon, lat, gz;
     lvcs->local_to_global(dx, dy, 0.0, vpgl_lvcs::wgs84, lon, lat, gz);
-    circle.push_back(vgl_point_2d<double>(lon, lat));
+    circle.emplace_back(lon, lat);
     theta += d_theta;
   }
   return true;
@@ -536,7 +539,7 @@ bool volm_candidate_list::generate_heading_direction(vgl_point_2d<double> const&
   double e_lon, e_lat, e_gz;
   lvcs->local_to_global(lx, ly, 0.0, vpgl_lvcs::wgs84, e_lon, e_lat, e_gz);
   heading_line.push_back(center);
-  heading_line.push_back(vgl_point_2d<double>(e_lon, e_lat));
+  heading_line.emplace_back(e_lon, e_lat);
 
   // generate camera viewing volume
   float left_angle  = heading_angle - right_fov;
@@ -550,11 +553,11 @@ bool volm_candidate_list::generate_heading_direction(vgl_point_2d<double> const&
   lx = length * std::cos(left_angle);
   ly = length * std::sin(left_angle);
   lvcs->local_to_global(lx, ly, 0.0, vpgl_lvcs::wgs84, lon, lat, gz);
-  viewing.push_back(vgl_point_2d<double>(lon, lat));
+  viewing.emplace_back(lon, lat);
   lx = length * std::cos(right_angle);
   ly = length * std::sin(right_angle);
   lvcs->local_to_global(lx, ly, 0.0, vpgl_lvcs::wgs84, lon, lat, gz);
-  viewing.push_back(vgl_point_2d<double>(lon, lat));
+  viewing.emplace_back(lon, lat);
   viewing.push_back(center);
   return true;
 }

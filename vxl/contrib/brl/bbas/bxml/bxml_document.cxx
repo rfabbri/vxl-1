@@ -1,7 +1,4 @@
 // This is brl/bbas/bxml/bxml_document.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Matt Leotta
@@ -14,7 +11,7 @@
 std::string
 bxml_element::attribute(const std::string& attr_name) const
 {
-  std::map<std::string,std::string>::const_iterator result = attributes_.find(attr_name);
+  auto result = attributes_.find(attr_name);
   if (result != attributes_.end())
     return result->second;
   return "";
@@ -23,7 +20,7 @@ bxml_element::attribute(const std::string& attr_name) const
 
 //: Constructor - default
 bxml_document::bxml_document()
-  : root_element_(VXL_NULLPTR),
+  : root_element_(nullptr),
     version_("1.0"),
     encoding_("UTF-8"),
     standalone_(true)
@@ -34,7 +31,7 @@ bxml_document::bxml_document()
 //: Append text in this element
 void bxml_element::append_text(const std::string& text)
 {
-  bxml_text * last_text = VXL_NULLPTR;
+  bxml_text * last_text = nullptr;
   if (!data_.empty()){
     bxml_data_sptr last_data = data_.back();
     if (last_data->type() == bxml_data::TEXT)
@@ -55,14 +52,14 @@ bool operator==(const bxml_data& d1, const bxml_data& d2)
     return false;
 
   if (d1.type() == bxml_data::TEXT){
-    const bxml_text& text1 = static_cast<const bxml_text&>(d1);
-    const bxml_text& text2 = static_cast<const bxml_text&>(d2);
+    const auto& text1 = static_cast<const bxml_text&>(d1);
+    const auto& text2 = static_cast<const bxml_text&>(d2);
     return text1.data() == text2.data();
   }
 
   if (d1.type() == bxml_data::ELEMENT){
-    const bxml_element& element1 = static_cast<const bxml_element&>(d1);
-    const bxml_element& element2 = static_cast<const bxml_element&>(d2);
+    const auto& element1 = static_cast<const bxml_element&>(d1);
+    const auto& element2 = static_cast<const bxml_element&>(d2);
     return element1 == element2;
   }
 
@@ -79,8 +76,8 @@ bool operator==(const bxml_element& e1, const bxml_element& e2)
   if (e1.num_attributes() != e2.num_attributes())
     return false;
 
-  bxml_element::const_attr_iterator a1 = e1.attr_begin();
-  bxml_element::const_attr_iterator a2 = e2.attr_begin();
+  auto a1 = e1.attr_begin();
+  auto a2 = e2.attr_begin();
   for (; a1 != e1.attr_end();  ++a1, ++a2)
   {
     if (a1->first != a2->first || a1->second != a2->second)
@@ -90,8 +87,8 @@ bool operator==(const bxml_element& e1, const bxml_element& e2)
   if (e1.num_data() != e2.num_data())
     return false;
 
-  bxml_element::const_data_iterator d1 = e1.data_begin();
-  bxml_element::const_data_iterator d2 = e2.data_begin();
+  auto d1 = e1.data_begin();
+  auto d2 = e2.data_begin();
   for (; d1 != e1.data_end();  ++d1, ++d2)
   {
     if (!(**d1 == **d2))
@@ -136,12 +133,12 @@ void vsl_b_read(vsl_b_istream& is, bxml_document* ph)
     vsl_b_read(is, *ph);
   }
   else
-    ph = VXL_NULLPTR;
+    ph = nullptr;
 }
 
 void vsl_b_write(vsl_b_ostream& os, const bxml_document* &ph)
 {
-  if (ph==VXL_NULLPTR)
+  if (ph==nullptr)
   {
     vsl_b_write(os, false); // Indicate null pointer stored
   }
@@ -151,5 +148,3 @@ void vsl_b_write(vsl_b_ostream& os, const bxml_document* &ph)
     vsl_b_write(os,*ph);
   }
 }
-
-

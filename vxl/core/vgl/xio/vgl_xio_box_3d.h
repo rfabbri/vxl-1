@@ -9,7 +9,9 @@
 #include <string>
 #include <iosfwd>
 #include <vgl/vgl_box_3d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: XML save vgl_box_3d to stream.
 template <class T>

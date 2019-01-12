@@ -1,7 +1,4 @@
 // This is core/vil/vil_open.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
@@ -22,7 +19,7 @@ vil_stream *vil_open(char const* what, char const* how)
 {
   // check for null pointer or empty strings.
   if (!what || !*what)
-    return VXL_NULLPTR;
+    return nullptr;
 
   // try to open as file first.
 #ifdef VIL_USE_FSTREAM64
@@ -51,7 +48,7 @@ vil_stream *vil_open(char const* what, char const* how)
     // this will delete the stream object.
     is->ref();
     is->unref();
-    is = VXL_NULLPTR;
+    is = nullptr;
   }
 
   if (!is) {
@@ -60,7 +57,7 @@ vil_stream *vil_open(char const* what, char const* how)
     if (l > 4 && std::strncmp(what, "gen:", 4) == 0) {
       if (std::strcmp(how, "r") == 0) {
         // Make an in-core stream...
-        vil_stream_core *cis = new vil_stream_core();
+        auto *cis = new vil_stream_core();
         cis->write(what, l+1);
         is = cis;
       }
@@ -73,7 +70,7 @@ vil_stream *vil_open(char const* what, char const* how)
     // this will delete the stream object.
     is->ref();
     is->unref();
-    is = VXL_NULLPTR;
+    is = nullptr;
   }
 
   if (!is) {
@@ -91,13 +88,13 @@ vil_stream *vil_open(char const* what, char const* how)
     // this will delete the stream object.
     is->ref();
     is->unref();
-    is = VXL_NULLPTR;
+    is = nullptr;
   }
 
   return is;
 }
 
-#if defined(VCL_WIN32) && VXL_USE_WIN_WCHAR_T
+#if defined(_WIN32) && VXL_USE_WIN_WCHAR_T
 //  --------------------------------------------------------------------------------
 //  Windows' wchar_t overloading version
 //
@@ -169,4 +166,4 @@ vil_stream *vil_open(wchar_t const* what, char const* how)
   return is;
 }
 
-#endif //defined(VCL_WIN32) && VXL_USE_WIN_WCHAR_T
+#endif //defined(_WIN32) && VXL_USE_WIN_WCHAR_T

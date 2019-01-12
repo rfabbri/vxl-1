@@ -1,9 +1,6 @@
 // This is oxl/osl/osl_1d_half_kernel.h
 #ifndef osl_1d_half_kernel_h_
 #define osl_1d_half_kernel_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 //  \file
 // \author fsm
@@ -18,7 +15,7 @@ struct osl_1d_half_kernel
     , count(0)
     , array(new T[capacity]) { }
 
-  ~osl_1d_half_kernel() { delete [] array; array = 0; }
+  ~osl_1d_half_kernel() { delete [] array; array = nullptr; }
 
   unsigned const capacity;
 

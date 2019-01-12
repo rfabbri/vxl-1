@@ -16,7 +16,9 @@
 #include <iostream>
 #include <vector>
 #include "imesh_mesh.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Return the indices of half edges that are on the mesh boundary
 //  The results are organized into loops

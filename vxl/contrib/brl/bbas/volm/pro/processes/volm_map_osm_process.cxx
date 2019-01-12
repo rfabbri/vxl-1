@@ -34,12 +34,12 @@
 bool volm_map_osm_process_cons(bprb_func_process& pro)
 {
   std::vector<std::string> input_types;
-  input_types.push_back("vil_image_view_base_sptr");  // ortho image - pass as converted to byte image
-  input_types.push_back("vpgl_camera_double_sptr");  // ortho camera
-  input_types.push_back("vcl_string");   // bin file with osm object list
-  input_types.push_back("vcl_string");   // a binary file to store the projected line on image domain
+  input_types.emplace_back("vil_image_view_base_sptr");  // ortho image - pass as converted to byte image
+  input_types.emplace_back("vpgl_camera_double_sptr");  // ortho camera
+  input_types.emplace_back("vcl_string");   // bin file with osm object list
+  input_types.emplace_back("vcl_string");   // a binary file to store the projected line on image domain
   std::vector<std::string> output_types;
-  output_types.push_back("vil_image_view_base_sptr"); // a color image with red channel the objects that are overlaid
+  output_types.emplace_back("vil_image_view_base_sptr"); // a color image with red channel the objects that are overlaid
   return pro.set_input_types(input_types)
       && pro.set_output_types(output_types);
 }
@@ -61,7 +61,7 @@ bool volm_map_osm_process(bprb_func_process& pro)
   std::string osm_file  = pro.get_input<std::string>(2);
   std::string out_bin_file = pro.get_input<std::string>(3);
 
-  vpgl_geo_camera *geo_cam = dynamic_cast<vpgl_geo_camera*>(cam.ptr());
+  auto *geo_cam = dynamic_cast<vpgl_geo_camera*>(cam.ptr());
   if (!geo_cam) {
     std::cerr << "Cannot cast the input cam to a vpgl_geo_camera!\n";
     return false;
@@ -85,17 +85,17 @@ bool volm_map_osm_process(bprb_func_process& pro)
   bool hit = false;
   std::vector<std::vector<std::pair<int, int> > > img_lines;
   std::vector<volm_osm_object_line_sptr> loc_lines = osm_objs.loc_lines();
-  for (unsigned i = 0; i < loc_lines.size(); i++) {
-    std::vector<vgl_point_2d<double> > pts = loc_lines[i]->line();
+  for (auto & loc_line : loc_lines) {
+    std::vector<vgl_point_2d<double> > pts = loc_line->line();
     std::vector<std::pair<int, int> > img_line;
-    for (unsigned j = 0; j < pts.size(); j++) {
+    for (auto & pt : pts) {
       double u, v;
-      geo_cam->global_to_img(pts[j].x(), pts[j].y(), 0, u, v);
-      unsigned uu = (unsigned)std::floor(u + 0.5f);
-      unsigned vv = (unsigned)std::floor(v + 0.5f);
+      geo_cam->global_to_img(pt.x(), pt.y(), 0, u, v);
+      auto uu = (unsigned)std::floor(u + 0.5f);
+      auto vv = (unsigned)std::floor(v + 0.5f);
       if (uu < img_sptr->ni() && vv < img_sptr->nj()) {
         //out_img(uu, vv).r = 255;
-        img_line.push_back(std::pair<int, int>(uu,vv));
+        img_line.emplace_back(uu,vv);
         hit = true;
       }
     }
@@ -111,7 +111,7 @@ bool volm_map_osm_process(bprb_func_process& pro)
       for (unsigned j = 0; j < img_lines.size(); j++)
         vertices.push_back(new vsol_point_2d(img_lines[i][j].first, img_lines[i][j].second));
       vsol_polyline_2d_sptr vsolp = new vsol_polyline_2d(vertices);
-      sos.push_back(vsolp->cast_to_spatial_object());
+      sos.emplace_back(vsolp->cast_to_spatial_object());
       out_img(img_lines[i][0].first, img_lines[i][0].second).r = 255;
       for (unsigned j = 1; j < img_lines[i].size(); j++) {
         double prev_u = img_lines[i][j-1].first;
@@ -125,8 +125,8 @@ bool volm_map_osm_process(bprb_func_process& pro)
         while (ds > 0.1) {
           //out_img(prev_u + cnt*1*cos, prev_v + cnt*1*sin).r = 255;  // delta is 1 pixel
 
-          unsigned uu = (unsigned)std::floor(prev_u + cnt*1*cos + 0.5f);
-          unsigned vv = (unsigned)std::floor(prev_v + cnt*1*sin + 0.5f);
+          auto uu = (unsigned)std::floor(prev_u + cnt*1*cos + 0.5f);
+          auto vv = (unsigned)std::floor(prev_v + cnt*1*sin + 0.5f);
           if (uu < img_sptr->ni() && vv < img_sptr->nj())
             out_img(uu, vv).r = 255;  // delta is 1 pixel
 
@@ -166,12 +166,12 @@ bool volm_map_osm_process(bprb_func_process& pro)
 bool volm_map_segments_process_cons(bprb_func_process& pro)
 {
   std::vector<std::string> input_types;
-  input_types.push_back("vil_image_view_base_sptr");  // ortho image - pass as color image where each segment has a unique color
-  input_types.push_back("vpgl_camera_double_sptr");  // ortho camera
-  input_types.push_back("vcl_string");   // bin file with osm object list
-  input_types.push_back("vil_image_view_base_sptr");  // ortho height image
+  input_types.emplace_back("vil_image_view_base_sptr");  // ortho image - pass as color image where each segment has a unique color
+  input_types.emplace_back("vpgl_camera_double_sptr");  // ortho camera
+  input_types.emplace_back("vcl_string");   // bin file with osm object list
+  input_types.emplace_back("vil_image_view_base_sptr");  // ortho height image
   std::vector<std::string> output_types;
-  output_types.push_back("vil_image_view_base_sptr"); // a color image with output segments
+  output_types.emplace_back("vil_image_view_base_sptr"); // a color image with output segments
   return pro.set_input_types(input_types)
       && pro.set_output_types(output_types);
 }
@@ -193,7 +193,7 @@ bool volm_map_segments_process(bprb_func_process& pro)
   std::cout << "!!!!!!!!!!! input height img ni: " << input_height_image_sptr->ni() << "  nj: " << input_height_image_sptr->nj() << std::endl;
   vil_image_view<float> height_image = vil_convert_cast(float(), input_height_image_sptr);
 
-  vpgl_geo_camera *geo_cam = dynamic_cast<vpgl_geo_camera*>(cam.ptr());
+  auto *geo_cam = dynamic_cast<vpgl_geo_camera*>(cam.ptr());
   if (!geo_cam) {
     std::cerr << "Cannot cast the input cam to a vpgl_geo_camera!\n";
     return false;
@@ -209,10 +209,10 @@ bool volm_map_segments_process(bprb_func_process& pro)
       std::pair<unsigned char, std::pair<unsigned char, unsigned char> > seg_color(img(i,j).r, std::pair<unsigned char, unsigned char>(img(i,j).g, img(i,j).b));
       iter = segment_map.find(seg_color);
       if (iter != segment_map.end())
-        iter->second.first.push_back(std::pair<int, int>(i,j));
+        iter->second.first.emplace_back(i,j);
       else {
         std::vector<std::pair<int, int> > tmp;
-        tmp.push_back(std::pair<int, int>(i,j));
+        tmp.emplace_back(i,j);
         std::pair<std::vector<std::pair<int, int> >, vil_rgb<vxl_byte> > p(tmp, vil_rgb<vxl_byte>(255, 255, 255));
         segment_map[seg_color] = p;
       }
@@ -233,16 +233,16 @@ bool volm_map_segments_process(bprb_func_process& pro)
   bool hit = false;
   std::vector<std::vector<std::pair<int, int> > > img_lines;
   std::vector<volm_osm_object_line_sptr> loc_lines = osm_objs.loc_lines();
-  for (unsigned i = 0; i < loc_lines.size(); i++) {
-    std::vector<vgl_point_2d<double> > pts = loc_lines[i]->line();
+  for (auto & loc_line : loc_lines) {
+    std::vector<vgl_point_2d<double> > pts = loc_line->line();
     std::vector<std::pair<int, int> > img_line;
-    for (unsigned j = 0; j < pts.size(); j++) {
+    for (auto & pt : pts) {
       double u, v;
-      geo_cam->global_to_img(pts[j].x(), pts[j].y(), 0, u, v);
+      geo_cam->global_to_img(pt.x(), pt.y(), 0, u, v);
       unsigned uu = std::floor(u + 0.5f);
       unsigned vv = std::floor(v + 0.5f);
       if (uu < img_sptr->ni() && vv < img_sptr->nj()) {
-        img_line.push_back(std::pair<int, int>(uu,vv));
+        img_line.emplace_back(uu,vv);
         hit = true;
       }
     }
@@ -272,8 +272,8 @@ bool volm_map_segments_process(bprb_func_process& pro)
         double cos = dx/ds; double sin = dy/ds;
         unsigned cnt = 1;
         while (ds > 0.1) {
-          unsigned uu = (unsigned)std::floor(prev_u + cnt*1*cos + 0.5f);
-          unsigned vv = (unsigned)std::floor(prev_v + cnt*1*sin + 0.5f);
+          auto uu = (unsigned)std::floor(prev_u + cnt*1*cos + 0.5f);
+          auto vv = (unsigned)std::floor(prev_v + cnt*1*sin + 0.5f);
           if (uu < img_sptr->ni() && vv < img_sptr->nj()) {
             vil_rgb<vxl_byte> segment_color = img(uu, vv);
             std::pair<unsigned char, std::pair<unsigned char, unsigned char> > seg_color(segment_color.r, std::pair<unsigned char, unsigned char>(segment_color.g, segment_color.b));
@@ -300,9 +300,9 @@ bool volm_map_segments_process(bprb_func_process& pro)
       }
       // find the median height of its pixels
       std::vector<float> heights;
-      for (unsigned i = 0; i < tmp.size(); i++) {
-        if (height_image(tmp[i].first, tmp[i].second) > 0)
-          heights.push_back(height_image(tmp[i].first, tmp[i].second));
+      for (auto & i : tmp) {
+        if (height_image(i.first, i.second) > 0)
+          heights.push_back(height_image(i.first, i.second));
       }
       if (heights.size() <= 0)
         continue;
@@ -316,8 +316,8 @@ bool volm_map_segments_process(bprb_func_process& pro)
     }
     std::sort(road_heights.begin(), road_heights.end());
     std::cout << "road heights: " << std::endl;
-    for (unsigned i = 0; i < road_heights.size(); i++)
-      std::cout << road_heights[i] << " ";
+    for (float road_height : road_heights)
+      std::cout << road_height << " ";
     std::cout << "\n";
     int med = (int)std::floor(road_heights.size()/2.0);
     std::cout << "road heights size: " << road_heights.size() << " med: " << med << std::endl; std::cout.flush();
@@ -338,8 +338,8 @@ bool volm_map_segments_process(bprb_func_process& pro)
     // recolor the output image
     for (iter = segment_map.begin(); iter != segment_map.end(); iter++) {
       std::vector<std::pair<int, int> >& tmp = iter->second.first;
-      for (unsigned i = 0; i < tmp.size(); i++) {
-        out_img(tmp[i].first, tmp[i].second) = iter->second.second;
+      for (auto & i : tmp) {
+        out_img(i.first, i.second) = iter->second.second;
       }
     }
 
@@ -359,18 +359,18 @@ bool volm_map_segments_process(bprb_func_process& pro)
 bool volm_map_osm_onto_image_process_cons(bprb_func_process& pro)
 {
   std::vector<std::string> input_types;
-  input_types.push_back("vil_image_view_base_sptr");  // satellite image
-  input_types.push_back("vpgl_camera_double_sptr");   // local rational camera
-  input_types.push_back("vil_image_view_base_sptr");  // ortho image - float values: absolute heights
-  input_types.push_back("vpgl_camera_double_sptr");  // ortho camera
-  input_types.push_back("vcl_string");   // bin file with osm object list
-  input_types.push_back("vcl_string");   // name of band where the osm data will be put
-  input_types.push_back("bool");         // option to project OSM road
-  input_types.push_back("bool");         // option to project OSM buildings
-  input_types.push_back("vcl_string");   // if passed then also output a binary file with the mapped objects in image coordinates saved as a vector of vsol_spatial_object_2d_sptr
-  input_types.push_back("vcl_string");   // if passed then also output a ortho kml file with all projected OSM objects
+  input_types.emplace_back("vil_image_view_base_sptr");  // satellite image
+  input_types.emplace_back("vpgl_camera_double_sptr");   // local rational camera
+  input_types.emplace_back("vil_image_view_base_sptr");  // ortho image - float values: absolute heights
+  input_types.emplace_back("vpgl_camera_double_sptr");  // ortho camera
+  input_types.emplace_back("vcl_string");   // bin file with osm object list
+  input_types.emplace_back("vcl_string");   // name of band where the osm data will be put
+  input_types.emplace_back("bool");         // option to project OSM road
+  input_types.emplace_back("bool");         // option to project OSM buildings
+  input_types.emplace_back("vcl_string");   // if passed then also output a binary file with the mapped objects in image coordinates saved as a vector of vsol_spatial_object_2d_sptr
+  input_types.emplace_back("vcl_string");   // if passed then also output a ortho kml file with all projected OSM objects
   std::vector<std::string> output_types;
-  output_types.push_back("vil_image_view_base_sptr"); // a color image with red channel the objects that are overlaid
+  output_types.emplace_back("vil_image_view_base_sptr"); // a color image with red channel the objects that are overlaid
   return pro.set_input_types(input_types)
       && pro.set_output_types(output_types);
 }
@@ -401,7 +401,7 @@ bool volm_map_osm_onto_image_process(bprb_func_process& pro)
   std::vector<vgl_polygon<double> >  projected_regions;
   std::vector<std::vector<vgl_point_2d<double> > > projected_roads;
 
-  vpgl_geo_camera *geo_cam = dynamic_cast<vpgl_geo_camera*>(ortho_cam.ptr());
+  auto *geo_cam = dynamic_cast<vpgl_geo_camera*>(ortho_cam.ptr());
   if (!geo_cam) {
     std::cerr << pro.name() << ": cannot cast the input cam to a vpgl_geo_camera!\n";
     return false;
@@ -413,7 +413,7 @@ bool volm_map_osm_onto_image_process(bprb_func_process& pro)
   }
 
 
-  vpgl_local_rational_camera<double>* cam_local_rat = dynamic_cast<vpgl_local_rational_camera<double>*>(sat_cam.ptr());
+  auto* cam_local_rat = dynamic_cast<vpgl_local_rational_camera<double>*>(sat_cam.ptr());
   //vpgl_rational_camera<double>* cam_local_rat = dynamic_cast<vpgl_rational_camera<double>*>(sat_cam.ptr());
   if (!cam_local_rat) {
     std::cerr << pro.name() << ": cannot cast the input satellite cam to a local rational camera\n";
@@ -447,7 +447,7 @@ bool volm_map_osm_onto_image_process(bprb_func_process& pro)
     for (unsigned r_idx = 0; r_idx < num_regions; r_idx++) {
       unsigned char curr_id = osm_objs.loc_polys()[r_idx]->prop().id_;
       if (curr_id == volm_osm_category_io::volm_land_table_name["building"].id_)
-        loc_regions.push_back(vgl_polygon<double>(osm_objs.loc_polys()[r_idx]->poly()[0]));
+        loc_regions.emplace_back(osm_objs.loc_polys()[r_idx]->poly()[0]);
     }
 
     std::vector<std::vector<vgl_point_2d<double> > > img_polys;
@@ -458,25 +458,25 @@ bool volm_map_osm_onto_image_process(bprb_func_process& pro)
       std::vector<vgl_point_2d<double> > img_poly;
       std::vector<vgl_point_2d<double> > loc_poly;
       std::vector<vsol_point_2d_sptr> vsol_pts;
-      for (unsigned j = 0; j < pts.size(); j++) {
+      for (auto & pt : pts) {
         double u, v;
-        geo_cam->global_to_img(pts[j].x(), pts[j].y(), 0, u, v);
-        unsigned uu = (unsigned)std::floor(u + 0.5f);
-        unsigned vv = (unsigned)std::floor(v + 0.5f);
+        geo_cam->global_to_img(pt.x(), pt.y(), 0, u, v);
+        auto uu = (unsigned)std::floor(u + 0.5f);
+        auto vv = (unsigned)std::floor(v + 0.5f);
         if (uu < height_img_sptr->ni() && vv < height_img_sptr->nj()) {
           double elev = height_img(uu, vv);
           // now find where it projects in the satellite image
           // project to local coords of local_rational_camera first
           double loc_x, loc_y, loc_z;
-          cam_local_rat->lvcs().global_to_local(pts[j].x(), pts[j].y(), elev, vpgl_lvcs::wgs84, loc_x, loc_y, loc_z);
+          cam_local_rat->lvcs().global_to_local(pt.x(), pt.y(), elev, vpgl_lvcs::wgs84, loc_x, loc_y, loc_z);
           double iu, iv;
           cam_local_rat->project(loc_x, loc_y, loc_z, iu, iv);
           double iuu = iu + 0.5;
           double ivv = iv + 0.5;
           if (iuu >= 0 && ivv >= 0 && iuu < sat_img_sptr->ni() && ivv < sat_img_sptr->nj()) {
-            std::cout << "line " << i << ": pt [" << pts[j].x() << ',' << pts[j].y() << ',' << elev << " --> " << iuu << ',' << ivv << std::endl;
-            img_poly.push_back(vgl_point_2d<double>(iuu,ivv));
-            loc_poly.push_back(vgl_point_2d<double>(pts[j].x(), pts[j].y()));
+            std::cout << "line " << i << ": pt [" << pt.x() << ',' << pt.y() << ',' << elev << " --> " << iuu << ',' << ivv << std::endl;
+            img_poly.emplace_back(iuu,ivv);
+            loc_poly.emplace_back(pt.x(), pt.y());
             vsol_pts.push_back(new vsol_point_2d(iuu, ivv));
             hit = true;
           }
@@ -488,21 +488,21 @@ bool volm_map_osm_onto_image_process(bprb_func_process& pro)
         projected_regions.push_back(project_poly);
         if (vsol_pts.size() > 2) {
           vsol_polygon_2d_sptr vsolp = new vsol_polygon_2d(vsol_pts);
-          sos.push_back(vsolp->cast_to_spatial_object());
+          sos.emplace_back(vsolp->cast_to_spatial_object());
         }
       }
     }
     if (img_polys.size() > 0)
       hit = true;
     if (hit) {
-      for (unsigned i = 0; i < img_polys.size(); i++) {
+      for (auto & i : img_polys) {
         std::vector<std::pair<int, int> > img_line;
-        for (unsigned k = 0; k < img_polys[i].size(); k++) {
-          int iuu = (int)std::floor(img_polys[i][k].x());
-          int ivv = (int)std::floor(img_polys[i][k].y());
-          img_line.push_back(std::pair<int, int>(iuu,ivv));
+        for (unsigned k = 0; k < i.size(); k++) {
+          int iuu = (int)std::floor(i[k].x());
+          int ivv = (int)std::floor(i[k].y());
+          img_line.emplace_back(iuu,ivv);
         }
-        img_line.push_back(std::pair<int, int>(std::floor(img_polys[i][0].x()),std::floor(img_polys[i][0].y())));
+        img_line.emplace_back(std::floor(i[0].x()),std::floor(i[0].y()));
         out_img(img_line[0].first, img_line[0].second).r = 255;
         for (unsigned j = 1; j < img_line.size(); j++) {
           double prev_u = img_line[j-1].first;
@@ -519,7 +519,7 @@ bool volm_map_osm_onto_image_process(bprb_func_process& pro)
             double uu = prev_u + cnt*1*cos + 0.5f;
             double vv = prev_v + cnt*1*sin + 0.5f;
             if (uu >= 0 && vv >= 0 && uu < sat_img_sptr->ni() && vv < sat_img_sptr->nj()) {
-              line_img.push_back(vgl_point_2d<double>(uu,vv));
+              line_img.emplace_back(uu,vv);
               //if (band_name.compare("r") == 0)      out_img(uu, vv).r = 255;
               //else if(band_name.compare("g") == 0)  out_img(uu, vv).g = 255;
               //else if(band_name.compare("b") == 0)  out_img(uu, vv).b = 255;
@@ -560,11 +560,11 @@ bool volm_map_osm_onto_image_process(bprb_func_process& pro)
       std::vector<std::pair<int, int> > img_line;
       std::vector<vgl_point_2d<double> > loc_line;
       std::vector<vsol_point_2d_sptr> vsol_pts;
-      for (unsigned j = 0; j < pts.size(); j++) {
+      for (auto & pt : pts) {
         double u, v;
-        geo_cam->global_to_img(pts[j].x(), pts[j].y(), 0, u, v);
-        unsigned uu = (unsigned)std::floor(u + 0.5f);
-        unsigned vv = (unsigned)std::floor(v + 0.5f);
+        geo_cam->global_to_img(pt.x(), pt.y(), 0, u, v);
+        auto uu = (unsigned)std::floor(u + 0.5f);
+        auto vv = (unsigned)std::floor(v + 0.5f);
         if (uu < height_img_sptr->ni() && vv < height_img_sptr->nj()) {
           //out_img(uu, vv).r = 255;
           double elev = height_img(uu, vv);
@@ -572,15 +572,15 @@ bool volm_map_osm_onto_image_process(bprb_func_process& pro)
           // now find where it projects in the satellite image
           // project to local coords of local_rational_camera first
           double loc_x, loc_y, loc_z;
-          cam_local_rat->lvcs().global_to_local(pts[j].x(), pts[j].y(), elev, vpgl_lvcs::wgs84, loc_x, loc_y, loc_z);
+          cam_local_rat->lvcs().global_to_local(pt.x(), pt.y(), elev, vpgl_lvcs::wgs84, loc_x, loc_y, loc_z);
           double iu, iv;
           cam_local_rat->project(loc_x, loc_y, loc_z, iu, iv);
-          unsigned iuu = (unsigned)std::floor(iu + 0.5f);
-          unsigned ivv = (unsigned)std::floor(iv + 0.5f);
+          auto iuu = (unsigned)std::floor(iu + 0.5f);
+          auto ivv = (unsigned)std::floor(iv + 0.5f);
           if (iuu < sat_img_sptr->ni() && ivv < sat_img_sptr->nj()) {
-            std::cout << "line " << i << ": pt [" << pts[j].x() << ',' << pts[j].y() << ',' << elev << " --> " << iuu << ',' << ivv << std::endl;
-            loc_line.push_back(pts[j]);
-            img_line.push_back(std::pair<int, int>(iuu,ivv));
+            std::cout << "line " << i << ": pt [" << pt.x() << ',' << pt.y() << ',' << elev << " --> " << iuu << ',' << ivv << std::endl;
+            loc_line.push_back(pt);
+            img_line.emplace_back(iuu,ivv);
             vsol_pts.push_back(new vsol_point_2d(iuu, ivv));
           }
         }
@@ -590,7 +590,7 @@ bool volm_map_osm_onto_image_process(bprb_func_process& pro)
         // add the line into project line
         projected_roads.push_back(loc_line);
         vsol_polyline_2d_sptr vsoll = new vsol_polyline_2d(vsol_pts);
-        sos.push_back(vsoll->cast_to_spatial_object());
+        sos.emplace_back(vsoll->cast_to_spatial_object());
       }
     }
     std::cout << "number of img lines: " << img_lines.size() << std::endl;
@@ -616,7 +616,7 @@ bool volm_map_osm_onto_image_process(bprb_func_process& pro)
             double uu = prev_u + cnt*1*cos + 0.5f;
             double vv = prev_v + cnt*1*sin + 0.5f;
             if (uu >= 0 && vv >= 0 && uu < sat_img_sptr->ni() && vv < sat_img_sptr->nj())
-              line_img.push_back(vgl_point_2d<double>(uu,vv));
+              line_img.emplace_back(uu,vv);
             cnt++;
             ds -= 1;
           }
@@ -694,16 +694,16 @@ bool volm_map_osm_onto_image_process(bprb_func_process& pro)
 bool volm_map_osm_onto_image_process2_cons(bprb_func_process& pro)
 {
   std::vector<std::string> input_types;
-  input_types.push_back("vil_image_view_base_sptr");  // satellite image
-  input_types.push_back("vpgl_camera_double_sptr");   // local rational camera
-  input_types.push_back("vil_image_view_base_sptr");  // ortho image - float values: absolute heights
-  input_types.push_back("vpgl_camera_double_sptr");   // ortho camera
-  input_types.push_back("vcl_string");                // bin file with osm object list // if it exists things are appended to this file!
-  input_types.push_back("vcl_string");                // OSM category name
-  input_types.push_back("vcl_string");                // output a binary file with the mapped objects saved as a vector of vsol_spatial_object_2d_sptr
+  input_types.emplace_back("vil_image_view_base_sptr");  // satellite image
+  input_types.emplace_back("vpgl_camera_double_sptr");   // local rational camera
+  input_types.emplace_back("vil_image_view_base_sptr");  // ortho image - float values: absolute heights
+  input_types.emplace_back("vpgl_camera_double_sptr");   // ortho camera
+  input_types.emplace_back("vcl_string");                // bin file with osm object list // if it exists things are appended to this file!
+  input_types.emplace_back("vcl_string");                // OSM category name
+  input_types.emplace_back("vcl_string");                // output a binary file with the mapped objects saved as a vector of vsol_spatial_object_2d_sptr
   std::vector<std::string> output_types;
-  output_types.push_back("vil_image_view_base_sptr"); // a RBG image patch that labels the OSM category
-  output_types.push_back("vil_image_view_base_sptr"); // a binary mask patch that contains all ables from OSM category
+  output_types.emplace_back("vil_image_view_base_sptr"); // a RBG image patch that labels the OSM category
+  output_types.emplace_back("vil_image_view_base_sptr"); // a binary mask patch that contains all ables from OSM category
   return pro.set_input_types(input_types)
       && pro.set_output_types(output_types);
 }
@@ -728,7 +728,7 @@ bool volm_map_osm_onto_image_process2(bprb_func_process& pro)
   std::string osm_file  = pro.get_input<std::string>(4);
   std::string osm_category_name = pro.get_input<std::string>(5);
   unsigned osm_id = 0;
-  std::map<std::string, volm_land_layer>::iterator iter = volm_osm_category_io::volm_land_table_name.find(osm_category_name);
+  auto iter = volm_osm_category_io::volm_land_table_name.find(osm_category_name);
   if (iter == volm_osm_category_io::volm_land_table_name.end()) {
     std::cerr << "string: " << osm_category_name << " is not a valid category name listed in volm_osm_category_io::volm_land_table_name!\n";
     return false;
@@ -739,13 +739,13 @@ bool volm_map_osm_onto_image_process2(bprb_func_process& pro)
 
   std::vector<vsol_spatial_object_2d_sptr> sos;
 
-  vpgl_geo_camera *geo_cam = dynamic_cast<vpgl_geo_camera*>(ortho_cam.ptr());
+  auto *geo_cam = dynamic_cast<vpgl_geo_camera*>(ortho_cam.ptr());
   if (!geo_cam) {
     std::cerr << pro.name() << ": cannot cast the input cam to a vpgl_geo_camera!\n";
     return false;
   }
 
-  vpgl_local_rational_camera<double>* cam_local_rat = dynamic_cast<vpgl_local_rational_camera<double>*>(sat_cam.ptr());
+  auto* cam_local_rat = dynamic_cast<vpgl_local_rational_camera<double>*>(sat_cam.ptr());
   //vpgl_rational_camera<double>* cam_local_rat = dynamic_cast<vpgl_rational_camera<double>*>(sat_cam.ptr());
   if (!cam_local_rat) {
     std::cerr << pro.name() << ": cannot cast the input satellite cam to a local rational camera\n";
@@ -768,36 +768,36 @@ bool volm_map_osm_onto_image_process2(bprb_func_process& pro)
   for (unsigned r_idx = 0; r_idx < num_regions; r_idx++) {
     unsigned char curr_id = osm_objs.loc_polys()[r_idx]->prop().id_;
     if (curr_id == osm_id)
-      loc_regions.push_back(vgl_polygon<double>(osm_objs.loc_polys()[r_idx]->poly()[0]));
+      loc_regions.emplace_back(osm_objs.loc_polys()[r_idx]->poly()[0]);
   }
 
   std::vector<std::vector<vgl_point_2d<double> > > img_polys;
 
   std::cout << "project OSM regions with name " << osm_category_name << " onto image..." << std::endl;
-  for (unsigned i = 0; i < loc_regions.size(); i++) {
-    std::vector<vgl_point_2d<double> > pts = loc_regions[i][0];
+  for (auto & loc_region : loc_regions) {
+    std::vector<vgl_point_2d<double> > pts = loc_region[0];
     //pts.push_back(loc_regions[i][0][0]);
     std::vector<vgl_point_2d<double> > img_poly;
 
     std::vector<vsol_point_2d_sptr> vsol_pts;
-    for (unsigned j = 0; j < pts.size(); j++) {
+    for (auto & pt : pts) {
       double u, v;
-      geo_cam->global_to_img(pts[j].x(), pts[j].y(), 0, u, v);
-      unsigned uu = (unsigned)std::floor(u + 0.5f);
-      unsigned vv = (unsigned)std::floor(v + 0.5f);
+      geo_cam->global_to_img(pt.x(), pt.y(), 0, u, v);
+      auto uu = (unsigned)std::floor(u + 0.5f);
+      auto vv = (unsigned)std::floor(v + 0.5f);
       if (uu < height_img_sptr->ni() && vv < height_img_sptr->nj()) {
         double elev = height_img(uu, vv);
         // now find where it projects in the satellite image
         // project to local coords of local_rational_camera first
         double loc_x, loc_y, loc_z;
-        cam_local_rat->lvcs().global_to_local(pts[j].x(), pts[j].y(), elev, vpgl_lvcs::wgs84, loc_x, loc_y, loc_z);
+        cam_local_rat->lvcs().global_to_local(pt.x(), pt.y(), elev, vpgl_lvcs::wgs84, loc_x, loc_y, loc_z);
         double iu, iv;
         cam_local_rat->project(loc_x, loc_y, loc_z, iu, iv);
         double iuu = iu + 0.5;
         double ivv = iv + 0.5;
         if (iuu >= 0 && ivv >= 0 && iuu < sat_img_sptr->ni() && ivv < sat_img_sptr->nj()) {
           //std::cout << "line " << i << ": pt [" << pts[j].x() << ',' << pts[j].y() << ',' << elev << " --> " << iuu << ',' << ivv << std::endl;
-          img_poly.push_back(vgl_point_2d<double>(iuu,ivv));
+          img_poly.emplace_back(iuu,ivv);
           vsol_pts.push_back(new vsol_point_2d(iuu, ivv));
         }
       }
@@ -806,7 +806,7 @@ bool volm_map_osm_onto_image_process2(bprb_func_process& pro)
       img_polys.push_back(img_poly);
       if (vsol_pts.size() > 2) {
         vsol_polygon_2d_sptr vsolp = new vsol_polygon_2d(vsol_pts);
-        sos.push_back(vsolp->cast_to_spatial_object());
+        sos.emplace_back(vsolp->cast_to_spatial_object());
       }
     }
   }
@@ -815,18 +815,18 @@ bool volm_map_osm_onto_image_process2(bprb_func_process& pro)
   // project all OSM lines with the specified name
   std::vector<std::vector<std::pair<int, int> > > img_lines;
   std::vector<volm_osm_object_line_sptr> loc_lines = osm_objs.loc_lines();
-  for (unsigned i = 0; i < loc_lines.size(); i++) {
-    if (loc_lines[i]->prop().id_ != osm_id)
+  for (auto & loc_line : loc_lines) {
+    if (loc_line->prop().id_ != osm_id)
       continue;
 
-    std::vector<vgl_point_2d<double> > pts = loc_lines[i]->line();
+    std::vector<vgl_point_2d<double> > pts = loc_line->line();
     std::vector<std::pair<int, int> > img_line;
     std::vector<vsol_point_2d_sptr> vsol_pts;
-    for (unsigned j = 0; j < pts.size(); j++) {
+    for (auto & pt : pts) {
       double u, v;
-      geo_cam->global_to_img(pts[j].x(), pts[j].y(), 0, u, v);
-      unsigned uu = (unsigned)std::floor(u + 0.5f);
-      unsigned vv = (unsigned)std::floor(v + 0.5f);
+      geo_cam->global_to_img(pt.x(), pt.y(), 0, u, v);
+      auto uu = (unsigned)std::floor(u + 0.5f);
+      auto vv = (unsigned)std::floor(v + 0.5f);
       if (uu < height_img_sptr->ni() && vv < height_img_sptr->nj()) {
         //out_img(uu, vv).r = 255;
         double elev = height_img(uu, vv);
@@ -834,21 +834,21 @@ bool volm_map_osm_onto_image_process2(bprb_func_process& pro)
         // now find where it projects in the satellite image
         // project to local coords of local_rational_camera first
         double loc_x, loc_y, loc_z;
-        cam_local_rat->lvcs().global_to_local(pts[j].x(), pts[j].y(), elev, vpgl_lvcs::wgs84, loc_x, loc_y, loc_z);
+        cam_local_rat->lvcs().global_to_local(pt.x(), pt.y(), elev, vpgl_lvcs::wgs84, loc_x, loc_y, loc_z);
         double iu, iv;
         cam_local_rat->project(loc_x, loc_y, loc_z, iu, iv);
-        unsigned iuu = (unsigned)std::floor(iu + 0.5f);
-        unsigned ivv = (unsigned)std::floor(iv + 0.5f);
+        auto iuu = (unsigned)std::floor(iu + 0.5f);
+        auto ivv = (unsigned)std::floor(iv + 0.5f);
         if (iuu < sat_img_sptr->ni() && ivv < sat_img_sptr->nj()) {
           //std::cout << "line " << i << ": pt [" << pts[j].x() << ',' << pts[j].y() << ',' << elev << " --> " << iuu << ',' << ivv << std::endl;
-          img_line.push_back(std::pair<int, int>(iuu,ivv));
+          img_line.emplace_back(iuu,ivv);
         }
       }
     }
     if (img_line.size() > 1) {
       //std::cout << "road " << i << " has " << img_line.size() << " points" << std::endl;
       // expend the line to a polygon
-      double width = loc_lines[i]->prop().width_;
+      double width = loc_line->prop().width_;
       if (width == 0)  width = 3.0;
       width += 2.0;
       vgl_polygon<double> img_poly;
@@ -865,7 +865,7 @@ bool volm_map_osm_onto_image_process2(bprb_func_process& pro)
           double uu = prev_u + cnt*1*cos + 0.5f;
           double vv = prev_v + cnt*1*sin + 0.5f;
           if (uu >= 0 && vv >= 0 && uu < sat_img_sptr->ni() && vv < sat_img_sptr->nj())
-            line_img.push_back(vgl_point_2d<double>(uu,vv));
+            line_img.emplace_back(uu,vv);
           cnt++;
           ds -= 3;
         }
@@ -879,7 +879,7 @@ bool volm_map_osm_onto_image_process2(bprb_func_process& pro)
         vsol_pts.push_back(new vsol_point_2d(img_poly[0][v_idx].x(), img_poly[0][v_idx].y()));
       if (vsol_pts.size() > 2) {
         vsol_polygon_2d_sptr vsolp = new vsol_polygon_2d(vsol_pts);
-        sos.push_back(vsolp->cast_to_spatial_object());
+        sos.emplace_back(vsolp->cast_to_spatial_object());
       }
     }
   }
@@ -891,14 +891,14 @@ bool volm_map_osm_onto_image_process2(bprb_func_process& pro)
   std::vector<std::pair<unsigned, unsigned> > img_pts;
   std::vector<volm_osm_object_point_sptr> loc_pts = osm_objs.loc_pts();
 
-  for (unsigned i = 0; i < loc_pts.size(); i++) {
-    unsigned char curr_id = loc_pts[i]->prop().id_;
+  for (auto & loc_pt : loc_pts) {
+    unsigned char curr_id = loc_pt->prop().id_;
     if (curr_id == osm_id) {
-      vgl_point_2d<double> pt = loc_pts[i]->loc();
+      vgl_point_2d<double> pt = loc_pt->loc();
       double u, v;
       geo_cam->global_to_img(pt.x(), pt.y(), 0, u, v);
-      unsigned uu = (unsigned)std::floor(u + 0.5f);
-      unsigned vv = (unsigned)std::floor(v + 0.5f);
+      auto uu = (unsigned)std::floor(u + 0.5f);
+      auto vv = (unsigned)std::floor(v + 0.5f);
       if (uu < height_img_sptr->ni() && vv < height_img_sptr->nj()) {
         double elev = height_img(uu, vv);
         //now find where it projects in the satellite image
@@ -907,8 +907,8 @@ bool volm_map_osm_onto_image_process2(bprb_func_process& pro)
         cam_local_rat->lvcs().global_to_local(pt.x(), pt.y(), elev, vpgl_lvcs::wgs84, loc_x, loc_y, loc_z);
         double iu, iv;
         cam_local_rat->project(loc_x, loc_y, loc_z, iu, iv);
-        unsigned iuu = (unsigned)std::floor(iu + 0.5f);
-        unsigned ivv = (unsigned)std::floor(iv + 0.5f);
+        auto iuu = (unsigned)std::floor(iu + 0.5f);
+        auto ivv = (unsigned)std::floor(iv + 0.5f);
         if (iuu < sat_img_sptr->ni() && ivv < sat_img_sptr->nj()) {
           // make it a 2x2 region with this point at the center
           std::vector<vsol_point_2d_sptr> vsol_pts;
@@ -917,7 +917,7 @@ bool volm_map_osm_onto_image_process2(bprb_func_process& pro)
           vsol_pts.push_back(new vsol_point_2d(iu+1, iv+1));
           vsol_pts.push_back(new vsol_point_2d(iu+1, iv-1));
           vsol_polygon_2d_sptr vsolp = new vsol_polygon_2d(vsol_pts);
-          sos.push_back(vsolp->cast_to_spatial_object());
+          sos.emplace_back(vsolp->cast_to_spatial_object());
         }
       }
     }
@@ -938,8 +938,8 @@ bool volm_map_osm_onto_image_process2(bprb_func_process& pro)
   else {
     std::cout << "there are " << sos.size() << " vsol objects, appending to binary file: " << bin_filename
               << " which currently has: " << sos_in.size() << " objects" << std::endl;
-    for (unsigned ii = 0; ii < sos_in.size(); ii++)
-      sos.push_back(sos_in[ii]);
+    for (const auto & ii : sos_in)
+      sos.push_back(ii);
     vsl_b_write(ostr, sos);
     ostr.close();
   }
@@ -955,8 +955,8 @@ bool volm_map_osm_onto_image_process2(bprb_func_process& pro)
   vil_image_view<vxl_byte> out_mask(sat_img_sptr->ni(), sat_img_sptr->nj(), 1);
   out_mask.fill(0);
   std::vector<vgl_polygon<double> > sos_poly;
-  for (unsigned i = 0; i < sos.size(); i++) {
-    vsol_polygon_2d* poly = static_cast<vsol_polygon_2d*>(sos[i].ptr());
+  for (auto & so : sos) {
+    auto* poly = static_cast<vsol_polygon_2d*>(so.ptr());
     vgl_polygon<double> vpoly; vpoly.new_sheet();
     unsigned nverts = poly->size();
     for (unsigned i = 0; i < nverts; i++) {
@@ -970,8 +970,8 @@ bool volm_map_osm_onto_image_process2(bprb_func_process& pro)
     std::cerr << " There are no vsol spatial objects in the vector!\n";
   else {
     std::cout << "there are " << sos_poly.size() << " vsol objects put into the image patch " << std::endl;
-    for (unsigned i = 0; i < sos_poly.size(); i++) {
-      vgl_polygon_scan_iterator<double> it(sos_poly[i], true);
+    for (const auto & i : sos_poly) {
+      vgl_polygon_scan_iterator<double> it(i, true);
       for (it.reset(); it.next(); ) {
         int y = it.scany();
         for (int x = it.startx(); x <= it.endx(); ++x)
@@ -987,12 +987,12 @@ bool volm_map_osm_onto_image_process2(bprb_func_process& pro)
   // format: number_of_points,x,y,x,y,x,y,...
   std::string txt_file = vul_file::strip_extension(bin_filename) + ".csv";
   std::ofstream ofs(txt_file.c_str());
-  for (unsigned i = 0; i < sos_poly.size(); i++) {
-    unsigned n_verts = sos_poly[i][0].size();
+  for (auto & i : sos_poly) {
+    unsigned n_verts = i[0].size();
     ofs << n_verts;
     for (unsigned v_idx = 0; v_idx < n_verts; v_idx++) {
-      unsigned uu = (unsigned)std::floor(sos_poly[i][0][v_idx].x() + 0.5);
-      unsigned vv = (unsigned)std::floor(sos_poly[i][0][v_idx].y() + 0.5);
+      auto uu = (unsigned)std::floor(i[0][v_idx].x() + 0.5);
+      auto vv = (unsigned)std::floor(i[0][v_idx].y() + 0.5);
       if (uu < out_img.ni() && vv < out_img.nj())
         ofs << ',' << uu << ',' << vv;
     }
@@ -1013,11 +1013,11 @@ bool volm_map_osm_onto_image_process2(bprb_func_process& pro)
 bool volm_map_osm_onto_image_process3_cons(bprb_func_process& pro)
 {
   std::vector<std::string> input_types;
-  input_types.push_back("vil_image_view_base_sptr");  // ortho image
-  input_types.push_back("vpgl_camera_double_sptr");  // ortho camera
-  input_types.push_back("vcl_string");   // bin file with osm object list // if it exists things are appended to this file!
-  input_types.push_back("vcl_string");         // OSM category name
-  input_types.push_back("vcl_string");   // output a binary file with the mapped objects in image coordinates saved as a vector of vsol_spatial_object_2d_sptr
+  input_types.emplace_back("vil_image_view_base_sptr");  // ortho image
+  input_types.emplace_back("vpgl_camera_double_sptr");  // ortho camera
+  input_types.emplace_back("vcl_string");   // bin file with osm object list // if it exists things are appended to this file!
+  input_types.emplace_back("vcl_string");         // OSM category name
+  input_types.emplace_back("vcl_string");   // output a binary file with the mapped objects in image coordinates saved as a vector of vsol_spatial_object_2d_sptr
   std::vector<std::string> output_types;
   return pro.set_input_types(input_types)
       && pro.set_output_types(output_types);
@@ -1038,7 +1038,7 @@ bool volm_map_osm_onto_image_process3(bprb_func_process& pro)
   std::string osm_file  = pro.get_input<std::string>(2);
   std::string osm_category_name = pro.get_input<std::string>(3);
   unsigned osm_id = 0;
-  std::map<std::string, volm_land_layer>::iterator iter = volm_osm_category_io::volm_land_table_name.find(osm_category_name);
+  auto iter = volm_osm_category_io::volm_land_table_name.find(osm_category_name);
   if (iter == volm_osm_category_io::volm_land_table_name.end()) {
     std::cerr << "string: " << osm_category_name << " is not a valid category name listed in volm_osm_category_io::volm_land_table_name!\n";
     return false;
@@ -1049,7 +1049,7 @@ bool volm_map_osm_onto_image_process3(bprb_func_process& pro)
 
   std::vector<vsol_spatial_object_2d_sptr> sos;
 
-  vpgl_geo_camera *geo_cam = dynamic_cast<vpgl_geo_camera*>(ortho_cam.ptr());
+  auto *geo_cam = dynamic_cast<vpgl_geo_camera*>(ortho_cam.ptr());
   if (!geo_cam) {
     std::cerr << pro.name() << ": cannot cast the input cam to a vpgl_geo_camera!\n";
     return false;
@@ -1070,24 +1070,24 @@ bool volm_map_osm_onto_image_process3(bprb_func_process& pro)
   for (unsigned r_idx = 0; r_idx < num_regions; r_idx++) {
     unsigned char curr_id = osm_objs.loc_polys()[r_idx]->prop().id_;
     if (curr_id == osm_id)
-      loc_regions.push_back(vgl_polygon<double>(osm_objs.loc_polys()[r_idx]->poly()[0]));
+      loc_regions.emplace_back(osm_objs.loc_polys()[r_idx]->poly()[0]);
   }
 
   std::vector<std::vector<vgl_point_2d<double> > > img_polys;
 
-  for (unsigned i = 0; i < loc_regions.size(); i++) {
-    std::vector<vgl_point_2d<double> > pts = loc_regions[i][0];
+  for (auto & loc_region : loc_regions) {
+    std::vector<vgl_point_2d<double> > pts = loc_region[0];
     //pts.push_back(loc_regions[i][0][0]);
     std::vector<vgl_point_2d<double> > img_poly;
 
     std::vector<vsol_point_2d_sptr> vsol_pts;
-    for (unsigned j = 0; j < pts.size(); j++) {
+    for (auto & pt : pts) {
       double u, v;
-      geo_cam->global_to_img(pts[j].x(), pts[j].y(), 0, u, v);
+      geo_cam->global_to_img(pt.x(), pt.y(), 0, u, v);
       int uu = (int)std::floor(u + 0.5f);
       int vv = (int)std::floor(v + 0.5f);
       if (uu >= 0 && vv >= 0 && uu < img_sptr->ni() && vv < img_sptr->nj()) {
-        img_poly.push_back(vgl_point_2d<double>(uu,vv));
+        img_poly.emplace_back(uu,vv);
         vsol_pts.push_back(new vsol_point_2d(uu, vv));
         hit = true;
       }
@@ -1096,7 +1096,7 @@ bool volm_map_osm_onto_image_process3(bprb_func_process& pro)
       img_polys.push_back(img_poly);
       if (vsol_pts.size() > 2) {
         vsol_polygon_2d_sptr vsolp = new vsol_polygon_2d(vsol_pts);
-        sos.push_back(vsolp->cast_to_spatial_object());
+        sos.emplace_back(vsolp->cast_to_spatial_object());
       }
     }
   }
@@ -1105,20 +1105,20 @@ bool volm_map_osm_onto_image_process3(bprb_func_process& pro)
   // project all OSM lines with the specified name
   std::vector<std::vector<std::pair<int, int> > > img_lines;
   std::vector<volm_osm_object_line_sptr> loc_lines = osm_objs.loc_lines();
-  for (unsigned i = 0; i < loc_lines.size(); i++) {
-    if (loc_lines[i]->prop().id_ != osm_id)
+  for (auto & loc_line : loc_lines) {
+    if (loc_line->prop().id_ != osm_id)
       continue;
 
-    std::vector<vgl_point_2d<double> > pts = loc_lines[i]->line();
+    std::vector<vgl_point_2d<double> > pts = loc_line->line();
     std::vector<std::pair<int, int> > img_line;
     std::vector<vsol_point_2d_sptr> vsol_pts;
-    for (unsigned j = 0; j < pts.size(); j++) {
+    for (auto & pt : pts) {
       double u, v;
-      geo_cam->global_to_img(pts[j].x(), pts[j].y(), 0, u, v);
+      geo_cam->global_to_img(pt.x(), pt.y(), 0, u, v);
       int uu = (int)std::floor(u + 0.5f);
       int vv = (int)std::floor(v + 0.5f);
       if (uu >= 0 && vv >= 0 && uu < img_sptr->ni() && vv < img_sptr->nj()) {
-        img_line.push_back(std::pair<int, int>(uu,vv));
+        img_line.emplace_back(uu,vv);
         vsol_pts.push_back(new vsol_point_2d(uu, vv));
         hit = true;
       }
@@ -1129,7 +1129,7 @@ bool volm_map_osm_onto_image_process3(bprb_func_process& pro)
         vsol_pts.push_back(vsol_pts[i]);
       if (vsol_pts.size() > 2) {
         vsol_polygon_2d_sptr vsolp = new vsol_polygon_2d(vsol_pts);
-        sos.push_back(vsolp->cast_to_spatial_object());
+        sos.emplace_back(vsolp->cast_to_spatial_object());
       }
     }
   }
@@ -1140,10 +1140,10 @@ bool volm_map_osm_onto_image_process3(bprb_func_process& pro)
   std::vector<std::pair<unsigned, unsigned> > img_pts;
   std::vector<volm_osm_object_point_sptr> loc_pts = osm_objs.loc_pts();
 
-  for (unsigned i = 0; i < loc_pts.size(); i++) {
-    unsigned char curr_id = loc_pts[i]->prop().id_;
+  for (auto & loc_pt : loc_pts) {
+    unsigned char curr_id = loc_pt->prop().id_;
     if (curr_id == osm_id) {
-      vgl_point_2d<double> pt = loc_pts[i]->loc();
+      vgl_point_2d<double> pt = loc_pt->loc();
       double u, v;
       geo_cam->global_to_img(pt.x(), pt.y(), 0, u, v);
       int uu = (int)std::floor(u + 0.5f);
@@ -1157,7 +1157,7 @@ bool volm_map_osm_onto_image_process3(bprb_func_process& pro)
         vsol_pts.push_back(new vsol_point_2d(uu+1, vv+1));
         vsol_pts.push_back(new vsol_point_2d(uu+1, vv-1));
         vsol_polygon_2d_sptr vsolp = new vsol_polygon_2d(vsol_pts);
-        sos.push_back(vsolp->cast_to_spatial_object());
+        sos.emplace_back(vsolp->cast_to_spatial_object());
       }
     }
   }
@@ -1178,8 +1178,8 @@ bool volm_map_osm_onto_image_process3(bprb_func_process& pro)
       std::cerr << "Failed to open output stream " << bin_filename << std::endl;
     else {
       std::cout << "there are " << sos.size() << " vsol objects, appending to binary file: " << bin_filename << " which currently has: " << sos_in.size() << " objects" << std::endl;
-      for (unsigned ii = 0; ii < sos_in.size(); ii++)
-        sos.push_back(sos_in[ii]);
+      for (const auto & ii : sos_in)
+        sos.push_back(ii);
       vsl_b_write(ostr, sos);
       ostr.close();
     }
@@ -1238,15 +1238,15 @@ bool volm_render_kml_polygon_mask_process(bprb_func_process& pro)
   // get inputs
   unsigned in_i = 0;
   vil_image_view_base_sptr in_img_sptr = pro.get_input<vil_image_view_base_sptr>(in_i++);
-  double ll_lon = pro.get_input<double>(in_i++);
-  double ll_lat = pro.get_input<double>(in_i++);
-  double ur_lon = pro.get_input<double>(in_i++);
-  double ur_lat = pro.get_input<double>(in_i++);
+  auto ll_lon = pro.get_input<double>(in_i++);
+  auto ll_lat = pro.get_input<double>(in_i++);
+  auto ur_lon = pro.get_input<double>(in_i++);
+  auto ur_lat = pro.get_input<double>(in_i++);
   std::string poly_kml_file = pro.get_input<std::string>(in_i++);
-  unsigned mask_value = pro.get_input<unsigned>(in_i++);
+  auto mask_value = pro.get_input<unsigned>(in_i++);
 
   // load the image
-  vil_image_view<vxl_byte>* image = dynamic_cast<vil_image_view<vxl_byte>*>(in_img_sptr.ptr());
+  auto* image = dynamic_cast<vil_image_view<vxl_byte>*>(in_img_sptr.ptr());
   if (!image) {
     std::cerr << pro.name() << ": Unsupported image pixel type -- " << in_img_sptr->pixel_format() << ", only byte image is supported!\n";
     return false;
@@ -1294,9 +1294,9 @@ bool volm_render_kml_polygon_mask_process(bprb_func_process& pro)
   }
 
   // fill the image
-  for (unsigned ii = 0; ii < img_poly.size(); ii++)
+  for (const auto & ii : img_poly)
   {
-    vgl_polygon_scan_iterator<double> psi(img_poly[ii]);
+    vgl_polygon_scan_iterator<double> psi(ii);
     for (psi.reset(); psi.next(); ) {
       int j = psi.scany();
       for (int i = psi.startx(); i <= psi.endx(); i++) {

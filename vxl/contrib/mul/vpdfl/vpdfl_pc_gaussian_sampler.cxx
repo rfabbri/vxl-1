@@ -1,7 +1,4 @@
 // This is mul/vpdfl/vpdfl_pc_gaussian_sampler.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Ian Scott
@@ -14,7 +11,9 @@
 #include <string>
 #include "vpdfl_pc_gaussian_sampler.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //=======================================================================
 // Method: is_a
@@ -50,4 +49,3 @@ vpdfl_sampler_base* vpdfl_pc_gaussian_sampler::clone() const
 {
   return new vpdfl_pc_gaussian_sampler(*this);
 }
-

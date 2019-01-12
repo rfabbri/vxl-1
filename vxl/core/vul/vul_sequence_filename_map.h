@@ -1,9 +1,6 @@
 // This is core/vul/vul_sequence_filename_map.h
 #ifndef vul_sequence_filename_map_h_
 #define vul_sequence_filename_map_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Contains class for mapping sequence frame indices to filenames
@@ -18,7 +15,9 @@
 #include <string>
 #include <iosfwd>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 //: Maps sequence frame indices to filenames
@@ -40,11 +39,11 @@ class vul_sequence_filename_map
 {
  public:
   vul_sequence_filename_map ();
-  vul_sequence_filename_map (std::string const & seq_template,
-                             std::vector<int> const & indices);
-  vul_sequence_filename_map (std::string const & seq_template,
+  vul_sequence_filename_map (std::string  seq_template,
+                             std::vector<int>  indices);
+  vul_sequence_filename_map (std::string  seq_template,
                              int start, int end, int step = 1);
-  vul_sequence_filename_map (std::string const & seq_template,
+  vul_sequence_filename_map (std::string  seq_template,
                              int step = 1);
   ~vul_sequence_filename_map ();
 

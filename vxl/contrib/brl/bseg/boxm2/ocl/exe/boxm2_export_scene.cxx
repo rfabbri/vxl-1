@@ -41,7 +41,9 @@
 #include <bprb/bprb_macros.h>
 #include <bprb/bprb_func_process.h>
 #include <brip/brip_vil_float_ops.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/file_formats/vil_jpeg.h>
 #include <vil/vil_open.h>
 // Boxm2_Export_Scene executable will create a small, portable, pre rendered
@@ -103,7 +105,7 @@ int main(int argc,  char** argv)
     std::cout<<"Boxm2 Hemisphere"<<std::endl;
     vul_arg<std::string> scene_file("-scene", "scene filename", "");
     vul_arg<std::string> dir("-dir", "output image directory", "");
-    vul_arg<bool> depth("-depth", "output depth maps", 0);
+    vul_arg<bool> depth("-depth", "output depth maps", false);
     vul_arg<std::string> imgname("-imgname", "name of the image", "scene");
     vul_arg<unsigned> ni("-ni", "Width of image", 640);
     vul_arg<unsigned> nj("-nj", "Height of image", 480);
@@ -218,8 +220,8 @@ int main(int argc,  char** argv)
                 vpgl_camera_double_sptr cam_sptr = view.camera();
 
                 //set focal length and image size for camera
-                vpgl_perspective_camera<double>* cam = static_cast<vpgl_perspective_camera<double>* >(cam_sptr.ptr());
-                vpgl_calibration_matrix<double> mat = cam->get_calibration();
+                auto* cam = static_cast<vpgl_perspective_camera<double>* >(cam_sptr.ptr());
+                const vpgl_calibration_matrix<double>& mat = cam->get_calibration();
                 vgl_vector_3d<double> pp = normalized(cam->principal_axis());
                 vgl_vector_3d<double> vdir(cam->get_rotation().as_matrix()(1,0),
                                            cam->get_rotation().as_matrix()(1,1),
@@ -240,7 +242,7 @@ int main(int argc,  char** argv)
                         rays((int)l,(int)k)=vgl_ray_3d<double>(p,pp);
                     }
                 }
-                vpgl_generic_camera<double> * gcam = new vpgl_generic_camera<double>(rays);
+                auto * gcam = new vpgl_generic_camera<double>(rays);
                 brdb_value_sptr brdb_cam = new brdb_value_t<vpgl_camera_double_sptr>(gcam);
                 //if scene has RGB data type, use color render process
                 bool good;
@@ -268,7 +270,7 @@ int main(int argc,  char** argv)
                     }
 
                     brdb_query_aptr Q = brdb_query_comp_new("id", brdb_query::EQ, img_id);
-                    brdb_selection_sptr S = DATABASE->select("vil_image_view_base_sptr_data", vcl_move(Q));
+                    brdb_selection_sptr S = DATABASE->select("vil_image_view_base_sptr_data", std::move(Q));
                     if (S->size()!=1) {
                         std::cout << "in bprb_batch_process_manager::set_input_from_db(.) - no selections\n";
                     }
@@ -278,7 +280,7 @@ int main(int argc,  char** argv)
                         std::cout << "in bprb_batch_process_manager::set_input_from_db(.) - didn't get value\n";
                     }
                     vil_image_view_base_sptr outimg=value->val<vil_image_view_base_sptr>();
-                    vil_image_view<vil_rgba<vxl_byte> >* exp_img_out = static_cast<vil_image_view<vil_rgba<vxl_byte> > *>(outimg.ptr());
+                    auto* exp_img_out = static_cast<vil_image_view<vil_rgba<vxl_byte> > *>(outimg.ptr());
                     saved_imgs[uid] = idstream.str();
 
                     vil_image_view<vxl_byte> jpg_out(ni(), nj(),3);
@@ -318,7 +320,7 @@ int main(int argc,  char** argv)
                     }
 
                     brdb_query_aptr Q = brdb_query_comp_new("id", brdb_query::EQ, img_id);
-                    brdb_selection_sptr S = DATABASE->select("vil_image_view_base_sptr_data", vcl_move(Q));
+                    brdb_selection_sptr S = DATABASE->select("vil_image_view_base_sptr_data", std::move(Q));
                     if (S->size()!=1) {
                         std::cout << "in bprb_batch_process_manager::set_input_from_db(.) - no selections\n";
                     }
@@ -328,8 +330,8 @@ int main(int argc,  char** argv)
                         std::cout << "in bprb_batch_process_manager::set_input_from_db(.) - didn't get value\n";
                     }
                     vil_image_view_base_sptr outimg=value->val<vil_image_view_base_sptr>();
-                    vil_image_view<float>* expimg_view = static_cast<vil_image_view<float>* >(outimg.ptr());
-                    vil_image_view<vxl_byte>* byte_img = new vil_image_view<vxl_byte>(ni(), nj());
+                    auto* expimg_view = static_cast<vil_image_view<float>* >(outimg.ptr());
+                    auto* byte_img = new vil_image_view<vxl_byte>(ni(), nj());
                     for (unsigned int i=0; i<ni(); ++i)
                         for (unsigned int j=0; j<nj(); ++j)
                             (*byte_img)(i,j) =  (unsigned char)((*expimg_view)(i,j) *255.0f);   //just grab the first byte (all foura r the same)
@@ -363,7 +365,7 @@ int main(int argc,  char** argv)
                     }
 
                     brdb_query_aptr Q = brdb_query_comp_new("id", brdb_query::EQ, img_id);
-                    brdb_selection_sptr S = DATABASE->select("vil_image_view_base_sptr_data", vcl_move(Q));
+                    brdb_selection_sptr S = DATABASE->select("vil_image_view_base_sptr_data", std::move(Q));
                     if (S->size()!=1) {
                         std::cout << "in bprb_batch_process_manager::set_input_from_db(.) - no selections\n";
                     }
@@ -372,8 +374,8 @@ int main(int argc,  char** argv)
                         std::cout << "in bprb_batch_process_manager::set_input_from_db(.) - didn't get value\n";
                     }
                     vil_image_view_base_sptr outimg=value->val<vil_image_view_base_sptr>();
-                    vil_image_view<float>* expimg_view = static_cast<vil_image_view<float>* >(outimg.ptr());
-                    vil_image_view<vxl_byte>* byte_img = new vil_image_view<vxl_byte>(ni(), nj());
+                    auto* expimg_view = static_cast<vil_image_view<float>* >(outimg.ptr());
+                    auto* byte_img = new vil_image_view<vxl_byte>(ni(), nj());
                     for (unsigned int i=0; i<ni(); ++i)
                         for (unsigned int j=0; j<nj(); ++j)
                             (*byte_img)(i,j) =  (unsigned char)(std::min((*expimg_view)(i,j),255.0f) );   //just grab the first byte (all foura r the same)
@@ -399,7 +401,7 @@ int main(int argc,  char** argv)
                     }
 
                     brdb_query_aptr Q = brdb_query_comp_new("id", brdb_query::EQ, img_id);
-                    brdb_selection_sptr S = DATABASE->select("vil_image_view_base_sptr_data", vcl_move(Q));
+                    brdb_selection_sptr S = DATABASE->select("vil_image_view_base_sptr_data", std::move(Q));
                     if (S->size()!=1) {
                         std::cout << "in bprb_batch_process_manager::set_input_from_db(.) - no selections\n";
                     }
@@ -409,7 +411,7 @@ int main(int argc,  char** argv)
                         std::cout << "in bprb_batch_process_manager::set_input_from_db(.) - didn't get value\n";
                     }
                     vil_image_view_base_sptr depthimg=value->val<vil_image_view_base_sptr>();
-                    vil_image_view<float>* depthimg_view = static_cast<vil_image_view<float>* >(depthimg.ptr());
+                    auto* depthimg_view = static_cast<vil_image_view<float>* >(depthimg.ptr());
                     float vmin=0, vmax = 0;
                     vil_math_value_range<  float>(*depthimg_view, vmin, vmax);
                     vil_image_view<vxl_byte> byte_img = brip_vil_float_ops::convert_to_byte(*depthimg_view);
@@ -427,7 +429,7 @@ int main(int argc,  char** argv)
     if (stitch())
     {
         //construct a humungous image
-        vil_image_view<vxl_byte>* stitched = new vil_image_view<vxl_byte>(ni() * num_az(), nj() * num_in());
+        auto* stitched = new vil_image_view<vxl_byte>(ni() * num_az(), nj() * num_in());
         for (unsigned int row = 0; row < num_in(); ++row) {
             for (unsigned int col = 0; col < num_az(); ++col) {
                 //lil image to copy into big image
@@ -443,4 +445,3 @@ int main(int argc,  char** argv)
     }
     return 0;
 }
-

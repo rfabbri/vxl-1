@@ -9,8 +9,10 @@
 //
 //=======================================================================
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_vector.h>
 #include <pdf1d/pdf1d_weighted_epanech_kernel_pdf.h>
@@ -25,9 +27,7 @@ pdf1d_weighted_epanech_kernel_sampler::pdf1d_weighted_epanech_kernel_sampler():
 
 //=======================================================================
 
-pdf1d_weighted_epanech_kernel_sampler::~pdf1d_weighted_epanech_kernel_sampler()
-{
-}
+pdf1d_weighted_epanech_kernel_sampler::~pdf1d_weighted_epanech_kernel_sampler() = default;
 
 //=======================================================================
 
@@ -163,4 +163,3 @@ pdf1d_sampler* pdf1d_weighted_epanech_kernel_sampler::clone() const
 {
   return new pdf1d_weighted_epanech_kernel_sampler(*this);
 }
-

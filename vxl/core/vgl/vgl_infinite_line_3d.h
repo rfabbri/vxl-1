@@ -1,9 +1,6 @@
 // This is core/vgl/vgl_infinite_line_3d.h
 #ifndef vgl_infinite_line_3d_h_
 #define vgl_infinite_line_3d_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief A 3-d infinite line with position parameterized by orthogonal plane coordinates
@@ -15,7 +12,9 @@
 // \endverbatim
 
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_vector_2d.h>
 #include <vgl/vgl_vector_3d.h>
 #include <vgl/vgl_point_3d.h>
@@ -33,7 +32,7 @@ class vgl_infinite_line_3d
   vgl_vector_3d<Type> t_;  //!< line direction vector (tangent)
  public:
   //: Default constructor - does not initialise!
-  inline vgl_infinite_line_3d() {}
+  inline vgl_infinite_line_3d() = default;
 
   //: Copy constructor
   inline vgl_infinite_line_3d(vgl_infinite_line_3d<Type> const& l)
@@ -67,7 +66,7 @@ class vgl_infinite_line_3d
   }
 
   //: Destructor
-  inline ~vgl_infinite_line_3d() {}
+  inline ~vgl_infinite_line_3d() = default;
 
   //: Accessors
   inline vgl_vector_2d<Type> x0() const { return x0_; } // return a copy

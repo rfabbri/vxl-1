@@ -1,9 +1,6 @@
 // This is oxl/xcv/xcv_multiview.h
 #ifndef xcv_multiview_h_
 #define xcv_multiview_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author   K.Y.McGaul
@@ -22,7 +19,9 @@
 #include <vector>
 #include "xcv_twoview_manager.h"
 #include "xcv_threeview_manager.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class vgui_menu;
 

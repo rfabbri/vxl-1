@@ -10,7 +10,9 @@
 // \file
 // Based on ITK, Testing/Code/Common/itkSystemInformationTest.cxx
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <testlib/testlib_test.h>
 
 // Construct the name of the notes file.
@@ -99,14 +101,12 @@ static void test_build_info()
     vxl_BUILD_DIR "/CMakeCache.txt",
     vxl_BUILD_DIR "/CMakeError.log",
     vxl_BUILD_DIR "/core/vxl_config.h",
-    vxl_BUILD_DIR "/vcl/vcl_config_compiler.h",
-    vxl_BUILD_DIR "/vcl/vcl_config_headers.h",
-    vxl_BUILD_DIR "/vcl/vcl_config_manual.h",
+    vxl_BUILD_DIR "/vcl/vcl_compiler.h",
     vxl_BUILD_DIR "/core/vil/vil_config.h",
     vxl_BUILD_DIR "/core/vnl/vnl_config.h",
     vxl_BUILD_DIR "/v3p/dcmtk/osconfig.h",
     vxl_BUILD_DIR "/v3p/mpeg2/include/config.h",
-    VXL_NULLPTR
+    nullptr
   };
 
   for (const char** f = files; *f; f++)

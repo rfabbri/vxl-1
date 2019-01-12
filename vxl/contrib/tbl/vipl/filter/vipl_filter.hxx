@@ -7,20 +7,22 @@
 #include <iostream>
 #include <algorithm>
 #include "vipl_filter.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
-#ifdef VCL_VC
+#ifdef _MSC_VER
 #pragma warning( disable: 4390 )
 #endif
 
 template <class ImgIn,class ImgOut,class DataIn,class DataOut,int Arity,class PixelItr>
-VXL_CONSTEXPR_VAR VIPL_FILTER_STATE vipl_filter<ImgIn,ImgOut,DataIn,DataOut,Arity,PixelItr>::Not_Ready VCL_STATIC_CONST_INIT_INT_DEFN( 0 );
+constexpr VIPL_FILTER_STATE vipl_filter<ImgIn,ImgOut,DataIn,DataOut,Arity,PixelItr>::Not_Ready;
 template <class ImgIn,class ImgOut,class DataIn,class DataOut,int Arity,class PixelItr>
-VXL_CONSTEXPR_VAR VIPL_FILTER_STATE vipl_filter<ImgIn,ImgOut,DataIn,DataOut,Arity,PixelItr>::Ready VCL_STATIC_CONST_INIT_INT_DEFN( 1 );
+constexpr VIPL_FILTER_STATE vipl_filter<ImgIn,ImgOut,DataIn,DataOut,Arity,PixelItr>::Ready;
 template <class ImgIn,class ImgOut,class DataIn,class DataOut,int Arity,class PixelItr>
-VXL_CONSTEXPR_VAR VIPL_FILTER_STATE vipl_filter<ImgIn,ImgOut,DataIn,DataOut,Arity,PixelItr>::Unchanged VCL_STATIC_CONST_INIT_INT_DEFN( 2 );
+constexpr VIPL_FILTER_STATE vipl_filter<ImgIn,ImgOut,DataIn,DataOut,Arity,PixelItr>::Unchanged;
 template <class ImgIn,class ImgOut,class DataIn,class DataOut,int Arity,class PixelItr>
-VXL_CONSTEXPR_VAR VIPL_FILTER_STATE vipl_filter<ImgIn,ImgOut,DataIn,DataOut,Arity,PixelItr>::Filter_Owned VCL_STATIC_CONST_INIT_INT_DEFN( 4 );
+constexpr VIPL_FILTER_STATE vipl_filter<ImgIn,ImgOut,DataIn,DataOut,Arity,PixelItr>::Filter_Owned;
 
 //: A workhorse constructor for this abstract class.
 // If dst_image (by default) the output will be generated automatically when
@@ -169,13 +171,13 @@ template < class ImgIn, class ImgOut, class DataIn, class DataOut, int Arity, cl
     hsoutput_state(Not_Ready),
     hsnuminputs(1),
     hsinf(std::vector<inimagept>(hsnuminputs)),
-    hsoutf(VXL_NULLPTR),
-    hssrc_section(VXL_NULLPTR),
-    hsinsecp(VXL_NULLPTR),
-    hsdst_section(VXL_NULLPTR),
-    hssecp(VXL_NULLPTR),
-    hsinROA (VXL_NULLPTR),
-    hsROA (VXL_NULLPTR),
+    hsoutf(nullptr),
+    hssrc_section(nullptr),
+    hsinsecp(nullptr),
+    hsdst_section(nullptr),
+    hssecp(nullptr),
+    hsinROA (nullptr),
+    hsROA (nullptr),
     hsis_input_driven(false)
 {
 #if 0
@@ -195,7 +197,7 @@ template < class ImgIn, class ImgOut, class DataIn, class DataOut, int Arity, cl
     hsoutput_state(t.hsoutput_state),
     hsnuminputs(t.hsnuminputs),
     hsinf(std::vector<inimagept>(hsnuminputs)),
-    hsoutf(VXL_NULLPTR),
+    hsoutf(nullptr),
     hssrc_section(t.hssrc_section),
     hsinsecp(t.hsinsecp),
     hsdst_section(t.hsdst_section),
@@ -513,7 +515,7 @@ template < class ImgIn, class ImgOut, class DataIn, class DataOut, int Arity, cl
     return ref_outf();
   else {
     std::cerr << "Warning: Tried to reference a NOT READY output-data, returned 0\n";
-    return VXL_NULLPTR;
+    return nullptr;
   }
 }
 

@@ -6,13 +6,15 @@
 //:
 // \file
 
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vgl/algo/vgl_norm_trans_3d.h>
 #include <vnl/algo/vnl_svd.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
-const int TM_UNKNOWNS_COUNT = 9;
-const double DEGENERACY_THRESHOLD = 0.00001;
+constexpr int TM_UNKNOWNS_COUNT = 9;
+constexpr double DEGENERACY_THRESHOLD = 0.00001;
 
 
 //: Compute a 3D-to-3D affine transformation without translation 3 x 3 matrix
@@ -124,6 +126,3 @@ compute_p(std::vector<vgl_homg_point_3d<double> > const& points1,
   H = tr2_inv*hh*tr1;
   return true;
 }
-
-
-

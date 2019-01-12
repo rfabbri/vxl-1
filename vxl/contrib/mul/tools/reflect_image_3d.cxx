@@ -2,7 +2,9 @@
 
 #include <iostream>
 #include <exception>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_arg.h>
 #include <vul/vul_file.h>
 #include <vil3d/vil3d_reflect.h>
@@ -45,8 +47,8 @@ int main2(int argc, char *argv[])
     "The output image is written in v3i format (vimt3d_image_3d_of<float>).\n"
     "NB. Default units are metres.\n"
   );
-  vul_arg<std::string> src_file(VXL_NULLPTR, "Input image file");
-  vul_arg<std::string> dst_file(VXL_NULLPTR, "Output image file");
+  vul_arg<std::string> src_file(nullptr, "Input image file");
+  vul_arg<std::string> dst_file(nullptr, "Output image file");
   vul_arg<std::string> axis("-a", "Axis along which to reflect, i.e. X means reflect in X direction (through YZ plane)", "X");
   vul_arg<bool> image_centre("-c", "Reflect about image centre if set, otherwise about world origin", false);
   vul_arg<bool> use_mm("-mm", "World coords in units of mm", false);

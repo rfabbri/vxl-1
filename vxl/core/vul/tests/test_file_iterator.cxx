@@ -2,7 +2,9 @@
 #include <iostream>
 #include <fstream>
 #include <map>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpl/vpl.h>
 #include <vul/vul_temp_filename.h>
 
@@ -307,7 +309,7 @@ void test_file_iterator_dos()
 
 static void test_file_iterator()
 {
-#ifndef VCL_WIN32
+#ifndef _WIN32
   test_file_iterator_unix();
 #else
   test_file_iterator_dos();

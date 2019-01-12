@@ -19,7 +19,9 @@
 #include <rrel/rrel_lms_obj.h>
 #include <rrel/rrel_ran_sam_search.h>
 #include <rrel/rrel_muset_obj.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <ipts/ipts_draw.h>
 
 #include <bapl/bapl_bbf_tree.h>
@@ -76,8 +78,7 @@ int main( int argc, char* argv[] )
   int max_dim2 = (image2.ni()>image2.nj())?image2.ni():image2.nj();
   bapl_lowe_clusterer clusterer(max_dim1, max_dim2, 10.0);
 
-  for (unsigned i=0; i<keypoints2.size(); ++i){
-    bapl_keypoint_sptr query = keypoints2[i];
+  for (const auto& query : keypoints2){
     std::vector<bapl_keypoint_sptr> matches;
     bbf.n_nearest(query, matches, 2, 50);
     if ( vnl_vector_ssd(query->descriptor(),matches[0]->descriptor()) <
@@ -108,7 +109,7 @@ int main( int argc, char* argv[] )
 #endif
 
   // Construct the estimation problem
-  bapl_affine2d_est * est = new bapl_affine2d_est( clusters[0] );
+  auto * est = new bapl_affine2d_est( clusters[0] );
 
   //double max_outlier_frac = 0.5;
   double desired_prob_good = 0.99;
@@ -117,8 +118,8 @@ int main( int argc, char* argv[] )
 
   est->set_no_prior_scale();
 
-  rrel_muset_obj* muset = new rrel_muset_obj( clusters[0].size()+1 );
-  rrel_ran_sam_search * ransam = new rrel_ran_sam_search;
+  auto* muset = new rrel_muset_obj( clusters[0].size()+1 );
+  auto * ransam = new rrel_ran_sam_search;
   ransam->set_trace_level(trace_level);
   ransam->set_sampling_params( 1 - muset->min_inlier_fraction(),
                                desired_prob_good,
@@ -172,4 +173,3 @@ int main( int argc, char* argv[] )
   std::cout <<  "done!" <<std::endl;
   return 0;
 }
-

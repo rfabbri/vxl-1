@@ -2,7 +2,9 @@
 #include <iostream>
 #include <sstream>
 #include <iterator>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <mbl/mbl_read_multi_props.h>
 #include <testlib/testlib_test.h>
@@ -26,8 +28,6 @@ void test_read_multi_props_ws()
   std::cout << "\n*********************************\n"
            <<   " Testing mbl_read_multi_props_ws\n"
            <<   "*********************************\n";
-
-#if VCL_HAS_WORKING_STRINGSTREAM
   {
     std::cout << "\nCase 1\n";
     std::istringstream ss("{}");
@@ -285,9 +285,9 @@ void test_read_multi_props_ws()
       std::vector<std::string> val;
       props.get_required_properties("a", val);
       std::vector<std::string> true_val;
-      true_val.push_back("a1");
-      true_val.push_back("a2");
-      true_val.push_back("a3");
+      true_val.emplace_back("a1");
+      true_val.emplace_back("a2");
+      true_val.emplace_back("a3");
       TEST("Case 14a: present, correct", val, true_val);
     }
     {
@@ -348,9 +348,9 @@ void test_read_multi_props_ws()
       std::vector<std::string> val;
       props.get_required_properties("a", val);
       std::vector<std::string> true_val;
-      true_val.push_back("a1");
-      true_val.push_back("a2");
-      true_val.push_back("a3");
+      true_val.emplace_back("a1");
+      true_val.emplace_back("a2");
+      true_val.emplace_back("a3");
       TEST("Case 14a: present, correct", val, true_val);
     }
     {
@@ -411,9 +411,9 @@ void test_read_multi_props_ws()
       std::vector<std::string> val;
       props.get_optional_properties("a", val);
       std::vector<std::string> true_val;
-      true_val.push_back("a1");
-      true_val.push_back("a2");
-      true_val.push_back("a3");
+      true_val.emplace_back("a1");
+      true_val.emplace_back("a2");
+      true_val.emplace_back("a3");
       TEST("Case 15a: \"a\" present, correct", val, true_val);
     }
     {
@@ -486,9 +486,6 @@ void test_read_multi_props_ws()
   }
 
   std::cout << "\n\n";
-#else // VCL_HAS_WORKING_STRINGSTREAM
-  std::cout << "\nTests not run since this compiler has no fully functional std:stringstream\n\n";
-#endif // VCL_HAS_WORKING_STRINGSTREAM
 }
 
 void test_read_multi_props()

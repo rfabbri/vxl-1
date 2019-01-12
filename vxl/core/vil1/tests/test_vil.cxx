@@ -2,7 +2,9 @@
 #include <iostream>
 #include <vil1/vil1_vil.h>
 #include <vxl_config.h> // for vxl_byte
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <testlib/testlib_test.h>
 #include <vil1/vil1_memory_image_of.h>
 #include <vil1/vil1_load.h>
@@ -15,7 +17,7 @@ static void test_vil(int argc, char* argv[])
   if ( argc >= 2 )
   {
     image_base = argv[1];
-#ifdef VCL_WIN32
+#ifdef _WIN32
     image_base += "\\";
 #else
     image_base += "/";

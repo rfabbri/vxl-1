@@ -14,7 +14,9 @@
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_box_3d.h>
 #include <vgl/vgl_box_2d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_file.h>
 
 //smart pointer stuff
@@ -35,15 +37,15 @@ class bstm_scene : public vbl_ref_count
 {
   public:
     //: empty scene, needs to be initialized manually
-    bstm_scene() {}
+    bstm_scene() = default;
 
     bstm_scene(std::string data_path, vgl_point_3d<double> const& origin, int version = 2);
 
     //: initializes scene from xmlFile
-    bstm_scene(std::string filename);
+    bstm_scene(const std::string& filename);
 
     //: destructor
-    ~bstm_scene() { }
+    ~bstm_scene() override = default;
 
     //: save scene xml file
     void save_scene();
@@ -80,7 +82,7 @@ class bstm_scene : public vbl_ref_count
     //: mutable reference
     bstm_block_metadata& get_block_metadata(bstm_block_id id) { return blocks_[id]; }
     //: const so return a copy
-    bstm_block_metadata get_block_metadata_const(bstm_block_id id) const;
+    bstm_block_metadata get_block_metadata_const(const bstm_block_id& id) const;
 
 
     std::vector<bstm_block_id> get_block_ids() const;
@@ -121,7 +123,7 @@ class bstm_scene : public vbl_ref_count
 
     //: appearance model accessor
     std::vector<std::string> appearances()  const { return appearances_; }
-    bool has_data_type(std::string data_type);
+    bool has_data_type(const std::string& data_type);
 
     //: scene version number
     int version() { return version_; }

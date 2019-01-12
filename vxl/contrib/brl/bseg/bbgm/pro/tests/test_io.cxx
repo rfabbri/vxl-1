@@ -1,10 +1,11 @@
 #include <string>
 #include <iostream>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpl/vpl.h>
 //For backwards compatibility
-#include <vcl_string.h>
 #include <bbgm/bbgm_image_of.h>
 #include <bbgm/bbgm_image_sptr.h>
 #include <bsta/bsta_attributes.h>
@@ -55,8 +56,8 @@ namespace
 void test_io_function_2(void)
 {
   std::cout << "Starting test_io2\n";
-  const float window_size = 50.0;
-  const unsigned int max_components = 3;
+  constexpr float window_size = 50.0;
+  constexpr unsigned int max_components = 3;
   const float init_var = 0.01f;
   const unsigned int ni = 640, nj = 480;
 
@@ -97,7 +98,7 @@ void test_io_function_2(void)
   if (!iv) good = false;
   std::string test;
   if (good){
-    brdb_value_t<bbgm_image_sptr>* vp =
+    auto* vp =
     static_cast<brdb_value_t<bbgm_image_sptr>*>(iv.ptr());
     test = vp->value()->is_a();
   }
@@ -109,14 +110,14 @@ void test_io_function_2(void)
 
 static void test_io()
 {
-  REGISTER_DATATYPE(vcl_string);
+  REGISTER_DATATYPE_LONG_FORM(std::string, vcl_string );
   REGISTER_DATATYPE( bbgm_image_sptr );
   REG_PROCESS_FUNC_CONS(bprb_func_process, bprb_batch_process_manager, bbgm_save_image_of_process, "bbgmSaveImageOfProcess");
   REG_PROCESS_FUNC_CONS(bprb_func_process, bprb_batch_process_manager, bbgm_load_image_of_process, "bbgmLoadImageOfProcess");
   std::cout << "Starting test_io\n";
   bbgm_loader::register_loaders();
-  const float window_size = 50.0;
-  const unsigned int max_components = 3;
+  constexpr float window_size = 50.0;
+  constexpr unsigned int max_components = 3;
   const float init_var = 0.01f;
   const unsigned int ni = 640, nj = 480;
 
@@ -131,7 +132,6 @@ static void test_io()
   typedef bsta_num_obs<mix_gauss_type> obs_mix_gauss_type;
 
   typedef bsta_num_obs<bsta_gauss_sf1> sph_gauss_type;
-  typedef bsta_num_obs<bsta_mixture_fixed<sph_gauss_type, 3> > sph_mix_gauss_type_fixed;
 
   bsta_gauss_if3 init_gauss( init_mean, init_covar );
   bsta_mg_window_updater<mix_gauss_type> updater( init_gauss,
@@ -160,7 +160,7 @@ static void test_io()
   if (!iv) good = false;
   std::string test;
   if (good){
-    brdb_value_t<bbgm_image_sptr>* vp =
+    auto* vp =
     static_cast<brdb_value_t<bbgm_image_sptr>*>(iv.ptr());
     test = vp->value()->is_a();
   }

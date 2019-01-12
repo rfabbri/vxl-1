@@ -17,8 +17,10 @@
 #include <cmath>
 #include <iosfwd>
 #include <iostream>
-#include <vcl_compiler.h>
 #include <vector>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vnl_vector_fixed.h>
 
@@ -46,7 +48,7 @@ public:
   ~bstm_time_tree() {
     if (is_owning_ && bits_) {
       delete[] bits_;
-      bits_ = VXL_NULLPTR;
+      bits_ = nullptr;
     }
   }
 

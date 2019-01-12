@@ -1,7 +1,9 @@
 #include <iostream>
 #include <cmath>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bbgm/bbgm_image_of.h>
 #include <bsta/bsta_gauss_sf1.h>
 #include <vil/vil_image_view.h>
@@ -28,5 +30,3 @@ static void test_neighborhood_ops()
 }
 
 TESTMAIN(test_neighborhood_ops);
-
-

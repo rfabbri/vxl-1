@@ -1,6 +1,3 @@
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \brief Progress class that outputs elapsed time reporting on progress
@@ -10,7 +7,9 @@
 #include <iostream>
 #include <ios>
 #include "mbl_progress_time.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 //========================================================================
@@ -27,9 +26,7 @@ mbl_progress_time::mbl_progress_time(std::ostream& os/*=std::cout*/)
 //========================================================================
 // Destructor
 //========================================================================
-mbl_progress_time::~mbl_progress_time()
-{
-}
+mbl_progress_time::~mbl_progress_time() = default;
 
 
 //========================================================================
@@ -56,7 +53,7 @@ void mbl_progress_time::on_set_estimated_iterations(const std::string& identifie
 // Called when set_progress() is called for a given identifier.
 //========================================================================
 void mbl_progress_time::on_set_progress(const std::string& identifier,
-                                        const int progress)
+                                        const int  /*progress*/)
 {
   double tsec = timer_.real()/1000.0;
   os_ << "Elapsed time for mbl_progress_time \"" << identifier << "\": " << tsec << " s" << std::endl;

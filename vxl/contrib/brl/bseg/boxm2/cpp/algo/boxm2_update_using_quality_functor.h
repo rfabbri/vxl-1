@@ -10,14 +10,16 @@
 #include <boxm2/cpp/algo/boxm2_mog3_grey_processor.h>
 #include <boxm2/cpp/algo/boxm2_gauss_grey_processor.h>
 #include <vil/vil_image_view.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 template <boxm2_data_type APM_TYPE>
 class boxm2_update_using_quality_pass2_functor
 {
  public:
   //: "default" constructor
-  boxm2_update_using_quality_pass2_functor() {}
+  boxm2_update_using_quality_pass2_functor() = default;
 
   bool init_data(std::vector<boxm2_data_base*> & datas,
                  vil_image_view<float> * pre_img,vil_image_view<float> * vis_img,
@@ -72,7 +74,7 @@ class boxm2_update_using_quality_functor
 {
  public:
   //: "default" constructor
-  boxm2_update_using_quality_functor() {}
+  boxm2_update_using_quality_functor() = default;
 
   bool init_data(std::vector<boxm2_data_base*> & datas, float block_len, int max_levels)
   {

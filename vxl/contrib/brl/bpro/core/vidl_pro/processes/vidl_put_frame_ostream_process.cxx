@@ -7,7 +7,9 @@
 #include <vidl/vidl_ostream.h>
 #include <vidl/vidl_convert.h>
 #include <bprb/bprb_parameters.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Constructor
 bool vidl_put_frame_ostream_process_cons(bprb_func_process& pro)
@@ -15,8 +17,8 @@ bool vidl_put_frame_ostream_process_cons(bprb_func_process& pro)
   //input
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("vidl_ostream_sptr"); // the output stream
-  input_types.push_back("vil_image_view_base_sptr");// the frame image view
+  input_types.emplace_back("vidl_ostream_sptr"); // the output stream
+  input_types.emplace_back("vil_image_view_base_sptr");// the frame image view
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
@@ -49,4 +51,3 @@ bool vidl_put_frame_ostream_process(bprb_func_process& pro)
   }
   return true;
 }
-

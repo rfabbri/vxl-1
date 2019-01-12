@@ -3,8 +3,9 @@
 #include <testlib/testlib_test.h>
 #include "../bmdl_processes.h"
 
-#include <vcl_compiler.h>
-#include <vcl_string.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vgl/vgl_polygon.h>
 #include <vgl/io/vgl_io_polygon.h>
@@ -22,7 +23,7 @@
 static void test_bmdl_trace_boundaries_process(int argc, char* argv[])
 {
   REG_PROCESS_FUNC(bprb_func_process, bprb_batch_process_manager, bmdl_trace_boundaries_process, "bmdlTraceBoundariesProcess");
-  REGISTER_DATATYPE(vcl_string);
+  REGISTER_DATATYPE_LONG_FORM(std::string,vcl_string);
   REGISTER_DATATYPE(vil_image_view_base_sptr);
 
   std::string image_base;

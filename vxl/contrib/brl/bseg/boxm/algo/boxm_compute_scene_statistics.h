@@ -4,7 +4,9 @@
 // \file
 #include <iostream>
 #include <boxm/boxm_scene.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bsta/bsta_histogram.h>
 
 //: Compute histogram of a simple-type scenes. e.g. T_data = float, double
@@ -14,7 +16,6 @@ bool boxm_compute_scene_statistics(boxm_scene<boct_tree<T_loc, T_data > >* scene
   std::cout << " Using compute_scene_statistics\n";
 
   typedef boct_tree<T_loc, T_data> tree_type;
-  typedef boct_tree_cell<T_loc,T_data> cell_type;
 
   //(1) Traverse the leaves of the scene
   boxm_cell_iterator<tree_type > iterator = scene->cell_iterator(&boxm_scene<tree_type>::load_block, true);

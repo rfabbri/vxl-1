@@ -6,7 +6,9 @@
 // \file
 
 #include <bprb/bprb_parameters.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bhdfs/bhdfs_vil_save.h>
 #include <vil/vil_image_view_base.h>
 
@@ -50,4 +52,3 @@ bool bhdfs_save_image_view_process(bprb_func_process& pro)
   else
     return true;
 }
-

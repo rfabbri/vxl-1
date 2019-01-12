@@ -1,9 +1,6 @@
 // This is core/vil1/vil1_file_image.h
 #ifndef vil1_file_image_h_
 #define vil1_file_image_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Class to load an image from disk
@@ -11,7 +8,9 @@
 // \date 15 Mar 00
 
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil1/vil1_image.h>
 
 //: Load an image from disk
@@ -25,7 +24,7 @@ class vil1_file_image : public vil1_image
   };
 
   // Default constructor
-  vil1_file_image() {}
+  vil1_file_image() = default;
 
   //: Attempt to load named file
   vil1_file_image(char const* filename, verbosity v=verbose) {load(filename,v);}

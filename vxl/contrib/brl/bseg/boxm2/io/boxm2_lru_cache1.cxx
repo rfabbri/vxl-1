@@ -4,10 +4,12 @@
 //:
 // \file
 #include <boxm2/boxm2_block_metadata.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: PUBLIC create method, for creating singleton instance of boxm2_cache1
-void boxm2_lru_cache1::create(boxm2_scene_sptr scene, BOXM2_IO_FS_TYPE fs_type)
+void boxm2_lru_cache1::create(const boxm2_scene_sptr& scene, BOXM2_IO_FS_TYPE fs_type)
 {
   if (boxm2_cache1::exists())
   {
@@ -27,7 +29,7 @@ void boxm2_lru_cache1::create(boxm2_scene_sptr scene, BOXM2_IO_FS_TYPE fs_type)
 }
 
 //: constructor, set the directory path
-boxm2_lru_cache1::boxm2_lru_cache1(boxm2_scene_sptr scene, BOXM2_IO_FS_TYPE fs_type) : boxm2_cache1(scene,fs_type)
+boxm2_lru_cache1::boxm2_lru_cache1(const boxm2_scene_sptr& scene, BOXM2_IO_FS_TYPE fs_type) : boxm2_cache1(scene,fs_type)
 {
   scene_dir_ = scene->data_path();
 }
@@ -36,10 +38,9 @@ boxm2_lru_cache1::boxm2_lru_cache1(boxm2_scene_sptr scene, BOXM2_IO_FS_TYPE fs_t
 boxm2_lru_cache1::~boxm2_lru_cache1()
 {
   // save the data and delete
-  for (std::map<std::string, std::map<boxm2_block_id, boxm2_data_base*> >::iterator iter = cached_data_.begin();
-       iter != cached_data_.end(); iter++)
+  for (auto & iter : cached_data_)
   {
-    for (std::map<boxm2_block_id, boxm2_data_base*>::iterator it = iter->second.begin(); it != iter->second.end(); it++) {
+    for (auto it = iter.second.begin(); it != iter.second.end(); it++) {
       boxm2_block_id id = it->first;
 #if 0 // Currently causing some blocks to not save
       if (!it->second->read_only_) {
@@ -49,18 +50,17 @@ boxm2_lru_cache1::~boxm2_lru_cache1()
       // now throw it away
       delete it->second;
     }
-    iter->second.clear();
+    iter.second.clear();
   }
 
-  for (std::map<boxm2_block_id, boxm2_block*>::iterator iter = cached_blocks_.begin();
-       iter != cached_blocks_.end(); iter++)
+  for (auto & cached_block : cached_blocks_)
   {
-    boxm2_block_id id = iter->first;
+    boxm2_block_id id = cached_block.first;
 #if 0 // Currently causing some blocks to not save
     if (!iter->second->read_only())
       boxm2_sio_mgr::save_block(scene_dir_, iter->second);
 #endif
-    delete iter->second;
+    delete cached_block.second;
   }
 }
 
@@ -69,18 +69,16 @@ boxm2_lru_cache1::~boxm2_lru_cache1()
 void boxm2_lru_cache1::clear_cache()
 {
   // delete
-  for (std::map<std::string, std::map<boxm2_block_id, boxm2_data_base*> >::iterator iter = cached_data_.begin();
-       iter != cached_data_.end(); iter++)
+  for (auto & iter : cached_data_)
   {
-    for (std::map<boxm2_block_id, boxm2_data_base*>::iterator it = iter->second.begin(); it != iter->second.end(); it++)
+    for (auto it = iter.second.begin(); it != iter.second.end(); it++)
       delete it->second;
-    iter->second.clear();
+    iter.second.clear();
   }
   cached_data_.clear();
 
-  for (std::map<boxm2_block_id, boxm2_block*>::iterator iter = cached_blocks_.begin();
-       iter != cached_blocks_.end(); iter++)
-    delete iter->second;
+  for (auto & cached_block : cached_blocks_)
+    delete cached_block.second;
   cached_blocks_.clear();
 }
 
@@ -124,7 +122,7 @@ boxm2_data_base* boxm2_lru_cache1::get_data_base(boxm2_block_id id, std::string 
     this->cached_data_map(type);
 
   // then look for the block you're requesting
-  std::map<boxm2_block_id, boxm2_data_base*>::iterator iter = data_map.find(id);
+  auto iter = data_map.find(id);
   if ( iter != data_map.end() )
   {
     // congrats you've found the data block in cache, update cache and return block
@@ -200,7 +198,7 @@ boxm2_data_base* boxm2_lru_cache1::get_data_base_new(boxm2_block_id id, std::str
   std::map<boxm2_block_id, boxm2_data_base*>& data_map = this->cached_data_map(type);
 
   // then look for the block you're requesting
-  std::map<boxm2_block_id, boxm2_data_base*>::iterator iter = data_map.find(id);
+  auto iter = data_map.find(id);
   if ( iter != data_map.end() )
   {
     // congrats you've found the data block in cache, now throw it away
@@ -220,7 +218,7 @@ void boxm2_lru_cache1::remove_data_base(boxm2_block_id id, std::string type)
   std::map<boxm2_block_id, boxm2_data_base*>& data_map =
     this->cached_data_map(type);
   // then look for the block you're requesting
-  std::map<boxm2_block_id, boxm2_data_base*>::iterator rem = data_map.find(id);
+  auto rem = data_map.find(id);
   if ( rem != data_map.end() )
   {
     // found the block,
@@ -247,7 +245,7 @@ void boxm2_lru_cache1::replace_data_base(boxm2_block_id id, std::string type, bo
     this->cached_data_map(type);
 
   // find old data base and copy it's read_only/write status
-  std::map<boxm2_block_id, boxm2_data_base*>::iterator rem = data_map.find(id);
+  auto rem = data_map.find(id);
   if ( rem != data_map.end() )
   {
     // found the block,
@@ -269,7 +267,7 @@ void boxm2_lru_cache1::replace_data_base(boxm2_block_id id, std::string type, bo
 }
 
 //: helper method returns a reference to correct data map (ensures one exists)
-std::map<boxm2_block_id, boxm2_data_base*>& boxm2_lru_cache1::cached_data_map(std::string prefix)
+std::map<boxm2_block_id, boxm2_data_base*>& boxm2_lru_cache1::cached_data_map(const std::string& prefix)
 {
   // if map for this particular data type doesn't exist, initialize it
   if ( cached_data_.find(prefix) == cached_data_.end() )
@@ -284,7 +282,7 @@ std::map<boxm2_block_id, boxm2_data_base*>& boxm2_lru_cache1::cached_data_map(st
 }
 
 //: helper method says whether or not block id is valid
-bool boxm2_lru_cache1::is_valid_id(boxm2_block_id id)
+bool boxm2_lru_cache1::is_valid_id(const boxm2_block_id& id)
 {
   // use scene here to determine if this id is valid
   return scene_->block_exists(id);
@@ -323,22 +321,20 @@ std::string boxm2_lru_cache1::to_string()
 void boxm2_lru_cache1::write_to_disk()
 {
    // save the data and delete
-  for (std::map<std::string, std::map<boxm2_block_id, boxm2_data_base*> >::iterator iter = cached_data_.begin();
-       iter != cached_data_.end(); iter++)
+  for (auto & iter : cached_data_)
   {
-    for (std::map<boxm2_block_id, boxm2_data_base*>::iterator it = iter->second.begin(); it != iter->second.end(); it++) {
+    for (auto it = iter.second.begin(); it != iter.second.end(); it++) {
       boxm2_block_id id = it->first;
       // if (!it->second->read_only_)
-        boxm2_sio_mgr::save_block_data_base(scene_dir_, it->first, it->second, iter->first);
+        boxm2_sio_mgr::save_block_data_base(scene_dir_, it->first, it->second, iter.first);
     }
   }
 
-  for (std::map<boxm2_block_id, boxm2_block*>::iterator iter = cached_blocks_.begin();
-       iter != cached_blocks_.end(); iter++)
+  for (auto & cached_block : cached_blocks_)
   {
-    boxm2_block_id id = iter->first;
+    boxm2_block_id id = cached_block.first;
     // if (!iter->second->read_only())
-    boxm2_sio_mgr::save_block(scene_dir_, iter->second);
+    boxm2_sio_mgr::save_block(scene_dir_, cached_block.second);
   }
 }
 
@@ -347,4 +343,3 @@ std::ostream& operator<<(std::ostream &s, boxm2_lru_cache1& scene)
 {
   return s << scene.to_string();
 }
-

@@ -25,15 +25,15 @@ bool bsvg_bar_plot_initialize_process_cons(bprb_func_process& pro)
   //inputs
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("float");  // width of the drawing region in the svg file
-  input_types.push_back("float");  // height
-  input_types.push_back("vcl_string");  // title of the plot
+  input_types.emplace_back("float");  // width of the drawing region in the svg file
+  input_types.emplace_back("float");  // height
+  input_types.emplace_back("vcl_string");  // title of the plot
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   //output
   std::vector<std::string> output_types;
-  output_types.push_back("bxml_document_sptr");
+  output_types.emplace_back("bxml_document_sptr");
   ok = pro.set_output_types(output_types);
   return ok;
 }
@@ -48,11 +48,11 @@ bool bsvg_bar_plot_initialize_process(bprb_func_process& pro)
 
   // get input
   unsigned i = 0;
-  float w = pro.get_input<float>(i++);
-  float h = pro.get_input<float>(i++);
+  auto w = pro.get_input<float>(i++);
+  auto h = pro.get_input<float>(i++);
   std::string title = pro.get_input<std::string>(i++);
 
-  bsvg_plot* p = new bsvg_plot(w, h);
+  auto* p = new bsvg_plot(w, h);
   bxml_document_sptr pd = p;
   p->set_margin(40);
   p->set_font_size(15);
@@ -72,10 +72,10 @@ bool bsvg_bar_plot_add_process_cons(bprb_func_process& pro)
   //inputs
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("bxml_document_sptr");
-  input_types.push_back("float");  // height
-  input_types.push_back("vcl_string");  // label
-  input_types.push_back("vcl_string");  // color
+  input_types.emplace_back("bxml_document_sptr");
+  input_types.emplace_back("float");  // height
+  input_types.emplace_back("vcl_string");  // label
+  input_types.emplace_back("vcl_string");  // color
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
@@ -96,11 +96,11 @@ bool bsvg_bar_plot_add_process(bprb_func_process& pro)
   // get input
   unsigned i = 0;
   bxml_document_sptr doc = pro.get_input<bxml_document_sptr>(i++);
-  float h = pro.get_input<float>(i++);
+  auto h = pro.get_input<float>(i++);
   std::string label = pro.get_input<std::string>(i++);
   std::string color = pro.get_input<std::string>(i++);
 
-  bsvg_plot* p = dynamic_cast<bsvg_plot*>(doc.ptr());
+  auto* p = dynamic_cast<bsvg_plot*>(doc.ptr());
   p->add_bar(h, label, true, color);
   return true;
 }
@@ -110,8 +110,8 @@ bool bsvg_plot_write_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("bxml_document_sptr");
-  input_types.push_back("vcl_string");  // out file
+  input_types.emplace_back("bxml_document_sptr");
+  input_types.emplace_back("vcl_string");  // out file
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
   std::vector<std::string> output_types;
@@ -132,4 +132,3 @@ bool bsvg_plot_write_process(bprb_func_process& pro)
   bxml_write(out_file, *doc);
   return true;
 }
-

@@ -13,8 +13,10 @@
 
 //=======================================================================
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <mbl/mbl_parse_block.h>
 #include <mbl/mbl_read_props.h>
 #include <clsfy/clsfy_binary_threshold_1d_builder.h>
@@ -28,7 +30,7 @@ clsfy_binary_1d_wrapper_builder::clsfy_binary_1d_wrapper_builder():
 //: Create a new untrained linear classifier with binary output
   clsfy_classifier_base* clsfy_binary_1d_wrapper_builder::new_classifier() const
 {
-  vcl_unique_ptr<clsfy_classifier_1d> c_1d(builder_1d_->new_classifier());
+  std::unique_ptr<clsfy_classifier_1d> c_1d(builder_1d_->new_classifier());
 
   clsfy_binary_1d_wrapper classifier;
   classifier.set_classifier_1d(*c_1d);
@@ -69,9 +71,9 @@ double clsfy_binary_1d_wrapper_builder::build(
   assert(* std::max_element(outputs.begin(), outputs.end()) <= 1);
   assert(classifier.is_class("clsfy_binary_1d_wrapper"));
 
-  clsfy_binary_1d_wrapper &c_wrap = (clsfy_binary_1d_wrapper &) classifier;
+  auto &c_wrap = (clsfy_binary_1d_wrapper &) classifier;
 
-  vcl_unique_ptr<clsfy_classifier_1d> c_1d(builder_1d_->new_classifier());
+  std::unique_ptr<clsfy_classifier_1d> c_1d(builder_1d_->new_classifier());
 
   vnl_vector<double> inputs_1d(inputs.size());
   unsigned i=0;
@@ -108,7 +110,7 @@ double clsfy_binary_1d_wrapper_builder::build(
 
 void clsfy_binary_1d_wrapper_builder::b_write(vsl_b_ostream &bfs) const
 {
-  const short version_no=1;
+  constexpr short version_no = 1;
   vsl_b_write(bfs, version_no);
   vsl_b_write(bfs, builder_1d_);
 }
@@ -152,7 +154,7 @@ void clsfy_binary_1d_wrapper_builder::config(std::istream &as)
 
   {
     std::stringstream ss2(props.get_required_property("builder_1d"));
-    vcl_unique_ptr<clsfy_builder_1d> b_1d =
+    std::unique_ptr<clsfy_builder_1d> b_1d =
       clsfy_builder_1d::new_builder(ss2);
   }
 

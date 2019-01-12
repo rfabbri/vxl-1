@@ -2,7 +2,9 @@
 #include <string>
 #include <testlib/testlib_test.h>
 #include <bsta/bsta_von_mises.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h> // for pi
 
 // do not remove the following text
@@ -61,10 +63,8 @@ void test_von_mises_type(T epsilon, const std::string& type_name)
 
 static void test_von_mises()
 {
-#if VCL_CAN_DO_PARTIAL_SPECIALIZATION
   test_von_mises_type(float(1e-5),"float");
   test_von_mises_type(double(1e-7),"double");
-#endif
 }
 
 TESTMAIN(test_von_mises);

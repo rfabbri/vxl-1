@@ -1,7 +1,9 @@
 #include <iostream>
 #include <vcl_where_root_dir.h>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_vector.h>
 #include <vnl/algo/vnl_cholesky.h>
 #include <bocl/bocl_manager.h>
@@ -12,7 +14,7 @@
 
 void ocl_levenberg_marquardt(vnl_vector<float> x,
                              vnl_vector<float> y,
-                             int m, int n, int max_iter)
+                             int m, int n, int  /*max_iter*/)
 {
   //load BOCL stuff
   bocl_manager_child &mgr = bocl_manager_child::instance();

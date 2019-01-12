@@ -9,7 +9,9 @@
 
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_vector_3d.h>
 #include <vgl/vgl_ray_3d.h>
@@ -106,9 +108,9 @@ class vsph_camera_bounds
 
  private:
   //: constructor private - class contains static methods only
-  vsph_camera_bounds();
+  vsph_camera_bounds() = delete;
   //: destructor private - class contains static methods only
-  ~vsph_camera_bounds();
+  ~vsph_camera_bounds() = delete;
 };
 
 //: scan the principal ray over a cone defined by the half apex angle.
@@ -121,7 +123,7 @@ class principal_ray_scan
 {
  public:
   principal_ray_scan(double cone_half_angle, unsigned& n_samples);
-  ~principal_ray_scan() {}
+  ~principal_ray_scan() = default;
   //: number of scan states
   unsigned n_states() const {return theta_.size();}
   //: reset the scan state
@@ -147,7 +149,7 @@ class principal_ray_scan
   vgl_point_3d<double> pt_on_unit_sphere(unsigned i) const;
 
  private:
-  principal_ray_scan() {}
+  principal_ray_scan() = default;
   int index_;
   std::vector<double> theta_;
   std::vector<double> phi_;

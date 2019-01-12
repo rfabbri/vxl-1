@@ -1,6 +1,8 @@
 // This is mul/vimt/tests/test_gaussian_pyramid_builder_2d_general.cxx
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpl/vpl.h> // vpl_unlink()
 #include <vimt/vimt_image_2d_of.h>
 #include <vimt/vimt_gaussian_pyramid_builder_2d_general.h>
@@ -62,7 +64,7 @@ static void test_gaussian_pyramid_builder_2d_general()
 
   TEST("Found correct number of levels", image_pyr.n_levels(), 2);
 
-  const vimt_image_2d_of<vxl_byte>& image1 = static_cast<const vimt_image_2d_of<vxl_byte>&>(image_pyr(1));
+  const auto& image1 = static_cast<const vimt_image_2d_of<vxl_byte>&>(image_pyr(1));
   TEST("Level 1 size x",image1.image().ni(),(unsigned)(ni/1.2+0.5));
   TEST("Level 1 size y",image1.image().nj(),(unsigned)(nj/1.2+0.5));
   TEST("Pixel (0,0)",image1.image()(0,0),1);
@@ -119,7 +121,7 @@ static void test_gaussian_pyramid_builder_2d_general()
   bfs_out.close();
 
   vimt_gaussian_pyramid_builder_2d_general<vxl_byte> builder_in;
-  vimt_image_pyramid_builder* ptr_in=VXL_NULLPTR;
+  vimt_image_pyramid_builder* ptr_in=nullptr;
 
   vsl_b_ifstream bfs_in(test_path);
   TEST(("Opened " + test_path + " for reading").c_str(), (!bfs_in), false);

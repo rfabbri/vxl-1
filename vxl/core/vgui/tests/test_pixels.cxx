@@ -1,7 +1,9 @@
 // \author fsm
 
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_sprintf.h>
 #include <vgui/vgui_gl.h>
 #include <vgui/vgui_pixel.h>

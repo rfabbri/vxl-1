@@ -1,12 +1,11 @@
 // This is gel/vdgl/vdgl_edgel.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 
 #include <iostream>
 #include "vdgl_edgel.h"
 #include <vgl/vgl_point_2d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 vdgl_edgel::vdgl_edgel( const double x, const double y, const double grad, const double theta )
   : p_( x, y), grad_( grad), theta_( theta)
@@ -36,4 +35,3 @@ std::ostream&  operator<<(std::ostream& s, const vdgl_edgel& p)
   return s << "<vdgl_edgel (" << p.p_.x() << ", " << p.p_.y() << "),("
            << p.grad_ << ", " << p.theta_ <<  ")>";
 }
-

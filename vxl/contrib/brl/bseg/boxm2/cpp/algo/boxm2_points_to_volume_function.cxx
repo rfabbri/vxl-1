@@ -4,7 +4,7 @@
 #include "boxm2_points_to_volume_function.h"
 //:
 // \file
-#include <vcl_cassert.h>
+#include <cassert>
 #include <bbas/imesh/imesh_vertex.h>
 #include <imesh/algo/imesh_intersect.h>
 #include <imesh/imesh_operations.h>
@@ -12,11 +12,13 @@
 #include <bvgl/bvgl_triangle_3d.h>
 #include <vgl/vgl_box_3d.h>
 #include <vgl/vgl_point_3d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: constructor - populates list of AABBs
-boxm2_points_to_volume::boxm2_points_to_volume(boxm2_scene_sptr scene,
-                                               boxm2_cache_sptr cache,
+boxm2_points_to_volume::boxm2_points_to_volume(const boxm2_scene_sptr& scene,
+                                               const boxm2_cache_sptr& cache,
                                                imesh_mesh& points)
 : scene_(scene),
   cache_(cache),
@@ -24,7 +26,7 @@ boxm2_points_to_volume::boxm2_points_to_volume(boxm2_scene_sptr scene,
 {
   //store mesh triangles
   std::cout<<"Triangulating points:"<<std::endl;
-  vcl_unique_ptr<imesh_regular_face_array<3> > meshTris = imesh_triangulate(points_.faces());
+  std::unique_ptr<imesh_regular_face_array<3> > meshTris = imesh_triangulate(points_.faces());
   std::cout<<"   ... done."<<std::endl;
 
   //store bvpgl triangles
@@ -72,18 +74,18 @@ void boxm2_points_to_volume::fillVolume()
     //------ Store alphas in cache ----------
     //count data lengths for this blocr
     std::size_t dataLen=0;
-    for (unsigned int i=0; i<datas.size(); ++i)
-      dataLen += datas[i].size();
+    for (auto & data : datas)
+      dataLen += data.size();
     if (dataLen < nTrees)
       std::cout<<"NOT ALL TREES HAVE DATA THATS NO GOOD"<<std::endl;
 
     //initialize block data
     boxm2_data_base* newA = new boxm2_data_base(new char[dataLen * sizeof(float) ], dataLen * sizeof(float), id);
-    float* fullAlphas = reinterpret_cast<float*>(newA->data_buffer());
+    auto* fullAlphas = reinterpret_cast<float*>(newA->data_buffer());
     std::size_t c=0;
-    for (unsigned int i=0; i<datas.size(); ++i)
-      for (unsigned int j=0; j<datas[i].size(); ++j)
-        fullAlphas[c++] = datas[i][j];
+    for (auto & data : datas)
+      for (unsigned int j=0; j<data.size(); ++j)
+        fullAlphas[c++] = data[j];
 
     //Replace data in the cache
     boxm2_cache_sptr cache = boxm2_cache::instance();
@@ -175,7 +177,7 @@ void boxm2_points_to_volume::refine_tree(boct_bit_tree& tree,
                                          bvgl_triangle_3d<double>& tri,
                                          std::vector<float>& alpha)
 {
-  const int maxCell = 9;
+  constexpr int maxCell = 9;
   double blockLen = treeBox.width();
   boct_bit_tree orig(tree);
   unsigned int origSize = tree.num_cells();
@@ -267,8 +269,8 @@ boxm2_points_to_volume::tris_in_box(const vgl_box_3d<double>& bbox,
   }
 
   //use AABBs for faster collision detection
-  std::vector<bvgl_triangle_3d<double> >::const_iterator tri = tris.begin();
-  std::vector<vgl_box_3d<double> >::const_iterator box = bboxes.begin();
+  auto tri = tris.begin();
+  auto box = bboxes.begin();
   for ( ; tri != tris.end(); ++tri, ++box) {
     if (!bbox_intersect(*box, bbox))
       continue;
@@ -285,7 +287,7 @@ boxm2_points_to_volume::tris_in_box(const imesh_mesh& mesh, vgl_box_3d<double>& 
 {
   std::vector<bvgl_triangle_3d<double> > contained;
   const imesh_vertex_array<3>& verts = mesh.vertices<3>();
-  vcl_unique_ptr<imesh_regular_face_array<3> > tris = imesh_triangulate(mesh.faces());
+  std::unique_ptr<imesh_regular_face_array<3> > tris = imesh_triangulate(mesh.faces());
   imesh_regular_face_array<3>::const_iterator iter;
   for (iter = tris->begin(); iter != tris->end(); ++iter) {
     imesh_regular_face<3> idx =(*iter);

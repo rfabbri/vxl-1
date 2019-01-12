@@ -6,7 +6,9 @@
 #include <vidl/vidl_dshow.h>
 
 #include <vul/vul_timer.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #if 0 // Commented out
 const std::string config_file = "core/vidl/examples/config.dshow.logitech"; // config.euresys.vid1

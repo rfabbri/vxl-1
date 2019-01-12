@@ -6,8 +6,10 @@
 // \file
 
 #include <vul/vul_timer.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include "brip_vil_float_ops.h"
 
 //-----------------------------------------------------------------------
@@ -74,8 +76,7 @@ brip_para_cvrg::brip_para_cvrg(brip_para_cvrg_params& pdp) :
 //-----------------------------------------------------------------------------
 //: Destructor.
 brip_para_cvrg::~brip_para_cvrg()
-{
-}
+= default;
 
 //-----------------------------------------------------------------------------
 //: Convolves the image with the smoothing kernel.  Private.

@@ -12,7 +12,7 @@ static void vtol_test_timing()
 
   vul_timer t;
   // make a network of s^2 vertices and edges on an s by s grid
-  const int s = 100;
+  constexpr int s = 100;
   // make the vertices
   vertex_list verts(s*s);
   t.mark();
@@ -51,9 +51,9 @@ static void vtol_test_timing()
   // count the outgoing edges of all vertices
   t.mark();
   int n_vedges = 0;
-  for (vertex_list::iterator vit = verts.begin(); vit != verts.end(); vit++)
+  for (auto & vert : verts)
   {
-    edge_list vedges; (*vit)->edges(vedges);
+    edge_list vedges; vert->edges(vedges);
     n_vedges += vedges.size();
   }
   std::cout << "Time to count edges per vertex " << t.real()
@@ -85,9 +85,9 @@ static void vtol_test_timing()
   // count the faces adjacent to all vertices
   t.mark();
   int n_vfaces = 0;
-  for (vertex_list::iterator vit = verts.begin(); vit != verts.end(); vit++)
+  for (auto & vert : verts)
   {
-    face_list vfaces; (*vit)->faces(vfaces);
+    face_list vfaces; vert->faces(vfaces);
     n_vfaces += vfaces.size();
   }
   std::cout << "Time to count faces per vertex " << t.real() << " msecs\n";

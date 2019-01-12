@@ -2,7 +2,9 @@
 #include <iostream>
 #include <testlib/testlib_test.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil3d/vil3d_image_resource.h>
 #include <vil3d/vil3d_math.h>
 #include <vil3d/vil3d_new.h>
@@ -11,7 +13,7 @@
 
 
 template <class T>
-inline void test_image_resource(std::string type, vil_pixel_format format, T /*dummy*/)
+inline void test_image_resource(const std::string& type, vil_pixel_format format, T /*dummy*/)
 {
   std::cout << "******************************************************************\n"
            << " Testing vil3d_image_resource objects with pixel type = " << type << '\n'

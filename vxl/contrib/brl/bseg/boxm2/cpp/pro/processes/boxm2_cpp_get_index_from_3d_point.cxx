@@ -1,4 +1,5 @@
 // This is brl/bseg/boxm2/cpp/pro/processes/boxm2_cpp_get_index_from_3d_point_process.cxx
+#include <fstream>
 #include <bprb/bprb_func_process.h>
 //:
 // \file
@@ -7,7 +8,6 @@
 // \author Andy Neff
 // \date Oct 15 2015
 
-#include <fstream>
 #include <boxm2/io/boxm2_cache.h>
 #include <boxm2/io/boxm2_stream_cache.h>
 #include <boxm2/boxm2_scene.h>
@@ -20,14 +20,14 @@
 
 namespace boxm2_cpp_get_index_from_3d_point_process_globals
 {
-  const unsigned n_inputs_ =  5;
-  const unsigned n_outputs_ = 4;
+  constexpr unsigned n_inputs_ = 5;
+  constexpr unsigned n_outputs_ = 4;
 }
 
 namespace boxm2_cpp_get_3d_point_from_index_process_globals
 {
-  const unsigned n_inputs_ =  6;
-  const unsigned n_outputs_ = 7;
+  constexpr unsigned n_inputs_ = 6;
+  constexpr unsigned n_outputs_ = 7;
 }
 
 bool boxm2_cpp_get_index_from_3d_point_process_cons(bprb_func_process& pro)
@@ -100,9 +100,9 @@ bool  boxm2_cpp_get_index_from_3d_point_process(bprb_func_process& pro)
   unsigned i = 0;
   boxm2_scene_sptr scene =pro.get_input<boxm2_scene_sptr>(i++);
   boxm2_cache_sptr cache= pro.get_input<boxm2_cache_sptr>(i++);
-  float x =pro.get_input<float>(i++);
-  float y =pro.get_input<float>(i++);
-  float z =pro.get_input<float>(i++);
+  auto x =pro.get_input<float>(i++);
+  auto y =pro.get_input<float>(i++);
+  auto z =pro.get_input<float>(i++);
 
   vgl_point_3d<double> local;
   boxm2_block_id id;
@@ -218,4 +218,3 @@ bool  boxm2_cpp_get_3d_point_from_index_process(bprb_func_process& pro)
 
   return false;
 }
-

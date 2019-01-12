@@ -4,13 +4,15 @@
 #include <iostream>
 #include <cmath>
 #include <cstdlib>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vil1/vil1_new.h>
 #include <vil1/vil1_load.h>
 #include <vil1/vil1_rgb.h>
 
-void vil1_scale(vil1_image in, int newxsize, int newysize, vil1_image out);
+void vil1_scale(const vil1_image& in, int newxsize, int newysize, const vil1_image& out);
 
 int main(int argc, char ** argv)
 {
@@ -34,8 +36,8 @@ int main(int argc, char ** argv)
 }
 
 
-const int SCALE = 4096;
-const int HALFSCALE = 2048;
+constexpr int SCALE = 4096;
+constexpr int HALFSCALE = 2048;
 
 struct pnmscale {
   int rows, cols, format, newformat, newrows, newcols, newpixels;
@@ -136,7 +138,7 @@ struct pnmscale {
   int current_outrow;
   vil1_image out;
 
-  void init(vil1_image in, vil1_image out)
+  void init(const vil1_image& in, const vil1_image& out)
   {
     this->in = in;
     this->out = out;
@@ -237,7 +239,7 @@ void pnmscaleT<T, longT>::go()
   else
     tempxelrow = new T[cols];
 
-  longT* gs = new longT[cols];
+  auto* gs = new longT[cols];
   int rowsread = 0;
   fracrowleft = syscale;
   needtoreadrow = 1;
@@ -359,7 +361,7 @@ template struct pnmscaleT<unsigned char, long>;
 
 template struct pnmscaleT<vil1_rgb<unsigned char>, vil1_rgb<long> >;
 
-void vil1_scale(vil1_image in, int newxsize, int newysize, vil1_image out)
+void vil1_scale(const vil1_image& in, int newxsize, int newysize, const vil1_image& out)
 {
   pnmscaleT<vil1_rgb<unsigned char> , vil1_rgb<long> > p;
   p.set_xsize(newxsize);

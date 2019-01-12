@@ -13,12 +13,14 @@
 #include <vil/vil_convert.h>
 #include <vil/vil_save.h>
 #include <bbas_pro/bbas_1d_array_float.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 namespace boxm2_blob_precision_recall_process_globals
 {
-  const unsigned n_inputs_ = 3;
-  const unsigned n_outputs_ = 4;
+  constexpr unsigned n_inputs_ = 3;
+  constexpr unsigned n_outputs_ = 4;
 
   // do pixelwise sort on the image, and then
   struct Pair {
@@ -36,9 +38,9 @@ bool boxm2_blob_precision_recall_process_cons(bprb_func_process& pro)
 
   // this process takes 3 inputs:
   std::vector<std::string> input_types;
-  input_types.push_back("vil_image_view_base_sptr");  // image
-  input_types.push_back("vil_image_view_base_sptr");  // ground truth map
-  input_types.push_back("vil_image_view_base_sptr");  // mask image
+  input_types.emplace_back("vil_image_view_base_sptr");  // image
+  input_types.emplace_back("vil_image_view_base_sptr");  // ground truth map
+  input_types.emplace_back("vil_image_view_base_sptr");  // mask image
   if (! pro.set_input_types(input_types))
     return false;
 
@@ -48,10 +50,10 @@ bool boxm2_blob_precision_recall_process_cons(bprb_func_process& pro)
 
   // this process takes 4 outputs:
   std::vector<std::string> output_types;
-  output_types.push_back("bbas_1d_array_float_sptr");  // tp
-  output_types.push_back("bbas_1d_array_float_sptr");  // tn
-  output_types.push_back("bbas_1d_array_float_sptr");  // fp
-  output_types.push_back("bbas_1d_array_float_sptr");  // fp
+  output_types.emplace_back("bbas_1d_array_float_sptr");  // tp
+  output_types.emplace_back("bbas_1d_array_float_sptr");  // tn
+  output_types.emplace_back("bbas_1d_array_float_sptr");  // fp
+  output_types.emplace_back("bbas_1d_array_float_sptr");  // fp
   return pro.set_output_types(output_types);
 }
 
@@ -68,9 +70,9 @@ bool boxm2_blob_precision_recall_process(bprb_func_process& pro)
 
   // get the inputs
   unsigned i=0;
-  vil_image_view_base_sptr detection_map_sptr    = pro.get_input<vil_image_view_base_sptr>(i++);
+  vil_image_view_base_sptr detection_map_sptr = pro.get_input<vil_image_view_base_sptr>(i++);
   vil_image_view_base_sptr ground_truth_map_sptr = pro.get_input<vil_image_view_base_sptr>(i++);
-  vil_image_view_base_sptr mask_map_sptr         = pro.get_input<vil_image_view_base_sptr>(i++);
+  vil_image_view_base_sptr mask_map_sptr = pro.get_input<vil_image_view_base_sptr>(i++);
 
   // catch a "null" mask (not really null because that throws an error)
   bool use_mask = true;
@@ -80,9 +82,9 @@ bool boxm2_blob_precision_recall_process(bprb_func_process& pro)
   }
 
   // true positive, true negative, false positive, false negative
-  const unsigned int numPoints = 100;
-  bbas_1d_array_float * precision = new bbas_1d_array_float(numPoints);
-  bbas_1d_array_float * recall    = new bbas_1d_array_float(numPoints);
+  constexpr unsigned int numPoints = 100;
+  auto * precision = new bbas_1d_array_float(numPoints);
+  auto * recall = new bbas_1d_array_float(numPoints);
   vil_image_view<float> * detection_map;
 
   // check bounds to make sure they match
@@ -100,7 +102,7 @@ bool boxm2_blob_precision_recall_process(bprb_func_process& pro)
   }
 
   // convert detection map to [0,1] float
-  if (vil_image_view<unsigned char> * detection_map_uchar=dynamic_cast<vil_image_view<unsigned char> *>(detection_map_sptr.ptr())) {
+  if (auto * detection_map_uchar=dynamic_cast<vil_image_view<unsigned char> *>(detection_map_sptr.ptr())) {
     detection_map =new vil_image_view<float>(detection_map_uchar->ni(),detection_map_uchar->nj());
     vil_convert_stretch_range_limited<unsigned char>(*detection_map_uchar,*detection_map,0,255,0.0f,1.0f);
   }
@@ -113,12 +115,12 @@ bool boxm2_blob_precision_recall_process(bprb_func_process& pro)
   }
 
   // cast to usable image views
-  vil_image_view<vxl_byte> * gt_uchar = dynamic_cast<vil_image_view<vxl_byte> *>(ground_truth_map_sptr.ptr());
+  auto * gt_uchar = dynamic_cast<vil_image_view<vxl_byte> *>(ground_truth_map_sptr.ptr());
   if ( !gt_uchar ) {
     std::cout<<"boxm2_blob_precision_recall_process:: gt map is not an unsigned char map"<<std::endl;
     return false;
   }
-  vil_image_view<unsigned char> * mask_map=dynamic_cast<vil_image_view<unsigned char> *>(mask_map_sptr.ptr());
+  auto * mask_map=dynamic_cast<vil_image_view<unsigned char> *>(mask_map_sptr.ptr());
   if (!mask_map) {
     std::cout<<"boxm2_blob_precision_recall_process:: mask map is not an unsigned char map"<<std::endl;
     return false;
@@ -138,7 +140,7 @@ bool boxm2_blob_precision_recall_process(bprb_func_process& pro)
     for (unsigned i=0; i<detection_map->ni(); ++i) {
       Pair p;
       p.change = (*detection_map)(i,j);
-      p.gt     = gt_map(i,j);
+      p.gt = gt_map(i,j);
       pairs[c] = p;
       ++c;
     }
@@ -148,8 +150,8 @@ bool boxm2_blob_precision_recall_process(bprb_func_process& pro)
 #endif // 0
 
   //grab thresholds by evenly dispersing them through examples
-  float* thresholds = new float[numPoints];
-  float  incr       = 1.0f/(float)numPoints; // = totPix / numPoints;
+  auto* thresholds = new float[numPoints];
+  float  incr = 1.0f/(float)numPoints; // = totPix / numPoints;
   for (unsigned int i=0; i<numPoints; ++i) {
     thresholds[i] = i*incr + .01f; //pairs[i*incr].change;
 #ifdef DEBUG
@@ -181,10 +183,9 @@ bool boxm2_blob_precision_recall_process(bprb_func_process& pro)
     vil_save(blbImage, fname.str().c_str());
 
     //cross check each ground truth blob against change blobs for coverage
-    for (unsigned g=0; g<gt_blobs.size(); ++g) {
-      boxm2_change_blob& gt_blob = gt_blobs[g];
-      for (unsigned c=0; c<blobs.size(); ++c) {
-        if ( gt_blob.percent_overlap( blobs[c] ) > .25f )
+    for (auto & gt_blob : gt_blobs) {
+      for (auto & blob : blobs) {
+        if ( gt_blob.percent_overlap( blob ) > .25f )
           true_positives++;
       }
     }
@@ -192,7 +193,7 @@ bool boxm2_blob_precision_recall_process(bprb_func_process& pro)
 
     //set precision and recall
     precision->data_array[pnt] = blobs.size()==0 ? 0 : true_positives / blobs.size();
-    recall->data_array[pnt]    = true_positives / gt_blobs.size();
+    recall->data_array[pnt] = true_positives / gt_blobs.size();
   }
 
   // set outputs
@@ -204,4 +205,3 @@ bool boxm2_blob_precision_recall_process(bprb_func_process& pro)
   pro.set_output_val<bbas_1d_array_float_sptr>(1, recall);
   return true;
 }
-

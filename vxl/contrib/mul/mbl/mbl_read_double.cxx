@@ -1,7 +1,4 @@
 // This is mul/mbl/mbl_read_double.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \brief Asks question and waits for an answer
@@ -31,9 +28,11 @@
 #include <iostream>
 #include <cstdio>
 #include "mbl_read_double.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
-const int MAX_LEN = 40;
+constexpr int MAX_LEN = 40;
 
 // If min_d != 0 or max_d != 0 then prints range but doesn't check that reply is in range
 double RD_ReadDouble1(const char *q_str, double default_d,
@@ -49,7 +48,7 @@ double RD_ReadDouble1(const char *q_str, double default_d,
     std::cout<<q_str<<" ["<<min_d<<".."<<max_d<<"] ("<<default_d<<") :";
     std::cout.flush();
 
-    if (std::fgets(reply,MAX_LEN,stdin)!=VXL_NULLPTR)
+    if (std::fgets(reply,MAX_LEN,stdin)!=nullptr)
     {
       double r = default_d;
       if (reply[0]=='\n' || std::sscanf(reply,"%lf",&r)>0)
@@ -77,4 +76,3 @@ double mbl_read_double( const char *q_str, double default_d,
       return R; // acceptable
   }
 }
-

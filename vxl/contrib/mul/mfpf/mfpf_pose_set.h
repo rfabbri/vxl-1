@@ -9,7 +9,9 @@
 #include <cstdlib>
 #include <mfpf/mfpf_pose.h>
 #include <vsl/vsl_vector_io.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 struct mfpf_pose_set
 {
@@ -51,8 +53,8 @@ inline void vsl_b_write(vsl_b_ostream& bfs,
 {
   vsl_b_write(bfs,short(1));  // Version number
   vsl_b_write(bfs,unsigned(p.size()));
-  for (unsigned i=0;i<p.size();++i)
-    vsl_b_write(bfs,p[i]);
+  for (const auto & i : p)
+    vsl_b_write(bfs,i);
 }
 
 //: Read in vector of feature points from stream
@@ -77,4 +79,3 @@ inline void vsl_b_read(vsl_b_istream& bfs,
 }
 
 #endif // mfpf_pose_set_h_
-

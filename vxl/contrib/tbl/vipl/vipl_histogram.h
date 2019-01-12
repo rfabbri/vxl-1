@@ -72,7 +72,7 @@
 //   consistency and allow one to chose which "column" in the 2D output image
 //   was used to store the histogram.
 //
-template <class ImgIn,class ImgOut,class DataIn,class DataOut, VCL_DFL_TYPE_PARAM_STLDECL(PixelItr, vipl_trivial_pixeliter) >
+template <class ImgIn,class ImgOut,class DataIn,class DataOut, class PixelItr = vipl_trivial_pixeliter >
 class vipl_histogram : public vipl_filter_2d<ImgIn,ImgOut,DataIn,DataOut,PixelItr>
 {
   // -+-+- data members: -+-+-
@@ -97,7 +97,7 @@ class vipl_histogram : public vipl_filter_2d<ImgIn,ImgOut,DataIn,DataOut,PixelIt
            , shiftin_(shi)
            , scaleout_(so)
            , indexout_(0)
-           , checkrange_(0)
+           , checkrange_(false)
       {
         this->put_is_input_driven(true); // get sections from input
       }
@@ -112,13 +112,13 @@ class vipl_histogram : public vipl_filter_2d<ImgIn,ImgOut,DataIn,DataOut,PixelIt
       {
         this->put_is_input_driven(true); // get sections from input
       }
-  inline ~vipl_histogram() {}
+  inline ~vipl_histogram() override = default;
 
 // -+-+- required method for filters: -+-+-
-  bool section_applyop();
+  bool section_applyop() override;
 
   //: Use the preop stage to zero this histogram.
-  bool section_preop();
+  bool section_preop() override;
 };
 
 #ifdef INSTANTIATE_TEMPLATES

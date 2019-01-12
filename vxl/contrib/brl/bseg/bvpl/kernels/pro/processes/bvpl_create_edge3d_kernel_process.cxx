@@ -18,8 +18,8 @@
 namespace bvpl_create_edge3d_kernel_process_globals
 {
   //the specs of this kernel are specified as parameters
-  const unsigned n_inputs_ = 10;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 10;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 
@@ -66,10 +66,10 @@ bool bvpl_create_edge3d_kernel_process(bprb_func_process& pro)
   int min_z = pro.get_input<int>(i++);
   int max_z = pro.get_input<int>(i++);
 
-  float axis_x = pro.get_input<float>(i++);
-  float axis_y = pro.get_input<float>(i++);
-  float axis_z = pro.get_input<float>(i++);
-  float angle = pro.get_input<float>(i++);
+  auto axis_x = pro.get_input<float>(i++);
+  auto axis_y = pro.get_input<float>(i++);
+  auto axis_z = pro.get_input<float>(i++);
+  auto angle = pro.get_input<float>(i++);
 
   vnl_float_3 axis(axis_x,axis_y, axis_z);
 
@@ -85,4 +85,3 @@ bool bvpl_create_edge3d_kernel_process(bprb_func_process& pro)
 
   return true;
 }
-

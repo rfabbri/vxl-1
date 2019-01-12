@@ -30,7 +30,9 @@
 #include <vil3d/vil3d_image_view.h>
 #include <vil3d/algo/vil3d_distance_transform.h>
 #include <vnl/vnl_vector_fixed.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Multiplies 2 grids. The types of input grids must have a * operator
 template <class T>
@@ -232,8 +234,8 @@ bool bvxm_load_polygon_into_grid(bvxm_voxel_grid<T>* grid,
                                  T val)
 {
   vgl_box_3d<double> bb;
-  for (unsigned i=0; i < v_list.size(); ++i)
-    bb.add(v_list[i]);
+  for (const auto & i : v_list)
+    bb.add(i);
 
   vgl_vector_3d<unsigned int> grid_size = grid->grid_size();
   vgl_box_3d<double> grid_box;

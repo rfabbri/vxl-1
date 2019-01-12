@@ -1,11 +1,10 @@
 // This is oxl/osl/examples/run_osl_harris.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation "vul_arg.h"//otherwise "unresolved typeinfo vul_arg_base"
-#endif
 
 #include <string>
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_arg.h>
 #include <vil1/vil1_image.h>
 #include <vil1/vil1_load.h>

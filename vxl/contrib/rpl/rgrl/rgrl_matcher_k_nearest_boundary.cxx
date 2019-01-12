@@ -8,7 +8,10 @@
 #include "rgrl_feature_set.h"
 #include "rgrl_feature_trace_pt.h"
 #include "rgrl_cast.h"
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 rgrl_matcher_k_nearest_boundary::
 rgrl_matcher_k_nearest_boundary( unsigned int k )
@@ -160,4 +163,3 @@ match_boundary_pts_helper(vbl_array_2d<double> const& dist_error,
 
   return best_assignment;
 }
-

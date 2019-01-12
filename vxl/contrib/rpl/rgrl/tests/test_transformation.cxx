@@ -1,7 +1,9 @@
 //:
 // \file
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <testlib/testlib_test.h>
 
@@ -197,7 +199,7 @@ test_trans_homography()
 
   testlib_test_begin( "Construct 2D homography transform object" );
   rgrl_transformation_sptr xform = new rgrl_trans_homography2d( H );
-  testlib_test_perform( xform != VXL_NULLPTR );
+  testlib_test_perform( xform != nullptr );
 
   testlib_test_begin( "Transform 2D location" );
 
@@ -281,7 +283,7 @@ void test_trans_rigid()
 
   bool statusdet = true;
 
-  const int NUM_TRIALS = 1000;
+  constexpr int NUM_TRIALS = 1000;
 
   for (int qqq=0; qqq<NUM_TRIALS; qqq++)
   {

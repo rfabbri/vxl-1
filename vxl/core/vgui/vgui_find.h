@@ -1,16 +1,15 @@
 // This is core/vgui/vgui_find.h
 #ifndef vgui_find_h_
 #define vgui_find_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author  fsm
 // \brief   Functions to search for tableaux in the tableau hierarchy.
 
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgui/vgui_tableau_sptr.h>
 
 //: Search for a tableau by type in the hierarchy.

@@ -10,7 +10,9 @@
 // \author Vishal Jain
 // \date Aug 28, 2014
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2_multi/boxm2_multi_cache.h>
 #include <boxm2_multi/algo/boxm2_multi_render.h>
 
@@ -31,8 +33,8 @@
 
 namespace boxm2_multi_render_process_globals
 {
-  const unsigned n_inputs_  = 8;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 8;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 bool boxm2_multi_render_process_cons(bprb_func_process& pro)
@@ -58,8 +60,8 @@ bool boxm2_multi_render_process_cons(bprb_func_process& pro)
 
   // in case the 7th input is not set
   brdb_value_sptr idx = new brdb_value_t<std::string>("");
-  brdb_value_sptr tnearfactor   = new brdb_value_t<float>(100000.0f);  //by default update alpha
-  brdb_value_sptr tfarfactor   = new brdb_value_t<float>(100000.0f);  //by default update alpha
+  brdb_value_sptr tnearfactor = new brdb_value_t<float>(100000.0f);  //by default update alpha
+  brdb_value_sptr tfarfactor = new brdb_value_t<float>(100000.0f);  //by default update alpha
 
   pro.set_input(5, idx);
   pro.set_input(6, tnearfactor);
@@ -82,13 +84,13 @@ bool boxm2_multi_render_process(bprb_func_process& pro)
   boxm2_multi_cache_sptr multi_cache= pro.get_input<boxm2_multi_cache_sptr>(i++);
   boxm2_scene_sptr scene =pro.get_input<boxm2_scene_sptr>(i++);
   vpgl_camera_double_sptr cam= pro.get_input<vpgl_camera_double_sptr>(i++);
-  unsigned ni=pro.get_input<unsigned>(i++);
-  unsigned nj=pro.get_input<unsigned>(i++);
+  auto ni=pro.get_input<unsigned>(i++);
+  auto nj=pro.get_input<unsigned>(i++);
   std::string ident = pro.get_input<std::string>(i++);
-  float   nearfactor   = pro.get_input<float>(i++);
-  float   farfactor    = pro.get_input<float>(i++);
+  auto   nearfactor = pro.get_input<float>(i++);
+  auto   farfactor = pro.get_input<float>(i++);
   boxm2_multi_render renderer;
-  vil_image_view<float>* exp_img_out=new vil_image_view<float>(ni,nj);
+  auto* exp_img_out=new vil_image_view<float>(ni,nj);
   float gpu_time = renderer.render(*(multi_cache.ptr()), *exp_img_out, cam);
 
   i=0;

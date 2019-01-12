@@ -1,7 +1,4 @@
 // This is core/vgui/vgui_section_render.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
@@ -9,9 +6,11 @@
 #include <cmath>
 #include "vgui_section_render.h"
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
-#include <vcl_climits.h> // for UCHAR_MAX
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
+#include <climits>// for UCHAR_MAX
 // not used? #include <iostream>
 #include <vgui/internals/vgui_rasterpos.h>
 #include <vgui/internals/vgui_accelerate.h>
@@ -21,7 +20,7 @@ static inline float fsm_min(float x, float y) { return x<y ? x : y; }
 
 // Set to 1 for verbose debugging.
 #if 0
-# include <vcl_cstdio.h>
+#include <cstdio>
 # define fsm_debug std::printf
 #else
 static inline void fsm_debug(char const *, ...) { }

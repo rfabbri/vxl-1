@@ -1,6 +1,9 @@
 // This is core/vgl/algo/vgl_h_matrix_1d_compute_3point.cxx
 #include "vgl_h_matrix_1d_compute_3point.h"
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //
 // computes 1d Moebius map from three point correspondences :
@@ -45,4 +48,3 @@ compute_cool_homg(const std::vector<vgl_homg_point_1d<double> >& points1,
   H.set(&T[0][0]);
   return true;
 }
-

@@ -42,13 +42,13 @@ bool vpgl_compute_affine_from_rat_process(bprb_func_process& pro)
 {
   unsigned i = 0;
   vpgl_camera_double_sptr camera = pro.get_input<vpgl_camera_double_sptr>(i++);
-  double min_x = pro.get_input<double>(i++);
-  double min_y = pro.get_input<double>(i++);
-  double min_z = pro.get_input<double>(i++);
-  double max_x = pro.get_input<double>(i++);
-  double max_y = pro.get_input<double>(i++);
-  double max_z = pro.get_input<double>(i++);
-  unsigned n_points = pro.get_input<unsigned>(i++);
+  auto min_x = pro.get_input<double>(i++);
+  auto min_y = pro.get_input<double>(i++);
+  auto min_z = pro.get_input<double>(i++);
+  auto max_x = pro.get_input<double>(i++);
+  auto max_y = pro.get_input<double>(i++);
+  auto max_z = pro.get_input<double>(i++);
+  auto n_points = pro.get_input<unsigned>(i++);
   if (n_points <= 3)
     n_points = 10;   // make it minimum 10 points
 
@@ -56,7 +56,7 @@ bool vpgl_compute_affine_from_rat_process(bprb_func_process& pro)
     std::cout << pro.name() <<" :--  Input 0  is not valid!\n";
     return false;
   }
-  vpgl_local_rational_camera<double>* rat_camera = dynamic_cast<vpgl_local_rational_camera<double>*> (camera.as_pointer());
+  auto* rat_camera = dynamic_cast<vpgl_local_rational_camera<double>*> (camera.as_pointer());
   if (!rat_camera) {
     std::cout << pro.name() <<" :--  Input camera is not a local rational camera!\n";
     return false;
@@ -77,10 +77,10 @@ bool vpgl_compute_affine_from_rat_process(bprb_func_process& pro)
     double x = rng.drand64()*width + min_x;  // sample in local coords
     double y = rng.drand64()*depth + min_y;
     double z = rng.drand64()*height + min_z;
-    world_pts.push_back(vgl_point_3d<double>(x,y,z));
+    world_pts.emplace_back(x,y,z);
     double u, v;
     camera->project(x,y,z,u,v);  // local rational camera has an lvcs, so it handles, local coord to global to image point projection internally
-    image_pts.push_back(vgl_point_2d<double>(u,v));
+    image_pts.emplace_back(u,v);
   }
 
   vpgl_affine_camera<double>* out_camera = vpgl_affine_rectification::compute_affine_cam(image_pts, world_pts);

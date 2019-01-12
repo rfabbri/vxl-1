@@ -15,7 +15,9 @@
 #include <vil/vil_image_view.h>
 #include <vil/vil_copy.h>
 #include <bsta/bsta_joint_histogram.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 bool helper_function(double p_b_current, double p_f_current,
                      double p_b_current1, double p_f_current1,
@@ -313,7 +315,7 @@ brec_bayesian_propagation::run(brec_fg_pair_density& fgp, brec_fg_bg_pair_densit
 }
 
 bool helper_function2(double p_b_current, double p_f_current,
-                      double p_b_current1, double p_f_current1, // both unused - FIXME
+                      double  /*p_b_current1*/, double  /*p_f_current1*/, // both unused - FIXME
                       double p_bb, double p_bf, double p_fb, double p_ff,
                       double& out1, double& out2, double& out3, double& out4) {
   //: now compute 4 multipliers
@@ -484,5 +486,3 @@ brec_bayesian_propagation::run_area(vil_image_view<float>& area_map, float lambd
   vil_copy_deep(temp, bg_map_);
   return true;
 }
-
-

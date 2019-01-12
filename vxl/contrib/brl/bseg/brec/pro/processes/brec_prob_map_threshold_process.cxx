@@ -17,7 +17,9 @@
 #include <iostream>
 #include <bprb/bprb_func_process.h>
 #include <bprb/bprb_parameters.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <brdb/brdb_value.h>
 #include <vil/vil_image_view.h>
 #include <vil/vil_convert.h>
@@ -29,17 +31,17 @@ bool brec_prob_map_threshold_process_cons(bprb_func_process& pro)
   //inputs
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("vil_image_view_base_sptr"); //input probability frame
-  input_types.push_back("vil_image_view_base_sptr"); //input probability frame's mask
-  input_types.push_back("vil_image_view_base_sptr"); //orig_view
-  input_types.push_back("float"); //threshold
+  input_types.emplace_back("vil_image_view_base_sptr"); //input probability frame
+  input_types.emplace_back("vil_image_view_base_sptr"); //input probability frame's mask
+  input_types.emplace_back("vil_image_view_base_sptr"); //orig_view
+  input_types.emplace_back("float"); //threshold
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   //output
   std::vector<std::string> output_types;
-  output_types.push_back("vil_image_view_base_sptr");   // output a thresholded image where red channel is binarized wrt given threshold
-  output_types.push_back("vil_image_view_base_sptr");   // output a thresholded image where red channel is mapped wrt prob
+  output_types.emplace_back("vil_image_view_base_sptr");   // output a thresholded image where red channel is binarized wrt given threshold
+  output_types.emplace_back("vil_image_view_base_sptr");   // output a thresholded image where red channel is mapped wrt prob
   ok = pro.set_output_types(output_types);
   return ok;
 }
@@ -67,7 +69,7 @@ bool brec_prob_map_threshold_process(bprb_func_process& pro)
   temp = pro.get_input<vil_image_view_base_sptr>(i++);
   vil_image_view<vxl_byte> input_img(temp);
 
-  float thres = pro.get_input<float>(i++);
+  auto thres = pro.get_input<float>(i++);
 
   vil_image_view<vxl_byte> out(ni, nj, 3);
   out.fill(0);
@@ -110,4 +112,3 @@ bool brec_prob_map_threshold_process(bprb_func_process& pro)
 
   return true;
 }
-

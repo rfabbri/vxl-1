@@ -27,7 +27,7 @@ class rgrl_initializer
   rgrl_initializer() : use_prior_scale_from_match_(true)
   {   }
 
-  virtual ~rgrl_initializer();
+  ~rgrl_initializer() override;
 
   //: Get next initial view.
   //
@@ -80,7 +80,7 @@ class rgrl_initializer
 
  protected:
   //: Generate a prior scale depending on current settings
-  rgrl_scale_sptr enforce_prior_scale( rgrl_scale_sptr match_scale );
+  rgrl_scale_sptr enforce_prior_scale( const rgrl_scale_sptr& match_scale );
 
  protected:
   rgrl_scale_sptr prior_scale_;

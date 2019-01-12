@@ -21,7 +21,7 @@
 #include <vipl/filter/vipl_filter_2d.h> // parent class
 
 //: vipl_sobel convolution filter
-template <class ImgIn,class ImgOut,class DataIn,class DataOut, VCL_DFL_TYPE_PARAM_STLDECL(PixelItr, vipl_trivial_pixeliter) >
+template <class ImgIn,class ImgOut,class DataIn,class DataOut, class PixelItr = vipl_trivial_pixeliter >
 class vipl_sobel : public vipl_filter_2d<ImgIn,ImgOut,DataIn,DataOut,PixelItr>
 {
   // -+-+- no data members: -+-+-
@@ -31,10 +31,10 @@ class vipl_sobel : public vipl_filter_2d<ImgIn,ImgOut,DataIn,DataOut,PixelItr>
            : vipl_filter_2d<ImgIn,ImgOut,DataIn,DataOut,PixelItr>() {}
   inline vipl_sobel(vipl_sobel const& A)
            : vipl_filter_2d<ImgIn,ImgOut,DataIn,DataOut,PixelItr>(A) {}
-  inline ~vipl_sobel() {}
+  inline ~vipl_sobel() override = default;
 
   // -+-+- required method for filters: -+-+-
-  bool section_applyop();
+  bool section_applyop() override;
 };
 
 #ifdef INSTANTIATE_TEMPLATES

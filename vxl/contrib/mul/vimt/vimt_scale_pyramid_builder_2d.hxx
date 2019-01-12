@@ -11,14 +11,16 @@
 #include <iostream>
 #include <cmath>
 #include "vimt_scale_pyramid_builder_2d.h"
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vil/vil_bilin_interp.h>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_vector_2d.h>
 #include <vimt/vimt_image_2d_of.h>
 #include <vimt/vimt_image_pyramid.h>
 #include <vsl/vsl_indent.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vimt/vimt_crop.h>
 
 //=======================================================================
@@ -41,9 +43,7 @@ vimt_scale_pyramid_builder_2d<T>::vimt_scale_pyramid_builder_2d(double scale_ste
 //=======================================================================
 
 template <class T>
-vimt_scale_pyramid_builder_2d<T>::~vimt_scale_pyramid_builder_2d()
-{
-}
+vimt_scale_pyramid_builder_2d<T>::~vimt_scale_pyramid_builder_2d() = default;
 
 template <class T>
 void vimt_scale_pyramid_builder_2d<T>::scale_reduce(

@@ -12,21 +12,21 @@
 
 
 typedef vnl_vector_fixed<unsigned char,16> uchar16;
-bool boxm2_vecf_ocl_store_nbrs::get_scene_appearance( boxm2_scene_sptr scene,
+bool boxm2_vecf_ocl_store_nbrs::get_scene_appearance( const boxm2_scene_sptr& scene,
                                     std::string& options)
 {
     std::vector<std::string> apps = scene->appearances();
     bool foundDataType = false;
-    for (unsigned int i=0; i<apps.size(); ++i) {
-        if ( apps[i] == boxm2_data_traits<BOXM2_MOG3_GREY>::prefix() )
+    for (const auto & app : apps) {
+        if ( app == boxm2_data_traits<BOXM2_MOG3_GREY>::prefix() )
         {
-            app_type_ = apps[i];
+            app_type_ = app;
             foundDataType = true;
             options=" -D MOG_TYPE_8 ";
         }
-        else if ( apps[i] == boxm2_data_traits<BOXM2_MOG3_GREY_16>::prefix() )
+        else if ( app == boxm2_data_traits<BOXM2_MOG3_GREY_16>::prefix() )
         {
-            app_type_ = apps[i];
+            app_type_ = app;
             foundDataType = true;
             options=" -D MOG_TYPE_16 ";
         }
@@ -40,7 +40,7 @@ bool boxm2_vecf_ocl_store_nbrs::get_scene_appearance( boxm2_scene_sptr scene,
     return true;
 }
 boxm2_vecf_ocl_store_nbrs::boxm2_vecf_ocl_store_nbrs(boxm2_scene_sptr& source_scene,
-                                   boxm2_opencl_cache_sptr ocl_cache)
+                                   const boxm2_opencl_cache_sptr& ocl_cache)
   : source_scene_(source_scene),
     opencl_cache_(ocl_cache)
 {
@@ -87,12 +87,12 @@ bool boxm2_vecf_ocl_store_nbrs::init_ocl_store()
     lookup->create_buffer(CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR);
     status = 0;
     queue = clCreateCommandQueue(device_->context(),*(device_->device_id()),CL_QUEUE_PROFILING_ENABLE,&status);
-    ocl_depth = VXL_NULLPTR;
-    blk_info_source = VXL_NULLPTR;
-    info_buffer = VXL_NULLPTR;
-    info_buffer_source = VXL_NULLPTR;
-    blk_source = VXL_NULLPTR;
-    mog_source = VXL_NULLPTR;
+    ocl_depth = nullptr;
+    blk_info_source = nullptr;
+    info_buffer = nullptr;
+    info_buffer_source = nullptr;
+    blk_source = nullptr;
+    mog_source = nullptr;
     return true;
 }
 // input is a block (source scene) output is the source scene with neighbor information
@@ -106,7 +106,7 @@ bool boxm2_vecf_ocl_store_nbrs::augment_1_blk(){
   ocl_depth = new bocl_mem(device_->context(), &(depth), sizeof(int), "  depth of octree " );
   ocl_depth->create_buffer(CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR );
   std::vector<boxm2_block_id> blocks = source_scene_->get_block_ids();
-  std::vector<boxm2_block_id>::iterator iter_blk = blocks.begin();
+  auto iter_blk = blocks.begin();
   blk_source = opencl_cache_->get_block(source_scene_, *iter_blk);
   info_buffer = source_scene_->get_blk_metadata(*iter_blk);
   blk_info_source  = new bocl_mem(device_->context(), info_buffer, sizeof(boxm2_scene_info), " Scene Info" );

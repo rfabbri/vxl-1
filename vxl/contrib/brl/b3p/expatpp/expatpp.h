@@ -26,8 +26,10 @@
 #else
   #include "expat.h"  // since some version of expat moved to SourceForge
 #endif
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 
 /**
@@ -296,8 +298,8 @@ void MultiFilterParser::endElement(const XML_Char *name)
 class expatppNesting : public expatpp
 {
  public:
-  expatppNesting(expatppNesting* parent=VXL_NULLPTR);  ///< NOT a copy ctor!! this is a recursive situation
-  virtual ~expatppNesting();
+  expatppNesting(expatppNesting* parent=nullptr);  ///< NOT a copy ctor!! this is a recursive situation
+  ~expatppNesting() override;
 
   void switchToNewSubParser( expatppNesting* pAdoptedChild );
   expatppNesting* returnToParent();
@@ -324,13 +326,13 @@ class expatppNesting : public expatpp
 
 /// \name overrideables to customise behaviour, must call parent
 //@{
-  virtual void SetupHandlers();
+  void SetupHandlers() override;
 //@}
 
  private:
   // Forbid copy-construction and assignment, to prevent double-deletion of mOwnedChild
-            expatppNesting( const expatppNesting & );
-  expatppNesting &  operator=( const expatppNesting & );
+            expatppNesting( const expatppNesting & ) = delete;
+  expatppNesting &  operator=( const expatppNesting & ) = delete;
 };
 
 
@@ -353,7 +355,7 @@ inline void
 expatppNesting::OwnedChildOrphansItself(expatppNesting* callingChild)
 {
   assert(callingChild==mOwnedChild);
-  mOwnedChild = VXL_NULLPTR;
+  mOwnedChild = nullptr;
 }
 
 

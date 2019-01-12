@@ -15,14 +15,14 @@ bool vil_gaussian_process_cons(bprb_func_process& pro)
   //input
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("vil_image_view_base_sptr"); // input image
-  input_types.push_back("float"); // gaussian standard deviation
+  input_types.emplace_back("vil_image_view_base_sptr"); // input image
+  input_types.emplace_back("float"); // gaussian standard deviation
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   //output
   std::vector<std::string> output_types;
-  output_types.push_back("vil_image_view_base_sptr"); // gauss smoothed image(float)
+  output_types.emplace_back("vil_image_view_base_sptr"); // gauss smoothed image(float)
   ok = pro.set_output_types(output_types);
   if (!ok) return ok;
   return true;
@@ -43,8 +43,8 @@ bool vil_gaussian_process(bprb_func_process& pro)
   vil_image_view_base_sptr input_image = pro.get_input<vil_image_view_base_sptr>(i++);
 
   //Gaussian standard deviation
-  float sigma = pro.get_input<float>(i++);
-  unsigned half_width = static_cast<unsigned>(3.0f*sigma);
+  auto sigma = pro.get_input<float>(i++);
+  auto half_width = static_cast<unsigned>(3.0f*sigma);
 
   // convert input image to float
   vil_image_view<float> fimage = *vil_convert_cast(float(), input_image);
@@ -72,4 +72,3 @@ bool vil_gaussian_process(bprb_func_process& pro)
   pro.set_output_val<vil_image_view_base_sptr>(0, new vil_image_view<float>(G));
   return true;
 }
-

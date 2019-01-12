@@ -1,6 +1,7 @@
 #ifndef boxm_edge_updater_hxx_
 #define boxm_edge_updater_hxx_
 
+#include <utility>
 #include <vector>
 #include <iostream>
 #include <string>
@@ -11,13 +12,15 @@
 #include <boxm/boxm_scene.h>
 #include <boxm/boxm_aux_scene.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 template <class T_loc, class APM, class AUX>
 boxm_edge_updater<T_loc,APM,AUX>::boxm_edge_updater(boxm_scene<boct_tree<T_loc,
                                                     boxm_edge_sample<APM> > > &scene,
-                                                    std::vector<std::string> const& image_ids)
-: image_ids_(image_ids), scene_(scene)
+                                                    std::vector<std::string>  image_ids)
+: image_ids_(std::move(image_ids)), scene_(scene)
 {}
 
 
@@ -28,7 +31,6 @@ bool boxm_edge_updater<T_loc,APM,AUX>::add_cells()
   //typedef typename boxm_aux_traits<AUX>::sample_datatype AUX;
 
   typedef boct_tree<T_loc, boxm_edge_sample<APM> > tree_type;
-  typedef boct_tree<T_loc, boxm_aux_edge_sample<AUX> > aux_tree_type;
 
   std::vector<boxm_aux_scene<T_loc,  boxm_edge_sample<APM>, boxm_aux_edge_sample<AUX> > > aux_scenes;
   for (unsigned int i=0; i<image_ids_.size(); ++i) {

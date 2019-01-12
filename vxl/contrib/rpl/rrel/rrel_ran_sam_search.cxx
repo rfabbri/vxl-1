@@ -11,8 +11,10 @@
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_random.h>
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 // Random number generator. This will be shared by all ran_sam instances.
 static vnl_random global_generator_;
@@ -295,8 +297,8 @@ void
 rrel_ran_sam_search::trace_sample( const std::vector<int>& indices ) const
 {
   std::cout << "\nNew sample: ";
-  for ( unsigned int i=0; i<indices.size(); ++i)
-    std::cout << ' ' << indices[i];
+  for (int index : indices)
+    std::cout << ' ' << index;
   std::cout << std::endl;
 }
 

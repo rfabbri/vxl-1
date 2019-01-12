@@ -4,7 +4,9 @@
 // \file
 
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_binary_io.h>
 #include <boxm/boxm_apm_traits.h>
 
@@ -15,7 +17,7 @@ class boxm_scalar_sample
  public:
   boxm_scalar_sample() : scalar_sum_(0), seg_len_(0.0f) { }
 
-  ~boxm_scalar_sample() {}
+  ~boxm_scalar_sample() = default;
   T basic_val() { if (seg_len_>0) return scalar_sum_/seg_len_; else return (T)0; }
   static short version_no() { return 1; }
   void print(std::ostream& os) const;

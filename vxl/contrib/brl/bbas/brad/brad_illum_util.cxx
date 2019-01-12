@@ -2,8 +2,10 @@
 #include <iostream>
 #include <cmath>
 #include "brad_illum_util.h"
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/algo/vgl_rotation_3d.h>
 #include <vgl/vgl_vector_3d.h>
 #include <vnl/vnl_double_3.h>
@@ -189,9 +191,9 @@ double brad_nearest_ill_dir(std::vector<vnl_double_3> const& ill_dirs,
                             vnl_double_3 const& dir)
 {
   double min_ang = 1.0e10;
-  for (unsigned i = 0; i<ill_dirs.size(); ++i)
+  for (const auto & ill_dir : ill_dirs)
   {
-    double dot = dot_product(ill_dirs[i],dir);
+    double dot = dot_product(ill_dir,dir);
     double ang = std::acos(dot)*vnl_math::deg_per_rad;
     if (ang<min_ang)
       min_ang = ang;
@@ -235,8 +237,8 @@ void brad_solution_error(std::vector<vnl_double_3> const& ill_dirs,
 // Find the range in surface normal orientation angle for which
 // the dot product with respect to illumination direction is
 // positive for all images
-static void brad_search_range(vnl_matrix<double> illum_dirs,
-                              vnl_vector<double> u, vnl_vector<double> v,
+static void brad_search_range(const vnl_matrix<double>& illum_dirs,
+                              const vnl_vector<double>& u, const vnl_vector<double>& v,
                               double& theta_min, double& theta_max)
 {
   unsigned n_dirs = illum_dirs.rows();
@@ -279,11 +281,11 @@ static void nearest_to_z(vnl_vector<double> u, vnl_vector<double> v,
   if (n[2]<0) n = -n;
 }
 
-void brad_solve_atmospheric_model(vnl_matrix<double> illum_dirs,
+void brad_solve_atmospheric_model(const vnl_matrix<double>& illum_dirs,
                                   vnl_matrix<double> intensities,
                                   vnl_vector<double> airlight,
                                   unsigned max_iterations,
-                                  double max_fitting_error,
+                                  double  /*max_fitting_error*/,
                                   vnl_vector<double>& scene_irrad,
                                   vnl_matrix<double>& surf_normals,
                                   vnl_vector<double>& reflectances)
@@ -474,11 +476,11 @@ void brad_solve_atmospheric_model(vnl_matrix<double> illum_dirs,
 }
 
 
-void brad_solution_error(vnl_matrix<double> illum_dirs,
+void brad_solution_error(const vnl_matrix<double>& illum_dirs,
                          vnl_matrix<double> intensities,
                          vnl_vector<double> airlight,
                          vnl_vector<double> scene_irrad,
-                         vnl_matrix<double> surf_normals,
+                         const vnl_matrix<double>& surf_normals,
                          vnl_vector<double> reflectances,
                          vnl_matrix<double>& fit_errors,
                          vnl_matrix<double>& pred_intensities)
@@ -520,10 +522,10 @@ double brad_atmos_prediction(vnl_double_3 const& ill_dir,
   return radiance + airlight;
 }
 
-void brad_solve_atmospheric_model(vnl_matrix<double> illum_dirs,
+void brad_solve_atmospheric_model(const vnl_matrix<double>& illum_dirs,
                                   vnl_matrix<double> corr_intens,
                                   unsigned max_iterations,
-                                  double max_fitting_error,
+                                  double  /*max_fitting_error*/,
                                   vnl_matrix<double>& surf_normals,
                                   vnl_vector<double>& reflectances)
 {
@@ -658,9 +660,9 @@ void brad_solve_atmospheric_model(vnl_matrix<double> illum_dirs,
   reflectances = reflec;
 }
 
-void brad_solution_error(vnl_matrix<double> illum_dirs,
+void brad_solution_error(const vnl_matrix<double>& illum_dirs,
                          vnl_matrix<double> corr_intens,
-                         vnl_matrix<double> surf_normals,
+                         const vnl_matrix<double>& surf_normals,
                          vnl_vector<double> reflectances,
                          vnl_matrix<double>& fit_errors)
 {
@@ -911,4 +913,3 @@ double brad_radiance_variance_chavez(double reflectance,
 
    return radiance_var;
 }
-

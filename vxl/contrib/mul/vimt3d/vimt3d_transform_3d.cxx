@@ -8,8 +8,10 @@
 // \brief A class to define and apply a 3D transformation up to affine.
 // \author Graham Vincent, Tim Cootes
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_indent.h>
 #include <vnl/vnl_matrix_fixed.h>
 #include <vnl/vnl_vector.h>
@@ -1086,7 +1088,7 @@ void vimt3d_transform_3d::config(std::istream& is)
 
 void vimt3d_transform_3d::b_write(vsl_b_ostream& bfs) const
 {
-  const short version_no = 2;
+  constexpr short version_no = 2;
   vsl_b_write(bfs,version_no);
   vsl_b_write(bfs,int(form_));
   vsl_b_write(bfs,xx_); vsl_b_write(bfs,xy_); vsl_b_write(bfs,xz_); vsl_b_write(bfs,xt_);
@@ -1129,7 +1131,7 @@ void vimt3d_transform_3d::b_read(vsl_b_istream& bfs)
     std::abort();
   }
 
-  inv_uptodate_ = 0;
+  inv_uptodate_ = false;
 }
 
 //=======================================================================
@@ -1185,4 +1187,3 @@ bool vimt3d_transform_is_zoom_only(const vimt3d_transform_3d& transf,
 
   return true;
 }
-

@@ -19,7 +19,9 @@
 #include <vipl/vipl_with_vnl_matrix/accessors/vipl_accessors_vnl_vector.h>
 #include <vipl/vipl_histogram.h>
 #include <vnl/vnl_vector.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include "test_driver.h"
 #include <vxl_config.h> // for vxl_byte
 
@@ -45,8 +47,8 @@ int vipl_test_histogram()
   std::cout << "Starting vipl_histogram test\n";
 
   {
-    const unsigned int expected_n = 45;
-    const int scale = 2;
+    constexpr unsigned int expected_n = 45;
+    constexpr int scale = 2;
     vnl_vector<unsigned int> byte_out(expected_n / scale + 1);
     vipl_histogram<vil_image_view<vxl_byte>,vnl_vector<unsigned int>, vxl_byte,unsigned int> op(scale);
     op.put_in_data_ptr(&byte_img); op.put_out_data_ptr(&byte_out); op.filter();

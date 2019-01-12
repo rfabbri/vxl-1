@@ -1,7 +1,4 @@
 // This is core/vgui/vgui_toolkit.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
@@ -12,8 +9,10 @@
 #include <algorithm>
 #include "vgui_toolkit.h"
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <vul/vul_trace.h>
 
@@ -33,7 +32,7 @@ vgui_toolkit *vgui_toolkit::lookup(char const *name)
     if ((*vv)[i]->name() == name)
       return (*vv)[i];
   vgui_macro_warning << "WARNING : no toolkit with name \'" << name << "\' found.\n";
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 //--------------------------------------------------------------------------------
@@ -71,7 +70,7 @@ vgui_window *vgui_toolkit::produce_window(int /*width*/,
                                           char const* /*title*/)
 {
   vgui_macro_warning << "no implementation of produce_window supplied\n";
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 vgui_window *vgui_toolkit::produce_window(int /*width*/,
@@ -79,19 +78,19 @@ vgui_window *vgui_toolkit::produce_window(int /*width*/,
                                           char const* /*title*/)
 {
   vgui_macro_warning << "no implementation of produce_window supplied\n";
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 vgui_dialog_impl *vgui_toolkit::produce_dialog(char const*)
 {
   vgui_macro_warning << "no implementation of produce_dialog supplied\n";
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 vgui_dialog_extensions_impl *vgui_toolkit::produce_dialog_extension(char const*)
 {
   vgui_macro_warning << "no implementation of produce_dialog supplied\n";
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 void vgui_toolkit::quit()

@@ -1,7 +1,4 @@
 // This is core/vil1/vil1_image_impl.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Andrew W. Fitzgibbon, Oxford RRG
@@ -11,14 +8,17 @@
 
 #include "vil1_image_impl.h"
 #include <vil1/vil1_image.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //--------------------------------------------------------------------------------
 
 vil1_image vil1_image_impl::get_plane(unsigned int p) const
 {
   assert((int)p < planes());
-  return VXL_NULLPTR; // since this function has to be overloaded
+  return nullptr; // since this function has to be overloaded
 }
 
 bool vil1_image_impl::get_property(char const *, void *) const

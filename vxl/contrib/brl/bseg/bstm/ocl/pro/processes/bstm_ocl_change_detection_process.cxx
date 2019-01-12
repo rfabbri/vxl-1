@@ -27,15 +27,17 @@
 // directory utility
 #include <vul/vul_timer.h>
 #include <vcl_where_root_dir.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bocl/bocl_device.h>
 #include <bocl/bocl_kernel.h>
 #include <boxm2/util/boxm2_detect_change_blobs.h>
 
 namespace bstm_ocl_change_detection_process_globals
 {
-  const unsigned n_inputs_     = 9;
-  const unsigned n_outputs_    = 1;
+  constexpr unsigned n_inputs_ = 9;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 bool bstm_ocl_change_detection_process_cons(bprb_func_process& pro)
@@ -76,22 +78,22 @@ bool bstm_ocl_change_detection_process(bprb_func_process& pro)
 
   // get the inputs
   unsigned i = 0;
-  bocl_device_sptr         device        = pro.get_input<bocl_device_sptr>(i++);
-  bstm_scene_sptr          scene         = pro.get_input<bstm_scene_sptr>(i++);
-  bstm_opencl_cache_sptr   opencl_cache  = pro.get_input<bstm_opencl_cache_sptr>(i++);
-  vpgl_camera_double_sptr  cam           = pro.get_input<vpgl_camera_double_sptr>(i++);
-  vil_image_view_base_sptr img           = pro.get_input<vil_image_view_base_sptr>(i++);
-  vil_image_view_base_sptr mask_img      = pro.get_input<vil_image_view_base_sptr>(i++);
-  std::string               norm_type     = pro.get_input<std::string>(i++);
-  bool                     pmax         = pro.get_input<bool>(i++);
-  float                    time         = pro.get_input<float>(i++);
+  bocl_device_sptr         device = pro.get_input<bocl_device_sptr>(i++);
+  bstm_scene_sptr          scene = pro.get_input<bstm_scene_sptr>(i++);
+  bstm_opencl_cache_sptr   opencl_cache = pro.get_input<bstm_opencl_cache_sptr>(i++);
+  vpgl_camera_double_sptr  cam = pro.get_input<vpgl_camera_double_sptr>(i++);
+  vil_image_view_base_sptr img = pro.get_input<vil_image_view_base_sptr>(i++);
+  vil_image_view_base_sptr mask_img = pro.get_input<vil_image_view_base_sptr>(i++);
+  std::string               norm_type = pro.get_input<std::string>(i++);
+  bool                     pmax = pro.get_input<bool>(i++);
+  auto                    time = pro.get_input<float>(i++);
 
   // img dims
   unsigned ni=img->ni();
   unsigned nj=img->nj();
 
   // allocate two output images
-  vil_image_view<float>*    change_img     = new vil_image_view<float>(ni, nj);
+  auto*    change_img = new vil_image_view<float>(ni, nj);
 
   // check to see which type of change detection to do, either two pass, or regular
   vul_timer t;

@@ -10,14 +10,16 @@
 
 #include <iostream>
 #include <cstring>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <testlib/testlib_test.h>
 #include <gevd/gevd_memory_mixin.h>
 
 void
 test_gevd_memory_mixin()
 {
-  gevd_memory_mixin * gmm = new gevd_memory_mixin(8);
+  auto * gmm = new gevd_memory_mixin(8);
 
   int off = gmm->GetOffset();
   TEST("GetOffset.",off,0);

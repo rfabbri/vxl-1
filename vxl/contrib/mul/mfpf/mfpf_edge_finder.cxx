@@ -10,7 +10,9 @@
 #include <vnl/vnl_vector.h>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_vector_2d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vimt/vimt_bilin_interp.h>
 #include <vimt/vimt_sample_profile_bilin.h>
@@ -19,17 +21,13 @@
 // Dflt ctor
 //=======================================================================
 
-mfpf_edge_finder::mfpf_edge_finder()
-{
-}
+mfpf_edge_finder::mfpf_edge_finder() = default;
 
 //=======================================================================
 // Destructor
 //=======================================================================
 
-mfpf_edge_finder::~mfpf_edge_finder()
-{
-}
+mfpf_edge_finder::~mfpf_edge_finder() = default;
 
 //: Radius of circle containing modelled region
 double mfpf_edge_finder::radius() const

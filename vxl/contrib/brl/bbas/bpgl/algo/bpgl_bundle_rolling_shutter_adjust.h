@@ -16,7 +16,9 @@
 #include <vgl/vgl_homg_point_3d.h>
 #include <vgl/algo/vgl_rotation_3d.h>
 #include <vpgl/vpgl_perspective_camera.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 //: Computes the residuals for bundle adjustment given that the cameras share a fixed internal calibration, shared rolling rate which needs to be estimated
@@ -41,7 +43,7 @@ class bpgl_bundle_rolling_shutter_adj_lsqr : public vnl_sparse_lst_sqr_function
                                        bool use_confidence_weights = true);
 
   // Destructor
-  virtual ~bpgl_bundle_rolling_shutter_adj_lsqr() {}
+  ~bpgl_bundle_rolling_shutter_adj_lsqr() override = default;
 
   //: Compute all the reprojection errors
   //  Given the parameter vectors a and b, compute the vector of residuals e.
@@ -81,7 +83,7 @@ class bpgl_bundle_rolling_shutter_adj_lsqr : public vnl_sparse_lst_sqr_function
   vgl_homg_point_3d<double> param_to_point(int j, const vnl_vector<double>& b) const
   {
     const double* d = b.data_block() + index_b(j);
-    return vgl_homg_point_3d<double>(d[0], d[1], d[2]);
+    return {d[0], d[1], d[2]};
   }
 
   //: construct the ith perspective camera from parameter vector a
@@ -149,7 +151,7 @@ class bpgl_bundle_rolling_shutter_adj_lsqr : public vnl_sparse_lst_sqr_function
     create_param_vector(const std::vector<vgl_point_3d<double> >& world_points);
 
 
-  void reset() { iteration_count_ = 0; for (unsigned int i=0; i<weights_.size(); ++i) weights_[i] = 1.0; }
+  void reset() { iteration_count_ = 0; for (double & weight : weights_) weight = 1.0; }
 
   //: return the current weights
   std::vector<double> weights() const { return weights_; }

@@ -5,8 +5,10 @@
 #include <rrel/rrel_muset_obj.h>
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_math.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 namespace {
   inline void shft2(double &a, double &b, const double c)
@@ -130,7 +132,7 @@ rrel_kernel_density_obj::bandwidth(vect_const_iter res_begin, vect_const_iter re
     //because it assumes residuals are zero-based and have a Gaussian distribution.
 
     std::vector<double> residuals(res_begin, res_end);
-    std::vector<double>::iterator loc = residuals.begin() + n / 2;
+    auto loc = residuals.begin() + n / 2;
     std::nth_element( residuals.begin(), loc, residuals.end() );
 
     double res_median = *loc;
@@ -190,5 +192,3 @@ rrel_kernel_density_obj::kernel_function(double u) const
   double t = 1 - u * u;
   return 1.09375 * t * t * t;
 }
-
-

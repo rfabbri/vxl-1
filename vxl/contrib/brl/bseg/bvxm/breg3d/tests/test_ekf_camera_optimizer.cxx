@@ -2,7 +2,9 @@
 #include <string>
 #include <vector>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_file.h>
 
 #include <vgl/vgl_vector_3d.h>
@@ -43,7 +45,7 @@ static void test_ekf_camera_optimizer()
   bvxm_voxel_world_sptr vox_world = new bvxm_voxel_world(params);
 
   bvxm_voxel_grid_base_sptr ocp_grid_ptr = vox_world->get_grid<OCCUPANCY>(0,0);
-  bvxm_voxel_grid<float> *ocp_grid = dynamic_cast<bvxm_voxel_grid<float>*>(ocp_grid_ptr.ptr());
+  auto *ocp_grid = dynamic_cast<bvxm_voxel_grid<float>*>(ocp_grid_ptr.ptr());
   // fill in grid with zeros to start
   ocp_grid->initialize_data(0.0f);
   // now make a ground plane
@@ -91,7 +93,7 @@ static void test_ekf_camera_optimizer()
   // iterate through layers of apm grid and update each level with the same synthetic image
   // if you want different levels to look different youll have to create a different image for each level
   bvxm_voxel_grid_base_sptr apm_base = vox_world->get_grid<APM_MOG_GREY>(0,0);
-  bvxm_voxel_grid<mog_type> *apm_grid = dynamic_cast<bvxm_voxel_grid<mog_type>*>(apm_base.ptr());
+  auto *apm_grid = dynamic_cast<bvxm_voxel_grid<mog_type>*>(apm_base.ptr());
   // initialize the appearance model data to get rid of any previous data on disk
   apm_grid->initialize_data(bvxm_voxel_traits<APM_MOG_GREY>::initial_val());
 
@@ -122,9 +124,9 @@ static void test_ekf_camera_optimizer()
   vpgl_camera_double_sptr cam1 = new vpgl_perspective_camera<double>(K,center1,rot1);
   vpgl_camera_double_sptr cam2 = new vpgl_perspective_camera<double>(K,center2,rot2);
 
-  bvxm_image_metadata meta0(vil_image_view_base_sptr(VXL_NULLPTR),cam0);
-  bvxm_image_metadata meta1(vil_image_view_base_sptr(VXL_NULLPTR),cam1);
-  bvxm_image_metadata meta2(vil_image_view_base_sptr(VXL_NULLPTR),cam2);
+  bvxm_image_metadata meta0(vil_image_view_base_sptr(nullptr),cam0);
+  bvxm_image_metadata meta1(vil_image_view_base_sptr(nullptr),cam1);
+  bvxm_image_metadata meta2(vil_image_view_base_sptr(nullptr),cam2);
 
   vil_image_view<float> mask(640,480,1);
   vil_image_view_base_sptr img0 = new vil_image_view<unsigned char>(640,480);

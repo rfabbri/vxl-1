@@ -2,7 +2,9 @@
 #include <iostream>
 #include <iomanip>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vidl/vidl_pixel_format.h>
 
 

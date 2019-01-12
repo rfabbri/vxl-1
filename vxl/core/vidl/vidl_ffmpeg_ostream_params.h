@@ -1,9 +1,6 @@
 // This is core/vidl/vidl_ffmpeg_ostream_params.h
 #ifndef vidl_ffmpeg_ostream_params_h_
 #define vidl_ffmpeg_ostream_params_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief A parameters struct for vidl_ffmpeg_ostream
@@ -17,7 +14,9 @@
 // \endverbatim
 
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vidl/vidl_export.h>
 
 //: A parameters struct for vidl_ffmpeg_ostream

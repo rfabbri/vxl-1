@@ -1,6 +1,8 @@
 // This is mul/mbl/tests/test_correspond_points.cxx
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <mbl/mbl_correspond_points.h>
 #include <vnl/vnl_random.h>
 #include <vgl/vgl_point_2d.h>
@@ -77,7 +79,7 @@ void test_correspond_points()
           <<"Evals2: "<<cp.evals2()<<std::endl;
 
   std::cout<<"Add one clutter point and move it around\n";
-  points2.push_back(vgl_point_2d<double>(0,0));
+  points2.emplace_back(0,0);
 
   for (unsigned i=0;i<5;++i)
   {
@@ -93,7 +95,7 @@ void test_correspond_points()
   }
 
   std::cout<<"Add two clutter points and move them around\n";
-  points2.push_back(vgl_point_2d<double>(0,0));
+  points2.emplace_back(0,0);
 
   for (unsigned i=0;i<5;++i)
   {

@@ -1,4 +1,6 @@
 // This is brl/bpro/core/brad_pro/processes/brad_compute_appearance_index_process.cxx
+#include <iostream>
+#include <fstream>
 #include <bprb/bprb_func_process.h>
 #include <brad/brad_image_metadata.h>
 #include <brad/brad_appearance_neighborhood_index.h>
@@ -7,21 +9,23 @@
 //:
 // \file
 
-#include <vcl_fstream.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Constructor
 bool brad_compute_appearance_index_process_cons(bprb_func_process& pro)
 {
   //input
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
-  input_types.push_back("bbas_1d_array_string_sptr");
+  std::vector<std::string> input_types;
+  input_types.emplace_back("bbas_1d_array_string_sptr");
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   //output
-  vcl_vector<vcl_string> output_types;
-  output_types.push_back("bbas_1d_array_int_sptr");
+  std::vector<std::string> output_types;
+  output_types.emplace_back("bbas_1d_array_int_sptr");
   ok = pro.set_output_types(output_types);
   if (!ok) return ok;
   return true;
@@ -32,13 +36,13 @@ bool brad_compute_appearance_index_process(bprb_func_process& pro)
 {
   // Sanity check
   if (pro.n_inputs() != 1) {
-    vcl_cout << "brad_compute_appearance_index_process: The input number should be 1" << vcl_endl;
+    std::cout << "brad_compute_appearance_index_process: The input number should be 1" << std::endl;
     return false;
   }
 
   // get the input
   bbas_1d_array_string_sptr filenames = pro.get_input<bbas_1d_array_string_sptr>(0);
-  unsigned n = static_cast<unsigned>((filenames->data_array).size());
+  auto n = static_cast<unsigned>((filenames->data_array).size());
   std::vector<vbl_smart_ptr<brad_image_metadata> > metadata;
   for(unsigned i = 0; i<n; ++i){
     vbl_smart_ptr<brad_image_metadata> meta_ptr = new brad_image_metadata();
@@ -69,13 +73,11 @@ bool brad_compute_appearance_index_process(bprb_func_process& pro)
     unsigned target_idx = iit->first;
     (index_array->data_array)[midx++] = target_idx;
     const std::vector<unsigned>& illum_neighbors =index[target_idx];
-    for(std::vector<unsigned>::const_iterator iit = illum_neighbors.begin();
-        iit != illum_neighbors.end(); ++iit)
-      (index_array->data_array)[midx++] = *iit;
+    for(unsigned int illum_neighbor : illum_neighbors)
+      (index_array->data_array)[midx++] = illum_neighbor;
     midx++; // leave a -1 marker
   }
   pro.set_output_val<bbas_1d_array_int_sptr>(0,index_array);
 
   return true;
 }
-

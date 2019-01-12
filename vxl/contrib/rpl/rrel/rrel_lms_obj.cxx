@@ -7,9 +7,11 @@
 
 #include <vnl/vnl_math.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
-#include <vcl_cassert.h>
+#include <cassert>
 
 rrel_lms_obj::rrel_lms_obj( unsigned int num_sam_inst, double inlier_frac )
   : num_sam_inst_( num_sam_inst ),
@@ -17,9 +19,7 @@ rrel_lms_obj::rrel_lms_obj( unsigned int num_sam_inst, double inlier_frac )
 {
 }
 
-rrel_lms_obj::~rrel_lms_obj()
-{
-}
+rrel_lms_obj::~rrel_lms_obj() = default;
 
 
 double
@@ -27,7 +27,7 @@ rrel_lms_obj::fcn( vect_const_iter begin, vect_const_iter end,
                    vect_const_iter /*scale begin*/,
                    vnl_vector<double>* /*param_vector*/ ) const
 {
-  return fcn( begin, end, 0.0, (vnl_vector<double>*)VXL_NULLPTR );
+  return fcn( begin, end, 0.0, (vnl_vector<double>*)nullptr );
 }
 
 
@@ -64,7 +64,7 @@ rrel_lms_obj::fcn( vect_const_iter begin, vect_const_iter end,
   if ( index >= num_residuals ) index = num_residuals-1;
 
   // 3. Sort the squared residuals and extract the "median".
-  std::vector<double>::iterator loc = sq_res.begin() + index;
+  auto loc = sq_res.begin() + index;
   std::nth_element( sq_res.begin(), loc, sq_res.end() );
 
   return *loc;

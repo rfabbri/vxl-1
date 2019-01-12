@@ -8,7 +8,9 @@
 #include <cstdio>
 #include "bvgl_labelme_parser.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 //Constructor from file
@@ -44,7 +46,7 @@ bvgl_labelme_parser::bvgl_labelme_parser(std::string& filename)
 //#define LAND_TAG "land"
 //#define WEIGHT_TAG "weight"
 void
-bvgl_labelme_parser::startElement(const char* name, const char** atts)
+bvgl_labelme_parser::startElement(const char* name, const char**  /*atts*/)
 {
   //set active tag for charData
   active_tag_ = std::string(name);
@@ -205,10 +207,10 @@ void bvgl_labelme_parser::trim_string(std::string& s)
   bool trimmed = true;
   while (trimmed) {
     trimmed = false;
-    for (unsigned kk = 0; kk < 4; kk++) {
+    for (char trim : trims) {
       std::string current = t;
-      unsigned int i = (unsigned int)current.find_first_not_of(trims[kk]);
-      unsigned int j = (unsigned int)current.find_last_not_of(trims[kk]);
+      auto i = (unsigned int)current.find_first_not_of(trim);
+      auto j = (unsigned int)current.find_last_not_of(trim);
       if (i > j || j >= current.size()) {
         t = ""; break;
       }

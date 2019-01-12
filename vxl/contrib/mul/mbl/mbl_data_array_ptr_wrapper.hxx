@@ -8,13 +8,15 @@
 #include <cstdlib>
 #include "mbl_data_array_ptr_wrapper.h"
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 //: Default constructor
 template<class T>
 mbl_data_array_ptr_wrapper<T>::mbl_data_array_ptr_wrapper()
-  : data_(VXL_NULLPTR),n_(0),index_(0)
+  : data_(nullptr),n_(0),index_(0)
 {
 }
 
@@ -52,9 +54,7 @@ void mbl_data_array_ptr_wrapper<T>::set(const T*const* data, unsigned long n)
 
 //: Default destructor
 template<class T>
-mbl_data_array_ptr_wrapper<T>::~mbl_data_array_ptr_wrapper()
-{
-}
+mbl_data_array_ptr_wrapper<T>::~mbl_data_array_ptr_wrapper() = default;
 
 //: Number of objects available
 template<class T>

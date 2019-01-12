@@ -1,9 +1,6 @@
 // This is core/vsl/vsl_clipon_binary_loader.h
 #ifndef vsl_clipon_binary_loader_h_
 #define vsl_clipon_binary_loader_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 
@@ -11,7 +8,9 @@
 #include <string>
 #include <vsl/vsl_binary_loader_base.h>
 #include <vsl/vsl_binary_io.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Class to load objects by baseclass pointer using `clipon' classes
 // An example of a singleton design pattern for loading
@@ -89,10 +88,10 @@ class vsl_clipon_binary_loader : public vsl_binary_loader_base
 
  public:
   //: Constructor
-  vsl_clipon_binary_loader() {}
+  vsl_clipon_binary_loader() = default;
 
   //: Destructor
-  ~vsl_clipon_binary_loader();
+  ~vsl_clipon_binary_loader() override;
 
   //: Returns the instance variable for the singleton.
   static vsl_clipon_binary_loader<BaseClass,BaseClassIO>& instance();

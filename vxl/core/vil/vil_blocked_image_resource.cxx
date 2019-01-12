@@ -1,21 +1,19 @@
 // This is core/vil/vil_blocked_image_resource.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 #include "vil_blocked_image_resource.h"
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_property.h>
 #include <vil/vil_image_view.h>
 #include <vil/vil_crop.h>
 #include <vil/vil_copy.h>
 
 
-vil_blocked_image_resource::vil_blocked_image_resource()
-{}
+vil_blocked_image_resource::vil_blocked_image_resource() = default;
 
-vil_blocked_image_resource::~vil_blocked_image_resource()
-{}
+vil_blocked_image_resource::~vil_blocked_image_resource() = default;
 
 unsigned int vil_blocked_image_resource::n_block_i() const
 {
@@ -175,8 +173,8 @@ bool vil_blocked_image_resource::trim_border_blocks(unsigned int i0, unsigned in
   for (unsigned int bi = 0 ; bi < blocks.size() ; bi++) {
     for (unsigned int bj = 0 ; bj < blocks[bi].size() ; bj++) {
       if (!blocks[bi][bj]) continue;
-      unsigned int last_col_index = (unsigned int)(blocks.size()-1);
-      unsigned int last_row_index = (unsigned int)(blocks[bi].size()-1);
+      auto last_col_index = (unsigned int)(blocks.size()-1);
+      auto last_row_index = (unsigned int)(blocks[bi].size()-1);
       //booleans that tell me whether this box is some sort of border box
       bool first_block_in_row = bi == 0;
       bool first_block_in_col = bj == 0;
@@ -239,7 +237,7 @@ bool vil_blocked_image_resource::trim_border_blocks(unsigned int i0, unsigned in
 vil_image_view_base_sptr vil_blocked_image_resource::
 get_copy_view(unsigned int i0, unsigned int n_i, unsigned int j0, unsigned int n_j) const
 {
-  vil_image_view_base_sptr view = VXL_NULLPTR;
+  vil_image_view_base_sptr view = nullptr;
 
   unsigned int tw = size_block_i(), tl = size_block_j();
   if (tw==0||tl==0)
@@ -277,11 +275,11 @@ get_copy_view(unsigned int i0, unsigned int n_i, unsigned int j0, unsigned int n
 vil_blocked_image_resource_sptr blocked_image_resource(const vil_image_resource_sptr& ir)
 {
   if (!ir)
-    return VXL_NULLPTR;
+    return nullptr;
   unsigned int sbi=0, sbj=0;
   if (ir->get_property(vil_property_size_block_i, &sbi)&&
       ir->get_property(vil_property_size_block_j, &sbj))
     return (vil_blocked_image_resource*)ir.ptr();
   else
-    return VXL_NULLPTR;
+    return nullptr;
 }

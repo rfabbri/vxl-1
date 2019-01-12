@@ -1,13 +1,12 @@
 // This is core/vil1/vil1_flip_components_impl.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 
 #include <cstring>
 #include "vil1_flip_components_impl.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 vil1_image vil1_flip_components_impl::get_plane(unsigned int p) const
 {

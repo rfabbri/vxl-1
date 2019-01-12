@@ -5,8 +5,10 @@
 #include <cmath>
 #include <iomanip>
 #include "brip_max_scale_response.h"
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_convert.h>
 #include <vil/vil_resample_bilin.h>
 #include <brip/brip_vil_float_ops.h>
@@ -132,7 +134,7 @@ void brip_max_scale_response<T>::compute_trace_pyramid()
       std::cout <<'\n';
     }
 #endif
-    const unsigned radius = 2;
+    constexpr unsigned radius = 2;
     vil_image_view<float> tr =
       brip_vil_float_ops::trace_grad_matrix_NxN(smooth, radius);
     trace_.push_back(tr);

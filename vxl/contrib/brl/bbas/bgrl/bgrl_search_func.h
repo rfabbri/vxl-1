@@ -18,7 +18,9 @@
 #include <vbl/vbl_ref_count.h>
 #include <bgrl/bgrl_vertex_sptr.h>
 #include <bgrl/bgrl_edge_sptr.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 //: The abstract base class for search functions
@@ -26,7 +28,7 @@ class bgrl_search_func : public vbl_ref_count
 {
  public:
   // Constructor
-  bgrl_search_func(const bgrl_vertex_sptr& init_vertex = VXL_NULLPTR)
+  bgrl_search_func(const bgrl_vertex_sptr& init_vertex = nullptr)
     : curr_vertex_(init_vertex) {}
 
   // Copy constructor
@@ -34,7 +36,7 @@ class bgrl_search_func : public vbl_ref_count
     : vbl_ref_count(), curr_vertex_(f.curr_vertex_) {}
 
   // Destructor
-  ~bgrl_search_func() {}
+  ~bgrl_search_func() override = default;
 
   bgrl_vertex_sptr curr_vertex() const { return curr_vertex_; }
 
@@ -52,14 +54,14 @@ class bgrl_breadth_search : public bgrl_search_func
 {
  public:
   //: Constructor
-  bgrl_breadth_search(const bgrl_vertex_sptr& init_vertex = VXL_NULLPTR)
+  bgrl_breadth_search(const bgrl_vertex_sptr& init_vertex = nullptr)
     : bgrl_search_func(init_vertex) {visited_.insert(init_vertex);}
 
   //: Destructor
-  ~bgrl_breadth_search(){}
+  ~bgrl_breadth_search() override= default;
 
   //: Returns the edge to the next vertex in the search
-  virtual bgrl_edge_sptr next_vertex();
+  bgrl_edge_sptr next_vertex() override;
 
  protected:
   //: The queue of nodes to be evaluated
@@ -75,14 +77,14 @@ class bgrl_depth_search : public bgrl_search_func
 {
  public:
   //: Constructor
-  bgrl_depth_search(const bgrl_vertex_sptr& init_vertex = VXL_NULLPTR)
+  bgrl_depth_search(const bgrl_vertex_sptr& init_vertex = nullptr)
     : bgrl_search_func(init_vertex) {visited_.insert(init_vertex);}
 
   //: Destructor
-  ~bgrl_depth_search(){}
+  ~bgrl_depth_search() override= default;
 
   //: Returns the edge to the next vertex in the search
-  virtual bgrl_edge_sptr next_vertex();
+  bgrl_edge_sptr next_vertex() override;
 
  protected:
   //: The queue of nodes to be evaluated

@@ -2,7 +2,9 @@
 #include <fstream>
 #include "bwm_utils.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_config.h>
 
 #include <vgui/vgui_dialog.h>
@@ -294,7 +296,7 @@ bwm_utils::load_image(std::string& filename, vgui_range_map_params_sptr& rmps)
     }
     else {
       std::cerr << "error loading image pyramid "<< filename << '\n';
-      return VXL_NULLPTR;
+      return nullptr;
     }
   }
   else {
@@ -321,12 +323,12 @@ bwm_utils::load_image(std::string& filename, vgui_range_map_params_sptr& rmps)
       }
 #endif //HAS_J2K
   }
-  if (!res) return VXL_NULLPTR;
+  if (!res) return nullptr;
   float gamma = 1.0f;
   bool invert = false;
   bool gl_map = false;
   bool cache = true;
-  bool is_pyr = res->get_property(vil_property_pyramid, VXL_NULLPTR);
+  bool is_pyr = res->get_property(vil_property_pyramid, nullptr);
   if (is_pyr)
   { gl_map = true; cache = true;}
 
@@ -340,7 +342,7 @@ bwm_utils::load_image(std::string& filename, vgui_range_map_params_sptr& rmps)
     return res;
   if (biu.default_range_map(rmps, gamma, invert, gl_map, cache))
     return res;
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 void bwm_utils::show_error(std::string msg)

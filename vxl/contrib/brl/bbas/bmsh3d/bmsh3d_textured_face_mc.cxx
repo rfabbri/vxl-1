@@ -1,7 +1,8 @@
 // This is brl/bbas/bmsh3d/bmsh3d_textured_face_mc.cxx
 //---------------------------------------------------------------------
-#include <iostream>
 #include "bmsh3d_textured_face_mc.h"
+#include <iostream>
+#include <utility>
 //:
 // \file
 // \brief A textured mesh
@@ -20,17 +21,19 @@
 #include <bmsh3d/bmsh3d_edge.h>
 #include <vgl/vgl_point_2d.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 bmsh3d_textured_face_mc::bmsh3d_textured_face_mc(const bmsh3d_face* face, std::string tex_map_uri)
 : bmsh3d_face_mc(face->id())
 {
-  tex_map_uri_ = tex_map_uri;
+  tex_map_uri_ = std::move(tex_map_uri);
 
   // copy vertices
   std::vector<bmsh3d_vertex*> old_verts = face->vertices();
-  for (unsigned v = 0; v < old_verts.size(); v++) {
-    bmsh3d_vertex* vert = (bmsh3d_vertex*)old_verts[v];
+  for (auto & old_vert : old_verts) {
+    auto* vert = (bmsh3d_vertex*)old_vert;
     _add_vertex(vert);
   }
 }
@@ -53,4 +56,3 @@ void bmsh3d_textured_face_mc::print()
     } while (HE != he);
   }
 }
-

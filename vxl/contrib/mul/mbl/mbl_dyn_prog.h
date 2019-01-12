@@ -10,7 +10,9 @@
 #include <iostream>
 #include <iosfwd>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vsl/vsl_fwd.h>
 #include <vnl/vnl_matrix.h>
@@ -109,5 +111,3 @@ std::ostream& operator<<(std::ostream& os,const mbl_dyn_prog& b);
 
 //=======================================================================
 #endif
-
-

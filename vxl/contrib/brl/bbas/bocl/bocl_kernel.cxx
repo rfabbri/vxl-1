@@ -1,13 +1,16 @@
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <cstdio>
 #include "bocl_kernel.h"
+#include <cstdio>
+#include <fstream>
+#include <iostream>
+#include <sstream>
+#include <utility>
 //:
 // \file
 #include "bocl_device_info.h"
 #include "bocl_mem.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 bool bocl_kernel::create_kernel(cl_context* context,
                                 cl_device_id* device,
@@ -18,7 +21,7 @@ bool bocl_kernel::create_kernel(cl_context* context,
 {
   context_  = context;
   device_   = device;
-  id_       = id;
+  id_       = std::move(id);
 
   //make sure paths exist
   if (src_paths.empty()) {
@@ -67,7 +70,7 @@ bool bocl_kernel::create_kernel(const cl_context& context,
                                 std::string const& src,
                                 std::string const& kernel_name,
                                 std::string options,
-                                std::string id )
+                                const std::string& id )
 {
   id_ = id;
   device_ = device;
@@ -83,7 +86,7 @@ bool bocl_kernel::create_kernel(const cl_context& context,
   int status;
   if (program_) {
     status = clReleaseProgram(program_);
-    program_ = VXL_NULLPTR;
+    program_ = nullptr;
     if (!check_val(status, CL_SUCCESS, "clReleaseProgram failed."))
       return false;
   }
@@ -98,7 +101,7 @@ bool bocl_kernel::create_kernel(const cl_context& context,
   }
 
   // create a cl program executable for all the devices specified
-  status = clBuildProgram(program_, 1, device, options.c_str(), VXL_NULLPTR, VXL_NULLPTR);
+  status = clBuildProgram(program_, 1, device, options.c_str(), nullptr, nullptr);
   if (!check_val(status, CL_SUCCESS, error_to_string(status))){
     std::cout<<"BUILD ERROR: "<<this->build_log()<<std::endl;
     return false;
@@ -122,14 +125,14 @@ bocl_kernel::~bocl_kernel()
   if (kernel_)  {
     status = clReleaseKernel(kernel_);
   }
-  kernel_ = VXL_NULLPTR;
+  kernel_ = nullptr;
   if ( !check_val(status,CL_SUCCESS,"clReleaseKernel failed: " + this->id_) )
     std::cout<<" release failed in bocl_kernel destructor"<<std::endl;
 
   if (program_) {
     status = clReleaseProgram(program_);
   }
-  program_ = VXL_NULLPTR;
+  program_ = nullptr;
   if ( !check_val(status,CL_SUCCESS,"clReleaseProgram failed: " + this->id_) )
     std::cout<<" release failed in bocl_kernel destructor"<<std::endl;
 }
@@ -153,7 +156,7 @@ bool bocl_kernel::execute(const cl_command_queue& cmd_queue,
 
   //set local args
   for (unsigned int i=0; i<local_args_.size(); ++i) {
-    cl_int status = (cl_int)clSetKernelArg(kernel_,args_.size() + i, local_args_[i], VXL_NULLPTR);
+    auto status = (cl_int)clSetKernelArg(kernel_,args_.size() + i, local_args_[i], nullptr);
     if ( !check_val(status,CL_SUCCESS,"clSetLocal Arg Failed") ) {
       std::cout<<"Local argument "<<i<<" failed"<<std::endl;
       return false;
@@ -161,9 +164,9 @@ bool bocl_kernel::execute(const cl_command_queue& cmd_queue,
   }
 
   //enqueue the kernel on the command queue
-  ceEvent_ = VXL_NULLPTR;
+  ceEvent_ = nullptr;
 
-  status = clEnqueueNDRangeKernel(cmd_queue, kernel_, dim, global_offsets, global_threads, local_threads, 0, VXL_NULLPTR, &ceEvent_);
+  status = clEnqueueNDRangeKernel(cmd_queue, kernel_, dim, global_offsets, global_threads, local_threads, 0, nullptr, &ceEvent_);
   if ( !check_val(status,CL_SUCCESS,"clEnqueueNDRangeKernel failed (" + id_ + ") " +error_to_string(status)) )
     return false;
   else
@@ -190,13 +193,13 @@ bool bocl_kernel::set_arg(bocl_mem* buffer)
 float bocl_kernel::exec_time()
 {
   cl_ulong tend=0, tstart=0;
-  int status = clGetEventProfilingInfo(ceEvent_,CL_PROFILING_COMMAND_END,sizeof(cl_ulong),&tend,VXL_NULLPTR);
-  status &= clGetEventProfilingInfo(ceEvent_,CL_PROFILING_COMMAND_START,sizeof(cl_ulong),&tstart,VXL_NULLPTR);
+  int status = clGetEventProfilingInfo(ceEvent_,CL_PROFILING_COMMAND_END,sizeof(cl_ulong),&tend,nullptr);
+  status &= clGetEventProfilingInfo(ceEvent_,CL_PROFILING_COMMAND_START,sizeof(cl_ulong),&tstart,nullptr);
   if ( !check_val(status,CL_SUCCESS,"clFinish/ProfilingInfo failed (" + id_ + ") " +error_to_string(status)) )
     return false;
 
   //store execution time
-  unsigned long diff = (unsigned long)(tend - tstart);
+  auto diff = (unsigned long)(tend - tstart);
   return 1.0e-6f*float(diff);
 }
 
@@ -216,7 +219,7 @@ bool bocl_kernel::release_current_event()
 unsigned long bocl_kernel::local_mem_size()
 {
   unsigned long size;
-  int status = clGetKernelWorkGroupInfo(kernel_, (*device_), CL_KERNEL_LOCAL_MEM_SIZE, sizeof(size), (void*) &size, VXL_NULLPTR);
+  int status = clGetKernelWorkGroupInfo(kernel_, (*device_), CL_KERNEL_LOCAL_MEM_SIZE, sizeof(size), (void*) &size, nullptr);
   if ( !check_val(status,CL_SUCCESS,"bocl_kernel::local_mem_size() failed (" + id_ + ") " +error_to_string(status)) )
     return 0;
   return size;
@@ -225,7 +228,7 @@ unsigned long bocl_kernel::local_mem_size()
 std::size_t bocl_kernel::workgroup_size()
 {
   std::size_t size;
-  int status = clGetKernelWorkGroupInfo(kernel_, (*device_), CL_KERNEL_WORK_GROUP_SIZE, sizeof(size), (void*) &size, VXL_NULLPTR);
+  int status = clGetKernelWorkGroupInfo(kernel_, (*device_), CL_KERNEL_WORK_GROUP_SIZE, sizeof(size), (void*) &size, nullptr);
   if ( !check_val(status,CL_SUCCESS,"bocl_kernel::private_mem_size()  failed (" + id_ + ") " +error_to_string(status)) )
     return 0;
   else
@@ -235,7 +238,7 @@ std::size_t bocl_kernel::workgroup_size()
 std::string bocl_kernel::build_log()
 {
   char log[40*1024];
-  int status = clGetProgramBuildInfo( program_, (*device_), CL_PROGRAM_BUILD_LOG, sizeof(log), (void*) log, VXL_NULLPTR);
+  int status = clGetProgramBuildInfo( program_, (*device_), CL_PROGRAM_BUILD_LOG, sizeof(log), (void*) log, nullptr);
   if ( !check_val(status,CL_SUCCESS,"bocl_kernel::build_log()  failed (" + id_ + ") " +error_to_string(status)) )
     return "";
   else
@@ -246,24 +249,24 @@ std::string bocl_kernel::program_binaries()
 {
   //get num devices
   cl_uint numDevices;
-  cl_int status = clGetProgramInfo( program_, CL_PROGRAM_NUM_DEVICES, sizeof(numDevices), (void*) &numDevices, VXL_NULLPTR);
+  cl_int status = clGetProgramInfo( program_, CL_PROGRAM_NUM_DEVICES, sizeof(numDevices), (void*) &numDevices, nullptr);
   if ( !check_val(status,CL_SUCCESS,"bocl_kernel::program_binaries() numDevices failed (" + id_ + ") " +error_to_string(status)) )
     return "";
 
   //get binary sizes for each device
-  std::size_t* sizes = new std::size_t[numDevices];
-  status = clGetProgramInfo( program_, CL_PROGRAM_BINARY_SIZES, numDevices*sizeof(std::size_t), (void*) sizes, VXL_NULLPTR);
+  auto* sizes = new std::size_t[numDevices];
+  status = clGetProgramInfo( program_, CL_PROGRAM_BINARY_SIZES, numDevices*sizeof(std::size_t), (void*) sizes, nullptr);
   if ( !check_val(status,CL_SUCCESS,"bocl_kernel::program_binaries() binary_sizes failed (" + id_ + ") " +error_to_string(status)) )
     return "";
 
   //get binary for each device
   std::size_t numBytes = 0;
-  unsigned char** binaries = new unsigned char*[numDevices];
+  auto** binaries = new unsigned char*[numDevices];
   for (unsigned int i=0; i<numDevices; ++i) {
     numBytes += sizes[i];
     binaries[i] = new unsigned char[sizes[i]];
   }
-  status = clGetProgramInfo( program_, CL_PROGRAM_BINARIES, numBytes, (void*) binaries, VXL_NULLPTR);
+  status = clGetProgramInfo( program_, CL_PROGRAM_BINARIES, numBytes, (void*) binaries, nullptr);
   if ( !check_val(status,CL_SUCCESS,"bocl_kernel::program_binaries()  failed (" + id_ + ") " +error_to_string(status)) )
     return "";
 
@@ -321,7 +324,7 @@ bool bocl_kernel::append_process_kernels(std::string const& path)
 }
 
 //: build opencl program
-bool bocl_kernel::build_kernel_program(cl_program &program, std::string options)
+bool bocl_kernel::build_kernel_program(cl_program &program, const std::string& options)
 {
   cl_int status = CL_SUCCESS;
   std::size_t sourceSize[] = { this->prog_.size() };
@@ -329,7 +332,7 @@ bool bocl_kernel::build_kernel_program(cl_program &program, std::string options)
     return false;
   if (program) {
     status = clReleaseProgram(program);
-    program = VXL_NULLPTR;
+    program = nullptr;
     if (!check_val(status, CL_SUCCESS, "clReleaseProgram failed."))
       return false;
   }
@@ -348,8 +351,8 @@ bool bocl_kernel::build_kernel_program(cl_program &program, std::string options)
                           1,
                           this->device_,
                           options.c_str(),
-                          VXL_NULLPTR,
-                          VXL_NULLPTR);
+                          nullptr,
+                          nullptr);
   if (!check_val(status, CL_SUCCESS, error_to_string(status)))
   {
     std::cout<<"BUILD ERROR: "<<this->build_log()<<std::endl;

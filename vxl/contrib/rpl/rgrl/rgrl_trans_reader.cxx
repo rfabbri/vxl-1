@@ -19,8 +19,9 @@
 #include <rgrl/rgrl_trans_couple.h>
 #include <rgrl/rgrl_trans_spline.h>
 #include <rgrl/rgrl_util.h>
-#include <vcl_compiler.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 // initialize the static variables
 std::vector< rgrl_transformation_sptr >  rgrl_trans_reader::xform_candidates_;
@@ -33,7 +34,7 @@ read( char const* fn )
   if( ifs.good() )
     return read( ifs );
   else
-    return VXL_NULLPTR;
+    return nullptr;
 }
 
 #undef READ_THIS_TRANSFORMATION
@@ -109,12 +110,12 @@ read( std::istream& is )
           << "       " << "Tag [" << tag_str
           << "] cannot match with any existing transformations.\n"
           << "         Try to open istream in BINARY mode!" << std::endl;
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 void
 rgrl_trans_reader::
-add_xform( rgrl_transformation_sptr xform )
+add_xform( const rgrl_transformation_sptr& xform )
 {
   xform_candidates_.push_back( xform );
 }
@@ -126,4 +127,3 @@ operator>> (std::istream& is, rgrl_transformation_sptr& trans_sptr)
   trans_sptr = rgrl_trans_reader::read( is );
   return is;
 }
-

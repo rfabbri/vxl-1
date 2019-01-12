@@ -4,7 +4,10 @@
 #include "vsph_defs.h"
 #include "vsph_unit_sphere.h"
 #include <bvrml/bvrml_write.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_vector_3d.h>
 
 double vsph_sph_box_2d::pye() const
@@ -1229,4 +1232,3 @@ std::ostream& operator<<(std::ostream& os, vsph_sph_box_2d const& p)
   p.print(os);
   return os;
 }
-

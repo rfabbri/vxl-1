@@ -9,7 +9,9 @@
 // \author Ali Osman Ulusoy
 // \date Jan 28, 2013
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bstm/io/bstm_cache.h>
 #include <bstm/io/bstm_lru_cache.h>
 #include <bstm/bstm_scene.h>
@@ -26,8 +28,8 @@
 
 namespace bstm_cpp_label_bb_process_globals
 {
-  const unsigned n_inputs_ =  11;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 11;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool bstm_cpp_label_bb_process_cons(bprb_func_process& pro)
@@ -70,15 +72,15 @@ bool bstm_cpp_label_bb_process(bprb_func_process& pro)
   unsigned i = 0;
   bstm_scene_sptr scene =pro.get_input<bstm_scene_sptr>(i++);
   bstm_cache_sptr cache= pro.get_input<bstm_cache_sptr>(i++);
-  float center_x = pro.get_input<float>(i++);
-  float center_y = pro.get_input<float>(i++);
-  float center_z = pro.get_input<float>(i++);
-  float len_x = pro.get_input<float>(i++);
-  float len_y = pro.get_input<float>(i++);
-  float len_z = pro.get_input<float>(i++);
-  unsigned label = pro.get_input<unsigned>(i++);
-  float time = pro.get_input<float>(i++);
-  float p_threshold = pro.get_input<float>(i++);
+  auto center_x = pro.get_input<float>(i++);
+  auto center_y = pro.get_input<float>(i++);
+  auto center_z = pro.get_input<float>(i++);
+  auto len_x = pro.get_input<float>(i++);
+  auto len_y = pro.get_input<float>(i++);
+  auto len_z = pro.get_input<float>(i++);
+  auto label = pro.get_input<unsigned>(i++);
+  auto time = pro.get_input<float>(i++);
+  auto p_threshold = pro.get_input<float>(i++);
 
   //create vgl box
   const vgl_point_3d<double> center(center_x,center_y,center_z);
@@ -100,12 +102,12 @@ bool bstm_cpp_label_bb_process(bprb_func_process& pro)
 
         bstm_block* blk = cache->get_block(bstm_metadata.id_);
         bstm_time_block* blk_t = cache->get_time_block(bstm_metadata.id_);
-        bstm_data_base * alph    = cache->get_data_base(bstm_metadata.id_, bstm_data_traits<BSTM_ALPHA>::prefix());
+        bstm_data_base * alph = cache->get_data_base(bstm_metadata.id_, bstm_data_traits<BSTM_ALPHA>::prefix());
         bstm_data_base * label_data_base = cache->get_data_base(bstm_metadata.id_, bstm_data_traits<BSTM_LABEL>::prefix(),
                                         alph->buffer_length() / bstm_data_traits<BSTM_ALPHA>::datasize() * bstm_data_traits<BSTM_LABEL>::datasize() );
 
-        bstm_data_traits<BSTM_ALPHA>::datatype * alpha_data = (bstm_data_traits<BSTM_ALPHA>::datatype*) alph->data_buffer();
-        bstm_data_traits<BSTM_LABEL>::datatype * label_data = (bstm_data_traits<BSTM_LABEL>::datatype*) label_data_base->data_buffer();
+        auto * alpha_data = (bstm_data_traits<BSTM_ALPHA>::datatype*) alph->data_buffer();
+        auto * label_data = (bstm_data_traits<BSTM_LABEL>::datatype*) label_data_base->data_buffer();
 
         bstm_label_bb(blk, bstm_metadata, blk_t,label_data, alpha_data, local_time,label, box, p_threshold);
 

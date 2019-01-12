@@ -9,7 +9,9 @@
 #include "bwm_io_config_parser.h"
 #include "bwm_site.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 // --------------
 // --- PARSER ---

@@ -13,8 +13,8 @@
 //:global variables
 namespace bvpl_load_pca_error_scenes_process_globals
 {
-  const unsigned n_inputs_ = 3;
-  const unsigned n_outputs_ =1;
+  constexpr unsigned n_inputs_ = 3;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 
@@ -45,7 +45,7 @@ bool bvpl_load_pca_error_scenes_process(bprb_func_process& pro)
   unsigned i = 0;
   boxm_scene_base_sptr data_scene_base = pro.get_input<boxm_scene_base_sptr>(i++);
   std::string pca_path = pro.get_input<std::string>(i++);
-  unsigned feature_dim = pro.get_input<unsigned>(i++);
+  auto feature_dim = pro.get_input<unsigned>(i++);
 
   if (!data_scene_base)
     return false;

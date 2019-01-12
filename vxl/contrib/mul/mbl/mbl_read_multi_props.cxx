@@ -10,18 +10,19 @@
 // \file
 
 #include <vsl/vsl_indent.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <mbl/mbl_parse_block.h>
 #include <mbl/mbl_exception.h>
 
 void mbl_read_multi_props_print(std::ostream &afs, mbl_read_multi_props_type props)
 {
-  typedef mbl_read_multi_props_type::iterator ITER;
   afs << vsl_indent() << "{\n";
   vsl_indent_inc(afs);
-  for (ITER i = props.begin(); i != props.end(); ++i)
-    afs << vsl_indent() << (*i).first << ": " << (*i).second << '\n';
+  for (auto & prop : props)
+    afs << vsl_indent() << prop.first << ": " << prop.second << '\n';
   vsl_indent_dec(afs);
   afs << vsl_indent() << "}\n";
 }
@@ -31,10 +32,10 @@ void mbl_read_multi_props_print(std::ostream &afs, mbl_read_multi_props_type pro
   typedef mbl_read_multi_props_type::iterator ITER;
   afs << vsl_indent() << "{\n";
   vsl_indent_inc(afs);
-  for (ITER i = props.begin(); i != props.end(); ++i)
+  for (auto & prop : props)
   {
-    afs << vsl_indent() << (*i).first << ": " << (*i).second.substr(0, max_chars) << '\n';
-    if (max_chars < (*i).second.size()) afs << vsl_indent() << "...\n";
+    afs << vsl_indent() << prop.first << ": " << prop.second.substr(0, max_chars) << '\n';
+    if (max_chars < prop.second.size()) afs << vsl_indent() << "...\n";
   }
   vsl_indent_dec(afs);
   afs << vsl_indent() << "}\n";
@@ -109,7 +110,7 @@ mbl_read_multi_props_type mbl_read_multi_props_ws(std::istream &afs)
 
   typedef mbl_read_multi_props_type::iterator ITER;
   std::string last_label( label );
-  ITER last_label_iter = props.end();
+  auto last_label_iter = props.end();
 
   do
   {
@@ -217,8 +218,8 @@ mbl_read_multi_props_type mbl_read_multi_props_merge(const mbl_read_multi_props_
 {
   mbl_read_multi_props_type output;
 
-  mbl_read_multi_props_type::const_iterator a_it = a.begin();
-  mbl_read_multi_props_type::const_iterator b_it = b.begin();
+  auto a_it = a.begin();
+  auto b_it = b.begin();
 
 
   while (a_it != a.end() || b_it != b.end())
@@ -253,9 +254,8 @@ void mbl_read_multi_props_look_for_unused_props(
   mbl_read_multi_props_type p2(props);
 
   // Remove ignoreable properties
-  for (mbl_read_multi_props_type::const_iterator it=ignore.begin();
-         it != ignore.end(); ++it)
-    p2.erase(it->first);
+  for (const auto & it : ignore)
+    p2.erase(it.first);
 
   if (!p2.empty())
   {
@@ -316,11 +316,11 @@ void mbl_read_multi_props_type::get_required_properties(
 {
   values.clear();
 
-  mbl_read_multi_props_type::iterator beg = this->lower_bound(label);
-  mbl_read_multi_props_type::iterator fin = this->upper_bound(label);
+  auto beg = this->lower_bound(label);
+  auto fin = this->upper_bound(label);
   if (beg==fin)
     mbl_exception_error(mbl_exception_missing_property(label));
-  for (mbl_read_multi_props_type::iterator it=beg; it!=fin; ++it)
+  for (auto it=beg; it!=fin; ++it)
   {
     values.push_back(it->second);
   }
@@ -350,10 +350,10 @@ void mbl_read_multi_props_type::get_optional_properties(
 {
   values.clear();
 
-  mbl_read_multi_props_type::iterator beg = this->lower_bound(label);
-  mbl_read_multi_props_type::iterator fin = this->upper_bound(label);
+  auto beg = this->lower_bound(label);
+  auto fin = this->upper_bound(label);
 
-  for (mbl_read_multi_props_type::iterator it=beg; it!=fin; ++it)
+  for (auto it=beg; it!=fin; ++it)
   {
     values.push_back(it->second);
   }

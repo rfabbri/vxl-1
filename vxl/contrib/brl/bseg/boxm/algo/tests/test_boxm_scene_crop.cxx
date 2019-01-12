@@ -23,11 +23,11 @@ void fill_sample_octree(boct_tree<short,float>* tree)
     tree->init_cells(0.1f);
     leaves[1]->set_data(0.5f);
     if (debug)
-      for (unsigned i=0; i<leaves.size(); i++) {
-        std::cout<< leaves[i]->get_code().x_loc_ << ','
-                << leaves[i]->get_code().y_loc_ << ','
-                << leaves[i]->get_code().z_loc_ << ','
-                << leaves[i]->data() << std::endl;
+      for (auto & leave : leaves) {
+        std::cout<< leave->get_code().x_loc_ << ','
+                << leave->get_code().y_loc_ << ','
+                << leave->get_code().z_loc_ << ','
+                << leave->data() << std::endl;
       }
 
     leaves[1]->split();
@@ -37,13 +37,13 @@ void fill_sample_octree(boct_tree<short,float>* tree)
   {
     std::cout << "Level 0" << std::endl;
     std::vector<boct_tree_cell<short,float>*> leaves = tree->cells_at_level((short)0);
-    for (unsigned i=0; i<leaves.size(); i++) {
-      leaves[i]->set_data(0.9f);
-      std::cout<< leaves[i]->get_code().x_loc_ << ','
-              << leaves[i]->get_code().y_loc_ << ','
-              << leaves[i]->get_code().z_loc_ << ','
-              << leaves[i]->get_code().level << ','
-              << leaves[i]->data() << std::endl;
+    for (auto & leave : leaves) {
+      leave->set_data(0.9f);
+      std::cout<< leave->get_code().x_loc_ << ','
+              << leave->get_code().y_loc_ << ','
+              << leave->get_code().z_loc_ << ','
+              << leave->get_code().level << ','
+              << leave->data() << std::endl;
     }
   }
 
@@ -51,12 +51,12 @@ void fill_sample_octree(boct_tree<short,float>* tree)
   {
     std::cout << "All Levels" << std::endl;
     std::vector<boct_tree_cell<short,float>*> leaves = tree->all_cells();
-    for (unsigned i=0; i<leaves.size(); i++) {
-      std::cout<< leaves[i]->get_code().x_loc_ << ','
-              << leaves[i]->get_code().y_loc_ << ','
-              << leaves[i]->get_code().z_loc_ << ','
-              << leaves[i]->get_code().level << ','
-              << leaves[i]->data() << std::endl;
+    for (auto & leave : leaves) {
+      std::cout<< leave->get_code().x_loc_ << ','
+              << leave->get_code().y_loc_ << ','
+              << leave->get_code().z_loc_ << ','
+              << leave->get_code().level << ','
+              << leave->data() << std::endl;
     }
   }
 }
@@ -65,7 +65,7 @@ static void test_boxm_scene_crop()
 {
   //Create a dummy scene
   typedef boct_tree<short,float > tree_type;
-  boct_tree<short,float> *tree = new boct_tree<short,float>(3);
+  auto *tree = new boct_tree<short,float>(3);
   fill_sample_octree(tree);
 
   vpgl_lvcs lvcs(33.33,44.44,10.0, vpgl_lvcs::wgs84, vpgl_lvcs::DEG, vpgl_lvcs::METERS);
@@ -77,7 +77,7 @@ static void test_boxm_scene_crop()
   //number of blocks in a scene
   vgl_vector_3d<unsigned> world_dim(1,1,1);
 
-  boxm_scene<tree_type> *scene= new boxm_scene<tree_type>(lvcs, origin, block_dim, world_dim,true);
+  auto *scene= new boxm_scene<tree_type>(lvcs, origin, block_dim, world_dim,true);
   std::string scene_path=".";
   scene->set_paths(scene_path, "in_block");
   scene->set_appearance_model(BOXM_FLOAT);
@@ -103,9 +103,9 @@ static void test_boxm_scene_crop()
 
   std::vector<boct_tree_cell<short,float>*> leaves_out = tree_out->leaf_cells();
   bool result = true;
-  for (unsigned i=0; i<leaves_out.size(); i++)
+  for (auto & i : leaves_out)
   {
-    result = result && (std::abs(leaves_out[i]->data() - 0.9)< 1e-5);
+    result = result && (std::abs(i->data() - 0.9)< 1e-5);
   }
 
   TEST("Valid cropped tree", result, true);
@@ -113,12 +113,12 @@ static void test_boxm_scene_crop()
   std::vector<boct_tree_cell<short,float>*> leaves = tree_out->all_cells();
   if (debug) {
     std::cout << "Printing Output Tree" << std::endl;
-    for (unsigned i=0; i<leaves.size(); i++) {
-      std::cout<< leaves[i]->get_code().x_loc_ << ','
-              << leaves[i]->get_code().y_loc_ << ','
-              << leaves[i]->get_code().z_loc_ << ','
-              << leaves[i]->get_code().level << ','
-              << leaves[i]->data() << std::endl;
+    for (auto & leave : leaves) {
+      std::cout<< leave->get_code().x_loc_ << ','
+              << leave->get_code().y_loc_ << ','
+              << leave->get_code().z_loc_ << ','
+              << leave->get_code().level << ','
+              << leave->data() << std::endl;
     }
   }
 

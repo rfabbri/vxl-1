@@ -58,9 +58,8 @@ bool test_gauss_gradients_filter()
   std::map<boxm2_block_id, boxm2_block_metadata> blocks = scene->blocks();
   std::map<boxm2_block_id, boxm2_block_metadata>::iterator blk_iter;
   bool result = true;
-  for (unsigned k= 0; k< filter_vector->kernels_.size(); k++)
+  for (const auto& filter : filter_vector->kernels_)
   {
-    bvpl_kernel_sptr filter = filter_vector->kernels_[k];
     for (blk_iter = blocks.begin(); blk_iter != blocks.end(); ++blk_iter)
     {
       boxm2_block_id id = blk_iter->first;
@@ -73,7 +72,7 @@ bool test_gauss_gradients_filter()
 
       //3d array of trees
       const boxm2_array_3d<uchar16>& trees = blk->trees();
-      boxm2_data_traits<BOXM2_FLOAT>::datatype * response_data = (boxm2_data_traits<BOXM2_FLOAT>::datatype*) response->data_buffer();
+      auto * response_data = (boxm2_data_traits<BOXM2_FLOAT>::datatype*) response->data_buffer();
 
       //iterate through each block, filtering the root level first
 

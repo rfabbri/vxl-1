@@ -1,7 +1,4 @@
 // This is core/vil1/vil1_colour_space.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
@@ -10,7 +7,9 @@
 #include <algorithm>
 #include <cmath>
 #include "vil1_colour_space.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 template <class T>
 void vil1_colour_space_RGB_to_YIQ(T const in[3], T out[3])

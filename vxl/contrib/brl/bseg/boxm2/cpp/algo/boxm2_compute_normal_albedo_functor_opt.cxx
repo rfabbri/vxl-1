@@ -7,7 +7,9 @@
 #include <boxm2/boxm2_data_traits.h>
 #include <vgl/vgl_vector_3d.h>
 #include <vnl/vnl_math.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/algo/vnl_brent_minimizer.h>
 
 #include <brad/brad_image_metadata.h>
@@ -41,7 +43,7 @@ double boxm2_compute_normal_albedo_cost_function::f(vnl_vector<double> const& x)
          double diff = (radiance_scales_[m]*rho + radiance_offsets_[m] - radiances_[m]);
          prob = visibilities_[m] * std::exp(-diff*diff/(2.0*rad_var)) / std::sqrt(vnl_math::twopi*rad_var);
       }
-      const double background_density = 0.01; // TODO: compute actual uniform density value
+      constexpr double background_density = 0.01; // TODO: compute actual uniform density value
       prob += (1.0 - visibilities_[m])*background_density;
       if (!(prob >= 1e-6)) {
          prob = 1e-6;
@@ -54,7 +56,7 @@ double boxm2_compute_normal_albedo_cost_function::f(vnl_vector<double> const& x)
 
 bool boxm2_compute_normal_albedo_functor_opt::init_data(std::vector<brad_image_metadata> const& metadata,
                                                         std::vector<brad_atmospheric_parameters> const& atm_params,
-                                                        boxm2_stream_cache_sptr str_cache,
+                                                        const boxm2_stream_cache_sptr& str_cache,
                                                         boxm2_data_base * alpha_data,
                                                         boxm2_data_base * normal_albedo_model)
 {
@@ -119,7 +121,7 @@ bool boxm2_compute_normal_albedo_functor_opt::init_data(std::vector<brad_image_m
 }
 
 
-bool boxm2_compute_normal_albedo_functor_opt::process_cell(unsigned int index, bool is_leaf, float side_len)
+bool boxm2_compute_normal_albedo_functor_opt::process_cell(unsigned int index, bool  /*is_leaf*/, float  /*side_len*/)
 {
    if (index >= naa_model_data_->data().size()) {
       std::cerr << "ERROR: index = " << index << ", naa_model_data_->data().size = " << naa_model_data_->data().size() << '\n'
@@ -176,4 +178,3 @@ bool boxm2_compute_normal_albedo_functor_opt::process_cell(unsigned int index, b
    }
    return true;
 }
-

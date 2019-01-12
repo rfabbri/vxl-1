@@ -5,12 +5,14 @@
 // \file
 // \brief Ref. counted block of data on the heap
 // \author Tim Cootes
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 //: Dflt ctor
 vil_memory_chunk::vil_memory_chunk()
-: data_(VXL_NULLPTR), size_(0), pixel_format_(VIL_PIXEL_FORMAT_UNKNOWN), ref_count_(0)
+: data_(nullptr), size_(0), pixel_format_(VIL_PIXEL_FORMAT_UNKNOWN), ref_count_(0)
 {
 }
 
@@ -54,7 +56,7 @@ void vil_memory_chunk::unref()
   // lead to multiple smart pointers deleting the memory.
   if (--ref_count_==0)
   {
-    delete [] reinterpret_cast<char*>(data_); data_=VXL_NULLPTR;
+    delete [] reinterpret_cast<char*>(data_); data_=nullptr;
     delete this;
   }
 }
@@ -71,11 +73,9 @@ void vil_memory_chunk::set_size(unsigned long n, vil_pixel_format pixel_form)
 {
   if (size_==n) return;
   delete [] reinterpret_cast<char*>(data_);
-  data_ = VXL_NULLPTR;
+  data_ = nullptr;
   if (n>0)
     data_ = new char[n];
   size_ = n;
   pixel_format_ = pixel_form;
 }
-
-

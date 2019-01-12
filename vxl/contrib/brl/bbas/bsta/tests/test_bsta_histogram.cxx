@@ -4,7 +4,9 @@
 #include <cmath>
 #include <fstream>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bsta/bsta_histogram.h>
 #include <bsta/bsta_joint_histogram.h>
 #include <bsta/bsta_joint_histogram_3d.h>
@@ -161,8 +163,8 @@ void test_bsta_histogram()
 
   //Test smart pointer
   bsta_histogram_sptr hptr = new bsta_histogram<double>(10.0, 10);
-  bsta_histogram<double>* dcast = dynamic_cast<bsta_histogram<double>*>(hptr.ptr());
-  bsta_histogram<float>* fcast = dynamic_cast<bsta_histogram<float>*>(hptr.ptr());
+  auto* dcast = dynamic_cast<bsta_histogram<double>*>(hptr.ptr());
+  auto* fcast = dynamic_cast<bsta_histogram<float>*>(hptr.ptr());
   TEST("dynamic cast histogram", dcast&&!fcast, true);
 
   //Test Mutual Information

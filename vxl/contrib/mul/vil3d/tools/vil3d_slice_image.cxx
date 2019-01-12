@@ -6,7 +6,9 @@
 
 #include <iostream>
 #include <vul/vul_arg.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil3d/vil3d_property.h>
 #include <vil3d/vil3d_load.h>
 #include <vil3d/vil3d_convert.h>
@@ -26,7 +28,7 @@ void print_usage()
 
 void save_slice(const vil_image_view<float>& image,
                 float wi, float wj, double border,
-                std::string path)
+                const std::string& path)
 {
   // Resize so that image has square pixels
   float w=std::min(wi,wj);
@@ -75,7 +77,7 @@ int main(int argc, char** argv)
 
   // Attempt to load in the 3D image
   vil3d_image_resource_sptr im_res = vil3d_load_image_resource(image_path().c_str());
-  if (im_res==VXL_NULLPTR)
+  if (im_res==nullptr)
   {
     std::cerr<<"Failed to load in image from "<<image_path()<<'\n';
     return 1;

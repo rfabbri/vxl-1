@@ -13,7 +13,9 @@
 //  <none yet>
 // \endverbatim
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bprb/bprb_parameters.h>
 #include <bvxm/grid/bvxm_voxel_grid_base.h>
 #include <bvxm/grid/bvxm_voxel_grid.h>
@@ -22,8 +24,8 @@
 
 namespace bvxm_grid_to_image_stack_process_globals
 {
-  const unsigned n_inputs_ = 3;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 3;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 
@@ -66,18 +68,18 @@ bool bvxm_grid_to_image_stack_process(bprb_func_process& pro)
   //This is temporary. What should happen is that we can read the type from the file header.
   //Also the header should be such that we can check if the file is not currupt
   if (datatype == "float"){
-    bvxm_voxel_grid<float> *grid = dynamic_cast< bvxm_voxel_grid<float>* > (grid_base.ptr());
+    auto *grid = dynamic_cast< bvxm_voxel_grid<float>* > (grid_base.ptr());
     bvxm_grid_to_image_stack::write_grid_to_image_stack<float>(grid, output_dir);
 
     return true;
   }
   else if (datatype == "vnl_float_3"){
-      bvxm_voxel_grid<vnl_float_3> *grid = dynamic_cast< bvxm_voxel_grid<vnl_float_3>* > (grid_base.ptr());
+      auto *grid = dynamic_cast< bvxm_voxel_grid<vnl_float_3>* > (grid_base.ptr());
       bvxm_grid_to_image_stack::write_grid_to_image_stack<vnl_float_3>(grid, output_dir);
     return true;
   }
   else if (datatype == "vnl_float_4"){
-      bvxm_voxel_grid<vnl_float_4> *grid = dynamic_cast< bvxm_voxel_grid<vnl_float_4>* > (grid_base.ptr());
+      auto *grid = dynamic_cast< bvxm_voxel_grid<vnl_float_4>* > (grid_base.ptr());
       bvxm_grid_to_image_stack::write_grid_to_image_stack<vnl_float_4>(grid, output_dir);
     return true;
   }

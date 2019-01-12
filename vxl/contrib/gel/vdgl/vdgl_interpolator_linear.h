@@ -1,9 +1,6 @@
 // This is gel/vdgl/vdgl_interpolator_linear.h
 #ifndef vdgl_interpolator_linear_h
 #define vdgl_interpolator_linear_h
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Represents a linear 2D interpolator for a vdgl_edgel_chain
@@ -16,39 +13,39 @@ class vdgl_interpolator_linear : public vdgl_interpolator
  public:
   // Constructors/Destructors--------------------------------------------------
 
-  vdgl_interpolator_linear( vdgl_edgel_chain_sptr chain);
-  ~vdgl_interpolator_linear();
+  vdgl_interpolator_linear( const vdgl_edgel_chain_sptr& chain);
+  ~vdgl_interpolator_linear() override;
 
   // Operators----------------------------------------------------------------
 
   //: order of interpolation 1=linear, 2 = quadratic, 3 = cubic, ..etc.
-  virtual short order() const {return 1;}
+  short order() const override {return 1;}
 
   //: interpolation 0th degree
-  double get_x(double index);
-  double get_y(double index);
+  double get_x(double index) override;
+  double get_y(double index) override;
 
   // interpolation 1st degree
-  double get_grad(double index);
+  double get_grad(double index) override;
   //: the image gradient direction
-  double get_theta(double index);
+  double get_theta(double index) override;
   //:  the geometric tangent angle
-  double get_tangent_angle(double index);
+  double get_tangent_angle(double index) override;
 
   //: interpolation 2nd degree
-  double get_curvature(double index);
+  double get_curvature(double index) override;
 
   //: integral
-  double get_length();
+  double get_length() override;
 
   //: bounding box
-  double get_min_x();
-  double get_max_x();
-  double get_min_y();
-  double get_max_y();
+  double get_min_x() override;
+  double get_max_x() override;
+  double get_min_y() override;
+  double get_max_y() override;
 
   // closest point
-  vsol_point_2d_sptr closest_point_on_curve ( vsol_point_2d_sptr p );
+  vsol_point_2d_sptr closest_point_on_curve ( vsol_point_2d_sptr p ) override;
 
   // INTERNALS-----------------------------------------------------------------
  protected:

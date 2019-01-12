@@ -11,15 +11,17 @@
 //-----------------------------------------------------------------------------
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_matrix.h>
 
 //-----------------------------------------------------------------------------
 class bnl_parabolic_interpolator
 {
  public:
-  bnl_parabolic_interpolator() {}
-  ~bnl_parabolic_interpolator() {}
+  bnl_parabolic_interpolator() = default;
+  ~bnl_parabolic_interpolator() = default;
   //:p is the parameter to be interpolated, v is the data value
   void add_data_point(const double p, const double v);
   //: reset data array

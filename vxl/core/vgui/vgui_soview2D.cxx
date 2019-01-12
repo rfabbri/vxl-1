@@ -1,6 +1,3 @@
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Philip C. Pritchett, RRG, University of Oxford
@@ -11,7 +8,9 @@
 #include <iostream>
 #include "vgui_soview2D.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vgl/vgl_distance.h>
 #include <vnl/vnl_math.h> // for twopi
@@ -247,7 +246,7 @@ void vgui_soview2D_infinite_line::translate(float tx, float ty)
 
 //--------------------------------------------------------------------------//
 
-const int vgui__CIRCLE2D_LIST = 1;
+constexpr int vgui__CIRCLE2D_LIST = 1;
 
 void vgui_soview2D_circle::compile()
 {
@@ -365,8 +364,8 @@ vgui_soview2D_linestrip::vgui_soview2D_linestrip(unsigned n_, float const *x_, f
 vgui_soview2D_linestrip::~vgui_soview2D_linestrip()
 {
   n=0;
-  delete [] x; x=VXL_NULLPTR;
-  delete [] y; y=VXL_NULLPTR;
+  delete [] x; x=nullptr;
+  delete [] y; y=nullptr;
 }
 
 void vgui_soview2D_linestrip::draw() const
@@ -441,8 +440,8 @@ vgui_soview2D_polygon::vgui_soview2D_polygon(unsigned n_, float const *x_, float
 vgui_soview2D_polygon::~vgui_soview2D_polygon()
 {
   n=0;
-  delete [] x; x=VXL_NULLPTR;
-  delete [] y; y=VXL_NULLPTR;
+  delete [] x; x=nullptr;
+  delete [] y; y=nullptr;
 }
 
 void vgui_soview2D_polygon::draw() const
@@ -524,7 +523,7 @@ vgui_soview2D_image::vgui_soview2D_image( float in_x, float in_y,
     blend_( in_blend ),
     buffer_( new vgui_section_buffer( 0, 0, w_, h_, format, type ) )
 {
-  buffer_->apply( img , (vgui_range_map_params*) VXL_NULLPTR);
+  buffer_->apply( img , (vgui_range_map_params*) nullptr);
 }
 
 vgui_soview2D_image::vgui_soview2D_image( float in_x, float in_y,
@@ -539,7 +538,7 @@ vgui_soview2D_image::vgui_soview2D_image( float in_x, float in_y,
     blend_( in_blend ),
     buffer_( new vgui_section_buffer( 0, 0, w_, h_, format, type ) )
 {
-  buffer_->apply( vil_new_image_resource_of_view( img ), (vgui_range_map_params*) VXL_NULLPTR);
+  buffer_->apply( vil_new_image_resource_of_view( img ), (vgui_range_map_params*) nullptr);
 }
 
 vgui_soview2D_image::~vgui_soview2D_image()

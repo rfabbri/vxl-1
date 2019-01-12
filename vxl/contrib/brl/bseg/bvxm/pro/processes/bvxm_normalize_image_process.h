@@ -25,7 +25,9 @@
 #include <iostream>
 #include <string>
 #include <bprb/bprb_func_process.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vil/vil_image_view_base.h>
 #include <vil/vil_image_view.h>
@@ -35,8 +37,8 @@
 // global variables/functions for bvxm_normalize_image_process_globals
 namespace bvxm_normalize_image_process_globals
 {
-  const unsigned n_inputs_ = 3;
-  const unsigned n_outputs_ = 3;
+  constexpr unsigned n_inputs_ = 3;
+  constexpr unsigned n_outputs_ = 3;
 
   // normalized image = a*(original_image) +b;
   const std::string param_a_start_= "a_start";

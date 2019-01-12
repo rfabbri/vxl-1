@@ -9,7 +9,9 @@
 #include <vil/vil_load.h>
 #include <vil/vil_save.h>
 #include <vil/vil_math.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 static void test_gain_offset_solver()
 {
@@ -19,7 +21,7 @@ static void test_gain_offset_solver()
   for(unsigned j = 0; j<nj; ++j)
     for(unsigned i = 0; i<ni; ++i){
       // range 0-> 1
-      float v = static_cast<float>((std::rand()/(RAND_MAX+1.0)));
+      auto v = static_cast<float>((std::rand()/(RAND_MAX+1.0)));
       model(i,j) = v;
       float noise = (0.01f)*(static_cast<float>((std::rand()/(RAND_MAX+1.0))));
       test(i,j) = v + noise;

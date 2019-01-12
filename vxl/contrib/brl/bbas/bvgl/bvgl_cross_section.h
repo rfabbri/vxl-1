@@ -7,6 +7,7 @@
 // \author J. L. Mundy
 // \date November 2, 2015
 
+#include <utility>
 #include <vector>
 #include <iostream>
 #include <iosfwd>
@@ -14,7 +15,9 @@
 #include <vgl/vgl_box_3d.h>
 #include <vgl/vgl_plane_3d.h>
 #include <vgl/vgl_vector_3d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_pointset_3d.h>
 #include <vgl/vgl_bounding_box.h>
 
@@ -23,7 +26,7 @@ class bvgl_cross_section
 public:
  bvgl_cross_section():t_(0.0){}
  bvgl_cross_section(double t, vgl_point_3d<double> p, vgl_plane_3d<double> plane, vgl_pointset_3d<double> ptset):
-  t_(t),p_(p), plane_(plane), ptset_(ptset){bbox_ = vgl_bounding_box(ptset_);}
+  t_(t),p_(p), plane_(plane), ptset_(std::move(ptset)){bbox_ = vgl_bounding_box(ptset_);}
   //: accessors
   double t() const {return t_;}
   vgl_point_3d<double> p() {return p_;}

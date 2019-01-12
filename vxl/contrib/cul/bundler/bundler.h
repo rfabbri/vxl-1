@@ -16,7 +16,9 @@
 // Generic includes.
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_sparse_matrix.h>
 
 // We use vil_image_resources since they are not in memory, and we might
@@ -209,7 +211,7 @@ struct bundler_routines
     bundler_sfm sfm_phase;
 
     // Uses default everything, stages and settings
-    bundler_routines() {}
+    bundler_routines() = default;
 
     // Uses the default stages, but allows the user to specify settings
     // for the thresholds.

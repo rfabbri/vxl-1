@@ -10,7 +10,9 @@
 #include <sstream>
 #include <algorithm>
 #include <exception>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_arg.h>
 #include <mbl/mbl_mask.h>
 #include <mbl/mbl_exception.h>
@@ -19,9 +21,9 @@
 
 std::string trim(const std::string & s)
 {
-  std::size_t start = s.find_first_not_of(" ");
+  std::size_t start = s.find_first_not_of(' ');
   if (start == std::string::npos) return "";
-  unsigned end = s.find_last_not_of(" ");
+  unsigned end = s.find_last_not_of(' ');
   return s.substr(start, 1+end-start);
 }
 
@@ -85,8 +87,8 @@ int main(int argc, char **argv)
 {
   try
   {
-    vul_arg<std::string> mask_filename(VXL_NULLPTR, "Input mask file");
-    vul_arg<std::string> values_filename(VXL_NULLPTR, "Input values file");
+    vul_arg<std::string> mask_filename(nullptr, "Input mask file");
+    vul_arg<std::string> values_filename(nullptr, "Input values file");
     vul_arg<std::string> output_filename("-out", "Output values file - write to standard out if not set");
     vul_arg<std::string> delim("-delim", "Delimiter character for values file - one entry per line if not set");
     vul_arg_parse(argc, argv);
@@ -143,9 +145,3 @@ int main(int argc, char **argv)
 
 
 }
-
-
-
-
-
-

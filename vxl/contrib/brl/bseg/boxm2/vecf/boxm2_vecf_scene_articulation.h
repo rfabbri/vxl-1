@@ -3,15 +3,17 @@
 #include <iostream>
 #include <string>
 #include "boxm2_vecf_articulated_params.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgui/vgui_event.h>
 typedef std::vector<boxm2_vecf_articulated_params>::iterator iterator;
 
 class boxm2_vecf_scene_articulation{
 
  public:
-  boxm2_vecf_scene_articulation(){};
-  virtual ~boxm2_vecf_scene_articulation(){};
+  boxm2_vecf_scene_articulation()= default;;
+  virtual ~boxm2_vecf_scene_articulation()= default;;
 
   virtual unsigned size()=0;
   virtual boxm2_vecf_articulated_params& operator[] (unsigned i)=0;

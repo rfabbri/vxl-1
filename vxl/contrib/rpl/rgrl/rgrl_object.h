@@ -10,7 +10,9 @@
 #include <map>
 #include <vbl/vbl_ref_count.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include "rgrl_command_sptr.h"
 #include "rgrl_event_sptr.h"
@@ -22,13 +24,13 @@
 class rgrl_object_observer
 {
  public:
-  rgrl_object_observer() {}
+  rgrl_object_observer() = default;
   rgrl_object_observer(rgrl_command_sptr c,
                        rgrl_event_sptr event )
     :command_(c),
      event_(event)
   {}
-  ~rgrl_object_observer(){}
+  ~rgrl_object_observer()= default;
   rgrl_command_sptr command_;
   rgrl_event_sptr event_;
 };
@@ -60,7 +62,7 @@ class rgrl_object
     return *this;
   }
   //:
-  virtual ~rgrl_object();
+  ~rgrl_object() override;
 
   static const std::type_info& type_id()
   { return typeid(rgrl_object); }
@@ -87,7 +89,7 @@ class rgrl_object
   // to and an rgrl_command to execute. It returns an unsigned long tag
   // which can be used later to remove the event or retrieve the
   // command.
-  unsigned int add_observer( rgrl_event_sptr event, rgrl_command_sptr );
+  unsigned int add_observer( const rgrl_event_sptr& event, const rgrl_command_sptr& );
 
   //: Get the command associated with the given tag.
   rgrl_command_sptr get_command(unsigned int tag);

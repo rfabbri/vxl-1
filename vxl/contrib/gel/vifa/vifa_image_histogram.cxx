@@ -6,7 +6,7 @@
 #include <vil/vil_image_view.h>
 
 vifa_image_histogram::
-vifa_image_histogram(vil_image_view_base_sptr  image,
+vifa_image_histogram(const vil_image_view_base_sptr&  image,
                      double                    percentage)
 {
   // Compute max. # of pixel intensities
@@ -35,7 +35,7 @@ init(void)
 
   delta = 1.0;
 
-  if (vals != VXL_NULLPTR && counts != VXL_NULLPTR)
+  if (vals != nullptr && counts != nullptr)
   {
     float*  pval = vals;
     float*  pcount = counts;
@@ -74,7 +74,7 @@ init(void)
 }
 
 void vifa_image_histogram::
-fill_histogram(vil_image_view_base_sptr  image,
+fill_histogram(const vil_image_view_base_sptr&  image,
                double                    /* percentage */)
 {
   // Get the base histogram's array of counts
@@ -86,7 +86,7 @@ fill_histogram(vil_image_view_base_sptr  image,
     case VIL_PIXEL_FORMAT_SBYTE:
     {
       // Cast the abstract image view to a compatible concrete type
-      vil_image_view<vxl_byte>*  img =
+      auto*  img =
                 (vil_image_view<vxl_byte>*)(image.ptr());
 
       // Are all the pixels in contiguous memory?
@@ -120,7 +120,7 @@ fill_histogram(vil_image_view_base_sptr  image,
     case VIL_PIXEL_FORMAT_INT_16:
     {
       // Cast the abstract image view to a compatible concrete type
-      vil_image_view<vxl_int_16>*  img =
+      auto*  img =
                 (vil_image_view<vxl_int_16>*)(image.ptr());
 
       // Are all the pixels in contiguous memory?

@@ -3,17 +3,19 @@
 #include "bundler_inters.h"
 //
 #include <bundler/bundler_utils.h>
-#include <vcl_cassert.h>
+#include <cassert>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 const double INLIER_PERCENT_NOT_SET = -1.0;
 
 //----------Bundler Feature Impls -------------------------
 bundler_inters_feature::bundler_inters_feature()
- :  track(VXL_NULLPTR),
+ :  track(nullptr),
     index_in_track(-1),
-    image(VXL_NULLPTR),
+    image(nullptr),
     index_in_image(-1),
     visited(false) { }
 
@@ -25,7 +27,7 @@ bundler_inters_feature::bundler_inters_feature(
     int ind_in_img)
  :  point(row, col),
     descriptor(d),
-    track(VXL_NULLPTR),
+    track(nullptr),
     index_in_track(-1),
     image(img),
     index_in_image(ind_in_img),

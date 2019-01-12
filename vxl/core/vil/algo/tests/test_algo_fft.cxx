@@ -5,12 +5,14 @@
 #include <vil/vil_math.h>
 #include <vil/vil_image_view.h>
 #include <vil/algo/vil_fft.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 static void test_algo_fft()
 {
   vil_image_view<std::complex<double> > img0(4, 8, 2);
-  unsigned int seed = (unsigned int)std::time(VXL_NULLPTR);
+  auto seed = (unsigned int)std::time(nullptr);
 
   // fill in image
   for (unsigned i=0; i<img0.ni(); i++)

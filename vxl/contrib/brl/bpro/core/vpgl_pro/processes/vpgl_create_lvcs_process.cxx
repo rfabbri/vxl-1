@@ -5,7 +5,9 @@
 // \file
 
 #include <bprb/bprb_parameters.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpgl/vpgl_lvcs.h>
 #include <vpgl/vpgl_lvcs_sptr.h>
 
@@ -19,16 +21,16 @@ bool vpgl_create_lvcs_process_cons(bprb_func_process& pro)
   // 3: (string)  lvcs csname (wgs84, nad27n, wgs72, utm)
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("double");
-  input_types.push_back("double");
-  input_types.push_back("double");
-  input_types.push_back("vcl_string");
+  input_types.emplace_back("double");
+  input_types.emplace_back("double");
+  input_types.emplace_back("double");
+  input_types.emplace_back("vcl_string");
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   // process has no outputs
   std::vector<std::string> output_types;
-  output_types.push_back("vpgl_lvcs_sptr");
+  output_types.emplace_back("vpgl_lvcs_sptr");
   ok = pro.set_output_types(output_types);
   if (!ok) return ok;
 
@@ -44,9 +46,9 @@ bool vpgl_create_lvcs_process(bprb_func_process& pro)
   }
 
   // get the inputs
-  double lat = pro.get_input<double>(0);
-  double lon = pro.get_input<double>(1);
-  double el = pro.get_input<double>(2);
+  auto lat = pro.get_input<double>(0);
+  auto lon = pro.get_input<double>(1);
+  auto el = pro.get_input<double>(2);
   std::string lvcs_name = pro.get_input<std::string>(3);
 
   // create lvcs
@@ -56,4 +58,3 @@ bool vpgl_create_lvcs_process(bprb_func_process& pro)
   return true;
 
 }
-

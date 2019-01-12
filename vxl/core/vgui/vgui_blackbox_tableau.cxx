@@ -1,7 +1,4 @@
 // This is core/vgui/vgui_blackbox_tableau.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \brief  See vgui_blackbox_tableau.h for a description of this file.
@@ -18,7 +15,9 @@
 #include <fstream>
 #include "vgui_blackbox_tableau.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vpl/vpl.h>
 
@@ -80,7 +79,7 @@ bool vgui_blackbox_tableau::handle(const vgui_event& event)
       } else {
         vgui::out << "blackbox: starting playback\n";
         if (child) {
-          vgui_event *old_e = VXL_NULLPTR;
+          vgui_event *old_e = nullptr;
           int frame_number = 0;
           int t = 0;
           std::ofstream story("/tmp/vgui_blackbox_tableau.story");

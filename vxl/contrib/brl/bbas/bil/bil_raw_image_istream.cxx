@@ -1,7 +1,4 @@
 // This is brl/bbas/bil/bil_raw_image_istream.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Andrew Miller
@@ -13,7 +10,9 @@
 #include <algorithm>
 #include <sstream>
 #include "bil_raw_image_istream.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_file_iterator.h>
 #include <vul/vul_file.h>
 #include <vil/vil_image_view.h>
@@ -32,7 +31,7 @@ bil_raw_image_istream()
   : index_(INIT_INDEX),
     ni_(0), nj_(0),
     format_(VIL_PIXEL_FORMAT_UNKNOWN),
-    current_frame_(VXL_NULLPTR),
+    current_frame_(nullptr),
     time_stamp_(-1) {}
 
 
@@ -42,7 +41,7 @@ bil_raw_image_istream(const std::string& glob)
   : index_(INIT_INDEX),
     ni_(0), nj_(0),
     format_(VIL_PIXEL_FORMAT_UNKNOWN),
-    current_frame_(VXL_NULLPTR),
+    current_frame_(nullptr),
     time_stamp_(-1)
 {
   open(glob);
@@ -92,7 +91,7 @@ open(const std::string& rawFile)
 
   //index is invalid until advance is called
   index_ = INIT_INDEX;
-  current_frame_ = VXL_NULLPTR;
+  current_frame_ = nullptr;
   return true;
 }
 
@@ -103,7 +102,7 @@ close()
 {
   //image_paths_.clear();
   index_ = INIT_INDEX;
-  current_frame_ = VXL_NULLPTR;
+  current_frame_ = nullptr;
   ni_ = 0;
   nj_ = 0;
   format_ = VIL_PIXEL_FORMAT_UNKNOWN;
@@ -117,7 +116,7 @@ bool
 bil_raw_image_istream::
 advance()
 {
-  current_frame_ = VXL_NULLPTR;
+  current_frame_ = nullptr;
   if (index_ < num_frames_ || index_ == INIT_INDEX )
     return ++index_ < num_frames_;
 
@@ -172,7 +171,7 @@ bil_raw_image_istream::current_frame()
     }
     return current_frame_;
   }
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 
@@ -192,7 +191,7 @@ seek_frame(unsigned int frame_nr)
 {
   if (is_open() && frame_nr < num_frames_) {
     if (index_ != frame_nr)
-      current_frame_ = VXL_NULLPTR;
+      current_frame_ = nullptr;
     index_ = frame_nr;
     std::cout<<"Index is "<<index_<<std::endl;
     return true;
@@ -201,21 +200,19 @@ seek_frame(unsigned int frame_nr)
 }
 
 //: Binary write boxm2_data_base to stream
-void vsl_b_write(vsl_b_ostream& os, bil_raw_image_istream const& scene) {}
+void vsl_b_write(vsl_b_ostream&  /*os*/, bil_raw_image_istream const&  /*scene*/) {}
 //: Binary write boxm2_data_base to stream
-void vsl_b_write(vsl_b_ostream& os, const bil_raw_image_istream* &p) {}
+void vsl_b_write(vsl_b_ostream&  /*os*/, const bil_raw_image_istream* & /*p*/) {}
 //: Binary write boxm2_data_base_sptr to stream
-void vsl_b_write(vsl_b_ostream& os, bil_raw_image_istream_sptr& sptr) {}
+void vsl_b_write(vsl_b_ostream&  /*os*/, bil_raw_image_istream_sptr&  /*sptr*/) {}
 //: Binary write boxm2_data_base_sptr to stream
-void vsl_b_write(vsl_b_ostream& os, bil_raw_image_istream_sptr const& sptr) {}
+void vsl_b_write(vsl_b_ostream&  /*os*/, bil_raw_image_istream_sptr const&  /*sptr*/) {}
 
 //: Binary load boxm2_data_base from stream.
-void vsl_b_read(vsl_b_istream& is, bil_raw_image_istream &scene) {}
+void vsl_b_read(vsl_b_istream&  /*is*/, bil_raw_image_istream & /*scene*/) {}
 //: Binary load boxm2_data_base from stream.
-void vsl_b_read(vsl_b_istream& is, bil_raw_image_istream* p) {}
+void vsl_b_read(vsl_b_istream&  /*is*/, bil_raw_image_istream*  /*p*/) {}
 //: Binary load boxm2_data_base_sptr from stream.
-void vsl_b_read(vsl_b_istream& is, bil_raw_image_istream_sptr& sptr) {}
+void vsl_b_read(vsl_b_istream&  /*is*/, bil_raw_image_istream_sptr&  /*sptr*/) {}
 //: Binary load boxm2_data_base_sptr from stream.
-void vsl_b_read(vsl_b_istream& is, bil_raw_image_istream_sptr const& sptr) {}
-
-
+void vsl_b_read(vsl_b_istream&  /*is*/, bil_raw_image_istream_sptr const&  /*sptr*/) {}

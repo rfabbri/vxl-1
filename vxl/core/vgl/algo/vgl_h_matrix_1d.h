@@ -1,9 +1,6 @@
 // This is core/vgl/algo/vgl_h_matrix_1d.h
 #ifndef vgl_h_matrix_1d_h_
 #define vgl_h_matrix_1d_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief 2x2 line-to-line projectivity
@@ -29,7 +26,9 @@
 #include <iosfwd>
 #include <vnl/vnl_matrix_fixed.h>
 #include <vgl/vgl_homg_point_1d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //:
 // A class to hold a line-to-line projective transformation matrix
@@ -45,8 +44,8 @@ class vgl_h_matrix_1d
 
   // Constructors/Initializers/Destructors-------------------------------------
 
-  vgl_h_matrix_1d() {}
- ~vgl_h_matrix_1d() {}
+  vgl_h_matrix_1d() = default;
+ ~vgl_h_matrix_1d() = default;
 
   //: Copy constructor
   vgl_h_matrix_1d(vgl_h_matrix_1d<T> const& M) : t12_matrix_(M.get_matrix()) {}

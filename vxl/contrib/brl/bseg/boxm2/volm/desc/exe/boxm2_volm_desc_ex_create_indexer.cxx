@@ -69,7 +69,7 @@ int main(int argc, char** argv)
   // create the depth_interval
   volm_spherical_container_sptr sph = new volm_spherical_container(params.solid_angle, params.vmin, params.dmax);
   std::map<double, unsigned char>& depth_interval_map = sph->get_depth_interval_map();
-  std::map<double, unsigned char>::iterator iter = depth_interval_map.begin();
+  auto iter = depth_interval_map.begin();
   std::vector<double> depth_interval;
   for (; iter != depth_interval_map.end(); ++iter)
     depth_interval.push_back((double)iter->first);
@@ -96,8 +96,8 @@ int main(int argc, char** argv)
   std::cout << " \t Descriptor used: " << ex_indexer->get_index_type_str() << std::endl;
   std::cout << " \t Following parameters are used" << std::endl;
   std::cout << " \t\t radius = ";
-  for (std::vector<double>::iterator vit = radius().begin(); vit != radius().end(); ++vit)
-    std::cout << *vit << ' ';
+  for (double & vit : radius())
+    std::cout << vit << ' ';
   std::cout << '\n';
   if (norients() == 0)
     if (is_land_only())

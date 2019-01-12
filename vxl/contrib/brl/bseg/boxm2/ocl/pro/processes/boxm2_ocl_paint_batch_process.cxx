@@ -18,7 +18,9 @@
 #include <boxm2/io/boxm2_stream_cache.h>
 #include <boxm2/boxm2_util.h>
 #include <bprb/bprb_func_process.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //bsta sigma normalizer...
 #include <bsta/algo/bsta_sigma_normalizer.h>
@@ -26,8 +28,8 @@
 
 namespace boxm2_ocl_paint_batch_process_globals
 {
-  const unsigned n_inputs_ = 5;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 5;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool boxm2_ocl_paint_batch_process_cons(bprb_func_process& pro)
@@ -62,11 +64,11 @@ bool boxm2_ocl_paint_batch_process(bprb_func_process& pro)
   }
   //get the inputs
   unsigned i = 0;
-  bocl_device_sptr           device    = pro.get_input<bocl_device_sptr>(i++);
-  boxm2_scene_sptr           scene     = pro.get_input<boxm2_scene_sptr>(i++);
+  bocl_device_sptr           device = pro.get_input<bocl_device_sptr>(i++);
+  boxm2_scene_sptr           scene = pro.get_input<boxm2_scene_sptr>(i++);
   boxm2_opencl_cache_sptr    ocl_cache = pro.get_input<boxm2_opencl_cache_sptr>(i++);
   boxm2_stream_cache_sptr    str_cache = pro.get_input<boxm2_stream_cache_sptr>(i++);
-  bsta_sigma_normalizer_sptr n_table   = pro.get_input<bsta_sigma_normalizer_sptr>(i++);
+  bsta_sigma_normalizer_sptr n_table = pro.get_input<bsta_sigma_normalizer_sptr>(i++);
 
   //get scene data type and appTypeSize
   std::string data_type;
@@ -92,7 +94,7 @@ bool boxm2_ocl_paint_batch_process(bprb_func_process& pro)
   // iterate the scene block by block and write to output
   vul_timer totalTime;
   std::vector<boxm2_block_id> blk_ids = scene->get_block_ids();
-  std::vector<boxm2_block_id>::iterator id = blk_ids.begin();
+  auto id = blk_ids.begin();
   for (; id != blk_ids.end(); ++id) {
     boxm2_block_id bid = *id;
     std::cout<<" block "<<bid<<std::endl;

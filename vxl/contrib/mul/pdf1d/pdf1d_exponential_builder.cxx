@@ -9,8 +9,10 @@
 #include <cmath>
 #include "pdf1d_exponential_builder.h"
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <mbl/mbl_data_wrapper.h>
 #include <mbl/mbl_data_array_wrapper.h>
@@ -30,9 +32,7 @@ pdf1d_exponential_builder::pdf1d_exponential_builder()
 // Destructor
 //=======================================================================
 
-pdf1d_exponential_builder::~pdf1d_exponential_builder()
-{
-}
+pdf1d_exponential_builder::~pdf1d_exponential_builder() = default;
 
 //=======================================================================
 
@@ -109,7 +109,7 @@ void pdf1d_exponential_builder::build(pdf1d_pdf& model, mbl_data_wrapper<double>
   if (data.is_class("mbl_data_array_wrapper<T>"))
   {
     // Use more efficient build_from_array algorithm
-    mbl_data_array_wrapper<double>& data_array =
+    auto& data_array =
                      static_cast<mbl_data_array_wrapper<double>&>(data);
     build_from_array(model,data_array.data(),n_samples);
     return;
@@ -247,4 +247,3 @@ void pdf1d_exponential_builder::b_read(vsl_b_istream& bfs)
       return;
   }
 }
-

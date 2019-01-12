@@ -14,11 +14,11 @@ class vcsl_millimeter
   //***************************************************************************
 
   // Default constructor
-  vcsl_millimeter() {}
+  vcsl_millimeter() = default;
 
  public:
   // Destructor
-  virtual ~vcsl_millimeter() {}
+  ~vcsl_millimeter() override = default;
 
   //***************************************************************************
   // Status report
@@ -26,7 +26,7 @@ class vcsl_millimeter
 
   //: Returns the number of units of `this' equal of the standard_unit for the dimension
   // Pure virtual function of vcsl_unit
-  virtual double units_per_standard_unit() const { return 1000; }
+  double units_per_standard_unit() const override { return 1000; }
 
   //***************************************************************************
   // Singleton pattern

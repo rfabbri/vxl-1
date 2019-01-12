@@ -23,18 +23,16 @@ void brad_belief_prop_utils::project_intensities(vgl_point_3d<double> const& p){
   intensity_.clear();
   nbr_intensities_.clear();
   const std::map<unsigned, std::vector<unsigned> >& index = app_index_.const_index();
-  for(std::map<unsigned, std::vector<unsigned> >::const_iterator iit = index.begin();
-      iit != index.end(); ++iit){
-    unsigned img_index = iit->first;
-    const std::vector<unsigned>& nbrs = iit->second;
+  for(const auto & iit : index){
+    unsigned img_index = iit.first;
+    const std::vector<unsigned>& nbrs = iit.second;
     float Itarg = 0.0f;
     if(!pixel_intensity(imgs_[img_index], cams_[img_index], p, Itarg))
       continue;
     intensity_[img_index]=Itarg;
-    for(std::vector<unsigned>::const_iterator nit = nbrs.begin();
-        nit != nbrs.end(); ++nit){
+    for(unsigned int nbr : nbrs){
       float Inbr = 0.0f;
-      if(!pixel_intensity(imgs_[*nit], cams_[*nit], p, Inbr))
+      if(!pixel_intensity(imgs_[nbr], cams_[nbr], p, Inbr))
         continue;
       nbr_intensities_[img_index].push_back(Inbr);
     }
@@ -42,22 +40,21 @@ void brad_belief_prop_utils::project_intensities(vgl_point_3d<double> const& p){
 }
 
 void brad_belief_prop_utils::print_intensities() const{
-  std::map<unsigned, double>::const_iterator inti = intensity_.begin();
-  std::map<unsigned, std::vector<double> >::const_iterator ninti = nbr_intensities_.begin();
+  auto inti = intensity_.begin();
+  auto ninti = nbr_intensities_.begin();
   for(; inti!=intensity_.end(); ++inti, ++ninti){
     double tint = inti->second;
     const std::vector<double>& nbr_intens = ninti->second;
     std::cout << "t["<< inti->first <<  "]: " << tint << " n:( ";
-    for(std::vector<double>::const_iterator nit = nbr_intens.begin();
-        nit != nbr_intens.end(); ++nit)
-      std::cout << *nit << ' ';
+    for(double nbr_inten : nbr_intens)
+      std::cout << nbr_inten << ' ';
     std::cout << ")\n";
   }
 }
 void brad_belief_prop_utils::update_mog(std::vector<double> const& intens, vnl_vector_fixed<unsigned char, 8> & mog3,
                                         vnl_vector_fixed<float, 4>& nobs, bool fixed_sigma) const{
-  for(unsigned i = 0; i<static_cast<unsigned>(intens.size()); ++i)
-      bsta_mog3_grey::update_gauss_mixture_3(mog3, nobs, static_cast<float>(intens[i]), 1.0f, BRAD_INIT_SIGMA, BRAD_MIN_SIGMA);
+  for(double inten : intens)
+      bsta_mog3_grey::update_gauss_mixture_3(mog3, nobs, static_cast<float>(inten), 1.0f, BRAD_INIT_SIGMA, BRAD_MIN_SIGMA);
   if(fixed_sigma)
     bsta_mog3_grey::force_mog3_sigmas_to_value(mog3, BRAD_FIXED_SIGMA);
 }
@@ -66,7 +63,7 @@ double brad_belief_prop_utils::p_mog(double intensity, vnl_vector_fixed<unsigned
   return bsta_mog3_grey::prob_density(mog3, static_cast<float>(intensity));
 }
 
-  void brad_belief_prop_utils::print_mog(vnl_vector_fixed<unsigned char, 8> const& mog3, vnl_vector_fixed<float, 4> const& nobs) const{
+  void brad_belief_prop_utils::print_mog(vnl_vector_fixed<unsigned char, 8> const& mog3, vnl_vector_fixed<float, 4> const&  /*nobs*/) const{
     float mu0 = static_cast<float>(mog3[0])/255.0f, mu1 = static_cast<float>(mog3[3])/255.0f, mu2 = static_cast<float>(mog3[6])/255.0f;
     float w0 = static_cast<float>(mog3[2])/255.0f, w1 = static_cast<float>(mog3[5])/255.0f, w2 = 1.0f-(w0+w1);
     float sigma0 = static_cast<float>(mog3[1])/255.0f, sigma1 = static_cast<float>(mog3[4])/255.0f, sigma2 =static_cast<float>(mog3[7])/255.0f;
@@ -76,14 +73,14 @@ double brad_belief_prop_utils::p_mog(double intensity, vnl_vector_fixed<unsigned
 
 void brad_belief_prop_utils::test_appearance_update(){
   // must have called ::print_intensities first!
-  std::map<unsigned, double>::iterator inti = intensity_.begin();
-  std::map<unsigned, std::vector<double> >::iterator ninti = nbr_intensities_.begin();
+  auto inti = intensity_.begin();
+  auto ninti = nbr_intensities_.begin();
   for(; inti!=intensity_.end(); ++inti, ++ninti){
-    float tint = static_cast<float>(inti->second);
+    auto tint = static_cast<float>(inti->second);
     vnl_vector_fixed<unsigned char, 8> mog3(static_cast<unsigned char>(0));
     vnl_vector_fixed<float, 4> nobs(0.0f);
     std::vector<double>& nbr_intens = ninti->second;
-    unsigned n_nbr = static_cast<unsigned>(nbr_intens.size());
+    auto n_nbr = static_cast<unsigned>(nbr_intens.size());
     for(unsigned i = 0; i<n_nbr; ++i)
       bsta_mog3_grey::update_gauss_mixture_3(mog3, nobs, static_cast<float>(nbr_intens[i]), 1.0f, BRAD_INIT_SIGMA, BRAD_MIN_SIGMA);
 
@@ -104,10 +101,9 @@ std::vector<unsigned> brad_belief_prop_utils::index(unsigned indx) const{
 
 std::vector<double> brad_belief_prop_utils::ref_intensities(std::vector<unsigned> const& ref_indices, vgl_point_3d<double> const& p) const{
   std::vector<double> ret;
-  for(std::vector<unsigned>::const_iterator rit = ref_indices.begin();
-      rit != ref_indices.end(); ++rit){
+  for(unsigned int ref_indice : ref_indices){
     float I = 0.0f;
-    if(!pixel_intensity(imgs_[*rit], cams_[*rit], p, I))
+    if(!pixel_intensity(imgs_[ref_indice], cams_[ref_indice], p, I))
       continue;
     ret.push_back(I);
   }
@@ -119,7 +115,7 @@ void brad_belief_prop_utils::init_zray(double Iray, std::vector<unsigned> const&
   zray_.min_z_ = p.z()+dzmin;
   zray_.max_z_ = p.z()+(100.0+dzmin);
   zray_.init_ray();
-  unsigned n = static_cast<unsigned>((zray_.max_z_-zray_.min_z_)/zray_.dim_);
+  auto n = static_cast<unsigned>((zray_.max_z_-zray_.min_z_)/zray_.dim_);
   for(unsigned i=n; i>=1; i--){
     double z = zray_.ray_data_[i-1].cell_z_;
     vgl_point_3d<double> pray(p.x(), p.y(), z);
@@ -130,7 +126,7 @@ void brad_belief_prop_utils::init_zray(double Iray, std::vector<unsigned> const&
 }
 
 void brad_belief_prop_utils::zray_pre(){
-  unsigned n = static_cast<unsigned>((zray_.max_z_-zray_.min_z_)/zray_.dim_);
+  auto n = static_cast<unsigned>((zray_.max_z_-zray_.min_z_)/zray_.dim_);
   double pre = 0.0;
   for(unsigned i=n; i>=1; i--){
     zray_.ray_data_[i-1].pre_ = pre;
@@ -139,7 +135,7 @@ void brad_belief_prop_utils::zray_pre(){
 }
 
 void brad_belief_prop_utils::zray_post(){
-  unsigned n = static_cast<unsigned>((zray_.max_z_-zray_.min_z_)/zray_.dim_);
+  auto n = static_cast<unsigned>((zray_.max_z_-zray_.min_z_)/zray_.dim_);
   double post = 0.0;
   // reverse scan for post
   for(unsigned i=1; i<=n; i++){
@@ -149,8 +145,7 @@ void brad_belief_prop_utils::zray_post(){
   }
 }
 void brad_belief_prop_utils::update_PinS(){
-unsigned n = static_cast<unsigned>((zray_.max_z_-zray_.min_z_)/zray_.dim_);
-  double post = 0.0;
+auto n = static_cast<unsigned>((zray_.max_z_-zray_.min_z_)/zray_.dim_);
   // reverse scan for post
   for(unsigned i=1; i<=n; i++){
     double pins = zray_.ray_data_[i-1].PinS_;
@@ -165,7 +160,7 @@ unsigned n = static_cast<unsigned>((zray_.max_z_-zray_.min_z_)/zray_.dim_);
 }
 void brad_belief_prop_utils::update_vis(){
   double vis = 1.0;
-  unsigned n = static_cast<unsigned>((zray_.max_z_-zray_.min_z_)/zray_.dim_);
+  auto n = static_cast<unsigned>((zray_.max_z_-zray_.min_z_)/zray_.dim_);
   for(unsigned i=n; i>=1; i--){
     zray_.ray_data_[i-1].vis_=vis;
     vis *= (1.0-zray_.ray_data_[i-1].PinS_);
@@ -176,7 +171,7 @@ void brad_belief_prop_utils::print_zray(unsigned ni) const{
 }
 
 double brad_belief_prop_utils::expected_depth() const{
-  unsigned n = static_cast<unsigned>((zray_.max_z_-zray_.min_z_)/zray_.dim_);
+  auto n = static_cast<unsigned>((zray_.max_z_-zray_.min_z_)/zray_.dim_);
   double sum = 0.0;
   double sump = 0.0;
   for(unsigned i=n; i>=1; i--){
@@ -197,7 +192,7 @@ void brad_belief_prop_utils::compute_depth_map(vgl_box_2d<double>const& region, 
   std::vector<unsigned> ref_views =this->index(mnv);
   double min_x = region.min_x(), max_x = region.max_x();
   double min_y = region.min_y(), max_y = region.max_y();
-  unsigned ni = static_cast<unsigned>((max_x-min_x)/cell_len), nj = static_cast<unsigned>((max_y-min_y)/cell_len);
+  auto ni = static_cast<unsigned>((max_x-min_x)/cell_len), nj = static_cast<unsigned>((max_y-min_y)/cell_len);
   depth_.set_size(ni, nj);
   depth_.fill(0.0f);
   double y = min_y;
@@ -212,7 +207,7 @@ void brad_belief_prop_utils::compute_depth_map(vgl_box_2d<double>const& region, 
       this->zray_post();
       this->update_PinS();
       this->update_vis();
-      float ed = static_cast<float>(this->expected_depth());
+      auto ed = static_cast<float>(this->expected_depth());
       depth_(i,j) = ed;
       x += cell_len;
     }

@@ -1,7 +1,9 @@
 #include <iostream>
 #include <fstream>
 #include "boxm2_vecf_point_cloud_orbit_viewer.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include "boxm2_vecf_plot_orbit.h"
 std::vector<vgl_point_3d<double> >  boxm2_vecf_point_cloud_orbit_viewer::draw_sphere(vgl_sphere_3d<double> const& sph){
   std::vector<vgl_point_3d<double> > pts;
@@ -46,14 +48,13 @@ bool boxm2_vecf_point_cloud_orbit_viewer::set_point_cloud(std::string const& pc_
 }
 void boxm2_vecf_point_cloud_orbit_viewer::add_sphere(vgl_sphere_3d<double> const& sph, int r, int g, int b){
   std::vector<vgl_point_3d<double> > pts = this->draw_sphere(sph);
-  for(std::vector<vgl_point_3d<double> >::iterator pit = pts.begin();
-      pit != pts.end(); ++pit){
-    cpoint p(*pit, r, g, b);
+  for(auto & pt : pts){
+    cpoint p(pt, r, g, b);
     pc_.push_back(p);
   }
 }
 
-bool boxm2_vecf_point_cloud_orbit_viewer::display_orbit(boxm2_vecf_orbit_params opr, bool is_right){
+bool boxm2_vecf_point_cloud_orbit_viewer::display_orbit(const boxm2_vecf_orbit_params& opr, bool is_right){
   double xm_min = opr.x_min()-10.0;
   double xm_max = opr.x_max()+10.0;
   std::vector<vgl_point_3d<double> > inf_pts, sup_pts, crease_pts;
@@ -92,9 +93,7 @@ bool boxm2_vecf_point_cloud_orbit_viewer::save_point_cloud(std::string const& pc
     std::cout << "invalid point clould path " << pc_path << '\n';
     return false;
   }
-  for(std::vector<cpoint>::const_iterator pit = pc_.begin();
-      pit != pc_.end(); ++pit){
-    const cpoint& p = (*pit);
+  for(const auto & p : pc_){
     ostr << p.pt_.x() <<' '<< p.pt_.y()<<' '<< p.pt_.z()<<' '<< p.r_ <<' '<< p.g_<<' '<< p.b_<< '\n';
   }
   ostr.close();

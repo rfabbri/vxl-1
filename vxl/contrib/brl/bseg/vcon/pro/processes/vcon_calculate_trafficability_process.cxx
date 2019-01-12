@@ -36,8 +36,8 @@
 //: global variables and functions
 namespace vcon_calculate_trafficability_process_globals
 {
-  const unsigned n_inputs_  = 5;
-  const unsigned n_outputs_ = 2;
+  constexpr unsigned n_inputs_ = 5;
+  constexpr unsigned n_outputs_ = 2;
 
 }
 //: constructor
@@ -71,14 +71,14 @@ bool vcon_calculate_trafficability_process(bprb_func_process& pro)
   vpgl_camera_double_sptr  cam_sptr = pro.get_input<vpgl_camera_double_sptr>(in_i++);
   bbas_1d_array_float_sptr pt_lon = pro.get_input<bbas_1d_array_float_sptr>(in_i++);
   bbas_1d_array_float_sptr pt_lat = pro.get_input<bbas_1d_array_float_sptr>(in_i++);
-  float road_width = pro.get_input<float>(in_i++);
+  auto road_width = pro.get_input<float>(in_i++);
 
   // load the image
   if (img_sptr->pixel_format() != VIL_PIXEL_FORMAT_BYTE) {
     std::cerr << pro.name() << ": Unsupported pixel format: " << img_sptr->pixel_format() << ", only byte is allowed!\n";
     return false;
   }
-  vpgl_geo_camera *geocam = dynamic_cast<vpgl_geo_camera*>(cam_sptr.ptr());
+  auto *geocam = dynamic_cast<vpgl_geo_camera*>(cam_sptr.ptr());
   if (!geocam) {
     std::cerr << pro.name() << ": cannot cast the input cam to a vpgl_geo_camera!\n";
     return false;
@@ -106,7 +106,7 @@ bool vcon_calculate_trafficability_process(bprb_func_process& pro)
     double lon = pt_lon->data_array[i];
     double lat = pt_lat->data_array[i];
     lvcs->global_to_local(lon, lat, 0.0, vpgl_lvcs::wgs84, lx, ly, lz);
-    road_in_meter.push_back(vgl_point_2d<double>(lx, ly));
+    road_in_meter.emplace_back(lx, ly);
   }
   // expand the road
   if (road_width < 1.0)
@@ -187,7 +187,7 @@ bool vcon_calculate_trafficability_process(bprb_func_process& pro)
   }
   std::cout << "loading image: " << dem_file << std::endl;
   vil_image_resource_sptr dem_res = vil_load_image_resource(dem_file.c_str());
-  vpgl_geo_camera* dem_cam = VXL_NULLPTR;
+  vpgl_geo_camera* dem_cam = nullptr;
   /*if (dem_cam_sptr) {
     std::cout << "Using the input geo camera for dem image!\n";
     dem_cam = dynamic_cast<vpgl_geo_camera*>(dem_cam_sptr.ptr());

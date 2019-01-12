@@ -8,7 +8,9 @@
 #include <iostream>
 #include <cmath>
 #include <boxm2/io/boxm2_stream_cache.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class boxm2_mean_intensities_batch_functor
 {
@@ -16,7 +18,7 @@ class boxm2_mean_intensities_batch_functor
   typedef boxm2_data_traits<BOXM2_AUX0>::datatype datatype;
 
   //: "default" constructor
-  boxm2_mean_intensities_batch_functor() {}
+  boxm2_mean_intensities_batch_functor() = default;
 
   bool init_data(boxm2_data_base *output_alph, boxm2_stream_cache_sptr str_cache)
   {
@@ -33,8 +35,8 @@ class boxm2_mean_intensities_batch_functor
     std::vector<datatype> out = str_cache_->get_next<BOXM2_AUX0>(id_, index);
 
     alpha = datatype(0.0);
-    for (unsigned j = 0; j < out.size(); j++) {
-      alpha += out[j];
+    for (float j : out) {
+      alpha += j;
     }
     alpha /= datatype(out.size());
     return true;
@@ -53,7 +55,7 @@ class boxm2_mean_intensities_print_functor
   typedef boxm2_data_traits<BOXM2_AUX0>::datatype datatype;
 
   //: "default" constructor
-  boxm2_mean_intensities_print_functor() {}
+  boxm2_mean_intensities_print_functor() = default;
 
   bool init_data(boxm2_data_base *output_alph, boxm2_stream_cache_sptr str_cache)
   {
@@ -70,8 +72,8 @@ class boxm2_mean_intensities_print_functor
 
     if (index%1000000 == 0) {
       std::cout << alpha;
-      for (unsigned j = 0; j < out.size(); ++j) {
-        std::cout << ' ' << out[j];
+      for (float j : out) {
+        std::cout << ' ' << j;
       }
       std::cout << '\n';
     }

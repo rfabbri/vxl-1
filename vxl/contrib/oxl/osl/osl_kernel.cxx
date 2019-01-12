@@ -1,7 +1,4 @@
 // This is oxl/osl/osl_kernel.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
@@ -9,7 +6,9 @@
 #include <iostream>
 #include <cmath>
 #include "osl_kernel.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h>
 
 // Construct one half of a Gaussian convolution kernel.
@@ -63,4 +62,3 @@ void osl_kernel_DOG(float *kernel_, float *sub_area_, int &k_size_,
   // kernel size
   k_size_ = 2*width_ - 1;
 }
-

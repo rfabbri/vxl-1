@@ -10,7 +10,9 @@
 // \author Vishal Jain
 // \date Mar 10, 2011
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/io/boxm2_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -26,8 +28,8 @@
 
 namespace boxm2_cpp_cone_update_image_process_globals
 {
-  const unsigned n_inputs_ = 5;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 5;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool boxm2_cpp_cone_update_image_process_cons(bprb_func_process& pro)
@@ -74,24 +76,24 @@ bool boxm2_cpp_cone_update_image_process(bprb_func_process& pro)
   int illumination_bin_index = pro.get_input<int>(i);
 
   vil_image_view_base_sptr float_image=boxm2_util::prepare_input_image(in_img);
-  if (vil_image_view<float> * input_image=dynamic_cast<vil_image_view<float> * > (float_image.ptr()))
+  if (auto * input_image=dynamic_cast<vil_image_view<float> * > (float_image.ptr()))
   {
     bool foundDataType = false;
 
     std::string data_type;
     std::string num_obs_type;
     std::vector<std::string> apps = scene->appearances();
-    for (unsigned int i=0; i<apps.size(); ++i) {
-      if ( apps[i] == boxm2_data_traits<BOXM2_MOG3_GREY>::prefix() ) {
-        data_type = apps[i];
+    for (const auto & app : apps) {
+      if ( app == boxm2_data_traits<BOXM2_MOG3_GREY>::prefix() ) {
+        data_type = app;
         foundDataType = true;
       }
-      else if ( apps[i] == boxm2_data_traits<BOXM2_MOG3_GREY_16>::prefix() ) {
-        data_type = apps[i];
+      else if ( app == boxm2_data_traits<BOXM2_MOG3_GREY_16>::prefix() ) {
+        data_type = app;
         foundDataType = true;
       }
-      else if ( apps[i] == boxm2_data_traits<BOXM2_NUM_OBS>::prefix() ) {
-        num_obs_type = apps[i];
+      else if ( app == boxm2_data_traits<BOXM2_NUM_OBS>::prefix() ) {
+        num_obs_type = app;
       }
     }
     if (!foundDataType) {

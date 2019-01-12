@@ -6,7 +6,10 @@
 
 #include "mbl_data_collector_list.h"
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_binary_loader.h>
 #include <vsl/vsl_vector_io.h>
 
@@ -15,18 +18,14 @@
 //=======================================================================
 
 template<class T>
-mbl_data_collector_list<T>::mbl_data_collector_list()
-{
-}
+mbl_data_collector_list<T>::mbl_data_collector_list() = default;
 
 //=======================================================================
 // Destructor
 //=======================================================================
 
 template<class T>
-mbl_data_collector_list<T>::~mbl_data_collector_list()
-{
-}
+mbl_data_collector_list<T>::~mbl_data_collector_list() = default;
 
 //: Clear any stored data
 template<class T>
@@ -61,7 +60,7 @@ mbl_data_wrapper<T >& mbl_data_collector_list<T>::data_wrapper()
     wrapper_.set(&data_[0],data_.size()); // not data_.begin() since set() expects T*, not vector_iterator
   }
   else
-    wrapper_.set(VXL_NULLPTR, 0);
+    wrapper_.set(nullptr, 0);
   return wrapper_;
 }
 

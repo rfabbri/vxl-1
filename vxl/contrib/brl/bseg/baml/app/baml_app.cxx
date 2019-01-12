@@ -12,8 +12,6 @@
 #include <vil/vil_save.h>
 #include <vil/algo/vil_gauss_filter.h>
 
-#include <vul/vul_file.h>
-
 #include <vgl/vgl_intersection.h>
 
 #include <vpgl/vpgl_local_rational_camera.h>
@@ -28,7 +26,7 @@
 #include "bsta/bsta_histogram.h"
 
 
-int main(int argc, char * argv[])
+int main(int  /*argc*/, char *  /*argv*/[])
 {
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // CHANGE DETECTION
@@ -199,7 +197,7 @@ int main(int argc, char * argv[])
       read_rational_camera_from_txt<double>(ref_cam_file);
 
     // Check cameras
-    if (target_rpc == VXL_NULLPTR || ref_rpc == VXL_NULLPTR) {
+    if (target_rpc == nullptr || ref_rpc == nullptr) {
       std::cerr << "Failed to load cameras\n";
       return 1;
     }

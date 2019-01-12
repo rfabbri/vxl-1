@@ -1,12 +1,15 @@
 // This is brl/bseg/betr/pro/processes/betr_execute_etr_multi_chimg_evt_poly_process.cxx
 #include <iostream>
 #include <fstream>
+#include <string>
 #include <bprb/bprb_func_process.h>
 #include <bpro/core/bbas_pro/bbas_1d_array_double.h>
 #include <bpro/core/bbas_pro/bbas_1d_array_string.h>
 #include <bpro/core/bbas_pro/bbas_1d_array_byte.h>
 #include <bpro/core/bbas_pro/bbas_1d_array_int.h>
-#include <vcl_string.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_point_2d.h>
 #include <vsol/vsol_point_3d.h>
 #include <vil/vil_image_view.h>
@@ -18,14 +21,13 @@
 // for each object. For a polygonal object the base is the polygon itself.
 // For a 3-d mesh object the base is the lowest face of the mesh.
 //
-#include <vcl_compiler.h>
 #include <betr/betr_event_trigger.h>
 #include <vgl/vgl_point_3d.h>
 
 namespace betr_execute_etr_multi_chimg_evt_poly_process_globals
 {
-  const unsigned n_inputs_  = 3;
-  const unsigned n_outputs_ = 6;
+  constexpr unsigned n_inputs_ = 3;
+  constexpr unsigned n_outputs_ = 6;
 }
 
 bool betr_execute_etr_multi_chimg_evt_poly_process_cons(bprb_func_process& pro)
@@ -34,9 +36,9 @@ bool betr_execute_etr_multi_chimg_evt_poly_process_cons(bprb_func_process& pro)
 
   //process takes 2 inputs
   std::vector<std::string> input_types_(n_inputs_);
-  input_types_[0]  = "betr_event_trigger_sptr"; //event_trigger
-  input_types_[1]  = "vcl_string"; //algorithm name
-  input_types_[2]  = "vcl_string"; //json prarameters
+  input_types_[0] = "betr_event_trigger_sptr"; //event_trigger
+  input_types_[1] = "vcl_string"; //algorithm name
+  input_types_[2] = "vcl_string"; //json prarameters
   // process has 6 outputs
   std::vector<std::string> output_types_(n_outputs_);
   output_types_[0] = "bbas_1d_array_double_sptr"; // change probability
@@ -85,7 +87,7 @@ bool betr_execute_etr_multi_chimg_evt_poly_process(bprb_func_process& pro)
     if(!imgr)
       continue;
     unsigned ni = imgr->ni(), nj = imgr->nj();
-    unsigned area  = ni*nj;
+    unsigned area = ni*nj;
     area_total += area;
     dims_offset->data_array[k]=ni;
     dims_offset->data_array[k+1]=nj;
@@ -107,7 +109,7 @@ bool betr_execute_etr_multi_chimg_evt_poly_process(bprb_func_process& pro)
   }
   // store the array of change scores
   unsigned j = 0;
-  for(std::vector<double>::iterator pit = prob_change.begin();
+  for(auto pit = prob_change.begin();
       pit != prob_change.end(); ++pit, ++j)
     change_probs->data_array[j]=*pit;
 
@@ -118,7 +120,7 @@ bool betr_execute_etr_multi_chimg_evt_poly_process(bprb_func_process& pro)
   for(unsigned j = 0; j<n; ++j){
     std::string enam = event_region_names[j];
     //look up the geo object by name
-    std::map<std::string, betr_geo_object_3d_sptr>::const_iterator oit = evt_objs.find(enam);
+    auto oit = evt_objs.find(enam);
     if(oit == evt_objs.end()){
       std::cout << "In betr_execute_multi_chimg_evt_poly_process - event object " << enam << " not found" << std::endl;
       return false;
@@ -144,11 +146,11 @@ bool betr_execute_etr_multi_chimg_evt_poly_process(bprb_func_process& pro)
   bbas_1d_array_int_sptr poly_nverts = new bbas_1d_array_int(nverts.size());
   bbas_1d_array_double_sptr poly_verts = new bbas_1d_array_double(verts.size());
   unsigned nv = 0;
-  for(std::vector<unsigned>::iterator nit =  nverts.begin();
+  for(auto nit =  nverts.begin();
       nit != nverts.end(); ++nit, ++nv)
     poly_nverts->data_array[nv]=*nit;
   unsigned iv = 0;
-  for(std::vector<double>::iterator vit =  verts.begin();
+  for(auto vit =  verts.begin();
       vit != verts.end(); ++vit, ++iv)
     poly_verts->data_array[iv]=*vit;
   //save outputs and exit

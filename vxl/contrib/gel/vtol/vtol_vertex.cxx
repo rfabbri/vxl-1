@@ -10,8 +10,10 @@
 #include <vtol/vtol_face.h>
 #include <vtol/vtol_macros.h>
 #include <vtol/vtol_list_functions.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 //***************************************************************************
 // Initialization
@@ -176,9 +178,8 @@ void vtol_vertex::explore_vertex(vertex_list &verts)
   // it will be put as the second element, during the first recursive call.
 
   edge_list e_list; this->edges(e_list);
-  for (edge_list::iterator i=e_list.begin();i!=e_list.end();++i)
+  for (const auto& e : e_list)
   {
-    vtol_edge_sptr e=*i;
     vtol_vertex_sptr vv;
     if (e->v1()==this)
       vv=e->v2();

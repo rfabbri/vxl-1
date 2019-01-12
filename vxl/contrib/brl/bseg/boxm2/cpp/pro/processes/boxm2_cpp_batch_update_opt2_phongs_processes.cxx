@@ -9,7 +9,9 @@
 // \author Ozge C. Ozcanli
 // \date May 12, 2011
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/io/boxm2_stream_cache.h>
 #include <boxm2/io/boxm2_cache.h>
 #include <boxm2/boxm2_scene.h>
@@ -29,8 +31,8 @@
 //: create a norm img = pre_inf+vis_inf;
 namespace boxm2_cpp_pre_infinity_opt2_phongs_process_globals
 {
-    const unsigned n_inputs_ = 9;
-    const unsigned n_outputs_ = 1;
+    constexpr unsigned n_inputs_ = 9;
+    constexpr unsigned n_outputs_ = 1;
 }
 
 bool boxm2_cpp_pre_infinity_opt2_phongs_process_cons(bprb_func_process& pro)
@@ -76,14 +78,14 @@ bool boxm2_cpp_pre_infinity_opt2_phongs_process(bprb_func_process& pro)
     boxm2_cache_sptr cache= pro.get_input<boxm2_cache_sptr>(i++);
     vpgl_camera_double_sptr cam= pro.get_input<vpgl_camera_double_sptr>(i++);
 
-    unsigned ni = pro.get_input<unsigned>(i++);
-    unsigned nj = pro.get_input<unsigned>(i++);
+    auto ni = pro.get_input<unsigned>(i++);
+    auto nj = pro.get_input<unsigned>(i++);
 
     std::string dir_identifier = pro.get_input<std::string>(i++);
     std::string img_identifier = pro.get_input<std::string>(i++);
 
-    float sun_elev=pro.get_input<float>(i++);
-    float sun_azim=pro.get_input<float>(i++);
+    auto sun_elev=pro.get_input<float>(i++);
+    auto sun_azim=pro.get_input<float>(i++);
 
     std::vector<boxm2_block_id> vis_order=scene->get_vis_blocks(reinterpret_cast<vpgl_generic_camera<double>*>(cam.ptr()));
     if (vis_order.empty())
@@ -101,9 +103,9 @@ bool boxm2_cpp_pre_infinity_opt2_phongs_process(bprb_func_process& pro)
     for (id = vis_order.begin(); id != vis_order.end(); ++id)
     {
         std::cout<<"Block id "<<(*id)<<' ';
-        boxm2_block *     blk   = cache->get_block(scene,*id);
-        boxm2_data_base *  alph  = cache->get_data_base(scene, *id,boxm2_data_traits<BOXM2_ALPHA>::prefix(),0,true);
-        boxm2_data_base *  float8_phongs   = cache->get_data_base(scene, *id,boxm2_data_traits<BOXM2_FLOAT8>::prefix(),0,true);
+        boxm2_block *     blk = cache->get_block(scene,*id);
+        boxm2_data_base *  alph = cache->get_data_base(scene, *id,boxm2_data_traits<BOXM2_ALPHA>::prefix(),0,true);
+        boxm2_data_base *  float8_phongs = cache->get_data_base(scene, *id,boxm2_data_traits<BOXM2_FLOAT8>::prefix(),0,true);
         // call get_data_base method with num_bytes = 0 to read from disc
         boxm2_data_base *aux0 = cache->get_data_base(scene,*id,boxm2_data_traits<BOXM2_AUX0>::prefix(img_identifier));
         boxm2_data_base *aux1 = cache->get_data_base(scene,*id,boxm2_data_traits<BOXM2_AUX1>::prefix(img_identifier));
@@ -122,7 +124,7 @@ bool boxm2_cpp_pre_infinity_opt2_phongs_process(bprb_func_process& pro)
         datas.push_back(aux3_view);
         datas.push_back(alph);
         datas.push_back(float8_phongs);
-        boxm2_scene_info_wrapper *scene_info_wrapper=new boxm2_scene_info_wrapper();
+        auto *scene_info_wrapper=new boxm2_scene_info_wrapper();
         scene_info_wrapper->info=scene->get_blk_metadata(*id);
 
         boxm2_batch_update_phongs_pass1_functor pass1;
@@ -142,7 +144,7 @@ bool boxm2_cpp_pre_infinity_opt2_phongs_process(bprb_func_process& pro)
         cache->remove_data_base(scene,*id,boxm2_data_traits<BOXM2_AUX3>::prefix(dir_identifier));
     }
     // compute beta denominator
-    vil_image_view<float> *  norm_img= new vil_image_view<float>(ni,nj);
+    auto *  norm_img= new vil_image_view<float>(ni,nj);
     // pre_inf + vis * 1 // assume PI = 1 for all the colors (uniform distribution)
     vil_math_image_sum<float,float,float>(pre_inf_img,vis_inf_img,*norm_img);
 
@@ -157,9 +159,9 @@ bool boxm2_cpp_pre_infinity_opt2_phongs_process(bprb_func_process& pro)
     for (id = vis_order.begin(); id != vis_order.end(); ++id)
     {
         std::cout<<"Block id "<<(*id)<<' ';
-        boxm2_block *     blk   = cache->get_block(scene,*id);
-        boxm2_data_base *  alph  = cache->get_data_base(scene,*id,boxm2_data_traits<BOXM2_ALPHA>::prefix(),0,true);
-        boxm2_data_base *  phongs_model_base   = cache->get_data_base(scene,*id,boxm2_data_traits<BOXM2_FLOAT8>::prefix(),0,false);
+        boxm2_block *     blk = cache->get_block(scene,*id);
+        boxm2_data_base *  alph = cache->get_data_base(scene,*id,boxm2_data_traits<BOXM2_ALPHA>::prefix(),0,true);
+        boxm2_data_base *  phongs_model_base = cache->get_data_base(scene,*id,boxm2_data_traits<BOXM2_FLOAT8>::prefix(),0,false);
         // call get_data_base method with num_bytes = 0 to read from disc
         boxm2_data_base *aux0 = cache->get_data_base(scene,*id,boxm2_data_traits<BOXM2_AUX0>::prefix(img_identifier));
         boxm2_data_base *aux1 = cache->get_data_base(scene,*id,boxm2_data_traits<BOXM2_AUX1>::prefix(img_identifier));
@@ -180,7 +182,7 @@ bool boxm2_cpp_pre_infinity_opt2_phongs_process(bprb_func_process& pro)
         datas.push_back(alph);
         datas.push_back(phongs_model_base);
         datas.push_back(aux);
-        boxm2_scene_info_wrapper *scene_info_wrapper=new boxm2_scene_info_wrapper();
+        auto *scene_info_wrapper=new boxm2_scene_info_wrapper();
         scene_info_wrapper->info=scene->get_blk_metadata(*id);
 
         boxm2_batch_update_opt2_phongs_pass2_functor pass2;
@@ -209,8 +211,8 @@ bool boxm2_cpp_pre_infinity_opt2_phongs_process(bprb_func_process& pro)
 //: run batch update
 namespace boxm2_cpp_batch_update_opt2_phongs_process_globals
 {
-    const unsigned n_inputs_ = 6;
-    const unsigned n_outputs_ = 0;
+    constexpr unsigned n_inputs_ = 6;
+    constexpr unsigned n_outputs_ = 0;
 }
 
 bool boxm2_cpp_batch_update_opt2_phongs_process_cons(bprb_func_process& pro)
@@ -252,8 +254,8 @@ bool boxm2_cpp_batch_update_opt2_phongs_process(bprb_func_process& pro)
     boxm2_cache_sptr cache= pro.get_input<boxm2_cache_sptr>(i++);
     boxm2_stream_cache_sptr str_cache1 = pro.get_input<boxm2_stream_cache_sptr>(i++);  //: this is for aux1,aux2,aux3.
     boxm2_stream_cache_sptr str_cache2 = pro.get_input<boxm2_stream_cache_sptr>(i++); // this is for aux
-    float  sun_elev = pro.get_input<float>(i++); // this is for aux
-    float  sun_azim = pro.get_input<float>(i++); // this is for aux
+    auto  sun_elev = pro.get_input<float>(i++); // this is for aux
+    auto  sun_azim = pro.get_input<float>(i++); // this is for aux
 
     // assumes that the data of each image has been created in the data models previously
     int alphaTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_ALPHA>::prefix());
@@ -263,8 +265,8 @@ bool boxm2_cpp_batch_update_opt2_phongs_process(bprb_func_process& pro)
     id = blk_ids.begin();
     for (id = blk_ids.begin(); id != blk_ids.end(); ++id) {
         // pass num_bytes = 0 to make sure disc is read if not already in memory
-        boxm2_data_base *  alph  = cache->get_data_base(scene,*id,boxm2_data_traits<BOXM2_ALPHA>::prefix(),0,false);
-        boxm2_data_base *  phongs  = cache->get_data_base(scene,*id,boxm2_data_traits<BOXM2_FLOAT8>::prefix(),0,false);
+        boxm2_data_base *  alph = cache->get_data_base(scene,*id,boxm2_data_traits<BOXM2_ALPHA>::prefix(),0,false);
+        boxm2_data_base *  phongs = cache->get_data_base(scene,*id,boxm2_data_traits<BOXM2_FLOAT8>::prefix(),0,false);
         std::cout << "buffer length of alpha: " << alph->buffer_length() << '\n'
                  << "buffer length of phongs: " << phongs->buffer_length() << std::endl;
         boxm2_batch_update_opt2_phongs_functor data_functor;
@@ -282,8 +284,8 @@ bool boxm2_cpp_batch_update_opt2_phongs_process(bprb_func_process& pro)
 //: run batch update
 namespace boxm2_cpp_batch_update_nonray_process_globals
 {
-    const unsigned n_inputs_ = 2;
-    const unsigned n_outputs_ = 0;
+    constexpr unsigned n_inputs_ = 2;
+    constexpr unsigned n_outputs_ = 0;
 }
 
 bool boxm2_cpp_batch_update_nonray_process_cons(bprb_func_process& pro)
@@ -335,10 +337,10 @@ bool boxm2_cpp_batch_update_nonray_process(bprb_func_process& pro)
     id = blk_ids.begin();
     for (id = blk_ids.begin(); id != blk_ids.end(); ++id) {
         // pass num_bytes = 0 to make sure disc is read if not already in memory
-        boxm2_data_base *  alph  = cache->get_data_base(scene,*id,boxm2_data_traits<BOXM2_ALPHA>::prefix(),0,false);
-        boxm2_data_base *  phongs  = cache->get_data_base(scene,*id,boxm2_data_traits<BOXM2_FLOAT8>::prefix("phongs_model"),0,false);
-        boxm2_data_base *  air  = cache->get_data_base(scene,*id,boxm2_data_traits<BOXM2_AUX0>::prefix("entropy_histo_air"),0,false);
-        boxm2_data_base *  uncertainty  = cache->get_data_base(scene,*id,boxm2_data_traits<BOXM2_AUX1>::prefix("uncertainty"),0,false);
+        boxm2_data_base *  alph = cache->get_data_base(scene,*id,boxm2_data_traits<BOXM2_ALPHA>::prefix(),0,false);
+        boxm2_data_base *  phongs = cache->get_data_base(scene,*id,boxm2_data_traits<BOXM2_FLOAT8>::prefix("phongs_model"),0,false);
+        boxm2_data_base *  air = cache->get_data_base(scene,*id,boxm2_data_traits<BOXM2_AUX0>::prefix("entropy_histo_air"),0,false);
+        boxm2_data_base *  uncertainty = cache->get_data_base(scene,*id,boxm2_data_traits<BOXM2_AUX1>::prefix("uncertainty"),0,false);
         std::cout << "buffer length of alpha: " << alph->buffer_length() << '\n'
                  << "buffer length of phongs: " << phongs->buffer_length() << std::endl;
         boxm2_batch_update_nonray_phongs_functor data_functor;

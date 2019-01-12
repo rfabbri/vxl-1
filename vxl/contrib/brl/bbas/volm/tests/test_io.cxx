@@ -1,6 +1,9 @@
 #include <iostream>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#include <utility>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpl/vpl.h>
 #include <depth_map/depth_map_scene.h>
 #include <depth_map/depth_map_region_sptr.h>
@@ -22,7 +25,7 @@ static void test_load_conf_tag_file(std::string xml_file)
   float floor_height = 4.5f;
   std::string world_region, query_name;
   unsigned img_ni, img_nj;
-  bool success = volm_io::read_conf_query_tags(xml_file, floor_height, dms, world_region, img_ni, img_nj, query_name);
+  bool success = volm_io::read_conf_query_tags(std::move(xml_file), floor_height, dms, world_region, img_ni, img_nj, query_name);
   //bool parser_success = volm_io::read_conf_query_tags(xml_file, floor_height, dms, world_region, img_ni, img_nj, query_name);
   TEST("parse LCM matcher tag file",success,true);
 
@@ -50,8 +53,8 @@ static void test_load_conf_tag_file(std::string xml_file)
 static void test_io()
 {
   // test the volm_fallback_category
-  std::map<unsigned char, std::vector<unsigned char> >::iterator mit = volm_fallback_label::fallback_id.begin();
-  std::map<unsigned char, std::vector<float> >::iterator mit_w = volm_fallback_label::fallback_weight.begin();
+  auto mit = volm_fallback_label::fallback_id.begin();
+  auto mit_w = volm_fallback_label::fallback_weight.begin();
 
   for (; mit != volm_fallback_label::fallback_id.end(); ++mit) {
     std::cout << (int)mit->first << '(' << volm_osm_category_io::volm_land_table[mit->first].name_ << ") ---> ";
@@ -60,8 +63,8 @@ static void test_io()
     //  std::cout << volm_label_table::land_string(*vit) << ", ";
     std::cout << std::setw(10) << std::setfill(' ') << " ------ ";
     volm_fallback_label::print_wgt(mit->first);
-    for (std::vector<unsigned char>::iterator vit = mit->second.begin(); vit != mit->second.end(); ++vit)
-      std::cout << std::setprecision(3) << (int)*vit << ' ';
+    for (unsigned char & vit : mit->second)
+      std::cout << std::setprecision(3) << (int)vit << ' ';
     std::cout << '\n' << std::endl;
     ++mit_w;
   }

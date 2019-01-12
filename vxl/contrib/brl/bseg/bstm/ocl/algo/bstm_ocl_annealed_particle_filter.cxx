@@ -3,7 +3,9 @@
 #include <sstream>
 #include "bstm_ocl_annealed_particle_filter.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #define ALPHA 0.5
 #define MAX_BETA 15
 #define ENABLE_ROT
@@ -81,7 +83,7 @@ void bstm_ocl_annealed_particle_filter::dump_particles(unsigned cur_time, unsign
   myfile.close();
 }
 
-void bstm_ocl_annealed_particle_filter::perturb_particles(unsigned prev_time, unsigned cur_time, unsigned m)
+void bstm_ocl_annealed_particle_filter::perturb_particles(unsigned  /*prev_time*/, unsigned cur_time, unsigned  /*m*/)
 {
   t_sigma_ *= ALPHA;
   w_sigma_ *= ALPHA;
@@ -193,4 +195,3 @@ float bstm_ocl_annealed_particle_filter::scale_obs_density(unsigned cur_time, do
 
   return cur_beta;
 }
-

@@ -7,9 +7,11 @@
 // \author Tim Cootes
 // \brief Probability used in Kolmogorov-Smirnov test
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
-const double f1 = 0.001;
+constexpr double f1 = 0.001;
 const double f2 = 1.0e-8;
 
 //: Probability used in Kolmogorov-Smirnov test

@@ -6,9 +6,11 @@
 
 #include <vnl/vnl_math.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
-#include <vcl_cassert.h>
+#include <cassert>
 
 rrel_lts_obj::rrel_lts_obj( unsigned int num_sam_inst, double inlier_frac )
   : num_sam_inst_( num_sam_inst ),
@@ -16,9 +18,7 @@ rrel_lts_obj::rrel_lts_obj( unsigned int num_sam_inst, double inlier_frac )
 {
 }
 
-rrel_lts_obj::~rrel_lts_obj()
-{
-}
+rrel_lts_obj::~rrel_lts_obj() = default;
 
 
 double
@@ -26,7 +26,7 @@ rrel_lts_obj::fcn( vect_const_iter begin, vect_const_iter end,
                    vect_const_iter /*scale begin*/,
                    vnl_vector<double>* /*param_vector*/ ) const
 {
-  return fcn( begin, end, 0.0, (vnl_vector<double>*)VXL_NULLPTR );
+  return fcn( begin, end, 0.0, (vnl_vector<double>*)nullptr );
 }
 
 
@@ -64,7 +64,7 @@ rrel_lts_obj::fcn( vect_const_iter begin, vect_const_iter end,
 
   // 3. Sort the squared residuals so that all the smallest residuals
   // are in positions less than index.
-  std::vector<double>::iterator loc = sq_res.begin() + index;
+  auto loc = sq_res.begin() + index;
   std::nth_element( sq_res.begin(), loc, sq_res.end() );
 
   // 4. Sum them up.
@@ -74,4 +74,3 @@ rrel_lts_obj::fcn( vect_const_iter begin, vect_const_iter end,
 
   return sum;
 }
-

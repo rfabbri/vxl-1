@@ -5,7 +5,9 @@
 // \file
 // \brief A process to register two images by finding the best translational mapping.
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <ihog/ihog_minimizer.h>
 #include <ihog/ihog_world_roi.h>
 #include <ihog/ihog_minfo_cost_func.h>
@@ -21,12 +23,12 @@ bool ihog_compute_mi_cost_surface_process_cons(bprb_func_process& pro)
   //  2) mask
   //  3) radius
   std::vector<std::string> input_types;
-  input_types.push_back("vil_image_view_base_sptr");
-  input_types.push_back("vil_image_view_base_sptr");
-  input_types.push_back("vil_image_view_base_sptr");
-  input_types.push_back("int");
+  input_types.emplace_back("vil_image_view_base_sptr");
+  input_types.emplace_back("vil_image_view_base_sptr");
+  input_types.emplace_back("vil_image_view_base_sptr");
+  input_types.emplace_back("int");
   std::vector<std::string> output_types;
-  output_types.push_back("vil_image_view_base_sptr");
+  output_types.emplace_back("vil_image_view_base_sptr");
 
   return pro.set_input_types(input_types)
       && pro.set_output_types(output_types);
@@ -79,7 +81,7 @@ bool ihog_compute_mi_cost_surface_process(bprb_func_process& pro)
   float step = 1.0f;
   int half_n_steps = radius;
   int n_steps = 2*half_n_steps + 1;
-  vil_image_view<float> *cost_map = new vil_image_view<float>(n_steps,n_steps);
+  auto *cost_map = new vil_image_view<float>(n_steps,n_steps);
   vil_image_view_base_sptr cost_map_sptr(cost_map);
 
   for (int i=0; i<n_steps; ++i) {
@@ -92,7 +94,7 @@ bool ihog_compute_mi_cost_surface_process(bprb_func_process& pro)
       vnl_vector<double> x;
       xform.params(x);
       //std::cout << "x = " << x << std::endl;
-      float minfo = float(cost_fun.f(x));
+      auto minfo = float(cost_fun.f(x));
       (*cost_map)(i,j) = minfo;
       std::cout << "minfo(" << offset_x << ", " << offset_y << ") = " << minfo << " (" << i << ", " << j << ')' << std::endl;
     }
@@ -102,4 +104,3 @@ bool ihog_compute_mi_cost_surface_process(bprb_func_process& pro)
 
   return true;
 }
-

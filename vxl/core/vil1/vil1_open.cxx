@@ -1,7 +1,4 @@
 // This is core/vil1/vil1_open.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
@@ -10,7 +7,9 @@
 #include <iostream>
 #include "vil1_open.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vil1/vil1_stream_fstream.h>
 #include <vil1/vil1_stream_core.h>
@@ -20,7 +19,7 @@ vil1_stream *vil1_open(char const* what, char const* how)
 {
   // check for null pointer or empty strings.
   if (!what || !*what)
-    return VXL_NULLPTR;
+    return nullptr;
 
   // try to open as file first.
   vil1_stream *is = new vil1_stream_fstream(what, how);
@@ -40,7 +39,7 @@ vil1_stream *vil1_open(char const* what, char const* how)
     // this will delete the stream object.
     is->ref();
     is->unref();
-    is = VXL_NULLPTR;
+    is = nullptr;
   }
 
   if (!is) {
@@ -49,7 +48,7 @@ vil1_stream *vil1_open(char const* what, char const* how)
     if (l > 4 && std::strncmp(what, "gen:", 4) == 0) {
       if (std::strcmp(how, "r") == 0) {
         // Make an in-core stream...
-        vil1_stream_core *cis = new vil1_stream_core();
+        auto *cis = new vil1_stream_core();
         cis->write(what, l+1);
         is = cis;
       }
@@ -62,7 +61,7 @@ vil1_stream *vil1_open(char const* what, char const* how)
     // this will delete the stream object.
     is->ref();
     is->unref();
-    is = VXL_NULLPTR;
+    is = nullptr;
   }
 
   if (!is) {
@@ -83,7 +82,7 @@ vil1_stream *vil1_open(char const* what, char const* how)
     // this will delete the stream object.
     is->ref();
     is->unref();
-    is = VXL_NULLPTR;
+    is = nullptr;
   }
 
   return is;

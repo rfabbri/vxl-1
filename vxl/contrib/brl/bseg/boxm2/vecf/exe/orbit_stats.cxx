@@ -2,12 +2,14 @@
 #include <fstream>
 #include <string>
 #include <sstream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_arg.h>
 #include <vul/vul_file.h>
 #include "../boxm2_vecf_orbit_params.h"
 #include "../boxm2_vecf_orbit_param_stats.h"
-#include <vcl_compiler.h>
+
 int main(int argc, char ** argv)
 {
 
@@ -82,5 +84,3 @@ int main(int argc, char ** argv)
   ops.separation_stats();
   return 0;
 }
-
-

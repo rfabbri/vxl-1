@@ -20,7 +20,9 @@
 #include <sstream>
 #include <iostream>
 #include <fstream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_vector_fixed.h>
 
@@ -87,14 +89,14 @@ read_feature_file( const char* filename,
 class command_iteration_update: public rgrl_command
 {
  public:
-  void execute(rgrl_object* caller, const rgrl_event & event )
+  void execute(rgrl_object* caller, const rgrl_event & event ) override
   {
     execute( (const rgrl_object*) caller, event );
   }
 
-  void execute(const rgrl_object* caller, const rgrl_event & /*event*/ )
+  void execute(const rgrl_object* caller, const rgrl_event & /*event*/ ) override
   {
-    const rgrl_feature_based_registration* reg_engine =
+    const auto* reg_engine =
       dynamic_cast<const rgrl_feature_based_registration*>(caller);
     rgrl_transformation_sptr trans = reg_engine->current_transformation();
     rgrl_trans_affine* a_xform = rgrl_cast<rgrl_trans_affine*>(trans);
@@ -177,7 +179,7 @@ main( int argc, char* argv[] )
   read_feature_file( moving_file_name, moving_feature_points, 50 );
   read_feature_file( fixed_file_name, fixed_feature_points, 1 );
 
-  const unsigned int dimension = 3;
+  constexpr unsigned int dimension = 3;
   rgrl_feature_set_sptr moving_feature_set =
     new rgrl_feature_set_location<dimension>(moving_feature_points );
   rgrl_feature_set_sptr fixed_feature_set =
@@ -210,7 +212,7 @@ main( int argc, char* argv[] )
   vector_3d x0(-1,-1,-1);           //upper left corner
   vector_3d x1(1,1,1);              //bottom right corner
   rgrl_mask_sptr moving_image_region = new rgrl_mask_box(x0.as_ref(), x1.as_ref());
-  rgrl_mask_sptr fixed_image_region = moving_image_region;  // assume two are identical
+  const rgrl_mask_sptr& fixed_image_region = moving_image_region;  // assume two are identical
   rgrl_initializer_sptr initializer =
     new rgrl_initializer_prior( moving_image_region,
                                 fixed_image_region,
@@ -224,18 +226,18 @@ main( int argc, char* argv[] )
 
   //Weighter
   //
-  vcl_unique_ptr<rrel_m_est_obj>  m_est_obj( new rrel_tukey_obj(4) );
-  rgrl_weighter_sptr wgter = new rgrl_weighter_m_est(vcl_move(m_est_obj), false, false);
+  std::unique_ptr<rrel_m_est_obj>  m_est_obj( new rrel_tukey_obj(4) );
+  rgrl_weighter_sptr wgter = new rgrl_weighter_m_est(std::move(m_est_obj), false, false);
 
   //Scale estimator
   //
   int max_set_size = 1000;  //maximum expected number of features
-  vcl_unique_ptr<rrel_objective> muset_obj( new rrel_muset_obj( max_set_size , false) );
+  std::unique_ptr<rrel_objective> muset_obj( new rrel_muset_obj( max_set_size , false) );
 
   rgrl_scale_estimator_unwgted_sptr unwgted_scale_est;
   rgrl_scale_estimator_wgted_sptr wgted_scale_est;
 
-  unwgted_scale_est = new rgrl_scale_est_closest( vcl_move(muset_obj));
+  unwgted_scale_est = new rgrl_scale_est_closest( std::move(muset_obj));
   wgted_scale_est = new rgrl_scale_est_all_weights();
 
   //convergence tester

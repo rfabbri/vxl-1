@@ -1,6 +1,8 @@
 // @author fsm
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vul/vul_sprintf.h>
 
@@ -67,14 +69,14 @@ int main(int argc, char **argv)
       std::cerr << "convolve x..." << std::flush;
       vil1_convolve_1d_x(K,
                          vil1_convolve_signal_2d<vxl_byte const>(bytesc.row_array(), 0, 0, w,  0, 0, h),
-                         (double*)VXL_NULLPTR,
+                         (double*)nullptr,
                          vil1_convolve_signal_2d<double        >(tmp   .row_array(), 0, 0, w,  0, 0, h),
                          option[j], option[j]);
       std::cerr << "done\n"
                << "convolve y..." << std::flush;
       vil1_convolve_1d_y(K,
                          vil1_convolve_signal_2d<double const>(tmpc  .row_array(), 0, 0, w,  0, 0, h),
-                         (double*)VXL_NULLPTR,
+                         (double*)nullptr,
                          vil1_convolve_signal_2d<float       >(smooth.row_array(), 0, 0, w,  0, 0, h),
                          option[j], option[j]);
       std::cerr << "done\n"

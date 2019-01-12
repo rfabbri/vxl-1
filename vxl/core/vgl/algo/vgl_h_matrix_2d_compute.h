@@ -23,7 +23,9 @@
 //   Jun 23, 2003 Peter Vanroose - made compute_pl() etc. pure virtual
 // \endverbatim
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_homg_point_2d.h>
 #include <vgl/vgl_homg_line_2d.h>
 #include <vgl/algo/vgl_h_matrix_2d.h>
@@ -32,7 +34,7 @@ class vgl_h_matrix_2d_compute
 {
  public:
   vgl_h_matrix_2d_compute() : verbose_(false) {}
-  virtual ~vgl_h_matrix_2d_compute() {}
+  virtual ~vgl_h_matrix_2d_compute() = default;
 
   // set this to true for verbose run-time information
   void verbose(bool v) { verbose_ = v; }

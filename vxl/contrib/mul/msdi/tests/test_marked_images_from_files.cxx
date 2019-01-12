@@ -11,7 +11,9 @@
 // \author Tim Cootes
 // \brief Test msdi_marked_images_from_files
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <msdi/msdi_marked_images_from_files.h>
 #include <vimt/vimt_image_2d_of.h>
 #include <vil/vil_save.h>
@@ -26,22 +28,22 @@ inline bool is_reflected(const vimt_image_2d& im)
 
 inline void test_n_samples(msdi_marked_images_from_files& data, unsigned n)
 {
-  vcl_cout<<"Testing state: "<<msdi_string_from_state(data.reflection_state())<<vcl_endl;
+  std::cout<<"Testing state: "<<msdi_string_from_state(data.reflection_state())<<std::endl;
   TEST("N.Samples",data.size(),n);
   unsigned count=0;
   data.reset();
   do
   {
     count++;
-    vcl_cout<<"Points: "<<data.points_name();
-    if (vcl_fabs(data.points()[0].x()-1.0)<1e-5) vcl_cout<<" (Raw)";
-    else                        vcl_cout<<" (Ref)";
+    std::cout<<"Points: "<<data.points_name();
+    if (std::fabs(data.points()[0].x()-1.0)<1e-5) std::cout<<" (Raw)";
+    else                        std::cout<<" (Ref)";
 
-//    vcl_cout<<" Image: "<<data.image_name();
-//    if (is_reflected(data.image())) vcl_cout<<" (Ref) ";
-//    else                          vcl_cout<<" (Raw)";
+//    std::cout<<" Image: "<<data.image_name();
+//    if (is_reflected(data.image())) std::cout<<" (Ref) ";
+//    else                          std::cout<<" (Raw)";
 
-     vcl_cout<<vcl_endl;
+     std::cout<<std::endl;
 
   } while (data.next());
   TEST("Iterated N.Samples",count,n);
@@ -63,9 +65,9 @@ void test_marked_images_from_files()
   vil_save(image,"image00.png");
   vil_save(image,"image01.png");
   vil_save(image,"image02.png");
-  image_names.push_back(std::string("image00.png"));
-  image_names.push_back(std::string("image01.png"));
-  image_names.push_back(std::string("image02.png"));
+  image_names.emplace_back("image00.png");
+  image_names.emplace_back("image01.png");
+  image_names.emplace_back("image02.png");
 
   msm_points points(2);
   points.set_point(0,1,0);
@@ -73,9 +75,9 @@ void test_marked_images_from_files()
   points.write_text_file("image00.pts");
   points.write_text_file("image01.pts");
   points.write_text_file("image02.pts");
-  points_names.push_back(std::string("image00.pts"));
-  points_names.push_back(std::string("image01.pts"));
-  points_names.push_back(std::string("image02.pts"));
+  points_names.emplace_back("image00.pts");
+  points_names.emplace_back("image01.pts");
+  points_names.emplace_back("image02.pts");
 
   points.write_text_file("ref-image00.pts");
   points.write_text_file("ref-image01.pts");

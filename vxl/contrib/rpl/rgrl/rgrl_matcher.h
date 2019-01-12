@@ -10,8 +10,7 @@
 #include <rgrl/rgrl_mask.h>
 #include <rgrl/rgrl_object.h>
 #include <rgrl/rgrl_feature_sptr.h>
-
-#include <vcl_stlfwd.h>
+#include <vector>
 
 class rgrl_feature_set;
 class rgrl_view;
@@ -24,7 +23,7 @@ class rgrl_matcher
   : public rgrl_object
 {
  public:
-  virtual ~rgrl_matcher();
+  ~rgrl_matcher() override;
 
   //: Build the matches with a view (old interface)
   //
@@ -35,7 +34,7 @@ class rgrl_matcher
                    rgrl_view const&           current_view,
                    rgrl_transformation const& current_xform,
                    rgrl_scale const&          current_scale,
-                   rgrl_match_set_sptr const& old_matches = VXL_NULLPTR ) = 0;
+                   rgrl_match_set_sptr const& old_matches = nullptr ) = 0;
 
   //: Build the matches with a view (new interface)
   //
@@ -45,7 +44,7 @@ class rgrl_matcher
                    rgrl_feature_set const&    to_features,
                    rgrl_view const&           current_view,
                    rgrl_scale const&          current_scale,
-                   rgrl_match_set_sptr const& old_matches = VXL_NULLPTR );
+                   rgrl_match_set_sptr const& old_matches = nullptr );
 
   //: Build the matches without a view
   //
@@ -56,7 +55,7 @@ class rgrl_matcher
                    rgrl_mask_box const&       from_region,
                    rgrl_mask_box const&       to_region,
                    rgrl_scale const&          current_scale,
-                   rgrl_match_set_sptr const& old_matches = VXL_NULLPTR );
+                   rgrl_match_set_sptr const& old_matches = nullptr );
 
   //: invert the matches according to inverse transformation
   virtual

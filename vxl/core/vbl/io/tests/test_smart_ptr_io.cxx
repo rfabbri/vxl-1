@@ -1,6 +1,8 @@
 // This is core/vbl/io/tests/test_smart_ptr_io.cxx
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include "vbl_io_test_classes.h"
 #include <testlib/testlib_test.h>
 #include <vpl/vpl.h>
@@ -11,7 +13,7 @@ void test_smart_ptr_io()
            << "Testing smart_ptr<impl> io\n"
            << "**************************\n";
 
-  const int n = 50;
+  constexpr int n = 50;
 
   vbl_smart_ptr<impl > sp1_out(new impl(n));
   vbl_smart_ptr<impl> sp2_out(sp1_out);
@@ -20,7 +22,7 @@ void test_smart_ptr_io()
   vbl_smart_ptr<impl> null1_in(new impl(n)), null2_in;
 
   TEST("sp1_out->get_references() == 2", sp1_out->get_references() ,2);
-  TEST("null1_in!=0", null1_in.ptr()!=VXL_NULLPTR, true);
+  TEST("null1_in!=0", null1_in.ptr()!=nullptr, true);
   TEST("null2_in==0", null2_in.ptr(), 0);
 
   vsl_b_ofstream bfs_out("vbl_smart_ptr_test_io.bvl.tmp");

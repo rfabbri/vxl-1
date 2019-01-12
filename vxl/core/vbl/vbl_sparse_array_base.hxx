@@ -8,8 +8,10 @@
 
 #include <utility>
 #include "vbl_sparse_array_base.h"
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Empty the sparse matrix.
 template <class T, class Index>
@@ -47,7 +49,7 @@ T* vbl_sparse_array_base<T, Index>::get_addr(Index i)
   typename Map::iterator p = storage_.find(i);
 
   if (p == storage_.end())
-    return VXL_NULLPTR;
+    return nullptr;
 
   return &(*p).second;
 }

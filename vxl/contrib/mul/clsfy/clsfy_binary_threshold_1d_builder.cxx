@@ -8,24 +8,22 @@
 // \author dac
 // \date   Tue Mar  5 01:11:31 2002
 
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vsl/vsl_binary_loader.h>
 #include <vnl/vnl_double_2.h>
 #include <clsfy/clsfy_builder_1d.h>
 #include <clsfy/clsfy_binary_threshold_1d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //=======================================================================
 
-clsfy_binary_threshold_1d_builder::clsfy_binary_threshold_1d_builder()
-{
-}
+clsfy_binary_threshold_1d_builder::clsfy_binary_threshold_1d_builder() = default;
 
 //=======================================================================
 
-clsfy_binary_threshold_1d_builder::~clsfy_binary_threshold_1d_builder()
-{
-}
+clsfy_binary_threshold_1d_builder::~clsfy_binary_threshold_1d_builder() = default;
 
 //=======================================================================
 

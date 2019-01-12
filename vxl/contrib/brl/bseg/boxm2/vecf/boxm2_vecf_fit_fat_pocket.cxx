@@ -1,29 +1,33 @@
 //:
 // \file
-#include <vcl_cassert.h>
 #include <string>
 #include <limits>
 #include <algorithm>
+#include <iostream>
+#include <fstream>
+#include <functional>
+#include <utility>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include "boxm2_vecf_fit_fat_pocket.h"
 #include "boxm2_vecf_middle_fat_pocket.h"
 #include <vnl/vnl_matrix.h>
-#include <iostream>
-#include <fstream>
 #include <vnl/algo/vnl_levenberg_marquardt.h>
 #include <vnl/algo/vnl_amoeba.h>
 #include <vnl/vnl_least_squares_function.h>
 #include <vnl/vnl_cost_function.h>
 #include <vgl/vgl_pointset_3d.h>
-#include <functional>   // std::greater
 
 class neutral_residual_function : public vnl_least_squares_function{
  public:
-  neutral_residual_function(boxm2_vecf_middle_fat_pocket const& fat_pocket, const vgl_pointset_3d<double>& neutral_ptset,
+  neutral_residual_function(boxm2_vecf_middle_fat_pocket  fat_pocket, const vgl_pointset_3d<double>& neutral_ptset,
                             bvgl_knn_index_3d<double>* skin_layer) :
-    vnl_least_squares_function(6,static_cast<unsigned>(3*(neutral_ptset.npts())), vnl_least_squares_function::no_gradient), pocket_(fat_pocket),
+    vnl_least_squares_function(6,static_cast<unsigned>(3*(neutral_ptset.npts())), vnl_least_squares_function::no_gradient), pocket_(std::move(fat_pocket)),
     skin_layer_(skin_layer), neutral_ptset_(neutral_ptset){}
 
-  virtual void f(vnl_vector<double> const& x, vnl_vector<double>& fx){
+  void f(vnl_vector<double> const& x, vnl_vector<double>& fx) override{
 
     double inv_err = 10.0;
     // extract parameters from x
@@ -62,12 +66,12 @@ class neutral_residual_function : public vnl_least_squares_function{
 
 class deformed_residual_function : public vnl_least_squares_function{
  public:
-  deformed_residual_function(boxm2_vecf_middle_fat_pocket const& fat_pocket, const vgl_pointset_3d<double>& deformed_ptset,
+  deformed_residual_function(boxm2_vecf_middle_fat_pocket  fat_pocket, const vgl_pointset_3d<double>& deformed_ptset,
                             bvgl_knn_index_3d<double>* skin_layer) :
-    vnl_least_squares_function(5,static_cast<unsigned>(3*(deformed_ptset.npts())), vnl_least_squares_function::no_gradient), pocket_(fat_pocket),
+    vnl_least_squares_function(5,static_cast<unsigned>(3*(deformed_ptset.npts())), vnl_least_squares_function::no_gradient), pocket_(std::move(fat_pocket)),
     skin_layer_(skin_layer), deformed_ptset_(deformed_ptset){defpr_.fit_to_subject_=false;}
 
-  virtual void f(vnl_vector<double> const& x, vnl_vector<double>& fx){
+  void f(vnl_vector<double> const& x, vnl_vector<double>& fx) override{
 
     double inv_err = 5.0;
     // extract parameters from x
@@ -109,12 +113,12 @@ class deformed_residual_function : public vnl_least_squares_function{
 
 class deformed_cost_function : public vnl_cost_function{
  public:
-  deformed_cost_function(boxm2_vecf_middle_fat_pocket const& fat_pocket, const vgl_pointset_3d<double>& deformed_ptset,
+  deformed_cost_function(boxm2_vecf_middle_fat_pocket  fat_pocket, vgl_pointset_3d<double>  deformed_ptset,
                          bvgl_knn_index_3d<double>* skin_layer) :
-    vnl_cost_function(5), pocket_(fat_pocket),
-    skin_layer_(skin_layer), deformed_ptset_(deformed_ptset){defpr_.fit_to_subject_=false;}
+    vnl_cost_function(5), pocket_(std::move(fat_pocket)),
+    skin_layer_(skin_layer), deformed_ptset_(std::move(deformed_ptset)){defpr_.fit_to_subject_=false;}
 
-  virtual double f(vnl_vector<double> const& x){
+  double f(vnl_vector<double> const& x) override{
 
     // extract parameters from x
     defpr_.lambda_           = x[0];
@@ -188,7 +192,7 @@ boxm2_vecf_fit_fat_pocket::boxm2_vecf_fit_fat_pocket(std::string const& neutral_
   skin_layer_.set_thresh(surface_dist_thresh);
   defpr_.fit_to_subject_ = true;
 }
-boxm2_vecf_fit_fat_pocket::boxm2_vecf_fit_fat_pocket(std::string const& neutral_face_ptset_path, std::string const& deformed_face_ptset_path,
+boxm2_vecf_fit_fat_pocket::boxm2_vecf_fit_fat_pocket(std::string const&  /*neutral_face_ptset_path*/, std::string const& deformed_face_ptset_path,
                                                      std::string const& skin_ptset_path, std::string const& fat_pocket_geo_path):
   pocket_(boxm2_vecf_middle_fat_pocket(fat_pocket_geo_path)), is_right_(false){
   double surface_dist_thresh = 1.0;
@@ -305,7 +309,7 @@ double boxm2_vecf_fit_fat_pocket::fit_deformed(std::ostream* outstream, bool ver
   return 0.0;
 }
 #endif
-double boxm2_vecf_fit_fat_pocket::fit_deformed(std::ostream* outstream, bool verbose){
+double boxm2_vecf_fit_fat_pocket::fit_deformed(std::ostream*  /*outstream*/, bool  /*verbose*/){
   vgl_point_3d<double> iorg = initial_pr_.origin_;
   deformed_cost_function dcf(pocket_, deformed_face_.const_ptset(), &skin_layer_);
   vnl_vector<double> xm_init(5);
@@ -364,7 +368,7 @@ bool boxm2_vecf_fit_fat_pocket::plot_middle_fat_pocket_fit(std::ostream& ostr) {
       errors.push_back(1000.0);
     }
   }
-  unsigned n = static_cast<unsigned>(pts.size());
+  auto n = static_cast<unsigned>(pts.size());
   for(unsigned i=0; i<n; ++i){
     vgl_point_3d<double>& p = pts[i];
     double& e = errors[i];

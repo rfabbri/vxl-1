@@ -1,9 +1,6 @@
 // This is core/vil1/vil1_crop_image_impl.h
 #ifndef vil1_crop_image_h_
 #define vil1_crop_image_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief A generic_image adaptor that behaves like a cropped version of its input
@@ -13,36 +10,38 @@
 #include <string>
 #include <vil1/vil1_image_impl.h>
 #include <vil1/vil1_image.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: A generic_image adaptor that behaves like a cropped version of its input
 class vil1_crop_image_impl : public vil1_image_impl
 {
  public:
   vil1_crop_image_impl(vil1_image const&, int x0, int y0, int w, int h);
-  ~vil1_crop_image_impl();
+  ~vil1_crop_image_impl() override;
 
-  int planes() const { return gi_.planes(); }
-  int width() const { return width_; }
-  int height() const { return height_; }
-  int components() const { return gi_.components(); }
+  int planes() const override { return gi_.planes(); }
+  int width() const override { return width_; }
+  int height() const override { return height_; }
+  int components() const override { return gi_.components(); }
 
-  int bits_per_component() const { return gi_.bits_per_component(); }
-  enum vil1_component_format component_format() const { return gi_.component_format(); }
+  int bits_per_component() const override { return gi_.bits_per_component(); }
+  enum vil1_component_format component_format() const override { return gi_.component_format(); }
 
-  bool get_section(void* buf, int x0, int y0, int width, int height) const {
+  bool get_section(void* buf, int x0, int y0, int width, int height) const override {
     return gi_.get_section(buf, x0 + x0_, y0 + y0_, width, height);
   }
-  bool put_section(void const* buf, int x0, int y0, int width, int height) {
+  bool put_section(void const* buf, int x0, int y0, int width, int height) override {
     return gi_.put_section(buf, x0 + x0_, y0 + y0_, width, height);
   }
   //  vil1_image get_plane(unsigned int p) const;
 
   //: Return the name of the class;
-  virtual std::string is_a() const;
+  std::string is_a() const override;
 
   //: Return true if the name of the class matches the argument
-  virtual bool is_class(std::string const&) const;
+  bool is_class(std::string const&) const override;
 
  protected:
   vil1_image gi_;

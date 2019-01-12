@@ -7,7 +7,9 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_file.h>
 #include <vgl/vgl_point_2d.h>
 
@@ -42,8 +44,8 @@ bool imesh_read_ply2(std::istream& is, imesh_mesh& mesh)
 {
   unsigned int num_verts, num_faces;
   is >> num_verts >> num_faces;
-  vcl_unique_ptr<imesh_vertex_array<3> > verts(new imesh_vertex_array<3>(num_verts));
-  vcl_unique_ptr<imesh_face_array > faces(new imesh_face_array(num_faces));
+  std::unique_ptr<imesh_vertex_array<3> > verts(new imesh_vertex_array<3>(num_verts));
+  std::unique_ptr<imesh_face_array > faces(new imesh_face_array(num_faces));
   for (unsigned int v=0; v<num_verts; ++v) {
     imesh_vertex<3>& vert = (*verts)[v];
     is >> vert[0] >> vert[1] >> vert[2];
@@ -57,8 +59,8 @@ bool imesh_read_ply2(std::istream& is, imesh_mesh& mesh)
       is >> face[v];
   }
 
-  mesh.set_vertices(vcl_unique_ptr<imesh_vertex_array_base>(vcl_move(verts)));
-  mesh.set_faces(vcl_unique_ptr<imesh_face_array_base>(vcl_move(faces)));
+  mesh.set_vertices(std::unique_ptr<imesh_vertex_array_base>(std::move(verts)));
+  mesh.set_faces(std::unique_ptr<imesh_face_array_base>(std::move(faces)));
   return true;
 }
 
@@ -94,8 +96,8 @@ bool imesh_read_ply(std::istream& is, imesh_mesh& mesh)
       done = true;
     }
   }
-  vcl_unique_ptr<imesh_vertex_array<3> > verts(new imesh_vertex_array<3>(num_verts));
-  vcl_unique_ptr<imesh_face_array > faces(new imesh_face_array(num_faces));
+  std::unique_ptr<imesh_vertex_array<3> > verts(new imesh_vertex_array<3>(num_verts));
+  std::unique_ptr<imesh_face_array > faces(new imesh_face_array(num_faces));
   for (unsigned int v=0; v<num_verts; ++v) {
     imesh_vertex<3>& vert = (*verts)[v];
     is >> vert[0] >> vert[1] >> vert[2];
@@ -109,8 +111,8 @@ bool imesh_read_ply(std::istream& is, imesh_mesh& mesh)
       is >> face[v];
   }
 
-  mesh.set_vertices(vcl_unique_ptr<imesh_vertex_array_base>(vcl_move(verts)));
-  mesh.set_faces(vcl_unique_ptr<imesh_face_array_base>(vcl_move(faces)));
+  mesh.set_vertices(std::unique_ptr<imesh_vertex_array_base>(std::move(verts)));
+  mesh.set_faces(std::unique_ptr<imesh_face_array_base>(std::move(faces)));
   return true;
 }
 
@@ -166,7 +168,7 @@ bool imesh_read_uv2(std::istream& is, imesh_mesh& mesh)
    for (unsigned int i=0; i<num_verts; ++i) {
       double u,v;
       is >> u >> v;
-      uv.push_back(vgl_point_2d<double>(u,v));
+      uv.emplace_back(u,v);
    }
    mesh.set_tex_coords(uv);
    return true;
@@ -186,8 +188,8 @@ bool imesh_read_obj(const std::string& filename, imesh_mesh& mesh)
 //: Read a mesh from a wavefront OBJ stream
 bool imesh_read_obj(std::istream& is, imesh_mesh& mesh)
 {
-  vcl_unique_ptr<imesh_vertex_array<3> > verts(new imesh_vertex_array<3>);
-  vcl_unique_ptr<imesh_face_array> faces(new imesh_face_array);
+  std::unique_ptr<imesh_vertex_array<3> > verts(new imesh_vertex_array<3>);
+  std::unique_ptr<imesh_face_array> faces(new imesh_face_array);
   std::vector<vgl_vector_3d<double> > normals;
   std::vector<vgl_point_2d<double> > tex;
   std::string last_group = "ungrouped";
@@ -206,7 +208,7 @@ bool imesh_read_obj(std::istream& is, imesh_mesh& mesh)
             is.ignore();
             double x,y,z;
             is >> x >> y >> z;
-            normals.push_back(vgl_vector_3d<double>(x,y,z));
+            normals.emplace_back(x,y,z);
             break;
           }
           case 't': // read a texture coord
@@ -215,7 +217,7 @@ bool imesh_read_obj(std::istream& is, imesh_mesh& mesh)
             double x,y;
             is >> x >> y;
             is.ignore(256,'\n');
-            tex.push_back(vgl_point_2d<double>(x,y));
+            tex.emplace_back(x,y);
             break;
           }
           default: // read a position
@@ -290,8 +292,8 @@ bool imesh_read_obj(std::istream& is, imesh_mesh& mesh)
   if (normals.size() == verts->size())
     verts->set_normals(normals);
 
-  mesh.set_vertices(vcl_unique_ptr<imesh_vertex_array_base>(vcl_move(verts)));
-  mesh.set_faces(vcl_unique_ptr<imesh_face_array_base>(vcl_move(faces)));
+  mesh.set_vertices(std::unique_ptr<imesh_vertex_array_base>(std::move(verts)));
+  mesh.set_faces(std::unique_ptr<imesh_face_array_base>(std::move(faces)));
   mesh.set_tex_coords(tex);
 
   return true;
@@ -331,8 +333,8 @@ void imesh_write_obj(std::ostream& os, const imesh_mesh& mesh)
 
   if (mesh.has_tex_coords()) {
     const std::vector<vgl_point_2d<double> >& tex = mesh.tex_coords();
-    for (unsigned int t=0; t<tex.size(); ++t) {
-      os << "vt " << tex[t].x() << ' ' << tex[t].y() << '\n';
+    for (auto t : tex) {
+      os << "vt " << t.x() << ' ' << t.y() << '\n';
     }
   }
 
@@ -424,7 +426,7 @@ void imesh_write_kml_collada(std::ostream& os, const imesh_mesh& mesh)
     std::cerr << "ERROR! only triangle meshes are supported.\n";
     return;
   }
-  const imesh_regular_face_array<3>& tris =
+  const auto& tris =
       static_cast<const imesh_regular_face_array<3>&>(mesh.faces());
   const imesh_vertex_array<3>& verts = mesh.vertices<3>();
   const unsigned int nverts = verts.size();
@@ -568,7 +570,7 @@ void imesh_write_vrml(std::ostream& os, const imesh_mesh& mesh)
     std::cerr << "ERROR! only triangle meshes are supported.\n";
     return;
   }
-  const imesh_regular_face_array<3>& tris =
+  const auto& tris =
     static_cast<const imesh_regular_face_array<3>&>(mesh.faces());
   const imesh_vertex_array_base& vertsb = mesh.vertices();
   unsigned d = vertsb.dim();
@@ -599,13 +601,13 @@ void imesh_write_vrml(std::ostream& os, const imesh_mesh& mesh)
      << "    point [\n";
   if (d == 2) {
     const imesh_vertex_array<2>& verts2= mesh.vertices<2>();
-    for (unsigned i=0;i<verts2.size();++i)
-      os << "    " << verts2[i][0] << ' ' << verts2[i][1] << ' ' << 0.0 << '\n';
+    for (auto i : verts2)
+      os << "    " << i[0] << ' ' << i[1] << ' ' << 0.0 << '\n';
   }
   else {
     const imesh_vertex_array<3>& verts3= mesh.vertices<3>();
-    for (unsigned i=0;i<verts3.size();++i)
-      os << "    " << verts3[i][0] << ' ' << verts3[i][1] << ' ' << verts3[i][2] << '\n';
+    for (const auto & i : verts3)
+      os << "    " << i[0] << ' ' << i[1] << ' ' << i[2] << '\n';
   }
   os << "    ]}\n";
 
@@ -627,8 +629,8 @@ void imesh_write_vrml(std::ostream& os, const imesh_mesh& mesh)
 
     //write tex coordinates (should be same number as vertices above)
     const std::vector<vgl_point_2d<double> >& tc = mesh.tex_coords();
-    for (unsigned int i=0; i<tc.size(); ++i)
-      os << "    " << tc[i].x() << ' ' << tc[i].y() << ",\n";
+    for (auto i : tc)
+      os << "    " << i.x() << ' ' << i.y() << ",\n";
 
     //close texture coordinates
     os << "    ]}\n";

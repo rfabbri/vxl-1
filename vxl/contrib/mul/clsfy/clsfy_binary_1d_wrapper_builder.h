@@ -10,7 +10,9 @@
 
 #include <iostream>
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <mbl/mbl_cloneable_ptr.h>
 #include <clsfy/clsfy_binary_1d_wrapper.h>
 #include <clsfy/clsfy_builder_1d.h>
@@ -36,7 +38,7 @@ class clsfy_binary_1d_wrapper_builder : public clsfy_builder_base
   { return *builder_1d_; }
 
   //: Create a new untrained linear classifier with binary output
-  virtual clsfy_classifier_base* new_classifier() const;
+  clsfy_classifier_base* new_classifier() const override;
 
   //: Build a linear classifier, with the given data.
   // Return the mean error over the training set.
@@ -49,28 +51,28 @@ class clsfy_binary_1d_wrapper_builder : public clsfy_builder_base
   // n_classes must be 1
   double build(clsfy_classifier_base &classifier,
                mbl_data_wrapper<vnl_vector<double> > &inputs,
-               unsigned n_classes, const std::vector<unsigned> &outputs) const;
+               unsigned n_classes, const std::vector<unsigned> &outputs) const override;
 
 
   //: Name of the class
-  std::string is_a() const;
+  std::string is_a() const override;
 
   //: Name of the class
-  virtual bool is_class(std::string const& s) const;
+  bool is_class(std::string const& s) const override;
 
   //: Print class to os
-  void print_summary(std::ostream& os) const;
+  void print_summary(std::ostream& os) const override;
 
   //: Create a deep copy.
   // client is responsible for deleting returned object.
-  virtual clsfy_builder_base* clone() const
+  clsfy_builder_base* clone() const override
   { return new clsfy_binary_1d_wrapper_builder(*this); }
 
-  virtual void b_write(vsl_b_ostream &) const;
-  virtual void b_read(vsl_b_istream &);
+  void b_write(vsl_b_ostream &) const override;
+  void b_read(vsl_b_istream &) override;
 
   //: Initialise the parameters from a text stream.
-  void config(std::istream &as);
+  void config(std::istream &as) override;
 
 };
 

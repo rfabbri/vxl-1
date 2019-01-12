@@ -8,13 +8,15 @@
 #include <vnl/vnl_vector_fixed.h>
 
 #include <vbl/vbl_array_2d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 template < class COORD_T, class VALUE_T >
 class rsdl_bins_2d_entry
 {
  public:
-  rsdl_bins_2d_entry() {}
+  rsdl_bins_2d_entry() = default;
   rsdl_bins_2d_entry( const vnl_vector_fixed< COORD_T, 2 > & pt,
                       const VALUE_T& val )
     : point_(pt), value_(val) {}

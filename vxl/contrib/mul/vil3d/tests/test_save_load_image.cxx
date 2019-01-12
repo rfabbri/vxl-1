@@ -8,7 +8,9 @@
 // \date 18 Dec 2007
 //
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vxl_config.h> // for vxl_byte
 
@@ -112,7 +114,7 @@ bool test_image_equal(char const* type_name,
     return false;
   }
 
-  if (voxel_size != VXL_NULLPTR)
+  if (voxel_size != nullptr)
   {
     float vs2[3];
     TEST("Voxel size provided", pimage2->get_property(vil3d_property_voxel_size, vs2), true);

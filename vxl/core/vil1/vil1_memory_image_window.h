@@ -1,9 +1,6 @@
 // This is core/vil1/vil1_memory_image_window.h
 #ifndef vil1_memory_image_window_h_
 #define vil1_memory_image_window_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Operations on a small region of an image
@@ -56,8 +53,8 @@ class vil1_memory_image_window
 
  private:
   // Helpers-------------------------------------------------------------------
-  vil1_memory_image_window(const vil1_memory_image_window& that);
-  vil1_memory_image_window& operator=(const vil1_memory_image_window& that);
+  vil1_memory_image_window(const vil1_memory_image_window& that) = delete;
+  vil1_memory_image_window& operator=(const vil1_memory_image_window& that) = delete;
 };
 
 #endif // vil1_memory_image_window_h_

@@ -9,7 +9,9 @@
 #include <iostream>
 #include <ios>
 #include <iomanip>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <clsfy/clsfy_smo_1.h>
 #include <clsfy/clsfy_k_nearest_neighbour.h>
 #include <clsfy/clsfy_rbf_parzen.h>
@@ -32,7 +34,7 @@ void test_smo_1()
            <<"======== TESTING BUILDING ===========\n";
 
   std::vector<vpdfl_axis_gaussian_sampler *> generator(4);//
-  const unsigned nDims = 2;
+  constexpr unsigned nDims = 2;
   vnl_vector<double> mean0(nDims), var0(nDims), mean1(nDims), var1(nDims), mean2(nDims), var2(nDims), mean3(nDims), var3(nDims);
   vpdfl_axis_gaussian PDF0, PDF1, PDF2, PDF3;
 
@@ -41,7 +43,7 @@ void test_smo_1()
   mean2.fill(0.0); mean2(1) = 1;
   mean3.fill(0.0); mean3(1) = -1;
 
-  const double width = 0.05;
+  constexpr double width = 0.05;
   var0.fill(width/10.0); var0(0) = width;
   var1.fill(width/10.0); var1(0) = width;
   var2.fill(width/10.0); var2(1) = width;
@@ -69,7 +71,7 @@ void test_smo_1()
 
   vnl_random rng;
   rng.reseed(33323335);
-  const unsigned nSamples = 200;
+  constexpr unsigned nSamples = 200;
   std::vector<unsigned> labels(nSamples);
   std::vector<int> svlabels(nSamples);
   std::vector<vnl_vector<double> > data(nSamples);

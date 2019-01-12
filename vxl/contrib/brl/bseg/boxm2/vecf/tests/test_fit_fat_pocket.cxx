@@ -4,12 +4,11 @@
 // \date 02/25/16
 
 
-#include <testlib/testlib_test.h>
 #include <string>
 #include <fstream>
+#include <testlib/testlib_test.h>
 #include <vul/vul_timer.h>
 #include <vul/vul_file.h>
-#include <vul/vul_timer.h>
 #include <vgl/vgl_box_3d.h>
 #include <vgl/vgl_pointset_3d.h>
 #include "../boxm2_vecf_middle_fat_pocket_params.h"

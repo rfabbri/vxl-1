@@ -1,9 +1,6 @@
 // This is oxl/mvl/HomgPlane3D.h
 #ifndef HomgPlane3D_h_
 #define HomgPlane3D_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Homogeneous 4-vector for a 3D plane
@@ -14,7 +11,9 @@
 #include <iosfwd>
 #include <mvl/Homg3D.h>
 #include <vnl/vnl_double_3.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class HomgPoint3D;
 

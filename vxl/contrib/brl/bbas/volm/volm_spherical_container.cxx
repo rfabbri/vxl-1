@@ -3,7 +3,9 @@
 #include "volm_spherical_container.h"
 //:
 // \file
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 double RoundUp(double x, double unit)
 {
@@ -19,7 +21,7 @@ double RoundUp2Vmin(double x, double vmin)
   if (x < 2*vmin)
     return vmin;
   else {
-    unsigned int k = (unsigned int)std::floor(x/vmin);
+    auto k = (unsigned int)std::floor(x/vmin);
     unsigned int count = 0;
     while (k != 1) {
       k /= 2;
@@ -55,14 +57,14 @@ volm_spherical_container::volm_spherical_container(float d_solid_ang, float voxe
   //this->meshcurrentlayer(d, vc);
   // update and check current layer has even number of voxel along half
   d = d + vc;
-  unsigned int N = (unsigned int)(d/vc);
+  auto N = (unsigned int)(d/vc);
   is_even = !(N%2);
   } // end of while
 
   //: create the depth_interval_map_  [0,d1) --> 1, [d1,d2) --> 2, ... [dn,dmax) --> n , n can be 253 max
   unsigned int i = 0;
-  for (std::map<double, unsigned int>::iterator iter = depth_offset_map_.begin(); iter != depth_offset_map_.end(); iter++) {
-    depth_interval_map_[iter->first] = (unsigned char)i;
+  for (auto & iter : depth_offset_map_) {
+    depth_interval_map_[iter.first] = (unsigned char)i;
     i++;
     if (i > 252) {
       std::cerr << "In volm_spherical_container::volm_spherical_container() -- number of depth intervals is larger than 253! Current indexing scheme does not support this container extent of " << dmax_ << "!\n";
@@ -76,7 +78,7 @@ unsigned char volm_spherical_container::get_depth_interval(double value)
 {
   if (value < 0)
     return (unsigned char)1;
-  std::map<double, unsigned char>::iterator iter = depth_interval_map_.upper_bound(value);
+  auto iter = depth_interval_map_.upper_bound(value);
   if (iter == depth_interval_map_.end()) {
     iter--;
     return iter->second + 1;
@@ -109,27 +111,27 @@ bool volm_spherical_container::meshcurrentlayer(double d, double v)
   while (xleft < hw) {
     double yleft = 0.0;
     while (yleft < hw) {
-      voxels_.push_back(volm_voxel(v,vgl_point_3d<double>(xcr,ycr,z)));
-      voxels_.push_back(volm_voxel(v,vgl_point_3d<double>(xcl,ycr,z)));
-      voxels_.push_back(volm_voxel(v,vgl_point_3d<double>(xcl,ycl,z)));
-      voxels_.push_back(volm_voxel(v,vgl_point_3d<double>(xcr,ycl,z)));
+      voxels_.emplace_back(v,vgl_point_3d<double>(xcr,ycr,z));
+      voxels_.emplace_back(v,vgl_point_3d<double>(xcl,ycr,z));
+      voxels_.emplace_back(v,vgl_point_3d<double>(xcl,ycl,z));
+      voxels_.emplace_back(v,vgl_point_3d<double>(xcr,ycl,z));
       upper_num += 4;
       blk_num += 4;
-      uppers.push_back(vgl_point_3d<double>(xcr,ycr,z));
-      uppers.push_back(vgl_point_3d<double>(xcl,ycr,z));
-      uppers.push_back(vgl_point_3d<double>(xcl,ycl,z));
-      uppers.push_back(vgl_point_3d<double>(xcr,ycl,z));
+      uppers.emplace_back(xcr,ycr,z);
+      uppers.emplace_back(xcl,ycr,z);
+      uppers.emplace_back(xcl,ycl,z);
+      uppers.emplace_back(xcr,ycl,z);
       if (xcr < bdry) {
-        inners_left.push_back(vgl_point_3d<double>(xcr,ycr,z));
-        inners_left.push_back(vgl_point_3d<double>(xcl,ycr,z));
-        inners_left.push_back(vgl_point_3d<double>(xcl,ycl,z));
-        inners_left.push_back(vgl_point_3d<double>(xcr,ycl,z));
+        inners_left.emplace_back(xcr,ycr,z);
+        inners_left.emplace_back(xcl,ycr,z);
+        inners_left.emplace_back(xcl,ycl,z);
+        inners_left.emplace_back(xcr,ycl,z);
       }
       if (ycr < bdry && xcr < bdry) {
-        inners_back.push_back(vgl_point_3d<double>(xcr,ycr,z));
-        inners_back.push_back(vgl_point_3d<double>(xcl,ycr,z));
-        inners_back.push_back(vgl_point_3d<double>(xcl,ycl,z));
-        inners_back.push_back(vgl_point_3d<double>(xcr,ycl,z));
+        inners_back.emplace_back(xcr,ycr,z);
+        inners_back.emplace_back(xcl,ycr,z);
+        inners_back.emplace_back(xcl,ycl,z);
+        inners_back.emplace_back(xcr,ycl,z);
       }
       ycr += v; ycl -= v;  yleft += v;
     }
@@ -137,8 +139,8 @@ bool volm_spherical_container::meshcurrentlayer(double d, double v)
   xcr += v; xcl -= v;  xleft += v;
   }
   // construct lower layer
-  for (std::vector<vgl_point_3d<double> >::iterator upit = uppers.begin(); upit != uppers.end(); ++upit) {
-    voxels_.push_back(volm_voxel(v,vgl_point_3d<double>(upit->x(),upit->y(),-1*upit->z())));
+  for (auto & upper : uppers) {
+    voxels_.emplace_back(v,vgl_point_3d<double>(upper.x(),upper.y(),-1*upper.z()));
   lower_num++;
   blk_num++;
   }
@@ -154,19 +156,19 @@ bool volm_spherical_container::meshcurrentlayer(double d, double v)
   vnl_vector_fixed<double,3> xp;
   vnl_vector_fixed<double,3> Xp;
   std::vector<vgl_point_3d<double> > left;
-  for (std::vector<vgl_point_3d<double> >::iterator it = inners_left.begin(); it != inners_left.end(); ++it) {
-    X[0] = it->x();  X[1] = it->y();  X[2] = it->z();
+  for (auto & it : inners_left) {
+    X[0] = it.x();  X[1] = it.y();  X[2] = it.z();
   x = Q*(X-O);
   xp[0] = x[2];  xp[1] = x[1];  xp[2] = x[0];
   Xp = Q.transpose()*xp + O;
-  voxels_.push_back(volm_voxel(v, vgl_point_3d<double>(Xp[0],Xp[1],Xp[2])));
+  voxels_.emplace_back(v, vgl_point_3d<double>(Xp[0],Xp[1],Xp[2]));
   left_num++;
   blk_num++;
-  left.push_back(vgl_point_3d<double>(Xp[0],Xp[1],Xp[2]));
+  left.emplace_back(Xp[0],Xp[1],Xp[2]);
   }
   // construct right layer
-  for (std::vector<vgl_point_3d<double> >::iterator it = left.begin(); it != left.end(); ++it) {
-    voxels_.push_back(volm_voxel(v,vgl_point_3d<double>(-1*it->x(),it->y(),it->z())));
+  for (auto & it : left) {
+    voxels_.emplace_back(v,vgl_point_3d<double>(-1*it.x(),it.y(),it.z()));
     right_num++;
     blk_num++;
   }
@@ -176,19 +178,19 @@ bool volm_spherical_container::meshcurrentlayer(double d, double v)
   Q[2][0] = 0.0;  Q[2][1] = 1.0;  Q[2][2] =  0.0;
   O[0] = 0.0;  O[1] = -d-hv;  O[2] = d+hv;
   std::vector<vgl_point_3d<double> > back;
-  for (std::vector<vgl_point_3d<double> >::iterator it = inners_back.begin(); it != inners_back.end(); ++it) {
-    X[0] = it->x();  X[1] = it->y();  X[2] = it->z();
+  for (auto & it : inners_back) {
+    X[0] = it.x();  X[1] = it.y();  X[2] = it.z();
     x = Q*(X-O);
     xp[0] = x[0];  xp[1] = x[2];  xp[2] = x[1];
     Xp = Q.transpose()*xp + O;
-    voxels_.push_back(volm_voxel(v, vgl_point_3d<double>(Xp[0],Xp[1],Xp[2])));
+    voxels_.emplace_back(v, vgl_point_3d<double>(Xp[0],Xp[1],Xp[2]));
     back_num++;
     blk_num++;
-    back.push_back(vgl_point_3d<double>(Xp[0],Xp[1],Xp[2]));
+    back.emplace_back(Xp[0],Xp[1],Xp[2]);
   }
   // use back layer to mirror front layer
-  for (std::vector<vgl_point_3d<double> >::iterator it = back.begin(); it != back.end(); ++it) {
-    voxels_.push_back(volm_voxel(v,vgl_point_3d<double>(it->x(),-1*it->y(),it->z())));
+  for (auto & it : back) {
+    voxels_.emplace_back(v,vgl_point_3d<double>(it.x(),-1*it.y(),it.z()));
     blk_num++;
   }
   // update current offset
@@ -229,7 +231,7 @@ void volm_spherical_container::draw_helper(std::ofstream& ofs, double dmin)
 {
   // write a world center and world axis
   double rad = 0.5*vmin_;
-  std::vector<volm_voxel>::iterator it = voxels_.end();
+  auto it = voxels_.end();
   --it;
   double axis_len = (dmax_ + it->resolution_)*1.2;
   vgl_point_3d<float> cent(0.0,0.0,0.0);
@@ -243,16 +245,16 @@ void volm_spherical_container::draw_helper(std::ofstream& ofs, double dmin)
   bvrml_write::write_vrml_line(ofs, cent_ray, axis_y, (float)axis_len, 0.0f, 1.0f, 0.0f);
   bvrml_write::write_vrml_line(ofs, cent_ray, axis_z, (float)axis_len, 1.0f, 1.0f, 1.0f);
   // write the voxel structure
-  for (std::vector<volm_voxel>::iterator it = voxels_.begin(); it != voxels_.end(); ++it) {
-    double x = std::fabs(it->center_.x());
-    double y = std::fabs(it->center_.y());
-    double z = std::fabs(it->center_.z());
+  for (auto & voxel : voxels_) {
+    double x = std::fabs(voxel.center_.x());
+    double y = std::fabs(voxel.center_.y());
+    double z = std::fabs(voxel.center_.z());
     double d = x;
     if (d < y) d = y;
     if (d < z) d = z;
     if (d > dmin) {
-      double v_len = it->resolution_;
-      vgl_point_3d<double> vc(it->center_.x(), it->center_.y(), it->center_.z());
+      double v_len = voxel.resolution_;
+      vgl_point_3d<double> vc(voxel.center_.x(), voxel.center_.y(), voxel.center_.z());
       vgl_box_3d<double> box(vc, v_len, v_len, v_len, vgl_box_3d<double>::centre);
       bvrml_write::write_vrml_box(ofs, box, 1.0f, 1.0f, 0.0f, (float)(d/dmax_+0.2));
       bvrml_write::write_vrml_wireframe_box(ofs, box, 0.0f, 0.0f, 1.0f, 1);
@@ -260,7 +262,7 @@ void volm_spherical_container::draw_helper(std::ofstream& ofs, double dmin)
   }
 }
 
-void volm_spherical_container::draw_template(std::string vrml_file_name, double dmin)
+void volm_spherical_container::draw_template(const std::string& vrml_file_name, double dmin)
 {
   std::ofstream ofs(vrml_file_name.c_str());
   // write the header
@@ -270,7 +272,7 @@ void volm_spherical_container::draw_template(std::string vrml_file_name, double 
 }
 
 //: paint the wireframe of the voxels with the given ids with the given color
-void volm_spherical_container::draw_template_painted(std::string vrml_file_name, double dmin, std::vector<unsigned int>& ids, float r, float g, float b, float trans)
+void volm_spherical_container::draw_template_painted(const std::string& vrml_file_name, double dmin, std::vector<unsigned int>& ids, float r, float g, float b, float trans)
 {
   std::ofstream ofs(vrml_file_name.c_str());
   // write the header
@@ -278,17 +280,17 @@ void volm_spherical_container::draw_template_painted(std::string vrml_file_name,
   //draw_helper(ofs, dmin);
   // draw the extras
 
-  for (unsigned i = 0; i < ids.size(); i++) {
+  for (unsigned int id : ids) {
 
-    double x = std::fabs(voxels_[ids[i]].center_.x());
-    double y = std::fabs(voxels_[ids[i]].center_.y());
-    double z = std::fabs(voxels_[ids[i]].center_.z());
+    double x = std::fabs(voxels_[id].center_.x());
+    double y = std::fabs(voxels_[id].center_.y());
+    double z = std::fabs(voxels_[id].center_.z());
     double d = x;
     if (d < y) d = y;
     if (d < z) d = z;
     if (d > dmin) {
-      double v_len = voxels_[ids[i]].resolution_;
-      vgl_point_3d<double> vc(voxels_[ids[i]].center_.x(), voxels_[ids[i]].center_.y(), voxels_[ids[i]].center_.z());
+      double v_len = voxels_[id].resolution_;
+      vgl_point_3d<double> vc(voxels_[id].center_.x(), voxels_[id].center_.y(), voxels_[id].center_.z());
       vgl_box_3d<double> box(vc, v_len, v_len, v_len, vgl_box_3d<double>::centre);
       bvrml_write::write_vrml_box(ofs, box, r, g, b, trans);
       bvrml_write::write_vrml_wireframe_box(ofs, box, r, g, b, 1);
@@ -299,7 +301,7 @@ void volm_spherical_container::draw_template_painted(std::string vrml_file_name,
 }
 
 //: paint the wireframe of the voxels with the given ids with the given color
-void volm_spherical_container::draw_template_vis_prob(std::string vrml_file_name, double dmin, std::vector<char>& ids)
+void volm_spherical_container::draw_template_vis_prob(const std::string& vrml_file_name, double dmin, std::vector<char>& ids)
 {
   std::ofstream ofs(vrml_file_name.c_str());
   // write the header
@@ -347,16 +349,16 @@ void volm_spherical_container::last_res(double res, unsigned int& offset, unsign
   // number of depth layers in the container:
   offset = 0;
   depth = 0.0;
-  for (std::map<double, unsigned int>::iterator iter = depth_offset_map_.begin(); iter != depth_offset_map_.end(); iter++) {
-    if (voxels_[iter->second].resolution_ > res) {
-      end_offset = iter->second;
+  for (auto & iter : depth_offset_map_) {
+    if (voxels_[iter.second].resolution_ > res) {
+      end_offset = iter.second;
       break;
     }
 #ifdef DEBUG
     std::cout << iter->first << ' ' << iter->second << std::endl;
 #endif
-    offset = iter->second;
-    depth = iter->first;
+    offset = iter.second;
+    depth = iter.first;
   }
 }
 
@@ -366,7 +368,7 @@ void volm_spherical_container::first_res(double res, unsigned int& offset, unsig
   // number of depth layers in the container:
   offset = 0;
   depth = 0.0;
-  for (std::map<double, unsigned int>::iterator iter = depth_offset_map_.begin(); iter != depth_offset_map_.end(); iter++) {
+  for (auto iter = depth_offset_map_.begin(); iter != depth_offset_map_.end(); iter++) {
     if (voxels_[iter->second].resolution_ < res)
       continue;
     offset = iter->second;
@@ -382,8 +384,7 @@ void volm_spherical_container::first_res(double res, unsigned int& offset, unsig
 
 void volm_spherical_container::get_depth_intervals(std::vector<float>& ints)
 {
-  std::map<double, unsigned char>::iterator iter = depth_interval_map_.begin();
+  auto iter = depth_interval_map_.begin();
   for (; iter != depth_interval_map_.end(); ++iter)
     ints.push_back((float)iter->first);
 }
-

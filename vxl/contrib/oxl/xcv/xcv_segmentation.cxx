@@ -9,7 +9,9 @@
 // \author K.Y.McGaul
 
 #include <vil1/vil1_image.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <osl/osl_harris_params.h>
 #include <osl/osl_harris.h>

@@ -6,14 +6,16 @@
 // \author Tim Cootes
 
 #include <string>
-#include <vcl_memory.h>
 #include <iostream>
+#include <memory>
 #include <iosfwd>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vimt/vimt_image_2d_of.h>
 #include <vgl/vgl_fwd.h>
 
 #include <vsl/vsl_binary_io.h>
-#include <vcl_compiler.h>
 
 class mfpf_point_finder;
 class mbl_read_props_type;
@@ -116,7 +118,7 @@ class mfpf_point_finder_builder
   //: Add one example to the model
   virtual void add_example(const vimt_image_2d_of<float>& image,
                            const vgl_point_2d<double>& p,
-                           const vgl_vector_2d<double>& u)=0;
+                           const vgl_vector_2d<double>& u) = 0;
 
   //: Build object from the data supplied in add_example()
   virtual void build(mfpf_point_finder&)=0;
@@ -143,7 +145,7 @@ class mfpf_point_finder_builder
   virtual void b_read(vsl_b_istream& bfs);
 
   //: Create a concrete object, from a text specification.
-  static vcl_unique_ptr<mfpf_point_finder_builder> create_from_stream(std::istream &is);
+  static std::unique_ptr<mfpf_point_finder_builder> create_from_stream(std::istream &is);
 };
 
 //: Allows derived class to be loaded by base-class pointer

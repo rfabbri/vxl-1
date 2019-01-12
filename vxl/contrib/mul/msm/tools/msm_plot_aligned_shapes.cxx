@@ -12,7 +12,9 @@
 #include <mbl/mbl_parse_colon_pairs_list.h>
 #include <vul/vul_arg.h>
 #include <vul/vul_string.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_quick_file.h>
 
 #include <msm/msm_aligner.h>
@@ -64,7 +66,7 @@ void print_usage()
 struct tool_params
 {
   //: Aligner for shape model
-  vcl_unique_ptr<msm_aligner> aligner;
+  std::unique_ptr<msm_aligner> aligner;
 
   std::string curves_path;
 
@@ -219,9 +221,8 @@ int main(int argc, char** argv)
                         d_width,d_height);
 
   writer.set_colour(params.point_colour);
-  for (unsigned i=0;i<shapes.size();++i)
+  for (auto points : shapes)
   {
-    msm_points points = shapes[i];
     points.translate_by(tx,ty);
     points.scale_by(s);
     msm_draw_points_to_eps(writer,points,

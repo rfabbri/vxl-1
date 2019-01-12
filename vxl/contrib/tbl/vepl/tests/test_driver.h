@@ -4,7 +4,9 @@
 #include <string>
 #include <iostream>
 #include <vil/vil_image_resource.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <testlib/testlib_test.h>
 
 // create a 1 bit test image
@@ -32,8 +34,8 @@ vil_image_resource_sptr CreateTestfloatImage(int wd, int ht);
 vil_image_resource_sptr CreateTestdoubleImage(int wd, int ht);
 
 // Compare two images and return true if their difference is not v
-bool difference(vil_image_resource_sptr a,
-                vil_image_resource_sptr b,
+bool difference(const vil_image_resource_sptr& a,
+                const vil_image_resource_sptr& b,
                 vxl_uint_32 v, std::string const& m, bool exact=true);
 
 #define ONE_TEST(x,i,r,T,v,m,a) { std::cout << "Starting "<<m<<" test\n"; i = x(r a); difference(i,r,v,m); }

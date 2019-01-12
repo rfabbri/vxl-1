@@ -4,7 +4,10 @@
 // \file
 
 #include <vbl/io/vbl_io_bounding_box.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 double vsol_box_3d::get_min_x() const
 {
@@ -175,7 +178,7 @@ vsl_b_read(vsl_b_istream &is, vsol_box_3d_sptr &b)
       break;
      }
      default:
-      b = VXL_NULLPTR;
+      b = nullptr;
     }
   }
 }

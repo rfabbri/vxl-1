@@ -6,14 +6,16 @@
 //:
 // \file
 #include <bpro/core/bbas_pro/bbas_1d_array_float.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_vector.h>
 #include <vnl/algo/vnl_levenberg_marquardt.h>
 
 namespace brad_estimate_phongs_model_process_globals
 {
-  const unsigned n_inputs_  = 6;
-  const unsigned n_outputs_ = 7;
+  constexpr unsigned n_inputs_ = 6;
+  constexpr unsigned n_outputs_ = 7;
 }
 
 
@@ -59,8 +61,8 @@ bool brad_estimate_phongs_model_process(bprb_func_process& pro)
   bbas_1d_array_float_sptr visibilities = pro.get_input<bbas_1d_array_float_sptr>(i++);
   bbas_1d_array_float_sptr camera_elev_array = pro.get_input<bbas_1d_array_float_sptr>(i++);
   bbas_1d_array_float_sptr camera_azim_array = pro.get_input<bbas_1d_array_float_sptr>(i++);
-  float sun_elev = pro.get_input<float>(i++);
-  float sun_azim = pro.get_input<float>(i++);
+  auto sun_elev = pro.get_input<float>(i++);
+  auto sun_azim = pro.get_input<float>(i++);
 
   unsigned num_samples=intensities->data_array.size();
   vnl_vector<double> samples(num_samples);
@@ -119,4 +121,3 @@ bool brad_estimate_phongs_model_process(bprb_func_process& pro)
   pro.set_output_val<float>(i++, f.error_var(x));
   return true;
 }
-

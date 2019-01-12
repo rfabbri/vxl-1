@@ -1,9 +1,6 @@
 // This is oxl/osl/osl_easy_canny.h
 #ifndef osl_easy_canny_h_
 #define osl_easy_canny_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 // .NAME osl_easy_canny
 // .INCLUDE osl/osl_easy_canny.h
 // .FILE osl_easy_canny.cxx
@@ -11,7 +8,9 @@
 
 #include <iostream>
 #include <list>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 class osl_edge;
 class vil1_image;
 

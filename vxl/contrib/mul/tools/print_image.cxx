@@ -6,7 +6,9 @@
 #include <exception>
 #include <iostream>
 #include <cstdlib>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_arg.h>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_vector_2d.h>
@@ -48,7 +50,7 @@ vgl_vector_2d<double> pixel_size_from_transform(const vimt_transform_2d& w2i)
   vgl_vector_2d<double> j(0,1);
   double dx = i2w.delta(p, i).length();
   double dy = i2w.delta(p, j).length();
-  return vgl_vector_2d<double>(dx, dy);
+  return {dx, dy};
 }
 
 
@@ -64,7 +66,7 @@ static vgl_vector_3d<double> voxel_size_from_transform(const vimt3d_transform_3d
   double dx = i2w.delta(p, i).length();
   double dy = i2w.delta(p, j).length();
   double dz = i2w.delta(p, k).length();
-  return vgl_vector_3d<double>(dx, dy, dz);
+  return {dx, dy, dz};
 }
 
 
@@ -157,7 +159,7 @@ int main2(int argc, char*argv[])
   vimt3d_add_all_loaders();
 
   // Parse the program arguments
-  vul_arg<std::string> img_src(VXL_NULLPTR, "input image filename");
+  vul_arg<std::string> img_src(nullptr, "input image filename");
   vul_arg<float> unit_scaling("-s", "Unit scaling (1000 for mm)", 1000);
   vul_arg<bool> range("-r", "Determine intensity range", false);
   vul_arg<bool> only_3d("-3", "Only try to load 3d image", false);

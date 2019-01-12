@@ -10,7 +10,9 @@
 #include <vsl/vsl_binary_io.h>
 #include <vnl/io/vnl_io_vector.h>
 #include <vnl/io/vnl_io_matrix.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <mbl/mbl_data_array_wrapper.h>
 #include <mcal/mcal_pca.h>
 #include <mcal/mcal_extract_mode.h>
@@ -32,9 +34,7 @@ msm_shape_model_builder::msm_shape_model_builder()
 // Destructor
 //=======================================================================
 
-msm_shape_model_builder::~msm_shape_model_builder()
-{
-}
+msm_shape_model_builder::~msm_shape_model_builder() = default;
 
 //: Set up model
 void msm_shape_model_builder::set_aligner(
@@ -189,13 +189,13 @@ static void msm_count_classes(const std::vector<int>& id,
                               std::vector<unsigned>& n_per_class)
 {
   int max_id = 0;
-  for (unsigned i=0;i<id.size();++i)
-    if (id[i]>max_id) max_id=id[i];
+  for (int i : id)
+    if (i>max_id) max_id=i;
 
   n_per_class.resize(1+max_id,0u);
 
-  for (unsigned i=0;i<id.size();++i)
-    if (id[i]>=0) n_per_class[id[i]]++;
+  for (int i : id)
+    if (i>=0) n_per_class[i]++;
 }
 
 
@@ -383,7 +383,7 @@ void msm_shape_model_builder::config_from_stream(std::istream &is)
 
   std::string aligner_str = props.get_required_property("aligner");
   std::stringstream aligner_ss(aligner_str);
-  vcl_unique_ptr<msm_aligner> aligner=msm_aligner::create_from_stream(aligner_ss);
+  std::unique_ptr<msm_aligner> aligner=msm_aligner::create_from_stream(aligner_ss);
   aligner_=aligner->clone();
 
   std::string param_limiter_str
@@ -393,7 +393,7 @@ void msm_shape_model_builder::config_from_stream(std::istream &is)
   {
     std::stringstream ss(param_limiter_str);
 
-    vcl_unique_ptr<msm_param_limiter> param_limiter;
+    std::unique_ptr<msm_param_limiter> param_limiter;
     param_limiter = msm_param_limiter::create_from_stream(ss);
     param_limiter_ = param_limiter->clone();
   }

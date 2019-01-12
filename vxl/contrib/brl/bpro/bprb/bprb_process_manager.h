@@ -19,7 +19,9 @@
 #include <iostream>
 #include <map>
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vbl/vbl_ref_count.h>
 #include <bprb/bprb_process_sptr.h>
@@ -30,7 +32,7 @@ class bprb_process_manager : public vbl_ref_count
  public:
 
   //: Destructor
-  virtual ~bprb_process_manager();
+  ~bprb_process_manager() override;
 
   //: Use this instead of constructor
   static T* instance();

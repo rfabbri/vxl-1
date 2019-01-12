@@ -3,7 +3,9 @@
 */
 #include <cstdlib>
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vgui/vgui.h>
 #include <vgui/vgui_window.h>
@@ -19,7 +21,7 @@ struct joe_tab : public vgui_tableau
   vgui_menu the_menu;
 
   joe_tab(const std::string &m) : msg(m) {
-    the_menu.add("joe(0)",joe_callback,VXL_NULLPTR /*data*/);
+    the_menu.add("joe(0)",joe_callback,nullptr /*data*/);
     the_menu.add("joe(this)",joe_callback,this /*data*/);
     the_menu.add("toggle1", new vgui_command_toggle(false) );
     the_menu.add("toggle2", new vgui_command_toggle(true) );
@@ -44,7 +46,7 @@ struct joe_tab : public vgui_tableau
 
 static void SEGV()
 {
-  ++ *(int*)VXL_NULLPTR;
+  ++ *(int*)nullptr;
 }
 
 static void BUS()

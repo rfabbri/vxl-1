@@ -6,7 +6,10 @@
 // \author Tim Cootes
 
 #include "vil_median.h"
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Computes median value of pixels under structuring element.
 // dest_image(i0,j0) is the median value of the pixels under the

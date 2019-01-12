@@ -3,8 +3,11 @@
 //:
 // \file
 #include <iostream>
+#include <utility>
 #include <boxm/boxm_apm_traits.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_binary_io.h>
 #include <bsta/io/bsta_io_attributes.h>
 
@@ -24,9 +27,9 @@ class boxm_sample
 
   boxm_sample(float alpha_val): alpha(alpha_val), appearance_() {}
   //: constructor
-  boxm_sample(float alpha_val, apm_datatype apm_val): alpha(alpha_val), appearance_(apm_val) {}
+  boxm_sample(float alpha_val, apm_datatype apm_val): alpha(alpha_val), appearance_(std::move(apm_val)) {}
 
-  virtual ~boxm_sample() {}
+  virtual ~boxm_sample() = default;
 
   static short version_no() { return 1; }
 

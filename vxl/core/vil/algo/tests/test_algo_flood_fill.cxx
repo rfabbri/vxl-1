@@ -1,7 +1,9 @@
 // This is core/vil/algo/tests/test_algo_flood_fill.cxx
 #include <iostream>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/algo/vil_flood_fill.h>
 
 // Checks that every pixel in im1 with value v1 has value v2 in image v2

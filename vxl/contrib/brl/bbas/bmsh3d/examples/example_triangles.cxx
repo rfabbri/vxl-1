@@ -9,7 +9,9 @@
 //  \date Oct 03, 2006.
 
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_point_3d.h>
 #include <bmsh3d/bmsh3d_mesh.h>
 #include <bmsh3d/algo/bmsh3d_fileio.h>
@@ -35,7 +37,7 @@ int main()
            << "  and then add the face f1 to the mesh->\n"
            << "  The result is saved into a PLY2 file example_triangles.ply2." << std::endl;
 
-  bmsh3d_mesh* mesh = new bmsh3d_mesh ();
+  auto* mesh = new bmsh3d_mesh ();
 
   bmsh3d_vertex* v0 = mesh->_new_vertex ();
   v0->set_pt (vgl_point_3d<double> (0, 0, 0));

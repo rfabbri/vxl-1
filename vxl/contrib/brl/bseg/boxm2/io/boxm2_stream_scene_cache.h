@@ -10,7 +10,9 @@
 #include <boxm2/boxm2_data.h>
 #include <boxm2/basic/boxm2_block_id.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vbl/vbl_ref_count.h>
 #include <vbl/vbl_smart_ptr.h>
@@ -24,13 +26,13 @@ class boxm2_stream_scene_cache: public vbl_ref_count
 
   public:
     //: hidden constructor (singleton class)
-    boxm2_stream_scene_cache(boxm2_scene_sptr scene,
+    boxm2_stream_scene_cache(const boxm2_scene_sptr& scene,
                              std::vector<data_type> data_types,
                              std::vector<identifier> identifiers);
 
     bool clear();
 
-    ~boxm2_stream_scene_cache();
+    ~boxm2_stream_scene_cache() override;
 
     //: map to store various info about each datatype
     std::map<data_type, char *> data_buffers_;

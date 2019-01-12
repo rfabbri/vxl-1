@@ -9,7 +9,9 @@
 #include <boxm2/boxm2_data.h>
 #include <boxm2/basic/boxm2_block_id.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vbl/vbl_ref_count.h>
 #include <vbl/vbl_smart_ptr.h>
@@ -17,18 +19,18 @@
 class boxm2_stream_cache_helper : public vbl_ref_count
 {
   public:
-    boxm2_stream_cache_helper() : index_(-1), buf_(VXL_NULLPTR) {}
-    ~boxm2_stream_cache_helper();
+    boxm2_stream_cache_helper() : index_(-1), buf_(nullptr) {}
+    ~boxm2_stream_cache_helper() override;
 
-    bool open_file(std::string filename);
-    void read(unsigned long size, boxm2_block_id id);
+    bool open_file(const std::string& filename);
+    void read(unsigned long size, const boxm2_block_id& id);
     void close_file();
 
     //: return num cells on the buf
     int num_cells(std::size_t cell_size);
 
     //: return the byte buffer that contains ith cell, i is with respect to the global file
-    char *get_cell(int i, std::size_t cell_size, boxm2_block_id id);
+    char *get_cell(int i, std::size_t cell_size, const boxm2_block_id& id);
 
     int index_;  // index of the data point at the beginning of buf_
     std::ifstream ifs_;
@@ -63,7 +65,7 @@ class boxm2_stream_cache: public vbl_ref_count
 {
   public:
     //: hidden constructor (singleton class)
-    boxm2_stream_cache(boxm2_scene_sptr scene,
+    boxm2_stream_cache(const boxm2_scene_sptr& scene,
                        const std::vector<std::string>& data_types,
                        const std::vector<std::string>& identifier_list,
                        float num_giga = 1.0f);
@@ -81,7 +83,7 @@ class boxm2_stream_cache: public vbl_ref_count
   protected:
 
     //: hidden destructor (singleton class)
-    ~boxm2_stream_cache();
+    ~boxm2_stream_cache() override;
 
     boxm2_stream_cache_datatype_helper_sptr get_helper(std::string& data_type);
 

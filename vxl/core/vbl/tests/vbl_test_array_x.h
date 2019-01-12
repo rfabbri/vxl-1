@@ -1,14 +1,13 @@
 #ifndef vbl_test_array_x_h_
 #define vbl_test_array_x_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief A simple object to test a container.
 
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class vbl_test_array_x
 {

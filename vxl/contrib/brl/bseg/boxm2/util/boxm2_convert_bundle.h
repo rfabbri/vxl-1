@@ -14,8 +14,10 @@
 #include <bwm/video/bwm_video_corr.h>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_box_3d.h>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 //#include <cstdlib>
 
 typedef vpgl_perspective_camera<double> CamType;
@@ -32,7 +34,7 @@ void boxm2_util_convert_bundle( std::string bundle_file,
 class boxm2_convert_bundle
 {
   public:
-    boxm2_convert_bundle(std::string bundle_file, std::string img_dir);
+    boxm2_convert_bundle(const std::string& bundle_file, const std::string& img_dir);
     std::map<std::string, CamType*>&       get_cams() { return final_cams_; }
     vgl_box_3d<double>                   get_bbox() const { return bbox_; }
     double                               get_resolution() const { return resolution_; }

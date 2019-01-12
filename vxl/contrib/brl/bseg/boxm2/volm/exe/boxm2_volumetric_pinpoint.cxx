@@ -17,7 +17,9 @@
 #include <volm/volm_geo_index_sptr.h>
 #include <volm/volm_loc_hyp.h>
 #include <volm/volm_loc_hyp_sptr.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bkml/bkml_write.h>
 #include <bkml/bkml_parser.h>
 #include <vpgl/vpgl_lvcs.h>
@@ -38,7 +40,7 @@ static bool is_contained(vgl_polygon<double> const& polygon, vgl_point_3d<double
 // generate a circle (points of lat/lon) given the center (lat/lon) and the radius value (in meters)
 static bool generate_pin_point_circle(vgl_point_3d<double> const& center, double const& radius, std::vector<vgl_point_2d<double> >& circle);
 // obtain camera angles from camera space and camera id
-static bool generate_camera_angles(volm_camera_space_sptr cam_space, unsigned const& ni, unsigned const& nj, std::vector<unsigned> cam_ids,
+static bool generate_camera_angles(const volm_camera_space_sptr& cam_space, unsigned const& ni, unsigned const& nj, std::vector<unsigned> cam_ids,
                                    std::vector<cam_angles>& top_cameras, std::vector<double>& right_fovs);
 
 class pin_pt_loc
@@ -48,7 +50,7 @@ public:
   pin_pt_loc() : loc_(vgl_point_3d<double>(0.0,0.0,0.0)), cam_id_(0) {}
   pin_pt_loc(vgl_point_3d<double> const& loc, unsigned const& cam_id) : loc_(loc), cam_id_(cam_id) {}
   // destructor
-  ~pin_pt_loc() {}
+  ~pin_pt_loc() = default;
 
   vgl_point_3d<double> loc_;
   unsigned cam_id_;
@@ -154,7 +156,7 @@ int main(int argc, char** argv)
     volm_score::read_scores(scores, score_bin.str());
     // sort all the score data
     std::cout << scores.size() << " scores is loaded from " << score_bin.str() << std::endl;
-    unsigned total_ind = (unsigned)scores.size();
+    auto total_ind = (unsigned)scores.size();
     for (unsigned i = 0; i < total_ind; i++) {
       vgl_point_3d<double> h_pt = leaves[scores[i]->leaf_id_]->hyps_->locs_[scores[i]->hypo_id_];
       std::pair<float, pin_pt_loc> tmp_pair(scores[i]->max_score_, pin_pt_loc(h_pt, scores[i]->max_cam_id_));
@@ -175,7 +177,7 @@ int main(int argc, char** argv)
   std::vector<vgl_point_2d<double> > top_locs;
   std::vector<float> likelihood;
   std::vector<unsigned> cam_ids;
-  std::multimap<float, pin_pt_loc, std::greater<float> >::iterator mit = score_map.begin();
+  auto mit = score_map.begin();
   while (pin_pt_poly.num_sheets() < num_top_locs() && mit != score_map.end())
   {
     // check whether the location has been in the pin-pointed region
@@ -187,7 +189,7 @@ int main(int argc, char** argv)
     // generate a pin-point region for current location
     likelihood.push_back(mit->first);
     cam_ids.push_back(mit->second.cam_id_);
-    top_locs.push_back(vgl_point_2d<double>(mit->second.loc_.x(), mit->second.loc_.y()));
+    top_locs.emplace_back(mit->second.loc_.x(), mit->second.loc_.y());
     std::vector<vgl_point_2d<double> > circle;
     if (!generate_pin_point_circle(mit->second.loc_, radius(), circle))
     {
@@ -226,7 +228,7 @@ int main(int argc, char** argv)
   }
   else {
     for (unsigned i = 0; i < pin_pt_poly.num_sheets(); i++) {
-      top_cameras.push_back(cam_angles(0.0, 1.0, 0.0, 90.0));
+      top_cameras.emplace_back(0.0, 1.0, 0.0, 90.0);
       right_fovs.push_back(1.0);
     }
   }
@@ -268,20 +270,20 @@ bool generate_pin_point_circle(vgl_point_3d<double> const& center, double const&
     double dy = radius * std::sin(theta);
     double lon ,lat, gz;
     lvcs->local_to_global(dx, dy, 0.0, vpgl_lvcs::wgs84, lon, lat, gz);
-    circle.push_back(vgl_point_2d<double>(lon, lat));
+    circle.emplace_back(lon, lat);
     theta += d_theta;
   }
   return true;
 }
 
-bool generate_camera_angles(volm_camera_space_sptr cam_space, unsigned const& ni, unsigned const& nj, std::vector<unsigned> cam_ids,
+bool generate_camera_angles(const volm_camera_space_sptr& cam_space, unsigned const& ni, unsigned const& nj, std::vector<unsigned> cam_ids,
                             std::vector<cam_angles>& top_cameras, std::vector<double>& right_fovs)
 {
   top_cameras.clear();
   right_fovs.clear();
-  for (unsigned i = 0; i < cam_ids.size(); i++)
+  for (unsigned int cam_id : cam_ids)
   {
-    cam_angles cam_ang = cam_space->camera_angles(cam_ids[i]);
+    cam_angles cam_ang = cam_space->camera_angles(cam_id);
     double head = (cam_ang.heading_ < 0) ? cam_ang.heading_ + 360.0 : cam_ang.heading_;
     double tilt = (cam_ang.tilt_ < 0) ? cam_ang.tilt_ + 360 : cam_ang.tilt_;
     double roll;
@@ -291,7 +293,7 @@ bool generate_camera_angles(volm_camera_space_sptr cam_space, unsigned const& ni
     double tv_rad = tfov / vnl_math::deg_per_rad;
     double ttr = std::tan(tv_rad);
     double rfov = std::atan( ni * ttr / nj) * vnl_math::deg_per_rad;
-    top_cameras.push_back(cam_angles(roll, tfov, head, tilt));
+    top_cameras.emplace_back(roll, tfov, head, tilt);
     right_fovs.push_back(rfov);
   }
   return true;

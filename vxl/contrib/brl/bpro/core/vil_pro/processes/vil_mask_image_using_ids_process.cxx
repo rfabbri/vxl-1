@@ -8,7 +8,9 @@
 #include "../vil_math_functors.h"
 #include <vil/vil_convert.h>
 #include <bprb/bprb_parameters.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_image_view_base.h>
 #include <vil/vil_transform.h>
 #include <vil/vil_math.h>
@@ -19,15 +21,15 @@ bool vil_mask_image_using_ids_process_cons(bprb_func_process& pro)
   //input
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("vil_image_view_base_sptr");  // input
-  input_types.push_back("vil_image_view_base_sptr");  // mask image
-  input_types.push_back("unsigned");   // input id (all the other ids will be masked)
+  input_types.emplace_back("vil_image_view_base_sptr");  // input
+  input_types.emplace_back("vil_image_view_base_sptr");  // mask image
+  input_types.emplace_back("unsigned");   // input id (all the other ids will be masked)
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   //output
   std::vector<std::string> output_types;
-  output_types.push_back("vil_image_view_base_sptr");  // output
+  output_types.emplace_back("vil_image_view_base_sptr");  // output
   ok = pro.set_output_types(output_types);
   if (!ok) return ok;
   return true;
@@ -46,8 +48,8 @@ bool vil_mask_image_using_ids_process(bprb_func_process& pro)
   unsigned i=0;
   vil_image_view_base_sptr image_sptr = pro.get_input<vil_image_view_base_sptr>(i++);
   vil_image_view_base_sptr mask_image_sptr = pro.get_input<vil_image_view_base_sptr>(i++);
-  unsigned idi = pro.get_input<unsigned>(i++);
-  unsigned char id = (unsigned char)idi;
+  auto idi = pro.get_input<unsigned>(i++);
+  auto id = (unsigned char)idi;
 
   unsigned ni = image_sptr->ni();
   unsigned nj = image_sptr->nj();
@@ -72,4 +74,3 @@ bool vil_mask_image_using_ids_process(bprb_func_process& pro)
   pro.set_output_val<vil_image_view_base_sptr>(0, out_image_sptr);
   return true;
 }
-

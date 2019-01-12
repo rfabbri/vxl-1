@@ -10,8 +10,10 @@
 #include <vsl/vsl_binary_loader.h>
 #include <vnl/algo/vnl_svd.h>
 #include <vnl/algo/vnl_cholesky.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 //=======================================================================
 
@@ -61,8 +63,8 @@ double msm_affine_aligner::scale(const vnl_vector<double>& t) const
   assert(t.size()==6);
   double a = t[0]+1, b = t[1];
   double c = t[3],   d = t[4]+1;
-  double s2 = vcl_fabs(a*d - b*c);
-  if (s2>0) return vcl_sqrt(s2);
+  double s2 = std::fabs(a*d - b*c);
+  if (s2>0) return std::sqrt(s2);
 
   return 0.0;
 }
@@ -390,6 +392,12 @@ void msm_affine_aligner::align_set(const std::vector<msm_points>& points,
 
     for (unsigned i=0;i<n_shapes;++i)
     {
+      if (points[i].size()!=ref_mean_shape.size())
+      {
+        std::cerr<<"msm_affine_aligner::align_set() shape "<<i
+                 <<" has different number of points to first shape"<<std::endl;
+        std::abort();
+      }
       calc_transform_from_ref(ref_mean_shape,points[i],pose_from_ref);
       pose_to_ref[i]=inverse(pose_from_ref);
       average_pose+=pose_from_ref;
@@ -429,5 +437,3 @@ msm_aligner* msm_affine_aligner::clone() const
 {
   return new msm_affine_aligner(*this);
 }
-
-

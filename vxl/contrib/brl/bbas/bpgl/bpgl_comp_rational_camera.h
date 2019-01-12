@@ -19,7 +19,9 @@
 #include <iostream>
 #include <string>
 #include <vgl/vgl_fwd.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_vector_fixed.h>
 #include <vnl/vnl_matrix_fixed.h>
 #include <vpgl/vpgl_rational_camera.h>
@@ -55,7 +57,7 @@ class bpgl_comp_rational_camera : public vpgl_rational_camera<T>
   //: Constructor, create from a camera file given by cam_path
   bpgl_comp_rational_camera(std::string cam_path);
 
-  virtual ~bpgl_comp_rational_camera() {}
+  virtual ~bpgl_comp_rational_camera() = default;
 
   //: Clone `this': creation of a new object and initialization
   //  See Prototype pattern
@@ -119,4 +121,3 @@ std::istream& operator>>(std::istream& is, bpgl_comp_rational_camera<T>& p);
 
 
 #endif // bpgl_comp_rational_camera_h_
-

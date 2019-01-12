@@ -10,8 +10,10 @@
 #include <iosfwd>
 #include <string>
 #include <vector>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_fwd.h>
 
 //: List of points making a curve - for defining boundaries
@@ -41,7 +43,7 @@ class msm_curve
             bool open=true, std::string name="");
 
   // Destructor
-  ~msm_curve() {}
+  ~msm_curve() = default;
 
   //: Number of points defining the curve
   std::size_t size() const { return index_.size(); }
@@ -145,7 +147,7 @@ class msm_curves : public std::vector<msm_curve>
   // If curve_data starts with { then parse using config_from_stream,
   // else assume it is a filename and load.
   // If curves_data="-" then empty curves
-  void parse_or_load(const vcl_string& curves_data);
+  void parse_or_load(const std::string& curves_data);
 
   //: Save to text file
   // Writes in format:

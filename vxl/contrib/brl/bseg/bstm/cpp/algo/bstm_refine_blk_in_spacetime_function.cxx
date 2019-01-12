@@ -2,7 +2,9 @@
 #include <algorithm>
 #include "bstm_refine_blk_in_spacetime_function.h"
 #include <bstm/io/bstm_lru_cache.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 bool bstm_refine_blk_in_spacetime_function::init_data(bstm_time_block* blk_t, bstm_block* blk, std::vector<bstm_data_base*> & datas, float prob_thresh)
@@ -72,12 +74,12 @@ bool bstm_refine_blk_in_spacetime_function::init_data(bstm_time_block* blk_t, bs
    return true;
 }
 
-bool bstm_refine_blk_in_spacetime_function::refine(std::vector<bstm_data_base*>& datas)
+bool bstm_refine_blk_in_spacetime_function::refine(std::vector<bstm_data_base*>&  /*datas*/)
 {
 
   //1. loop over each tree, refine it in place
   boxm2_array_3d<uchar16>&  trees = blk_->trees();  //trees to refine
-  uchar16* trees_copy = new uchar16[trees.size()];  //copy of those trees
+  auto* trees_copy = new uchar16[trees.size()];  //copy of those trees
   int* dataIndex = new int[trees.size()];           //data index for each new tree
   int currIndex = 0;                                //curr tree being looked at
   int dataSize = 0;                                 //running sum of data size
@@ -169,9 +171,9 @@ bool bstm_refine_blk_in_spacetime_function::refine(std::vector<bstm_data_base*>&
                                                       dataSize * bstm_data_traits<BSTM_MOG6_VIEW_COMPACT>::datasize() , id);
   bstm_data_base* newN = new bstm_data_base(new char[dataSize * bstm_data_traits<BSTM_NUM_OBS_VIEW_COMPACT>::datasize() ],
                                                       dataSize * bstm_data_traits<BSTM_NUM_OBS_VIEW_COMPACT>::datasize(), id);
-  bstm_data_traits<BSTM_ALPHA>::datatype *   alpha_cpy = (bstm_data_traits<BSTM_ALPHA>::datatype *) newA->data_buffer();
-  bstm_data_traits<BSTM_MOG6_VIEW_COMPACT>::datatype *  mog_cpy = ( bstm_data_traits<BSTM_MOG6_VIEW_COMPACT>::datatype *) newM->data_buffer();
-  bstm_data_traits<BSTM_NUM_OBS_VIEW_COMPACT>::datatype *  numobs_cpy = (bstm_data_traits<BSTM_NUM_OBS_VIEW_COMPACT>::datatype *) newN->data_buffer();
+  auto *   alpha_cpy = (bstm_data_traits<BSTM_ALPHA>::datatype *) newA->data_buffer();
+  auto *  mog_cpy = ( bstm_data_traits<BSTM_MOG6_VIEW_COMPACT>::datatype *) newM->data_buffer();
+  auto *  numobs_cpy = (bstm_data_traits<BSTM_NUM_OBS_VIEW_COMPACT>::datatype *) newN->data_buffer();
 
 
   //5. move data from old data buffers to new data buffers
@@ -215,18 +217,18 @@ void bstm_refine_blk_in_spacetime_function::move_data(bstm_time_tree& unrefined_
   std::vector<int> new_leaves = refined_time_tree.get_leaf_bits();
   std::vector<int> old_leaves = unrefined_time_tree.get_leaf_bits();
 
-  for (std::vector<int>::iterator iter = new_leaves.begin(); iter != new_leaves.end(); iter++)
+  for (int & new_leave : new_leaves)
   {
     //get new data ptr
-    int newDataPtr = refined_time_tree.get_data_index(*iter);
+    int newDataPtr = refined_time_tree.get_data_index(new_leave);
 
     //find out if this leaf exists in the unrefined tree as well
-    int pj = unrefined_time_tree.parent_index(*iter);           //Bit_index of parent bit
-    bool validCellOld = (*iter==0) || unrefined_time_tree.bit_at(pj);
+    int pj = unrefined_time_tree.parent_index(new_leave);           //Bit_index of parent bit
+    bool validCellOld = (new_leave==0) || unrefined_time_tree.bit_at(pj);
 
     int oldDataPtr;
     if (validCellOld) { //if they both exist
-      oldDataPtr = unrefined_time_tree.get_data_index(*iter);
+      oldDataPtr = unrefined_time_tree.get_data_index(new_leave);
 
       //copy data
       alpha_cpy[newDataPtr]= alpha_[oldDataPtr];
@@ -277,7 +279,7 @@ int bstm_refine_blk_in_spacetime_function::move_time_trees(boct_bit_tree& unrefi
 
       if (!refined_tree.is_leaf(j)) //if the time trees being copied belong to an inner cell, erase their time trees
       {
-        vnl_vector_fixed<unsigned char, 8> * erased_old_time_trees = new vnl_vector_fixed<unsigned char, 8>[sub_block_num_t_];
+        auto * erased_old_time_trees = new vnl_vector_fixed<unsigned char, 8>[sub_block_num_t_];
         for (unsigned int t_idx = 0;t_idx < sub_block_num_t_; ++t_idx) {
           bstm_time_tree tmp_tree(old_time_trees[t_idx].data_block() );   //create tree by copying the tree data
           tmp_tree.erase_cells();                                         //erase all cells except for root.
@@ -347,9 +349,9 @@ bool bstm_refine_blk_in_spacetime_function::decide_refinement_in_space(int dataI
 {
   //fetch time tree(s) and see if they contain any cell with prob > prob_t.
   boxm2_array_1d<uchar8>  all_time_trees =  blk_t_->get_cell_all_tt(dataIndex);
-  for (unsigned int t = 0; t < all_time_trees.size(); ++t)
+  for (auto & all_time_tree : all_time_trees)
   {
-    bstm_time_tree time_tree( all_time_trees[t].data_block(), max_level_t_);
+    bstm_time_tree time_tree( all_time_tree.data_block(), max_level_t_);
     //loop over its leaves to see if any cell has prob > prob_t
     std::vector<int> leaves = time_tree.get_leaf_bits();
     for(std::vector<int>::const_iterator iter = leaves.begin(); iter != leaves.end(); iter++)

@@ -5,7 +5,9 @@
 #include <vgui/vgui_popup_params.h>
 
 #include <qgl.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 vgui_qt_adaptor::vgui_qt_adaptor(QWidget* parent, const char* name)
    : QGLWidget(QGLFormat(DoubleBuffer|DepthBuffer|Rgba|AlphaChannel|

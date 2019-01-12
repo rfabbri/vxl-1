@@ -1,9 +1,6 @@
 // This is oxl/mvl/RawPMatrixStore.h
 #ifndef RawPMatrixStore_h_
 #define RawPMatrixStore_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Demand-load image sequence from disk
@@ -19,10 +16,13 @@
 //-----------------------------------------------------------------------------
 
 #include <iostream>
+#include <utility>
 #include <vector>
-#include <vcl_compiler.h>
 #include <mvl/FileNameGenerator.h>
 #include <mvl/PMatrix_sptr.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class RawPMatrixStore
 {
@@ -30,7 +30,7 @@ class RawPMatrixStore
   // Constructors/Destructors--------------------------------------------------
 
   //: Construct a PMatrix store given a FileNameGenerator
-  RawPMatrixStore(FileNameGenerator const& fng) : fng_(fng) {}
+  RawPMatrixStore(FileNameGenerator  fng) : fng_(std::move(fng)) {}
 
   // Operations----------------------------------------------------------------
 

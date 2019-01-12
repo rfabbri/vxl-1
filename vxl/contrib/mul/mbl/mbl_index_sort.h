@@ -9,7 +9,9 @@
 #include <iostream>
 #include <algorithm>
 #include <functional>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Implementation class - Do No Use.
 template <class T>

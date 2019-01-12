@@ -14,7 +14,9 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_ref_count.h>
 #include <vgl/vgl_box_2d.h>
 #include <vpgl/vpgl_lvcs_sptr.h>
@@ -27,7 +29,7 @@
 class volm_satellite_resource
 {
   public:
-    volm_satellite_resource() : full_path_(""), name_(""), pair_(""), meta_(VXL_NULLPTR) {}
+    volm_satellite_resource() : full_path_(""), name_(""), pair_(""), meta_(nullptr) {}
 
   // ===========  binary I/O ================
   short version() const { return 0; }
@@ -46,7 +48,7 @@ class volm_satellite_resources : public vbl_ref_count
 {
   public:
     //: default constructor
-    volm_satellite_resources() {}
+    volm_satellite_resources() = default;
 
     //: x is lon and y is lat in the bbox, construct bbox with min point to be lower left and max to be upper right and as axis aligned with North-East
     volm_satellite_resources(vgl_box_2d<double>& bbox, double min_size = 1.0, bool eliminate_same = false);
@@ -89,15 +91,15 @@ class volm_satellite_resources : public vbl_ref_count
         const std::vector<vgl_polygon<double> >& footprints);
 
     void query_resources(std::vector<vgl_polygon<double> >& footprints, std::vector<unsigned>& footprint_ids,
-        volm_satellite_resources_sptr res, const std::string& kml_file, const std::string& band="PAN", double gsd_thres=10.0);
+        const volm_satellite_resources_sptr& res, const std::string& kml_file, const std::string& band="PAN", double gsd_thres=10.0);
 
-    void highly_overlapping_resources(std::vector<std::string>& overlapping_res, volm_satellite_resources_sptr res,
+    void highly_overlapping_resources(std::vector<std::string>& overlapping_res, const volm_satellite_resources_sptr& res,
         const std::string& kml_file, float downsample_factor, const std::string& band="PAN", double gsd_thres=10.0);
 
     void highly_overlapping_resources(std::vector<unsigned>& overlapping_ids, const std::vector<vgl_polygon<double> >& footprints,
         float downsample_factor);
 
-    void highly_intersecting_resources(std::vector<std::string>& overlapping_res, volm_satellite_resources_sptr res,
+    void highly_intersecting_resources(std::vector<std::string>& overlapping_res, const volm_satellite_resources_sptr& res,
         const std::string& kml_file, int k=3, int l=5, const std::string& band="PAN", double gsd_thres=10.0);
 
     void highly_intersecting_resources(std::vector<unsigned>& overlapping_ids,
@@ -106,7 +108,7 @@ class volm_satellite_resources : public vbl_ref_count
     void ind_combinations(std::vector<std::vector<unsigned> >& combs, unsigned N, unsigned K);
 
     //: return the full path of a satellite image given its name, if not found returns empty string
-    std::pair<std::string, std::string> full_path(std::string name);
+    std::pair<std::string, std::string> full_path(const std::string& name);
 
     //: find the image PAN/MULTI band pair given the satellite image name
     //: Note the PAN and MULTI band generally has shifted footprint and tolerance here is used to set the threshold that PAN/MULTI band needs to have footprint shift less than
@@ -122,7 +124,7 @@ class volm_satellite_resources : public vbl_ref_count
     static std::map<std::string, float> satellite_geo_reliability;
 
 protected:
-    void add_resource(std::string name);
+    void add_resource(const std::string& name);
     void construct_tree();
     //: add the resources in the resources_ vector to the tree
     void add_resources(unsigned start, unsigned end);

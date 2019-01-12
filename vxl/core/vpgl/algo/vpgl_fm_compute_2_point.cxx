@@ -12,7 +12,9 @@
 #include <vnl/vnl_matrix_fixed.h>
 #include <vnl/algo/vnl_svd.h>
 #include <vgl/algo/vgl_norm_trans_2d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 //-------------------------------------------
@@ -59,7 +61,7 @@ vpgl_fm_compute_2_point::compute(
     }
   }
   // Solve!
-  vnl_matrix<double> S(pr_norm.size(),3);
+  vnl_matrix<double> S(static_cast<unsigned int>(pr_norm.size()), 3);
   for ( unsigned int i = 0; i < pr_norm.size(); i++ )
   {
     double xl =pl_norm[i].x(), yl = pl_norm[i].y(), wl = pl_norm[i].w();

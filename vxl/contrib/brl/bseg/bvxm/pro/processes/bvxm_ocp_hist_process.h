@@ -20,17 +20,19 @@
 #include <iostream>
 #include <string>
 #include <bprb/bprb_func_process.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bvxm/bvxm_voxel_world.h>
 
 //: global variables for this process
 namespace bvxm_ocp_hist_process_globals
 {
-  const unsigned n_inputs_ = 3;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 3;
+  constexpr unsigned n_outputs_ = 0;
 
   // functions
-  bool compute(bvxm_voxel_world_sptr w, unsigned scale, std::string path);
+  bool compute(const bvxm_voxel_world_sptr& w, unsigned scale, const std::string& path);
 }
 
 //: set input and output types

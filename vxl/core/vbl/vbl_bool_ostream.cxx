@@ -1,11 +1,10 @@
 // This is core/vbl/vbl_bool_ostream.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 
 #include <iostream>
 #include "vbl_bool_ostream.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 std::ostream& operator<<(std::ostream& s, const vbl_bool_ostream::on_off& proxy)
 {
@@ -33,4 +32,3 @@ std::ostream& operator<<(std::ostream& s, const vbl_bool_ostream::true_false& pr
     s << "false";
   return s;
 }
-

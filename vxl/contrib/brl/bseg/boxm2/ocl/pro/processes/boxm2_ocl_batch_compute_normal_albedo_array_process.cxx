@@ -9,7 +9,9 @@
 // \author Daniel Crispell
 // \date Feb 14, 2012
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/ocl/boxm2_opencl_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -32,9 +34,9 @@
 
 namespace boxm2_ocl_batch_compute_normal_albedo_array_process_globals
 {
-   const unsigned n_inputs_ =  6;
-   const unsigned n_outputs_ = 0;
-   void compile_kernel(bocl_device_sptr device,std::vector<bocl_kernel*> & vec_kernels)
+   constexpr unsigned n_inputs_ = 6;
+   constexpr unsigned n_outputs_ = 0;
+   void compile_kernel(const bocl_device_sptr& device,std::vector<bocl_kernel*> & vec_kernels)
    {
       std::vector<std::string> src_paths;
       std::string source_dir = boxm2_ocl_util::ocl_src_root();
@@ -44,7 +46,7 @@ namespace boxm2_ocl_batch_compute_normal_albedo_array_process_globals
 
       //compilation options
 
-      bocl_kernel* compute_naa = new bocl_kernel();
+      auto* compute_naa = new bocl_kernel();
       std::string opts = " -D COMPUTE_NAA ";
 
       compute_naa->create_kernel(&device->context(), device->device_id(), src_paths, "batch_fit_normal_albedo_array", opts, "batch_fit_normal_albedo_array");
@@ -86,8 +88,8 @@ bool boxm2_ocl_batch_compute_normal_albedo_array_process(bprb_func_process& pro)
       return false;
    }
    //get the inputs
-   bocl_device_sptr device             = pro.get_input<bocl_device_sptr>(0);
-   boxm2_scene_sptr scene              = pro.get_input<boxm2_scene_sptr>(1);
+   bocl_device_sptr device = pro.get_input<bocl_device_sptr>(0);
+   boxm2_scene_sptr scene = pro.get_input<boxm2_scene_sptr>(1);
    boxm2_opencl_cache_sptr opencl_cache= pro.get_input<boxm2_opencl_cache_sptr>(2);
    std::string id_list_fname =  pro.get_input<std::string>(3);
    std::string md_list_fname =  pro.get_input<std::string>(4);
@@ -183,10 +185,10 @@ bool boxm2_ocl_batch_compute_normal_albedo_array_process(bprb_func_process& pro)
       return false;
    }
    // compute offsets and scales for linear radiance model
-   float* radiance_scales_buff = new float[num_normals * num_images];
-   float* radiance_offsets_buff = new float[num_normals * num_images];
-   float* radiance_var_scales_buff = new float[num_normals * num_images];
-   float* radiance_var_offsets_buff = new float[num_normals * num_images];
+   auto* radiance_scales_buff = new float[num_normals * num_images];
+   auto* radiance_offsets_buff = new float[num_normals * num_images];
+   auto* radiance_var_scales_buff = new float[num_normals * num_images];
+   auto* radiance_var_offsets_buff = new float[num_normals * num_images];
 
    for (unsigned int m=0; m<num_images; ++m) {
       for (unsigned int n=0; n<num_normals; ++n) {
@@ -223,10 +225,10 @@ bool boxm2_ocl_batch_compute_normal_albedo_array_process(bprb_func_process& pro)
   num_images_ocl->create_buffer(CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR);
 
   std::vector<std::string> type_names;
-  type_names.push_back("aux0");
-  type_names.push_back("aux1");
-  type_names.push_back("aux2");
-  type_names.push_back("aux3");
+  type_names.emplace_back("aux0");
+  type_names.emplace_back("aux1");
+  type_names.emplace_back("aux2");
+  type_names.emplace_back("aux3");
 
   boxm2_cache_sptr cpu_cache = opencl_cache->get_cpu_cache();
 
@@ -256,10 +258,10 @@ bool boxm2_ocl_batch_compute_normal_albedo_array_process(bprb_func_process& pro)
    for (id = block_ids.begin(); id != block_ids.end(); ++id)
    {
       /* bocl_mem* blk = */ opencl_cache->get_block(scene,*id);
-      bocl_mem* blk_info  = opencl_cache->loaded_block_info();
-      bocl_mem* alpha     = opencl_cache->get_data<BOXM2_ALPHA>(scene,*id,0,true);
+      bocl_mem* blk_info = opencl_cache->loaded_block_info();
+      bocl_mem* alpha = opencl_cache->get_data<BOXM2_ALPHA>(scene,*id,0,true);
       int alphaTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_ALPHA>::prefix());
-      boxm2_scene_info* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
+      auto* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
       info_buffer->data_buffer_length = (int) (alpha->num_bytes()/alphaTypeSize);
 
       bocl_kernel * kern = kernels[(device->device_id())][0];
@@ -268,13 +270,13 @@ bool boxm2_ocl_batch_compute_normal_albedo_array_process(bprb_func_process& pro)
 
       std::size_t num_cells = str_blk_cache.block_size_in_bytes_["aux0"]/ sizeof(float);
 
-      cl_int num_cells_buff = (cl_int)num_cells;
+      auto num_cells_buff = (cl_int)num_cells;
       bocl_mem_sptr num_cells_ocl = new bocl_mem(device->context(), &num_cells_buff, sizeof(cl_int), "num cells buffer");
       num_cells_ocl->create_buffer(CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR);
 
       std::string data_type = boxm2_data_traits<BOXM2_NORMAL_ALBEDO_ARRAY>::prefix();
       int appTypeSize = (int)boxm2_data_info::datasize(data_type);
-      bocl_mem* naa_apm   = opencl_cache->get_data(scene,*id,data_type,num_cells*appTypeSize, true);
+      bocl_mem* naa_apm = opencl_cache->get_data(scene,*id,data_type,num_cells*appTypeSize, true);
 
       boxm2_data_base * data_type0 = str_blk_cache.data_types_["aux0"];
       bocl_mem_sptr bocl_data_type0 = opencl_cache->alloc_mem(data_type0->buffer_length(), data_type0->data_buffer(),"bocl data type0");

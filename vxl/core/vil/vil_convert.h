@@ -1,9 +1,6 @@
 // This is core/vil/vil_convert.h
 #ifndef vil_convert_h_
 #define vil_convert_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Some standard conversion functions.
@@ -82,8 +79,11 @@
 
 #include <limits>
 #include <cmath>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#include <vcl_compiler_detection.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_transform.h>
 #include <vil/vil_math.h>
 #include <vil/vil_plane.h>
@@ -216,7 +216,7 @@ macro( vxl_uint_64 )
 #endif // DOXYGEN_SHOULD_SKIP_THIS
 // declare general case in case anyone needs something weird.
 
-#if defined(VCL_VC)
+#if defined(_MSC_VER)
 // Visual C++ intentionally warns when a non-bool is assigned or
 // cast to a bool. Since the following cast is valid, we suppress the
 // warning.
@@ -230,7 +230,7 @@ inline void vil_convert_cast_pixel<In, Out>::operator () (In v, Out &d) const
   d = static_cast<Out>(v);
 }
 
-#if defined(VCL_VC)
+#if defined(_MSC_VER)
 # pragma warning( pop )
 #endif
 
@@ -757,7 +757,7 @@ inline vil_image_view_base_sptr vil_convert_cast(outP /*dummy*/,
     default:
       vil_exception_warning(vil_exception_unsupported_pixel_format(
         src->pixel_format(), "vil_convert_cast") );
-      dest = VXL_NULLPTR;
+      dest = nullptr;
   }
   return dest;
 }
@@ -863,7 +863,7 @@ macro(VIL_PIXEL_FORMAT_DOUBLE , double )
   default:
     vil_exception_warning(vil_exception_unsupported_pixel_format(
       src->pixel_format(), "vil_convert_round") );
-    dest=VXL_NULLPTR;
+    dest=nullptr;
   }
   return dest;
 }
@@ -916,7 +916,7 @@ macro(VIL_PIXEL_FORMAT_DOUBLE , double )
     default:
       vil_exception_warning(vil_exception_unsupported_pixel_format(
         src->pixel_format(), "vil_convert_to_compound_order") );
-      dest=VXL_NULLPTR;
+      dest=nullptr;
   }
   return dest;
 }
@@ -1030,7 +1030,7 @@ inline vil_image_view_base_sptr vil_convert_to_grey_using_average(
   default:
     vil_exception_warning(vil_exception_unsupported_pixel_format(
       src->pixel_format(), "vil_convert_to_grey_using_average") );
-    return VXL_NULLPTR;
+    return nullptr;
   }
 }
 

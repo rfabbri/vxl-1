@@ -3,13 +3,15 @@
 #include <testlib/testlib_test.h>
 #include <testlib/testlib_root_dir.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_file.h>
 
 #include <vil/vil_stream_fstream.h>
 #include <vxl_config.h>
 
-#if defined(VCL_WIN32) && VXL_USE_WIN_WCHAR_T
+#if defined(_WIN32) && VXL_USE_WIN_WCHAR_T
 # include <windows.h>
 #endif
 
@@ -46,8 +48,8 @@ test_stream( int argc, char* argv[] )
     fs->unref();
   }
 
-#if defined(VCL_WIN32) && VXL_USE_WIN_WCHAR_T
-  const unsigned int size = 4096;  // should be enough
+#if defined(_WIN32) && VXL_USE_WIN_WCHAR_T
+  constexpr unsigned int size = 4096;  // should be enough
   std::wstring wdir;
   wdir.resize(size);
   const int ret = MultiByteToWideChar(CP_ACP, 0, dir.c_str(), int(dir.size()), &wdir[0], size);
@@ -69,7 +71,7 @@ test_stream( int argc, char* argv[] )
     TEST( "[wchar_t] Size file 2", fs->file_size(), 1069 );
     fs->unref();
   }
-#endif //defined(VCL_WIN32) && VXL_USE_WIN_WCHAR_T
+#endif //defined(_WIN32) && VXL_USE_WIN_WCHAR_T
 }
 
 TESTMAIN_ARGS(test_stream);

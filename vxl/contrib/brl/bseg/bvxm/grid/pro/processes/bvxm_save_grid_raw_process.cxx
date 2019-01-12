@@ -22,8 +22,8 @@
 
 namespace bvxm_save_grid_raw_process_globals
 {
-  const unsigned n_inputs_ = 2;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 2;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool bvxm_save_grid_raw_process_cons(bprb_func_process& pro)
@@ -55,19 +55,19 @@ bool bvxm_save_grid_raw_process(bprb_func_process& pro)
   std::string volume_path = pro.get_input<std::string>(1);
 
   // create the grid from in memory file and save
-  if ( bvxm_voxel_grid<float > *grid = dynamic_cast<bvxm_voxel_grid<float >* >(grid_base.ptr())) {
+  if ( auto *grid = dynamic_cast<bvxm_voxel_grid<float >* >(grid_base.ptr())) {
     bvxm_grid_save_raw(grid,volume_path);
     return true;
   }
-  else if ( bvxm_voxel_grid<bvxm_opinion > *grid = dynamic_cast<bvxm_voxel_grid<bvxm_opinion >* >(grid_base.ptr())) {
+  else if ( auto *grid = dynamic_cast<bvxm_voxel_grid<bvxm_opinion >* >(grid_base.ptr())) {
      bvxm_grid_save_raw(grid,volume_path);
     return true;
   }
-  else if ( bvxm_voxel_grid<unsigned> *grid = dynamic_cast<bvxm_voxel_grid<unsigned>* >(grid_base.ptr())) {
+  else if ( auto *grid = dynamic_cast<bvxm_voxel_grid<unsigned>* >(grid_base.ptr())) {
     bvxm_grid_save_raw(grid,volume_path);
     return true;
   }
-  else if ( bvxm_voxel_grid<bsta_num_obs<bsta_gauss_sf1> > *grid = dynamic_cast<bvxm_voxel_grid<bsta_num_obs<bsta_gauss_sf1> >* >(grid_base.ptr())) {
+  else if ( auto *grid = dynamic_cast<bvxm_voxel_grid<bsta_num_obs<bsta_gauss_sf1> >* >(grid_base.ptr())) {
     bvxm_grid_save_raw<bsta_num_obs<bsta_gauss_sf1> >(grid,volume_path);
     return true;
   }

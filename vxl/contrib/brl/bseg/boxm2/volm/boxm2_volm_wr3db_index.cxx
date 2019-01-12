@@ -6,9 +6,11 @@
 #include <bbas/volm/volm_spherical_container.h>
 #include <boxm2/volm/boxm2_volm_locations.h>
 #include <vgl/vgl_box_3d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
-bool boxm2_volm_wr3db_index_params::write_params_file(std::string index_file_name)
+bool boxm2_volm_wr3db_index_params::write_params_file(const std::string& index_file_name)
 {
   std::string index_params_file = vul_file::strip_extension(index_file_name) + ".params";
   std::ofstream ofs(index_params_file.c_str());
@@ -30,7 +32,7 @@ bool boxm2_volm_wr3db_index_params::write_params_file(std::string index_file_nam
   return true;
 }
 
-bool boxm2_volm_wr3db_index_params::read_params_file(std::string index_file_name)
+bool boxm2_volm_wr3db_index_params::read_params_file(const std::string& index_file_name)
 {
   std::string index_params_file = vul_file::strip_extension(index_file_name) + ".params";
   std::ifstream ifs(index_params_file.c_str());
@@ -66,7 +68,7 @@ bool boxm2_volm_wr3db_index_params::query_params_equal(boxm2_volm_wr3db_index_pa
 }
 
 
-bool boxm2_volm_wr3db_index_params::write_size_file(std::string index_file_name, unsigned long indexed_cnt)
+bool boxm2_volm_wr3db_index_params::write_size_file(const std::string& index_file_name, unsigned long indexed_cnt)
 {
   std::string index_size_file = vul_file::strip_extension(index_file_name) + ".txt";
   std::ofstream ofs(index_size_file.c_str());
@@ -77,7 +79,7 @@ bool boxm2_volm_wr3db_index_params::write_size_file(std::string index_file_name,
   return true;
 }
 
-bool boxm2_volm_wr3db_index_params::read_size_file(std::string index_file_name, unsigned long& size)
+bool boxm2_volm_wr3db_index_params::read_size_file(const std::string& index_file_name, unsigned long& size)
 {
   std::string index_size_file = vul_file::strip_extension(index_file_name) + ".txt";
   std::ifstream ifs(index_size_file.c_str());
@@ -90,7 +92,7 @@ bool boxm2_volm_wr3db_index_params::read_size_file(std::string index_file_name, 
 
 
 boxm2_volm_wr3db_index::boxm2_volm_wr3db_index(unsigned layer_size, float buffer_capacity) :
-layer_size_(layer_size), buffer_size_(0), current_id_(0), current_global_id_(0), m_(NOT_INITIALIZED), file_name_(""), active_buffer_(VXL_NULLPTR)
+layer_size_(layer_size), buffer_size_(0), current_id_(0), current_global_id_(0), m_(NOT_INITIALIZED), file_name_(""), active_buffer_(nullptr)
 {
   buffer_size_ = (unsigned int)std::floor((buffer_capacity*1024*1024*1024)/(2.0f*layer_size));
   active_buffer_ = new uchar[buffer_size_*layer_size_];
@@ -104,7 +106,7 @@ boxm2_volm_wr3db_index::~boxm2_volm_wr3db_index()
     delete [] active_buffer_;
 }
 
-bool boxm2_volm_wr3db_index::initialize_write(std::string file_name)
+bool boxm2_volm_wr3db_index::initialize_write(const std::string& file_name)
 {
   if (m_ == READ)
     this->finalize();
@@ -119,7 +121,7 @@ bool boxm2_volm_wr3db_index::initialize_write(std::string file_name)
   return true;
 }
 
-bool boxm2_volm_wr3db_index::initialize_read(std::string file_name)
+bool boxm2_volm_wr3db_index::initialize_read(const std::string& file_name)
 {
   if (m_ == WRITE)
     this->finalize();
@@ -261,7 +263,7 @@ bool boxm2_volm_wr3db_index::get_next(uchar* values, unsigned size)
 
 //: inflate the index for ith location and return a vector of char values where last bit is visibility and second to last is prob (occupied or not)
 bool boxm2_volm_wr3db_index::inflate_index_vis_and_prob(std::vector<uchar>& values,
-                                                        volm_spherical_container_sptr cont,
+                                                        const volm_spherical_container_sptr& cont,
                                                         std::vector<char>& vis_prob)
 {
   // get the voxel on the indexed layer for a given voxel
@@ -271,7 +273,7 @@ bool boxm2_volm_wr3db_index::inflate_index_vis_and_prob(std::vector<uchar>& valu
   cont->first_res(cont->min_voxel_res()*2, offset, end_offset, depth);
 
   std::map<double, unsigned int>& depth_offset_map = cont->get_depth_offset_map();
-  std::map<double, unsigned int>::iterator iter = depth_offset_map.begin();
+  auto iter = depth_offset_map.begin();
   vgl_point_3d<double> origin(0,0,0);
   unsigned char current_depth_interval = 0; // to count the depth intervals
 

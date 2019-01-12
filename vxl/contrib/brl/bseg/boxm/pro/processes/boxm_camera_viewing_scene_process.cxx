@@ -24,13 +24,15 @@
 #include <vpgl/vpgl_perspective_camera.h>
 #include <bpgl/algo/bpgl_project.h>
 #include <vnl/vnl_math.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 //:global variables
 namespace boxm_camera_viewing_scene_process_globals
 {
   //this process takes no inputs
-  const unsigned n_inputs_ = 7;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 7;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 //:sets input and output types
@@ -71,13 +73,13 @@ bool boxm_camera_viewing_scene_process(bprb_func_process& pro)
   std::string cam_type = pro.get_input<std::string>(1);
   if (cam_type!="vpgl_perspective_camera")
     return false; //later other camera types
-  double elevation = pro.get_input<double>(2);
-  double azimuth = pro.get_input<double>(3);
-  double radius = pro.get_input<double>(4);
+  auto elevation = pro.get_input<double>(2);
+  auto azimuth = pro.get_input<double>(3);
+  auto radius = pro.get_input<double>(4);
 
-  unsigned ni = pro.get_input<unsigned>(5);
-  unsigned nj = pro.get_input<unsigned>(6);
-  double dni = static_cast<double>(ni), dnj = static_cast<double>(nj);
+  auto ni = pro.get_input<unsigned>(5);
+  auto nj = pro.get_input<unsigned>(6);
+  auto dni = static_cast<double>(ni), dnj = static_cast<double>(nj);
   //
   //find a camera that will project the scene bounding box
   //entirely inside the image
@@ -101,7 +103,7 @@ bool boxm_camera_viewing_scene_process(bprb_func_process& pro)
   // 3) start with a unit focal length and position the camera
   vpgl_calibration_matrix<double> K(1.0, vgl_point_2d<double>(ni/2, nj/2));
   vgl_rotation_3d<double> R;
-  vpgl_perspective_camera<double>* cam =
+  auto* cam =
     new vpgl_perspective_camera<double>(K, cent, R);
 
   //stare at the center of the scene

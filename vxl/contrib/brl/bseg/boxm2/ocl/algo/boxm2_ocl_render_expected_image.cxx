@@ -9,7 +9,9 @@
 #include <vsph/vsph_camera_bounds.h>
 #include <vgl/vgl_ray_3d.h>
 #include <boct/boct_bit_tree.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <brad/brad_image_metadata.h>
 #include <brad/brad_atmospheric_parameters.h>
@@ -23,38 +25,38 @@ using namespace boxm2_ocl_render_expected_image_globals;
 //verifies data type for scene
 //--------------------------------------------------
 bool boxm2_ocl_render_expected_image_globals::validate_appearances(
-    boxm2_scene_sptr scene,
+    const boxm2_scene_sptr& scene,
     std::string& data_type,
     int& appTypeSize,
     std::string& options)
 {
   std::vector<std::string> apps = scene->appearances();
   bool foundDataType = false;
-  for (unsigned int i=0; i<apps.size(); ++i) {
-    if ( apps[i] == boxm2_data_traits<BOXM2_MOG3_GREY>::prefix() )
+  for (const auto & app : apps) {
+    if ( app == boxm2_data_traits<BOXM2_MOG3_GREY>::prefix() )
     {
-      data_type = apps[i];
+      data_type = app;
       foundDataType = true;
       options="-D MOG_TYPE_8 ";
       appTypeSize = boxm2_data_traits<BOXM2_MOG3_GREY>::datasize();
     }
-    else if ( apps[i] == boxm2_data_traits<BOXM2_MOG3_GREY_16>::prefix() )
+    else if ( app == boxm2_data_traits<BOXM2_MOG3_GREY_16>::prefix() )
     {
-      data_type = apps[i];
+      data_type = app;
       foundDataType = true;
       options="-D MOG_TYPE_16 ";
       appTypeSize = boxm2_data_traits<BOXM2_MOG3_GREY_16>::datasize();
     }
-    else if ( apps[i] == boxm2_data_traits<BOXM2_FLOAT8>::prefix() )
+    else if ( app == boxm2_data_traits<BOXM2_FLOAT8>::prefix() )
     {
-      data_type = apps[i];
+      data_type = app;
       foundDataType = true;
       options="-D FLOAT8 ";
       appTypeSize = boxm2_data_traits<BOXM2_FLOAT8>::datasize();
     }
-    else if ( apps[i] == boxm2_data_traits<BOXM2_LABEL_SHORT>::prefix() )
+    else if ( app == boxm2_data_traits<BOXM2_LABEL_SHORT>::prefix() )
     {
-      data_type = apps[i];
+      data_type = app;
       foundDataType = true;
       options="-D SHORT ";
       appTypeSize = boxm2_data_traits<BOXM2_LABEL_SHORT>::datasize();
@@ -77,7 +79,7 @@ bool boxm2_ocl_render_expected_image::render(
     bocl_device_sptr         device,
     boxm2_opencl_cache_sptr  opencl_cache,
     vpgl_camera_double_sptr  cam,
-    std::string               ident,
+    const std::string&               ident,
     unsigned                 ni,
     unsigned                 nj,
     float                    nearfactor,
@@ -126,7 +128,7 @@ bool boxm2_ocl_render_expected_image::render(
   unsigned cl_nj=RoundUp(nj,lthreads[1]);
 
   // expected image
-  float* exp_buff = new float[cl_ni*cl_nj];
+  auto* exp_buff = new float[cl_ni*cl_nj];
   for (unsigned i=0;i<cl_ni*cl_nj;i++) exp_buff[i]=0.0f;
   bocl_mem_sptr exp_image=opencl_cache->alloc_mem(cl_ni*cl_nj*sizeof(float), exp_buff,"exp image buffer");
   exp_image->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
@@ -138,12 +140,12 @@ bool boxm2_ocl_render_expected_image::render(
   exp_img_dim->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
 
   // visibility image
-  float* vis_buff = new float[cl_ni*cl_nj];
+  auto* vis_buff = new float[cl_ni*cl_nj];
   std::fill(vis_buff, vis_buff + cl_ni*cl_nj, 1.0f);
   bocl_mem_sptr vis_image = opencl_cache->alloc_mem(cl_ni*cl_nj*sizeof(float), vis_buff,"vis image buffer");
   vis_image->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
 
-  float* max_omega_buff = new float[cl_ni*cl_nj];
+  auto* max_omega_buff = new float[cl_ni*cl_nj];
   std::fill(max_omega_buff, max_omega_buff + cl_ni*cl_nj, 0.0f);
   bocl_mem_sptr max_omega_image = opencl_cache->alloc_mem(cl_ni*cl_nj*sizeof(float), max_omega_buff,"vis image buffer");
   max_omega_image->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
@@ -214,7 +216,7 @@ bool boxm2_ocl_render_expected_image::render(
 }
 
 std::vector<bocl_kernel*>& boxm2_ocl_render_expected_image::get_kernel(
-    bocl_device_sptr device, std::string opts)
+    const bocl_device_sptr& device, const std::string& opts)
 {
   // check to see if this device has compiled kernels already
   std::string identifier = device->device_identifier() + opts;
@@ -250,7 +252,7 @@ std::vector<bocl_kernel*>& boxm2_ocl_render_expected_image::get_kernel(
 
 
     //have kernel construct itself using the context and device
-    bocl_kernel * ray_trace_kernel=new bocl_kernel();
+    auto * ray_trace_kernel=new bocl_kernel();
     ray_trace_kernel->create_kernel( &device->context(),
                                      device->device_id(),
                                      src_paths,
@@ -267,7 +269,7 @@ std::vector<bocl_kernel*>& boxm2_ocl_render_expected_image::get_kernel(
     options += "-D STEP_CELL=step_cell_render(aux_args.mog,aux_args.alpha,data_ptr,d*linfo->block_len,vis,aux_args.expint)";
 
     //have kernel construct itself using the context and device
-    bocl_kernel * ray_trace_kernel=new bocl_kernel();
+    auto * ray_trace_kernel=new bocl_kernel();
     ray_trace_kernel->create_kernel( &device->context(),
                                      device->device_id(),
                                      src_paths,
@@ -280,7 +282,7 @@ std::vector<bocl_kernel*>& boxm2_ocl_render_expected_image::get_kernel(
     std::vector<std::string> norm_src_paths;
     norm_src_paths.push_back(source_dir + "pixel_conversion.cl");
     norm_src_paths.push_back(source_dir + "bit/normalize_kernels.cl");
-    bocl_kernel * normalize_render_kernel=new bocl_kernel();
+    auto * normalize_render_kernel=new bocl_kernel();
 
     normalize_render_kernel->create_kernel( &device->context(),
                                             device->device_id(),

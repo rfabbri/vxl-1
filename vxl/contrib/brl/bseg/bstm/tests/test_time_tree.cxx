@@ -13,14 +13,16 @@
 #include <bstm/bstm_time_tree.h>
 #include <vnl/vnl_vector_fixed.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 void test_time_tree()
 {
     //-------------------------------------------------------------
     std::cout << "Initializing empty tree... " << std::endl;
-    unsigned char* array = new unsigned char[8];
+    auto* array = new unsigned char[8];
     for(int i = 0; i < 8; i++)
       array[i] = 0;
     bstm_time_tree empty_tree(array,6);
@@ -95,7 +97,7 @@ void test_time_tree()
     good = true;
     for (int i=0; i<31; i++) {
       unsigned char tmp = tree2.bit_at(i);
-      tree2.set_bit_at(i,(tmp) ? 0 : 1);
+      tree2.set_bit_at(i,(tmp) ? false : true);
       good = good && (tree2.bit_at(i) != bits2[i]);
       if (!good)
         std::cout<<i << " " ;
@@ -199,7 +201,7 @@ void test_time_tree()
     //  test fill cells
     {
       bool frames[32];
-      vcl_memset(frames, false, 32);
+      std::memset(frames, false, 32);
       frames[7] = true;
       frames[8] = true;
       frames[9] = true;
@@ -229,7 +231,7 @@ void test_time_tree()
     }
     {
       bool frames[32];
-      vcl_memset(frames, false, 32);
+      std::memset(frames, false, 32);
       bstm_time_tree tree;
       tree.fill_cells(frames);
       unsigned char bits[31] = {0};
@@ -242,7 +244,7 @@ void test_time_tree()
     }
     {
       bool frames[32];
-      vcl_memset(frames, false, 32);
+      std::memset(frames, false, 32);
       frames[0] = true;
       bstm_time_tree tree;
       tree.fill_cells(frames);
@@ -256,7 +258,7 @@ void test_time_tree()
     }
     {
       bool frames[32];
-      vcl_memset(frames, false, 32);
+      std::memset(frames, false, 32);
       frames[1] = true;
       bstm_time_tree tree;
       tree.fill_cells(frames);
@@ -279,7 +281,7 @@ void test_time_tree()
     }
     {
       bool frames[32];
-      vcl_memset(frames, false, 32);
+      std::memset(frames, false, 32);
       frames[2] = true;
       bstm_time_tree tree;
       tree.fill_cells(frames);
@@ -302,7 +304,7 @@ void test_time_tree()
     }
     {
       bool frames[32];
-      vcl_memset(frames, false, 32);
+      std::memset(frames, false, 32);
       frames[8] = true;
       frames[16] = true;
       bstm_time_tree tree;
@@ -326,7 +328,7 @@ void test_time_tree()
     }
     {
       bool frames[32];
-      vcl_memset(frames, false, 32);
+      std::memset(frames, false, 32);
       frames[10] = true;
       frames[21] = true;
       bstm_time_tree tree;

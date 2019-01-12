@@ -18,7 +18,9 @@
 #include <fstream>
 #include <map>
 #include <utility>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vxl_config.h>
 #include <vsl/vsl_export.h>
 //: A binary output adaptor for any std::ostream
@@ -46,7 +48,7 @@ class vsl_b_ostream
   std::ostream& os() const;
 
   //: Virtual destructor.
-  virtual ~vsl_b_ostream() {}
+  virtual ~vsl_b_ostream() = default;
 
   //: Returns true if the underlying stream has its fail bit set.
   bool operator!() const;
@@ -88,7 +90,7 @@ class vsl_b_ostream
   //: The length of the b_stream header.
   // You can move to this offset from the start of the file to get to
   // the first real data item.
-  static VSL_EXPORT const std::streamoff header_length;
+  static constexpr std::streamoff header_length = 6;
 
  protected:
   //: The member stream
@@ -115,7 +117,7 @@ class vsl_b_ostream
   serialisation_records_type serialisation_records_;
 
   //: The version number of the IO scheme.
-  static const unsigned short version_no_;
+  static constexpr unsigned short version_no_ = 1;
 };
 
 
@@ -136,7 +138,7 @@ class vsl_b_ofstream: public vsl_b_ostream
     vsl_b_ostream(new std::ofstream(filename, mode | std::ios::binary)) {}
 
   //: Virtual destructor.
-  virtual ~vsl_b_ofstream();
+  ~vsl_b_ofstream() override;
 
 
   //: Close the stream
@@ -174,7 +176,7 @@ class vsl_b_istream
   std::istream & is() const;
 
   //: Virtual destructor.so that it can be overloaded
-  virtual ~vsl_b_istream() {}
+  virtual ~vsl_b_istream() = default;
 
   //: Returns true if the underlying stream has its fail bit set.
   bool operator!() const;
@@ -248,7 +250,7 @@ class vsl_b_ifstream: public vsl_b_istream
     vsl_b_istream(new std::ifstream(filename, mode | std::ios::binary)) {}
 
   //: Virtual destructor.so that it can be overloaded
-  virtual ~vsl_b_ifstream();
+  ~vsl_b_ifstream() override;
 
   //: Close the stream
   void close();
@@ -318,7 +320,7 @@ inline void vsl_print_summary(std::ostream& os, const char* s )
 //             to be used. A new version of MS .NET compiler required this change.
 //             Add compilers as needed. This could be moved to vcl_compiler.h.
 //             [Nils Krahnstoever]
-#ifdef VCL_VC
+#ifdef _MSC_VER
 # define VCL_64BIT_ATTR __w64
 #else
 # define VCL_64BIT_ATTR /* */
@@ -374,7 +376,7 @@ void vsl_b_read(vsl_b_istream& is,unsigned long& n );
 inline void vsl_print_summary(std::ostream& os, unsigned long n )
 {  os << n; }
 
-#if VXL_HAS_INT_64 && !VXL_INT_64_IS_LONG
+#if VXL_INT_64_IS_LONGLONG
 
 //: Write  to vsl_b_ostream
 void vsl_b_write(vsl_b_ostream& os,vxl_int_64 n );

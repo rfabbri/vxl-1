@@ -8,9 +8,11 @@
 #include <algorithm>
 #include <limits>
 #include "bsta_gaussian_full.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #if 0
-#include <vcl_cassert.h>
+#include <cassert>
 #endif
 
 #include <vnl/algo/vnl_svd.h>
@@ -119,7 +121,7 @@ void
 bsta_gaussian_full<T,n>::set_covar(const vnl_matrix_fixed<T,n,n>& covar)
 {
   delete inv_covar_;
-  inv_covar_ = VXL_NULLPTR;
+  inv_covar_ = nullptr;
   covar_ = covar;
   compute_det();
 }

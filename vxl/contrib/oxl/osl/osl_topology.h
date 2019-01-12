@@ -1,9 +1,6 @@
 // This is oxl/osl/osl_topology.h
 #ifndef osl_topology_h_
 #define osl_topology_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author fsm
@@ -19,7 +16,9 @@
 
 #include <iostream>
 #include <list>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_ref_count.h>
 
 template <class T>
@@ -40,14 +39,14 @@ struct osl_topology_base : public vbl_ref_count
     : vbl_ref_count(), id(x.id), stash_head(x.stash_head) {}
   int id;
   osl_topology_base();
-  ~osl_topology_base();
+  ~osl_topology_base() override;
   void SetId(int );
   int GetId() const;
 
   //: add another stash under that name.
-  void  stash_add     (char const *name, void const *data, void (*dtor)(void *) = VXL_NULLPTR);
+  void  stash_add     (char const *name, void const *data, void (*dtor)(void *) = nullptr);
   //: replace first stash ith given name. the old dtor is \e not called.
-  void  stash_replace (char const *name, void const *data, void (*dtor)(void *) = VXL_NULLPTR);
+  void  stash_replace (char const *name, void const *data, void (*dtor)(void *) = nullptr);
   //: return first stash with given name, 0 if none.
   void *stash_retrieve(char const *name) const;
   //: remove first stash with given name. the dtor is \e not called.
@@ -79,7 +78,7 @@ void osl_topology_unref(Container &C)
 }
 
 #define OSL_TOPOLOGY_REF_UNREF_INSTANTIATE(C) \
-VCL_INSTANTIATE_INLINE(void osl_topology_ref(C &)); \
-VCL_INSTANTIATE_INLINE(void osl_topology_unref(C &))
+/*template void osl_topology_ref(C &) ; */ \
+/*template void osl_topology_unref(C &) */
 
 #endif // osl_topology_h_

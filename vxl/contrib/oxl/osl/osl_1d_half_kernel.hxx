@@ -8,8 +8,10 @@
 #include <iostream>
 #include <cmath>
 #include "osl_1d_half_kernel.h"
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: helper routine used by create_gaussian
 //static/*FIXME*/

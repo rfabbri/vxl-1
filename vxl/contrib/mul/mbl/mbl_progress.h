@@ -1,8 +1,5 @@
 #ifndef mbl_progress_h_
 #define mbl_progress_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief  A base for classes which wish to take some action during a lengthy operation.
@@ -12,15 +9,17 @@
 #include <string>
 #include <iostream>
 #include <map>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //========================================================================
 //: An exception that can be thrown by an operation when cancelled.
 class mbl_progress_cancel_exception
 {
  public:
-  mbl_progress_cancel_exception() {}
-  ~mbl_progress_cancel_exception() {}
+  mbl_progress_cancel_exception() = default;
+  ~mbl_progress_cancel_exception() = default;
 };
 
 
@@ -55,7 +54,7 @@ class mbl_progress
   mbl_progress(): throw_exception_on_cancel_(false) {}
 
   //: Destructor
-  virtual ~mbl_progress() {}
+  virtual ~mbl_progress() = default;
 
   //: Estimated number of iterations for the given identifier.
   void set_estimated_iterations(const std::string& identifier,

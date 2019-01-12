@@ -16,7 +16,9 @@
 #include <iomanip>
 #include <iostream>
 #include <algorithm>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <volm/volm_io.h>
 #include <vul/vul_file.h>
 #include <volm/volm_camera_space.h>

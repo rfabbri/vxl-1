@@ -1,9 +1,6 @@
 // This is core/vil/vil_print.h
 #ifndef vil_print_h_
 #define vil_print_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author Ian Scott, Tim Cootes.
@@ -11,7 +8,9 @@
 #include <iomanip>
 #include <iostream>
 #include <vil/vil_image_view.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: How to print value in vil_print_all(image_view)
 // \relatesalso vil_image_view

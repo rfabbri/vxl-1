@@ -1,7 +1,4 @@
 // This is core/vgui/vgui_text_tableau.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \brief  See vgui_text_tableau.h for a description of this file.
@@ -17,7 +14,10 @@
 #include <vgui/vgui_text_put.h>
 #include <vgui/vgui_event.h>
 #include <vgui/vgui_gl.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 vgui_text_tableau::vgui_text_tableau()
   : cur_r_( 1 ), cur_g_( 0 ), cur_b_( 0 ),

@@ -1,9 +1,6 @@
 // This is mul/mbl/mbl_data_collector.h
 #ifndef mbl_data_collector_h_
 #define mbl_data_collector_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Templated base class for objects which collect sets of data.
@@ -12,7 +9,9 @@
 
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <mbl/mbl_data_collector_base.h>
 #include <mbl/mbl_data_wrapper.h>
 
@@ -30,7 +29,7 @@ class mbl_data_collector : public mbl_data_collector_base
   mbl_data_collector();
 
   //: Destructor
-  virtual ~mbl_data_collector();
+  ~mbl_data_collector() override;
 
   //: Clear any stored data
   virtual void clear() =0;
@@ -68,6 +67,6 @@ template<class T>
 unsigned long mbl_data_collector_merge_all(mbl_data_collector<T > &dest,
                                            mbl_data_wrapper<T > &src0,
                                            mbl_data_wrapper<T > &src1,
-                                           std::vector<unsigned> *order = VXL_NULLPTR);
+                                           std::vector<unsigned> *order = nullptr);
 
 #endif // mbl_data_collector_h_

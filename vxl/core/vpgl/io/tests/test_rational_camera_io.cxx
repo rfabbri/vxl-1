@@ -3,7 +3,9 @@
 #include <testlib/testlib_test.h>
 #include <vpgl/vpgl_rational_camera.h>
 #include <vpgl/io/vpgl_io_rational_camera.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpl/vpl.h>
 #include <vsl/vsl_binary_io.h>
 

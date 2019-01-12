@@ -18,8 +18,8 @@
 
 namespace bvpl_create_corner2d_kernel_vector_process_globals
 {
-  const unsigned n_inputs_ = 4;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 4;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 
@@ -89,4 +89,3 @@ bool bvpl_create_corner2d_kernel_vector_process(bprb_func_process& pro)
 
   return true;
 }
-

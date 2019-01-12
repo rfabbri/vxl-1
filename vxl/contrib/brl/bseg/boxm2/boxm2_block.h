@@ -22,7 +22,9 @@
 #include <boxm2/basic/boxm2_array_3d.h>
 #include <vnl/vnl_vector_fixed.h>
 #include <vgl/vgl_vector_3d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //smart pointer stuff
 #include <vbl/vbl_ref_count.h>
@@ -56,7 +58,7 @@ class boxm2_block : public vbl_ref_count
   bool init_empty_block(boxm2_block_metadata const& data);
 
   //: default destructor
-  virtual ~boxm2_block() { if (buffer_) delete[] buffer_; }
+  ~boxm2_block() override { if (buffer_) delete[] buffer_; }
 
   //: all IO manipulates char buffers
   bool b_read(char* buffer);

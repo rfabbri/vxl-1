@@ -86,8 +86,8 @@ bool draw_box(vil_image_view<vil_rgb<vxl_byte> >& output_img, vgl_oriented_box_2
 //: global variables
 namespace sdet_selective_search_process_globals
 {
-  const unsigned n_inputs_ = 2;
-  const unsigned n_outputs_= 2;
+  constexpr unsigned n_inputs_ = 2;
+  constexpr unsigned n_outputs_ = 2;
 }
 
 bool sdet_selective_search_process_cons(bprb_func_process& pro)
@@ -118,7 +118,7 @@ bool sdet_selective_search_process(bprb_func_process& pro)
   // get inputs
   // image
   vil_image_view_base_sptr input_image_sptr = pro.get_input<vil_image_view_base_sptr>(0);
-  float weight_thres = pro.get_input<float>(1);
+  auto weight_thres = pro.get_input<float>(1);
 
   //check input validity
   if (!input_image_sptr) {
@@ -152,7 +152,7 @@ bool sdet_selective_search_process(bprb_func_process& pro)
   double aspect_ratio_t = 4.5;
   double length_t = 70;
   const std::map<unsigned, sdet_region_sptr>& sregions=sproc.diverse_regions();
-  std::map<unsigned, sdet_region_sptr>::const_iterator rit = sregions.begin();
+  auto rit = sregions.begin();
   for(;rit != sregions.end(); ++rit){
     //vgl_box_2d<float> bb =(*rit).second->obox();
     vgl_oriented_box_2d<float> bb = (*rit).second->obox();

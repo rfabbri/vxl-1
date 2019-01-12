@@ -3,7 +3,9 @@
 #include <iostream>
 #include <ctime>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vxl_config.h>
 #include <vimt3d/vimt3d_reflect.h>
 #include <vul/vul_ios_state.h>
@@ -21,9 +23,9 @@ static void test_reflect_int()
            << " Testing vimt3d_reflect<vxl_int_32>\n"
            << "***********************************\n";
 
-  const unsigned ni = 5;
-  const unsigned nj = 5;
-  const unsigned nk = 5;
+  constexpr unsigned ni = 5;
+  constexpr unsigned nj = 5;
+  constexpr unsigned nk = 5;
 
   vimt3d_image_3d_of<vxl_int_32> image(ni, nj, nk);
   for (unsigned k=0; k<nk; ++k)

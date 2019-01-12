@@ -7,9 +7,11 @@
 #include <bbas/volm/volm_spherical_container.h>
 #include <boxm2/volm/boxm2_volm_locations.h>
 #include <vgl/vgl_box_3d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
-bool volm_buffered_index_params::write_params_file(std::string index_file_name_pre)
+bool volm_buffered_index_params::write_params_file(const std::string& index_file_name_pre)
 {
   //std::string index_params_file = vul_file::strip_extension(index_file_name) + ".params";
   std::string index_params_file = index_file_name_pre + ".params";
@@ -21,7 +23,7 @@ bool volm_buffered_index_params::write_params_file(std::string index_file_name_p
   return true;
 }
 
-bool volm_buffered_index_params::read_params_file(std::string index_file_name_pre)
+bool volm_buffered_index_params::read_params_file(const std::string& index_file_name_pre)
 {
   //std::string index_params_file = vul_file::strip_extension(index_file_name) + ".params";
   std::string index_params_file = index_file_name_pre + ".params";
@@ -34,7 +36,7 @@ bool volm_buffered_index_params::read_params_file(std::string index_file_name_pr
   return true;
 }
 
-bool volm_buffered_index_params::write_ex_param_file(std::string index_file_name_pre)
+bool volm_buffered_index_params::write_ex_param_file(const std::string& index_file_name_pre)
 {
   //std::string index_params_file = vul_file::strip_extension(index_file_name) + ".params";
   std::string index_params_file = index_file_name_pre + ".params";
@@ -46,14 +48,14 @@ bool volm_buffered_index_params::write_ex_param_file(std::string index_file_name
   ofs << "orientation_type " << norients << std::endl;
   ofs << "land_type " << nlands << std::endl;
   ofs << "radius: ";
-  for (unsigned i = 0; i < radius.size(); i++)
-    ofs << radius[i] << ' ';
+  for (double radiu : radius)
+    ofs << radiu << ' ';
   ofs << std::endl;
   ofs.close();
   return true;
 }
 
-bool volm_buffered_index_params::read_ex_param_file(std::string index_file_name_pre)
+bool volm_buffered_index_params::read_ex_param_file(const std::string& index_file_name_pre)
 {
   //std::string index_params_file = vul_file::strip_extension(index_file_name) + ".params";
   std::string index_params_file = index_file_name_pre + ".params";
@@ -97,7 +99,7 @@ bool volm_buffered_index_params::read_conf_param_file(std::string const& index_f
   return true;
 }
 
-bool volm_buffered_index_params::write_size_file(std::string index_file_name, unsigned long indexed_cnt)
+bool volm_buffered_index_params::write_size_file(const std::string& index_file_name, unsigned long indexed_cnt)
 {
   std::string index_size_file = vul_file::strip_extension(index_file_name) + ".txt";
   std::ofstream ofs(index_size_file.c_str());
@@ -108,7 +110,7 @@ bool volm_buffered_index_params::write_size_file(std::string index_file_name, un
   return true;
 }
 
-bool volm_buffered_index_params::read_size_file(std::string index_file_name, unsigned long& size)
+bool volm_buffered_index_params::read_size_file(const std::string& index_file_name, unsigned long& size)
 {
   std::string index_size_file = vul_file::strip_extension(index_file_name) + ".txt";
   std::ifstream ifs(index_size_file.c_str());
@@ -121,7 +123,7 @@ bool volm_buffered_index_params::read_size_file(std::string index_file_name, uns
 
 
 volm_buffered_index::volm_buffered_index(unsigned layer_size, float buffer_capacity) :
-layer_size_(layer_size), buffer_size_(0), current_id_(0), current_global_id_(0), m_(NOT_INITIALIZED), file_name_(""), active_buffer_(VXL_NULLPTR)
+layer_size_(layer_size), buffer_size_(0), current_id_(0), current_global_id_(0), m_(NOT_INITIALIZED), file_name_(""), active_buffer_(nullptr)
 {
   buffer_size_ = (unsigned int)std::floor((buffer_capacity*1024*1024*1024)/(2.0f*layer_size));
   active_buffer_ = new uchar[buffer_size_*layer_size_];
@@ -135,7 +137,7 @@ volm_buffered_index::~volm_buffered_index()
     delete [] active_buffer_;
 }
 
-bool volm_buffered_index::initialize_write(std::string file_name)
+bool volm_buffered_index::initialize_write(const std::string& file_name)
 {
   if (m_ == READ)
     this->finalize();
@@ -150,7 +152,7 @@ bool volm_buffered_index::initialize_write(std::string file_name)
   return true;
 }
 
-bool volm_buffered_index::initialize_read(std::string file_name)
+bool volm_buffered_index::initialize_read(const std::string& file_name)
 {
   if (m_ == WRITE)
     this->finalize();
@@ -289,4 +291,3 @@ bool volm_buffered_index::get_next(uchar* values, unsigned size)
   current_id_++;
   return true;
 }
-

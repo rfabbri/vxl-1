@@ -6,7 +6,9 @@
 // Approved for public Release, distribution unlimited
 // DISTAR Case 14074
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 // By definition, each level is a factor of 2 reduced in scale
 static float scale_at_level(unsigned level)
@@ -21,7 +23,7 @@ vil_openjpeg_pyramid_image_resource::
 vil_openjpeg_pyramid_image_resource(vil_image_resource_sptr const &openjpeg)
 : openjpeg_sptr_(openjpeg)
 {
-  ptr_ = VXL_NULLPTR;
+  ptr_ = nullptr;
   if (!openjpeg_sptr_)
     return;
   ptr_ = dynamic_cast<vil_openjpeg_image*>(openjpeg_sptr_.ptr());
@@ -90,7 +92,7 @@ vil_openjpeg_pyramid_image_resource::get_copy_view(unsigned i0, unsigned ni,
                                                    unsigned level) const
 {
   if (!ptr_||!(ptr_->is_valid()))
-     return VXL_NULLPTR;
+     return nullptr;
   if (level >= this->nlevels())
     level = this->nlevels() - 1;
   return ptr_->get_copy_view_reduced(i0, ni, j0, nj, level);
@@ -111,7 +113,7 @@ vil_openjpeg_pyramid_image_resource::get_copy_view(unsigned i0, unsigned ni,
     return this->get_copy_view(i0, ni, j0, nj, 0);
   }
   float f_lev = -std::log(scale) / std::log(2.0f);
-  unsigned level = static_cast<unsigned>(f_lev);
+  auto level = static_cast<unsigned>(f_lev);
   if (level >= this->nlevels())
     level = this->nlevels()-1;
   actual_scale = scale_at_level(level);
@@ -124,7 +126,7 @@ vil_openjpeg_pyramid_image_resource::get_resource(const unsigned level) const
 {
   if (level == 0)
     return openjpeg_sptr_;
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 //: for debug purposes

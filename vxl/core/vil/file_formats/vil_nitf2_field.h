@@ -9,7 +9,9 @@
 #include <iostream>
 #include <string>
 // not used? #include <sstream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class vil_nitf2_date_time;
 class vil_nitf2_location;
@@ -50,7 +52,7 @@ class vil_nitf2_field
   vil_nitf2_array_field* array_field();
 
   // Destructor
-  virtual ~vil_nitf2_field() {}
+  virtual ~vil_nitf2_field() = default;
 
   // Output to stream (required overload as a reminder to implement operator <<)
   virtual std::ostream& output(std::ostream& os) const = 0;

@@ -7,7 +7,9 @@
 // \author Ozge C Ozcanli (ozge@lems.brown.edu)
 // \date October 16, 2008
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_save.h>
 
 vil_image_view<vxl_byte>
@@ -73,13 +75,13 @@ brec_glitch::square_glitch(int c_size, std::vector<std::pair<int, int> >& neighb
   for (int i = 0; i < c_size_outer; i++)
     for (int j = 0; j < c_size_outer; j++) {
       if (map_img(i,j) == 100)
-        neighborhood_center.push_back(std::pair<int, int>(i-(c_size_outer/2), j-(c_size_outer/2)));
+        neighborhood_center.emplace_back(i-(c_size_outer/2), j-(c_size_outer/2));
     }
 
   for (int i = 0; i < (int)c_size_outer; i++)
     for (int j = 0; j < (int)c_size_outer; j++) {
       if (map_img(i,j) == 255)
-        neighborhood_surround.push_back(std::pair<int, int>(i-(c_size_outer/2), j-(c_size_outer/2)));
+        neighborhood_surround.emplace_back(i-(c_size_outer/2), j-(c_size_outer/2));
     }
 }
 
@@ -93,9 +95,9 @@ void brec_glitch::extend_prob_to_square_region(int c_size, vil_image_view<float>
   for (unsigned i = 0; i < input_map.ni(); i++) {
     for (unsigned j = 0; j < input_map.nj(); j++) {
       if (input_map(i,j) > 0) {
-        for (unsigned k = 0; k < neighborhood.size(); k++) {
-          int ii = i+neighborhood[k].first;
-          int jj = j+neighborhood[k].second;
+        for (auto & k : neighborhood) {
+          int ii = i+k.first;
+          int jj = j+k.second;
           if (ii > 0 && jj > 0 && ii < (int)output_map.ni() && jj < (int)output_map.nj())
             output_map(ii, jj) = input_map(i,j);
         }
@@ -103,4 +105,3 @@ void brec_glitch::extend_prob_to_square_region(int c_size, vil_image_view<float>
     }
   }
 }
-

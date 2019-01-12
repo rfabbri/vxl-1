@@ -33,7 +33,7 @@
 //   according to a Gaussian distribution (with given sigma= std deviation).
 //   (The window is cut when `cutoff' (default: 0.01) of the probability mass
 //   lies out of the window.)
-template <class ImgIn,class ImgOut,class DataIn,class DataOut, VCL_DFL_TYPE_PARAM_STLDECL(PixelItr, vipl_trivial_pixeliter) >
+template <class ImgIn,class ImgOut,class DataIn,class DataOut, class PixelItr = vipl_trivial_pixeliter >
 class vipl_gaussian_convolution : public vipl_filter_2d<ImgIn,ImgOut,DataIn,DataOut,PixelItr>
 {
   // -+-+- data members: -+-+-
@@ -65,7 +65,7 @@ class vipl_gaussian_convolution : public vipl_filter_2d<ImgIn,ImgOut,DataIn,Data
            : vipl_filter_2d<ImgIn,ImgOut,DataIn,DataOut,PixelItr>()
            , sigma_(s)
            , cutoff_(c)
-           , mask_(VXL_NULLPTR)
+           , mask_(nullptr)
            , masksize_(0)
     { if (s < 0) ref_sigma() = -s;
       if (c < 0.005) ref_cutoff() = 0.005;
@@ -75,16 +75,16 @@ class vipl_gaussian_convolution : public vipl_filter_2d<ImgIn,ImgOut,DataIn,Data
            : vipl_filter_2d<ImgIn,ImgOut,DataIn,DataOut,PixelItr>(A)
            , sigma_(A.sigma())
            , cutoff_(A.cutoff())
-           , mask_(VXL_NULLPTR)
+           , mask_(nullptr)
            , masksize_(0) {}
 
-  inline ~vipl_gaussian_convolution() {}
+  inline ~vipl_gaussian_convolution() override = default;
 
 // -+-+- required method for filters: -+-+-
-  bool section_applyop();
+  bool section_applyop() override;
 // -+-+- optional method for filters, compute mask only once in preop, free in postop: -+-+-
-  bool preop();
-  bool postop();
+  bool preop() override;
+  bool postop() override;
 };
 
 #ifdef INSTANTIATE_TEMPLATES

@@ -5,7 +5,9 @@
 // \file
 
 #include <cstdio>
-#include "vcl_compiler.h"
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include "vpl/vpl_export.h"
 
 //: Turn an open file descriptor (int) into a file stream (FILE *).

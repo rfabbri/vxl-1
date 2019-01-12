@@ -1,6 +1,8 @@
 // This is mul/mbl/tests/test_index_sort.cxx
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <mbl/mbl_index_sort.h>
 #include <testlib/testlib_test.h>
 
@@ -10,7 +12,7 @@ void test_index_sort()
            << "Testing mbl_index_sort\n"
            << "**********************\n";
 
-  const unsigned int n = 20;
+  constexpr unsigned int n = 20;
   std::vector<double> x(n);
   std::vector<int> index;
 

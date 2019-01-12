@@ -4,7 +4,9 @@
 #include <vector>
 #include <cstdlib>
 #include <cmath>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vil/vil_image_view.h>
 #include <vil/vil_print.h>
@@ -18,7 +20,7 @@ static void test_algo_gaussian_filter_5tap_byte_float()
            << " Testing vil_gauss_filter_5tap byte float\n"
            << "******************************************\n";
 
-  const int n = 10;
+  constexpr int n = 10;
 
   vil_image_view<vxl_byte> src(n,n);
   for (int i=0;i<n;++i)

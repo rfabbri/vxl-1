@@ -5,7 +5,9 @@
 #include <limits>
 #include <vector>
 #include <cstdlib>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_binary_io.h>
 #include <vsl/vsl_block_binary.h>
 #include <testlib/testlib_test.h>
@@ -29,12 +31,8 @@ void test_vlarge_block(void * block, std::size_t s, T scale)
 
   vsl_b_ofstream bfs_out("vsl_vlarge_block_io_test.bvl.tmp");
   TEST("Created vsl_vlarge_block_io_test.bvl.tmp for writing", (!bfs_out), false);
-#if VCL_HAS_EXCEPTIONS
   try { vsl_block_binary_write(bfs_out, numbers, n); }
   catch(...) { TEST ("vsl_block_binary_write didn't throw exception", true, false); }
-#else
-  vsl_block_binary_write(bfs_out, numbers, n);
-#endif
   vsl_b_write(bfs_out, 0xdeadbeefu);
   TEST("Stream still ok", (!bfs_out), false);
   bfs_out.close();
@@ -44,12 +42,8 @@ void test_vlarge_block(void * block, std::size_t s, T scale)
   vsl_b_ifstream bfs_in("vsl_vlarge_block_io_test.bvl.tmp");
   TEST("Opened vsl_vlarge_block_io_test.bvl.tmp for reading", (!bfs_in), false);
   unsigned sentinel;
-#if VCL_HAS_EXCEPTIONS
   try { vsl_block_binary_read(bfs_in, numbers, n); }
   catch(...) { TEST ("vsl_block_binary_read didn't throw exception", true, false); }
-#else
-  vsl_block_binary_read(bfs_in, numbers, n);
-#endif
   vsl_b_read(bfs_in, sentinel);
   TEST("sentinel matched", sentinel, 0xdeadbeefu);
   TEST("Stream still ok", (!bfs_in), false);
@@ -77,9 +71,9 @@ void test_vlarge_block_io()
   std::cout << "Start by trying to allocate " << (s/(1024*1024))+1 << "MiB" << std::endl;
   while (true)
   {
-    char *block = VXL_NULLPTR;
+    char *block = nullptr;
     block = (char *)std::malloc(s);
-    if (block != VXL_NULLPTR)
+    if (block != nullptr)
     {
       std::free(block);
       break;
@@ -116,10 +110,10 @@ void test_vlarge_block_io()
       free_blocks(blocks);
       std::exit(3);
     }
-    void * block = VXL_NULLPTR;
+    void * block = nullptr;
     block = std::malloc(s);
     // if we have run out of memory, go on to next section.
-    if (block == VXL_NULLPTR)
+    if (block == nullptr)
       break;
     //otherwise store memory pointer, and try and use up some more.
     blocks.push_back(block);
@@ -154,4 +148,3 @@ void test_vlarge_block_io()
 }
 
 TESTMAIN(test_vlarge_block_io);
-

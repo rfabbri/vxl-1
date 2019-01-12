@@ -20,14 +20,14 @@ void boxm2_vecf_orbit_exporter::export_orbit(bool is_right,
                                             std::vector<vgl_point_3d<double> >& crease_pts,
                                             std::vector<vgl_point_3d<double> >& sup_pts,
                                              std::vector<vgl_point_3d<double> >& inf_pts,
-                                             std::string export_fname_base){
+                                             const std::string& export_fname_base){
   // get parameter bounds and model to image transformation parameters
   boxm2_vecf_orbit_params params = is_right? right_params_ : left_params_;
 
     bool export_points = export_fname_base == "" ? false : true;
-    std::ofstream * sup_points = VXL_NULLPTR;
-    std::ofstream * inf_points = VXL_NULLPTR;
-    std::ofstream * cre_points = VXL_NULLPTR;
+    std::ofstream * sup_points = nullptr;
+    std::ofstream * inf_points = nullptr;
+    std::ofstream * cre_points = nullptr;
 
     if (export_points){
       std::string sup_fname = is_right ? export_fname_base+"/right_sup_points.txt" : export_fname_base+"/left_sup_points.txt";
@@ -103,7 +103,7 @@ void boxm2_vecf_orbit_exporter::export_orbit(bool is_right,
      x = (x+xtr)/mm_per_pix;
      y = (y+ytr)/mm_per_pix;
      y = image_height-y;
-     crease_pts.push_back(vgl_point_3d<double>(x,y,z));
+     crease_pts.emplace_back(x,y,z);
     if (export_points)
       *cre_points<< x << " " << y <<std::endl;
   }
@@ -116,7 +116,7 @@ void boxm2_vecf_orbit_exporter::export_orbit(bool is_right,
     x = (x+xtr)/mm_per_pix;
     y = (y+ytr)/mm_per_pix;
     y = image_height-y;
-    inf_pts.push_back(vgl_point_3d<double>(x,y,z));
+    inf_pts.emplace_back(x,y,z);
     if(export_points)
       *inf_points<< x << " " << y <<std::endl;
   }
@@ -128,7 +128,7 @@ void boxm2_vecf_orbit_exporter::export_orbit(bool is_right,
     x = (x+ xtr)/mm_per_pix;
     y = (y+ ytr)/mm_per_pix;
     y = image_height-y;
-    sup_pts.push_back(vgl_point_3d<double>(x,y,z));
+    sup_pts.emplace_back(x,y,z);
     if(export_points)
       *sup_points<< x << " " << y <<std::endl;
   }

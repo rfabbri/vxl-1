@@ -12,7 +12,10 @@
 //   <none yet>
 // \endverbatim
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_vector_3d.h>
@@ -69,7 +72,7 @@ class imesh_vertex<2>
   //: convert to a vgl point
   operator vgl_point_2d<double>() const
   {
-    return vgl_point_2d<double>(coords_[0],coords_[1]);
+    return {coords_[0],coords_[1]};
   }
 
   //: Constructor from a vector
@@ -124,7 +127,7 @@ class imesh_vertex<3>
   //: convert to a vgl point
   operator vgl_point_3d<double>() const
   {
-    return vgl_point_3d<double>(coords_[0],coords_[1],coords_[2]);
+    return {coords_[0],coords_[1],coords_[2]};
   }
 
   //: return the dimension of the vertex
@@ -144,7 +147,7 @@ class imesh_vertex_array_base
 {
  public:
   //: Destructor
-  virtual ~imesh_vertex_array_base() {}
+  virtual ~imesh_vertex_array_base() = default;
 
   //: returns the number of vertices
   virtual unsigned int size() const = 0;
@@ -194,7 +197,7 @@ class imesh_vertex_array : public imesh_vertex_array_base
 
  public:
   //: Default Constructor
-  imesh_vertex_array<d>() {}
+  imesh_vertex_array<d>() = default;
 
   //: Constructor (from size)
   imesh_vertex_array<d>(unsigned int size)
@@ -205,22 +208,22 @@ class imesh_vertex_array : public imesh_vertex_array_base
   : verts_(verts) {}
 
   //: Produce a clone of this object (dynamic copy)
-  virtual imesh_vertex_array_base* clone() const
+  imesh_vertex_array_base* clone() const override
   {
     return new imesh_vertex_array<d>(*this);
   }
 
   //: returns the number of vertices
-  virtual unsigned int size() const { return verts_.size(); }
+  unsigned int size() const override { return verts_.size(); }
 
   //: returns the dimension of the vertices
-  virtual unsigned int dim() const { return d; }
+  unsigned int dim() const override { return d; }
 
   //: Access a vertex coordinate by vertex index and coordinate index
-  virtual double operator() (unsigned int v, unsigned int i) const { return verts_[v][i]; }
+  double operator() (unsigned int v, unsigned int i) const override { return verts_[v][i]; }
 
   //: Append these vertices (assuming the same type)
-  virtual void append(const imesh_vertex_array_base& verts)
+  void append(const imesh_vertex_array_base& verts) override
   {
     assert(verts.dim() == d);
     const imesh_vertex_array<d>& v = static_cast<const imesh_vertex_array<d>&>(verts);

@@ -11,7 +11,9 @@
 #include <vgl/vgl_closest_point.h>
 #include <boxm2/boxm2_util.h>
 #include <boxm2/io/boxm2_lru_cache.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_timer.h>
 #include <boxm2/cpp/algo/boxm2_surface_distance_refine.h>
 #include <boxm2/cpp/algo/boxm2_refine_block_multi_data.h>
@@ -29,14 +31,13 @@ void boxm2_vecf_cranium_scene::extract_block_data(){
 // after loading the block initialize all the cell indices from the block labels, e.g., cell == LEFT_RAMUS, cell == LEFT_ANGLE, etc.
 void boxm2_vecf_cranium_scene::cache_cell_centers_from_anatomy_labels(){
   std::vector<cell_info> source_cell_centers = blk_->cells_in_box(source_bb_);
-  for(std::vector<cell_info>::iterator cit = source_cell_centers.begin();
-      cit != source_cell_centers.end(); ++cit){
-    unsigned dindx = cit->data_index_;
-    float alpha = static_cast<float>(alpha_data_[dindx]);
+  for(auto & source_cell_center : source_cell_centers){
+    unsigned dindx = source_cell_center.data_index_;
+    auto alpha = static_cast<float>(alpha_data_[dindx]);
     bool cranium = cranium_data_[dindx]   > pixtype(0);
     if(cranium||alpha>alpha_init_){
-      unsigned cranium_index  = static_cast<unsigned>(cranium_cell_centers_.size());
-      cranium_cell_centers_.push_back(cit->cell_center_);
+      auto cranium_index  = static_cast<unsigned>(cranium_cell_centers_.size());
+      cranium_cell_centers_.push_back(source_cell_center.cell_center_);
       cranium_cell_data_index_.push_back(dindx);
       data_index_to_cell_index_[dindx] = cranium_index;
       // new cell that doesn't have appearance or anatomy data
@@ -50,12 +51,12 @@ void boxm2_vecf_cranium_scene::cache_cell_centers_from_anatomy_labels(){
       }
     }else{
       params_.app_ = app_data_[dindx];
-      float alp = static_cast<float>(alpha_data_[dindx]);
+      auto alp = static_cast<float>(alpha_data_[dindx]);
     }
   }
 }
 // constructors
-boxm2_vecf_cranium_scene::boxm2_vecf_cranium_scene(std::string const& scene_file): boxm2_vecf_articulated_scene(scene_file), cranium_data_(VXL_NULLPTR){
+boxm2_vecf_cranium_scene::boxm2_vecf_cranium_scene(std::string const& scene_file): boxm2_vecf_articulated_scene(scene_file), cranium_data_(nullptr){
   boxm2_lru_cache::create(base_model_);
   cranium_geo_.set_params(params_);
   vul_timer t;
@@ -69,7 +70,7 @@ boxm2_vecf_cranium_scene::boxm2_vecf_cranium_scene(std::string const& scene_file
 {
   cranium_geo_ = boxm2_vecf_cranium(geometry_file);
   cranium_geo_.set_params(params_);
-  target_blk_ = VXL_NULLPTR;
+  target_blk_ = nullptr;
   target_data_extracted_ = false;
   boxm2_lru_cache::create(base_model_);
   this->extract_block_data();
@@ -77,10 +78,10 @@ boxm2_vecf_cranium_scene::boxm2_vecf_cranium_scene(std::string const& scene_file
   this->build_cranium();
   this->paint_cranium();
   std::vector<std::string> prefixes;
-  prefixes.push_back("alpha");
-  prefixes.push_back("boxm2_mog3_grey");
-  prefixes.push_back("boxm2_num_obs");
-  prefixes.push_back("boxm2_pixel_cranium");
+  prefixes.emplace_back("alpha");
+  prefixes.emplace_back("boxm2_mog3_grey");
+  prefixes.emplace_back("boxm2_num_obs");
+  prefixes.emplace_back("boxm2_pixel_cranium");
   boxm2_surface_distance_refine<boxm2_vecf_cranium>(cranium_geo_, base_model_, prefixes);
   boxm2_surface_distance_refine<boxm2_vecf_cranium>(cranium_geo_, base_model_, prefixes);
   //  boxm2_surface_distance_refine<boxm2_vecf_cranium>(cranium_geo_, base_model_, prefixes);
@@ -103,18 +104,17 @@ void boxm2_vecf_cranium_scene::build_cranium(){
   vgl_box_3d<double> bb = cranium_geo_.bounding_box();
    // cell in a box centers are in global coordinates
   std::vector<cell_info> ccs = blk_->cells_in_box(bb);
-  for(std::vector<cell_info>::iterator cit = ccs.begin();
-      cit != ccs.end(); ++cit){
-    const vgl_point_3d<double>& cell_center = cit->cell_center_;
-    unsigned indx = cit->data_index_;
+  for(auto & cc : ccs){
+    const vgl_point_3d<double>& cell_center = cc.cell_center_;
+    unsigned indx = cc.data_index_;
     double d = cranium_geo_.distance(cell_center);
-    double d_thresh = len_coef*cit->side_length_;
+    double d_thresh = len_coef*cc.side_length_;
     if(d < d_thresh){
       if(!is_type_global(cell_center, CRANIUM)){
         cranium_cell_centers_.push_back(cell_center);
         cranium_cell_data_index_.push_back(indx);
         data_index_to_cell_index_[indx]=static_cast<unsigned>(cranium_cell_centers_.size())-1;
-        float blending_factor = static_cast<float>(gauss(d,sigma_));
+        auto blending_factor = static_cast<float>(gauss(d,sigma_));
         alpha_data_[indx]= - std::log(1.0f - ( 0.95f ))/ static_cast<float>(this->subblock_len()) * blending_factor;
         cranium_data_[indx] = static_cast<pixtype>(true);
       }
@@ -134,12 +134,11 @@ void boxm2_vecf_cranium_scene::find_cell_neigborhoods(){
       vgl_point_3d<double>& p = cranium_cell_centers_[i];
       unsigned indx_i = cranium_cell_data_index_[i];
       std::vector<vgl_point_3d<double> > nbrs = blk_->sub_block_neighbors(p, distance);
-      for(unsigned j =0; j<nbrs.size(); ++j){
-        vgl_point_3d<double>& q = nbrs[j];
+      for(auto & q : nbrs){
         unsigned indx_n;
         if(!blk_->data_index(q, indx_n))
           continue;
-        std::map<unsigned, unsigned >::iterator iit= data_index_to_cell_index_.find(indx_n);
+        auto iit= data_index_to_cell_index_.find(indx_n);
         if(iit == data_index_to_cell_index_.end())
           continue;
         if(iit->second==i)
@@ -166,7 +165,7 @@ void boxm2_vecf_cranium_scene::paint_cranium(){
   params_.app_[0]=params_.cranium_intensity_;
   boxm2_data_traits<BOXM2_NUM_OBS>::datatype nobs;
   nobs.fill(0);
-  unsigned ns = static_cast<unsigned>(cranium_cell_centers_.size());
+  auto ns = static_cast<unsigned>(cranium_cell_centers_.size());
   for(unsigned i = 0; i<ns; ++i){
     unsigned indx = cranium_cell_data_index_[i];
     app_data_[indx] = params_.app_;
@@ -177,7 +176,7 @@ void boxm2_vecf_cranium_scene::paint_cranium(){
  bool boxm2_vecf_cranium_scene::is_type_data_index(unsigned data_index, boxm2_vecf_cranium_scene::anat_type type) const{
 
    if(type == CRANIUM){
-     unsigned char cranium = static_cast<unsigned char>(cranium_data_[data_index]);
+     auto cranium = static_cast<unsigned char>(cranium_data_[data_index]);
      return cranium>0;
    }
    return false;
@@ -231,11 +230,10 @@ int boxm2_vecf_cranium_scene::prerefine_target_sub_block(vgl_point_3d<double> co
 
   // iterate through each intersecting source tree and find the maximum tree depth
   int max_depth = 0;
-  for(std::vector<vgl_point_3d<int> >::iterator bit = int_sblks.begin();
-      bit != int_sblks.end(); ++bit){
-    const uchar16& tree_bits = trees_(bit->x(), bit->y(), bit->z());
+  for(auto & int_sblk : int_sblks){
+    const uchar16& tree_bits = trees_(int_sblk.x(), int_sblk.y(), int_sblk.z());
     //safely cast since bit_tree is just temporary
-    uchar16& uctree_bits = const_cast<uchar16&>(tree_bits);
+    auto& uctree_bits = const_cast<uchar16&>(tree_bits);
     boct_bit_tree bit_tree(uctree_bits.data_block(), max_level);
     int dpth = bit_tree.depth();
     if(dpth>max_depth){
@@ -247,7 +245,7 @@ int boxm2_vecf_cranium_scene::prerefine_target_sub_block(vgl_point_3d<double> co
 
 // == the full inverse vector field  p_source = p_target + vf ===
 void boxm2_vecf_cranium_scene::inverse_vector_field_unrefined(std::vector<vgl_point_3d<double> > const& unrefined_target_pts){
-  unsigned n = static_cast<unsigned>(unrefined_target_pts.size());
+  auto n = static_cast<unsigned>(unrefined_target_pts.size());
   vfield_unrefined_.resize(n, vgl_vector_3d<double>(0.0, 0.0, 0.0));
   valid_unrefined_.resize(n, false);
   for(unsigned vf_index = 0;vf_index<n; ++vf_index){
@@ -279,7 +277,7 @@ bool boxm2_vecf_cranium_scene::inverse_vector_field(vgl_point_3d<double> const& 
 void  boxm2_vecf_cranium_scene::inverse_vector_field(std::vector<vgl_vector_3d<double> >& vf,
                                                       std::vector<bool>& valid) const{
   vul_timer t;
-  unsigned nt = static_cast<unsigned>(box_cell_centers_.size());
+  auto nt = static_cast<unsigned>(box_cell_centers_.size());
   vf.resize(nt, vgl_vector_3d<double>(0.0, 0.0, 0.0));// initialized to 0
   valid.resize(nt, false);
   for(unsigned i = 0; i<nt; ++i){
@@ -333,7 +331,7 @@ void boxm2_vecf_cranium_scene::interpolate_vector_field(vgl_point_3d<double> con
   sumalpha /= sumw;
   sumcolor/=sumw;
   color_app[0] = (unsigned char) (sumcolor[0] * 255); color_app[2] = (unsigned char)(sumcolor[2]*255); color_app[4]= (unsigned char) (sumcolor[4] * 255);
-  boxm2_data_traits<BOXM2_ALPHA>::datatype alpha = static_cast<boxm2_data_traits<BOXM2_ALPHA>::datatype>(sumalpha);
+  auto alpha = static_cast<boxm2_data_traits<BOXM2_ALPHA>::datatype>(sumalpha);
   target_app_data_[tindx] = app;
   target_alpha_data_[tindx] = alpha;
 }
@@ -360,7 +358,7 @@ bool boxm2_vecf_cranium_scene::apply_vector_field(cell_info const& target_cell, 
 
 void boxm2_vecf_cranium_scene::apply_vector_field_to_target(std::vector<vgl_vector_3d<double> > const& vf,
                                                               std::vector<bool> const& valid){
-  unsigned n = static_cast<unsigned>(box_cell_centers_.size());
+  auto n = static_cast<unsigned>(box_cell_centers_.size());
   if(n==0)
     return;//shouldn't happen
   vul_timer t;
@@ -388,9 +386,8 @@ void boxm2_vecf_cranium_scene::map_to_target(boxm2_scene_sptr target_scene){
     this->extract_target_block_data(target_scene);
   this->extract_unrefined_cell_info();//on articulated_scene
   std::vector<vgl_point_3d<double> > tgt_pts;
-  for(std::vector<unrefined_cell_info>::iterator cit = unrefined_cell_info_.begin();
-      cit != unrefined_cell_info_.end(); ++cit)
-    tgt_pts.push_back(cit->pt_);
+  for(auto & cit : unrefined_cell_info_)
+    tgt_pts.push_back(cit.pt_);
   // compute inverse vector field for prerefining the target
   this->inverse_vector_field_unrefined(tgt_pts);
 
@@ -411,7 +408,7 @@ void boxm2_vecf_cranium_scene::map_to_target(boxm2_scene_sptr target_scene){
 
 bool boxm2_vecf_cranium_scene::set_params(boxm2_vecf_articulated_params const& params){
   try{
-    boxm2_vecf_cranium_params const& params_ref = dynamic_cast<boxm2_vecf_cranium_params const &>(params);
+    auto const& params_ref = dynamic_cast<boxm2_vecf_cranium_params const &>(params);
     bool change = this->vfield_params_change_check(params_ref);
     params_ = boxm2_vecf_cranium_params(params_ref);
     cranium_geo_.set_params(params_);
@@ -428,7 +425,7 @@ bool boxm2_vecf_cranium_scene::set_params(boxm2_vecf_articulated_params const& p
   }
 }
 
-bool boxm2_vecf_cranium_scene::vfield_params_change_check(const boxm2_vecf_cranium_params & params){
+bool boxm2_vecf_cranium_scene::vfield_params_change_check(const boxm2_vecf_cranium_params &  /*params*/){
   // move to parames class
   return false;//temporary
 }

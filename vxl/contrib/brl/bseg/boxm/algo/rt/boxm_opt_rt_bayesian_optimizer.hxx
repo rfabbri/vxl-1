@@ -1,6 +1,7 @@
 #ifndef boxm_opt_rt_bayesian_optimizer_hxx_
 #define boxm_opt_rt_bayesian_optimizer_hxx_
 
+#include <utility>
 #include <vector>
 #include <iostream>
 #include <string>
@@ -12,12 +13,14 @@
 #include <boxm/boxm_scene.h>
 #include <boxm/boxm_aux_scene.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 template <class T_loc, boxm_apm_type APM, boxm_aux_type AUX>
 boxm_opt_rt_bayesian_optimizer<T_loc,APM,AUX>::boxm_opt_rt_bayesian_optimizer(boxm_scene<boct_tree<T_loc, boxm_sample<APM> > > &scene,
-                                                                              std::vector<std::string> const& image_ids)
-: image_ids_(image_ids), scene_(scene), max_cell_P_(0.995f), min_cell_P_(0.0001f)
+                                                                              std::vector<std::string>  image_ids)
+: image_ids_(std::move(image_ids)), scene_(scene), max_cell_P_(0.995f), min_cell_P_(0.0001f)
 {}
 
 
@@ -28,7 +31,6 @@ bool boxm_opt_rt_bayesian_optimizer<T_loc,APM,AUX>::optimize_cells(double dampin
   typedef typename boxm_aux_traits<AUX>::sample_datatype aux_type;
 
   typedef boct_tree<T_loc, boxm_sample<APM> > tree_type;
-  typedef boct_tree<T_loc, aux_type > aux_tree_type;
 
   std::vector<boxm_aux_scene<T_loc,  boxm_sample<APM>, aux_type> > aux_scenes;
   for (unsigned int i=0; i<image_ids_.size(); ++i) {

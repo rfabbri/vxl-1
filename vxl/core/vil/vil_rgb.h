@@ -1,9 +1,6 @@
 // This is core/vil/vil_rgb.h
 #ifndef vil_rgb_h_
 #define vil_rgb_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Pixel type for 24 bit images
@@ -30,7 +27,9 @@
 //\endverbatim
 
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: This is the appropriate pixel type for 24-bit colour images.
 //
@@ -43,7 +42,7 @@ struct vil_rgb
 {
   typedef T value_type;
 
-  inline vil_rgb() { }
+  inline vil_rgb() = default;
 
   //:Create grey (v,v,v) vil_rgb cell from value v.
   // This provides a conversion from T to vil_rgb<T>

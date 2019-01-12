@@ -1,9 +1,6 @@
 // This is oxl/osl/osl_ortho_regress.h
 #ifndef osl_ortho_regress_h_
 #define osl_ortho_regress_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 // .NAME osl_ortho_regress
 // .INCLUDE osl/osl_ortho_regress.h
 // .FILE osl_ortho_regress.cxx
@@ -37,7 +34,7 @@ class osl_ortho_regress
 
   osl_ortho_regress() { reset(); }
 
-  ~osl_ortho_regress() { }
+  ~osl_ortho_regress() = default;
 
   void add_point(double x, double y) {
     ++S1;

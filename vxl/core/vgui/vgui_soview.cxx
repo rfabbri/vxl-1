@@ -1,7 +1,4 @@
 // This is core/vgui/vgui_soview.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Philip C. Pritchett, RRG, University of Oxford
@@ -16,7 +13,9 @@
 #include <map>
 #include "vgui_soview.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vgui/vgui_gl.h>
 #include <vgui/vgui_observer.h>
@@ -81,7 +80,7 @@ vgui_soview* vgui_soview::id_to_object(unsigned id)
   }
 #endif
 
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 
@@ -175,7 +174,7 @@ const void * const vgui_soview::msg_unhighlight="unhighlight";
 typedef std::multimap<void *, void *, std::less<void *> > mmap_Pv_Pv;
 static mmap_Pv_Pv &the_map()
 {
-  static mmap_Pv_Pv *ptr = VXL_NULLPTR;
+  static mmap_Pv_Pv *ptr = nullptr;
   if (!ptr)
     ptr = new mmap_Pv_Pv;
   return *ptr;

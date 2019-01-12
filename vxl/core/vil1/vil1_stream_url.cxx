@@ -1,7 +1,4 @@
 // This is core/vil1/vil1_stream_url.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
@@ -14,22 +11,21 @@
 #include <cstdio>
 #include "vil1_stream_url.h"
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil1/vil1_stream_core.h>
 #undef sprintf // This works around a bug in libintl.h
 
-#if defined(unix) || defined(__unix) || defined(__unix__)
+#if defined (_WIN32) && !defined(__CYGWIN__)
+# include <winsock2.h>
+#else
 # include <unistd.h>       // read(), write(), close()
 # include <netdb.h>        // gethostbyname(), sockaddr_in()
 # include <sys/socket.h>
 # include <netinet/in.h>   // htons()
-# ifdef __alpha
-#  include <fp.h>           // htons() [ on e.g. DEC alpha, htons is in machine/endian.h]
-# endif
 # define SOCKET int
-#elif defined (VCL_WIN32) && !defined(__CYGWIN__)
-# include <winsock2.h>
 #endif
 
 
@@ -117,7 +113,7 @@ static std::string encode_base64(const std::string& in)
 vil1_stream_url::vil1_stream_url(char const *url)
   : u_(0)
 {
-  if (std::strncmp(url, "http://", 7) != 0)
+  if (std::strncmp(url, "http://", 7) != 0 && std::strncmp(url, "https://", 8) != 0 )
     return; // doesn't look like a URL to me....
 
   char const *p = url+7;
@@ -162,7 +158,7 @@ vil1_stream_url::vil1_stream_url(char const *url)
            << "port = " << port << std::endl;
 #endif
 
-#if defined(VCL_WIN32) && !defined(__CYGWIN__)
+#if defined(_WIN32) && !defined(__CYGWIN__)
   static int called_WSAStartup;
   if (called_WSAStartup==0)
   {
@@ -180,7 +176,7 @@ vil1_stream_url::vil1_stream_url(char const *url)
                              SOCK_STREAM,  // two-way, reliable, connection-based stream socket.
                              PF_UNSPEC);   // protocol number.
 
-#if defined(VCL_WIN32) && !defined(__CYGWIN__)
+#if defined(_WIN32) && !defined(__CYGWIN__)
   if (tcp_socket == INVALID_SOCKET) {
     std::cerr << __FILE__ ": failed to create socket.\n";
 # ifndef NDEBUG
@@ -201,7 +197,7 @@ vil1_stream_url::vil1_stream_url(char const *url)
   hostent *hp = gethostbyname(host.c_str());
   if (! hp) {
     std::cerr << __FILE__ ": failed to lookup host\n";
-#if defined(VCL_WIN32) && !defined(__CYGWIN__)
+#if defined(_WIN32) && !defined(__CYGWIN__)
     closesocket(tcp_socket);
 #else
     close(tcp_socket);
@@ -219,7 +215,7 @@ vil1_stream_url::vil1_stream_url(char const *url)
   if (connect(tcp_socket , (sockaddr *) &my_addr, sizeof my_addr) < 0) {
     std::cerr << __FILE__ ": failed to connect to host\n";
     //perror(__FILE__);
-#if defined(VCL_WIN32) && !defined(__CYGWIN__)
+#if defined(_WIN32) && !defined(__CYGWIN__)
     closesocket(tcp_socket);
 #else
     close(tcp_socket);
@@ -236,7 +232,7 @@ vil1_stream_url::vil1_stream_url(char const *url)
     std::sprintf(buffer+std::strlen(buffer), "Authorization:  Basic %s\n", encode_base64(auth).c_str());
 //    std::sprintf(buffer+std::strlen(buffer), "Authorization:  user  testuser:testuser\n");
 
-#if defined(VCL_WIN32) && !defined(__CYGWIN__)
+#if defined(_WIN32) && !defined(__CYGWIN__)
   if (send(tcp_socket, buffer, (int)std::strlen(buffer), 0) < 0)
   {
     std::cerr << __FILE__ ": error sending HTTP request\n";
@@ -267,7 +263,7 @@ vil1_stream_url::vil1_stream_url(char const *url)
   {
     unsigned entity_marker = 0; // count end of header CR and LFs
     vil1_streampos n;
-#if defined(VCL_WIN32) && !defined(__CYGWIN__)
+#if defined(_WIN32) && !defined(__CYGWIN__)
     while ((n = recv(tcp_socket, buffer, sizeof buffer,0 )) > 0L)
 #else
     while ((n = ::read(tcp_socket, buffer, sizeof buffer)) > 0L)
@@ -311,7 +307,7 @@ vil1_stream_url::vil1_stream_url(char const *url)
 
 
   // close connection to server.
-#if defined(VCL_WIN32) && !defined(__CYGWIN__)
+#if defined(_WIN32) && !defined(__CYGWIN__)
   closesocket(tcp_socket);
 #else
   close(tcp_socket);

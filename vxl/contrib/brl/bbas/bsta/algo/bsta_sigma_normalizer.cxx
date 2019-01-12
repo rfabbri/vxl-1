@@ -4,7 +4,9 @@
 // \file
 // \brief A class for adjusting sample standard deviation values such that the probability of underestimation of the true std. dev. is fixed.
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vnl/vnl_vector_fixed.h>
 #include <vnl/vnl_gamma.h>
@@ -18,7 +20,7 @@ bsta_sigma_normalizer::bsta_sigma_normalizer(float under_estimation_probability,
    public:
     gammainc_error_fn(unsigned int ndof, float under_estimation_prob) : vnl_least_squares_function(1,1,no_gradient), ndof_(ndof), p_(under_estimation_prob) {}
 
-    virtual void f(vnl_vector<double> const& x, vnl_vector<double>& fx)
+    void f(vnl_vector<double> const& x, vnl_vector<double>& fx) override
     {
       // don't allow x to become negative
       if (x[0] < 0.0f) {
@@ -59,7 +61,7 @@ bsta_sigma_normalizer::bsta_sigma_normalizer(float under_estimation_probability,
     if (end_error > 1e-3) {
       std::cerr << "error: boxm_sigma_normalizer: levenberg_marquardt final error = " << end_error << '\n';
     }
-    float unbias_constant = (float)std::sqrt((float)(n-1) / x[0]);
+    auto unbias_constant = (float)std::sqrt((float)(n-1) / x[0]);
 
     unbias_const_[n] = unbias_constant;
   }
@@ -118,5 +120,3 @@ void vsl_b_read(vsl_b_istream& /*is*/, bsta_sigma_normalizer* /*ph*/) {}
 void vsl_b_read(vsl_b_istream& /*is*/, bsta_sigma_normalizer_sptr&) {}
 //: Binary load boxm scene smart pointer from stream.
 void vsl_b_read(vsl_b_istream& /*is*/, bsta_sigma_normalizer_sptr const&) {}
-
-

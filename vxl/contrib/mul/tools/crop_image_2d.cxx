@@ -5,7 +5,9 @@
 
 #include <iostream>
 #include <exception>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_arg.h>
 #include <mbl/mbl_log.h>
 #include <vimt/vimt_add_all_binary_loaders.h>
@@ -46,8 +48,8 @@ int main2(int argc, char*argv[])
   );
 
   // Parse the program arguments
-  vul_arg<std::string> img_src(VXL_NULLPTR, "input image filename");
-  vul_arg<std::string> img_dst(VXL_NULLPTR, "output image filename");
+  vul_arg<std::string> img_src(nullptr, "input image filename");
+  vul_arg<std::string> img_dst(nullptr, "output image filename");
   vul_arg<std::vector<unsigned> > bbi("-bbi", "bounding box in image coords (i0,j0,i1,j1)");
   vul_arg<std::vector<double> > bbf("-bbf", "bounding box in image fraction e.g. 0.2,0.2,0.75,0.75");
   vul_arg<std::vector<double> > bbw("-bbw", "bounding box in world coords (x0,y0,x1,y1)");
@@ -182,8 +184,8 @@ int main2(int argc, char*argv[])
     i0 = static_cast<unsigned>(std::floor((ir->ni()-1)*fx0));
     j0 = static_cast<unsigned>(std::floor((ir->nj()-1)*fy0));
     // Round upper bounds up
-    unsigned i1 = static_cast<unsigned>(std::ceil((ir->ni()-1)*fx1));
-    unsigned j1 = static_cast<unsigned>(std::ceil((ir->nj()-1)*fy1));
+    auto i1 = static_cast<unsigned>(std::ceil((ir->ni()-1)*fx1));
+    auto j1 = static_cast<unsigned>(std::ceil((ir->nj()-1)*fy1));
     ni = i1 - i0 + 1;
     nj = j1 - j0 + 1;
   }
@@ -196,8 +198,8 @@ int main2(int argc, char*argv[])
     i0 = static_cast<unsigned>(std::floor(imlo.x()));
     j0 = static_cast<unsigned>(std::floor(imlo.y()));
     // Round upper bounds up
-    unsigned i1 = static_cast<unsigned>(std::ceil(imhi.x()));
-    unsigned j1 = static_cast<unsigned>(std::ceil(imhi.y()));
+    auto i1 = static_cast<unsigned>(std::ceil(imhi.x()));
+    auto j1 = static_cast<unsigned>(std::ceil(imhi.y()));
     ni = i1 - i0 + 1;
     nj = j1 - j0 + 1;
   }

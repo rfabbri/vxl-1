@@ -26,7 +26,10 @@
 
 #include <iostream>
 #include <string>
-#include <vcl_compiler.h>
+#include <utility>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //-------------------------------------------------------------------------
 //: Throw an exception indicating a definite problem.
@@ -36,7 +39,7 @@ template <class T> void vidl_exception_error(T exception)
 {
   std::cerr << "\nERROR: " << exception.what() << std::endl;
 
-#if !defined VIDL_EXCEPTIONS_DISABLE && VCL_HAS_EXCEPTIONS
+#if !defined VIDL_EXCEPTIONS_DISABLE
   throw exception;
 #else
   std::abort();
@@ -51,7 +54,7 @@ template <class T> void vidl_exception_warning(T exception)
 {
   std::cerr << "\nWARNING: " << exception.what() << std::endl;
 
-#if !defined VIDL_EXCEPTIONS_DISABLE && VCL_HAS_EXCEPTIONS
+#if !defined VIDL_EXCEPTIONS_DISABLE
   throw exception;
 #endif
 }
@@ -63,8 +66,8 @@ template <class T> void vidl_exception_warning(T exception)
 class vidl_exception
 {
  public:
-  explicit vidl_exception(const std::string& msg) : msg_(msg) {}
-  virtual ~vidl_exception() {}
+  explicit vidl_exception(std::string  msg) : msg_(std::move(msg)) {}
+  virtual ~vidl_exception() = default;
 
   virtual const std::string& what() const { return msg_; }
 

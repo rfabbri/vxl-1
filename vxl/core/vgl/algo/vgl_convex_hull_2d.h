@@ -1,9 +1,6 @@
 // This is core/vgl/algo/vgl_convex_hull_2d.h
 #ifndef vgl_convex_hull_2d_h_
 #define vgl_convex_hull_2d_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Compute the convex hull of a 2-d point set
@@ -15,7 +12,9 @@
 // \endverbatim
 
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_polygon.h>
 #include <vgl/vgl_oriented_box_2d.h>
@@ -24,12 +23,12 @@ class vgl_convex_hull_2d
 {
  public:
   vgl_convex_hull_2d (std::vector<vgl_point_2d<T> > const& points);
-  ~vgl_convex_hull_2d () {}
+  ~vgl_convex_hull_2d () = default;
   vgl_polygon<T>  hull();
   //: the oriented box enclosing the hull with minimum area
   vgl_oriented_box_2d<T> min_area_enclosing_rectangle();
  private:
-  vgl_convex_hull_2d();
+  vgl_convex_hull_2d() = delete;
   bool hull_valid_;
   void compute_hull();
   std::vector<vgl_point_2d<T> > points_;

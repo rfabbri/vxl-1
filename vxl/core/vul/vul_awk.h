@@ -1,9 +1,6 @@
 // This is core/vul/vul_awk.h
 #ifndef vul_awk_h_
 #define vul_awk_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author Andrew W. Fitzgibbon, Oxford RRG
@@ -23,7 +20,9 @@
 #include <string>
 #include <iosfwd>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: The core of awk
 // vul_awk reads lines from a std::istream and breaks them into whitespace-separated
@@ -56,7 +55,7 @@
 
 class vul_awk
 {
-  VCL_SAFE_BOOL_DEFINE;
+
  public:
   // Constructors/Destructors--------------------------------------------------
   enum ModeFlags {
@@ -76,7 +75,7 @@ class vul_awk
     if (i < fields_.size())
       return fields_[i];
     else
-      return VXL_NULLPTR;
+      return nullptr;
   }
 
 //: Return the current "record number", i.e. line number
@@ -93,8 +92,8 @@ class vul_awk
   char const* line_from(int field_number) const;
 
 //: Return true if this line is not the last.
-  operator safe_bool () const
-    { return (!done_)? VCL_SAFE_BOOL_TRUE : VXL_NULLPTR; }
+  explicit operator bool () const
+    { return (!done_)? true : false; }
 
 //: Return false if this line is not the last.
   bool operator!() const

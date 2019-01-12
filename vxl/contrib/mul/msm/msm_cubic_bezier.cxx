@@ -10,11 +10,13 @@
 #include <vsl/vsl_indent.h>
 #include <vsl/vsl_binary_io.h>
 #include <vsl/vsl_vector_io.h>
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vgl/io/vgl_io_point_2d.h>
 #include <vgl/io/vgl_io_vector_2d.h>
 #include <vnl/algo/vnl_cholesky.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Return position at t (in [0,1]) given end point q
 vgl_point_2d<double> msm_cubic_bezier_node::point(double t, const vgl_point_2d<double>& q) const
@@ -23,8 +25,8 @@ vgl_point_2d<double> msm_cubic_bezier_node::point(double t, const vgl_point_2d<d
   double t2=t*t,s2=s*s;
   double a=s*s2, b=3.0*t*s2, c=3.0*t2*s, d=t*t2;
 
-  return vgl_point_2d<double>(a*p.x() + b*c1.x() + c*c2.x() + d*q.x(),
-                              a*p.y() + b*c1.y() + c*c2.y() + d*q.y());
+  return {a*p.x() + b*c1.x() + c*c2.x() + d*q.x(),
+                              a*p.y() + b*c1.y() + c*c2.y() + d*q.y()};
 }
 
 //: Return tangent to curve at t (in [0,1]) given end point q
@@ -35,9 +37,9 @@ vgl_vector_2d<double> msm_cubic_bezier_node::tangent(double t, const vgl_point_2
   double s2 = s*s;
   double st = s*t;
 
-  return vgl_vector_2d<double>(
+  return {
     3.0*(-s2*p.x() + (s2-2*st)*c1.x() + (2*st - t2)*c2.x() + t2*q.x()),
-    3.0*(-s2*p.y() + (s2-2*st)*c1.y() + (2*st - t2)*c2.y() + t2*q.y()));
+    3.0*(-s2*p.y() + (s2-2*st)*c1.y() + (2*st - t2)*c2.y() + t2*q.y())};
 }
 
 //: Estimate approximate length of curve by piece-wise linear curve with k extra points
@@ -90,9 +92,7 @@ void msm_cubic_bezier_node::set_to_line(const vgl_point_2d<double>& q)
 
 
 // Default Constructor
-msm_cubic_bezier::msm_cubic_bezier()
-{
-}
+msm_cubic_bezier::msm_cubic_bezier() = default;
 
 //: Construct from set of points. Curve will pass through these.
 msm_cubic_bezier::msm_cubic_bezier(const std::vector<vgl_point_2d<double> >&pts, bool closed)
@@ -507,6 +507,7 @@ void msm_cubic_bezier::equal_space(unsigned start, unsigned end, unsigned n_pts,
 
     // Calculate proportion along this fragment
     double L = length[j+1]-length[j];
+    if (L<1e-8) L=1e-8;  // Avoid divide by zero.
     double f = (target_len-length[j])/L;
     double t2=t[j+1];  if (t2==0.0) t2=1.0;  // start of next segment
     new_pts[i] = point(index[j],(1.0-f)*t[j]+f*t2);
@@ -581,6 +582,7 @@ void msm_cubic_bezier::get_extra_points(double approx_sep,
 
       // Calculate proportion along this fragment
       double L = length[k+1]-length[k];
+      if (L<1e-8) L=1e-8;  // Avoid divide by zero.
       double f = (target_len-length[k])/L;
       double t1=(1.0-f)*t[k]+f*t[k+1];
       new_pts[index] = point(i,t1);
@@ -617,11 +619,11 @@ void msm_cubic_bezier::b_write(vsl_b_ostream& bfs) const
   vsl_b_write(bfs,short(1)); // Version
   vsl_b_write(bfs,closed_);
   vsl_b_write(bfs,unsigned(bnode_.size()));
-  for (unsigned i=0;i<bnode_.size();++i)
+  for (const auto & i : bnode_)
   {
-    vsl_b_write(bfs,bnode_[i].p);
-    vsl_b_write(bfs,bnode_[i].c1);
-    vsl_b_write(bfs,bnode_[i].c2);
+    vsl_b_write(bfs,i.p);
+    vsl_b_write(bfs,i.c1);
+    vsl_b_write(bfs,i.c2);
   }
 }
 
@@ -639,11 +641,11 @@ void msm_cubic_bezier::b_read(vsl_b_istream& bfs)
       vsl_b_read(bfs,closed_);
       vsl_b_read(bfs,n);
       bnode_.resize(n);
-      for (unsigned i=0;i<bnode_.size();++i)
+      for (auto & i : bnode_)
       {
-        vsl_b_read(bfs,bnode_[i].p);
-        vsl_b_read(bfs,bnode_[i].c1);
-        vsl_b_read(bfs,bnode_[i].c2);
+        vsl_b_read(bfs,i.p);
+        vsl_b_read(bfs,i.c1);
+        vsl_b_read(bfs,i.c2);
       }
       break;
     default:
@@ -688,7 +690,3 @@ void vsl_print_summary(std::ostream& os,const msm_cubic_bezier& b)
 {
  os << b;
 }
-
-
-
-

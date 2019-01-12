@@ -26,6 +26,7 @@ set(msm_sources
   msm_similarity_aligner.h    msm_similarity_aligner.cxx
   msm_rigid_aligner.h         msm_rigid_aligner.cxx
   msm_affine_aligner.h        msm_affine_aligner.cxx
+  msm_subset_aligner.h        msm_subset_aligner.cxx
 
   msm_curve.h                 msm_curve.cxx
 
@@ -39,6 +40,7 @@ set(msm_sources
 
   msm_cubic_bezier.h          msm_cubic_bezier.cxx
   msm_equally_space.h         msm_equally_space.cxx
+  msm_rotate_to_axes.h        msm_rotate_to_axes.cxx
 )
 
 aux_source_directory(Templates msm_sources)
@@ -47,10 +49,14 @@ target_link_libraries(msm mcal vimt)
 
 add_subdirectory(utils)
 
-if(BUILD_MUL_TOOLS)
+if(VXL_BUILD_MUL_TOOLS)
   add_subdirectory(tools)
 endif()
 
 if( BUILD_TESTING)
   add_subdirectory(tests)
+endif()
+
+if (VXL_BUILD_OBJECT_LIBRARIES)
+  add_library(msm-obj OBJECT ${msm_sources})
 endif()

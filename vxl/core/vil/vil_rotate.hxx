@@ -12,11 +12,13 @@
 #include <cmath>
 #include "vil_rotate.h"
 #include <vil/vil_resample_bilin.h>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Calculate theta in range 0 to x
-static double calc_theta_mod(double theta, double x)
+static inline double calc_theta_mod(double theta, double x)
 {
   if (x<0) x=-x;
   double theta_x = std::fmod(theta,x);

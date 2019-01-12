@@ -4,7 +4,9 @@
 #include <testlib/testlib_test.h>
 #include <bsta/bsta_sampler.h>
 #include <vnl/vnl_random.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 void test_sampler_helper(void)
 {
@@ -29,8 +31,8 @@ void test_sampler_helper(void)
   }
 
   std::cout << "\n selected:\n";
-  for (unsigned i = 0; i < out.size(); i++) {
-    std::cout << out[i] << std::endl;
+  for (unsigned int i : out) {
+    std::cout << i << std::endl;
   }
 }
 
@@ -61,8 +63,8 @@ void test_sampler_helper2(void)
   }
 
   std::cout << "\n selected:\n";
-  for (unsigned i = 0; i < out.size(); i++) {
-    std::cout << out[i] << std::endl;
+  for (unsigned int i : out) {
+    std::cout << i << std::endl;
   }
 }
 
@@ -74,5 +76,3 @@ static void test_sampler()
 }
 
 TESTMAIN(test_sampler);
-
-

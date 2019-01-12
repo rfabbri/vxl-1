@@ -1,7 +1,4 @@
 // This is oxl/osl/osl_canny_nms.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
@@ -9,7 +6,9 @@
 #include <iostream>
 #include <cmath>
 #include "osl_canny_nms.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h>
 
 //: returns number of edgels found [?]
@@ -17,7 +16,7 @@ unsigned int osl_canny_nms(int xsize_, int ysize_,
                            float * const * dx_, float * const * dy_, float const * const * grad_,
                            float * const *thick_, float * const * theta_)
 {
-  const float k = float(vnl_math::deg_per_rad);
+  const auto k = float(vnl_math::deg_per_rad);
   unsigned int n_edgels_NMS = 0; // return value for this function
 
   for (int y=ysize_-2; y>0; --y) {

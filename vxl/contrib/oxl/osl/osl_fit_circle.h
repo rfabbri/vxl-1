@@ -1,9 +1,6 @@
 // This is oxl/osl/osl_fit_circle.h
 #ifndef osl_fit_circle_h_
 #define osl_fit_circle_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief  least-squares fit of N points to a circle
@@ -20,7 +17,9 @@
 
 #include <iostream>
 #include <list>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_point_2d.h>
 #include <osl/osl_edgel_chain.h>
 

@@ -18,11 +18,13 @@
 
 //=======================================================================
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_indent.h>
 #include <vsl/vsl_binary_loader.h>
 #include <vpdfl/vpdfl_mixture_sampler.h>
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vsl/vsl_vector_io.h>
 #include <vnl/vnl_c_vector.h>
 #include <vnl/vnl_math.h>
@@ -30,9 +32,7 @@
 //=======================================================================
 
 
-vpdfl_mixture::vpdfl_mixture()
-{
-}
+vpdfl_mixture::vpdfl_mixture() = default;
 
 vpdfl_mixture::vpdfl_mixture(const vpdfl_mixture& m):
   vpdfl_pdf_base()
@@ -78,7 +78,7 @@ vpdfl_mixture::~vpdfl_mixture()
 //: Return instance of this PDF
 vpdfl_sampler_base* vpdfl_mixture::new_sampler() const
 {
-  vpdfl_mixture_sampler* i = new vpdfl_mixture_sampler;
+  auto* i = new vpdfl_mixture_sampler;
   i->set_model(*this);
 
   return i;
@@ -130,7 +130,7 @@ static inline void incXbyYplusXXv(vnl_vector<double> *X, const vnl_vector<double
 //=======================================================================
 //: Set the contents of the mixture model.
 // Clones are taken of all the data, and the class will be responsible for their deletion.
-void vpdfl_mixture::set(const std::vector<vpdfl_pdf_base*> components, const std::vector<double> & weights)
+void vpdfl_mixture::set(const std::vector<vpdfl_pdf_base*>& components, const std::vector<double> & weights)
 {
   unsigned n = components.size();
   assert (weights.size() == n);

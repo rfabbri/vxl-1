@@ -15,7 +15,9 @@
 #include <iostream>
 #include <vector>
 #include <vtol/vtol_topology_object.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_timestamp.h>
 
 class vtol_vertex;
@@ -37,7 +39,7 @@ class vtol_topology_cache : public vul_timestamp
   //: private constructor
   vtol_topology_cache(vtol_topology_object* to_be_cached);
   //: private destructor
-  ~vtol_topology_cache();
+  ~vtol_topology_cache() override;
 
   //accessors
 

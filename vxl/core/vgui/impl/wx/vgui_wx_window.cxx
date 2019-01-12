@@ -17,7 +17,10 @@
 #include <wx/frame.h>
 #include <wx/statusbr.h>
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //-------------------------------------------------------------------------
 // vgui_wx_window implementation - construction & destruction.

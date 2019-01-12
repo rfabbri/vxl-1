@@ -23,7 +23,9 @@
 #include <vgl/vgl_closest_point.h>
 #include <boxm/boxm_apm_traits.h>
 #include <boxm/sample/boxm_edge_tangent_sample.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #define ITER_MAX 100
 

@@ -4,7 +4,9 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsol/vsol_box_2d.h>
 #include <vsl/vsl_binary_loader.h>
 
@@ -23,7 +25,7 @@ const char * vsol_spatial_object_2d::SpatialTypes[] =
 };
 
 vsol_spatial_object_2d::vsol_spatial_object_2d()
-  : bounding_box_(VXL_NULLPTR)
+  : bounding_box_(nullptr)
 {
   this->tag_ = 0;
   this->id_ = 0;
@@ -31,7 +33,7 @@ vsol_spatial_object_2d::vsol_spatial_object_2d()
 }
 
 vsol_spatial_object_2d::vsol_spatial_object_2d(vsol_spatial_object_2d const& s)
-  : vsol_spatial_object(s), bounding_box_(VXL_NULLPTR)
+  : vsol_spatial_object(s), bounding_box_(nullptr)
 {
   this->tag_ = 0;
   this->id_ = s.get_id();
@@ -47,9 +49,7 @@ const char * vsol_spatial_object_2d::get_name() const
     return SpatialTypes[0];
 }
 
-vsol_spatial_object_2d::~vsol_spatial_object_2d()
-{
-}
+vsol_spatial_object_2d::~vsol_spatial_object_2d() = default;
 
 //: Return IO version number;
 short vsol_spatial_object_2d::version() const

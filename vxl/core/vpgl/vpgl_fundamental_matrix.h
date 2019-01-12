@@ -29,7 +29,9 @@
 #include <iosfwd>
 #include <vnl/vnl_fwd.h>
 #include <vgl/vgl_fwd.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include "vpgl_proj_camera.h"
 
@@ -48,11 +50,11 @@ class vpgl_fundamental_matrix
   //: Main constructor takes two projective cameras.
   //  The RHS of the fundamental matrix will correspond to cr and the LHS to cl.
   vpgl_fundamental_matrix( const vpgl_proj_camera<T>& cr,
-                           const vpgl_proj_camera<T>& cl ) : cached_svd_(VXL_NULLPTR)
+                           const vpgl_proj_camera<T>& cl ) : cached_svd_(nullptr)
   { set_matrix( cr, cl ); }
 
   //: Construct from a fundamental matrix in vnl form.
-  vpgl_fundamental_matrix( const vnl_matrix_fixed<T,3,3>& F ) : cached_svd_(VXL_NULLPTR)
+  vpgl_fundamental_matrix( const vnl_matrix_fixed<T,3,3>& F ) : cached_svd_(nullptr)
   { set_matrix( F ); }
 
   //: Copy Constructor

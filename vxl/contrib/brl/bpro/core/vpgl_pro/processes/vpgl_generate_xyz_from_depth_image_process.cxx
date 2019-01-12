@@ -5,7 +5,9 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpgl/vpgl_camera.h>
 #include <vpgl/vpgl_perspective_camera.h>
 #include <vpgl/vpgl_generic_camera.h>
@@ -14,8 +16,8 @@
 
 namespace vpgl_generate_xyz_from_depth_image_process_globals
 {
-    const unsigned n_inputs_ = 2;
-    const unsigned n_outputs_ = 3;
+    constexpr unsigned n_inputs_ = 2;
+    constexpr unsigned n_outputs_ = 3;
 }
 //: Init function
 bool vpgl_generate_xyz_from_depth_image_process_cons(bprb_func_process& pro)
@@ -51,7 +53,7 @@ bool vpgl_generate_xyz_from_depth_image_process(bprb_func_process& pro)
   vil_image_view_base_sptr depth_img_ptr = pro.get_input<vil_image_view_base_sptr>(i++);
 
 
-  vil_image_view<float>* depth_img = dynamic_cast<vil_image_view<float>*>(depth_img_ptr.ptr());
+  auto* depth_img = dynamic_cast<vil_image_view<float>*>(depth_img_ptr.ptr());
   if ( !depth_img ) {
     std::cout<<"Depth image cannot be converted to float image"<<std::endl;
     return false;
@@ -59,10 +61,10 @@ bool vpgl_generate_xyz_from_depth_image_process(bprb_func_process& pro)
   unsigned ni = depth_img->ni();
   unsigned nj = depth_img->nj();
 
-  vil_image_view<float>* out_img_x = new vil_image_view<float>(ni, nj);
-  vil_image_view<float>* out_img_y = new vil_image_view<float>(ni, nj);
-  vil_image_view<float>* out_img_z = new vil_image_view<float>(ni, nj);
-  if(vpgl_perspective_camera<double>* cam = dynamic_cast<vpgl_perspective_camera<double>*>(cam_ptr.ptr()))
+  auto* out_img_x = new vil_image_view<float>(ni, nj);
+  auto* out_img_y = new vil_image_view<float>(ni, nj);
+  auto* out_img_z = new vil_image_view<float>(ni, nj);
+  if(auto* cam = dynamic_cast<vpgl_perspective_camera<double>*>(cam_ptr.ptr()))
     {
     for (unsigned int u=0; u < ni; ++u)
       {
@@ -78,7 +80,7 @@ bool vpgl_generate_xyz_from_depth_image_process(bprb_func_process& pro)
         }
       }
     }
-  else if(vpgl_generic_camera<double>* cam = dynamic_cast<vpgl_generic_camera<double>*>(cam_ptr.ptr()))
+  else if(auto* cam = dynamic_cast<vpgl_generic_camera<double>*>(cam_ptr.ptr()))
     {
     for (unsigned int u=0; u < ni; ++u)
       {
@@ -107,4 +109,3 @@ bool vpgl_generate_xyz_from_depth_image_process(bprb_func_process& pro)
   return true;
 
 }
-

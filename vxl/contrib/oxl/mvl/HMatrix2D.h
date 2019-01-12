@@ -1,9 +1,6 @@
 // This is oxl/mvl/HMatrix2D.h
 #ifndef _HMatrix2D_h
 #define _HMatrix2D_h
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 //  \file
 // \brief 3x3 plane-to-plane projectivity
@@ -27,7 +24,9 @@
 #include <mvl/HomgPoint2D.h>
 #include <mvl/HomgLine2D.h>
 #include <mvl/HomgLineSeg2D.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //:
 // A class to hold a plane-to-plane projective transformation matrix

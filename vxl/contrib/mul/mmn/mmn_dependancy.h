@@ -8,13 +8,15 @@
 
 #include <iostream>
 #include <vsl/vsl_binary_io.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Value to indicate no valid arc
-const unsigned mmn_no_arc=99999;
+constexpr unsigned mmn_no_arc = 99999;
 
 //: Value to indicate no valid triangle
-const unsigned mmn_no_tri=99999;
+constexpr unsigned mmn_no_tri = 99999;
 
 //: Store information about which node a given node depends on
 //  If n_dep==1, then v0 depends only on v1 through arc1
@@ -101,4 +103,3 @@ inline void vsl_b_read(vsl_b_istream& bfs, mmn_dependancy& t)
 }
 
 #endif // mmn_dependancy_h_
-

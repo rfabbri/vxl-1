@@ -16,7 +16,9 @@
 #include <iostream>
 #include <cmath>
 #include <vnl/vnl_math.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_distance.h>
 
@@ -234,4 +236,3 @@ inline bool sdet_intersect_angle_range_mpi_pi(double a1, double b1, double a2, d
 }
 
 #endif // sdet_sel_utils_h
-

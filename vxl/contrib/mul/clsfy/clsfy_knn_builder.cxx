@@ -1,8 +1,5 @@
 // This is mul/clsfy/clsfy_knn_builder.cxx
 // Copyright (c) 2001: British Telecommunications plc
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \brief Implement a knn classifier builder
@@ -14,8 +11,10 @@
 #include <string>
 #include "clsfy_knn_builder.h"
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vsl/vsl_binary_loader.h>
 #include <vul/vul_string.h>
 #include <mbl/mbl_parse_block.h>
@@ -108,7 +107,7 @@ double clsfy_knn_builder::build(clsfy_classifier_base& model,
   assert(model.is_class("clsfy_k_nearest_neighbour")); // equiv to dynamic_cast<> != 0
   assert(inputs.size()==outputs.size());
 
-  clsfy_k_nearest_neighbour &knn = (clsfy_k_nearest_neighbour&) model;
+  auto &knn = (clsfy_k_nearest_neighbour&) model;
 
   std::vector<vnl_vector<double> > vin(inputs.size());
 

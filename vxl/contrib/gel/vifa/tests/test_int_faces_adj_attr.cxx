@@ -1,7 +1,9 @@
 // This is gel/vifa/tests/test_int_faces_adj_attr.cxx
 #include <iostream>
 #include <ostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vxl_config.h>
 #include <testlib/testlib_test.h>
 #include <sdet/sdet_detector_params.h>
@@ -70,7 +72,7 @@ static void test_int_faces_adj_attr(int argc, char* argv[])
 
     // Get the group attributes in turn, with each face as a seed
     test_ifa_factory  tif;
-    iface_iterator    ifi = region_list.begin();
+    auto    ifi = region_list.begin();
     int  i = 1;
     for (; ifi != region_list.end(); ifi++, i++)
     {
@@ -84,9 +86,9 @@ static void test_int_faces_adj_attr(int argc, char* argv[])
                                      1,  // Adjacent regions only
                                      -1,  // No size filter
                                      &flp,
-                                     VXL_NULLPTR,
-                                     VXL_NULLPTR,
-                                     VXL_NULLPTR,
+                                     nullptr,
+                                     nullptr,
+                                     nullptr,
                                      &np,
                                      &tif,
                                      0.0);  // No junk -- use all regions
@@ -103,8 +105,8 @@ static void test_int_faces_adj_attr(int argc, char* argv[])
                  << attr_names.size() << " attribute names:\n";
 
         // Dump the attribute vector
-        std::vector<std::string>::iterator  ani = attr_names.begin();
-        std::vector<float>::iterator      ai = attrs.begin();
+        auto  ani = attr_names.begin();
+        auto      ai = attrs.begin();
         for (; (ai != attrs.end()) && (ani != attr_names.end()); ai++, ani++)
           std::cout << "  " << (*ani) << ": " << (*ai) << std::endl;
       }

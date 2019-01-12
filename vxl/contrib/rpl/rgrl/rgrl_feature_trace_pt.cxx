@@ -8,7 +8,10 @@
 #include "rgrl_util.h"
 #include <vnl/algo/vnl_svd.h>
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <rgrl/rgrl_cast.h>
 
@@ -77,7 +80,7 @@ rgrl_feature_sptr
 rgrl_feature_trace_pt::
 transform( rgrl_transformation const& xform ) const
 {
-  rgrl_feature_trace_pt* result = new rgrl_feature_trace_pt( );
+  auto* result = new rgrl_feature_trace_pt( );
 
   // capture the allocation into a smart pointer for exception safety.
   rgrl_feature_sptr result_sptr = result;

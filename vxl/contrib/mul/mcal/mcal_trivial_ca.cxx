@@ -8,7 +8,9 @@
 // \author Tim Cootes
 // \brief Generates set of axis aligned modes for non-zero elements
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vsl/vsl_binary_io.h>
 #include <vnl/vnl_vector.h>
@@ -21,18 +23,14 @@
 // Constructors
 //=======================================================================
 
-mcal_trivial_ca::mcal_trivial_ca()
-{
-}
+mcal_trivial_ca::mcal_trivial_ca() = default;
 
 
 //=======================================================================
 // Destructor
 //=======================================================================
 
-mcal_trivial_ca::~mcal_trivial_ca()
-{
-}
+mcal_trivial_ca::~mcal_trivial_ca() = default;
 
 
 //: Compute modes of the supplied data relative to the supplied mean

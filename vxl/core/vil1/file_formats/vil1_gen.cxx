@@ -1,7 +1,4 @@
 // This is core/vil1/file_formats/vil1_gen.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 
 #include <cstdlib>
 #include <cstdio>
@@ -9,8 +6,10 @@
 #include <iostream>
 #include "vil1_gen.h"
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vil1/vil1_stream.h>
 #include <vil1/vil1_image_impl.h>
@@ -26,7 +25,7 @@ vil1_image_impl* vil1_gen_file_format::make_input_image(vil1_stream* vs)
   for (;;) {
     char buf;
     if (vs->read(&buf, 1L) == 0L)
-      return VXL_NULLPTR;
+      return nullptr;
     if (buf == 0)
       break;
     s += buf;
@@ -39,7 +38,7 @@ vil1_image_impl* vil1_gen_file_format::make_input_image(vil1_stream* vs)
              s[3] == ':');
 
   if (!ok)
-    return VXL_NULLPTR;
+    return nullptr;
 
   std::cerr << "vil1_gen_file_format: s= [" << s << "]\n";
 
@@ -172,10 +171,10 @@ bool vil1_gen_generic_image::get_section(void* buf, int /*x0*/, int /*y0*/, int 
   }
   else if (type_ == vil1_gen_rgb) {
     int n = xs*ys;
-    unsigned char* p = (unsigned char*)buf;
-    unsigned char r = (unsigned char)(params_[0]);
-    unsigned char g = (unsigned char)(params_[1]);
-    unsigned char b = (unsigned char)(params_[2]);
+    auto* p = (unsigned char*)buf;
+    auto r = (unsigned char)(params_[0]);
+    auto g = (unsigned char)(params_[1]);
+    auto b = (unsigned char)(params_[2]);
     while (n--) {
       *p++ = r;
       *p++ = g;

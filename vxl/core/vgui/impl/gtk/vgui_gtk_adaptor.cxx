@@ -1,7 +1,4 @@
 // This is core/vgui/impl/gtk/vgui_gtk_adaptor.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \brief  See vgui_gtk_adaptor.h for a description of this file.
@@ -18,8 +15,10 @@
 #include <cstdlib>
 #include <utility>
 #include "vgui_gtk_adaptor.h"
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <gdk/gdkkeysyms.h>
 #include <gtk/gtk.h>
 #include <gtkgl/gtkglarea.h>

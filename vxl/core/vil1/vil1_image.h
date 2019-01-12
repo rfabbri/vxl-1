@@ -1,16 +1,15 @@
 // This is core/vil1/vil1_image.h
 #ifndef vil1_image_h_
 #define vil1_image_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief A reference-counted image object.
 // \author fsm
 
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil1/vil1_image_impl.h>
 
 //: A smart pointer to an actual image.
@@ -28,7 +27,7 @@
 
 class vil1_image
 {
-  VCL_SAFE_BOOL_DEFINE;
+
  public:
 // use this delegation macro for consistency, not convenience.
 #define vil1_image_delegate(m, args, default) { return ptr ? ptr->m args : default; }
@@ -64,11 +63,11 @@ class vil1_image
   { vil1_image_delegate(put_section, (buf, x0, y0, wd, ht), false); }
 
   //: Getting property information
-  bool get_property(char const *tag, void *property_value = VXL_NULLPTR) const
+  bool get_property(char const *tag, void *property_value = nullptr) const
   { vil1_image_delegate(get_property, (tag, property_value), false); }
 
   //: Setting property information
-  bool set_property(char const *tag, void const *property_value = VXL_NULLPTR)
+  bool set_property(char const *tag, void const *property_value = nullptr)
   { vil1_image_delegate(set_property, (tag, property_value), false); }
 
   //: Return a string describing the file format.
@@ -91,7 +90,7 @@ class vil1_image
 
   //------------ smart-pointer logic --------
 
-  vil1_image(vil1_image_impl *p = VXL_NULLPTR) : ptr(p)
+  vil1_image(vil1_image_impl *p = nullptr) : ptr(p)
   {
     if (ptr)
       ptr->up_ref();
@@ -106,7 +105,7 @@ class vil1_image
   ~vil1_image() {
     if (ptr)
       ptr->down_ref();
-    ptr = VXL_NULLPTR; // don't dangle
+    ptr = nullptr; // don't dangle
   }
 
   vil1_image& operator=(vil1_image const &that) {
@@ -140,12 +139,13 @@ class vil1_image
   }
 
   //: conversion to bool
-  operator safe_bool () const
-    { return (ptr != VXL_NULLPTR)? VCL_SAFE_BOOL_TRUE : VXL_NULLPTR; }
+  /* The old 'safe_bool' did implicit conversions, best practice would be to use explicit operator bool */
+  operator bool () const
+    { return (ptr != nullptr)? true : false; }
 
   //: inverse conversion to bool
   bool operator!() const
-    { return (ptr != VXL_NULLPTR)? false : true; }
+    { return (ptr != nullptr)? false : true; }
 
   //: use "sptr.impl()" to get a pointer to the impl object.
   vil1_image_impl *impl() const {

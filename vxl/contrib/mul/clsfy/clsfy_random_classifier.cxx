@@ -1,7 +1,4 @@
 // This is mul/clsfy/clsfy_random_classifier.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 // Copyright (c) 2001: British Telecommunications plc
 
 //:
@@ -14,8 +11,10 @@
 #include <string>
 #include "clsfy_random_classifier.h"
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vsl/vsl_binary_loader.h>
 #include <clsfy/clsfy_classifier_base.h>
 #include <vsl/vsl_vector_io.h>

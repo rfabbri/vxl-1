@@ -1,6 +1,7 @@
 // This is brl/bseg/bapl/bapl_affine2d_est.cxx
 #include <iostream>
 #include <cmath>
+#include <utility>
 #include "bapl_affine2d_est.h"
 //:
 // \file
@@ -10,8 +11,10 @@
 #include <vnl/vnl_math.h>
 #include <vnl/algo/vnl_svd.h>
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Constructor from a vector of matches (pairs of keypoint smart pointers)
 bapl_affine2d_est::bapl_affine2d_est( const std::vector< bapl_keypoint_match > & matches )
@@ -19,28 +22,27 @@ bapl_affine2d_est::bapl_affine2d_est( const std::vector< bapl_keypoint_match > &
 {
   vnl_vector< double > p(2), q(2);
 
-  for ( unsigned int i=0; i<matches.size(); ++i ) {
-    p[0] = matches[i].first->location_i();
-    p[1] = matches[i].first->location_j();
+  for (const auto & matche : matches) {
+    p[0] = matche.first->location_i();
+    p[1] = matche.first->location_j();
     from_pts_.push_back( p );
 
-    q[0] = matches[i].second->location_i();
-    q[1] = matches[i].second->location_j();
+    q[0] = matche.second->location_i();
+    q[1] = matche.second->location_j();
     to_pts_.push_back( q );
   }
 }
 
-bapl_affine2d_est::bapl_affine2d_est( const std::vector< vnl_vector<double> > & from_pts,
-                                      const std::vector< vnl_vector<double> > & to_pts )
+bapl_affine2d_est::bapl_affine2d_est( std::vector< vnl_vector<double> >  from_pts,
+                                      std::vector< vnl_vector<double> >  to_pts )
   : rrel_estimation_problem( 6 /*dof*/, 3 /*points to instantiate*/ ),
-    from_pts_( from_pts ), to_pts_( to_pts )
+    from_pts_(std::move( from_pts )), to_pts_(std::move( to_pts ))
 {
   assert( from_pts_.size() == to_pts_.size() );
 }
 
 bapl_affine2d_est::~bapl_affine2d_est()
-{
-}
+= default;
 
 
 unsigned int

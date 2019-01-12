@@ -11,7 +11,9 @@
 #include <bvxm/bvxm_world_params.h>
 #include <bvxm/bvxm_voxel_world.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <brdb/brdb_value.h>
 #include <brdb/brdb_selection.h>
@@ -61,7 +63,7 @@ static void test_bvxm_illum_index_process()
     if (good)
     {
       brdb_query_aptr bin_idx_Q = brdb_query_comp_new("id", brdb_query::EQ, id_bin_idx);
-      brdb_selection_sptr bin_idx_S = DATABASE->select("unsigned_data", vcl_move(bin_idx_Q));
+      brdb_selection_sptr bin_idx_S = DATABASE->select("unsigned_data", std::move(bin_idx_Q));
       if (bin_idx_S->size()!=1){
         std::cout << "in bprb_batch_process_manager::set_input_from_db(.) -"
                  << " no selections\n";
@@ -72,11 +74,11 @@ static void test_bvxm_illum_index_process()
         std::cout << "in bprb_batch_process_manager::set_input_from_db(.) -"
                  << " didn't get value\n";
       }
-      bool non_null = (value != VXL_NULLPTR);
+      bool non_null = (value != nullptr);
       TEST("bin index output non-null", non_null ,true);
 
       // check that for zero regions choice, the index is zero
-      brdb_value_t<unsigned>* result =
+      auto* result =
         static_cast<brdb_value_t<unsigned>* >(value.ptr());
       unsigned idx = result->value();
 

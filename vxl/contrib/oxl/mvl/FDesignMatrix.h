@@ -1,9 +1,6 @@
 // This is oxl/mvl/FDesignMatrix.h
 #ifndef FDesignMatrix_h_
 #define FDesignMatrix_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Design matrix for linear FMatrix least squares
@@ -27,7 +24,9 @@
 #include <iostream>
 #include <vector>
 #include <vnl/vnl_matrix.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <mvl/HomgPoint2D.h>
 #include <vgl/vgl_homg_point_2d.h>
 

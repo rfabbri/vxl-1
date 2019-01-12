@@ -1,7 +1,9 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include "boxm2_vecf_labeled_point.h"
 //
 // there are two anchor file formats at present:

@@ -18,7 +18,9 @@
 #include <vnl/vnl_math.h>
 
 #include <bxml/bxml_find.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_gamma.h>
 
 #include <bsta/algo/bsta_fit_weibull.h>
@@ -29,7 +31,7 @@
 #include <vul/vul_psfile.h>
 
 //: strength_threshold in [0,1] - min strength to declare the part as detected
-bool extract_gaussian_primitives(vil_image_resource_sptr img, float lambda0, float lambda1, float theta, bool bright, float cutoff_percentage, float strength_threshold, unsigned type, std::vector<brec_part_instance_sptr>& parts)
+bool extract_gaussian_primitives(const vil_image_resource_sptr& img, float lambda0, float lambda1, float theta, bool bright, float cutoff_percentage, float strength_threshold, unsigned type, std::vector<brec_part_instance_sptr>& parts)
 {
   vil_image_view<float> fimg = brip_vil_float_ops::convert_to_float(img);
   vil_image_view<float> extr = brip_vil_float_ops::extrema(fimg, lambda0, lambda1, theta, bright, false,true);
@@ -79,7 +81,7 @@ bool extract_gaussian_primitives(vil_image_resource_sptr img, float lambda0, flo
       if (strength_map(i,j) > strength_threshold) {
         brec_part_gaussian_sptr dp = new brec_part_gaussian((float)i, (float)j, strength_map(i,j), lambda0, lambda1, theta, bright, type);
         dp->cutoff_percentage_ = cutoff_percentage;
-        parts.push_back(dp->cast_to_instance());
+        parts.emplace_back(dp->cast_to_instance());
       }
     }
 
@@ -485,7 +487,7 @@ bool brec_part_gaussian::construct_class_response_models(vil_image_view<float>& 
 //: for gaussian operators we use weibull distribution as the parametric model
 bool brec_part_gaussian::fit_distribution_to_response_hist(bsta_histogram<float>& fg_h)
 {
-  float mean = fg_h.mean(); float std_dev = (float)std::sqrt(fg_h.variance());
+  float mean = fg_h.mean(); auto std_dev = (float)std::sqrt(fg_h.variance());
   bsta_weibull_cost_function wcf(mean, std_dev);
   bsta_fit_weibull<float> fw(&wcf);
   k_ = 1.0f;
@@ -567,7 +569,7 @@ bool brec_part_gaussian::update_response_hist(vil_image_view<float>& img, vil_im
 //  fg_prob_image is the probability of being foreground for each pixel
 //  pb_zero is the constant required for the background response model (probability of zero response)
 bool brec_part_gaussian::extract(vil_image_view<float>& img, vil_image_view<float>& fg_prob_image,
-                                 float rot_angle, std::string model_dir, std::vector<brec_part_instance_sptr>& instances, float prior_class)
+                                 float rot_angle, const std::string& model_dir, std::vector<brec_part_instance_sptr>& instances, float prior_class)
 {
   unsigned ni = img.ni();
   unsigned nj = img.nj();
@@ -675,7 +677,7 @@ bool brec_part_gaussian::extract(vil_image_view<float>& img, vil_image_view<floa
       dp->rho_c_b_ = pos_c_b;
       dp->rho_nc_b_ = pos_nc_b;
       dp->cutoff_percentage_ = cutoff_percentage_;
-      instances.push_back(dp->cast_to_instance());
+      instances.emplace_back(dp->cast_to_instance());
 
 #if 0
       if ((i == 375 && j == 204) || (i == 348 && j == 221) || (i == 374 && j == 193) ||
@@ -735,7 +737,7 @@ bool brec_part_gaussian::extract(vil_image_view<float>& img, vil_image_view<floa
         dp->rho_nc_b_ = 0.0f;
 
         dp->cutoff_percentage_ = cutoff_percentage_;
-        instances.push_back(dp->cast_to_instance());
+        instances.emplace_back(dp->cast_to_instance());
       }
     }
 
@@ -746,8 +748,8 @@ bool brec_part_gaussian::extract(vil_image_view<float>& img, vil_image_view<floa
 //: use the background mean and std_dev imgs to construct response model for background and calculate posterior ratio's expected value
 //  Assumes that k_ and lambda_ for the foreground response model has already been set
 bool brec_part_gaussian::update_foreground_posterior(vil_image_view<float>& img,
-                                                     vil_image_view<float>& fg_prob_img,
-                                                     vil_image_view<bool>& mask, // FIXME - unused
+                                                     vil_image_view<float>&  /*fg_prob_img*/,
+                                                     vil_image_view<bool>&  /*mask*/, // FIXME - unused
                                                      vil_image_view<float>& mean_img,
                                                      vil_image_view<float>& std_dev_img)
 {
@@ -826,7 +828,7 @@ bool brec_part_gaussian::update_foreground_posterior(vil_image_view<float>& img,
   return true;
 }
 
-bool draw_gauss_to_ps(vul_psfile& ps, brec_part_gaussian_sptr pi, float x, float y, float cr, float cg, float cb)
+bool draw_gauss_to_ps(vul_psfile& ps, const brec_part_gaussian_sptr& pi, float x, float y, float cr, float cg, float cb)
 {
   ps.set_fg_color(cr,cg,cb);
   ps.set_line_width(1.f);
@@ -834,4 +836,3 @@ bool draw_gauss_to_ps(vul_psfile& ps, brec_part_gaussian_sptr pi, float x, float
   ps.ellipse(x*4, -y*4, pi->lambda0_*4, pi->lambda1_*4, int(-pi->theta_));
   return true;
 }
-

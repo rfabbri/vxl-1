@@ -1,12 +1,14 @@
+#include <utility>
+
 #include "boxm2_opencl_cache1.h"
 //:
 // \file
 
 //: scene/device constructor
-boxm2_opencl_cache1::boxm2_opencl_cache1(boxm2_scene_sptr scene,
-                                       bocl_device_sptr device,
+boxm2_opencl_cache1::boxm2_opencl_cache1(const boxm2_scene_sptr& scene,
+                                       const bocl_device_sptr& device,
                                        unsigned int maxBlocks)
-: scene_(scene), maxBlocksInCache(maxBlocks), bytesInCache_(0), block_info_(VXL_NULLPTR), device_(device)
+: scene_(scene), maxBlocksInCache(maxBlocks), bytesInCache_(0), block_info_(nullptr), device_(device)
 {
   // store max bytes allowed in cache - use only 80 percent of the memory
   maxBytesInCache_ = (unsigned long) (device->info().total_global_memory_ * 0.7);
@@ -51,10 +53,10 @@ bool boxm2_opencl_cache1::clear_cache()
 {
   // delete stored block info
   if (block_info_) {
-    boxm2_scene_info* buff = (boxm2_scene_info*) block_info_->cpu_buffer();
+    auto* buff = (boxm2_scene_info*) block_info_->cpu_buffer();
     delete buff;
     delete block_info_;
-    block_info_=VXL_NULLPTR;
+    block_info_=nullptr;
   }
 
   // delete blocks in cache
@@ -106,10 +108,10 @@ bool boxm2_opencl_cache1::finish_queue() {
   return true;
 }
 
-void boxm2_opencl_cache1::shallow_remove_block(boxm2_block_id id)
+void boxm2_opencl_cache1::shallow_remove_block(const boxm2_block_id& id)
 {
   // delete blocks in cache
-  std::map<boxm2_block_id, bocl_mem*>::iterator iter = cached_blocks_.find(id);
+  auto iter = cached_blocks_.find(id);
   if (iter != cached_blocks_.end()) {
     bocl_mem* toDelete = iter->second;
     bytesInCache_ -= toDelete->num_bytes();
@@ -162,7 +164,7 @@ std::size_t boxm2_opencl_cache1::bytes_in_cache()
 }
 
 //: realization of abstract "get_block(block_id)"
-bocl_mem* boxm2_opencl_cache1::get_block(boxm2_block_id id)
+bocl_mem* boxm2_opencl_cache1::get_block(const boxm2_block_id& id)
 {
   //requesting block pushes it to the front of the list
   this->lru_push_front(id);
@@ -172,7 +174,7 @@ bocl_mem* boxm2_opencl_cache1::get_block(boxm2_block_id id)
     // load block info
     boxm2_block* loaded = cpu_cache_->get_block(id);
     if (block_info_) {
-       boxm2_scene_info* buff = (boxm2_scene_info*) block_info_->cpu_buffer();
+       auto* buff = (boxm2_scene_info*) block_info_->cpu_buffer();
        delete buff;
        delete block_info_;
     }
@@ -202,7 +204,7 @@ bocl_mem* boxm2_opencl_cache1::get_block(boxm2_block_id id)
       boxm2_block_id lru_id;
       if (!this->lru_remove_last(lru_id)) {
          std::cerr << "ERROR: boxm2_opencl_cache1::get_block(): lru is empty" << std::endl;
-         return (bocl_mem*)VXL_NULLPTR;
+         return (bocl_mem*)nullptr;
       }
 #ifdef DEBUG
       std::cout<<lru_id<<" ... ";
@@ -214,7 +216,7 @@ bocl_mem* boxm2_opencl_cache1::get_block(boxm2_block_id id)
     std::cout<<std::endl;
 #endif
   }
- uchar16* data_block = const_cast<uchar16*>(trees.data_block());
+ auto* data_block = const_cast<uchar16*>(trees.data_block());
   // otherwise load it from disk with blocking
   bocl_mem* blk = new bocl_mem(*context_, data_block, toLoadSize, "3d trees buffer " + id.to_string() );
   blk->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR );
@@ -226,7 +228,7 @@ bocl_mem* boxm2_opencl_cache1::get_block(boxm2_block_id id)
   //////////////////////////////////////////////////////
   // load block info
   if (block_info_) {
-    boxm2_scene_info* buff = (boxm2_scene_info*) block_info_->cpu_buffer();
+    auto* buff = (boxm2_scene_info*) block_info_->cpu_buffer();
     delete buff;
     delete block_info_;
   }
@@ -241,11 +243,11 @@ bocl_mem* boxm2_opencl_cache1::get_block(boxm2_block_id id)
   return blk;
 }
 
-bocl_mem* boxm2_opencl_cache1::get_block_info(boxm2_block_id id)
+bocl_mem* boxm2_opencl_cache1::get_block_info(const boxm2_block_id& id)
 {
   // clean up
   if (block_info_) {
-    boxm2_scene_info* buff = (boxm2_scene_info*) block_info_->cpu_buffer();
+    auto* buff = (boxm2_scene_info*) block_info_->cpu_buffer();
     delete buff;
     delete block_info_;
   }
@@ -263,7 +265,7 @@ bocl_mem* boxm2_opencl_cache1::get_block_info(boxm2_block_id id)
 
 //: Get data generic
 // Possible issue: if \p num_bytes is greater than 0, should it then always initialize a new data object?
-bocl_mem* boxm2_opencl_cache1::get_data(boxm2_block_id id, std::string type, std::size_t num_bytes, bool read_only)
+bocl_mem* boxm2_opencl_cache1::get_data(const boxm2_block_id& id, const std::string& type, std::size_t num_bytes, bool read_only)
 {
   //push id to front of LRU list
   this->lru_push_front(id);
@@ -273,7 +275,7 @@ bocl_mem* boxm2_opencl_cache1::get_data(boxm2_block_id id, std::string type, std
     this->cached_data_map(type);
 
   // then look for the block you're requesting
-  std::map<boxm2_block_id, bocl_mem*>::iterator iter = data_map.find(id);
+  auto iter = data_map.find(id);
   if ( iter != data_map.end() ) {
     return iter->second;
   }
@@ -298,7 +300,7 @@ bocl_mem* boxm2_opencl_cache1::get_data(boxm2_block_id id, std::string type, std
       boxm2_block_id lru_id;
       if(!this->lru_remove_last(lru_id)) {
          std::cerr << "ERROR: boxm2_opencl_cache1::get_data() : lru is empty" << std::endl;
-         return (bocl_mem*)VXL_NULLPTR;
+         return (bocl_mem*)nullptr;
       }
 #ifdef DEBUG
       std::cout<<lru_id<<" ... ";
@@ -315,7 +317,7 @@ bocl_mem* boxm2_opencl_cache1::get_data(boxm2_block_id id, std::string type, std
   // if num bytes is specified and the data doesn't match, create empty buffer
   if (num_bytes > 0 && data_base->buffer_length() != num_bytes )
   {
-    bocl_mem* data = new bocl_mem(*context_, VXL_NULLPTR, num_bytes, type);
+    bocl_mem* data = new bocl_mem(*context_, nullptr, num_bytes, type);
     data->create_buffer(CL_MEM_READ_WRITE);
     this->deep_replace_data(id,type,data,read_only);
     //data->zero_gpu_buffer(*queue_);
@@ -335,7 +337,7 @@ bocl_mem* boxm2_opencl_cache1::get_data(boxm2_block_id id, std::string type, std
 
 //: Get data new generic
 // Possible issue: if \p num_bytes is greater than 0, should it then always initialize a new data object?
-bocl_mem* boxm2_opencl_cache1::get_data_new(boxm2_block_id id, std::string type, std::size_t num_bytes, bool read_only)
+bocl_mem* boxm2_opencl_cache1::get_data_new(const boxm2_block_id& id, const std::string& type, std::size_t num_bytes, bool read_only)
 {
   //push id to front of LRU list
   this->lru_push_front(id);
@@ -344,7 +346,7 @@ bocl_mem* boxm2_opencl_cache1::get_data_new(boxm2_block_id id, std::string type,
   std::map<boxm2_block_id, bocl_mem*>& data_map = this->cached_data_map(type);
 
   // then look for the block you're requesting, if found, delete it.
-  std::map<boxm2_block_id, bocl_mem*>::iterator iter = data_map.find(id);
+  auto iter = data_map.find(id);
   if ( iter != data_map.end() ) {
     delete iter->second;
     data_map.erase(iter);
@@ -366,7 +368,7 @@ bocl_mem* boxm2_opencl_cache1::get_data_new(boxm2_block_id id, std::string type,
       boxm2_block_id lru_id;
       if (!this->lru_remove_last(lru_id)) {
          std::cerr << "ERROR: boxm2_opencl_cache1::get_data_new() : lru is empty " << std::endl;
-         return (bocl_mem*)VXL_NULLPTR;
+         return (bocl_mem*)nullptr;
       }
 #ifdef DEBUG
       std::cout<<lru_id<<" ... ";
@@ -405,7 +407,7 @@ bocl_mem* boxm2_opencl_cache1::alloc_mem(std::size_t num_bytes, void* cpu_buff, 
       boxm2_block_id lru_id;
       if (!this->lru_remove_last(lru_id)) {
          std::cerr << "ERROR: lru empty. unable to alloc buffer of requested size. " << std::endl;
-         return (bocl_mem*)VXL_NULLPTR;
+         return (bocl_mem*)nullptr;
       }
 #ifdef DEBUG
       std::cout<<lru_id<<" ... ";
@@ -418,7 +420,7 @@ bocl_mem* boxm2_opencl_cache1::alloc_mem(std::size_t num_bytes, void* cpu_buff, 
 
 
   //allocate mem
-  bocl_mem* data = new bocl_mem(*context_, cpu_buff, num_bytes, id);
+  bocl_mem* data = new bocl_mem(*context_, cpu_buff, num_bytes, std::move(id));
   mem_pool_[data] = num_bytes;
   return data;
 }
@@ -437,7 +439,7 @@ void boxm2_opencl_cache1::free_mem_pool()
 //removes mem from pool, but still keeps it allocated
 void boxm2_opencl_cache1::unref_mem(bocl_mem* mem)
 {
-  std::map<bocl_mem*,std::size_t>::iterator iter = mem_pool_.find(mem);
+  auto iter = mem_pool_.find(mem);
   if (iter != mem_pool_.end()){
     mem_pool_.erase(iter);
   }
@@ -456,7 +458,7 @@ void boxm2_opencl_cache1::free_mem(bocl_mem* mem)
 //: Deep data replace.
 // This replaces not only the data in the GPU cache, but
 // in the cpu cache as well (by creating a new one)
-void boxm2_opencl_cache1::deep_replace_data(boxm2_block_id id, std::string type, bocl_mem* mem, bool read_only)
+void boxm2_opencl_cache1::deep_replace_data(const boxm2_block_id& id, const std::string& type, bocl_mem* mem, bool read_only)
 {
   // instantiate new data block
   std::size_t numDataBytes = mem->num_bytes();
@@ -473,7 +475,7 @@ void boxm2_opencl_cache1::deep_replace_data(boxm2_block_id id, std::string type,
 
   // now replace the mem in the GPU cache.. first delete existing
   std::map<boxm2_block_id, bocl_mem*>& data_map = this->cached_data_map(type);
-  std::map<boxm2_block_id, bocl_mem*>::iterator iter = data_map.find(id);
+  auto iter = data_map.find(id);
   if ( iter != data_map.end() ) {
     // release existing memory
     bocl_mem* toDelete = iter->second;
@@ -484,11 +486,11 @@ void boxm2_opencl_cache1::deep_replace_data(boxm2_block_id id, std::string type,
 }
 
 //: deep remove data, removes from ocl cache as well
-void boxm2_opencl_cache1::deep_remove_data(boxm2_block_id id, std::string type, bool write_out)
+void boxm2_opencl_cache1::deep_remove_data(const boxm2_block_id& id, const std::string& type, bool  /*write_out*/)
 {
   //find the data in this map
   std::map<boxm2_block_id, bocl_mem*>& data_map = this->cached_data_map(type);
-  std::map<boxm2_block_id, bocl_mem*>::iterator iter = data_map.find(id);
+  auto iter = data_map.find(id);
   if ( iter != data_map.end() ) {
     // release existing memory
 
@@ -509,11 +511,11 @@ void boxm2_opencl_cache1::deep_remove_data(boxm2_block_id id, std::string type, 
 }
 
 //: shallow_remove_data removes data with id and type from ocl cache only
-void boxm2_opencl_cache1::shallow_remove_data(boxm2_block_id id, std::string type)
+void boxm2_opencl_cache1::shallow_remove_data(const boxm2_block_id& id, std::string type)
 {
   //find the data in this map
-  std::map<boxm2_block_id, bocl_mem*>& data_map = this->cached_data_map(type);
-  std::map<boxm2_block_id, bocl_mem*>::iterator iter = data_map.find(id);
+  std::map<boxm2_block_id, bocl_mem*>& data_map = this->cached_data_map(std::move(type));
+  auto iter = data_map.find(id);
   if ( iter != data_map.end() ) {
     // release existing memory
     bocl_mem* toDelete = iter->second;
@@ -524,7 +526,7 @@ void boxm2_opencl_cache1::shallow_remove_data(boxm2_block_id id, std::string typ
 }
 
 //: helper method, \returns a reference to correct data map (ensures one exists)
-std::map<boxm2_block_id, bocl_mem*>& boxm2_opencl_cache1::cached_data_map(std::string prefix)
+std::map<boxm2_block_id, bocl_mem*>& boxm2_opencl_cache1::cached_data_map(const std::string& prefix)
 {
   // if map for this particular data type doesn't exist, initialize it
   if ( cached_data_.find(prefix) == cached_data_.end() )
@@ -539,7 +541,7 @@ std::map<boxm2_block_id, bocl_mem*>& boxm2_opencl_cache1::cached_data_map(std::s
 }
 
 //: helper method to insert into LRU list
-void boxm2_opencl_cache1::lru_push_front( boxm2_block_id id )
+void boxm2_opencl_cache1::lru_push_front( const boxm2_block_id& id )
 {
   //serach for it in the list, if it's there, delete it
   std::list<boxm2_block_id>::iterator iter;
@@ -566,7 +568,7 @@ bool boxm2_opencl_cache1::lru_remove_last(boxm2_block_id &lru_id)
   lru_order_.pop_back();
 
   // then look for the block to delete
-  std::map<boxm2_block_id, bocl_mem*>::iterator blk = cached_blocks_.find(lru_id);
+  auto blk = cached_blocks_.find(lru_id);
   if ( blk != cached_blocks_.end() ) {
     bocl_mem* toDelete = blk->second;
     //toDelete->read_to_buffer( *queue_ );
@@ -584,7 +586,7 @@ bool boxm2_opencl_cache1::lru_remove_last(boxm2_block_id &lru_id)
   {
     std::string data_type = datas->first;
     std::map<boxm2_block_id, bocl_mem*>& data_map = datas->second;
-    std::map<boxm2_block_id, bocl_mem*>::iterator dat = data_map.find(lru_id);
+    auto dat = data_map.find(lru_id);
     if ( dat != data_map.end() ) {
       bocl_mem* toDelete = dat->second;
       //toDelete->read_to_buffer( *queue_ );
@@ -613,12 +615,12 @@ std::string boxm2_opencl_cache1::to_string()
 }
 
 // === Dummy (empty) instantiations for binary I/O
-void vsl_b_write(vsl_b_ostream& os, boxm2_opencl_cache1 const& scene) {}
-void vsl_b_write(vsl_b_ostream& os, const boxm2_opencl_cache1* &p) {}
-void vsl_b_write(vsl_b_ostream& os, boxm2_opencl_cache1_sptr& sptr) {}
-void vsl_b_write(vsl_b_ostream& os, boxm2_opencl_cache1_sptr const& sptr) {}
+void vsl_b_write(vsl_b_ostream&  /*os*/, boxm2_opencl_cache1 const&  /*scene*/) {}
+void vsl_b_write(vsl_b_ostream&  /*os*/, const boxm2_opencl_cache1* & /*p*/) {}
+void vsl_b_write(vsl_b_ostream&  /*os*/, boxm2_opencl_cache1_sptr&  /*sptr*/) {}
+void vsl_b_write(vsl_b_ostream&  /*os*/, boxm2_opencl_cache1_sptr const&  /*sptr*/) {}
 
-void vsl_b_read(vsl_b_istream& is, boxm2_opencl_cache1 &scene) {}
-void vsl_b_read(vsl_b_istream& is, boxm2_opencl_cache1* p) {}
-void vsl_b_read(vsl_b_istream& is, boxm2_opencl_cache1_sptr& sptr) {}
-void vsl_b_read(vsl_b_istream& is, boxm2_opencl_cache1_sptr const& sptr) {}
+void vsl_b_read(vsl_b_istream&  /*is*/, boxm2_opencl_cache1 & /*scene*/) {}
+void vsl_b_read(vsl_b_istream&  /*is*/, boxm2_opencl_cache1*  /*p*/) {}
+void vsl_b_read(vsl_b_istream&  /*is*/, boxm2_opencl_cache1_sptr&  /*sptr*/) {}
+void vsl_b_read(vsl_b_istream&  /*is*/, boxm2_opencl_cache1_sptr const&  /*sptr*/) {}

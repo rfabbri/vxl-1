@@ -10,7 +10,9 @@
 #include <algorithm>
 #include <list>
 #include <cstdlib>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vnl/vnl_double_2.h>
 
@@ -59,14 +61,14 @@ typedef vxl_byte pixel_type;
 class command_iteration_update: public rgrl_command
 {
  public:
-  void execute(rgrl_object* caller, const rgrl_event & event )
+  void execute(rgrl_object* caller, const rgrl_event & event ) override
   {
     execute( (const rgrl_object*) caller, event );
   }
 
-  void execute(const rgrl_object* caller, const rgrl_event & /*event*/ )
+  void execute(const rgrl_object* caller, const rgrl_event & /*event*/ ) override
   {
-    const rgrl_feature_based_registration* reg_engine =
+    const auto* reg_engine =
       dynamic_cast<const rgrl_feature_based_registration*>(caller);
 
     // set precision
@@ -131,7 +133,7 @@ struct scaled_feature_node {
   unsigned size() const { return features_.size(); }
 
   //: push back function
-  void push_back( rgrl_feature_sptr sptr ) { features_.push_back(sptr); }
+  void push_back( const rgrl_feature_sptr& sptr ) { features_.push_back(sptr); }
 };
 
 // The example read in a text file containing features , each with an
@@ -182,7 +184,7 @@ read_feature_file( char const* filename,
         continue;
 
       // push it into list
-      feature_list.push_back( scaled_feature_node() );
+      feature_list.emplace_back( );
       scaled_feature_node& this_node = feature_list.back();
       this_node.sigma_ = sigma;
 
@@ -246,12 +248,12 @@ read_affine_trans_2d( const char* trans_file, vnl_matrix< double > & A, vnl_vect
 int
 main( int argc, char* argv[] )
 {
-  vul_arg< unsigned > spacing( VXL_NULLPTR, "spacing for fewer features" );
-  vul_arg< const char* > feature_file( VXL_NULLPTR, "the feature file" );
-  vul_arg< const char* > from_files( VXL_NULLPTR, "from image file" );
-  vul_arg< const char* > to_files( VXL_NULLPTR, "to image file" );
-  vul_arg< const char* > output_xform( "-o", "output xformation file", VXL_NULLPTR );
-  vul_arg< const char* > mask_file( "-mask", "mask file", VXL_NULLPTR );
+  vul_arg< unsigned > spacing( nullptr, "spacing for fewer features" );
+  vul_arg< const char* > feature_file( nullptr, "the feature file" );
+  vul_arg< const char* > from_files( nullptr, "from image file" );
+  vul_arg< const char* > to_files( nullptr, "to image file" );
+  vul_arg< const char* > output_xform( "-o", "output xformation file", nullptr );
+  vul_arg< const char* > mask_file( "-mask", "mask file", nullptr );
   vul_arg< const char* > trans_file( "-init", "the initialization" );
   vul_arg< const char* > model( "-model", "Final model (affine, quadratic) in the highest resolution", "quadratic" );
 
@@ -366,8 +368,8 @@ main( int argc, char* argv[] )
   //
   rgrl_weighter_sptr wgter;
   {
-    vcl_unique_ptr< rrel_m_est_obj > m_est_obj( new rrel_cauchy_obj(4) );
-    wgter = new rgrl_weighter_m_est( vcl_move(m_est_obj), true, true) ;
+    std::unique_ptr< rrel_m_est_obj > m_est_obj( new rrel_cauchy_obj(4) );
+    wgter = new rgrl_weighter_m_est( std::move(m_est_obj), true, true) ;
   }
 
   // 3. Scale estimator
@@ -378,8 +380,8 @@ main( int argc, char* argv[] )
   rgrl_scale_estimator_wgted_sptr wgted_scale_est;
   {
     // muse and unwgted_scale_est are not used
-    vcl_unique_ptr<rrel_objective> obj( new rrel_muset_obj( 1 ) );
-    unwgted_scale_est = new rgrl_scale_est_closest( vcl_move(obj) );
+    std::unique_ptr<rrel_objective> obj( new rrel_muset_obj( 1 ) );
+    unwgted_scale_est = new rgrl_scale_est_closest( std::move(obj) );
     wgted_scale_est = new rgrl_scale_est_all_weights( );
     wgted_scale_est->set_debug_flag( 1 );
   }
@@ -426,9 +428,8 @@ main( int argc, char* argv[] )
 
     for ( unsigned int j=0; j<2&&it!=feature_sets.end(); ++j,++it) {
       // Now copying features with corresponding coordinate scale
-      for (std::vector< rgrl_feature_sptr >::const_iterator jt=it->features_.begin();
-          jt!=it->features_.end(); ++jt ) {
-        from_features.push_back( scale_location_by( *jt, scaling_factor ) );
+      for (const auto & feature : it->features_) {
+        from_features.push_back( scale_location_by( feature, scaling_factor ) );
       }
     }
 
@@ -504,7 +505,7 @@ main( int argc, char* argv[] )
     prior_scale->set_geometric_scale( geometric_scale );
 
     // set mask_box to image size
-    rgrl_mask_box* box_ptr = new rgrl_mask_box(2);
+    auto* box_ptr = new rgrl_mask_box(2);
     box_ptr->set_x0( vnl_double_2(0, 0).as_ref() );
     const unsigned ni = from_images[num_stages].ni();
     const unsigned nj = from_images[num_stages].nj();
@@ -512,7 +513,7 @@ main( int argc, char* argv[] )
 
     // set smart pointer
     rgrl_mask_sptr roi = box_ptr;
-    box_ptr = VXL_NULLPTR;
+    box_ptr = nullptr;
 
     initializer = new rgrl_initializer_prior( roi, roi, affine_sptr, init_trans, num_stages, prior_scale );
   }

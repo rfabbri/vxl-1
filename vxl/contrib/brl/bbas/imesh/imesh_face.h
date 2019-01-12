@@ -12,15 +12,17 @@
 //   <none yet>
 // \endverbatim
 
+#include <utility>
 #include <vector>
 #include <set>
-#include <vcl_memory.h>
-#include <utility>
-#include <string>
 #include <iostream>
+#include <memory>
+#include <string>
 #include <algorithm>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_vector_3d.h>
 
 #define imesh_invalid_idx (static_cast<unsigned int>(-1))
@@ -86,7 +88,7 @@ class imesh_face_array_base
 {
  public:
   //: Destructor
-  virtual ~imesh_face_array_base() {}
+  virtual ~imesh_face_array_base() = default;
 
   //: returns the number of vertices per face if the same for all faces, zero otherwise
   virtual unsigned int regularity() const = 0;
@@ -162,14 +164,14 @@ class imesh_face_array : public imesh_face_array_base
 
  public:
   //: Default Constructor
-  imesh_face_array() {}
+  imesh_face_array() = default;
 
   //: Constructor
   imesh_face_array(unsigned int size) : faces_(size) {}
 
   //: Constructor (from a vector)
-  imesh_face_array(const std::vector<std::vector<unsigned int> >& faces)
-  : faces_(faces) {}
+  imesh_face_array(std::vector<std::vector<unsigned int> >  faces)
+  : faces_(std::move(faces)) {}
 
   //: Copy Constructor
   imesh_face_array(const imesh_face_array& other)
@@ -185,34 +187,34 @@ class imesh_face_array : public imesh_face_array_base
   }
 
   //: returns the number of vertices per face if the same for all faces, zero otherwise
-  virtual unsigned int regularity() const { return 0; }
+  unsigned int regularity() const override { return 0; }
 
   //: returns the number of faces
-  virtual unsigned int size() const { return faces_.size(); }
+  unsigned int size() const override { return faces_.size(); }
 
   //: returns the number of vertices in face \param f
-  virtual unsigned int num_verts(unsigned int f) const { return faces_[f].size(); }
+  unsigned int num_verts(unsigned int f) const override { return faces_[f].size(); }
 
   //: Access a vertex index by face index and within-face index
-  virtual unsigned int operator() (unsigned int f, unsigned int i) const { return faces_[f][i]; }
+  unsigned int operator() (unsigned int f, unsigned int i) const override { return faces_[f][i]; }
 
   //: Flip a face over, inverting its orientation
-  virtual void flip_orientation (unsigned int f)
+  void flip_orientation (unsigned int f) override
   {
     std::reverse(faces_[f].begin(),faces_[f].end());
     imesh_face_array_base::flip_orientation(f);
   }
 
   //: Produce a clone of this object (dynamic copy)
-  virtual imesh_face_array_base* clone() const
+  imesh_face_array_base* clone() const override
   {
     return new imesh_face_array(*this);
   }
 
   //: Append this array of faces
   //  Optionally shift the indices in \param other by \param ind_shift
-  virtual void append(const imesh_face_array_base& other,
-                      unsigned int ind_shift=0);
+  void append(const imesh_face_array_base& other,
+                      unsigned int ind_shift=0) override;
 
   //: Add a face to the array
   void push_back(const std::vector<unsigned int>& f) { faces_.push_back(f); }
@@ -241,7 +243,7 @@ class imesh_regular_face_array : public imesh_face_array_base
 
  public:
   //: Default Constructor
-  imesh_regular_face_array<s>() {}
+  imesh_regular_face_array<s>() = default;
 
   //: Constructor
   imesh_regular_face_array<s>(unsigned int size) : faces_(size) {}
@@ -251,34 +253,34 @@ class imesh_regular_face_array : public imesh_face_array_base
 
   //: returns the number of vertices per face if the same for all faces
   //  Returns zero otherwise
-  virtual unsigned int regularity() const { return s; }
+  unsigned int regularity() const override { return s; }
 
   //: returns the number of faces
-  virtual unsigned int size() const { return faces_.size(); }
+  unsigned int size() const override { return faces_.size(); }
 
   //: returns the number of vertices in face \param f
-  virtual unsigned int num_verts(unsigned int /*f*/) const { return s; }
+  unsigned int num_verts(unsigned int /*f*/) const override { return s; }
 
   //: Access a vertex index by face index and within-face index
-  virtual unsigned int operator() (unsigned int f, unsigned int i) const { return faces_[f][i]; }
+  unsigned int operator() (unsigned int f, unsigned int i) const override { return faces_[f][i]; }
 
   //: Flip a face over, inverting its orientation
-  virtual void flip_orientation (unsigned int f)
+  void flip_orientation (unsigned int f) override
   {
     faces_[f].flip_orientation();
     imesh_face_array_base::flip_orientation(f);
   }
 
   //: Produce a clone of this object (dynamic copy)
-  virtual imesh_face_array_base* clone() const
+  imesh_face_array_base* clone() const override
   {
     return new imesh_regular_face_array<s>(*this);
   }
 
   //: Append this array of faces (must be the same type)
   //  Optionally shift the indices in \param other by \param ind_shift
-  virtual void append(const imesh_face_array_base& other,
-                      unsigned int ind_shift=0)
+  void append(const imesh_face_array_base& other,
+                      unsigned int ind_shift=0) override
   {
     imesh_face_array_base::append(other,ind_shift);
     assert(other.regularity() == s);
@@ -317,7 +319,7 @@ class imesh_regular_face_array : public imesh_face_array_base
 
 //: Merge the two face arrays
 //  Shift the mesh indices in \param f2 by \param ind_shift
-vcl_unique_ptr<imesh_face_array_base>
+std::unique_ptr<imesh_face_array_base>
 imesh_merge(const imesh_face_array_base& f1,
             const imesh_face_array_base& f2,
             unsigned int ind_shift=0);

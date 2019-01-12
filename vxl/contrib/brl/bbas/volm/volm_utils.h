@@ -17,7 +17,9 @@
 #include <vgl/vgl_box_2d.h>
 #include <vgl/vgl_polygon.h>
 #include <vgl/vgl_intersection.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class volm_utils
 {
@@ -38,7 +40,7 @@ public:
   static std::string volm_src_root();
 
 private:  // only static function in this class: disallow instantiation
-  volm_utils();
+  volm_utils() = delete;
 };
 
 #define VOLM_UTILS_INSTANTIATE(T) extern "Please #include <volm/volm_utils.hxx>"

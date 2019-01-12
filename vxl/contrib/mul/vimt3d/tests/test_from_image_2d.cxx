@@ -1,7 +1,9 @@
 // This is mul/vimt3d/tests/test_from_image_2d.cxx
 #include <iostream>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vxl_config.h>
 #include <vimt3d/vimt3d_from_image_2d.h>
 
@@ -51,4 +53,3 @@ static void test_from_image_2d()
 //
 //========================================================================
 TESTMAIN(test_from_image_2d);
-

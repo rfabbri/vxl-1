@@ -20,7 +20,9 @@
 #include <vgui/vgui_loader_tableau.h>
 #include <vgui/vgui_deck_tableau.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 vgui_deck_tableau_new   deck;
 vgui_loader_tableau_new load(deck);
@@ -37,7 +39,7 @@ void keyboard(unsigned char k, int, int)
 void idle()
 {
   static std::time_t last = 0;
-  std::time_t now = time(VXL_NULLPTR);
+  std::time_t now = time(nullptr);
   if (now > last) {
     // Advance the deck
     deck->next();

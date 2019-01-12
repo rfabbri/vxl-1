@@ -7,8 +7,10 @@
 // \brief Simple object to build histogram from supplied data.
 // \author Tim Cootes
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vsl/vsl_vector_io.h>
 
 mbl_histogram::mbl_histogram()
@@ -41,7 +43,7 @@ void mbl_histogram::clear()
   n_obs_ = 0;
   n_below_ = 0;
   n_above_ = 0;
-  for (unsigned int i=0;i<freq_.size();++i) freq_[i]=0;
+  for (int & i : freq_) i=0;
 }
 
 void mbl_histogram::obs(double v)

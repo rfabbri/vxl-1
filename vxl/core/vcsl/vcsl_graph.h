@@ -19,7 +19,9 @@
 #include <vbl/vbl_ref_count.h>
 #include <vcsl/vcsl_graph_sptr.h>
 #include <vcsl/vcsl_spatial_sptr.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Spatial coordinate system transformation graph
 // Graph where nodes are spatial coordinate systems and arrows are
@@ -34,13 +36,13 @@ class vcsl_graph
   //***************************************************************************
 
   // Default constructor
-  vcsl_graph() {}
+  vcsl_graph() = default;
 
   // Copy constructor
   vcsl_graph(vcsl_graph const& x) : vbl_ref_count(), vertices_(x.vertices_) {}
 
   // Destructor
-  ~vcsl_graph() {}
+  ~vcsl_graph() override = default;
 
   //***************************************************************************
   // Measurement

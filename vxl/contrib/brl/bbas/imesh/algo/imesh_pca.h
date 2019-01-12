@@ -16,8 +16,10 @@
 #include <iostream>
 #include <vector>
 #include <imesh/imesh_mesh.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_matrix.h>
 #include <vpgl/vpgl_proj_camera.h>
@@ -28,7 +30,7 @@ class imesh_pca_mesh : public imesh_mesh
 {
  public:
   //: Default Constructor
-  imesh_pca_mesh() {}
+  imesh_pca_mesh() = default;
 
   //: Constructor from a vector of meshes with the same topology
   imesh_pca_mesh(const std::vector<imesh_mesh>& meshes);
@@ -101,7 +103,7 @@ class imesh_pca_mesh : public imesh_mesh
 
   vnl_vector<double> std_devs_;
   vnl_matrix<double> pc_;
-  vcl_unique_ptr<imesh_vertex_array_base> mean_verts_;
+  std::unique_ptr<imesh_vertex_array_base> mean_verts_;
 
   vnl_vector<double> params_;
 };

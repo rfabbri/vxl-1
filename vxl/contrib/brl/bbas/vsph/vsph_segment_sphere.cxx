@@ -5,11 +5,13 @@
 #include "vsph_segment_sphere.h"
 //:
 // \file
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vnl/vnl_math.h>
 #include <vbl/vbl_graph_partition.h>
 #include <vbl/vbl_edge.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 static void random_rgb(float& r, float&g, float& b)
 {
@@ -40,9 +42,8 @@ void vsph_segment_sphere::smooth_data()
         unsigned nn = neighbors.size();
         if (nn == 0) continue;
         double weight_sum = static_cast<double>(nn)*neigh_weight + 1.0;
-        for (std::set<int>::iterator nit = neighbors.begin();
-             nit != neighbors.end(); ++nit)
-            sum += neigh_weight*data_[*nit];
+        for (const auto & neighbor : neighbors)
+            sum += neigh_weight*data_[neighbor];
 
         sum /= weight_sum;
         smooth_data_[i]=sum;
@@ -107,8 +108,8 @@ double vsph_segment_sphere::region_mean(int id)
 {
     std::vector<int>  region = regions_[id];
     double sum = 0.0;
-    for (unsigned int i = 0; i<region.size(); ++i)
-        sum += data_[region[i]];
+    for (int i : region)
+        sum += data_[i];
     if (region.size() > 0)
         return sum/region.size();
     else return 0.0;
@@ -119,8 +120,9 @@ double vsph_segment_sphere::region_median(int id)
 {
     std::vector<double> vals;
     std::vector<int>  region = regions_[id];
-    for (unsigned int i = 0; i<region.size(); ++i)
-        vals.push_back( data_[region[i]] );
+    vals.reserve(region.size());
+for (int i : region)
+        vals.push_back( data_[i] );
     std::sort(vals.begin(), vals.end());
     if ( vals.size() > 0)
         return vals[vals.size()/2];
@@ -132,11 +134,11 @@ std::vector<double> vsph_segment_sphere::region_data() const
 {
     if (!seg_valid_) return std::vector<double>();
     std::vector<double> rdata(data_.size());
-    std::map<int,  std::vector<int> >::const_iterator rit = regions_.begin();
+    auto rit = regions_.begin();
     for (; rit != regions_.end(); ++rit) {
         const std::vector<int>& pt_ids = rit->second;
         int n = pt_ids.size();
-        double dn = static_cast<double>(n);
+        auto dn = static_cast<double>(n);
         if (dn == 0.0) dn = 1.0;
         double sum = 0.0;
         for (int i = 0; i<n; ++i)
@@ -152,7 +154,7 @@ std::vector<std::vector<float> > vsph_segment_sphere::region_color() const
 {
     if (!seg_valid_) return std::vector<std::vector<float> >();
     std::vector<std::vector<float> > cdata(data_.size());
-    std::map<int,  std::vector<int> >::const_iterator rit = regions_.begin();
+    auto rit = regions_.begin();
     for (; rit != regions_.end(); ++rit) {
         const std::vector<int>& pt_ids = rit->second;
         float r, g, b;
@@ -172,7 +174,7 @@ bool vsph_segment_sphere::extract_region_bounding_boxes()
     if (!usph_.neighbors_valid())
         usph_.find_neighbors();
     const std::vector<vsph_sph_point_2d>& spts = usph_.sph_points_ref();
-    std::map<int,  std::vector<int> >::iterator rit = regions_.begin();
+    auto rit = regions_.begin();
     for (; rit != regions_.end(); ++rit) {
         int reg_set_id = rit->first;
         std::vector<int>& rays = rit->second;
@@ -182,7 +184,7 @@ bool vsph_segment_sphere::extract_region_bounding_boxes()
         for (int i = 0; i<n&&!done; ++i) {
             int ray = rays[i];
             std::set<int> neigh = usph_.neighbors(ray);
-            for (std::set<int>::iterator nit = neigh.begin();
+            for (auto nit = neigh.begin();
                  nit != neigh.end()&&!done; ++nit) {
                 int nid = *nit;
                 int nbr_set_id = ds_.find_set(nid);

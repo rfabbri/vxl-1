@@ -14,8 +14,10 @@
 
 //=======================================================================
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_vector_ref.h>
 #include <vnl/algo/vnl_lbfgs.h>
 #include <clsfy/clsfy_logit_loss_function.h>
@@ -70,7 +72,7 @@ double clsfy_binary_hyperplane_logit_builder::build(clsfy_classifier_base& class
   }
 
   assert(classifier.is_a()=="clsfy_binary_hyperplane");
-  clsfy_binary_hyperplane& plane = static_cast<clsfy_binary_hyperplane&>(classifier);
+  auto& plane = static_cast<clsfy_binary_hyperplane&>(classifier);
 
   // Set initial weights using initial LS hyperplane
   unsigned n_dim = plane.n_dims();
@@ -106,7 +108,7 @@ double clsfy_binary_hyperplane_logit_builder::build(clsfy_classifier_base& class
 
 void clsfy_binary_hyperplane_logit_builder::b_write(vsl_b_ostream &bfs) const
 {
-  const int version_no=1;
+  constexpr int version_no = 1;
   vsl_b_write(bfs, version_no);
   clsfy_binary_hyperplane_ls_builder::b_write(bfs);
   vsl_b_write(bfs,min_p_);
@@ -168,4 +170,3 @@ clsfy_builder_base* clsfy_binary_hyperplane_logit_builder::clone() const
 {
   return new clsfy_binary_hyperplane_logit_builder(*this);
 }
-

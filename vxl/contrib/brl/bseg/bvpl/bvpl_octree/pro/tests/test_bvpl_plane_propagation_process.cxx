@@ -33,7 +33,9 @@
 #include <bvpl/bvpl_octree/pro/bvpl_octree_processes.h>
 #include <vul/vul_file.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 static void test_bvpl_plane_propagation_process()
 {
@@ -99,7 +101,7 @@ static void test_bvpl_plane_propagation_process()
 
   // check if the results are in DB
   brdb_query_aptr Q = brdb_query_comp_new("id", brdb_query::EQ, id);
-  brdb_selection_sptr S = DATABASE->select("boxm_scene_base_sptr_data", vcl_move(Q));
+  brdb_selection_sptr S = DATABASE->select("boxm_scene_base_sptr_data", std::move(Q));
   if (S->size()!=1){
     std::cout << "in bprb_batch_process_manager::set_input_from_db(.) -"
              << " no selections\n";
@@ -109,14 +111,14 @@ static void test_bvpl_plane_propagation_process()
     std::cout << "in bprb_batch_process_manager::set_input_from_db(.) -"
              << " didn't get value\n";
   }
-  bool non_null = (value != VXL_NULLPTR);
+  bool non_null = (value != nullptr);
   TEST("the output scene non-null", non_null, true);
 
-  brdb_value_t<boxm_scene_base_sptr>* result=static_cast<brdb_value_t<boxm_scene_base_sptr>* >(value.ptr());
+  auto* result=static_cast<brdb_value_t<boxm_scene_base_sptr>* >(value.ptr());
   boxm_scene_base_sptr scene_sptr = result->value();
 
   // get the new scene with updated cells
-  scene_type *scene2 = static_cast<scene_type *>(scene_sptr.as_pointer());
+  auto *scene2 = static_cast<scene_type *>(scene_sptr.as_pointer());
   boxm_block_iterator<boct_tree<short,data_type > > iter2(scene2);
 
   bool obs_num_ok=true;
@@ -128,8 +130,8 @@ static void test_bvpl_plane_propagation_process()
 
     // get the leaf nodes and insert one plane to each
     std::vector<boct_tree_cell<short,data_type >*> nodes=tree->leaf_cells();
-    for (unsigned i=0; i<nodes.size(); i++) {
-      unsigned num=nodes[i]->data().num_obs();
+    for (auto & node : nodes) {
+      unsigned num=node->data().num_obs();
       // each node has 8 neighbors in the 3x3 neighborhood including itself
       if (num != 8)
         obs_num_ok = false;

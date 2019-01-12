@@ -56,7 +56,9 @@
 #include <list>
 #include <vector>
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_ref_count.h>
 #include <vbl/vbl_smart_ptr.h>
 
@@ -79,7 +81,7 @@ class bgrl2_graph : public vbl_ref_count
   bgrl2_graph() : vbl_ref_count(), vertices_(), edges_() {}
 
   //: Destructor
-  virtual ~bgrl2_graph() {}
+  ~bgrl2_graph() override = default;
 
   //-------------------------------------------------------------------
   // Standard Graph functions

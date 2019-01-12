@@ -8,14 +8,16 @@
 //
 #include <string>
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_ref_count.h>
 #include <bjson/bjson.h>
 class betr_params: public vbl_ref_count
 {
  public:
-  betr_params() {}
-  virtual ~betr_params() {}
+  betr_params() = default;
+  ~betr_params() override = default;
   //: check values of parameters to flag illegal values
   virtual bool sanity_check(std::string& errors) const = 0;
   virtual void serialize( Json::Value& root ) const = 0;

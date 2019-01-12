@@ -14,7 +14,9 @@
 #include <fstream>
 #include <bprb/bprb_func_process.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <boxm/boxm_scene_base.h>
 #include <boxm/boxm_scene.h>
@@ -27,8 +29,8 @@
 
 namespace boxm_generate_opt2_samples_process_globals
 {
-  const unsigned n_inputs_ = 7;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 7;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool boxm_generate_opt2_samples_process_cons(bprb_func_process& pro)
@@ -70,12 +72,12 @@ bool boxm_generate_opt2_samples_process(bprb_func_process& pro)
   vpgl_camera_double_sptr camera = pro.get_input<vpgl_camera_double_sptr>(1);
   boxm_scene_base_sptr scene = pro.get_input<boxm_scene_base_sptr>(2);
   std::string img_name =  pro.get_input<std::string>(3); // TODO - unused!!
-  float shadow_prior = pro.get_input<float>(4);
-  float shadow_sigma = pro.get_input<float>(5);
+  auto shadow_prior = pro.get_input<float>(4);
+  auto shadow_sigma = pro.get_input<float>(5);
   bool use_black_background =  pro.get_input<bool>(6);
 
   // check the input validity
-  if ((input_image == VXL_NULLPTR) || (camera == VXL_NULLPTR) || (scene == VXL_NULLPTR)) {
+  if ((input_image == nullptr) || (camera == nullptr) || (scene == nullptr)) {
     std::cout << "boxm_generate_opt2_samples_process: null input value, cannot run" << std::endl;
     return false;
   }
@@ -84,7 +86,7 @@ bool boxm_generate_opt2_samples_process(bprb_func_process& pro)
   {
    case BOXM_APM_SIMPLE_GREY:
     {
-      vil_image_view<vxl_byte> *img_byte = dynamic_cast<vil_image_view<vxl_byte>*>(input_image.ptr());
+      auto *img_byte = dynamic_cast<vil_image_view<vxl_byte>*>(input_image.ptr());
       vil_image_view<boxm_apm_traits<BOXM_APM_SIMPLE_GREY>::obs_datatype> img(img_byte->ni(), img_byte->nj(), 1);
       vil_convert_stretch_range_limited(*img_byte ,img, vxl_byte(0), vxl_byte(255), 0.0f, 1.0f);
       // create alternate appearance models
@@ -97,7 +99,7 @@ bool boxm_generate_opt2_samples_process(bprb_func_process& pro)
       }
       if (!scene->multi_bin()) {
         typedef boct_tree<short, boxm_sample<BOXM_APM_SIMPLE_GREY> > tree_type;
-        boxm_scene<tree_type> *s = static_cast<boxm_scene<tree_type>*> (scene.as_pointer());
+        auto *s = static_cast<boxm_scene<tree_type>*> (scene.as_pointer());
         boxm_generate_opt2_samples<short, boxm_sample<BOXM_APM_SIMPLE_GREY>, BOXM_AUX_OPT2_GREY >(*s, camera, img, img_name, alt_appearance_priors, alt_appearance_models, use_black_background);
       }
       else {
@@ -107,7 +109,7 @@ bool boxm_generate_opt2_samples_process(bprb_func_process& pro)
     }
    case BOXM_APM_MOG_GREY:
     {
-      vil_image_view<vxl_byte> *img_byte = dynamic_cast<vil_image_view<vxl_byte>*>(input_image.ptr());
+      auto *img_byte = dynamic_cast<vil_image_view<vxl_byte>*>(input_image.ptr());
       vil_image_view<boxm_apm_traits<BOXM_APM_MOG_GREY>::obs_datatype> img(img_byte->ni(), img_byte->nj(), 1);
       vil_convert_stretch_range_limited(*img_byte ,img, vxl_byte(0), vxl_byte(255), 0.0f, 1.0f);
       // create alternate appearance models
@@ -123,7 +125,7 @@ bool boxm_generate_opt2_samples_process(bprb_func_process& pro)
       }
       if (!scene->multi_bin()) {
         typedef boct_tree<short, boxm_sample<BOXM_APM_MOG_GREY> > tree_type;
-        boxm_scene<tree_type> *s = static_cast<boxm_scene<tree_type>*> (scene.as_pointer());
+        auto *s = static_cast<boxm_scene<tree_type>*> (scene.as_pointer());
         boxm_generate_opt2_samples<short, boxm_sample<BOXM_APM_MOG_GREY>, BOXM_AUX_OPT2_GREY >(*s, camera, img, img_name, alt_appearance_priors, alt_appearance_models, use_black_background);
       }
       else {

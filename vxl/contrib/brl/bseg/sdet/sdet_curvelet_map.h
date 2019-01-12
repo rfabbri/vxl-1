@@ -20,7 +20,9 @@
 #include <vector>
 #include <iostream>
 #include <list>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <sdet/sdet_edgel.h>
 #include <sdet/sdet_curvelet.h>
@@ -71,7 +73,7 @@ public:
     bidirectional_(bidir)
   {}
 
-  ~sdet_curvelet_params(){}
+  ~sdet_curvelet_params()= default;
 };
 
 //: This class stores the map of curvelets formed by the SEL edge linker.
@@ -93,7 +95,7 @@ public:
   std::vector<sdet_curvelet_list > map2_;
 
   //: constructor
-  sdet_curvelet_map(sdet_edgemap_sptr EM=VXL_NULLPTR, sdet_curvelet_params params=sdet_curvelet_params());
+  sdet_curvelet_map(const sdet_edgemap_sptr& EM=nullptr, sdet_curvelet_params params=sdet_curvelet_params());
 
   //: destructor
   ~sdet_curvelet_map();

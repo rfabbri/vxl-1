@@ -7,8 +7,10 @@
 // \author Tim Cootes
 
 #include <vil/vil_fill.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 //: Compute distance function from zeros in original image
 //  Image is assumed to be filled with max_dist where there
@@ -243,4 +245,3 @@ void vil_distance_transform_r2(vil_image_view<float>& image)
                                    image.nplanes());
   vil_distance_transform_r2_one_way(flip_image);
 }
-

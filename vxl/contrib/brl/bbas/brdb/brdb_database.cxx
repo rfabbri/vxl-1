@@ -11,8 +11,10 @@
 //   <none yet>
 // \endverbatim
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <brdb/brdb_tuple.h>
 #include <brdb/brdb_relation.h>
 #include <brdb/brdb_selection.h>
@@ -20,8 +22,7 @@
 
 //: Constructor - create an empty database;
 brdb_database::brdb_database()
-{
-}
+= default;
 
 //: Constructor - create a database populated with relations
 brdb_database::brdb_database(std::vector<brdb_relation_sptr> relations, std::vector<std::string> relation_names)
@@ -33,8 +34,8 @@ brdb_database::brdb_database(std::vector<brdb_relation_sptr> relations, std::vec
   assert(std::set<std::string>(relation_names.begin(), relation_names.end()).size() == relation_names.size());
 
   // fill the relations_
-  std::vector<brdb_relation_sptr>::iterator relations_itr = relations.begin();
-  std::vector<std::string>::iterator relation_name_itr = relation_names.begin();
+  auto relations_itr = relations.begin();
+  auto relation_name_itr = relation_names.begin();
   for (; (relations_itr != relations.end()) && (relation_name_itr != relation_names.end()); ++relations_itr, ++relation_name_itr)
   {
     relations_[*relation_name_itr] = *relations_itr;
@@ -66,7 +67,7 @@ brdb_database::exists(const std::string& name) const
   if (empty())
     return false;
 
-  std::map<std::string, brdb_relation_sptr>::const_iterator itr = relations_.find(name);
+  auto itr = relations_.find(name);
   return itr != relations_.end();
 }
 
@@ -79,7 +80,7 @@ brdb_database::exists(const std::string& relation_name,
   if (empty())
     return false;
 
-  std::map<std::string, brdb_relation_sptr>::const_iterator itr = relations_.find(relation_name);
+  auto itr = relations_.find(relation_name);
   if (itr == relations_.end())
     return false;
 
@@ -91,7 +92,7 @@ brdb_database::exists(const std::string& relation_name,
 bool
 brdb_database::add_tuple(const std::string& name, const brdb_tuple_sptr& new_tuple)
 {
-  std::map<std::string, brdb_relation_sptr>::iterator itr = relations_.find(name);
+  auto itr = relations_.find(name);
   if (itr == relations_.end())
   {
     std::cerr << "Database warning: trying to add new tuple to an unknown relation: "
@@ -107,7 +108,7 @@ brdb_database::add_tuple(const std::string& name, const brdb_tuple_sptr& new_tup
 bool
 brdb_database::remove_relation(const std::string& name)
 {
-  std::map<std::string, brdb_relation_sptr>::iterator itr = relations_.find(name);
+  auto itr = relations_.find(name);
   if (itr == relations_.end())
   {
     std::cerr << "Database warning: trying to delete a relation that does not exist: "
@@ -124,7 +125,7 @@ brdb_database::remove_relation(const std::string& name)
 bool
 brdb_database::clear_relation(const std::string& name)
 {
-  std::map<std::string, brdb_relation_sptr>::iterator itr = relations_.find(name);
+  auto itr = relations_.find(name);
   if (itr == relations_.end())
   {
     std::cerr << "Database warning: trying to clear a relation that does not exist: "
@@ -143,7 +144,7 @@ brdb_database::add_relation(const std::string& name, const brdb_relation_sptr& n
 {
   //std::cout << "Adding relation " << name << '\n';
 
-  std::map<std::string, brdb_relation_sptr>::iterator itr = relations_.find(name);
+  auto itr = relations_.find(name);
   if (itr != relations_.end())
   {
     std::cerr << "Database warning: trying to add a new relation " << name
@@ -159,9 +160,9 @@ brdb_database::add_relation(const std::string& name, const brdb_relation_sptr& n
 brdb_relation_sptr
 brdb_database::get_relation(const std::string& name) const
 {
-  std::map<std::string, brdb_relation_sptr>::const_iterator itr = relations_.find(name);
+  auto itr = relations_.find(name);
   if (itr == relations_.end())
-    return VXL_NULLPTR;
+    return nullptr;
   return itr->second;
 }
 
@@ -171,7 +172,7 @@ void
 brdb_database::print() const
 {
   std::cout << "\n<<<<<<<<<<<<<<<<<<<<---- Printing database ---->>>>>>>>>>>>>>>>>>>>>>>\n";
-  std::map<std::string, brdb_relation_sptr>::const_iterator itr = relations_.begin();
+  auto itr = relations_.begin();
   for (; itr != relations_.end(); itr++)
   {
     std::cout << "______________________________________________________________________\n"
@@ -188,9 +189,9 @@ brdb_database::get_all_relation_names() const
 {
   std::set<std::string> names;
 
-  for (std::map<std::string, brdb_relation_sptr>::const_iterator itr = relations_.begin(); itr != relations_.end(); ++itr)
+  for (const auto & relation : relations_)
   {
-    names.insert((*itr).first);
+    names.insert(relation.first);
   }
 
   return names;
@@ -201,14 +202,14 @@ brdb_database::get_all_relation_names() const
 brdb_relation_sptr
 brdb_database::join(const std::string& r1, const std::string& r2) const
 {
-  std::map<std::string, brdb_relation_sptr>::const_iterator find_r1 = relations_.find(r1);
-  std::map<std::string, brdb_relation_sptr>::const_iterator find_r2 = relations_.find(r2);
+  auto find_r1 = relations_.find(r1);
+  auto find_r2 = relations_.find(r2);
 
   if (find_r1 == relations_.end() || find_r2 == relations_.end())
   {
     std::cerr << "Database warning: trying to join relation that does not exist in database: "
              << r1 << " or " << r2 << std::endl;
-    return VXL_NULLPTR;
+    return nullptr;
   }
 
   return brdb_join(find_r1->second, find_r2->second);
@@ -219,7 +220,7 @@ brdb_database::join(const std::string& r1, const std::string& r2) const
 bool
 brdb_database::join(const std::string& r1, const std::string& r2, const std::string& result )
 {
-  std::map<std::string, brdb_relation_sptr>::iterator itr = relations_.find(result);
+  auto itr = relations_.find(result);
   if (itr != relations_.end()){
     return false;
   }
@@ -239,12 +240,12 @@ brdb_database::select(const std::string& relation_name, brdb_query_aptr q) const
   if (!exists(relation_name)){
     std::cerr << "Database warning: trying to select in a nonexisting relation: "
              << relation_name << std::endl;
-    return VXL_NULLPTR;
+    return nullptr;
   }
 
   brdb_relation_sptr relation = this->get_relation(relation_name);
 
-  return new brdb_selection(relation, vcl_move(q) );
+  return new brdb_selection(relation, std::move(q) );
 }
 
 
@@ -270,26 +271,25 @@ brdb_database::merge(const brdb_database_sptr& other)
   r_map new_relations(this->relations_);
 
   // for each relation in the other database
-  for (r_map::iterator oi = other->relations_.begin();
-       oi!=other->relations_.end(); ++oi)
+  for (auto & relation : other->relations_)
   {
     // look for a relation with the same name in this database
-    r_map::iterator ti = new_relations.find(oi->first);
+    auto ti = new_relations.find(relation.first);
     // if not found
     if (ti == this->relations_.end())
     {
-      new_relations.insert(*oi);
+      new_relations.insert(relation);
       continue;
     }
 
     // test for compatibility of relations
-    if (!ti->second->is_compatible(oi->second))
+    if (!ti->second->is_compatible(relation.second))
       return false;
 
     // copy the old relation and merge tuples
     // if later merging fails, the original tuple is not modified
     brdb_relation_sptr new_relation = new brdb_relation(*ti->second);
-    if (!new_relation->merge(oi->second))
+    if (!new_relation->merge(relation.second))
       return false;
 
     new_relations[ti->first] = new_relation;
@@ -362,4 +362,3 @@ void brdb_database::b_read(vsl_b_istream is)
     }
   }
 }
-

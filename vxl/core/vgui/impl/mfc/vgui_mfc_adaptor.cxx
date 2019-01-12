@@ -15,7 +15,9 @@
 //                          - Set event.ascii_char to be the actual key stroke.
 // \endverbatim
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vgui/vgui_gl.h>
 #include <vgui/vgui_event.h>
@@ -747,4 +749,3 @@ BOOL vgui_mfc_adaptor::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 #endif
   return FALSE;
 }
-

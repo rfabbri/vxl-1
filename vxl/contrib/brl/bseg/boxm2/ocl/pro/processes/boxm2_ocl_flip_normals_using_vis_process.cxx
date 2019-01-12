@@ -14,7 +14,9 @@
 // \author Ali Osman Ulusoy
 // \date Oct 10, 2011
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/ocl/boxm2_opencl_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -32,14 +34,14 @@
 
 namespace boxm2_ocl_flip_normals_using_vis_process_globals
 {
-  const unsigned n_inputs_  = 4;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 4;
+  constexpr unsigned n_outputs_ = 0;
   enum {
       COMPUTE_VIS = 0,
       DECIDE_NORMAL = 1
   };
 
-  void compile_kernel(bocl_device_sptr device,std::vector<bocl_kernel*> & vec_kernels,std::string opts)
+  void compile_kernel(const bocl_device_sptr& device,std::vector<bocl_kernel*> & vec_kernels,const std::string& opts)
   {
     //gather all render sources... seems like a lot for rendering...
     std::vector<std::string> src_paths;
@@ -57,12 +59,12 @@ namespace boxm2_ocl_flip_normals_using_vis_process_globals
     //compilation options
     std::string options = opts+ "-D INTENSITY ";
 
-    bocl_kernel* compute_vis = new bocl_kernel();
+    auto* compute_vis = new bocl_kernel();
     std::string seg_opts = options + "-D COMPVIS -D STEP_CELL=step_cell_computevis(aux_args,data_ptr,llid,d)";
     compute_vis->create_kernel(&device->context(),device->device_id(), src_paths, "compute_vis", seg_opts, "compute_vis");
     vec_kernels.push_back(compute_vis);
 
-    bocl_kernel* decide_normal_dir = new bocl_kernel();
+    auto* decide_normal_dir = new bocl_kernel();
     decide_normal_dir->create_kernel(&device->context(),device->device_id(), src_paths, "decide_normal_dir", seg_opts, "decide_normal_dir");
     vec_kernels.push_back(decide_normal_dir);
     return ;
@@ -106,10 +108,10 @@ bool boxm2_ocl_flip_normals_using_vis_process(bprb_func_process& pro)
 
   //get the inputs
   unsigned i = 0;
-  bocl_device_sptr         device       = pro.get_input<bocl_device_sptr>(i++);
-  boxm2_scene_sptr         scene        = pro.get_input<boxm2_scene_sptr>(i++);
+  bocl_device_sptr         device = pro.get_input<bocl_device_sptr>(i++);
+  boxm2_scene_sptr         scene = pro.get_input<boxm2_scene_sptr>(i++);
   boxm2_opencl_cache_sptr  opencl_cache = pro.get_input<boxm2_opencl_cache_sptr>(i++);
-  bool use_sum = false;    use_sum      = pro.get_input<bool>(i++);
+  bool use_sum = false;    use_sum = pro.get_input<bool>(i++);
 
   //cache size sanity check
   long binCache = opencl_cache.ptr()->bytes_in_cache();
@@ -201,7 +203,7 @@ bool boxm2_ocl_flip_normals_using_vis_process(bprb_func_process& pro)
             //array to store visibilities computed around a sphere
             //ask for a new BOXM2_VIS_SPHERE data so that it gets initialized properly.
             std::size_t visTypeSize = boxm2_data_info::datasize(boxm2_data_traits<BOXM2_VIS_SPHERE>::prefix());
-            bocl_mem *vis_sphere   = opencl_cache->get_data_new<BOXM2_VIS_SPHERE>(scene,blk_iter->first, (normals->num_bytes()/normalsTypeSize)*visTypeSize, false);
+            bocl_mem *vis_sphere = opencl_cache->get_data_new<BOXM2_VIS_SPHERE>(scene,blk_iter->first, (normals->num_bytes()/normalsTypeSize)*visTypeSize, false);
 
             //zip through each block
             std::map<boxm2_block_id, boxm2_block_metadata>::iterator blk_iter_inner;
@@ -214,10 +216,10 @@ bool boxm2_ocl_flip_normals_using_vis_process(bprb_func_process& pro)
               //load tree and alpha
               boxm2_block_metadata mdata = blk_iter_inner->second;
               vul_timer transfer;
-              bocl_mem* blk       = opencl_cache->get_block(scene,blk_iter_inner->first);
-              bocl_mem* blk_info  = opencl_cache->loaded_block_info();
-              bocl_mem* alpha     = opencl_cache->get_data<BOXM2_ALPHA>(scene,blk_iter_inner->first,0,false);
-              boxm2_scene_info* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
+              bocl_mem* blk = opencl_cache->get_block(scene,blk_iter_inner->first);
+              bocl_mem* blk_info = opencl_cache->loaded_block_info();
+              bocl_mem* alpha = opencl_cache->get_data<BOXM2_ALPHA>(scene,blk_iter_inner->first,0,false);
+              auto* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
               int alphaTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_ALPHA>::prefix());
               info_buffer->data_buffer_length = (int) (alpha->num_bytes()/alphaTypeSize);
               blk_info->write_to_buffer((queue));
@@ -272,8 +274,8 @@ bool boxm2_ocl_flip_normals_using_vis_process(bprb_func_process& pro)
           boxm2_block_metadata mdata = blk_iter->second;
           vul_timer transfer;
           /* bocl_mem* blk = */ opencl_cache->get_block(scene,blk_iter->first);
-          bocl_mem* blk_info  = opencl_cache->loaded_block_info();
-          boxm2_scene_info* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
+          bocl_mem* blk_info = opencl_cache->loaded_block_info();
+          auto* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
           info_buffer->data_buffer_length = (int) (normals->num_bytes()/normalsTypeSize);
           blk_info->write_to_buffer((queue));
 
@@ -281,7 +283,7 @@ bool boxm2_ocl_flip_normals_using_vis_process(bprb_func_process& pro)
           bocl_mem* vis_sphere = opencl_cache->get_data<BOXM2_VIS_SPHERE>(scene,blk_iter->first,0,false);
 
           //array to store final visibility score of a point
-          bocl_mem* vis   = opencl_cache->get_data<BOXM2_VIS_SCORE>(scene,blk_iter->first, (normals->num_bytes()/normalsTypeSize)
+          bocl_mem* vis = opencl_cache->get_data<BOXM2_VIS_SCORE>(scene,blk_iter->first, (normals->num_bytes()/normalsTypeSize)
                                                   *boxm2_data_info::datasize(boxm2_data_traits<BOXM2_VIS_SCORE>::prefix()),false);
 
           transfer_time += (float) transfer.all();

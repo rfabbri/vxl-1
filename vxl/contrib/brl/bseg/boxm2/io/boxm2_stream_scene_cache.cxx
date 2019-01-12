@@ -1,15 +1,18 @@
 #include <new>
 #include <iostream>
+#include <utility>
 #include "boxm2_stream_scene_cache.h"
 //:
 // \file
 #include <vgl/vgl_box_3d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
-boxm2_stream_scene_cache::boxm2_stream_scene_cache(boxm2_scene_sptr scene,
+boxm2_stream_scene_cache::boxm2_stream_scene_cache(const boxm2_scene_sptr& scene,
                                                    std::vector<std::string> data_types,
                                                    std::vector<std::string> identifiers)
-: blk_buffer_(VXL_NULLPTR), scene_(scene), data_types_(data_types), identifiers_(identifiers)
+: blk_buffer_(nullptr), scene_(scene), data_types_(data_types), identifiers_(std::move(identifiers))
 {
   std::map<boxm2_block_id, boxm2_block_metadata> blocks = scene->blocks();
   std::map<boxm2_block_id, boxm2_block_metadata>::iterator blk_iter;
@@ -32,7 +35,7 @@ boxm2_stream_scene_cache::boxm2_stream_scene_cache(boxm2_scene_sptr scene,
   }
 
   blk_buffer_ = new(std::nothrow)  uchar16[total_bytes_per_block_];
-  if (blk_buffer_ == VXL_NULLPTR)
+  if (blk_buffer_ == nullptr)
   {
     std::cout<<"Failed to Allocate Memory"<<std::endl;
     return ;
@@ -82,7 +85,7 @@ boxm2_stream_scene_cache::boxm2_stream_scene_cache(boxm2_scene_sptr scene,
 
     total_bytes_per_data_[data_type]=total_bytes_per_data_type;
     char * data_buffer = new(std::nothrow)  char[total_bytes_per_data_type];
-    if (data_buffer == VXL_NULLPTR)
+    if (data_buffer == nullptr)
     {
       std::cout<<"Failed to Allocate Memory"<<std::endl;
       return ;
@@ -125,14 +128,13 @@ boxm2_stream_scene_cache::~boxm2_stream_scene_cache()
 // in iterative mode, the files need to be closed and re-opened
 
 //: Binary write boxm2_cache  to stream
-void vsl_b_write(vsl_b_ostream& os, boxm2_stream_scene_cache const& scene) {}
-void vsl_b_write(vsl_b_ostream& os, const boxm2_stream_scene_cache* &p) {}
-void vsl_b_write(vsl_b_ostream& os, boxm2_stream_scene_cache_sptr& sptr) {}
-void vsl_b_write(vsl_b_ostream& os, boxm2_stream_scene_cache_sptr const& sptr) {}
+void vsl_b_write(vsl_b_ostream&  /*os*/, boxm2_stream_scene_cache const&  /*scene*/) {}
+void vsl_b_write(vsl_b_ostream&  /*os*/, const boxm2_stream_scene_cache* & /*p*/) {}
+void vsl_b_write(vsl_b_ostream&  /*os*/, boxm2_stream_scene_cache_sptr&  /*sptr*/) {}
+void vsl_b_write(vsl_b_ostream&  /*os*/, boxm2_stream_scene_cache_sptr const&  /*sptr*/) {}
 
 //: Binary load boxm2_cache  from stream
-void vsl_b_read(vsl_b_istream& is, boxm2_stream_scene_cache &scene) {}
-void vsl_b_read(vsl_b_istream& is, boxm2_stream_scene_cache* p) {}
-void vsl_b_read(vsl_b_istream& is, boxm2_stream_scene_cache_sptr& sptr) {}
-void vsl_b_read(vsl_b_istream& is, boxm2_stream_scene_cache_sptr const& sptr) {}
-
+void vsl_b_read(vsl_b_istream&  /*is*/, boxm2_stream_scene_cache & /*scene*/) {}
+void vsl_b_read(vsl_b_istream&  /*is*/, boxm2_stream_scene_cache*  /*p*/) {}
+void vsl_b_read(vsl_b_istream&  /*is*/, boxm2_stream_scene_cache_sptr&  /*sptr*/) {}
+void vsl_b_read(vsl_b_istream&  /*is*/, boxm2_stream_scene_cache_sptr const&  /*sptr*/) {}

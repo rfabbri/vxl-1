@@ -3,7 +3,9 @@
 //:
 // \file
 #include <sys/stat.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_image_resource.h>
 #include <vil/vil_blocked_image_resource.h>
 #include <vil/vil_pyramid_image_resource.h>
@@ -16,7 +18,7 @@ bool vil_image_list::vil_is_directory(char const* fn)
   return stat(fn, &fs) == 0 && (fs.st_mode & S_IFMT) == S_IFDIR;
 }
 
-#if defined(VCL_WIN32) && !defined(__CYGWIN__)
+#if defined(_WIN32) && !defined(__CYGWIN__)
 #include <io.h>
 std::vector<std::string> vil_image_list::files()
 {
@@ -54,7 +56,7 @@ std::vector<std::string> vil_image_list::files()
 
   return temp;
 }
-#else // !defined(VCL_WIN32) || defined(__CYGWIN__)
+#else // !defined(_WIN32) || defined(__CYGWIN__)
 
 #include <dirent.h>
 std::vector<std::string> vil_image_list::files()
@@ -65,7 +67,7 @@ std::vector<std::string> vil_image_list::files()
   DIR* dir_handle = opendir(directory_.c_str());
   dirent* de;
   de = readdir(dir_handle);
-  if (de==VXL_NULLPTR)
+  if (de==nullptr)
     return temp;
   std::string s = de->d_name;
   std::string filename = directory_+ "/" + s;
@@ -79,7 +81,7 @@ std::vector<std::string> vil_image_list::files()
   while ( true )
   {
     de = readdir(dir_handle);
-    if (de == VXL_NULLPTR) {
+    if (de == nullptr) {
       closedir(dir_handle);
       return temp;
     }
@@ -96,15 +98,14 @@ std::vector<std::string> vil_image_list::files()
   return temp;
 }
 
-#endif // !defined(VCL_WIN32) || defined(__CYGWIN__)
+#endif // !defined(_WIN32) || defined(__CYGWIN__)
 std::vector<vil_image_resource_sptr> vil_image_list::resources()
 {
   std::vector<vil_image_resource_sptr>  temp;
   std::vector<std::string> fs = this->files();
-  for (std::vector<std::string>::iterator fit = fs.begin();
-       fit != fs.end(); ++fit)
+  for (auto & f : fs)
   {
-    vil_image_resource_sptr resc = vil_load_image_resource((*fit).c_str(), il_verbose);
+    vil_image_resource_sptr resc = vil_load_image_resource(f.c_str(), il_verbose);
     if (resc)
       temp.push_back(resc);
   }
@@ -115,10 +116,9 @@ std::vector<vil_image_resource_sptr> vil_image_list::blocked_resources()
 {
   std::vector<vil_image_resource_sptr>  temp;
   std::vector<std::string> fs = this->files();
-  for (std::vector<std::string>::iterator fit = fs.begin();
-       fit != fs.end(); ++fit)
+  for (auto & f : fs)
   {
-    vil_image_resource_sptr resc = vil_load_image_resource((*fit).c_str(), il_verbose);
+    vil_image_resource_sptr resc = vil_load_image_resource(f.c_str(), il_verbose);
     vil_image_resource_sptr bir = blocked_image_resource(resc).ptr();
     if (bir)
       temp.push_back(bir);
@@ -130,20 +130,19 @@ std::vector<vil_image_resource_sptr> vil_image_list::pyramids()
 {
   std::vector<vil_image_resource_sptr>  temp;
   std::vector<std::string> fs = this->files();
-  for (std::vector<std::string>::iterator fit = fs.begin();
-       fit != fs.end(); ++fit)
+  for (auto & f : fs)
   {
     vil_pyramid_image_resource_sptr pyr =
-      vil_load_pyramid_resource((*fit).c_str(), il_verbose);
+      vil_load_pyramid_resource(f.c_str(), il_verbose);
     if (pyr)
-      temp.push_back(pyr.ptr());
+      temp.emplace_back(pyr.ptr());
   }
   return temp;
 }
 //:remove a file
 bool vil_image_list::remove_file(std::string& filename)
 {
-#if defined(VCL_WIN32) && !defined(__CYGWIN__)
+#if defined(_WIN32) && !defined(__CYGWIN__)
   std::string command = "del " + filename;
 #else
   std::string command = "rm " + filename;
@@ -157,9 +156,8 @@ bool vil_image_list::clean_directory()
   std::vector<std::string> filez = this->files();
   bool good = true;
   std::cout << "starting to remove ..\n";
-  for (std::vector<std::string>::iterator fit = filez.begin();
-       fit != filez.end(); ++fit)
-    if (!this->remove_file(*fit))
+  for (auto & fit : filez)
+    if (!this->remove_file(fit))
       good = false;
   std::cout << "finished remove ..\n";
   return good;

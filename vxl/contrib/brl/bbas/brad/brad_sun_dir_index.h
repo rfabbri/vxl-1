@@ -23,7 +23,9 @@
 #include <iosfwd>
 #include <bbas/bsta/bsta_spherical_histogram.h>
 #include <vnl/vnl_double_3.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class brad_sun_dir_index
 {
@@ -42,7 +44,7 @@ class brad_sun_dir_index
     cone_axes_(sun_dir_bin_centers), cone_half_angle_(0.0){
     bin_radius_ = ((int)sun_dir_bin_centers.size()-1)/2;}
 
-  ~brad_sun_dir_index(){}
+  ~brad_sun_dir_index()= default;
 
   //: uses standard definion of sun azimuth and elevation, i.e. elevation zero tangent plane, increasing to nadir and azimuth zero at North and increasing to East, angles in degrees.
   int index(double geo_sun_azimuth, double geo_sun_elevation, double & min_angle) ;
@@ -67,7 +69,7 @@ class brad_sun_dir_index
   //: output a vrml display of the major path and the bin axis positions on sun direction sphere
   void print_to_vrml(std::ostream& os);
  private:
-  brad_sun_dir_index();//no default constructor
+  brad_sun_dir_index() = delete;//no default constructor
   //: the histogram of sun directions for the specified location and collection time
   double longitude_deg_;
   double latitude_deg_;

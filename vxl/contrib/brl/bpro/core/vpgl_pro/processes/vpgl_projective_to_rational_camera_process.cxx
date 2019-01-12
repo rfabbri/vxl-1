@@ -6,7 +6,9 @@
 // \file
 // \brief A process to convert perspective camera to rational camera.
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpgl/vpgl_camera.h>
 #include <vpgl/vpgl_proj_camera.h>
 #include <vpgl/vpgl_rational_camera.h>
@@ -20,12 +22,12 @@ bool vpgl_projective_to_rational_camera_process_cons(bprb_func_process& pro)
   //this process takes one input: the filename
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("vpgl_camera_double_sptr");
+  input_types.emplace_back("vpgl_camera_double_sptr");
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   std::vector<std::string> output_types;
-  output_types.push_back("vpgl_camera_double_sptr");  // label image
+  output_types.emplace_back("vpgl_camera_double_sptr");  // label image
   ok = pro.set_output_types(output_types);
   if (!ok) return ok;
 
@@ -42,7 +44,7 @@ bool vpgl_projective_to_rational_camera_process(bprb_func_process& pro)
 
   // get the inputs
   vpgl_camera_double_sptr camera = pro.get_input<vpgl_camera_double_sptr>(0);
-  if (vpgl_proj_camera<double>* cam = dynamic_cast<vpgl_proj_camera<double>*>(camera.ptr()))
+  if (auto* cam = dynamic_cast<vpgl_proj_camera<double>*>(camera.ptr()))
   {
     vpgl_rational_camera<double> rat_cam=projective_to_rational(*cam);
 

@@ -10,7 +10,9 @@
 #include <vector>
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_random.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class rrel_objective;
 class rrel_estimation_problem;

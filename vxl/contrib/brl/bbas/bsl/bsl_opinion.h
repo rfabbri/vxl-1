@@ -20,7 +20,9 @@
 #include <limits>
 #include <cmath>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class bsl_opinion
 {
@@ -36,7 +38,7 @@ class bsl_opinion
   bsl_opinion(bsl_opinion const& o) : u_(o.u()), b_(o.b()), a_(o.a()) {}
 
   //: destructor
-  ~bsl_opinion() {}
+  ~bsl_opinion() = default;
 
   float u() const { return u_; }
 
@@ -101,4 +103,3 @@ inline std::ostream& operator<< (std::ostream& s, bsl_opinion const& o) { s << "
 
 
 #endif
-

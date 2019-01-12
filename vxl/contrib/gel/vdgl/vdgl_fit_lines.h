@@ -23,7 +23,9 @@
 //-------------------------------------------------------------------------
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/algo/vgl_fit_lines_2d.h>
 #include <vsol/vsol_line_2d_sptr.h>
 #include <vdgl/vdgl_digital_curve_sptr.h>
@@ -40,7 +42,7 @@ class vdgl_fit_lines : public vdgl_fit_lines_params
   vdgl_fit_lines(vdgl_fit_lines_params& flp)
   : vdgl_fit_lines_params(flp), fitter_(vgl_fit_lines_2d<double>()) {}
 
-  ~vdgl_fit_lines() {}
+  ~vdgl_fit_lines() override = default;
 
   //: Set the curves to be processed
   void set_curves(std::vector<vdgl_digital_curve_sptr> const& curves) { line_segs_.clear(); curves_=curves; }

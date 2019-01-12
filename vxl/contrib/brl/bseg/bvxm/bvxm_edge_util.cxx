@@ -7,7 +7,9 @@
 
 #include "bvxm_util.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpgl/vpgl_camera.h>
 #include <vnl/vnl_double_3x3.h>
 #include <vnl/vnl_double_3x1.h>
@@ -27,7 +29,7 @@
 #include <vnl/algo/vnl_chi_squared.h>
 #include <bsta/bsta_gaussian_sphere.h>
 #include <brip/brip_vil_float_ops.h>
-#include <vcl_cassert.h>
+#include <cassert>
 
 vil_image_view<float> bvxm_edge_util::multiply_image_with_gaussian_kernel(vil_image_view<float> img, double gaussian_sigma)
 {
@@ -78,9 +80,9 @@ vil_image_view<vxl_byte> bvxm_edge_util::detect_edges(vil_image_view<vxl_byte> i
   img_edge.fill(0);
 
   // iterate over each connected edge component
-  for (std::vector<vtol_edge_2d_sptr>::iterator eit = edges->begin(); eit != edges->end(); eit++)
+  for (auto & edge : *edges)
   {
-    vsol_curve_2d_sptr c = (*eit)->curve();
+    vsol_curve_2d_sptr c = edge->curve();
     vdgl_digital_curve_sptr dc = c->cast_to_vdgl_digital_curve();
     if (!dc)
       continue;
@@ -138,15 +140,14 @@ void bvxm_edge_util::edge_distance_transform(vil_image_view<vxl_byte>& inp_image
   }
 }
 
-int bvxm_edge_util::convert_uncertainty_from_meters_to_pixels(float uncertainty, vpgl_lvcs_sptr lvcs, vpgl_camera_double_sptr camera)
+int bvxm_edge_util::convert_uncertainty_from_meters_to_pixels(float uncertainty, const vpgl_lvcs_sptr& lvcs, const vpgl_camera_double_sptr& camera)
 {
   // estimate the offset search size in the image space
   vgl_box_3d<double> box_uncertainty(-uncertainty,-uncertainty,-uncertainty,uncertainty,uncertainty,uncertainty);
   std::vector<vgl_point_3d<double> > box_uncertainty_corners = bvxm_util::corners_of_box_3d<double>(box_uncertainty);
-  vgl_box_2d<double>* roi_uncertainty = new vgl_box_2d<double>();
+  auto* roi_uncertainty = new vgl_box_2d<double>();
 
-  for (unsigned i=0; i<box_uncertainty_corners.size(); i++) {
-    vgl_point_3d<double> curr_corner = box_uncertainty_corners[i];
+  for (auto curr_corner : box_uncertainty_corners) {
     vgl_point_3d<double> curr_pt;
     if (camera->type_name()=="vpgl_local_rational_camera") {
       curr_pt.set(curr_corner.x(),curr_corner.y(),curr_corner.z());
@@ -229,4 +230,3 @@ void bvxm_edge_util::estimate_edge_prob_image(const vil_image_view<vxl_byte>& im
     }
   }
 }
-

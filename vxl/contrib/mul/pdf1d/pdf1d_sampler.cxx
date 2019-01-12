@@ -9,23 +9,22 @@
 #include "pdf1d_sampler.h"
 #include <pdf1d/pdf1d_pdf.h>
 #include <vsl/vsl_indent.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //=======================================================================
 // Dflt ctor
 //=======================================================================
 
-pdf1d_sampler::pdf1d_sampler()
-{
-}
+pdf1d_sampler::pdf1d_sampler() = default;
 
 //=======================================================================
 // Destructor
 //=======================================================================
 
-pdf1d_sampler::~pdf1d_sampler()
-{
-}
+pdf1d_sampler::~pdf1d_sampler() = default;
 
 
 //: Set model for which this is an instance
@@ -37,7 +36,7 @@ void pdf1d_sampler::set_model(const pdf1d_pdf& model)
 //: PDF of which this is an instance
 const pdf1d_pdf& pdf1d_sampler::model() const
 {
-  assert (pdf_model_ != VXL_NULLPTR);
+  assert (pdf_model_ != nullptr);
   return *pdf_model_;
 }
 
@@ -122,4 +121,3 @@ void vsl_print_summary(std::ostream& os,const pdf1d_sampler* b)
   else
     os << "No pdf1d_sampler defined.";
 }
-

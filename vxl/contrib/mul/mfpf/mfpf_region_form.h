@@ -5,10 +5,13 @@
 // \brief Defines pose and shape (box/ellipse etc) of a region
 // \author Tim Cootes
 
-#include <iostream>
 #include <cstdlib>
+#include <iostream>
+#include <utility>
 #include <mfpf/mfpf_pose.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Defines pose and shape (box/ellipse etc) of a region
 //  General purpose object.  form() gives shape (eg "box", "ellipse")
@@ -33,10 +36,10 @@ struct mfpf_region_form
   //: Constructor
   mfpf_region_form(const mfpf_pose& p, std::string form,
                    double wi, double wj)
-   : pose_(p),wi_(wi),wj_(wj),form_(form) {}
+   : pose_(p),wi_(wi),wj_(wj),form_(std::move(form)) {}
 
   //: Default constructor
-  mfpf_region_form() {}
+  mfpf_region_form() = default;
 
   //: Pose (position + scale/orientation)
   mfpf_pose& pose() { return pose_; }
@@ -104,8 +107,8 @@ inline void vsl_b_write(vsl_b_ostream& bfs,
 {
   vsl_b_write(bfs,short(1));  // Version number
   vsl_b_write(bfs,unsigned(p.size()));
-  for (unsigned i=0;i<p.size();++i)
-    vsl_b_write(bfs,p[i]);
+  for (const auto & i : p)
+    vsl_b_write(bfs,i);
 }
 
 //: Read in vector of feature points from stream

@@ -12,14 +12,16 @@
 
 #include <iostream>
 #include <iosfwd>
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_matrix.h>
 
 #include "rgrl_feature_sptr.h"
 #include "rgrl_feature_reader.h"
 #include "rgrl_object.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class rgrl_transformation;
 
@@ -44,7 +46,7 @@ class rgrl_feature
   }
 
   //:
-  virtual ~rgrl_feature() {}
+  ~rgrl_feature() override = default;
 
   //:  Apply a transformation to create a new feature.
   virtual
@@ -171,7 +173,7 @@ class rgrl_feature
 
  private:
   // disabled
-  rgrl_feature& operator=( rgrl_feature const& );
+  rgrl_feature& operator=( rgrl_feature const& ) = delete;
 };
 
 

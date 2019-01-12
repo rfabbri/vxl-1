@@ -23,7 +23,9 @@
 
 #include <brdb/brdb_value.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <boxm/sample/boxm_sample_multi_bin.h>
 #include <boxm/boxm_scene_parser.h>
@@ -33,8 +35,8 @@
 namespace boxm_init_scene_process_globals
 {
   //this process takes no outputs
-  const unsigned n_inputs_ = 1;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 1;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 //: sets input and output types
@@ -66,7 +68,7 @@ bool boxm_init_scene_process(bprb_func_process& pro)
   boxm_scene_base_sptr scene = pro.get_input<boxm_scene_base_sptr>(i++);
 
   // check the input validity
-  if (scene == VXL_NULLPTR) {
+  if (scene == nullptr) {
     std::cout << "boxm_init_scene_process: scene is null, cannot run" << std::endl;
     return false;
   }
@@ -74,7 +76,7 @@ bool boxm_init_scene_process(bprb_func_process& pro)
   if (scene->appearence_model() == BOXM_APM_MOG_GREY) {
     if (!scene->multi_bin()) {
       typedef boct_tree<short, boxm_sample<BOXM_APM_MOG_GREY> > tree_type;
-      boxm_scene<tree_type> *s = static_cast<boxm_scene<tree_type>*> (scene.as_pointer());
+      auto *s = static_cast<boxm_scene<tree_type>*> (scene.as_pointer());
       boxm_init_scene<BOXM_APM_MOG_GREY>(*s);
     }
   }
@@ -85,7 +87,7 @@ bool boxm_init_scene_process(bprb_func_process& pro)
     }
     else {
       typedef boct_tree<short, boxm_sample<BOXM_APM_SIMPLE_GREY> > tree_type;
-      boxm_scene<tree_type> *s = static_cast<boxm_scene<tree_type>*> (scene.as_pointer());
+      auto *s = static_cast<boxm_scene<tree_type>*> (scene.as_pointer());
       boxm_init_scene<BOXM_APM_SIMPLE_GREY>(*s);
     }
   }
@@ -96,7 +98,7 @@ bool boxm_init_scene_process(bprb_func_process& pro)
     }
     else {
       typedef boct_tree<short, boxm_sample<BOXM_APM_MOB_GREY> > tree_type;
-      boxm_scene<tree_type> *s = static_cast<boxm_scene<tree_type>*> (scene.as_pointer());
+      auto *s = static_cast<boxm_scene<tree_type>*> (scene.as_pointer());
       boxm_init_scene<BOXM_APM_MOB_GREY >(*s);
     }
   }

@@ -5,7 +5,9 @@
 #include <bprb/bprb_func_process.h>
 #include <brad/brad_eigenspace.h>
 #include <bpro/core/bbas_pro/bbas_1d_array_string.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_load.h>
 //:
 // \file
@@ -71,14 +73,13 @@ bool brad_compute_eigenspace_process(bprb_func_process& pro)
   bbas_1d_array_string_sptr paths =pro.get_input<bbas_1d_array_string_sptr>(1);
 
   //fraction of resource area to process
-  double frac = pro.get_input<double>(2);
+  auto frac = pro.get_input<double>(2);
 
   //tile dimensions
-  unsigned nit = pro.get_input<unsigned>(3);
-  unsigned njt = pro.get_input<unsigned>(4);
+  auto nit = pro.get_input<unsigned>(3);
+  auto njt = pro.get_input<unsigned>(4);
   CAST_CALL_EIGENSPACE(es_ptr, eigen_training_process(*paths, frac, nit, njt, *ep),
                        "in compute_eigenspace_process-creating eigenspace failed")
   std::cout << "in compute_eigenspace_process - unknown eigenspace type\n";
   return true;
 }
-

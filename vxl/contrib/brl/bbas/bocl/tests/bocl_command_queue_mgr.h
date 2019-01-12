@@ -15,7 +15,9 @@
 //  (this may need to be pushed down to the processor)
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //open cl includes
 #include <bocl/bocl_cl.h>
@@ -59,8 +61,8 @@ class bocl_command_queue_mgr: public bocl_manager<bocl_command_queue_mgr>
  private:
     friend class bocl_manager<bocl_command_queue_mgr>;
     // don't allow users to create their own instances (force use of instance())
-    bocl_command_queue_mgr() {}
-    ~bocl_command_queue_mgr(){}
+    bocl_command_queue_mgr() = default;
+    ~bocl_command_queue_mgr() override= default;
 
 };
 

@@ -1,7 +1,4 @@
 // This is core/vgui/vgui_find.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
@@ -15,7 +12,7 @@
 vgui_tableau_sptr vgui_find_by_type_name(vgui_tableau_sptr const& start, std::string const &tn, bool direction_down)
 {
   if (!start)
-    return VXL_NULLPTR;
+    return nullptr;
 
   if (start->type_name() == tn)
     return start;
@@ -31,7 +28,7 @@ vgui_tableau_sptr vgui_find_by_type_name(vgui_tableau_sptr const& start, std::st
     if (t)
       return t; // found one.
   }
-  return VXL_NULLPTR; // not found.
+  return nullptr; // not found.
 }
 
 
@@ -39,7 +36,7 @@ vgui_tableau_sptr
 vgui_find_by_name(vgui_tableau_sptr const& start, std::string const &name, bool direction_down)
 {
   if (!start)
-    return VXL_NULLPTR;
+    return nullptr;
 
   if (start->name() == name)
     return start;
@@ -55,5 +52,5 @@ vgui_find_by_name(vgui_tableau_sptr const& start, std::string const &name, bool 
     if (t)
       return t; // found one.
   }
-  return VXL_NULLPTR; // not found.
+  return nullptr; // not found.
 }

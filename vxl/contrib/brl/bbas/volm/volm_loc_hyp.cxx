@@ -8,9 +8,11 @@
 #include <vgl/vgl_polygon.h>
 #include <bkml/bkml_write.h>
 #include <vpgl/file_formats/vpgl_geo_camera.h>
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vgl/vgl_distance.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: construct using a single dem file
 void volm_loc_hyp::add(vgl_polygon<double>& poly, vil_image_view<float>& dem, vpgl_geo_camera* geocam, int inc_i, int inc_j, bool adjust_cam, char hemi, char dir)
@@ -43,7 +45,7 @@ bool volm_loc_hyp::add(double lat, double lon, double elev)
 
 
 //: construct by reading from a binary file
-volm_loc_hyp::volm_loc_hyp(std::string bin_file) : current_(0)
+volm_loc_hyp::volm_loc_hyp(const std::string& bin_file) : current_(0)
 {
   vsl_b_ifstream is(bin_file.c_str());
   if (!is) {
@@ -54,7 +56,7 @@ volm_loc_hyp::volm_loc_hyp(std::string bin_file) : current_(0)
   is.close();
 }
 
-bool volm_loc_hyp::write_hypotheses(std::string out_file)
+bool volm_loc_hyp::write_hypotheses(const std::string& out_file)
 {
   vsl_b_ofstream os(out_file.c_str());
   if (!os)
@@ -131,10 +133,10 @@ void volm_loc_hyp::b_write(vsl_b_ostream &os) const
 {
   vsl_b_write(os, version());
   vsl_b_write(os, locs_.size());
-  for (unsigned i = 0; i < locs_.size(); ++i) {
-    vsl_b_write(os, locs_[i].x());
-    vsl_b_write(os, locs_[i].y());
-    vsl_b_write(os, locs_[i].z());
+  for (const auto & loc : locs_) {
+    vsl_b_write(os, loc.x());
+    vsl_b_write(os, loc.y());
+    vsl_b_write(os, loc.z());
   }
 }
 
@@ -176,7 +178,7 @@ void volm_loc_hyp::b_read(vsl_b_istream &is)
 
 
 //: create a kml file, size is in seconds, e.g. 0.001
-void volm_loc_hyp::write_to_kml(std::string out_file, double size, bool const& write_as_dot)
+void volm_loc_hyp::write_to_kml(const std::string& out_file, double size, bool const& write_as_dot)
 {
   std::ofstream ofs(out_file.c_str());
   bkml_write::open_document(ofs);
@@ -205,5 +207,3 @@ void volm_loc_hyp::write_to_kml(std::string out_file, double size, bool const& w
 
   bkml_write::close_document(ofs);
 }
-
-

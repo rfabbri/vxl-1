@@ -23,7 +23,7 @@
 #include <vipl/filter/vipl_filter_2d.h> // parent class
 
 //: convert between arbitrary image types
-template <class ImgIn,class ImgOut,class DataIn,class DataOut, VCL_DFL_TYPE_PARAM_STLDECL(PixelItr, vipl_trivial_pixeliter) >
+template <class ImgIn,class ImgOut,class DataIn,class DataOut, class PixelItr = vipl_trivial_pixeliter >
 class vipl_convert : public vipl_filter_2d<ImgIn,ImgOut,DataIn,DataOut,PixelItr>
 {
  public:
@@ -34,10 +34,10 @@ class vipl_convert : public vipl_filter_2d<ImgIn,ImgOut,DataIn,DataOut,PixelItr>
     : vipl_filter_2d<ImgIn,ImgOut,DataIn,DataOut,PixelItr>() {}
   inline vipl_convert(vipl_convert const& A)
     : vipl_filter_2d<ImgIn,ImgOut,DataIn,DataOut,PixelItr>(A) {}
-  inline ~vipl_convert() {}
+  inline ~vipl_convert() override = default;
 
   // -+-+- required method for filters: -+-+-
-  bool section_applyop();
+  bool section_applyop() override;
 };
 
 #ifdef INSTANTIATE_TEMPLATES

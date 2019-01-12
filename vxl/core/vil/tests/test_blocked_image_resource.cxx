@@ -3,7 +3,9 @@
 #include <string>
 #include <testlib/testlib_test.h>
 #include <testlib/testlib_root_dir.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_new.h>
 #include <vil/vil_load.h>
 #include <vil/vil_property.h>
@@ -21,8 +23,8 @@ static void test_blocked_image_resource()
            << " Testing vil_blocked_image_resource\n"
            << "************************************\n";
   // Test Resource
-  const unsigned int ni = 73;
-  const unsigned int nj = 43;
+  constexpr unsigned int ni = 73;
+  constexpr unsigned int nj = 43;
   vil_image_view<unsigned short> image;
   image.set_size(ni,nj);
   for (unsigned i = 0; i<ni; ++i)
@@ -293,17 +295,17 @@ static void test_blocked_image_resource()
   // set sptr's to 0 so the underlying objects are destructed and the
   // temporary image files are closed.  Otherwise the unlink below will
   // fail.
-  ir = VXL_NULLPTR;
-  bir = VXL_NULLPTR;
-  lir = VXL_NULLPTR;
-  bir2 = VXL_NULLPTR;
-  bif = VXL_NULLPTR;
-  dir = VXL_NULLPTR;
-  dbif = VXL_NULLPTR;
-  flbir = VXL_NULLPTR;
-  fabir = VXL_NULLPTR;
-  cflbir = VXL_NULLPTR;
-  cfabir = VXL_NULLPTR;
+  ir = nullptr;
+  bir = nullptr;
+  lir = nullptr;
+  bir2 = nullptr;
+  bif = nullptr;
+  dir = nullptr;
+  dbif = nullptr;
+  flbir = nullptr;
+  fabir = nullptr;
+  cflbir = nullptr;
+  cfabir = nullptr;
   // delete temporary files
   vpl_unlink(path.c_str());
   vpl_unlink(path2.c_str());
@@ -360,4 +362,3 @@ test_blocked_image_resource_main( int argc, char* argv[] )
   test_blocked_image_resource();
   return 0;
 }
-

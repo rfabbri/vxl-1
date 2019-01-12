@@ -1,9 +1,6 @@
 // This is core/vgui/impl/mfc/vgui_mfc.h
 #ifndef vgui_mfc_h_
 #define vgui_mfc_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief   MFC (Microsoft Foundation Classes) implementation of vgui_toolkit.
@@ -20,7 +17,9 @@
 // \endverbatim
 
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgui/vgui_toolkit.h>
 class vgui_mfc_adaptor;
 class vgui_mfc_window;

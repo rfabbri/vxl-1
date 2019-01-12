@@ -27,9 +27,9 @@ class boxm_scene_base : public vbl_ref_count
   : app_model_(BOXM_APM_UNKNOWN), multi_bin_(false), tree_level_set_(false),
     scene_path_(""), filename_(""), block_pref_(""), max_tree_level_(0), init_tree_level_(0) {}
 
-  virtual ~boxm_scene_base() {}
+  ~boxm_scene_base() override = default;
 
-  bool load_scene(std::string filename, boxm_scene_parser& parser);
+  bool load_scene(const std::string& filename, boxm_scene_parser& parser);
 
   boxm_apm_type appearence_model() { return app_model_; }
 
@@ -58,8 +58,8 @@ class boxm_scene_base : public vbl_ref_count
   unsigned init_level() const { return init_tree_level_; }
   std::string filename() const { return filename_; }
 
-  virtual vgl_box_3d<double> get_world_bbox() const { return vgl_box_3d<double>(); }
-  virtual vgl_vector_3d<unsigned> world_dim() const { return vgl_vector_3d<unsigned>(); }
+  virtual vgl_box_3d<double> get_world_bbox() const { return {}; }
+  virtual vgl_vector_3d<unsigned> world_dim() const { return {}; }
 
  protected:
   boxm_apm_type app_model_;

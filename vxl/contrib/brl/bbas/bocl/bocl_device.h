@@ -14,7 +14,9 @@
 #include "bocl_cl.h"
 #include "bocl_utils.h"
 #include "bocl_device_info.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_ref_count.h>
 #include <vsl/vsl_binary_io.h>
 #include <vbl/vbl_smart_ptr.h>
@@ -24,9 +26,9 @@
 class bocl_device: public vbl_ref_count
 {
   public:
-    bocl_device() {}
+    bocl_device() = default;
     bocl_device(cl_device_id& device);
-    virtual ~bocl_device();
+    ~bocl_device() override;
 
     //: accessors for context/device
     cl_device_id*     device_id() { return &device_; }

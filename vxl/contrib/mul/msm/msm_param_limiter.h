@@ -6,10 +6,12 @@
 // \brief Base for objects with apply limits to parameters
 
 #include <string>
-#include <vcl_memory.h>
 #include <iostream>
+#include <memory>
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_fwd.h>
 #include <vnl/vnl_fwd.h>
 
@@ -20,7 +22,7 @@ class msm_param_limiter
 {
  public:
 
-  virtual ~msm_param_limiter() {}
+  virtual ~msm_param_limiter() = default;
 
   //: Define variance on each parameter
   virtual void set_param_var(const vnl_vector<double>& v)=0;
@@ -51,7 +53,7 @@ class msm_param_limiter
   virtual void b_read(vsl_b_istream& bfs) = 0;
 
   //: Create a concrete msm_param_limiter-derived object, from a text specification.
-  static vcl_unique_ptr<msm_param_limiter> create_from_stream(std::istream &is);
+  static std::unique_ptr<msm_param_limiter> create_from_stream(std::istream &is);
 
   //: Initialise from a text stream.
   // The default implementation is for attribute-less normalisers,
@@ -99,5 +101,3 @@ void vsl_print_summary(std::ostream& os,const msm_param_limiter* b);
 double msm_chi2_for_cum_prob(double p, int n, double tol=0.001);
 
 #endif // msm_param_limiter_h_
-
-

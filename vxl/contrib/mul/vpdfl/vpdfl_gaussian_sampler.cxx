@@ -1,7 +1,4 @@
 // This is mul/vpdfl/vpdfl_gaussian_sampler.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Ian Scott
@@ -12,7 +9,9 @@
 #include <cmath>
 #include "vpdfl_gaussian_sampler.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpdfl/vpdfl_gaussian.h>
 #include <mbl/mbl_matxvec.h>
 
@@ -29,9 +28,7 @@ vpdfl_gaussian_sampler::vpdfl_gaussian_sampler():
 // Destructor
 //=======================================================================
 
-vpdfl_gaussian_sampler::~vpdfl_gaussian_sampler()
-{
-}
+vpdfl_gaussian_sampler::~vpdfl_gaussian_sampler() = default;
 
 
 //=======================================================================

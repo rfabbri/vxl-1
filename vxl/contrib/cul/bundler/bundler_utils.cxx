@@ -7,8 +7,10 @@
 #include <vpgl/algo/vpgl_triangulate_points.h>
 #include <vpgl/algo/vpgl_camera_compute.h>
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_homg_point_2d.h>
@@ -83,14 +85,12 @@ double bundler_utils_get_homography_inlier_percentage(
         std::vector<vgl_homg_point_2d<double> > rhs;
         std::vector<vgl_homg_point_2d<double> > lhs;
 
-        for (int i = 0; i < 4; ++i) {
-            lhs.push_back(
-                vgl_homg_point_2d<double>(
-                    match.matches[match_idxs[i]].first->point));
+        for (int match_idx : match_idxs) {
+            lhs.emplace_back(
+                    match.matches[match_idx].first->point);
 
-            rhs.push_back(
-                vgl_homg_point_2d<double>(
-                    match.matches[match_idxs[i]].second->point));
+            rhs.emplace_back(
+                    match.matches[match_idx].second->point);
         }
 
         // Get the homography for the points

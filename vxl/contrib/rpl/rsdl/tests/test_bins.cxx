@@ -3,7 +3,9 @@
 #include <algorithm>
 #include <sstream>
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vnl/vnl_vector_fixed.h>
 #include <vnl/vnl_double_2.h>
@@ -26,7 +28,7 @@ static void test_bins_2D()
   bin_sizes[0] = 6; bin_sizes[1] = 4;
 
   bin_type bins( min_pt, max_pt, bin_sizes );
-  const double dist_tol = 0.0001;
+  constexpr double dist_tol = 0.0001;
   bins.set_distance_tolerance( dist_tol );
   vnl_vector_fixed< double, 2 >  pt( 12.5, 3 );
   int added_value = 0, stored_value = -1;
@@ -48,7 +50,7 @@ static void test_bins_2D()
 
   {
     //  Generate a bunch of points:
-    const int M=60;
+    constexpr int M = 60;
     std::vector< vnl_vector_fixed< double, 2 > > points( M );
     std::vector< int > indices( M );
     vnl_random mz_rand;
@@ -63,7 +65,7 @@ static void test_bins_2D()
 
   //  test  "is_any_point_within_radius" and "points_with_radius"
 
-    const int num_tests = 5;
+    constexpr int num_tests = 5;
     for ( int t=0; t<num_tests; ++t )
     {
       vnl_vector_fixed< double, 2 > q;
@@ -166,7 +168,7 @@ static void test_bins_3D()
 
   {
     bin_type bins( min_pt, max_pt, bin_sizes );
-    const double dist_tol = 0.0001;
+    constexpr double dist_tol = 0.0001;
     bins.set_distance_tolerance( dist_tol );
     vnl_double_3  pt( 12.5, 3.0, -5.0 );
     int added_value = 0, stored_value = -1;
@@ -189,7 +191,7 @@ static void test_bins_3D()
 
   {
     //  Generate a bunch of points:
-    const int M=60;
+    constexpr int M = 60;
     std::vector< vnl_vector_fixed< double, 3 > > points( M );
     std::vector< int > indices( M );
     vnl_random mz_rand;
@@ -203,7 +205,7 @@ static void test_bins_3D()
       bins.add_point( points[ i ], i );
     }
 
-    const int num_tests = 5;
+    constexpr int num_tests = 5;
     for ( int t=0; t<num_tests; ++t )
     {
       vnl_vector_fixed< double, 3 > q;
@@ -315,7 +317,7 @@ test_bins_nearest ( unsigned n,
                     bool square_bins,
                     bool bound_points,
                     int single_bin_dim,
-                    std::string name )
+                    const std::string& name )
 {
   vnl_random mz_rand;
 
@@ -366,7 +368,7 @@ test_bins_nearest ( unsigned n,
   bool pass_size_all = true;
   bool pass_match_all = true;
 
-  const unsigned num_trials = 64;
+  constexpr unsigned num_trials = 64;
   for ( unsigned tn=0; tn<num_trials; ++tn )
   {
     // pick a random test point
@@ -395,7 +397,7 @@ test_bins_nearest ( unsigned n,
     bool pass_size = vals_fst.size() == vals_exh.size();
     bool pass_match = vals_fst == vals_exh;
 
-    pass_size_all  = pass_size_all  && pass_size;
+    pass_size_all = pass_size_all  && pass_size;
     pass_match_all = pass_match_all && pass_match;
 
 #if 0
@@ -428,7 +430,7 @@ static void test_bins_nearest_all_inst( unsigned n,
                                         bool square_bins,
                                         bool bound_points,
                                         int single_bin_dim,
-                                        std::string name )
+                                        const std::string& name )
 {
   test_bins_nearest< 2, float, int >( n, npoints, square_bins, bound_points, single_bin_dim, name+",N=2,C=float,V=int" );
   test_bins_nearest< 3, float, int >( n, npoints, square_bins, bound_points, single_bin_dim, name+",N=3,C=float,V=int" );

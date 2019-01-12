@@ -37,7 +37,9 @@
 
 #include <iostream>
 #include "bvpl_kernel_factory.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bxml/bxml_document.h>
 
 class bvpl_edge3d_kernel_factory : public bvpl_kernel_factory
@@ -56,22 +58,22 @@ class bvpl_edge3d_kernel_factory : public bvpl_kernel_factory
     min_y_(other.min_y_),max_y_(other.max_y_),
     min_z_(other.min_z_),max_z_(other.max_z_) {}
 
-  virtual ~bvpl_edge3d_kernel_factory() {}
+  ~bvpl_edge3d_kernel_factory() override = default;
 
   static std::string name() {return "edge3d"; }
 
-  virtual bvpl_kernel_factory_sptr self(){return new bvpl_edge3d_kernel_factory(*this);}
+  bvpl_kernel_factory_sptr self() override{return new bvpl_edge3d_kernel_factory(*this);}
 
   //: Return an xml element
-  virtual bxml_data_sptr xml_element();
+  bxml_data_sptr xml_element() override;
 
   //: Parse an xml element
-  static bvpl_kernel_sptr parse_xml_element(bxml_data_sptr d);
+  static bvpl_kernel_sptr parse_xml_element(const bxml_data_sptr& d);
 
  private:
 
   //:Creates a 2d edge kernel
-  virtual void create_canonical();
+  void create_canonical() override;
 
   int min_x_;
   int max_x_;

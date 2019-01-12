@@ -4,7 +4,9 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <Inventor/nodes/SoNode.h>
 #include <Inventor/nodes/SoSeparator.h>
@@ -15,6 +17,10 @@
 #include <Inventor/actions/SoToVRML2Action.h>
 #include <Inventor/VRMLnodes/SoVRMLGroup.h>
 
+#if 0
+  #include <Inventor/SoDB.h>
+  #include <Inventor/SoInteraction.h>
+#endif
 
 //: Export the scene as IV
 void
@@ -100,14 +106,6 @@ SoNode* bgui3d_import_file(const std::string& filename, std::ostream& os)
 
 
 #if 0 // Ming: temp test file.
-  #include <Inventor/SoDB.h>
-  #include <Inventor/SoInteraction.h>
-  #include <Inventor/SoInput.h>
-  #include <Inventor/SoOutput.h>
-  #include <Inventor/actions/SoWriteAction.h>
-  #include <Inventor/actions/SoToVRML2Action.h>
-  #include <Inventor/nodes/SoSeparator.h>
-  #include <Inventor/VRMLnodes/SoVRMLGroup.h>
 
   int testVRML (int argc, char *argv[])
   {

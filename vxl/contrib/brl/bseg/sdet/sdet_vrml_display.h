@@ -10,7 +10,9 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vtol/vtol_intensity_face_sptr.h>
 #include <vsol/vsol_polygon_3d_sptr.h>
 #include <vil/vil_image_view.h>
@@ -26,7 +28,7 @@ class sdet_vrml_display
                                     vil_image_view<float> const & z_of_xy,
                                     float r = 0.0, float g = 1.0, float b = 0.0);
  private:
-  sdet_vrml_display();
+  sdet_vrml_display() = delete;
 
 };
 

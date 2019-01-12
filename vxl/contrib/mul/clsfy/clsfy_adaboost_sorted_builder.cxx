@@ -1,7 +1,4 @@
 // This is mul/clsfy/clsfy_adaboost_sorted_builder.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \brief Functions to train classifiers using AdaBoost algorithm
@@ -24,8 +21,10 @@
 #include "clsfy_simple_adaboost.h"
 #include "clsfy_builder_1d.h"
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vbl/vbl_triple.h>
 #include <mbl/mbl_file_data_collector.h>
 #include <mbl/mbl_data_collector_list.h>
@@ -33,15 +32,13 @@
 //=======================================================================
 
 clsfy_adaboost_sorted_builder::clsfy_adaboost_sorted_builder()
-: save_data_to_disk_(false), bs_(-1), max_n_clfrs_(-1), weak_builder_(VXL_NULLPTR)
+: save_data_to_disk_(false), bs_(-1), max_n_clfrs_(-1), weak_builder_(nullptr)
 {
 }
 
 //=======================================================================
 
-clsfy_adaboost_sorted_builder::~clsfy_adaboost_sorted_builder()
-{
-}
+clsfy_adaboost_sorted_builder::~clsfy_adaboost_sorted_builder() = default;
 
 
 //=======================================================================
@@ -70,7 +67,7 @@ double clsfy_adaboost_sorted_builder::build(clsfy_classifier_base& model,
   // N.B. ignore nClasses=1, i.e. always binary classifier
 
   assert( model.is_class("clsfy_simple_adaboost") );
-  clsfy_simple_adaboost &strong_classifier = (clsfy_simple_adaboost&) model;
+  auto &strong_classifier = (clsfy_simple_adaboost&) model;
 
 
   // check parameters are OK
@@ -87,7 +84,7 @@ double clsfy_adaboost_sorted_builder::build(clsfy_classifier_base& model,
             <<max_n_clfrs_<<'\n';
   }
 
-  if ( weak_builder_ == VXL_NULLPTR )
+  if ( weak_builder_ == nullptr )
   {
     std::cout<<"Error: clsfy_adaboost_sorted_builder::build\n"
             <<"weak_builder_ pointer has not been set\n"

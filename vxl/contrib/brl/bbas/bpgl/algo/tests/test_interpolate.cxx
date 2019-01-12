@@ -1,6 +1,8 @@
 #include <iostream>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_homg_point_3d.h>
 #include <vgl/vgl_distance.h>
@@ -85,7 +87,7 @@ static void test_interpolate()
 
   vnl_double_3x3 at = bpgl_interpolate::A(lR45);
   vnl_double_3x3 atinv = bpgl_interpolate::Ainv(lR45);
-  vnl_double_3x3 id1 = at*atinv, id2 = atinv*at;
+//UNUSED  vnl_double_3x3 id1 = at*atinv, id2 = atinv*at;
   //=========== test camera interpolation ==============
   //set up the cameras
   vnl_double_3x3 M;
@@ -103,8 +105,8 @@ static void test_interpolate()
   std::vector<vpgl_perspective_camera<double> > cams;
   bool success = bpgl_interpolate::interpolate(cam0, cam1, 1, cams);
   if (success)
-    for (unsigned i = 0; i<cams.size(); ++i)
-      std::cout << cams[i];
+    for (const auto & cam : cams)
+      std::cout << cam;
   vpgl_perspective_camera<double> cam_interp = cams[0];
   vgl_point_3d<double> ci = cam_interp.get_camera_center();
   vgl_point_3d<double> cact(5,5,-5);

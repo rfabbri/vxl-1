@@ -1,7 +1,9 @@
 // This is tbl/vepl/vepl_threshold.cxx
 #include <iostream>
 #include "vepl_threshold.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vepl/accessors/vipl_accessors_vil_image_view_base.h>
 #include <vipl/vipl_threshold.h>
 #include <vil/vil_image_view.h>
@@ -10,7 +12,7 @@
 #include <vil/vil_new.h>
 #include <vxl_config.h> // for vxl_byte
 
-vil_image_resource_sptr vepl_threshold(vil_image_resource_sptr image, double threshold, double below, double above)
+vil_image_resource_sptr vepl_threshold(const vil_image_resource_sptr& image, double threshold, double below, double above)
 {
   vil_image_resource_sptr img_out = vil_new_image_resource(image->ni(), image->nj(), image->nplanes(), image->pixel_format());
 
@@ -98,4 +100,3 @@ vil_image_resource_sptr vepl_threshold(vil_image_resource_sptr image, double thr
 
   return img_out;
 }
-

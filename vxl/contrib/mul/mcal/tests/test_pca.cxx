@@ -14,7 +14,9 @@
 // \brief test mcal_pca
 
 #include <vsl/vsl_binary_loader.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h>
 #include <mbl/mbl_cloneables_factory.h>
 #include <mcal/mcal_add_all_loaders.h>
@@ -105,13 +107,13 @@ void test_pca()
           "  use_chunks:  true\n"
           "}\n");
 
-    vcl_unique_ptr<mcal_component_analyzer>
+    std::unique_ptr<mcal_component_analyzer>
             ca = mcal_component_analyzer::create_from_stream(ss);
 
     TEST("Correct component analyzer",ca->is_a(),"mcal_pca");
     if (ca->is_a()=="mcal_pca")
     {
-      mcal_pca &a_ca = static_cast<mcal_pca&>(*ca);
+      auto &a_ca = static_cast<mcal_pca&>(*ca);
       std::cout<<a_ca<<std::endl;
       TEST("min_modes configured",a_ca.min_modes(),1);
       TEST("max_modes configured",a_ca.max_modes(),7);

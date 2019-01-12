@@ -34,9 +34,9 @@ vimt_transform_2d vimt_load_transform(const vil_image_resource_sptr& im,
     offset[0]=offset[1]=0.0f;
   }
 
-  for(unsigned i=0; i<2;i++)
+  for(float & i : pixSize)
   {
-    pixSize[i]*= unit_scaling;
+    i*= unit_scaling;
   }
 
   vimt_transform_2d tx;
@@ -81,9 +81,9 @@ vimt_transform_2d vimt_load_transform_right_hand(const vil_image_resource_sptr& 
     offset[0] = offset[1] = 0.0f;
   }
 
-  for(unsigned i=0; i<2; i++)
+  for(float & i : pixSize)
   {
-    pixSize[i] *= unit_scaling;
+    i *= unit_scaling;
   }
 
   // Include a reflection through the x-axis.
@@ -99,7 +99,7 @@ template<class T>
 inline void invert_image(vil_image_view<T>& im_src, T max_val)
 {
   unsigned ni = im_src.ni(), nj = im_src.nj(), np = im_src.nplanes();
-  vcl_ptrdiff_t istep=im_src.istep(), jstep=im_src.jstep(), pstep = im_src.planestep();
+  std::ptrdiff_t istep=im_src.istep(), jstep=im_src.jstep(), pstep = im_src.planestep();
 
   T* plane = im_src.top_left_ptr();
   for (unsigned p=0;p<np;++p,plane += pstep)
@@ -119,7 +119,6 @@ bool vimt_is_image_dicom(vil_stream* is)
 {
    if (is)
    {
-     bool is_dicom = false;
      #ifdef _BUILD_DCMTK
        try
        {
@@ -129,7 +128,7 @@ bool vimt_is_image_dicom(vil_stream* is)
            is->seek(0);
            is->seek( DCM_PreambleLen );
            if ( is->read( magic, DCM_MagicLen ) == DCM_MagicLen ) {
-             if ( vcl_strncmp( magic, DCM_Magic, DCM_MagicLen ) == 0 ) {
+             if ( std::strncmp( magic, DCM_Magic, DCM_MagicLen ) == 0 ) {
                return true;
              }
            }
@@ -158,7 +157,7 @@ bool vimt_is_monochrome1(const std::string& im_path)
       if (strcmp(header.photo_interp_.c_str(), "MONOCHROME1") == 0)
       {
         isMONOCHROME1 = true;
-        vcl_cout<<"DICOM tag PhotometricInterpretation reads MONOCHROME1: image was automatically inverted." <<vcl_endl;
+        std::cout<<"DICOM tag PhotometricInterpretation reads MONOCHROME1: image was automatically inverted." <<std::endl;
       }
 
       delete dicom_image;
@@ -177,7 +176,7 @@ void vimt_load_to_byte(const std::string& im_path, vimt_image_2d_of<vxl_byte>& i
 {
   vil_image_resource_sptr ir = vil_load_image_resource(im_path.c_str());
 
-  if (ir.ptr()==VXL_NULLPTR)
+  if (ir.ptr()==nullptr)
   {
     image.image().set_size(0,0);
     return;
@@ -219,7 +218,7 @@ void vimt_load_to_float(const std::string& im_path, vimt_image_2d_of<float>& ima
 {
   vil_image_resource_sptr ir = vil_load_image_resource(im_path.c_str());
 
-  if (ir.ptr()==VXL_NULLPTR)
+  if (ir.ptr()==nullptr)
   {
     image.image().set_size(0,0);
     return;

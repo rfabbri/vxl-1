@@ -5,7 +5,10 @@
 
 #include <pop/pop_point_2d.h>
 #include <vgl/vgl_homg_point_2d.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: constructor
 // The parameters for this transform are
@@ -69,4 +72,3 @@ void pop_homography_2d::update()
       mat(r,c)=params_[r*3+c]->value_;
   trans_.set(mat);
 }
-

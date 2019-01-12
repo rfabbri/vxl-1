@@ -1,9 +1,6 @@
 // This is oxl/mvl/PMatrixDecompAa.h
 #ifndef PMatrixDecompAa_h_
 #define PMatrixDecompAa_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 //  \file
 // \brief Decompose PMatrix into [A a]
@@ -27,7 +24,7 @@ class PMatrixDecompAa
   //{genman, do not do anything to this line -- awf}
 
 //: Default constructor
-  PMatrixDecompAa() {}
+  PMatrixDecompAa() = default;
 
 //: Construct from PMatrix.
   PMatrixDecompAa(const PMatrix& P) { set(P); }

@@ -11,7 +11,9 @@
 #include <fstream>
 #include <string>
 #include "mbl_mask.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_string.h>
 #include <mbl/mbl_exception.h>
 
@@ -33,12 +35,10 @@ void mbl_masks_from_index_set(const std::vector<unsigned> & indices,
   for (unsigned i = 0 ; i < n ; ++i)
     used_indices.insert(indices[i]);
 
-  for (std::set<unsigned>::const_iterator it = used_indices.begin(),
-                                         end = used_indices.end();
-                                         it != end; ++it)
+  for (const auto & used_indice : used_indices)
   {
-    ordering[*it] = n_masks++;
-    masks.push_back(mbl_mask(n));
+    ordering[used_indice] = n_masks++;
+    masks.emplace_back(n);
   }
 
   for (unsigned i = 0 ; i < n ; ++i)
@@ -124,7 +124,7 @@ void mbl_mask_logic(const mbl_mask & A, mbl_mask & B, const std::string & operat
     //: Save to file
 void mbl_save_mask(const mbl_mask & mask, std::ostream & stream)
 {
-  std::vector<bool>::const_iterator it = mask.begin();
+  auto it = mask.begin();
   const std::vector<bool>::const_iterator & end = mask.end();
   for (; it != end; ++it)
     stream << *it << std::endl;
@@ -209,12 +209,8 @@ void mbl_indices_to_mask(const std::vector<unsigned>& inds,
                          mbl_mask& mask)
 {
   mask.resize(n, false);
-  for (unsigned i=0, m=inds.size(); i<m; ++i)
+  for (unsigned int ind : inds)
   {
-    mask[inds[i]]=true;
+    mask[ind]=true;
   }
 }
-
-
-
-

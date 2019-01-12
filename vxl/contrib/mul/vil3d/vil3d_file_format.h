@@ -1,9 +1,6 @@
 // This is mul/vil3d/vil3d_file_format.h
 #ifndef vil3d_file_format_h_
 #define vil3d_file_format_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Manager for 3d image file loaders
@@ -15,7 +12,7 @@
 class vil3d_file_format
 {
  public:
-  virtual ~vil3d_file_format() {}
+  virtual ~vil3d_file_format() = default;
 
   //: Add a format reader to current list of those available
   // This function will take ownership of the passed object, and will

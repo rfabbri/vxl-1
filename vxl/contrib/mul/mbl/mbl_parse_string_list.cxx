@@ -8,7 +8,9 @@
 
 #include <mbl/mbl_exception.h>
 #include <mbl/mbl_parse_block.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Parse list of strings
 // Expects format of data:
@@ -73,5 +75,3 @@ void mbl_parse_string_list(const std::string& data,
   std::istringstream data_stream(data);
   mbl_parse_string_list(data_stream,items,comment_str);
 }
-
-

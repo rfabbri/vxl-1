@@ -11,7 +11,10 @@
 // \endverbatim
 //
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include "rgrl_set_of.h"
 #include "rgrl_match_set_sptr.h"
@@ -39,8 +42,8 @@ class rgrl_estimator
   // some algorithms such as random sampling and DBICP.
   rgrl_estimator( unsigned int param_dof );
 
-  virtual
-  ~rgrl_estimator();
+
+  ~rgrl_estimator() override;
 
   //: whether this method is iterative or non-iterative
   virtual
@@ -141,15 +144,14 @@ class rgrl_linear_estimator
    : rgrl_estimator( param_dof )
   { }
 
-  virtual
-  ~rgrl_linear_estimator()
-  { }
+
+  ~rgrl_linear_estimator() override = default;
 
   //: Linear estimator is non-iterative
   //
-  virtual
+
   bool
-  is_iterative_method() const
+  is_iterative_method() const override
   { return false; }
 };
 
@@ -182,15 +184,14 @@ class rgrl_nonlinear_estimator
      relative_threshold_(1e-8)
   { }
 
-  virtual
-  ~rgrl_nonlinear_estimator()
-  { }
+
+  ~rgrl_nonlinear_estimator() override = default;
 
   //: Linear estimator is non-iterative
   //
-  virtual
+
   bool
-  is_iterative_method() const
+  is_iterative_method() const override
   { return true; }
 
   //: set max number of iterations

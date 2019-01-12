@@ -19,7 +19,9 @@
 // \endlatexonly
 
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vnl/vnl_vector_fixed.h>
 #include <vnl/vnl_math.h>
@@ -58,14 +60,14 @@ typedef std::vector< rgrl_feature_sptr >         feature_vector;
 class command_iteration_update: public rgrl_command
 {
  public:
-  void execute(rgrl_object* caller, const rgrl_event & event )
+  void execute(rgrl_object* caller, const rgrl_event & event ) override
   {
     execute( (const rgrl_object*) caller, event );
   }
 
-  void execute(const rgrl_object* caller, const rgrl_event & /*event*/ )
+  void execute(const rgrl_object* caller, const rgrl_event & /*event*/ ) override
   {
-    const rgrl_feature_based_registration* reg_engine =
+    const auto* reg_engine =
       dynamic_cast<const rgrl_feature_based_registration*>(caller);
     rgrl_transformation_sptr trans = reg_engine->current_transformation();
     rgrl_trans_affine* xform = rgrl_cast<rgrl_trans_affine*>(trans);
@@ -173,7 +175,7 @@ main()
 
   // Set up the feature sets
   //
-  const unsigned int  dimension = 2;
+  constexpr unsigned int dimension = 2;
    rgrl_feature_set_sptr moving_feature_set =
     new rgrl_feature_set_location<dimension>(moving_feature_points);
   rgrl_mask_box moving_image_roi = moving_feature_set->bounding_box();
@@ -248,8 +250,8 @@ main()
   // \endlatexonly
 
   // BeginCodeSnippet
-  vcl_unique_ptr<rrel_m_est_obj>  m_est_obj( new rrel_tukey_obj(4) );
-  rgrl_weighter_sptr wgter = new rgrl_weighter_m_est(vcl_move(m_est_obj), false, false);
+  std::unique_ptr<rrel_m_est_obj>  m_est_obj( new rrel_tukey_obj(4) );
+  rgrl_weighter_sptr wgter = new rgrl_weighter_m_est(std::move(m_est_obj), false, false);
   // EndCodeSnippet
 
   // \latexonly
@@ -291,10 +293,10 @@ main()
   // \endlatexonly
 
   // BeginCodeSnippet
-  vcl_unique_ptr<rrel_objective> muset_obj( new rrel_muset_obj(0, false) );
+  std::unique_ptr<rrel_objective> muset_obj( new rrel_muset_obj(0, false) );
 
   rgrl_scale_estimator_unwgted_sptr unwgted_scale_est =
-    new rgrl_scale_est_closest( vcl_move(muset_obj) );
+    new rgrl_scale_est_closest( std::move(muset_obj) );
   rgrl_scale_estimator_wgted_sptr wgted_scale_est =
     new rgrl_scale_est_all_weights();
   // EndCodeSnippet

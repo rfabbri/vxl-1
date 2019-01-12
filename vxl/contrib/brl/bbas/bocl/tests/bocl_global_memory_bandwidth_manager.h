@@ -5,7 +5,9 @@
 #include <string>
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bocl/bocl_manager.h>
 #include <bocl/bocl_utils.h>
 #include <bocl/bocl_mem.h>
@@ -34,7 +36,7 @@ class bocl_global_memory_bandwidth_manager : public bocl_manager<bocl_global_mem
   //: diff from run_kernel allocated array of float4 in local memory
   bool run_kernel_prefetch();
 
-  int create_kernel(std::string const& kernel_name, std::string src_path, std::string options);
+  int create_kernel(std::string const& kernel_name, const std::string& src_path, std::string options);
 
   float time_taken() const  { return time_in_secs_; }
   bocl_kernel kernel()      { return kernel_; }
@@ -65,9 +67,9 @@ class bocl_global_memory_bandwidth_manager : public bocl_manager<bocl_global_mem
 
   // don't allow users to create their own instance
   bocl_global_memory_bandwidth_manager()
-    : program_(VXL_NULLPTR),time_in_secs_(0.0f) {}
+    : program_(nullptr),time_in_secs_(0.0f) {}
 
-  ~bocl_global_memory_bandwidth_manager();
+  ~bocl_global_memory_bandwidth_manager() override;
 
 };
 

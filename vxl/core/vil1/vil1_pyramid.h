@@ -1,16 +1,15 @@
 // This is core/vil1/vil1_pyramid.h
 #ifndef vil1_pyramid_h_
 #define vil1_pyramid_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author fsm
 
 #include <vector>
 #include <vil1/vil1_image.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //:
 // vil1_pyramid is \e not an image. It is like an array of images, with

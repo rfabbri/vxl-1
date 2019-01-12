@@ -29,7 +29,9 @@
 //-------------------------------------------------------------------------
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_homg_point_2d.h>
 #include <vgl/algo/vgl_h_matrix_2d.h>
 #include <vsol/vsol_line_2d_sptr.h>
@@ -100,15 +102,15 @@ class sdet_grid_finder : public sdet_grid_finder_params
   // Constructors/destructor
   sdet_grid_finder(sdet_grid_finder_params& gfp);
 
-  ~sdet_grid_finder();
+  ~sdet_grid_finder() override;
 
   // Process methods
   bool match_grid();
   bool compute_homography();
-  bool compute_manual_homography(vsol_point_2d_sptr ul,
-                                 vsol_point_2d_sptr ur,
-                                 vsol_point_2d_sptr lr,
-                                 vsol_point_2d_sptr ll);
+  bool compute_manual_homography(const vsol_point_2d_sptr& ul,
+                                 const vsol_point_2d_sptr& ur,
+                                 const vsol_point_2d_sptr& lr,
+                                 const vsol_point_2d_sptr& ll);
   void clear();
 
   // Accessors
@@ -143,7 +145,7 @@ class sdet_grid_finder : public sdet_grid_finder_params
   bool write_image_points(std::ofstream & outstream);
 
   //:make sure homography and image correspond with each other
-  bool check_grid_match(vil1_image img);
+  bool check_grid_match(const vil1_image& img);
 
  protected:
   // protected methods
@@ -171,7 +173,7 @@ class sdet_grid_finder : public sdet_grid_finder_params
   bool compute_homography_linear_chamfer(vgl_h_matrix_2d<double> & H);
 
   // for checking homography match with original image
-  bool get_square_pixel_stats(vil1_image img,
+  bool get_square_pixel_stats(const vil1_image& img,
                               int x,int y,
                               double & mean_intensity,
                               double & intensity_sigma);

@@ -1,7 +1,4 @@
 // This is oxl/mvl/HomgLineSeg3D.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 //  \file
 
@@ -9,14 +6,14 @@
 #include "HomgLineSeg3D.h"
 #include <mvl/HomgLine3D.h>
 #include <mvl/HomgOperator3D.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //--------------------------------------------------------------
 //
 //: Default constructor
-HomgLineSeg3D::HomgLineSeg3D ()
-{
-}
+HomgLineSeg3D::HomgLineSeg3D () = default;
 
 //--------------------------------------------------------------
 //
@@ -32,9 +29,7 @@ HomgLineSeg3D::HomgLineSeg3D (const HomgPoint3D& point1, const HomgPoint3D& poin
 //--------------------------------------------------------------
 //
 //: Destructor
-HomgLineSeg3D::~HomgLineSeg3D()
-{
-}
+HomgLineSeg3D::~HomgLineSeg3D() = default;
 
 
 //--------------------------------------------------------------

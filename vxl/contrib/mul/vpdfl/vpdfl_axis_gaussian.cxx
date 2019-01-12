@@ -1,7 +1,4 @@
 // This is mul/vpdfl/vpdfl_axis_gaussian.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Tim Cootes
@@ -13,9 +10,11 @@
 #include <cstdlib>
 #include <string>
 #include "vpdfl_axis_gaussian.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h>
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vsl/vsl_indent.h>
 #include <vpdfl/vpdfl_axis_gaussian_sampler.h>
 #include <vpdfl/vpdfl_sampler_base.h>
@@ -26,17 +25,13 @@
 // Dflt ctor
 //=======================================================================
 
-vpdfl_axis_gaussian::vpdfl_axis_gaussian()
-{
-}
+vpdfl_axis_gaussian::vpdfl_axis_gaussian() = default;
 
 //=======================================================================
 // Destructor
 //=======================================================================
 
-vpdfl_axis_gaussian::~vpdfl_axis_gaussian()
-{
-}
+vpdfl_axis_gaussian::~vpdfl_axis_gaussian() = default;
 
 //=======================================================================
 
@@ -156,7 +151,7 @@ void vpdfl_axis_gaussian::gradient_logp(vnl_vector<double>& g,
 
 vpdfl_sampler_base* vpdfl_axis_gaussian::new_sampler() const
 {
-  vpdfl_axis_gaussian_sampler *i = new vpdfl_axis_gaussian_sampler;
+  auto *i = new vpdfl_axis_gaussian_sampler;
   i->set_model(*this);
   return i;
 }

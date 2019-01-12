@@ -10,14 +10,15 @@
 // \author Vishal Jain
 // \date Aug 28, 2014
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2_multi/boxm2_multi_cache.h>
 #include <boxm2_multi/algo/boxm2_multi_render.h>
 #include <boxm2_multi/algo/boxm2_multi_update.h>
 #include <boxm2_multi/algo/boxm2_multi_refine.h>
 
 #include <vcl_where_root_dir.h>
-#include <vcl_compiler.h>
 
 //executable args
 #include <vil/vil_image_view_base.h>
@@ -33,15 +34,13 @@
 #include <brdb/brdb_value.h>
 
 //directory utility
-#include <vcl_where_root_dir.h>
 #include <bocl/bocl_device.h>
 #include <bocl/bocl_kernel.h>
-#include <vul/vul_timer.h>
 
 namespace boxm2_multi_update_process_globals
 {
-  const unsigned int n_inputs_  = 10;
-  const unsigned int n_outputs_ = 0;
+  constexpr unsigned int n_inputs_ = 10;
+  constexpr unsigned int n_outputs_ = 0;
 }
 
 bool boxm2_multi_update_process_cons(bprb_func_process& pro)
@@ -98,14 +97,14 @@ bool boxm2_multi_update_process(bprb_func_process& pro)
   vil_image_view_base_sptr img          = pro.get_input<vil_image_view_base_sptr>(i++);
   std::string               ident        = pro.get_input<std::string>(i++);
   bool                     update_alpha = pro.get_input<bool>(i++);
-  float                    mog_var      = pro.get_input<float>(i++);
+  auto                    mog_var      = pro.get_input<float>(i++);
   bool                     update_app   = pro.get_input<bool>(i++);
-  float                    nearfactor   = pro.get_input<float>(i++);
-  float                    farfactor    = pro.get_input<float>(i++);
+  auto                    nearfactor   = pro.get_input<float>(i++);
+  auto                    farfactor    = pro.get_input<float>(i++);
   vul_timer t; t.mark();
 
   vil_image_view_base_sptr inImg = boxm2_util::prepare_input_image(img, true);
-  vil_image_view<float>* inImgPtr = dynamic_cast<vil_image_view<float>* >(inImg.ptr());
+  auto* inImgPtr = dynamic_cast<vil_image_view<float>* >(inImg.ptr());
 
   float gpu_time = boxm2_multi_update::update(*(multi_cache.ptr()), *inImgPtr, cam);
   float total = t.all();

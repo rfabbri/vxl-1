@@ -15,8 +15,8 @@
 //:global variables
 namespace bvpl_compute_pca_test_error_process_globals
 {
-  const unsigned n_inputs_ = 1;        //directory path, where pca_info.xml is
-  const unsigned n_outputs_ = 1;       //error file
+  constexpr unsigned n_inputs_ = 1;        //directory path, where pca_info.xml is
+  constexpr unsigned n_outputs_ = 1;       //error file
 }
 
 
@@ -29,7 +29,7 @@ bool bvpl_compute_pca_test_error_process_cons(bprb_func_process& pro)
   input_types_[0] = "vcl_string" ;
 
   std::vector<std::string> output_types_(n_outputs_);
-  output_types_[0] = " std::string";
+  output_types_[0] = "vcl_string";
 
   return pro.set_input_types(input_types_) && pro.set_output_types(output_types_);
 }

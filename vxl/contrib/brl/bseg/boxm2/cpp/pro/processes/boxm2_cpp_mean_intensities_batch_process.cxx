@@ -9,7 +9,9 @@
 // \author Ozge C. Ozcanli
 // \date May 12, 2011
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/io/boxm2_stream_cache.h>
 #include <boxm2/io/boxm2_cache.h>
 #include <boxm2/boxm2_scene.h>
@@ -26,8 +28,8 @@
 
 namespace boxm2_cpp_mean_intensities_batch_process_globals
 {
-  const unsigned n_inputs_ = 3;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 3;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool boxm2_cpp_mean_intensities_batch_process_cons(bprb_func_process& pro)
@@ -70,7 +72,7 @@ bool boxm2_cpp_mean_intensities_batch_process(bprb_func_process& pro)
   id = blk_ids.begin();
   for (id = blk_ids.begin(); id != blk_ids.end(); ++id) {
     // we're assuming that we have enough RAM to store the whole output block for alpha
-    boxm2_data_base *  output_alph  = cache->get_data_base(scene,*id,boxm2_data_traits<BOXM2_AUX0>::prefix(),0,false);
+    boxm2_data_base *  output_alph = cache->get_data_base(scene,*id,boxm2_data_traits<BOXM2_AUX0>::prefix(),0,false);
     boxm2_mean_intensities_batch_functor data_functor;
     data_functor.init_data(output_alph, str_cache);
     int data_buff_length = (int) (output_alph->buffer_length()/alphaTypeSize);
@@ -83,8 +85,8 @@ bool boxm2_cpp_mean_intensities_batch_process(bprb_func_process& pro)
 
 namespace boxm2_cpp_mean_intensities_print_process_globals
 {
-  const unsigned n_inputs_ = 3;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 3;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool boxm2_cpp_mean_intensities_print_process_cons(bprb_func_process& pro)
@@ -122,15 +124,15 @@ bool boxm2_cpp_mean_intensities_print_process(bprb_func_process& pro)
   int alphaTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_AUX0>::prefix());
   // iterate the scene block by block and write to output
   std::vector<boxm2_block_id> blk_ids = scene->get_block_ids();
-  for (std::vector<boxm2_block_id>::iterator id = blk_ids.begin(); id != blk_ids.end(); ++id)
+  for (auto & blk_id : blk_ids)
   {
     // we're assuming that we have enough RAM to store the whole output block for alpha
-    boxm2_data_base * output_alph  = cache->get_data_base(scene,*id,boxm2_data_traits<BOXM2_AUX0>::prefix());
+    boxm2_data_base * output_alph = cache->get_data_base(scene,blk_id,boxm2_data_traits<BOXM2_AUX0>::prefix());
     boxm2_mean_intensities_print_functor data_functor;
     data_functor.init_data(output_alph,str_cache);
     int data_buff_length = (int) (output_alph->buffer_length()/alphaTypeSize);
     boxm2_data_serial_iterator<boxm2_mean_intensities_print_functor>(data_buff_length,data_functor);
-    cache->remove_data_base(scene,*id,boxm2_data_traits<BOXM2_AUX0>::prefix());
+    cache->remove_data_base(scene,blk_id,boxm2_data_traits<BOXM2_AUX0>::prefix());
   }
 
   return true;
@@ -139,8 +141,8 @@ bool boxm2_cpp_mean_intensities_print_process(bprb_func_process& pro)
 //: a process to be used for debugging purposes to see the values inside given datatypes
 namespace boxm2_cpp_data_print_process_globals
 {
-  const unsigned n_inputs_ = 4;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 4;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool boxm2_cpp_data_print_process_cons(bprb_func_process& pro)
@@ -188,7 +190,7 @@ bool boxm2_cpp_data_print_process(bprb_func_process& pro)
   {
     boxm2_block * blk = cache->get_block(*id);
     //: we're assuming that we have enough RAM to store the whole output block for alpha
-    boxm2_data_base * output  = cache->get_data_base(*id,prefix);
+    boxm2_data_base * output = cache->get_data_base(*id,prefix);
     boxm2_data_print_functor data_functor;
     data_functor.init_data(output,TypeSize,prefix);
     int data_buff_length = (int) (output->buffer_length()/(int)TypeSize);
@@ -198,4 +200,3 @@ bool boxm2_cpp_data_print_process(bprb_func_process& pro)
 #endif // 0
   return true;
 }
-

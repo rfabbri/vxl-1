@@ -1,9 +1,6 @@
 // This is core/vil/vil_view_as.h
 #ifndef vil_view_as_h_
 #define vil_view_as_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Various view conversion functions.
@@ -13,7 +10,9 @@
 // \author Tim Cootes, Ian Scott - Manchester
 
 #include <complex>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_image_view.h>
 #include <vil/vil_rgb.h>
 #include <vil/vil_rgba.h>

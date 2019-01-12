@@ -9,7 +9,9 @@
 // \author Vishal Jain
 // \date Mar 10, 2011
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/ocl/boxm2_opencl_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -31,9 +33,9 @@
 
 namespace boxm2_ocl_batch_synoptic_function_process_globals
 {
-  const unsigned n_inputs_ =  6;
-  const unsigned n_outputs_ = 0;
-  void compile_kernel(bocl_device_sptr device,std::vector<bocl_kernel*> & vec_kernels)
+  constexpr unsigned n_inputs_ = 6;
+  constexpr unsigned n_outputs_ = 0;
+  void compile_kernel(const bocl_device_sptr& device,std::vector<bocl_kernel*> & vec_kernels)
   {
     std::vector<std::string> src_paths;
     std::string source_dir = boxm2_ocl_util::ocl_src_root();
@@ -44,7 +46,7 @@ namespace boxm2_ocl_batch_synoptic_function_process_globals
 
     //compilation options
 
-    bocl_kernel* compute_cubic = new bocl_kernel();
+    auto* compute_cubic = new bocl_kernel();
     std::string opts = " -D COMPUTE_CUBIC ";
 
     compute_cubic->create_kernel(&device->context(), device->device_id(), src_paths, "batch_fit_cubic_polynomial", opts, "batch_fit_cubic_polynomial");
@@ -81,12 +83,12 @@ bool boxm2_ocl_batch_synoptic_function_process(bprb_func_process& pro)
   }
   //get the inputs
   unsigned i = 0;
-  bocl_device_sptr device             = pro.get_input<bocl_device_sptr>(i++);
-  boxm2_scene_sptr scene              = pro.get_input<boxm2_scene_sptr>(i++);
+  bocl_device_sptr device = pro.get_input<bocl_device_sptr>(i++);
+  boxm2_scene_sptr scene = pro.get_input<boxm2_scene_sptr>(i++);
   boxm2_opencl_cache_sptr opencl_cache= pro.get_input<boxm2_opencl_cache_sptr>(i++);
-  unsigned int nobs                   = pro.get_input<unsigned>(i++);
-  std::string identifier_filename      = pro.get_input<std::string>(i++);
-  float interim_sigma                 = pro.get_input<float>(i++);
+  auto nobs = pro.get_input<unsigned>(i++);
+  std::string identifier_filename = pro.get_input<std::string>(i++);
+  auto interim_sigma = pro.get_input<float>(i++);
 
   boxm2_cache_sptr cache = opencl_cache->get_cpu_cache();
   //: Read data types and identifier file names.
@@ -106,10 +108,10 @@ bool boxm2_ocl_batch_synoptic_function_process(bprb_func_process& pro)
   ifs.close();
 
   std::vector<std::string> type_names;
-  type_names.push_back("aux0");
-  type_names.push_back("aux1");
-  type_names.push_back("aux2");
-  type_names.push_back("aux3");
+  type_names.emplace_back("aux0");
+  type_names.emplace_back("aux1");
+  type_names.emplace_back("aux2");
+  type_names.emplace_back("aux3");
 
   // create a command queue.
   int status=0;
@@ -138,15 +140,15 @@ bool boxm2_ocl_batch_synoptic_function_process(bprb_func_process& pro)
     //choose correct render kernel
 
     /* bocl_mem* blk = */ opencl_cache->get_block(scene,*id);
-    bocl_mem* blk_info  = opencl_cache->loaded_block_info();
-    bocl_mem* alpha     = opencl_cache->get_data<BOXM2_ALPHA>(scene,*id,0,true);
+    bocl_mem* blk_info = opencl_cache->loaded_block_info();
+    bocl_mem* alpha = opencl_cache->get_data<BOXM2_ALPHA>(scene,*id,0,true);
     int alphaTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_ALPHA>::prefix());
-    boxm2_scene_info* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
+    auto* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
     info_buffer->data_buffer_length = (int) (alpha->num_bytes()/alphaTypeSize);
 
     //grab an appropriately sized AUX data buffer
     int auxTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_FLOAT8>::prefix());
-    bocl_mem *coeffs_buff  = opencl_cache->get_data(scene,*id,
+    bocl_mem *coeffs_buff = opencl_cache->get_data(scene,*id,
                                                     boxm2_data_traits<BOXM2_FLOAT8>::prefix("cubic_model"),
                                                     info_buffer->data_buffer_length*auxTypeSize,false);
     coeffs_buff->zero_gpu_buffer(queue);

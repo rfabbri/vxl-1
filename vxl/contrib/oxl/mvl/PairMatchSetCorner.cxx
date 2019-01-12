@@ -1,7 +1,4 @@
 // This is oxl/mvl/PairMatchSetCorner.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 
@@ -10,12 +7,14 @@
 #include <vector>
 #include "PairMatchSetCorner.h"
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <mvl/HomgInterestPointSet.h>
 
 //: Constructor
-PairMatchSetCorner::PairMatchSetCorner() : corners1_(VXL_NULLPTR) , corners2_(VXL_NULLPTR)
+PairMatchSetCorner::PairMatchSetCorner() : corners1_(nullptr) , corners2_(nullptr)
 {
 }
 
@@ -24,14 +23,14 @@ PairMatchSetCorner::PairMatchSetCorner() : corners1_(VXL_NULLPTR) , corners2_(VX
 // live longer than the PairMatchSetCorner (for example in an MViewDatabase).
 PairMatchSetCorner::PairMatchSetCorner(HomgInterestPointSet const* corners1,
                                        HomgInterestPointSet const* corners2)
-  : corners1_(VXL_NULLPTR) , corners2_(VXL_NULLPTR)
+  : corners1_(nullptr) , corners2_(nullptr)
 {
   set(corners1, corners2);
 }
 
 //: Copy a PairMatchSetCorner
 PairMatchSetCorner::PairMatchSetCorner(const PairMatchSetCorner& that):
-  PairMatchSet(that) , corners1_(VXL_NULLPTR) , corners2_(VXL_NULLPTR)
+  PairMatchSet(that) , corners1_(nullptr) , corners2_(nullptr)
 {
   set(that.corners1_, that.corners2_);
 }
@@ -44,9 +43,7 @@ PairMatchSetCorner& PairMatchSetCorner::operator=(const PairMatchSetCorner&that)
 }
 
 //: Destructor
-PairMatchSetCorner::~PairMatchSetCorner()
-{
-}
+PairMatchSetCorner::~PairMatchSetCorner() = default;
 
 // Data Control--------------------------------------------------------------
 

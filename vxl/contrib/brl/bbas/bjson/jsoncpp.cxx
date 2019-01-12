@@ -73,6 +73,22 @@ license you like.
 
 
 
+#include <clocale>
+#include <utility>
+#include <cstdio>
+#include <cassert>
+#include <cstring>
+#include <istream>
+#include <sstream>
+#include <iostream>
+#include <memory>
+#include <set>
+#include <limits>
+#include <cmath>
+#include <cstddef>
+#include <algorithm>
+#include <iomanip>
+#include <cfloat>
 #include "json.h"
 
 #ifndef JSON_IS_AMALGAMATION
@@ -99,7 +115,6 @@ license you like.
 #endif
 
 #ifndef JSONCPP_NO_LOCALE_SUPPORT
-#include <clocale>
 #endif
 
 /* This header provides common string manipulation support, such as UTF-8,
@@ -226,15 +241,9 @@ static inline void fixNumericLocaleInput(char* begin, char* end) {
 #include <json/value.h>
 #include "json_tool.h"
 #endif // if !defined(JSON_IS_AMALGAMATION)
-#include <utility>
-#include <cstdio>
-#include <cassert>
-#include <cstring>
-#include <istream>
-#include <sstream>
-#include <vcl_memory.h>
-#include <set>
-#include <limits>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #if defined(_MSC_VER)
 #if !defined(WINCE) && defined(__STDC_SECURE_LIB__) && _MSC_VER >= 1500 // VC++ 9.0 and above
@@ -266,7 +275,7 @@ static int       stackDepth_g = 0;  // see readValue()
 
 namespace Json {
 
-typedef vcl_unique_ptr<CharReader>   CharReaderPtr;
+typedef std::unique_ptr<CharReader>   CharReaderPtr;
 
 // Implementation of class Features
 // ////////////////////////////////
@@ -1811,7 +1820,7 @@ bool OurReader::decodeDouble(Token& token) {
 
 bool OurReader::decodeDouble(Token& token, Value& decoded) {
   double value = 0;
-  const int bufferSize = 32;
+  constexpr int bufferSize = 32;
   int count;
   ptrdiff_t const length = token.end_ - token.start_;
 
@@ -2455,16 +2464,9 @@ ValueIterator& ValueIterator::operator=(const SelfType& other) {
 #include <json/value.h>
 #include <json/writer.h>
 #endif // if !defined(JSON_IS_AMALGAMATION)
-#include <math.h>
-#include <sstream>
-#include <utility>
-#include <cstring>
-#include <cassert>
 #ifdef JSON_USE_CPPTL
 #include <cpptl/conststring.h>
 #endif
-#include <cstddef> // size_t
-#include <algorithm> // min()
 
 #define JSON_ASSERT_UNREACHABLE assert(false)
 
@@ -2724,7 +2726,7 @@ Value::CZString::CZString(const CZString& other) {
 #if JSON_HAS_RVALUE_REFERENCES
 Value::CZString::CZString(CZString&& other)
   : cstr_(other.cstr_), index_(other.index_) {
-  other.cstr_ = VXL_NULLPTR;
+  other.cstr_ = nullptr;
 }
 #endif
 
@@ -4072,17 +4074,11 @@ Value& Path::make(Value& root) const {
 #include <json/writer.h>
 #include "json_tool.h"
 #endif // if !defined(JSON_IS_AMALGAMATION)
-#include <iomanip>
-#include <vcl_memory.h>
-#include <sstream>
-#include <utility>
-#include <set>
-#include <cassert>
-#include <cstring>
-#include <cstdio>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #if defined(_MSC_VER) && _MSC_VER >= 1200 && _MSC_VER < 1800 // Between VC++ 6.0 and VC++ 11.0
-#include <float.h>
 #define isfinite _finite
 #elif defined(__sun) && defined(__SVR4) //Solaris
 #if !defined(isfinite)
@@ -4091,7 +4087,6 @@ Value& Path::make(Value& root) const {
 #endif
 #elif defined(_AIX)
 #if !defined(isfinite)
-#include <math.h>
 #define isfinite finite
 #endif
 #elif defined(__hpux)
@@ -4100,12 +4095,10 @@ Value& Path::make(Value& root) const {
 #define isfinite(x) ((sizeof(x) == sizeof(float) ? \
                      _Isfinitef(x) : _IsFinite(x)))
 #else
-#include <math.h>
 #define isfinite finite
 #endif
 #endif
 #else
-#include <cmath>
 #if !(defined(__QNXNTO__)) // QNX already defines isfinite
 #define isfinite std::isfinite
 #endif
@@ -4128,7 +4121,6 @@ Value& Path::make(Value& root) const {
 #endif
 
 #if defined(__BORLANDC__)
-#include <float.h>
 #define isfinite _finite
 #define snprintf _snprintf
 #endif
@@ -4140,7 +4132,7 @@ Value& Path::make(Value& root) const {
 
 namespace Json {
 
-typedef vcl_unique_ptr<StreamWriter>   StreamWriterPtr;
+typedef std::unique_ptr<StreamWriter>   StreamWriterPtr;
 
 static bool containsControlCharacter(const char* str) {
   while (*str) {
@@ -5287,8 +5279,3 @@ JSONCPP_OSTREAM& operator<<(JSONCPP_OSTREAM& sout, Value const& root) {
 // //////////////////////////////////////////////////////////////////////
 // End of content of file: src/lib_json/json_writer.cpp
 // //////////////////////////////////////////////////////////////////////
-
-
-
-
-

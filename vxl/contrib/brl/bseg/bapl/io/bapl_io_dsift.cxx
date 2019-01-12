@@ -1,7 +1,9 @@
 // This is brl/bseg/bapl/io/bapl_io_dsift.cxx
 #include <iostream>
 #include "bapl_io_dsift.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 void vsl_b_read(vsl_b_istream &is, bapl_dsift &dsift)
 {
@@ -24,12 +26,12 @@ void vsl_b_read(vsl_b_istream &is, bapl_dsift* &p)
     vsl_b_read(is,*p);
   }
   else
-    p = VXL_NULLPTR;
+    p = nullptr;
 }
 
 void vsl_b_write(vsl_b_ostream &os, const bapl_dsift* p)
 {
-  if ( p == VXL_NULLPTR )
+  if ( p == nullptr )
     vsl_b_write(os,false); //indicate null pointer stored
   else
   {
@@ -38,7 +40,7 @@ void vsl_b_write(vsl_b_ostream &os, const bapl_dsift* p)
   }
 }
 
-void vsl_print_summary(std::ostream& os, const bapl_dsift *p)
+void vsl_print_summary(std::ostream& os, const bapl_dsift * /*p*/)
 {
   os << "vsl_print_summary not yet implemented. " << std::flush;
 }

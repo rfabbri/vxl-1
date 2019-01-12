@@ -1,7 +1,11 @@
 #include "boxm2_compute_derivative_function.h"
 //:
 // \file
-#include <vcl_cassert.h>
+#include <cassert>
+#include <utility>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #if 1
 # define PROB
@@ -14,17 +18,17 @@ boxm2_compute_derivative_function::boxm2_compute_derivative_function(
             float normal_threshold, std::string kernel_x_name, std::string kernel_y_name, std::string kernel_z_name)
 {
   //initialize kernels
-  kernel_x_ = load_kernel(kernel_x_name);
-  kernel_y_ = load_kernel(kernel_y_name);
-  kernel_z_ = load_kernel(kernel_z_name);
+  kernel_x_ = load_kernel(std::move(kernel_x_name));
+  kernel_y_ = load_kernel(std::move(kernel_y_name));
+  kernel_z_ = load_kernel(std::move(kernel_z_name));
 
   boxm2_block_id id = blk->block_id();
 
   //3d array of trees
   const boxm2_array_3d<uchar16>& trees = blk->trees();
-  boxm2_data_traits<BOXM2_ALPHA>::datatype *   alpha_data = (boxm2_data_traits<BOXM2_ALPHA>::datatype*) alphas->data_buffer();
-  boxm2_data_traits<BOXM2_NORMAL>::datatype * normals_data = (boxm2_data_traits<BOXM2_NORMAL>::datatype*) normals->data_buffer();
-  boxm2_data_traits<BOXM2_POINT>::datatype* points_data = (boxm2_data_traits<BOXM2_POINT>::datatype*)points->data_buffer();
+  auto *   alpha_data = (boxm2_data_traits<BOXM2_ALPHA>::datatype*) alphas->data_buffer();
+  auto * normals_data = (boxm2_data_traits<BOXM2_NORMAL>::datatype*) normals->data_buffer();
+  auto* points_data = (boxm2_data_traits<BOXM2_POINT>::datatype*)points->data_buffer();
 
   //iterate through each block, filtering the root level first
   std::cout << "Filtering scene: "<< std::flush
@@ -155,10 +159,10 @@ std::vector<std::pair<vgl_point_3d<int>, float> >  boxm2_compute_derivative_func
     double side_len = 1.0 / (double) (1<<curr_depth);
 #endif
 
-    for (unsigned int i=0; i<neighbors.size(); ++i)
+    for (const auto & neighbor : neighbors)
     {
         //load neighbor block/tree
-        vgl_point_3d<double> abCenter = neighbors[i].second;
+        vgl_point_3d<double> abCenter = neighbor.second;
         vgl_point_3d<int>    blkIdx((int) abCenter.x(),
                                     (int) abCenter.y(),
                                     (int) abCenter.z() );
@@ -181,7 +185,7 @@ std::vector<std::pair<vgl_point_3d<int>, float> >  boxm2_compute_derivative_func
             boxm2_data_traits<BOXM2_ALPHA>::datatype alpha = alpha_data[idx];
             float prob = 1.0f - (float)std::exp(-alpha * side_len * data.sub_block_dim_.x());
 
-            std::pair<vgl_point_3d<int>, float> mypair(neighbors[i].first, prob);
+            std::pair<vgl_point_3d<int>, float> mypair(neighbor.first, prob);
             probs.push_back(mypair);
 #else
             //grab alpha
@@ -215,7 +219,7 @@ std::vector<std::pair<vgl_point_3d<int>, float> >  boxm2_compute_derivative_func
 #else
             float prob = totalAlphaL;
 #endif
-            std::pair<vgl_point_3d<int>, float> mypair(neighbors[i].first, prob);
+            std::pair<vgl_point_3d<int>, float> mypair(neighbor.first, prob);
             probs.push_back(mypair);
         }
     }
@@ -224,7 +228,7 @@ std::vector<std::pair<vgl_point_3d<int>, float> >  boxm2_compute_derivative_func
 }
 
 
-std::vector<std::pair<vgl_point_3d<int>, float> > boxm2_compute_derivative_function::load_kernel(std::string filename)
+std::vector<std::pair<vgl_point_3d<int>, float> > boxm2_compute_derivative_function::load_kernel(const std::string& filename)
 {
     std::vector<std::pair<vgl_point_3d<int>, float> > filter;
 
@@ -248,7 +252,7 @@ std::vector<std::pair<vgl_point_3d<int>, float> > boxm2_compute_derivative_funct
         ifs >> weight;
         if (ifs.eof())
             break;
-        filter.push_back(std::pair<vgl_point_3d<int>, float>( vgl_point_3d<int>(int(this_loc.x()),int(this_loc.y()),int(this_loc.z())), weight));
+        filter.emplace_back( vgl_point_3d<int>(int(this_loc.x()),int(this_loc.y()),int(this_loc.z())), weight);
 #ifdef DEBUG
         std::cout << this_loc << "  weight: " << weight << std::endl;
 #endif
@@ -260,8 +264,8 @@ std::vector<std::pair<vgl_point_3d<int>, float> > boxm2_compute_derivative_funct
 float boxm2_compute_derivative_function::apply_filter(std::vector<std::pair<vgl_point_3d<int>, float> > neighbors, std::vector<std::pair<vgl_point_3d<int>, float> > filter)
 {
     float sum = 0;
-    for (unsigned  i = 0; i < filter.size(); i++) {
-        vgl_point_3d<int> loc = filter[i].first;
+    for (auto & i : filter) {
+        vgl_point_3d<int> loc = i.first;
         std::vector<std::pair<vgl_point_3d<int>, float> >::const_iterator it = neighbors.begin();
         bool found = false;
         while (!found) {
@@ -271,7 +275,7 @@ float boxm2_compute_derivative_function::apply_filter(std::vector<std::pair<vgl_
         }
         assert(found);
         //add data*filter to sum
-        sum += filter[i].second * (*it).second;
+        sum += i.second * (*it).second;
     }
     return sum;
 }

@@ -10,8 +10,10 @@
 #include <cmath>
 #include <string>
 #include "vimt_gaussian_pyramid_builder_2d_general.h"
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vil/algo/vil_gauss_reduce.h>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_vector_2d.h>
@@ -34,8 +36,7 @@ vimt_gaussian_pyramid_builder_2d_general<T>::vimt_gaussian_pyramid_builder_2d_ge
 //=======================================================================
 
 template <class T>
-vimt_gaussian_pyramid_builder_2d_general<T>::~vimt_gaussian_pyramid_builder_2d_general()
-{}
+vimt_gaussian_pyramid_builder_2d_general<T>::~vimt_gaussian_pyramid_builder_2d_general() = default;
 
 //: Set the Scale step
 template <class T>

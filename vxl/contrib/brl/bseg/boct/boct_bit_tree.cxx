@@ -1,11 +1,11 @@
 //:
 // \file
-#include "boct_bit_tree.h"
-#include "boct_tree_cell.h"
 #include <algorithm>
 #include <cstring>
 #include <iostream>
 #include <list>
+#include "boct_bit_tree.h"
+#include "boct_tree_cell.h"
 
 //: copy constructor
 boct_bit_tree::boct_bit_tree(const boct_bit_tree &other)
@@ -37,14 +37,14 @@ boct_bit_tree::boct_bit_tree(const unsigned char *bits, int num_levels)
 // Copy assignment operator
 boct_bit_tree &boct_bit_tree::operator=(boct_bit_tree that) {
   // swap members so 'that' can be safely destroyed
-  vcl_swap(this->bits_, that.bits_);
-  vcl_swap(this->is_owning_, that.is_owning_);
-  vcl_swap(this->num_levels_, that.num_levels_);
+  std::swap(this->bits_, that.bits_);
+  std::swap(this->is_owning_, that.is_owning_);
+  std::swap(this->num_levels_, that.num_levels_);
 
   // If is_owning, replace `that`s buffer with a copy
   if (this->is_owning_) {
-    unsigned char *new_bits = new unsigned char[16];
-    vcl_memcpy(new_bits, this->bits_, 16);
+    auto *new_bits = new unsigned char[16];
+    std::memcpy(new_bits, this->bits_, 16);
     this->bits_ = new_bits;
   }
   // Don't destroy old buffer in case of "self assignment" (i.e assignment when
@@ -137,20 +137,20 @@ int boct_bit_tree::traverse_to_level(const vgl_point_3d<double> p,
 }
 vgl_point_3d<double> boct_bit_tree::cell_center(int bit_index) {
   // Indexes into precomputed cell_center matrix
-  return vgl_point_3d<double>(
-      centerX[bit_index], centerY[bit_index], centerZ[bit_index]);
+  return {
+      centerX[bit_index], centerY[bit_index], centerZ[bit_index]};
 }
 
 //: Cell bounding box given bit_index, tree origin and tree len
 vgl_box_3d<double>
 boct_bit_tree::cell_box(int bit_index, vgl_point_3d<double> orig, double len) {
   double half_len = cell_len(bit_index) / 2.0;
-  return vgl_box_3d<double>(orig.x() + len * (centerX[bit_index] - half_len),
+  return {orig.x() + len * (centerX[bit_index] - half_len),
                             orig.y() + len * (centerY[bit_index] - half_len),
                             orig.z() + len * (centerZ[bit_index] - half_len),
                             orig.x() + len * (centerX[bit_index] + half_len),
                             orig.y() + len * (centerY[bit_index] + half_len),
-                            orig.z() + len * (centerZ[bit_index] + half_len));
+                            orig.z() + len * (centerZ[bit_index] + half_len)};
 }
 
 double boct_bit_tree::cell_len(int bit_index) const {
@@ -455,7 +455,7 @@ int boct_bit_tree::get_data_ptr(bool is_random) {
   if (is_random) {
     unsigned char hi = this->bits_[10];
     unsigned char lo = this->bits_[11];
-    unsigned short value = (unsigned short)((hi << 8) | lo);
+    auto value = (unsigned short)((hi << 8) | lo);
     return int(value);
   } else {
     return int((bits_[13] << 24) | (bits_[12] << 16) | (bits_[11] << 8) |
@@ -465,8 +465,8 @@ int boct_bit_tree::get_data_ptr(bool is_random) {
 
 void boct_bit_tree::set_data_ptr(int ptr, bool is_random) {
   if (is_random) {
-    unsigned char hi = (unsigned char)(ptr >> 8);
-    unsigned char lo = (unsigned char)(ptr & 255);
+    auto hi = (unsigned char)(ptr >> 8);
+    auto lo = (unsigned char)(ptr & 255);
     this->bits_[10] = hi;
     this->bits_[11] = lo;
   } else {

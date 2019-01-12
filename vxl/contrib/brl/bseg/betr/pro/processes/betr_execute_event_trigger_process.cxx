@@ -1,22 +1,24 @@
 // This is brl/bseg/betr/pro/processes/betr_execute_event_trigger_process.cxx
-#include <iostream>
-#include <fstream>
-#include <bprb/bprb_func_process.h>
-#include <vcl_string.h>
 //:
 // \file
 // \brief  A process for executing an event_trigger (process change)
 //
 
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <bprb/bprb_func_process.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
-#include <vcl_compiler.h>
 #include <betr/betr_event_trigger.h>
 #include <vgl/vgl_point_3d.h>
 
 namespace betr_execute_event_trigger_process_globals
 {
-  const unsigned n_inputs_  = 3;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 3;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 bool betr_execute_event_trigger_process_cons(bprb_func_process& pro)
@@ -25,9 +27,9 @@ bool betr_execute_event_trigger_process_cons(bprb_func_process& pro)
 
   //process takes 3 inputs
   std::vector<std::string> input_types_(n_inputs_);
-  input_types_[0]  = "betr_event_trigger_sptr"; //event_trigger
-  input_types_[1]  = "vcl_string"; //algorithm name
-  input_types_[2]  = "vcl_string"; //algorithm parameters
+  input_types_[0] = "betr_event_trigger_sptr"; //event_trigger
+  input_types_[1] = "vcl_string"; //algorithm name
+  input_types_[2] = "vcl_string"; //algorithm parameters
   // process has 1 output
   std::vector<std::string> output_types_(n_outputs_);
   output_types_[0] = "float"; // change probability

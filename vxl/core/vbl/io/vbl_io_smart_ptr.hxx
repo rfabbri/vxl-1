@@ -12,7 +12,9 @@
 #include "vbl_io_smart_ptr.h"
 #include <vsl/vsl_binary_io.h>
 #include <vbl/vbl_smart_ptr.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //=========================================================================
 //: Binary save self to stream.
@@ -20,11 +22,11 @@ template<class T>
 void vsl_b_write(vsl_b_ostream & os, const vbl_smart_ptr<T> &p)
 {
   // write version number
-  const short io_version_no = 2;
+  constexpr short io_version_no = 2;
   vsl_b_write(os, io_version_no);
   vsl_b_write(os, p.is_protected());
 
-  if (p.ptr() == VXL_NULLPTR)  // Deal with Null pointers first.
+  if (p.ptr() == nullptr)  // Deal with Null pointers first.
   {
     vsl_b_write(os, true);
     vsl_b_write(os, 0ul); // Use 0 to indicate a null pointer.
@@ -118,12 +120,12 @@ void vsl_b_read(vsl_b_istream &is, vbl_smart_ptr<T> &p)
 
     if (id == 0) // Deal with Null pointers first.
     {
-      p = VXL_NULLPTR;
+      p = nullptr;
       return;
     }
 
     T * pointer = static_cast<T *>( is.get_serialisation_pointer(id));
-    if (first_time != (pointer == VXL_NULLPTR))
+    if (first_time != (pointer == nullptr))
     {
       // This checks that the saving stream and reading stream
       // both agree on whether or not this is the first time they
@@ -134,7 +136,7 @@ void vsl_b_read(vsl_b_istream &is, vbl_smart_ptr<T> &p)
       return;
     }
 
-    if (pointer == VXL_NULLPTR)
+    if (pointer == nullptr)
     {
       // If you get an error in the next line, it could be because your type T
       // has no vsl_b_read(vsl_b_istream&,T*&)  defined on it.

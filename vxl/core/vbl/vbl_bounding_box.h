@@ -1,9 +1,6 @@
 // This is core/vbl/vbl_bounding_box.h
 #ifndef vbl_bounding_box_h_
 #define vbl_bounding_box_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Contains a bounding box class
@@ -19,8 +16,11 @@
 // \endverbatim
 
 #include <iosfwd>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
+#include <type_traits>
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 // Helper class for vbl_bounding_box
@@ -80,21 +80,25 @@ class vbl_bounding_box_base
 
   //:  is a 2D point inside the bounding box
   inline bool inside( const T& x, const T& y) const {
-    assert (DIM_::value == 2);
+    assert (DIM_::value == 2); //NOTE: in case of DIM_  != 2 this never occurs.
+    constexpr unsigned int xdim = 0;
+    constexpr unsigned int ydim = (DIM_::value == 2) ? 1 : 0;
     return
       initialized_ &&
-      min_[0] <= x && x <= max_[0] &&
-      min_[1] <= y && y <= max_[1];
+      min_[xdim] <= x && x <= max_[xdim] &&
+      min_[ydim] <= y && y <= max_[ydim];
   }
 
   //:  is a 3D point inside the bounding box
   inline bool inside( const T& x, const T& y, const T& z) const {
-    assert (DIM_::value == 3);
-    return
-      initialized_ &&
-      min_[0] <= x && x <= max_[0] &&
-      min_[1] <= y && y <= max_[1] &&
-      min_[2] <= z && z <= max_[2];
+    assert (DIM_::value == 3); //NOTE: in case of DIM_  != 3 this never occurs.
+    constexpr unsigned int xdim = 0;
+    constexpr unsigned int ydim = (DIM_::value == 3) ? 1 : 0;
+    constexpr unsigned int zdim = (DIM_::value == 3) ? 2 : 0;
+    return initialized_ &&
+      min_[xdim] <= x && x <= max_[xdim] &&
+      min_[ydim] <= y && y <= max_[ydim] &&
+      min_[zdim] <= z && z <= max_[zdim];
   }
 
   //:  inside test for arbitrary dimension
@@ -125,10 +129,10 @@ class vbl_bounding_box_base
 
   inline T const& xmin() const { return min_[0]; }
   inline T const& xmax() const { return max_[0]; }
-  inline T const& ymin() const { assert(DIM_::value >= 2); return min_[1]; }
-  inline T const& ymax() const { assert(DIM_::value >= 2); return max_[1]; }
-  inline T const& zmin() const { assert(DIM_::value >= 3); return min_[2]; }
-  inline T const& zmax() const { assert(DIM_::value >= 3); return max_[2]; }
+  inline T const& ymin() const { assert(DIM_::value >= 2); return (DIM_::value >= 2) ? min_[1] : min_[0]; }
+  inline T const& ymax() const { assert(DIM_::value >= 2); return (DIM_::value >= 2) ? max_[1] : max_[0]; }
+  inline T const& zmin() const { assert(DIM_::value >= 3); return (DIM_::value >= 3) ? min_[2] : min_[0]; }
+  inline T const& zmax() const { assert(DIM_::value >= 3); return (DIM_::value >= 3) ? max_[2] : max_[0]; }
 
   //#pragma dogma
   // There is no need for the data members to be private to

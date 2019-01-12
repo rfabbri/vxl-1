@@ -1,7 +1,4 @@
 // This is core/vil1/vil1_resample_image_impl.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
@@ -12,9 +9,11 @@
 #include <vil1/vil1_rgb.h>
 #include <vil1/vil1_pixel.h>
 #include <vxl_config.h>
-#include <vcl_climits.h> // CHAR_BIT
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#include <climits>// CHAR_BIT
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 vil1_resample_image_impl::vil1_resample_image_impl(vil1_image const &underlying, unsigned nw, unsigned nh)
   : base(underlying)
@@ -48,7 +47,7 @@ bool vil1_resample_image_impl::get_property(char const *, void *) const
 
 bool vil1_resample_image_impl::get_section(void *buf, int x0, int y0, int w, int h) const
 {
-  assert(buf!=VXL_NULLPTR);
+  assert(buf!=nullptr);
 #ifdef DEBUG
   std::cerr << "get_section() x0 y0 w h = " << x0 << ' ' << y0 << ' ' << w << ' ' << h << '\n';
 #endif
@@ -68,11 +67,11 @@ bool vil1_resample_image_impl::get_section(void *buf, int x0, int y0, int w, int
   switch ( vil1_pixel_format(base) ) {
   case VIL1_BYTE:
     return vil1_resample_image(base, new_width, new_height,
-                               (vxl_byte*)buf, (unsigned*)VXL_NULLPTR,
+                               (vxl_byte*)buf, (unsigned*)nullptr,
                                x0, y0, w, h);
   case VIL1_RGB_BYTE:
     return vil1_resample_image(base, new_width, new_height,
-                               (vil1_rgb<vxl_byte>*)buf, (vil1_rgb<int>*)VXL_NULLPTR,
+                               (vil1_rgb<vxl_byte>*)buf, (vil1_rgb<int>*)nullptr,
                                x0, y0, w, h);
 
   default:

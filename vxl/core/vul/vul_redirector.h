@@ -1,9 +1,6 @@
 // This is core/vul/vul_redirector.h
 #ifndef vul_redirector_h_
 #define vul_redirector_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Contains class for simplified redirection of iostreams
@@ -17,7 +14,9 @@
 // \endverbatim
 
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 struct vul_redirector_data;
 

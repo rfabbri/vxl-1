@@ -9,14 +9,16 @@
 // \author Vishal Jain
 // \date Mar 15, 2011
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/boxm2_scene.h>
 #include <vul/vul_file.h>
 
 namespace boxm2_write_scene_xml_process_globals
 {
-  const unsigned n_inputs_  =2;
-  const unsigned n_outputs_ =0;
+  constexpr unsigned n_inputs_ = 2;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool boxm2_write_scene_xml_process_cons(bprb_func_process& pro)

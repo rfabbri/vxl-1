@@ -1,8 +1,5 @@
 #ifndef mvl2_video_writer_linux_h_
 #define mvl2_video_writer_linux_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief A class for writing videos
@@ -16,7 +13,9 @@
 
 #include <iostream>
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vxl_config.h>
 #include <vil/vil_image_view.h>
 

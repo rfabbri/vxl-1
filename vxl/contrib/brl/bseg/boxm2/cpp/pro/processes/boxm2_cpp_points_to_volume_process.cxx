@@ -9,7 +9,9 @@
 // \author Andrew Miller
 // \date Jan 29, 2012
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/io/boxm2_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -27,8 +29,8 @@
 
 namespace boxm2_cpp_points_to_volume_process_globals
 {
-  const unsigned n_inputs_ =3;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 3;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool boxm2_cpp_points_to_volume_process_cons(bprb_func_process& pro)
@@ -62,7 +64,7 @@ bool boxm2_cpp_points_to_volume_process(bprb_func_process& pro)
   unsigned i = 0;
   boxm2_scene_sptr scene = pro.get_input<boxm2_scene_sptr>(i++);
   boxm2_cache_sptr cache = pro.get_input<boxm2_cache_sptr>(i++);
-  std::string point_file  = pro.get_input<std::string>(i++);
+  std::string point_file = pro.get_input<std::string>(i++);
 
   //load point file
   imesh_mesh points;

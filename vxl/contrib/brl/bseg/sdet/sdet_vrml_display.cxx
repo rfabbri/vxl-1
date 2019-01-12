@@ -60,10 +60,9 @@ void sdet_vrml_display::
 write_intensity_regions_3d(std::ofstream& str,
                            std::vector<vtol_intensity_face_sptr> const& faces)
 {
-  for (std::vector<vtol_intensity_face_sptr>::const_iterator fit = faces.begin();
-      fit != faces.end(); ++fit)
+  for (const auto & face : faces)
   {
-    vtol_intensity_face_sptr f = (*fit);
+    const vtol_intensity_face_sptr& f = face;
     if (f->area()==0) continue;
     //average region height
     double z0 = f->Io();
@@ -73,12 +72,12 @@ write_intensity_regions_3d(std::ofstream& str,
     for (unsigned i = 0; i<nedges; ++i)
     {
       vtol_edge_sptr e = och->edge(i);
-      vtol_edge_2d* e2d = (vtol_edge_2d*)(e.ptr());
+      auto* e2d = (vtol_edge_2d*)(e.ptr());
       vsol_curve_2d_sptr c = e2d->curve();
       vdgl_digital_curve* dc = c->cast_to_vdgl_digital_curve();
       if (!dc) continue;
       write_index_preamble(str);
-      unsigned n = static_cast<unsigned>(dc->n_pts());
+      auto n = static_cast<unsigned>(dc->n_pts());
       if (n<2) continue;
       double ds = 1.0/(n-1);
       for (unsigned j = 0; j<n; ++j){
@@ -97,10 +96,8 @@ void sdet_vrml_display::
 write_vsol_polys_3d(std::ofstream& str,
                     std::vector<vsol_polygon_3d_sptr> const& polys)
 {
-  for (std::vector<vsol_polygon_3d_sptr>::const_iterator pit = polys.begin();
-      pit != polys.end(); ++pit)
+  for (const auto& poly : polys)
   {
-    vsol_polygon_3d_sptr poly = *pit;
     unsigned n = poly->size();
     if (!n)
       continue;

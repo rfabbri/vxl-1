@@ -9,7 +9,9 @@
 
 #include <utility>
 #include <vpgl/vpgl_proj_camera.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/algo/vgl_rotation_3d.h>
 #include <vnl/vnl_least_squares_function.h>
 #include <vpgl/vpgl_calibration_matrix.h>
@@ -23,13 +25,13 @@ class vpgl_camera_transform_f : public vnl_least_squares_function
   //: Constructor. The source image is mapped to the destination frame by dt. nbins is the number of histogram bins used to compute entropies.
   vpgl_camera_transform_f(unsigned cnt_residuals, unsigned n_unknowns,
                           const std::vector<vpgl_perspective_camera<double>  >& input_cams,
-                          const std::vector< std::vector< std::pair<vnl_vector_fixed<double, 2>, unsigned> > >& cam_ids_img_pts,
-                          const std::vector<vnl_vector_fixed<double, 4> >& pts_3d, bool minimize_R = true);
+                          std::vector< std::vector< std::pair<vnl_vector_fixed<double, 2>, unsigned> > >  cam_ids_img_pts,
+                          std::vector<vnl_vector_fixed<double, 4> >  pts_3d, bool minimize_R = true);
 
   //: The main function.
   //  Given the parameter vector x, compute the vector of residuals fx.
   //  Fx has been sized appropriately before the call.
-  virtual void f(vnl_vector<double> const& x, vnl_vector<double>& fx);
+  void f(vnl_vector<double> const& x, vnl_vector<double>& fx) override;
 
   //: Calculate the Jacobian, given the parameter vector x using forward differencing
   //virtual void gradf(vnl_vector<double> const& x, vnl_matrix<double>& jacobian);

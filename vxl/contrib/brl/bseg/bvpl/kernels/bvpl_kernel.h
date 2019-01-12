@@ -14,7 +14,10 @@
 
 #include <iostream>
 #include <string>
-#include <vcl_compiler.h>
+#include <utility>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_float_3.h>
 #include <vbl/vbl_ref_count.h>
 #include "bvpl_kernel_iterator.h"
@@ -32,7 +35,7 @@ class bvpl_kernel: public vbl_ref_count
   bvpl_kernel(){id_=bvpl_kernel::get_next_id();}
   //: Constructor
   bvpl_kernel(bvpl_kernel_iterator kernel, vnl_float_3 axis, vnl_float_3 aux_axis, float angle, vgl_vector_3d<int> dim, vgl_point_3d<int> min_pt, vgl_point_3d<int> max_pt, std::string name = "", double voxel_length = 1.0)
-  : kernel_(kernel),axis_(axis),aux_axis_(aux_axis), angle_(angle),dim_(dim),min_point_(min_pt),max_point_(max_pt),name_(name),voxel_length_(voxel_length)
+  : kernel_(kernel),axis_(axis),aux_axis_(aux_axis), angle_(angle),dim_(dim),min_point_(min_pt),max_point_(max_pt),name_(std::move(name)),voxel_length_(voxel_length)
   {
 //#ifdef DEBUG
     std::cout << "Creating kernel with axis, angle, dim, max, min = " << axis_ << ' ' << angle_<< ' ' << dim_<< ' ' <<max_point_<< ' ' << min_point_ << '\n';
@@ -40,7 +43,7 @@ class bvpl_kernel: public vbl_ref_count
     id_=bvpl_kernel::get_next_id();
   }
   //: Destructor
-  ~bvpl_kernel() {}
+  ~bvpl_kernel() override = default;
   bvpl_kernel_iterator iterator(){return kernel_;}
   vnl_float_3 axis() const {return axis_;}
   vnl_float_3 aux_axis() const {return aux_axis_;}
@@ -66,7 +69,7 @@ class bvpl_kernel: public vbl_ref_count
 
     int z=max_point_.z();
 
-    return vgl_vector_3d<int>(x,y,z);
+    return {x,y,z};
   }
 
   void print()
@@ -90,15 +93,15 @@ class bvpl_kernel: public vbl_ref_count
   float max_val();
   float min_val();
 
-  void print_to_file(std::string filename);
+  void print_to_file(const std::string& filename);
 
-  bool save_raw(std::string filename);
+  bool save_raw(const std::string& filename);
 
   //: Return an xml element
   bxml_data_sptr xml_element();
 
   //: Read an xml element
-  static bvpl_kernel_sptr parse_xml_element(bxml_data_sptr d);
+  static bvpl_kernel_sptr parse_xml_element(const bxml_data_sptr& d);
 
   // Returns a sum of kernel values. Useful to check if they add up to zero
   float cum_sum()
@@ -147,7 +150,7 @@ class bvpl_kernel_vector : public vbl_ref_count
  public:
   typedef std::vector< bvpl_kernel_sptr >::iterator iterator;
   //: Default constructor
-  bvpl_kernel_vector() {}
+  bvpl_kernel_vector() = default;
 
   iterator begin() { return kernels_.begin(); }
   iterator end()   { return kernels_.end(); }
@@ -168,7 +171,7 @@ class bvpl_kernel_vector : public vbl_ref_count
       if (dim.z() > max_z)
         max_z = dim.z();
     }
-    return vgl_vector_3d<int>(max_x, max_y, max_z);
+    return {max_x, max_y, max_z};
   }
 
   vgl_point_3d<int> max(){
@@ -186,7 +189,7 @@ class bvpl_kernel_vector : public vbl_ref_count
       if (max_pt.z() > max_z)
         max_z = max_pt.z();
     }
-    return vgl_point_3d<int>(max_x, max_y, max_z);
+    return {max_x, max_y, max_z};
   }
 
   vgl_point_3d<int> min() {
@@ -204,7 +207,7 @@ class bvpl_kernel_vector : public vbl_ref_count
       if (min_pt.z() < min_z)
         min_z = min_pt.z();
     }
-    return vgl_point_3d<int>(min_x, min_y, min_z);
+    return {min_x, min_y, min_z};
   }
 
   //: vector of kernel

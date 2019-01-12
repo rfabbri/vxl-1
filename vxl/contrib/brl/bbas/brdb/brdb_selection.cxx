@@ -9,15 +9,17 @@
 // \author Yong Zhao
 // \date Apr 4th, 2007
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <brdb/brdb_query.h>
 #include <brdb/brdb_relation.h>
 #include <brdb/brdb_tuple.h>
 
 //: Constructor
 brdb_selection::brdb_selection(const brdb_relation_sptr& relation, brdb_query_aptr query)
-  : relation_(relation), query_(vcl_move(query))
+  : relation_(relation), query_(std::move(query))
 {
   this->time_stamp_ = relation->get_timestamp();
   produce(query_, selected_set_);
@@ -32,7 +34,7 @@ brdb_selection::brdb_selection(const brdb_selection_sptr& selection, brdb_query_
     selection->check_and_update();
     this->selected_set_ = selection->selected_set_;
     refine(query, selected_set_);
-    this->query_ = brdb_query_aptr(new brdb_query_and(selection->query_->clone(), vcl_move(query)));
+    this->query_ = brdb_query_aptr(new brdb_query_and(selection->query_->clone(), std::move(query)));
   }
 }
 
@@ -49,8 +51,7 @@ brdb_selection::brdb_selection(const brdb_relation_sptr& relation)
 
 //: destructor
 brdb_selection::~brdb_selection()
-{
-}
+= default;
 
 
 //: get the iterator pointing to the beginning of the selection set
@@ -94,7 +95,7 @@ brdb_selection::update_selected_tuple(const brdb_tuple_sptr& new_tuple)
     return false;
   }
 
-  selection_t::iterator itr = selected_set_.begin();
+  auto itr = selected_set_.begin();
 
   (*(*(itr))) = new_tuple;
   return true;
@@ -114,7 +115,7 @@ brdb_selection::update_selected_tuple(const std::string& attribute_name, const b
     return false;
   }
 
-  selection_t::iterator itr = selected_set_.begin();
+  auto itr = selected_set_.begin();
 
   unsigned int index = this->relation_->index(attribute_name);
   return (*(*(itr)))->set_value(index, value);
@@ -135,7 +136,7 @@ brdb_selection::get_value(const std::string& attribute_name, brdb_value& value)
     return false;
   }
 
-  selection_t::const_iterator itr = selected_set_.begin();
+  auto itr = selected_set_.begin();
 
   unsigned int index = this->relation_->index(attribute_name);
   return (*(*(itr)))->get_value(index ,value);
@@ -155,7 +156,7 @@ brdb_selection::get_value(const std::string& attribute_name,
     return false;
   }
 
-  selection_t::const_iterator itr = selected_set_.begin();
+  auto itr = selected_set_.begin();
 
   unsigned int index = this->relation_->index(attribute_name);
   return (*(*(itr)))->get_value(index ,value);
@@ -174,7 +175,7 @@ brdb_selection::get_value(const std::string& attribute_name, unsigned int index,
     return false;
   }
 
-  selection_t::const_iterator itr = selected_set_.begin();
+  auto itr = selected_set_.begin();
   while (index > 0) {
     --index;
     ++itr;
@@ -209,10 +210,9 @@ brdb_selection::get_sqlview()
   if (size() == 0)
     return sql_view;
 
-  for (selection_t::const_iterator itr = selected_set_.begin();
-       itr != selected_set_.end(); ++itr)
+  for (auto itr : selected_set_)
   {
-    sql_view->add_tuple((*(*itr)));
+    sql_view->add_tuple((*itr));
   }
   return sql_view;
 }
@@ -222,11 +222,11 @@ brdb_selection_sptr
 brdb_selection::selection_and(const brdb_selection_sptr& s)
 {
   if (!s)
-    return VXL_NULLPTR;
+    return nullptr;
 
   if (s->relation_ && s->relation_ != this->relation_){
     std::cerr << "warning: attempting to combine selections on different relations\n";
-    return VXL_NULLPTR;
+    return nullptr;
   }
 
   brdb_selection_sptr result = new brdb_selection(this->relation_);
@@ -249,11 +249,11 @@ brdb_selection_sptr
 brdb_selection::selection_or(const brdb_selection_sptr& s)
 {
   if (!s)
-    return VXL_NULLPTR;
+    return nullptr;
 
   if (s->relation_ && s->relation_ != this->relation_){
     std::cerr << "warning: attempting to combine selections on different relations\n";
-    return VXL_NULLPTR;
+    return nullptr;
   }
 
   brdb_selection_sptr result = new brdb_selection(this->relation_);
@@ -276,11 +276,11 @@ brdb_selection_sptr
 brdb_selection::selection_xor(const brdb_selection_sptr& s)
 {
   if (!s)
-    return VXL_NULLPTR;
+    return nullptr;
 
   if (s->relation_ && s->relation_ != this->relation_) {
     std::cerr << "warning: attempting to combine selections on different relations\n";
-    return VXL_NULLPTR;
+    return nullptr;
   }
 
   brdb_selection_sptr result = new brdb_selection(this->relation_);
@@ -309,7 +309,7 @@ brdb_selection::selection_not()
   // check and make sure that each selection is updated.
   this->check_and_update();
 
-  for (std::vector<brdb_tuple_sptr>::iterator itr = relation_->begin();
+  for (auto itr = relation_->begin();
        itr != relation_->end(); ++itr)
   {
     // check the attribute against the query
@@ -343,10 +343,9 @@ brdb_selection::print()
     {
       std::cout << "This selection is empty." << std::endl;
     }
-    for (selection_t::const_iterator itr = selected_set_.begin();
-         itr != selected_set_.end(); ++itr)
+    for (auto itr : selected_set_)
     {
-      brdb_tuple_sptr tuple = (*(*itr));
+      brdb_tuple_sptr tuple = (*itr);
       tuple->print();
     }
 }
@@ -365,7 +364,7 @@ brdb_selection::delete_tuples()
     }
 
     // deletion must be done from back to front, because each time an element is deleted, the iterators after it will be updated.
-    selection_t::iterator itr = selected_set_.end();
+    auto itr = selected_set_.end();
     // notice, everytime anything happens to the original relation, the size() will reflect the new information.
     unsigned int original_selection_size = this->size();
     for (unsigned int i=0; i<original_selection_size; i++)
@@ -398,9 +397,9 @@ brdb_selection::tuple_exist(const brdb_tuple_sptr& tuple)
   if (this->empty())
     return false;
 
-  for (selection_t::const_iterator itr = this->begin(); itr != this->end(); ++ itr)
+  for (auto itr : *this)
   {
-    if ((*(*itr)) == tuple)
+    if ((*itr) == tuple)
       return true;
   }
 
@@ -413,7 +412,7 @@ bool
 brdb_selection::contains(const std::vector<brdb_tuple_sptr>::iterator& relation_itr) const
 {
   // assume already updated
-  selection_t::const_iterator sitr = this->selected_set_.find(relation_itr);
+  auto sitr = this->selected_set_.find(relation_itr);
   return sitr == this->selected_set_.end();
 }
 
@@ -422,7 +421,7 @@ brdb_selection::contains(const std::vector<brdb_tuple_sptr>::iterator& relation_
 void
 brdb_selection::check_and_update()
 {
-  if (this->relation_ == VXL_NULLPTR)
+  if (this->relation_ == nullptr)
     return;
 
   if (this->time_stamp_ == this->relation_->get_timestamp())
@@ -439,12 +438,12 @@ brdb_selection::check_and_update()
 bool
 brdb_selection::produce(const brdb_query_aptr& q, selection_t& s)
 {
-  if (const brdb_query_and* qa = dynamic_cast<const brdb_query_and*>(q.get()))
+  if (const auto* qa = dynamic_cast<const brdb_query_and*>(q.get()))
   {
     produce(qa->first(), s);
     refine(qa->second(), s);
   }
-  else if (const brdb_query_or* qo = dynamic_cast<const brdb_query_or*>(q.get()))
+  else if (const auto* qo = dynamic_cast<const brdb_query_or*>(q.get()))
   {
     selection_t s1,s2;
     produce(qo->first(), s1);
@@ -452,11 +451,11 @@ brdb_selection::produce(const brdb_query_aptr& q, selection_t& s)
     std::set_union(s1.begin(), s1.end(), s2.begin(), s2.end(),
                   std::insert_iterator<selection_t>(s, s.end()));
   }
-  else if (const brdb_query_comp* qc = dynamic_cast<const brdb_query_comp*>(q.get()))
+  else if (const auto* qc = dynamic_cast<const brdb_query_comp*>(q.get()))
   {
     unsigned int attr_index = relation_->index(qc->attribute_name());
     // go through all the tuples
-    for (std::vector<brdb_tuple_sptr>::iterator itr = relation_->begin();
+    for (auto itr = relation_->begin();
          itr != relation_->end(); ++itr)
     {
       // check the attribute against the query
@@ -478,12 +477,12 @@ brdb_selection::produce(const brdb_query_aptr& q, selection_t& s)
 bool
 brdb_selection::refine(const brdb_query_aptr& q, selection_t& s)
 {
-  if (const brdb_query_and* qa = dynamic_cast<const brdb_query_and*>(q.get()))
+  if (const auto* qa = dynamic_cast<const brdb_query_and*>(q.get()))
   {
     refine(qa->first(), s);
     refine(qa->second(), s);
   }
-  else if (const brdb_query_or* qo = dynamic_cast<const brdb_query_or*>(q.get()))
+  else if (const auto* qo = dynamic_cast<const brdb_query_or*>(q.get()))
   {
     selection_t s1(s), s2(s);
     refine(qo->first(), s1);
@@ -492,18 +491,18 @@ brdb_selection::refine(const brdb_query_aptr& q, selection_t& s)
     std::set_union(s1.begin(), s1.end(), s2.begin(), s2.end(),
                   std::insert_iterator<selection_t>(s, s.end()));
   }
-  else if (const brdb_query_comp* qc = dynamic_cast<const brdb_query_comp*>(q.get()))
+  else if (const auto* qc = dynamic_cast<const brdb_query_comp*>(q.get()))
   {
     unsigned int attr_index = relation_->index(qc->attribute_name());
     selection_t s_new;
     // go through all the tuples pointed by the selection
-    for (selection_t::const_iterator itr = s.begin(); itr != s.end(); ++itr)
+    for (auto itr : s)
     {
       // get the attribute value
-      if (qc->pass((*(*(*itr)))[attr_index]))
+      if (qc->pass((*(*itr))[attr_index]))
       {
         //add the iterator to this tuple to selection;
-        s_new.insert(*itr);
+        s_new.insert(itr);
       }
     }
     s.swap(s_new);
@@ -513,4 +512,3 @@ brdb_selection::refine(const brdb_query_aptr& q, selection_t& s)
 
   return true;
 }
-

@@ -1,8 +1,5 @@
 #ifndef mvl2_image_format_plugin_h_
 #define mvl2_image_format_plugin_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Interface for loading avi frames as image formats
@@ -13,7 +10,9 @@
 #include <string>
 #include <iostream>
 #include <map>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_image_view_base.h>
 #include <vil/vil_image_resource_plugin.h>
 #include <mvl2/mvl2_video_reader.h>

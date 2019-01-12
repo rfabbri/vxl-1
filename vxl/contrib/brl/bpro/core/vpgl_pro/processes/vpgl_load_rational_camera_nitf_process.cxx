@@ -4,7 +4,9 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpgl/vpgl_camera.h>
 #include <vpgl/vpgl_rational_camera.h>
 #include <vil/vil_image_resource.h>
@@ -18,12 +20,12 @@ bool vpgl_load_rational_camera_nitf_process_cons(bprb_func_process& pro)
   //this process takes one input: the filename
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("vcl_string");
+  input_types.emplace_back("vcl_string");
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   std::vector<std::string> output_types;
-  output_types.push_back("vpgl_camera_double_sptr");  // label image
+  output_types.emplace_back("vpgl_camera_double_sptr");  // label image
   ok = pro.set_output_types(output_types);
   if (!ok) return ok;
 
@@ -48,7 +50,7 @@ bool vpgl_load_rational_camera_nitf_process(bprb_func_process& pro)
   if (!image)
   {
     std::cout << "NITF image load failed in vpgl_load_rational_camera_nitf_process\n";
-    return 0;
+    return false;
   }
 
   std::string format = image->file_format();
@@ -57,12 +59,12 @@ bool vpgl_load_rational_camera_nitf_process(bprb_func_process& pro)
   if (prefix != "nitf")
   {
     std::cout << "source image is not NITF in vpgl_load_rational_camera_nitf_process\n";
-    return 0;
+    return false;
   }
 
   //cast to an nitf2_image
-  vil_nitf2_image *nitf_image = static_cast<vil_nitf2_image*>(image.ptr());
-  vpgl_nitf_rational_camera *nitf_cam=new vpgl_nitf_rational_camera(nitf_image, false);
+  auto *nitf_image = static_cast<vil_nitf2_image*>(image.ptr());
+  auto *nitf_cam=new vpgl_nitf_rational_camera(nitf_image, false);
 
   vpgl_camera_double_sptr ratcam ( dynamic_cast<vpgl_rational_camera<double>* >(nitf_cam));
 
@@ -75,4 +77,3 @@ bool vpgl_load_rational_camera_nitf_process(bprb_func_process& pro)
 
   return true;
 }
-

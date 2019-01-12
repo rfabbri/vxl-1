@@ -1,9 +1,6 @@
 // This is core/vgl/algo/vgl_line_2d_regression.h
 #ifndef vgl_line_2d_regression_h_
 #define vgl_line_2d_regression_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief A helper class for line fitting. Holds the 2d_regression data
@@ -37,7 +34,7 @@ class vgl_line_2d_regression
   double squared_error_;//!< an estimate of the squared error
  public:
   vgl_line_2d_regression();
-  ~vgl_line_2d_regression() {}
+  ~vgl_line_2d_regression() = default;
 
   //: The number of points added.
   inline unsigned int get_n_pts() const { return npts_; }

@@ -10,7 +10,9 @@
 #include <fstream>
 #include <bprb/bprb_func_process.h>
 #include <boxm2/ocl/boxm2_opencl_cache.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_util.h>
 #include <boxm2/boxm2_data_traits.h>
@@ -21,8 +23,8 @@
 
 namespace boxm2_vecf_ocl_transform_scene_process_globals
 {
-  const unsigned n_inputs_ = 18;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 18;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 bool boxm2_vecf_ocl_transform_scene_process_cons(bprb_func_process& pro)

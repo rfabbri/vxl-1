@@ -30,7 +30,9 @@
 #include <vgl/vgl_vector_3d.h>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_homg_point_3d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class vsol_point_3d : public vsol_spatial_object_3d
 {
@@ -66,19 +68,19 @@ class vsol_point_3d : public vsol_spatial_object_3d
   //---------------------------------------------------------------------------
   //: Destructor
   //---------------------------------------------------------------------------
-  virtual ~vsol_point_3d();
+  ~vsol_point_3d() override;
 
   //---------------------------------------------------------------------------
   //: Clone `this': creation of a new object and initialization
   //  See Prototype pattern
   //---------------------------------------------------------------------------
-  virtual vsol_spatial_object_3d* clone(void) const;
+  vsol_spatial_object_3d* clone(void) const override;
 
   //---------------------------------------------------------------------------
   //: Safe downcasting methods
   //---------------------------------------------------------------------------
-  virtual vsol_point_3d* cast_to_point(void) { return this;}
-  virtual vsol_point_3d const* cast_to_point() const { return this;}
+  vsol_point_3d* cast_to_point(void) override { return this;}
+  vsol_point_3d const* cast_to_point() const override { return this;}
 
   //***************************************************************************
   // Access
@@ -107,7 +109,7 @@ class vsol_point_3d : public vsol_spatial_object_3d
   //: Has `this' the same coordinates than `other' ?
   //---------------------------------------------------------------------------
   virtual bool operator==(vsol_point_3d const& other) const;
-  virtual bool operator==(vsol_spatial_object_3d const& obj) const; // virtual of vsol_spatial_object_3d
+  bool operator==(vsol_spatial_object_3d const& obj) const override; // virtual of vsol_spatial_object_3d
 
   //---------------------------------------------------------------------------
   //: Has `this' not the same coordinates than `other' ?
@@ -121,12 +123,12 @@ class vsol_point_3d : public vsol_spatial_object_3d
   //---------------------------------------------------------------------------
   //: Return the real type of a point. It is a POINT
   //---------------------------------------------------------------------------
-  vsol_spatial_object_3d_type spatial_type(void) const;
+  vsol_spatial_object_3d_type spatial_type(void) const override;
 
   //---------------------------------------------------------------------------
   //: Compute the bounding box of `this'
   //---------------------------------------------------------------------------
-  virtual void compute_bounding_box(void) const;
+  void compute_bounding_box(void) const override;
 
   //***************************************************************************
   // Status setting
@@ -191,10 +193,10 @@ class vsol_point_3d : public vsol_spatial_object_3d
   // ==== Binary IO methods ======
 
   //: Binary save self to stream.
-  void b_write(vsl_b_ostream &os) const;
+  void b_write(vsl_b_ostream &os) const override;
 
   //: Binary load self from stream.
-  void b_read(vsl_b_istream &is);
+  void b_read(vsl_b_istream &is) override;
 
   //: Return IO version number;
   short version() const;
@@ -203,7 +205,7 @@ class vsol_point_3d : public vsol_spatial_object_3d
   void print_summary(std::ostream &os) const;
 
   //: Return a platform independent string identifying the class
-  virtual std::string is_a() const { return std::string("vsol_point_3d"); }
+  std::string is_a() const override { return std::string("vsol_point_3d"); }
 
   //: Return true if the argument matches the string identifying the class or any parent class
   virtual bool is_class(const std::string& cls) const { return cls==is_a(); }
@@ -211,7 +213,7 @@ class vsol_point_3d : public vsol_spatial_object_3d
   //---------------------------------------------------------------------------
   //: output description to stream
   //---------------------------------------------------------------------------
-  inline void describe(std::ostream &strm, int blanking=0) const
+  inline void describe(std::ostream &strm, int blanking=0) const override
   {
     if (blanking < 0) blanking = 0; while (blanking--) strm << ' ';
     strm << '(' << x() << ' ' << y() << ' ' << z() << ')' << std::endl;

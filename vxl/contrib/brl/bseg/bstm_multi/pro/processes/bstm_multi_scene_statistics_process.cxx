@@ -10,9 +10,12 @@
 // \author Raphael Kargon
 // \date 04 Aug 2017
 
-#include <vcl_iostream.h>
-#include <vcl_string.h>
-#include <vcl_vector.h>
+#include <iostream>
+#include <string>
+#include <vector>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_intersection.h>
 
 #include <boct/boct_bit_tree.h>
@@ -25,12 +28,12 @@
 #include <bstm_multi/space_time_scene.h>
 
 namespace {
-const unsigned n_inputs_ = 8;
-const unsigned n_outputs_ = 3;
+constexpr unsigned n_inputs_ = 8;
+constexpr unsigned n_outputs_ = 3;
 }
 
 bool bstm_multi_scene_statistics_process_cons(bprb_func_process &pro) {
-  vcl_vector<vcl_string> input_types_(::n_inputs_);
+  std::vector<std::string> input_types_(::n_inputs_);
   input_types_[0] = "bstm_multi_scene_sptr";
   input_types_[1] = "bstm_multi_cache_sptr";
   input_types_[2] = "float"; // center x
@@ -40,7 +43,7 @@ bool bstm_multi_scene_statistics_process_cons(bprb_func_process &pro) {
   input_types_[6] = "float"; // len y
   input_types_[7] = "float"; // len z
 
-  vcl_vector<vcl_string> output_types(::n_outputs_);
+  std::vector<std::string> output_types(::n_outputs_);
   output_types[0] = "float";
   output_types[1] = "float";
   output_types[2] = "unsigned";
@@ -65,25 +68,23 @@ bool bstm_multi_scene_statistics_process_cons(bprb_func_process &pro) {
 bool bstm_multi_scene_statistics_process(bprb_func_process &pro) {
   typedef unsigned char uchar;
   typedef unsigned short ushort;
-  typedef vnl_vector_fixed<uchar, 16> uchar16;
   typedef vnl_vector_fixed<uchar, 8> uchar8;
-  typedef vnl_vector_fixed<ushort, 4> ushort4;
 
   if (pro.n_inputs() < ::n_inputs_) {
-    vcl_cout << pro.name() << ": The input number should be " << ::n_inputs_
-             << vcl_endl;
+    std::cout << pro.name() << ": The input number should be " << ::n_inputs_
+             << std::endl;
     return false;
   }
   // get the inputs
   unsigned i = 0;
   bstm_multi_scene_sptr scene = pro.get_input<bstm_multi_scene_sptr>(i++);
   bstm_multi_cache_sptr cache = pro.get_input<bstm_multi_cache_sptr>(i++);
-  float center_x = pro.get_input<float>(i++);
-  float center_y = pro.get_input<float>(i++);
-  float center_z = pro.get_input<float>(i++);
-  float len_x = pro.get_input<float>(i++);
-  float len_y = pro.get_input<float>(i++);
-  float len_z = pro.get_input<float>(i++);
+  auto center_x = pro.get_input<float>(i++);
+  auto center_y = pro.get_input<float>(i++);
+  auto center_z = pro.get_input<float>(i++);
+  auto len_x = pro.get_input<float>(i++);
+  auto len_y = pro.get_input<float>(i++);
+  auto len_z = pro.get_input<float>(i++);
 
   // create vgl box
   const vgl_point_3d<double> center(center_x, center_y, center_z);
@@ -99,9 +100,9 @@ bool bstm_multi_scene_statistics_process(bprb_func_process &pro) {
   unsigned num_cells = 0;
 
   // get blocks
-  const vcl_map<bstm_block_id, bstm_multi_block_metadata> &blocks =
+  const std::map<bstm_block_id, bstm_multi_block_metadata> &blocks =
       scene->blocks();
-  vcl_map<bstm_block_id, bstm_multi_block_metadata>::const_iterator
+  auto
       bstm_multi_iter = blocks.begin();
   for (; bstm_multi_iter != blocks.end(); ++bstm_multi_iter) {
     bstm_block_id block_id = bstm_multi_iter->first;

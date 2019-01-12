@@ -1,9 +1,6 @@
 // This is core/vul/vul_file.h
 #ifndef vul_file_h_
 #define vul_file_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief A collection of miscellaneous filesystem-type utilities
@@ -20,7 +17,9 @@
 
 #include <string>
 #include <ctime>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vxl_config.h>
 //: A collection of miscellaneous filesystem-type utilities
 //
@@ -56,7 +55,7 @@ struct vul_file
     return is_directory(filename.c_str());
   }
 
-#if defined(VCL_WIN32) && !defined(__CYGWIN__)
+#if defined(_WIN32) && !defined(__CYGWIN__)
   //: Return true iff filename is a drive, e.g., "c:" or "Z:".
   static bool is_drive(char const* filename);
   static bool is_drive(const std::string& filename) {
@@ -94,8 +93,8 @@ struct vul_file
 
   //: Return basename
   // Only strip specified suffix.
-  static std::string basename(char const* filename, char const* suffix = VXL_NULLPTR);
-  static std::string basename(std::string const& filename, char const* suffix = VXL_NULLPTR) {
+  static std::string basename(char const* filename, char const* suffix = nullptr);
+  static std::string basename(std::string const& filename, char const* suffix = nullptr) {
     return basename(filename.c_str(), suffix );
   }
 
@@ -118,7 +117,7 @@ struct vul_file
   { return delete_file_glob(std::string(file_glob)); }
 
 
-#if defined(VCL_WIN32) && VXL_USE_WIN_WCHAR_T
+#if defined(_WIN32) && VXL_USE_WIN_WCHAR_T
 
   //: Return current working directory
   //  This function is provided as an overloading

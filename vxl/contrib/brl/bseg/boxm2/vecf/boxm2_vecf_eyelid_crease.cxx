@@ -1,7 +1,9 @@
 #include <iostream>
 #include <cmath>
 #include "boxm2_vecf_eyelid_crease.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_distance.h>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_vector_3d.h>
@@ -13,7 +15,7 @@
 boxm2_vecf_eyelid_crease::boxm2_vecf_eyelid_crease(): boxm2_vecf_lid_base(0.0, 1.0){
   el_ = boxm2_vecf_eyelid(boxm2_vecf_orbit_params());
 }
-boxm2_vecf_eyelid_crease::boxm2_vecf_eyelid_crease(double t_min, double t_max, double ct, vgl_vector_3d<double> upper_socket_normal):
+boxm2_vecf_eyelid_crease::boxm2_vecf_eyelid_crease(double t_min, double t_max, double ct, vgl_vector_3d<double>  /*upper_socket_normal*/):
   boxm2_vecf_lid_base(t_min, t_max), ct_(ct){
   el_ = boxm2_vecf_eyelid(boxm2_vecf_orbit_params());
 }
@@ -58,7 +60,7 @@ double boxm2_vecf_eyelid_crease::z_socket(double xp) const{
 vgl_plane_3d<double> boxm2_vecf_eyelid_crease::crease_plane(double xp) const{
   double xlat = opr_.lateral_socket_radius(), xmed = -opr_.medial_socket_radius();
   if(xp<=xmed || xp>=xlat)
-    return vgl_plane_3d<double>(0.0, 0.0, 1.0, -z_socket(xp));
+    return {0.0, 0.0, 1.0, -z_socket(xp)};
   double ct = opr_.eyelid_crease_ct_;
   double dx = opr_.eye_radius_*0.01;
   vgl_point_3d<double> p0(xp, gi(xp,ct), z_socket(xp));
@@ -186,4 +188,3 @@ double boxm2_vecf_eyelid_crease::distance(vgl_point_3d<double> const& p) const{
   // the distance to the plane
   return vgl_distance(p, plc);
 }
-

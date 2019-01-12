@@ -19,8 +19,8 @@
 
 namespace bpgl_transform_perspective_cameras_process_globals
 {
-    const unsigned n_inputs_ = 3;
-    const unsigned n_outputs_ = 0;
+    constexpr unsigned n_inputs_ = 3;
+    constexpr unsigned n_outputs_ = 0;
 }
 
 //: Init function
@@ -53,8 +53,8 @@ bool bpgl_transform_perspective_cameras_process(bprb_func_process& pro)
   // get the inputs
   unsigned i=0;
   std::string xform_file = pro.get_input<std::string>(i++);
-  std::string in_dir     = pro.get_input<std::string>(i++);
-  std::string out_dir    = pro.get_input<std::string>(i++);
+  std::string in_dir = pro.get_input<std::string>(i++);
+  std::string out_dir = pro.get_input<std::string>(i++);
   std::cout<<"out_dir "<<out_dir<<std::endl;
   // check if input directory exists
   if (!vul_file::is_directory(in_dir.c_str()))
@@ -147,7 +147,7 @@ vpgl_transform_space_process_transform_camera(vpgl_perspective_camera<double> co
   vnl_matrix_fixed<double,3,3> Rms = Rs.as_matrix();
   //Get input camera components
   //note, the homogeneous calibration matrix is unaffected by the scale
-  vpgl_calibration_matrix<double> K = cam.get_calibration();
+  const vpgl_calibration_matrix<double>& K = cam.get_calibration();
   vnl_matrix_fixed<double, 3, 3> R = cam.get_rotation().as_matrix();
   vgl_vector_3d<double> tv = cam.get_translation();
   vnl_vector_fixed<double, 3> t(tv.x(), tv.y(), tv.z());
@@ -213,7 +213,7 @@ bool vpgl_transform_space_process(bprb_func_process& pro)
   std::cout << pts0_xs->data_array;
 
   vnl_matrix<double> pts0, pts1;
-  unsigned n = (unsigned)(pts0_xs->data_array.size());
+  auto n = (unsigned)(pts0_xs->data_array.size());
 
   pts0.set_size(3,n);
   pts1.set_size(3,n);
@@ -269,9 +269,9 @@ bool vpgl_transform_space_process(bprb_func_process& pro)
   outM = RotT.get_matrix()*S;
 
   // copy to the output array
-  out->data_array[0]  = outM[0][0]; out->data_array[1]  = outM[0][1]; out->data_array[2]  = outM[0][2]; out->data_array[3]  = outM[0][3];
-  out->data_array[4]  = outM[1][0]; out->data_array[5]  = outM[1][1]; out->data_array[6]  = outM[1][2]; out->data_array[7]  = outM[1][3];
-  out->data_array[8]  = outM[2][0]; out->data_array[9]  = outM[2][1]; out->data_array[10] = outM[2][2]; out->data_array[11] = outM[2][3];
+  out->data_array[0] = outM[0][0]; out->data_array[1] = outM[0][1]; out->data_array[2] = outM[0][2]; out->data_array[3] = outM[0][3];
+  out->data_array[4] = outM[1][0]; out->data_array[5] = outM[1][1]; out->data_array[6] = outM[1][2]; out->data_array[7] = outM[1][3];
+  out->data_array[8] = outM[2][0]; out->data_array[9] = outM[2][1]; out->data_array[10] = outM[2][2]; out->data_array[11] = outM[2][3];
   out->data_array[12] = outM[3][0]; out->data_array[13] = outM[3][1]; out->data_array[14] = outM[3][2]; out->data_array[15] = outM[3][3];
 
   pro.set_output_val<bbas_1d_array_double_sptr>(0, out);
@@ -334,9 +334,9 @@ bool vpgl_transform_box_process(bprb_func_process& pro)
   std::vector<vgl_point_3d<double> > vertices = box1.vertices();
 
   // transform 8 corners of the box and add to the new box in the transformed space
-  for (unsigned i = 0; i < vertices.size(); i++) {
+  for (auto & vertice : vertices) {
     vnl_matrix_fixed<double, 4, 1> pt, new_pt;
-    pt[0][0] = vertices[i].x(); pt[1][0] = vertices[i].y(); pt[2][0] = vertices[i].z(); pt[3][0] = 1.0;
+    pt[0][0] = vertice.x(); pt[1][0] = vertice.y(); pt[2][0] = vertice.z(); pt[3][0] = 1.0;
     new_pt = SM*pt;
     box2.add(vgl_point_3d<double>(new_pt[0][0]/new_pt[3][0], new_pt[1][0]/new_pt[3][0], new_pt[2][0]/new_pt[3][0]));
   }
@@ -344,12 +344,10 @@ bool vpgl_transform_box_process(bprb_func_process& pro)
   vgl_point_3d<double> out_max_pt = box2.max_point();
 
   bbas_1d_array_double_sptr outmin = new bbas_1d_array_double(3), outmax = new bbas_1d_array_double(3);
-  outmin->data_array[0]  = out_min_pt.x(); outmin->data_array[1] = out_min_pt.y(); outmin->data_array[2] = out_min_pt.z();
-  outmax->data_array[0]  = out_max_pt.x(); outmax->data_array[1] = out_max_pt.y(); outmax->data_array[2] = out_max_pt.z();
+  outmin->data_array[0] = out_min_pt.x(); outmin->data_array[1] = out_min_pt.y(); outmin->data_array[2] = out_min_pt.z();
+  outmax->data_array[0] = out_max_pt.x(); outmax->data_array[1] = out_max_pt.y(); outmax->data_array[2] = out_max_pt.z();
 
   pro.set_output_val<bbas_1d_array_double_sptr>(0, outmin);
   pro.set_output_val<bbas_1d_array_double_sptr>(1, outmax);
   return true;
 }
-
-

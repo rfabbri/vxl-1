@@ -15,7 +15,9 @@
 #include "rgtl_object_array_points.h"
 
 #include <vnl/vnl_vector_fixed.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class rgtl_serialize_access;
 

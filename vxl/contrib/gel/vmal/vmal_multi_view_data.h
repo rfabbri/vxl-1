@@ -12,7 +12,9 @@
 #include <map>
 #include <iostream>
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <mvl/NViewMatches.h>
 #include <vbl/vbl_ref_count.h>
 
@@ -28,7 +30,7 @@ class vmal_multi_view_data: public vbl_ref_count
       size_vect_ft_(d.size_vect_ft_), matchnum_(d.matchnum_),
       closed_track_(d.closed_track_), MVM(d.MVM), all_pts(d.all_pts) {}
 
-  ~vmal_multi_view_data();
+  ~vmal_multi_view_data() override;
 
   void new_track();
   void close_track();

@@ -14,7 +14,9 @@
 #include <string>
 #include <bvpl/util/bvpl_corner_pair_finder.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bprb/bprb_func_process.h>
 #include <bprb/bprb_parameters.h>
 #include <bvxm/grid/bvxm_voxel_grid.h>
@@ -23,8 +25,8 @@
 
 namespace bvpl_load_pair_grid_process_globals
 {
-  const unsigned n_inputs_ = 1;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 1;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 

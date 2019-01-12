@@ -21,7 +21,9 @@
 //-------------------------------------------------------------------------
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_line_segment_2d.h>
 #include <sdet/sdet_image_mesh_params.h>
 #include <imesh/imesh_mesh.h>
@@ -33,7 +35,7 @@ class sdet_image_mesh : public sdet_image_mesh_params
  public:
   // === Constructors/destructor ===
   sdet_image_mesh(sdet_image_mesh_params& imp);
-  ~sdet_image_mesh();
+  ~sdet_image_mesh() override;
 
   // === Process methods ===
   void set_image(vil_image_resource_sptr const& resource);

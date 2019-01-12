@@ -12,19 +12,21 @@
 //   <none yet>
 // \endverbatim
 
+#include <utility>
 #include <vnl/vnl_matrix_fixed.h>
 #include <vnl/vnl_vector_fixed.h>
 
 #include <boxm/boxm_scene.h>
+
 
 template <unsigned feature_dim>
 class bvpl_global_pca: public vbl_ref_count
 {
  public:
   //: Constructor
-  bvpl_global_pca(std::vector<std::string> const &scenes, std::vector<std::string> const &aux_dirs, std::vector<double> const &finest_cell_length,
+  bvpl_global_pca(std::vector<std::string> scenes, std::vector<std::string> aux_dirs, std::vector<double> finest_cell_length,
                   vgl_box_3d<int> nbbox,  double training_fraction = 0.1, std::string path_out = "./"):
-  scenes_(scenes), aux_dirs_(aux_dirs), finest_cell_length_(finest_cell_length), nbbox_(nbbox), training_fraction_(training_fraction),path_out_(path_out)
+  scenes_(std::move(scenes)), aux_dirs_(std::move(aux_dirs)), finest_cell_length_(std::move(finest_cell_length)), nbbox_(nbbox), training_fraction_(training_fraction),path_out_(std::move(path_out))
   {
     training_scenes_ = std::vector<bool>(scenes_.size(), true);
     nleaves_ =  std::vector<unsigned long>(scenes_.size(), 0);

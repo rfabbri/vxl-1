@@ -8,7 +8,9 @@
 //
 //\endverbatim
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h>
 #include <gevd/gevd_noise.h>
 #include <gevd/gevd_float_operators.h>
@@ -18,7 +20,7 @@
 # include <vul/vul_timer.h>
 #endif
 
-gevd_bufferxy* gevd_fold::null_bufferxy = VXL_NULLPTR;
+gevd_bufferxy* gevd_fold::null_bufferxy = nullptr;
 
 const unsigned char TWOPI = 8, FULLPI = 4, HALFPI = 2;
 const int DIS[] = { 1, 1, 0,-1,-1,-1, 0, 1, // 8-connected neighbors
@@ -30,7 +32,7 @@ const int DJS[] = { 0, 1, 1, 1, 0,-1,-1,-1,
 const int RDS[] = {0,-1, 1,-2, 2,-3, 3,-4, 4,-5, 5}; // radial search
 
 // const unsigned char DIR0 = 8, DIR1 = 9, DIR2 = 10, DIR3 = 11;
-const int FRAME = 4; // 3 for NMS and extension, 4 for contour
+constexpr int FRAME = 4; // 3 for NMS and extension, 4 for contour
 
 gevd_fold::gevd_fold(float smooth_sigma, // width of filter dG
                      float noise_sigma,   // sensor/texture intensity noise -[0 1]
@@ -75,13 +77,13 @@ gevd_fold::DetectEdgels(const gevd_bufferxy& image,
   // -tpk @@ missing check if the requested buffer size is too small to contain the convolution operations
 
   // 1. Smooth image to regularize data, before taking derivatives
-  gevd_bufferxy* smooth = VXL_NULLPTR;      // Gaussian smoothed image
+  gevd_bufferxy* smooth = nullptr;      // Gaussian smoothed image
   // use float to avoid overflow/truncation
   filterFactor = gevd_float_operators::Gaussian((gevd_bufferxy&)image, // well-condition before
                                                 smooth, smoothSigma); // 2nd-difference
 
   // 2. Use 2nd-difference to estimate local curvature, filter is ddG.
-  gevd_bufferxy *curvature = VXL_NULLPTR;
+  gevd_bufferxy *curvature = nullptr;
   // need to make new arrays since later NonMaximumSupression clears
   // locationx locationy
   gevd_bufferxy *dirx = gevd_float_operators::SimilarBuffer(image);
@@ -105,7 +107,7 @@ gevd_fold::DetectEdgels(const gevd_bufferxy& image,
   {
     mag = gevd_float_operators::SimilarBuffer(image);
     angle = gevd_float_operators::SimilarBuffer(image);
-    const float kdeg = float(vnl_math::deg_per_rad);
+    const auto kdeg = float(vnl_math::deg_per_rad);
     for (int j = 0; j < image.GetSizeY(); j++)
       for (int i = 0; i < image.GetSizeX(); i++)
         if ((floatPixel(*mag, i, j) = floatPixel(*curvature, i, j)))
@@ -232,7 +234,7 @@ BestFoldExtension(const gevd_bufferxy& smooth,
       int dj = DJS[dir];
       float pix_m = floatPixel(smooth, ni-di, nj-dj);
       float pix_p = floatPixel(smooth, ni+di, nj+dj);
-      float curvature = (float)std::fabs(pix_p + pix_m - 2*pix);
+      auto curvature = (float)std::fabs(pix_p + pix_m - 2*pix);
       float max_s = (dir%HALFPI)? best_s*2: best_s;
       if (curvature > max_s) {      // find best strength
         int di2 = 2*di;
@@ -253,9 +255,9 @@ BestFoldExtension(const gevd_bufferxy& smooth,
     float pix = floatPixel(smooth, best_i, best_j);
     int di = DIS[best_d], dj = DJS[best_d];
     int di2 = 2*di, dj2 = 2*dj;
-    float s_m = (float)std::fabs(pix + floatPixel(smooth, best_i-di2, best_j-dj2)
+    auto s_m = (float)std::fabs(pix + floatPixel(smooth, best_i-di2, best_j-dj2)
                                 - 2*floatPixel(smooth, best_i-di, best_j-dj));
-    float s_p = (float)std::fabs(pix + floatPixel(smooth, best_i+di2, best_j+dj2)
+    auto s_p = (float)std::fabs(pix + floatPixel(smooth, best_i+di2, best_j+dj2)
                                 - 2*floatPixel(smooth, best_i+di, best_j+dj));
     if (best_d%HALFPI) {
       s_m /= (float)2.0;
@@ -312,7 +314,7 @@ gevd_fold::RecoverJunctions(const gevd_bufferxy& image,
   //          << length*100 / float((xmax/kmax)*(ymax/kmax)) << std::endl;
 
   // 2. Extend from end points until they touch other contours
-  gevd_bufferxy* smooth = VXL_NULLPTR;
+  gevd_bufferxy* smooth = nullptr;
   gevd_float_operators::Gaussian((gevd_bufferxy&)image, smooth, smoothSigma/2); // avoid oversmoothing
   const bool shortp = true;     // short contours
   const float threshold = NoiseThreshold(shortp);

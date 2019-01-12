@@ -4,7 +4,9 @@
 //:
 // \file
 #include <vsl/vsl_vector_io.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 unsigned volm_desc_ex_2d::locate_idx(double const& target, std::vector<double> const& arr) const
 {
@@ -26,7 +28,7 @@ unsigned volm_desc_ex_2d::locate_idx(double const& target, std::vector<double> c
 volm_desc_ex_2d::volm_desc_ex_2d(std::vector<double> const& radius,
                                  double const& h_width, double const& h_inc,
                                  unsigned const& nlands,
-                                 unsigned char const& initial_mag)
+                                 unsigned char const&  /*initial_mag*/)
 {
   name_ = "existence 2d descriptor";
   // create a histogram based on given parameter
@@ -47,7 +49,7 @@ volm_desc_ex_2d::volm_desc_ex_2d(std::vector<double> const& radius,
   heading_intervals_.clear();
   for (unsigned hidx = 0; hidx < nheadings_; hidx++) {
     double s = hidx * h_inc_;  double e = s + h_width_;
-    heading_intervals_.push_back(std::pair<double, double>(s, e));
+    heading_intervals_.emplace_back(s, e);
   }
 
   // construct the histogram
@@ -56,7 +58,7 @@ volm_desc_ex_2d::volm_desc_ex_2d(std::vector<double> const& radius,
   this->initialize_bin(nbins_);
 }
 
-void volm_desc_ex_2d::initialize_bin(unsigned char const& mag)
+void volm_desc_ex_2d::initialize_bin(unsigned char const&  /*mag*/)
 {
   for (unsigned bin_id = 0; bin_id < nbins_; bin_id++)
     h_[bin_id] = (unsigned char)0;
@@ -90,8 +92,9 @@ std::vector<unsigned> volm_desc_ex_2d::bin_index(double const& distance, unsigne
     if (heading_value >= heading_intervals_[hidx].first && heading_value < heading_intervals_[hidx].second)
       heading_indice.push_back(hidx);
   std::vector<unsigned> bin_indice;
-  for (std::vector<unsigned>::iterator it = heading_indice.begin(); it != heading_indice.end(); ++it)
-    bin_indice.push_back(this->bin_index(dist_idx, land_type, *it));
+  bin_indice.reserve(heading_indice.size());
+for (unsigned int & it : heading_indice)
+    bin_indice.push_back(this->bin_index(dist_idx, land_type, it));
   return bin_indice;
 }
 
@@ -110,8 +113,8 @@ void volm_desc_ex_2d::set_count(unsigned const& dist_idx, unsigned const& land_i
 void volm_desc_ex_2d::set_count(double const& distance, unsigned const& land_id, double const& heading, unsigned char const& count)
 {
   std::vector<unsigned> bins = this->bin_index(distance, land_id, heading);
-  for (std::vector<unsigned>::iterator vit = bins.begin();  vit != bins.end();  ++vit)
-    this->set_count(*vit, count);
+  for (unsigned int & bin : bins)
+    this->set_count(bin, count);
 }
 
 float volm_desc_ex_2d::similarity(volm_desc_sptr other)
@@ -131,11 +134,11 @@ void volm_desc_ex_2d::print() const
   std::cout << "descriptor name: " << name_ << '\n';
   std::cout << "number of depth bins: " << ndists_ << '\n'
      << "radius interval: ";
-  for (unsigned ridx = 0; ridx < radius_.size(); ridx++)
-    std::cout << radius_[ridx] << ' ';
+  for (double radiu : radius_)
+    std::cout << radiu << ' ';
   std::cout << "\nnumber of heading bins: " << nheadings_ << ", heading width: " << h_width_ << ", heading incremental: " << h_inc_ << '\n';
-  for (unsigned hidx = 0; hidx < heading_intervals_.size(); hidx++)
-    std::cout << '[' << heading_intervals_[hidx].first << ',' << heading_intervals_[hidx].second << "] ";
+  for (const auto & heading_interval : heading_intervals_)
+    std::cout << '[' << heading_interval.first << ',' << heading_interval.second << "] ";
   std::cout << '\n'
            << "number of land bins: " << nlands_ << '\n';
   std::cout << "number of total bins:" << nbins_ << '\n';
@@ -181,7 +184,7 @@ void volm_desc_ex_2d::b_read(vsl_b_istream& is)
     heading_intervals_.clear();
     for (unsigned hidx = 0; hidx < nheadings_; hidx++) {
       double s = hidx * h_inc_;  double e = s + h_width_;
-      heading_intervals_.push_back(std::pair<double, double>(s, e));
+      heading_intervals_.emplace_back(s, e);
     }
   }
   else

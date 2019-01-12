@@ -4,8 +4,10 @@
 #include "vsol_polygon_3d.h"
 //:
 // \file
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_vector_io.h>
 #include <vsol/vsol_point_3d.h>
 #include <vgl/vgl_vector_3d.h>
@@ -18,9 +20,8 @@
 void vsol_polygon_3d::compute_plane()
 {
   std::vector<vgl_homg_point_3d<double> > pts;
-  for (std::vector<vsol_point_3d_sptr>::iterator pit = storage_->begin();
-       pit != storage_->end(); ++pit)
-    pts.push_back(vgl_homg_point_3d<double>((*pit)->x(),(*pit)->y(),(*pit)->z(),1.0));
+  for (auto & pit : *storage_)
+    pts.emplace_back(pit->x(),pit->y(),pit->z(),1.0);
   vgl_fit_plane_3d<double> fp(pts);
   fp.fit(0.1, &std::cerr);
   plane_ = fp.get_plane();
@@ -31,7 +32,7 @@ void vsol_polygon_3d::compute_plane()
 // Default constructor
 //----------------------------------------------------------------
 vsol_polygon_3d::vsol_polygon_3d()
-: storage_(VXL_NULLPTR)
+: storage_(nullptr)
 {
 }
 
@@ -368,7 +369,7 @@ void vsol_polygon_3d::print_summary(std::ostream &os) const
 void
 vsl_b_write(vsl_b_ostream &os, vsol_polygon_3d const* p)
 {
-  if (p==VXL_NULLPTR) {
+  if (p==nullptr) {
     vsl_b_write(os, false); // Indicate null pointer stored
   }
   else{
@@ -390,5 +391,5 @@ vsl_b_read(vsl_b_istream &is, vsol_polygon_3d* &p)
     p->b_read(is);
   }
   else
-    p = VXL_NULLPTR;
+    p = nullptr;
 }

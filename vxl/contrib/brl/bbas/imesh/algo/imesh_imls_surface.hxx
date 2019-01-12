@@ -8,7 +8,10 @@
 #include <imesh/imesh_operations.h>
 #include <imesh/algo/imesh_intersect.h>
 #include <imesh/algo/imesh_kd_tree.hxx>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 //: area integral of the squared weight function times a linearly interpolated value

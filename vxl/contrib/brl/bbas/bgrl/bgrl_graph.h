@@ -30,7 +30,9 @@
 #include "bgrl_search_func.h"
 #include <vbl/vbl_ref_count.h>
 #include <vsl/vsl_binary_io.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: The graph
 class bgrl_graph : public vbl_ref_count
@@ -48,7 +50,7 @@ class bgrl_graph : public vbl_ref_count
   bgrl_graph(const bgrl_graph& graph);
 
   //: Destructor
-  virtual ~bgrl_graph(){}
+  ~bgrl_graph() override= default;
 
   //: Adds a new vertex to the graph
   // \retval true if the vertex was added
@@ -63,7 +65,7 @@ class bgrl_graph : public vbl_ref_count
   //: Add an edge between \p v1 and \p v2
   bgrl_edge_sptr add_edge( const bgrl_vertex_sptr& v1,
                            const bgrl_vertex_sptr& v2,
-                           const bgrl_edge_sptr& model_edge = VXL_NULLPTR);
+                           const bgrl_edge_sptr& model_edge = nullptr);
 
   //: Add an edge between \p v1 and \p v2
   bool remove_edge( const bgrl_vertex_sptr& v1, const bgrl_vertex_sptr& v2 );
@@ -105,13 +107,13 @@ class bgrl_graph : public vbl_ref_count
   {
    public:
     //: Constructor
-    iterator( bgrl_graph* graph, bgrl_search_func_sptr func );
+    iterator( bgrl_graph* graph, const bgrl_search_func_sptr& func );
 
     //: Constructor - for end iterator
     iterator( bgrl_graph* graph );
 
     //: Destructor
-    virtual ~iterator() {}
+    virtual ~iterator() = default;
 
     bgrl_graph* graph() const { return graph_; }
 
@@ -142,7 +144,7 @@ class bgrl_graph : public vbl_ref_count
   friend class bgrl_graph::iterator;
 
   //: Depth first search begin iterator
-  iterator begin(const bgrl_search_func_sptr& func = VXL_NULLPTR) { return iterator(this, func); }
+  iterator begin(const bgrl_search_func_sptr& func = nullptr) { return iterator(this, func); }
   //: Depth first search end iterator
   iterator end()   { return iterator(this); }
 };

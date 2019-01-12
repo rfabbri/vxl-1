@@ -2,12 +2,14 @@
 #include <vector>
 #include <string>
 #include <rsdl/rsdl_borgefors.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_vector_fixed.h>
 #include <testlib/testlib_test.h>
 
 static inline
-void TEST_NEAR_vec(std::string msg,
+void TEST_NEAR_vec(const std::string& msg,
                    const vnl_vector_fixed<double,2>& v1,
                    const vnl_vector_fixed<double,2>& v2,
                    double tol)
@@ -22,9 +24,9 @@ static void test_borgefors()
   int range = 250;
   std::vector<vnl_vector_fixed<double,2> > data;
   for (int i = -range ; i< range; i++)
-    data.push_back(vnl_vector_fixed<double,2>(i,0.0));
+    data.emplace_back(i,0.0);
   for (int j = -range; j< range; j++)
-    data.push_back(vnl_vector_fixed<double,2>(0.0,j));
+    data.emplace_back(0.0,j);
 
   std::cout << "Tests a borgefors map without a mask.\n";
   rsdl_borgefors<vnl_vector_fixed<double,2> >

@@ -1,7 +1,4 @@
 // This is oxl/mvl/FMPlanarNonLinFun.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 
@@ -9,7 +6,9 @@
 #include <cstdlib>
 #include "FMPlanarNonLinFun.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_matrix.h>
@@ -24,7 +23,7 @@
 #include <mvl/HomgOperator2D.h>
 #include <mvl/FMatrixPlanar.h>
 
-const int FMPlanarNonLinFun_nparams = 9;
+constexpr int FMPlanarNonLinFun_nparams = 9;
 
 //-----------------------------------------------------------------------------
 //: Constructor
@@ -44,8 +43,8 @@ FMPlanarNonLinFun::FMPlanarNonLinFun(const ImageMetric* image_metric1,
 {
   // Form single array from both points1 and points2
   std::vector<vgl_homg_point_2d<double> > points(points1);
-  for (unsigned i = 0; i < points2.size(); ++i)
-    points.push_back(points2[i]);
+  for (const auto & i : points2)
+    points.push_back(i);
 
   // Condition points
   normalized_.normalize(points);
@@ -66,14 +65,14 @@ FMPlanarNonLinFun::FMPlanarNonLinFun(const ImageMetric* image_metric1,
   image_metric1_(image_metric1),
   image_metric2_(image_metric2)
 {
-  for (unsigned i = 0; i < points1.size(); ++i)
-    points1_.push_back(vgl_homg_point_2d<double>(points1[i].x(),points1[i].y(),points1[i].w()));
-  for (unsigned i = 0; i < points2.size(); ++i)
-    points2_.push_back(vgl_homg_point_2d<double>(points2[i].x(),points2[i].y(),points2[i].w()));
+  for (auto & i : points1)
+    points1_.emplace_back(i.x(),i.y(),i.w());
+  for (auto & i : points2)
+    points2_.emplace_back(i.x(),i.y(),i.w());
   // Form single array
   std::vector<HomgPoint2D> points(points1);
-  for (unsigned i = 0; i < points2.size(); ++i)
-    points.push_back(points2[i]);
+  for (const auto & i : points2)
+    points.push_back(i);
 
   // Condition points
   normalized_.normalize(points);

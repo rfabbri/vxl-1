@@ -8,8 +8,10 @@
 
 #include <vsl/vsl_indent.h>
 #include <vsl/vsl_binary_loader.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <mbl/mbl_parse_block.h>
 #include <mbl/mbl_read_props.h>
@@ -19,17 +21,13 @@
 // Dflt ctor
 //=======================================================================
 
-mmn_solver::mmn_solver()
-{
-}
+mmn_solver::mmn_solver() = default;
 
 //=======================================================================
 // Destructor
 //=======================================================================
 
-mmn_solver::~mmn_solver()
-{
-}
+mmn_solver::~mmn_solver() = default;
 
 
 //: Initialise from a string stream
@@ -74,12 +72,12 @@ void vsl_add_to_binary_loader(const mmn_solver& b)
 }
 
 //: Create a concrete region_model-derived object, from a text specification.
-vcl_unique_ptr<mmn_solver> mmn_solver::
+std::unique_ptr<mmn_solver> mmn_solver::
   create_from_stream(std::istream &is)
 {
   std::string name;
   is >> name;
-  vcl_unique_ptr<mmn_solver> pair_cost;
+  std::unique_ptr<mmn_solver> pair_cost;
   try {
     pair_cost = mbl_cloneables_factory<mmn_solver>::get_clone(name);
   }

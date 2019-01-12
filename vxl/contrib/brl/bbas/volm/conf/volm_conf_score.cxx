@@ -1,16 +1,19 @@
 #include <iostream>
 #include <cmath>
 #include <limits>
+#include <utility>
 #include "volm_conf_score.h"
 //:
 // \file
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h>
 
 // note the angular value is from 0 to 2*pi and 0 refers to the east direction
 
-volm_conf_score::volm_conf_score(float const& score, float const& theta, std::vector<volm_conf_object> const& landmarks)
- : score_(score), theta_(theta), landmarks_(landmarks)
+volm_conf_score::volm_conf_score(float const& score, float const& theta, std::vector<volm_conf_object>  landmarks)
+ : score_(score), theta_(theta), landmarks_(std::move(landmarks))
 {
   while (theta_ > vnl_math::twopi)
     theta_ -= (float)vnl_math::twopi;
@@ -37,8 +40,8 @@ void volm_conf_score::b_write(vsl_b_ostream& os) const
   vsl_b_write(os, score_);
   vsl_b_write(os, theta_);
   vsl_b_write(os, landmarks_.size());
-  for (unsigned i = 0; i < landmarks_.size(); i++)
-    vsl_b_write(os, landmarks_[i]);
+  for (const auto & landmark : landmarks_)
+    vsl_b_write(os, landmark);
 }
 
 void volm_conf_score::b_read(vsl_b_istream& is)
@@ -75,7 +78,7 @@ void vsl_b_write(vsl_b_ostream& os, volm_conf_score const& score)
 
 void vsl_b_write(vsl_b_ostream& os, volm_conf_score const* score_ptr)
 {
-  if (score_ptr == VXL_NULLPTR)
+  if (score_ptr == nullptr)
     vsl_b_write(os,false);
   else {
     vsl_b_write(os, true);
@@ -95,7 +98,7 @@ void vsl_b_read(vsl_b_istream& is, volm_conf_score& score)
 
 void vsl_b_read(vsl_b_istream& is, volm_conf_score*& score_ptr)
 {
-  delete score_ptr;  score_ptr = VXL_NULLPTR;
+  delete score_ptr;  score_ptr = nullptr;
   bool not_null_ptr;
   vsl_b_read(is, not_null_ptr);
   if (not_null_ptr)
@@ -107,7 +110,7 @@ void vsl_b_read(vsl_b_istream& is, volm_conf_score*& score_ptr)
 
 void vsl_b_read(vsl_b_istream& is, volm_conf_score_sptr& score_sptr)
 {
-  volm_conf_score* score_ptr = VXL_NULLPTR;
+  volm_conf_score* score_ptr = nullptr;
   vsl_b_read(is, score_ptr);
   score_sptr = score_ptr;
 }

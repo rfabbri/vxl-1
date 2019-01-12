@@ -1,7 +1,4 @@
 // This is core/vil1/file_formats/vil1_jpeg_compressor.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
@@ -10,7 +7,9 @@
 #include "vil1_jpeg_compressor.h"
 #include "vil1_jpeg_destination_mgr.h"
 #include <vil1/vil1_stream.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 vil1_jpeg_compressor::vil1_jpeg_compressor(vil1_stream *s)
   : stream(s)
@@ -69,7 +68,7 @@ bool vil1_jpeg_compressor::write_scanline(unsigned line, JSAMPLE const *scanline
   }
 
   // write the scanline
-  { JSAMPLE *tmp = const_cast<JSAMPLE*>(scanline);
+  { auto *tmp = const_cast<JSAMPLE*>(scanline);
   jpeg_write_scanlines(&jobj, &tmp, 1); }
 
   // finish if the last scanline is written
@@ -91,6 +90,5 @@ vil1_jpeg_compressor::~vil1_jpeg_compressor() {
 
   //
   stream->unref();
-  stream = VXL_NULLPTR;
+  stream = nullptr;
 }
-

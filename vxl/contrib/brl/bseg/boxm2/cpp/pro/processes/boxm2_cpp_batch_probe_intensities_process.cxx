@@ -9,7 +9,9 @@
 // \author Ozge C. Ozcanli
 // \date May 12, 2011
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/io/boxm2_stream_cache.h>
 #include <boxm2/io/boxm2_cache.h>
 #include <boxm2/boxm2_scene.h>
@@ -26,8 +28,8 @@
 
 namespace boxm2_cpp_batch_probe_intensities_process_globals
 {
-  const unsigned n_inputs_ = 6;
-  const unsigned n_outputs_ = 3;
+  constexpr unsigned n_inputs_ = 6;
+  constexpr unsigned n_outputs_ = 3;
 }
 
 bool boxm2_cpp_batch_probe_intensities_process_cons(bprb_func_process& pro)
@@ -68,9 +70,9 @@ bool boxm2_cpp_batch_probe_intensities_process(bprb_func_process& pro)
   boxm2_scene_sptr scene =pro.get_input<boxm2_scene_sptr>(i++);
   boxm2_cache_sptr cache =pro.get_input<boxm2_cache_sptr>(i++);
   boxm2_stream_cache_sptr str_cache= pro.get_input<boxm2_stream_cache_sptr>(i++);
-  float x= pro.get_input<float>(i++);
-  float y= pro.get_input<float>(i++);
-  float z= pro.get_input<float>(i++);
+  auto x= pro.get_input<float>(i++);
+  auto y= pro.get_input<float>(i++);
+  auto z= pro.get_input<float>(i++);
 
   vgl_point_3d<double> local;
   boxm2_block_id id;

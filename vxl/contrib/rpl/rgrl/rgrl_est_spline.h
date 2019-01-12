@@ -27,7 +27,7 @@ class rgrl_est_spline
   //
   // Only B-spline estimation is performed. Neither is the global
   // estimation performed and nor is the global xformation used.
-  rgrl_est_spline( unsigned dof, rgrl_mask_box const& roi, vnl_vector<double> const& delta,
+  rgrl_est_spline( unsigned dof, rgrl_mask_box  roi, vnl_vector<double> const& delta,
                    vnl_vector< unsigned > const& m,
                    bool use_thin_plate = false, double lambda = 0.001 );
 
@@ -35,21 +35,21 @@ class rgrl_est_spline
   //
   // global_xform is used as the global xformation. No global
   // estimation will be performed.
-  rgrl_est_spline( unsigned dof, rgrl_transformation_sptr global_xform,
-                   rgrl_mask_box const& roi, vnl_vector<double> const& delta,
+  rgrl_est_spline( unsigned dof, const rgrl_transformation_sptr& global_xform,
+                   rgrl_mask_box  roi, vnl_vector<double> const& delta,
                    vnl_vector< unsigned > const& m,
                    bool use_thin_plate = false, double lambda = 0.001 );
 
   rgrl_transformation_sptr
   estimate( rgrl_set_of<rgrl_match_set_sptr> const& matches,
-            rgrl_transformation const& cur_transform ) const;
+            rgrl_transformation const& cur_transform ) const override;
 
   rgrl_transformation_sptr
   estimate( rgrl_match_set_sptr matches,
-            rgrl_transformation const& cur_transform ) const;
+            rgrl_transformation const& cur_transform ) const override;
 
   //: Type of transformation estimated by this estimator.
-  const std::type_info& transformation_type() const;
+  const std::type_info& transformation_type() const override;
 
   void set_optimize_method( int optimize_method )
     { optimize_method_ = optimize_method; }
@@ -75,4 +75,3 @@ class rgrl_est_spline
 };
 
 #endif
-

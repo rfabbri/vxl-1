@@ -11,7 +11,9 @@
 
 //=======================================================================
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <pdf1d/pdf1d_sampler.h>
 
 //=======================================================================
@@ -21,9 +23,7 @@ pdf1d_epanech_kernel_pdf_sampler::pdf1d_epanech_kernel_pdf_sampler():
 {
 }
 
-pdf1d_epanech_kernel_pdf_sampler::~pdf1d_epanech_kernel_pdf_sampler()
-{
-}
+pdf1d_epanech_kernel_pdf_sampler::~pdf1d_epanech_kernel_pdf_sampler() = default;
 
 //=======================================================================
 
@@ -151,4 +151,3 @@ pdf1d_sampler* pdf1d_epanech_kernel_pdf_sampler::clone() const
 {
   return new pdf1d_epanech_kernel_pdf_sampler(*this);
 }
-

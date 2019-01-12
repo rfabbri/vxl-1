@@ -3,7 +3,9 @@
 #include <fstream>
 #include <testlib/testlib_test.h>
 #include <brad/brad_sun_dir_index.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_double_2.h>
 #include <vnl/vnl_double_3.h>
 

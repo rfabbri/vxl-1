@@ -12,7 +12,10 @@
 
 #include "rgrl_feature_set_bins.h"
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <rsdl/rsdl_bins.h>
 #include <rsdl/rsdl_bins.hxx> // to avoid explicit instantiation
@@ -67,17 +70,15 @@ rgrl_feature_set_bins( feature_vector const& features,
   bins_.reset( new bin_type( min, max, bin_sizes ) );
 
   // Add the data
-  for ( feature_vector::const_iterator itr = features.begin(); itr != features.end(); ++itr ) {
-    bins_->add_point( (*itr)->location(), *itr );
+  for (const auto & feature : features) {
+    bins_->add_point( feature->location(), feature );
   }
 }
 
 
 template<unsigned N>
 rgrl_feature_set_bins<N>::
-~rgrl_feature_set_bins()
-{
-}
+~rgrl_feature_set_bins() = default;
 
 
 template<unsigned N>

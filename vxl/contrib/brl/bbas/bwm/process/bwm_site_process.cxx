@@ -1,6 +1,3 @@
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 
 #include <sstream>
 #include <iostream>
@@ -15,7 +12,9 @@
 #include <vil/vil_image_list.h>
 #include <vpgl/vpgl_rational_camera.h>
 #include <vgui/vgui_error_dialog.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 double bwm_site_process::version_num = 0;
 

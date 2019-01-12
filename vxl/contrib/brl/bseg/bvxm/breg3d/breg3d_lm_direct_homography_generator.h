@@ -20,9 +20,9 @@
 class breg3d_lm_direct_homography_generator : public breg3d_homography_generator
 {
  public:
-  breg3d_lm_direct_homography_generator(){}
+  breg3d_lm_direct_homography_generator()= default;
 
-  virtual ihog_transform_2d compute_homography();
+  ihog_transform_2d compute_homography() override;
 };
 
 

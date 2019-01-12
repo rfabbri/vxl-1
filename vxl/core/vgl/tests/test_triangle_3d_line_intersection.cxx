@@ -1,7 +1,9 @@
 // Some tests for vgl_triangle_3d_line_intersection
 
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <testlib/testlib_test.h>
 #include <vgl/vgl_triangle_3d.h>
 #include <vgl/vgl_point_3d.h>
@@ -108,7 +110,7 @@ static void test_line_intersection()
   }
   {
     bool outside_fail = false, inside_fail = false;
-    const double rad = 0.01745329251994329577; // radians per degree, i.e., pi/180
+    constexpr double rad = 0.01745329251994329577; // radians per degree, i.e., pi/180
     vgl_point_3d<double> i_pnt;
     for (double e=1e-12; e<0.0002; e *= 9.0) // height above/below triangle edge p1-p2
     {

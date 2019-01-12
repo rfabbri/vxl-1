@@ -5,8 +5,10 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
-#include <vcl_climits.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <climits>
 
 #include <vil/vil_image_view.h>
 #include <vil/vil_copy.h>
@@ -19,13 +21,11 @@
 
 //: Constructor
 bil_wshed_2d::bil_wshed_2d()
-{
-}
+= default;
 
 //: Destructor
 bil_wshed_2d::~bil_wshed_2d()
-{
-}
+= default;
 
 //public functions
 

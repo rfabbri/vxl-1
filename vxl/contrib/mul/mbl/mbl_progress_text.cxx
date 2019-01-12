@@ -1,6 +1,3 @@
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \brief Progress class that outputs simple text reporting on progress
@@ -22,9 +19,7 @@ mbl_progress_text::mbl_progress_text(std::ostream& os/*=std::cout*/)
 //========================================================================
 // Destructor
 //========================================================================
-mbl_progress_text::~mbl_progress_text()
-{
-}
+mbl_progress_text::~mbl_progress_text() = default;
 
 
 //========================================================================

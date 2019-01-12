@@ -14,7 +14,9 @@
 #include <iosfwd>
 #include <vbl/vbl_ref_count.h>
 #include <gevd/gevd_param_mixin.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class sdet_fit_conics_params : public gevd_param_mixin, public vbl_ref_count
 {
@@ -23,9 +25,9 @@ class sdet_fit_conics_params : public gevd_param_mixin, public vbl_ref_count
                          double rms_distance = 1.0,int aspect_ratio = 4);
 
   sdet_fit_conics_params(const sdet_fit_conics_params& old_params);
- ~sdet_fit_conics_params() {}
+ ~sdet_fit_conics_params() override = default;
 
-  bool SanityCheck();
+  bool SanityCheck() override;
  friend
   std::ostream& operator<<(std::ostream& os, const sdet_fit_conics_params& flp);
  protected:

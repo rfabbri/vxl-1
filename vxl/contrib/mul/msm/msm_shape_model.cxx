@@ -10,24 +10,22 @@
 #include <vsl/vsl_binary_io.h>
 #include <vnl/io/vnl_io_vector.h>
 #include <vnl/io/vnl_io_matrix.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 //=======================================================================
 // Dflt ctor
 //=======================================================================
 
-msm_shape_model::msm_shape_model()
-{
-}
+msm_shape_model::msm_shape_model() = default;
 
 //=======================================================================
 // Destructor
 //=======================================================================
 
-msm_shape_model::~msm_shape_model()
-{
-}
+msm_shape_model::~msm_shape_model() = default;
 
 //: Set up model
 void msm_shape_model::set(const msm_points& mean,

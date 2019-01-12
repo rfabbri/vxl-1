@@ -22,7 +22,9 @@
 #include <bocl/bocl_device.h>
 #include <bocl/bocl_kernel.h>
 #include <vul/vul_timer.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_pixel_format.h>
 #include <vil/vil_image_view.h>
 #include <vil/vil_save.h>
@@ -31,11 +33,11 @@
 std::map<std::string, std::vector<bocl_kernel*> > boxm2_ocl_paint_online_color::kernels_;
 
 //paint block
-bool boxm2_ocl_paint_online_color::paint_scene(boxm2_scene_sptr          scene,
-                                         bocl_device_sptr          device,
-                                         boxm2_opencl_cache_sptr    opencl_cache,
-                                         vil_image_view_base_sptr   img,
-                                         vpgl_camera_double_sptr    cam,
+bool boxm2_ocl_paint_online_color::paint_scene(const boxm2_scene_sptr&          scene,
+                                         const bocl_device_sptr&          device,
+                                         const boxm2_opencl_cache_sptr&    opencl_cache,
+                                         const vil_image_view_base_sptr&   img,
+                                         const vpgl_camera_double_sptr&    cam,
                                          std::string const& apm_id)
 {
   vil_image_view<float> weights(img->ni(), img->nj());
@@ -43,17 +45,15 @@ bool boxm2_ocl_paint_online_color::paint_scene(boxm2_scene_sptr          scene,
   return paint_scene_with_weights(scene, device, opencl_cache, img, weights, cam, apm_id);
 }
 
-bool boxm2_ocl_paint_online_color::paint_scene_with_weights(boxm2_scene_sptr          scene,
+bool boxm2_ocl_paint_online_color::paint_scene_with_weights(const boxm2_scene_sptr&          scene,
                                                       bocl_device_sptr          device,
-                                                      boxm2_opencl_cache_sptr    opencl_cache,
-                                                      vil_image_view_base_sptr   img,
+                                                      const boxm2_opencl_cache_sptr&    opencl_cache,
+                                                      const vil_image_view_base_sptr&   img,
                                                       vil_image_view<float> const& weights,
                                                       vpgl_camera_double_sptr    cam,
                                                       std::string const& apm_id)
 {
-  typedef boxm2_data_traits<BOXM2_AUX0>::datatype aux0_datatype;
   typedef boxm2_data_traits<BOXM2_AUX1>::datatype aux1_datatype;
-  typedef boxm2_data_traits<BOXM2_AUX2>::datatype aux2_datatype;
   typedef boxm2_data_traits<BOXM2_AUX3>::datatype aux3_datatype;
 
   float transfer_time=0.0f;
@@ -67,16 +67,16 @@ bool boxm2_ocl_paint_online_color::paint_scene_with_weights(boxm2_scene_sptr    
   bool foundDataType = false, foundNumObsType = false;
   std::string data_type, num_obs_type;
   std::vector<std::string> apps = scene->appearances();
-  for (unsigned int i=0; i<apps.size(); ++i) {
-    if ( apps[i] == boxm2_data_traits<BOXM2_GAUSS_RGB>::prefix(apm_id) )
+  for (const auto & app : apps) {
+    if ( app == boxm2_data_traits<BOXM2_GAUSS_RGB>::prefix(apm_id) )
     {
-      data_type = apps[i];
+      data_type = app;
       foundDataType = true;
       // boxm2_data_info::datasize(boxm2_data_traits<BOXM2_MOG3_GREY>::prefix());
     }
-    else if ( apps[i] == boxm2_data_traits<BOXM2_NUM_OBS_SINGLE>::prefix(apm_id) )
+    else if ( app == boxm2_data_traits<BOXM2_NUM_OBS_SINGLE>::prefix(apm_id) )
     {
-      num_obs_type = apps[i];
+      num_obs_type = app;
       foundNumObsType = true;
     }
   }
@@ -100,7 +100,7 @@ bool boxm2_ocl_paint_online_color::paint_scene_with_weights(boxm2_scene_sptr    
 
   //grab input image, establish cl_ni, cl_nj (so global size is divisible by local size)
   vil_image_view_base_sptr rgba_img = boxm2_util::prepare_input_rgb_image(img);
-  vil_image_view<vil_rgba<vxl_byte> >* img_view = dynamic_cast<vil_image_view<vil_rgba<vxl_byte> >*>(rgba_img.ptr());
+  auto* img_view = dynamic_cast<vil_image_view<vil_rgba<vxl_byte> >*>(rgba_img.ptr());
   if (!img_view) {
     std::cerr << "Error casting prepared image to type vil_image_view<vil_rgba<vxl_byte> >" << std::endl;
     return false;
@@ -108,8 +108,8 @@ bool boxm2_ocl_paint_online_color::paint_scene_with_weights(boxm2_scene_sptr    
 
   std::size_t local_threads[2]={8,8};
   std::size_t global_threads[2]={8,8};
-  unsigned cl_ni=(unsigned)RoundUp(img_view->ni(),(int)local_threads[0]);
-  unsigned cl_nj=(unsigned)RoundUp(img_view->nj(),(int)local_threads[1]);
+  auto cl_ni=(unsigned)RoundUp(img_view->ni(),(int)local_threads[0]);
+  auto cl_nj=(unsigned)RoundUp(img_view->nj(),(int)local_threads[1]);
 
   std::vector<boxm2_block_id> vis_order;
   std::vector<boxm2_block_id>::iterator id;
@@ -118,7 +118,7 @@ bool boxm2_ocl_paint_online_color::paint_scene_with_weights(boxm2_scene_sptr    
 
   // Output Array
   float output_arr[100];
-  for (int i=0; i<100; ++i) output_arr[i] = 0.0f;
+  for (float & i : output_arr) i = 0.0f;
   bocl_mem_sptr  cl_output=new bocl_mem(device->context(), output_arr, sizeof(float)*100, "output buffer");
   cl_output->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
 
@@ -126,15 +126,15 @@ bool boxm2_ocl_paint_online_color::paint_scene_with_weights(boxm2_scene_sptr    
   // raytrace kernel
   {
     //set generic cam
-    cl_float* ray_origins    = new cl_float[4*cl_ni*cl_nj];
-    cl_float* ray_directions = new cl_float[4*cl_ni*cl_nj];
+    auto* ray_origins    = new cl_float[4*cl_ni*cl_nj];
+    auto* ray_directions = new cl_float[4*cl_ni*cl_nj];
     bocl_mem_sptr ray_o_buff = opencl_cache->alloc_mem( cl_ni*cl_nj * sizeof(cl_float4), ray_origins,    "ray_origins buffer");
     bocl_mem_sptr ray_d_buff = opencl_cache->alloc_mem( cl_ni*cl_nj * sizeof(cl_float4), ray_directions, "ray_directions buffer");
     boxm2_ocl_camera_converter::compute_ray_image( device, queue, cam, cl_ni, cl_nj, ray_o_buff, ray_d_buff);
 
     //Visibility, Preinf, Norm, and input image buffers
-    float* vis_buff = new float[cl_ni*cl_nj];
-    float* input_buff=new float[cl_ni*cl_nj*4];
+    auto* vis_buff = new float[cl_ni*cl_nj];
+    auto* input_buff=new float[cl_ni*cl_nj*4];
     for (unsigned i=0;i<cl_ni*cl_nj;i++)
       vis_buff[i]=1.0f;
 
@@ -198,7 +198,7 @@ bool boxm2_ocl_paint_online_color::paint_scene_with_weights(boxm2_scene_sptr    
       bocl_mem* blk       = opencl_cache->get_block(scene, *id);
       bocl_mem* blk_info  = opencl_cache->loaded_block_info();
       bocl_mem* alpha     = opencl_cache->get_data(scene, *id,boxm2_data_traits<BOXM2_ALPHA>::prefix());
-      boxm2_scene_info* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
+      auto* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
       int alphaTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_ALPHA>::prefix());
       info_buffer->data_buffer_length = (int) (alpha->num_bytes()/alphaTypeSize);
       blk_info->write_to_buffer((queue));
@@ -288,7 +288,7 @@ bool boxm2_ocl_paint_online_color::paint_scene_with_weights(boxm2_scene_sptr    
       bocl_mem* blk       = opencl_cache->get_block(scene, *id);
       bocl_mem* blk_info  = opencl_cache->loaded_block_info();
       bocl_mem* alpha     = opencl_cache->get_data(scene, *id,boxm2_data_traits<BOXM2_ALPHA>::prefix());
-      boxm2_scene_info* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
+      auto* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
       int alphaTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_ALPHA>::prefix());
       info_buffer->data_buffer_length = (int) (alpha->num_bytes()/alphaTypeSize);
       blk_info->write_to_buffer((queue));
@@ -339,7 +339,7 @@ bool boxm2_ocl_paint_online_color::paint_scene_with_weights(boxm2_scene_sptr    
       vul_timer transfer;
       bocl_mem* blk       = opencl_cache->get_block(scene, *id);
       bocl_mem* blk_info  = opencl_cache->loaded_block_info();
-      boxm2_scene_info* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
+      auto* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
 
       //grab an appropriately sized AUX data buffer
       int auxTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_AUX0>::prefix());
@@ -402,8 +402,8 @@ bool boxm2_ocl_paint_online_color::paint_scene_with_weights(boxm2_scene_sptr    
 
 
 //: Keeps track of already compiled kernels, and returns matching ones
-std::vector< bocl_kernel* > boxm2_ocl_paint_online_color::compile_kernels( bocl_device_sptr device,
-                                                                    std::string opts )
+std::vector< bocl_kernel* > boxm2_ocl_paint_online_color::compile_kernels( const bocl_device_sptr& device,
+                                                                    const std::string& opts )
 {
   //make id out of device
   std::string identifier = device->device_identifier();
@@ -426,7 +426,7 @@ std::vector< bocl_kernel* > boxm2_ocl_paint_online_color::compile_kernels( bocl_
   src_paths.push_back(source_dir + "bit/cast_ray_bit.cl");
 
   //compilation options
-  bocl_kernel* kernel = new bocl_kernel();
+  auto* kernel = new bocl_kernel();
 
   std::string updt_opts = opts +  " -D SEGLEN_VIS -D YUV -D DETERMINISTIC -D MOG_TYPE_8";
   updt_opts += " -D STEP_CELL=step_cell_seglen_vis(aux_args,data_ptr,llid,d)";
@@ -442,12 +442,12 @@ std::vector< bocl_kernel* > boxm2_ocl_paint_online_color::compile_kernels( bocl_
   second_src_paths.push_back(source_dir + "ray_bundle_library_opt.cl");
   second_src_paths.push_back(source_dir + "bit/update_rgb_kernels.cl");
 
-  bocl_kernel* compress_kernel( new bocl_kernel() );
+  auto* compress_kernel( new bocl_kernel() );
   std::string compress_opts = opts + " -D COMPRESS_RGB -D YUV -D MOG_TYPE_8";
   compress_kernel->create_kernel(&device->context(), device->device_id(), second_src_paths, "compress_rgb", compress_opts, "online_paint_color::compress_rgb");
   kernels.push_back(compress_kernel);
 
-  bocl_kernel* update_kernel = new bocl_kernel();
+  auto* update_kernel = new bocl_kernel();
   std::string app_opts = opts +  " -D UPDATE_APP_YUV -D YUV -D MOG_TYPE_8";
   update_kernel->create_kernel(&device->context(),device->device_id(), second_src_paths, "update_yuv_main", app_opts, "online_paint_color::update_yuv_main");
   kernels.push_back(update_kernel);
@@ -456,7 +456,7 @@ std::vector< bocl_kernel* > boxm2_ocl_paint_online_color::compile_kernels( bocl_
   kernels_[identifier] = kernels;
   return kernels;
 }
-bool boxm2_ocl_paint_online_color::reset( boxm2_scene_sptr scene,bocl_device_sptr device,boxm2_opencl_cache_sptr opencl_cache,std::string apm_id){
+bool boxm2_ocl_paint_online_color::reset( const boxm2_scene_sptr& scene,const bocl_device_sptr& device,const boxm2_opencl_cache_sptr& opencl_cache,const std::string& apm_id){
   int status=0;
   cl_command_queue queue = clCreateCommandQueue( device->context(),
                                                  *(device->device_id()),

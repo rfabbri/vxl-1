@@ -1,11 +1,13 @@
 // SimpleTest.cpp : Defines the entry point for the console application.
 //
-#include "StdAfx.h"
-#include <vcl_compiler.h>
 #include <iostream>
 #include <cstdio>
-#include <expatpplib.h> // resides in b3p/expatpp
 #include <cstring>
+#include "StdAfx.h"
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <expatpplib.h> // resides in b3p/expatpp
 
 class myParser : public expatpp
 {

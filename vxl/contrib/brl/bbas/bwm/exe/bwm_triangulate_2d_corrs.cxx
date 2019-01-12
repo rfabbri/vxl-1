@@ -7,8 +7,10 @@
 #include <bwm/bwm_observer_mgr.h>
 #include <bwm/bwm_3d_corr.h>
 #include <bwm/bwm_3d_corr_sptr.h>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_arg.h>
 #include <vgl/vgl_point_3d.h>
 

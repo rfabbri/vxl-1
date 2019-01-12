@@ -9,7 +9,9 @@
 // \author DAC, Ian Scott
 // Test construction, IO etc
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpl/vpl.h> // vpl_unlink()
 #include <vsl/vsl_binary_loader.h>
 #include <vsl/vsl_vector_io.h>
@@ -102,7 +104,7 @@ void test_binary_1d_wrapper()
   clsfy_binary_1d_wrapper_builder b_thresh_builder;
   b_thresh_builder.set_builder_1d(clsfy_binary_threshold_1d_builder());
 
-  vcl_unique_ptr<clsfy_classifier_base> b_thresh_clsfr(
+  std::unique_ptr<clsfy_classifier_base> b_thresh_clsfr(
     b_thresh_builder.new_classifier());
 
   double error1= b_thresh_builder.build(*b_thresh_clsfr,
@@ -145,7 +147,7 @@ void test_binary_1d_wrapper()
   vsl_b_write(bfs_out, b_thresh_clsfr.get());
   bfs_out.close();
 
-  clsfy_classifier_base *classifier_in = VXL_NULLPTR;
+  clsfy_classifier_base *classifier_in = nullptr;
 
   vsl_b_ifstream bfs_in(test_path);
   TEST(("Opened " + test_path + " for reading").c_str(), (!bfs_in ), false);
@@ -166,7 +168,7 @@ void test_binary_1d_wrapper()
 
   std::istringstream ss(
     "clsfy_binary_1d_wrapper_builder { builder_1d: clsfy_binary_threshold_1d_builder }\n" );
-  vcl_unique_ptr<clsfy_builder_base> builder_configged =
+  std::unique_ptr<clsfy_builder_base> builder_configged =
     clsfy_builder_base::new_builder(ss);
 
   std::cout<<"Builder Constructed :\n"

@@ -17,10 +17,13 @@
 #include <string>
 #include <iostream>
 #include <typeinfo>
+#include <utility>
 #include <vector>
 #include <map>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vbl/vbl_ref_count.h>
 #include <bxml/bxml_document.h>
 #include <bprb/bprb_parameters_sptr.h>
@@ -31,7 +34,7 @@ class bprb_param
  public:
 
   //: Destructor
-  virtual ~bprb_param() {}
+  virtual ~bprb_param() = default;
 
   //: Clone this parameter
   virtual bprb_param * clone() const = 0;
@@ -65,8 +68,8 @@ class bprb_param
 
  protected:
   //: Constructor
-  bprb_param(bool has_bounds, const std::string& name, const std::string& desc)
-   : has_bounds_(has_bounds), name_(name), description_(desc) {}
+  bprb_param(bool has_bounds, std::string  name, std::string  desc)
+   : has_bounds_(has_bounds), name_(std::move(name)), description_(std::move(desc)) {}
 
 
   //: Describes whether or not the parameter has bounds
@@ -88,9 +91,9 @@ class bprb_param_type : public bprb_param
 {
  public:
   // Constructor - with bounds
-  bprb_param_type<T>(const std::string& name, const std::string& desc, const T& dflt, const T& min, const T& max)
+  bprb_param_type<T>(const std::string& name, const std::string& desc, const T& dflt, T  min, T  max)
    : bprb_param(true, name, desc), value_(dflt), default_(dflt), temp_value_(dflt),
-     min_value_(min), max_value_(max) { assert( min_value_ <= value_ && value_ <= max_value_ ); }
+     min_value_(std::move(min)), max_value_(std::move(max)) { assert( min_value_ <= value_ && value_ <= max_value_ ); }
 
   // Constructor - without bounds
   bprb_param_type<T>(const std::string& name, const std::string& desc, const T& dflt)
@@ -109,30 +112,30 @@ class bprb_param_type : public bprb_param
   //: A reference for temporary storage of values
   T& temp_ref() { temp_value_ = value_; return temp_value_; }
   //: Attempt to set the value from the temporary reference
-  bool set_from_temp() { return set_value(temp_value_); }
+  bool set_from_temp() override { return set_value(temp_value_); }
   //: Set the current value to \p val
   bool set_value( const T& val );
 
   //: Reset the value to its default
-  virtual void reset() { value_ = default_; }
+  void reset() override { value_ = default_; }
 
   //: Clone the parameter
-  virtual bprb_param * clone() const { return new bprb_param_type<T>(*this); }
+  bprb_param * clone() const override { return new bprb_param_type<T>(*this); }
 
   //: Return a string representation of the current value
-  virtual std::string value_str() const { return create_string(value_); }
+  std::string value_str() const override { return create_string(value_); }
   //: Return a string representation of the default value
-  virtual std::string default_str() const { return create_string(default_); }
+  std::string default_str() const override { return create_string(default_); }
   //: Return a string representation of the default value
-  virtual std::string type_str() const { return typeid(std::string("dummy")) == typeid(default_) ? "string" : typeid(default_).name(); }
+  std::string type_str() const override { return typeid(std::string("dummy")) == typeid(default_) ? "string" : typeid(default_).name(); }
 
   //: Return a string representation of the minimum value
-  virtual std::string min_str() const { return has_bounds_? create_string(min_value_) : ""; }
+  std::string min_str() const override { return has_bounds_? create_string(min_value_) : ""; }
   //: Return a string representation of the maximum value
-  virtual std::string max_str() const { return has_bounds_? create_string(max_value_) : ""; }
+  std::string max_str() const override { return has_bounds_? create_string(max_value_) : ""; }
 
   //: Set the current value by parsing a string
-  virtual bool parse_value_str(const std::string& input) { return set_value(parse_string(input)); }
+  bool parse_value_str(const std::string& input) override { return set_value(parse_string(input)); }
 
  private:
   //: Create a string representation of the value
@@ -165,7 +168,7 @@ class bprb_choice_param_type : public bprb_param_type<unsigned>
    : bprb_param_type<unsigned>(name, desc, def_val, 0, static_cast<unsigned>(choices.size()-1)), choices_(choices) {}
 
   //: Clone the parameter
-  virtual bprb_param * clone() const { return new bprb_choice_param_type(*this); }
+  bprb_param * clone() const override { return new bprb_choice_param_type(*this); }
 
   //: Accessor for the choice list;
   std::vector<std::string> & choices() { return choices_; }
@@ -186,7 +189,7 @@ class bprb_parameters : public vbl_ref_count
   //: Constructor
   bprb_parameters();
   //: Destructor
-  ~bprb_parameters();
+  ~bprb_parameters() override;
 
   //: Deep pseudo copy constructor
   bprb_parameters(const bprb_parameters_sptr& old_params);
@@ -237,7 +240,7 @@ class bprb_parameters : public vbl_ref_count
   template<class T>
   bool get_value( const std::string& name , T& value ) const
   {
-    bprb_param_type<T> * param = VXL_NULLPTR;
+    bprb_param_type<T> * param = nullptr;
     if ( get_param(name, param) && param ){
       value = param->value();
       return true;
@@ -344,8 +347,8 @@ class bprb_filepath
 {
  public:
   //: Constructor
-  bprb_filepath(const std::string& p = "", const std::string& e = "*")
-   : path(p), ext(e) {}
+  bprb_filepath(std::string  p = "", std::string  e = "*")
+   : path(std::move(p)), ext(std::move(e)) {}
 
   std::string path;
   std::string ext;

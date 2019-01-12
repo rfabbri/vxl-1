@@ -8,13 +8,15 @@
 // \author Tim Cootes
 
 #include <vsl/vsl_binary_loader.h>
-#include <vcl_cassert.h>
+#include <cassert>
 
 #include <vil/vil_resample_bilin.h>
 #include <vil/io/vil_io_image_view.h>
 #include <vsl/vsl_vector_io.h>
 #include <vsl/vsl_indent.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h>
 
 #include <mipa/mipa_orientation_histogram.h>
@@ -65,9 +67,7 @@ void mfpf_hog_box_finder::set_defaults()
 // Destructor
 //=======================================================================
 
-mfpf_hog_box_finder::~mfpf_hog_box_finder()
-{
-}
+mfpf_hog_box_finder::~mfpf_hog_box_finder() = default;
 
 //: Define region and cost of region
 void mfpf_hog_box_finder::set(unsigned nA_bins, bool full360,
@@ -90,7 +90,7 @@ void mfpf_hog_box_finder::set(unsigned nA_bins, bool full360,
 
   //: Block normalisers (and their derivatives) typically need their regions copying from this
   mipa_vector_normaliser* pNormaliser=normaliser_.ptr();
-  mipa_block_normaliser* pBlockNormaliser= dynamic_cast<mipa_block_normaliser*>(pNormaliser);
+  auto* pBlockNormaliser= dynamic_cast<mipa_block_normaliser*>(pNormaliser);
   if (pBlockNormaliser)
   {
       pBlockNormaliser->set_region(2*ni_,2*nj_);
@@ -394,7 +394,7 @@ void mfpf_hog_box_finder::print_summary(std::ostream& os) const
   normaliser_->print_summary(os);
 
   os << vsl_indent()<< "cost: ";
-  if (cost_.ptr()==VXL_NULLPTR) os << "--"<<std::endl; else os << cost_<<'\n';
+  if (cost_.ptr()==nullptr) os << "--"<<std::endl; else os << cost_<<'\n';
   os << vsl_indent();
   mfpf_point_finder::print_summary(os);
   os << '\n'
@@ -475,5 +475,3 @@ bool mfpf_hog_box_finder::operator==(const mfpf_hog_box_finder& nc) const
   // Strictly should compare costs
   return true;
 }
-
-

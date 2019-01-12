@@ -5,8 +5,10 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <vgl/vgl_triangle_3d.h>
 #include <vgl/vgl_distance.h>
@@ -143,7 +145,7 @@ int imesh_intersect_min_dist(const vgl_point_3d<double>& p,
   double ut, vt; // temporary u and v
 
   assert(mesh.faces().regularity() == 3);
-  const imesh_regular_face_array<3>& faces
+  const auto& faces
       = static_cast<const imesh_regular_face_array<3>&>(mesh.faces());
 
   const imesh_vertex_array<3>& verts = mesh.vertices<3>();
@@ -307,9 +309,9 @@ imesh_triangle_closest_point(const vgl_point_3d<double>& p,
   double u,v;
   imesh_triangle_closest_point(p,a,b,c,dist,u,v);
   double t = 1-u-v;
-  return vgl_point_3d<double>(t*a.x() + u*b.x() + v*c.x(),
+  return {t*a.x() + u*b.x() + v*c.x(),
                               t*a.y() + u*b.y() + v*c.y(),
-                              t*a.z() + u*b.z() + v*c.z());
+                              t*a.z() + u*b.z() + v*c.z()};
 }
 
 //: Find the closest point on the triangulated mesh to point p
@@ -322,7 +324,7 @@ int imesh_closest_point(const vgl_point_3d<double>& p,
                         double* u, double* v)
 {
   assert(mesh.faces().regularity() == 3);
-  const imesh_regular_face_array<3>& faces
+  const auto& faces
       = static_cast<const imesh_regular_face_array<3>&>(mesh.faces());
 
   const imesh_vertex_array<3>& verts = mesh.vertices<3>();

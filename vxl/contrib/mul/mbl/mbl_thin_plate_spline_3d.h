@@ -13,7 +13,9 @@
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_matrix.h>
 #include <vsl/vsl_binary_io.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //=======================================================================
 //: Construct thin plate spline to map 3D to 3D.
@@ -140,5 +142,3 @@ void vsl_b_read(vsl_b_istream& bfs, mbl_thin_plate_spline_3d& b);
 std::ostream& operator<<(std::ostream& os,const mbl_thin_plate_spline_3d& b);
 
 #endif
-
-

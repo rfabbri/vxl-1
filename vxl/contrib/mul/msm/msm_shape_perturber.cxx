@@ -1,5 +1,8 @@
 #include "msm_shape_perturber.h"
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 msm_shape_perturber::msm_shape_perturber()
 {
@@ -169,4 +172,3 @@ double msm_shape_perturber::random_value( vnl_random& rand,
   else
     return max_v * trunc_normal_sample( rand, rel_gauss_sd, 1 );
 }
-

@@ -6,12 +6,15 @@
 // \author Vishal Jain
 // \date Aug 08, 2011
 
-#include <fstream>
-#include <iostream>
 #include <algorithm>
 #include <bprb/bprb_func_process.h>
+#include <fstream>
+#include <iostream>
+#include <utility>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/ocl/boxm2_opencl_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -34,10 +37,10 @@
 
 namespace boxm2_ocl_aux_update_view_direction_process_globals
 {
-    const unsigned n_inputs_  = 9;
-    const unsigned n_outputs_ = 0;
+    constexpr unsigned n_inputs_ = 9;
+    constexpr unsigned n_outputs_ = 0;
 
-    void compile_kernel(bocl_device_sptr device,std::vector<bocl_kernel*> & vec_kernels,std::string opts)
+    void compile_kernel(const bocl_device_sptr& device,std::vector<bocl_kernel*> & vec_kernels,std::string opts)
     {
         //gather all render sources... seems like a lot for rendering...
         std::vector<std::string> src_paths;
@@ -53,19 +56,19 @@ namespace boxm2_ocl_aux_update_view_direction_process_globals
         src_paths.push_back(source_dir + "batch_update_functors.cl");
         src_paths.push_back(source_dir + "bit/cast_ray_bit.cl");
         //compilation options
-        std::string options = opts;
+        const std::string& options = std::move(opts);
         //create all passes
-        bocl_kernel* aux_direction_kernel = new bocl_kernel();
+        auto* aux_direction_kernel = new bocl_kernel();
         std::string seg_opts = options + " -D UPDATE_AUX_DIRECTION -D STEP_CELL=step_cell_directions(aux_args,data_ptr,d) ";
         aux_direction_kernel->create_kernel(&device->context(),device->device_id(), src_paths, "aux_directions_main", seg_opts, "batch_update::viewing directions");
         vec_kernels.push_back(aux_direction_kernel);
 
-        bocl_kernel* convert_aux_int_float = new bocl_kernel();
+        auto* convert_aux_int_float = new bocl_kernel();
         convert_aux_int_float->create_kernel(&device->context(),device->device_id(), second_pass_src, "convert_aux_int_to_float"," -D CONVERT_AUX", "batch_update::convert_aux_int_to_float");
         vec_kernels.push_back(convert_aux_int_float);
 
 
-        bocl_kernel* convert_aux_xyz_to_thetaphi = new bocl_kernel();
+        auto* convert_aux_xyz_to_thetaphi = new bocl_kernel();
         convert_aux_xyz_to_thetaphi->create_kernel(&device->context(),device->device_id(), second_pass_src, "convert_aux_xyz_to_thetaphi"," -D CONVERT_AUX_XYZ_THETAPHI ", "batch_update::convert_aux_xyz_to_thetaphi");
         vec_kernels.push_back(convert_aux_xyz_to_thetaphi);
 
@@ -120,15 +123,15 @@ bool boxm2_ocl_aux_update_view_direction_process(bprb_func_process& pro)
     float gpu_time=0.0f;
     //get the inputs
     unsigned i = 0;
-    bocl_device_sptr device               = pro.get_input<bocl_device_sptr>(i++);
-    boxm2_scene_sptr scene                = pro.get_input<boxm2_scene_sptr>(i++);
-    boxm2_cache_sptr cache                = pro.get_input<boxm2_cache_sptr>(i++);
-    boxm2_opencl_cache_sptr opencl_cache  = pro.get_input<boxm2_opencl_cache_sptr>(i++);
-    vpgl_camera_double_sptr cam           = pro.get_input<vpgl_camera_double_sptr>(i++);
-    unsigned int ni                       = pro.get_input<unsigned>(i++);
-    unsigned int nj                       = pro.get_input<unsigned>(i++);
-    std::string suffix                     = pro.get_input<std::string>(i++);
-    std::string coordinate_type            = pro.get_input<std::string>(i++);
+    bocl_device_sptr device = pro.get_input<bocl_device_sptr>(i++);
+    boxm2_scene_sptr scene = pro.get_input<boxm2_scene_sptr>(i++);
+    boxm2_cache_sptr cache = pro.get_input<boxm2_cache_sptr>(i++);
+    boxm2_opencl_cache_sptr opencl_cache = pro.get_input<boxm2_opencl_cache_sptr>(i++);
+    vpgl_camera_double_sptr cam = pro.get_input<vpgl_camera_double_sptr>(i++);
+    auto ni = pro.get_input<unsigned>(i++);
+    auto nj = pro.get_input<unsigned>(i++);
+    std::string suffix = pro.get_input<std::string>(i++);
+    std::string coordinate_type = pro.get_input<std::string>(i++);
 
     //  opencl_cache->get_cpu_cache()->clear_cache();
 
@@ -153,19 +156,19 @@ bool boxm2_ocl_aux_update_view_direction_process(bprb_func_process& pro)
     }
 
     //grab input image, establish cl_ni, cl_nj (so global size is divisible by local size)
-    unsigned cl_ni=(unsigned)RoundUp(ni,(int)local_threads[0]);
-    unsigned cl_nj=(unsigned)RoundUp(nj,(int)local_threads[1]);
+    auto cl_ni=(unsigned)RoundUp(ni,(int)local_threads[0]);
+    auto cl_nj=(unsigned)RoundUp(nj,(int)local_threads[1]);
     global_threads[0]=cl_ni;
     global_threads[1]=cl_nj;
     //set generic cam
-    cl_float* ray_origins    = new cl_float[4*cl_ni*cl_nj];
-    cl_float* ray_directions = new cl_float[4*cl_ni*cl_nj];
+    auto* ray_origins = new cl_float[4*cl_ni*cl_nj];
+    auto* ray_directions = new cl_float[4*cl_ni*cl_nj];
     bocl_mem_sptr ray_o_buff = new bocl_mem(device->context(), ray_origins, cl_ni*cl_nj * sizeof(cl_float4) , "ray_origins buffer");
     bocl_mem_sptr ray_d_buff = new bocl_mem(device->context(), ray_directions,  cl_ni*cl_nj * sizeof(cl_float4), "ray_directions buffer");
     if(cam->type_name() == "vpgl_geo_camera" )
     {
         vpgl_lvcs_sptr lvcs = new vpgl_lvcs(scene->lvcs());
-        vpgl_geo_camera* geocam = static_cast<vpgl_geo_camera*>(cam.ptr());
+        auto* geocam = static_cast<vpgl_geo_camera*>(cam.ptr());
         // crop relevant image data into a view
         vgl_box_3d<double> scene_bbox = scene->bounding_box();
         vgl_box_2d<double> proj_bbox;
@@ -229,7 +232,7 @@ bool boxm2_ocl_aux_update_view_direction_process(bprb_func_process& pro)
 
     // Output Array
     float output_arr[100];
-    for (int i=0; i<100; ++i) output_arr[i] = 0.0f;
+    for (float & i : output_arr) i = 0.0f;
     bocl_mem_sptr  cl_output=new bocl_mem(device->context(), output_arr, sizeof(float)*100, "output buffer");
     cl_output->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
 
@@ -253,22 +256,22 @@ bool boxm2_ocl_aux_update_view_direction_process(bprb_func_process& pro)
         boxm2_block_metadata mdata = scene->get_block_metadata(*id);
         //write the image values to the buffer
         vul_timer transfer;
-        bocl_mem* blk       = opencl_cache->get_block(scene,*id);
-        bocl_mem* blk_info  = opencl_cache->loaded_block_info();
-        bocl_mem* alpha     = opencl_cache->get_data<BOXM2_ALPHA>(scene,*id,0,false);
-        boxm2_scene_info* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
+        bocl_mem* blk = opencl_cache->get_block(scene,*id);
+        bocl_mem* blk_info = opencl_cache->loaded_block_info();
+        bocl_mem* alpha = opencl_cache->get_data<BOXM2_ALPHA>(scene,*id,0,false);
+        auto* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
         int alphaTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_ALPHA>::prefix());
         info_buffer->data_buffer_length = (int) (alpha->num_bytes()/alphaTypeSize);
         blk_info->write_to_buffer((queue));
         //grab an appropriately sized AUX data buffer
         int auxTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_AUX0>::prefix());
-        bocl_mem *aux0  = opencl_cache->get_data(scene,*id, boxm2_data_traits<BOXM2_AUX0>::prefix(suffix),info_buffer->data_buffer_length*auxTypeSize,false);
+        bocl_mem *aux0 = opencl_cache->get_data(scene,*id, boxm2_data_traits<BOXM2_AUX0>::prefix(suffix),info_buffer->data_buffer_length*auxTypeSize,false);
         auxTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_AUX1>::prefix());
-        bocl_mem *aux1  = opencl_cache->get_data(scene,*id, boxm2_data_traits<BOXM2_AUX1>::prefix(suffix),info_buffer->data_buffer_length*auxTypeSize,false);
+        bocl_mem *aux1 = opencl_cache->get_data(scene,*id, boxm2_data_traits<BOXM2_AUX1>::prefix(suffix),info_buffer->data_buffer_length*auxTypeSize,false);
         auxTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_AUX2>::prefix());
-        bocl_mem *aux2  = opencl_cache->get_data(scene,*id, boxm2_data_traits<BOXM2_AUX2>::prefix(suffix),info_buffer->data_buffer_length*auxTypeSize,false);
+        bocl_mem *aux2 = opencl_cache->get_data(scene,*id, boxm2_data_traits<BOXM2_AUX2>::prefix(suffix),info_buffer->data_buffer_length*auxTypeSize,false);
         auxTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_AUX2>::prefix());
-        bocl_mem *aux3  = opencl_cache->get_data(scene,*id, boxm2_data_traits<BOXM2_AUX3>::prefix(suffix),info_buffer->data_buffer_length*auxTypeSize,false);
+        bocl_mem *aux3 = opencl_cache->get_data(scene,*id, boxm2_data_traits<BOXM2_AUX3>::prefix(suffix),info_buffer->data_buffer_length*auxTypeSize,false);
         for (unsigned int i=0; i<2; ++i)
         {
             if( i ==0 )

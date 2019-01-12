@@ -10,15 +10,17 @@
 #include <fstream>
 #include <bprb/bprb_func_process.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm/boxm_scene_base.h>
 #include <boxm/boxm_scene.h>
 #include <boxm/boxm_scene_parser.h>
 
 namespace boxm_load_scene_process_globals
 {
-  const unsigned n_inputs_ = 1;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 1;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 bool boxm_load_scene_process_cons(bprb_func_process& pro)
@@ -55,7 +57,7 @@ bool boxm_load_scene_process(bprb_func_process& pro)
   scene->load_scene(scene_file, parser);
   if (scene->appearence_model() == BOXM_APM_MOG_GREY) {
     typedef boct_tree<short,boxm_sample<BOXM_APM_MOG_GREY> > tree_type;
-    boxm_scene<tree_type> *s = new boxm_scene<tree_type>();
+    auto *s = new boxm_scene<tree_type>();
     s->load_scene(parser);
    // scene.unref(scene);
     scene = s;

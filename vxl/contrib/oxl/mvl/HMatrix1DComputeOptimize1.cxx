@@ -1,10 +1,13 @@
-#include <iostream>
 #include <iomanip>
+#include <iostream>
+#include <utility>
 #include "HMatrix1DComputeOptimize1.h"
 #include "HMatrix1DComputeDesign.h"
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vnl/vnl_least_squares_function.h>
 #include <vnl/algo/vnl_levenberg_marquardt.h>
@@ -23,16 +26,16 @@ class XXX : public vnl_least_squares_function
   unsigned N;
   const std::vector<double> &z1,z2;
  public:
-  XXX(const std::vector<double> &z1_,const std::vector<double> &z2_)
+  XXX(const std::vector<double> &z1_,std::vector<double> z2_)
     : vnl_least_squares_function(3, z1_.size(), no_gradient)
     , N(z1_.size())
-    , z1(z1_) , z2(z2_)
+    , z1(z1_) , z2(std::move(z2_))
     {
       assert(N == z1.size());
       assert(N == z2.size());
       //      std::cerr << "N=" << N << std::endl;
     }
-  ~XXX() { N=0; }
+  ~XXX() override { N=0; }
 
   void boo(const vnl_vector<double> &x) {
     assert(x.size()==3);
@@ -47,7 +50,7 @@ class XXX : public vnl_least_squares_function
 
   //    the matrix is   [ 1.0    x[0] ]
   //                    [ x[1] 1+x[2] ]
-  void f(const vnl_vector<double>& x, vnl_vector<double>& fx) {
+  void f(const vnl_vector<double>& x, vnl_vector<double>& fx) override {
     assert(x.size()==3);
     assert(fx.size()==N);
     double z,y;
@@ -90,7 +93,7 @@ void do_compute(const std::vector<double> &z1,const std::vector<double> &z2,HMat
 }
 
 HMatrix1DComputeOptimize1::HMatrix1DComputeOptimize1(void) : HMatrix1DCompute() { }
-HMatrix1DComputeOptimize1::~HMatrix1DComputeOptimize1() { }
+HMatrix1DComputeOptimize1::~HMatrix1DComputeOptimize1() = default;
 
 bool
 HMatrix1DComputeOptimize1::compute_cool_homg(const std::vector<vgl_homg_point_1d<double> >&p1,
@@ -119,4 +122,3 @@ HMatrix1DComputeOptimize1::compute_cool_homg(const std::vector<vgl_homg_point_1d
   *M=HMatrix1D(K,*M);      // refine M using the correction K.
   return true;
 }
-

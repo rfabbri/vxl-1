@@ -11,7 +11,9 @@
 // \endverbatim
 //
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpgl/vpgl_lvcs.h>
 #include <vpgl/vpgl_lvcs_sptr.h>
 #include <vul/vul_file.h>
@@ -25,8 +27,8 @@
 //: global variables and functions
 namespace volm_find_overlapping_sat_resources_process_globals
 {
-  const unsigned n_inputs_  = 4;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 4;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 //: constructor
@@ -59,7 +61,7 @@ bool volm_find_overlapping_sat_resources_process(bprb_func_process& pro)
   unsigned in_i = 0;
   volm_satellite_resources_sptr res = pro.get_input<volm_satellite_resources_sptr>(0);
   std::string kml_file = pro.get_input<std::string>(1);
-  float downsample_factor = pro.get_input<float>(2);
+  auto downsample_factor = pro.get_input<float>(2);
   std::string out_file = pro.get_input<std::string>(3);
 
   std::vector<std::string> overlapping_res;
@@ -75,8 +77,8 @@ bool volm_find_overlapping_sat_resources_process(bprb_func_process& pro)
     std::cerr << pro.name() << " ERROR: cannot open file: " << out_file << std::endl;
     return false;
   }
-  for (unsigned i = 0; i < overlapping_res.size(); i++)
-    ofs << overlapping_res[i] << '\n';
+  for (const auto & overlapping_re : overlapping_res)
+    ofs << overlapping_re << '\n';
   ofs.close();
 
   return true;

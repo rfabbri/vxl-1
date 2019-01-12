@@ -1,7 +1,4 @@
 // This is core/vidl/vidl_v4l_istream.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Brendan McCane
@@ -14,7 +11,9 @@
 #include "vidl_v4l_params.h"
 #include "vidl_pixel_format.h"
 #include "vidl_frame.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Destructor
 vidl_v4l_istream::~vidl_v4l_istream()

@@ -10,7 +10,9 @@
 #include <fstream>
 #include <bprb/bprb_func_process.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/io/boxm2_cache.h>
 #include <boxm2/boxm2_block.h>
@@ -21,8 +23,8 @@
 #include <vgl/vgl_intersection.h>
 namespace boxm2_scene_statistics_process_globals
 {
-  const unsigned n_inputs_ = 8;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 8;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 #define MAX_CELLS_ 585
@@ -46,12 +48,12 @@ bool boxm2_scene_statistics_process_cons(bprb_func_process& pro)
   output_types[0] = "float";
 
   //default values for the box is empty
-  brdb_value_sptr def_center_x    = new brdb_value_t<float>(-1.0f);
-  brdb_value_sptr def_center_y    = new brdb_value_t<float>(-1.0f);
-  brdb_value_sptr def_center_z    = new brdb_value_t<float>(-1.0f);
-  brdb_value_sptr def_len_x    = new brdb_value_t<float>(-1.0f);
-  brdb_value_sptr def_len_y    = new brdb_value_t<float>(-1.0f);
-  brdb_value_sptr def_len_z    = new brdb_value_t<float>(-1.0f);
+  brdb_value_sptr def_center_x = new brdb_value_t<float>(-1.0f);
+  brdb_value_sptr def_center_y = new brdb_value_t<float>(-1.0f);
+  brdb_value_sptr def_center_z = new brdb_value_t<float>(-1.0f);
+  brdb_value_sptr def_len_x = new brdb_value_t<float>(-1.0f);
+  brdb_value_sptr def_len_y = new brdb_value_t<float>(-1.0f);
+  brdb_value_sptr def_len_z = new brdb_value_t<float>(-1.0f);
   pro.set_input(2, def_center_x);
   pro.set_input(3, def_center_y);
   pro.set_input(4, def_center_z);
@@ -70,7 +72,6 @@ bool boxm2_scene_statistics_process(bprb_func_process& pro)
   typedef unsigned short ushort;
   typedef vnl_vector_fixed<uchar, 16> uchar16;
   typedef vnl_vector_fixed<uchar, 8> uchar8;
-  typedef vnl_vector_fixed<ushort, 4> ushort4;
 
   if ( pro.n_inputs() < n_inputs_ ){
     std::cout << pro.name() << ": The input number should be " << n_inputs_<< std::endl;
@@ -80,12 +81,12 @@ bool boxm2_scene_statistics_process(bprb_func_process& pro)
   unsigned i = 0;
   boxm2_scene_sptr scene = pro.get_input<boxm2_scene_sptr>(i++);
   boxm2_cache_sptr cache = pro.get_input<boxm2_cache_sptr>(i++);
-  float center_x = pro.get_input<float>(i++);
-  float center_y = pro.get_input<float>(i++);
-  float center_z = pro.get_input<float>(i++);
-  float len_x = pro.get_input<float>(i++);
-  float len_y = pro.get_input<float>(i++);
-  float len_z = pro.get_input<float>(i++);
+  auto center_x = pro.get_input<float>(i++);
+  auto center_y = pro.get_input<float>(i++);
+  auto center_z = pro.get_input<float>(i++);
+  auto len_x = pro.get_input<float>(i++);
+  auto len_y = pro.get_input<float>(i++);
+  auto len_z = pro.get_input<float>(i++);
 
   //create vgl box
   const vgl_point_3d<double> center(center_x,center_y,center_z);

@@ -17,7 +17,9 @@
 #include <vul/vul_arg.h>
 #include <vul/vul_file.h>
 #include <vul/vul_file_iterator.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h>
 #include <vpgl/vpgl_lvcs.h>
 #include <vpgl/vpgl_lvcs_sptr.h>
@@ -109,9 +111,8 @@ int main(int argc, char** argv)
     std::cout << "  loading and sorting scores for tile " << t_idx << " from " << loc_leaves.size() << " leaves" << std::endl;
     std::stringstream score_file_pre;
     score_file_pre << score_folder() << "/conf_score_tile_" << t_idx;
-    for (unsigned i = 0; i < loc_leaves.size(); i++)
+    for (const auto& leaf : loc_leaves)
     {
-      volm_geo_index_node_sptr leaf = loc_leaves[i];
       std::string score_bin_file = score_file_pre.str() + "_" + leaf->get_string() + "_" + index_name() + ".bin";
       if (!vul_file::exists(score_bin_file))
         continue;
@@ -169,7 +170,7 @@ int main(int argc, char** argv)
   std::vector<float> pin_pt_max_dist;
   std::vector<float> pin_pt_heading_mid;
   std::vector<float> likelihood;
-  std::multimap<float, std::pair<volm_conf_score, vgl_point_2d<double> >, std::greater<float> >::iterator mit = score_map.begin();
+  auto mit = score_map.begin();
   while (pin_pt_center.size() < num_top_locs() && mit != score_map.end())
   {
     // check whether the location has been in the pin-pointed region
@@ -188,17 +189,17 @@ int main(int argc, char** argv)
       volm_io::write_error_log(log_file, log.str());
       return volm_io::EXE_ARGUMENT_ERROR;
     }
-    pin_pt_poly.push_back(vgl_polygon<double>(circle));
+    pin_pt_poly.emplace_back(circle);
     // find the furthest landmarks
     float max_dist = 0.0;
-    for (std::vector<volm_conf_object>::iterator vit = mit->second.first.landmarks().begin(); vit != mit->second.first.landmarks().end(); ++vit)
-      if (vit->dist() > max_dist)
-        max_dist = vit->dist();
+    for (auto & vit : mit->second.first.landmarks())
+      if (vit.dist() > max_dist)
+        max_dist = vit.dist();
     if (max_dist == 0.0)
       max_dist = radius()*5.0;
     float heading_mid = 0.0f;
-    for (std::vector<volm_conf_object>::iterator vit = mit->second.first.landmarks().begin(); vit != mit->second.first.landmarks().end(); ++vit)
-      heading_mid += vit->theta();
+    for (auto & vit : mit->second.first.landmarks())
+      heading_mid += vit.theta();
     if (mit->second.first.landmarks().empty())
       heading_mid = mit->second.first.theta();
     else
@@ -214,8 +215,8 @@ int main(int argc, char** argv)
     }
     pin_pt_landmarks.push_back(landmarks);
     std::vector<unsigned char> landmark_types;
-    for (unsigned i = 0; i < mit->second.first.landmarks().size(); i++)
-      landmark_types.push_back(mit->second.first.landmarks()[i].land());
+    for (auto & i : mit->second.first.landmarks())
+      landmark_types.push_back(i.land());
     pin_pt_landmark_types.push_back(landmark_types);
 
     ++mit;
@@ -482,13 +483,13 @@ bool generate_landmarks(vgl_point_2d<double> const& pt, std::vector<volm_conf_ob
   // construct a local lvcs
   double c_lon = pt.x(), c_lat = pt.y();
   vpgl_lvcs lvcs(c_lat, c_lon, 0.0, vpgl_lvcs::wgs84, vpgl_lvcs::DEG, vpgl_lvcs::METERS);
-  for (unsigned i = 0; i < land_objs.size(); i++)
+  for (const auto & land_obj : land_objs)
   {
     double lon, lat, gz;
-    float lx = land_objs[i].x();
-    float ly = land_objs[i].y();
+    float lx = land_obj.x();
+    float ly = land_obj.y();
     lvcs.local_to_global(lx, ly, 0.0, vpgl_lvcs::wgs84, lon, lat, gz);
-    landmarks.push_back(vgl_point_2d<double>(lon, lat));
+    landmarks.emplace_back(lon, lat);
   }
   return true;
 }

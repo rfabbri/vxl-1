@@ -8,8 +8,10 @@
 #include <cstdio>
 #include <bprb/bprb_func_process.h>
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <vgl/vgl_polygon.h>
 #include <vgl/io/vgl_io_polygon.h>
@@ -45,9 +47,9 @@ void update_mesh_coord(imesh_mesh& imesh, vpgl_geo_camera* cam)
 {
   imesh_vertex_array<3>& vertices = imesh.vertices<3>();
   for (unsigned v=0; v<vertices.size(); v++) {
-    unsigned int x = (unsigned int)vertices(v,0); // explicit cast from double
-    unsigned int y = (unsigned int)vertices(v,1);
-    unsigned int z = (unsigned int)vertices(v,2);
+    auto x = (unsigned int)vertices(v,0); // explicit cast from double
+    auto y = (unsigned int)vertices(v,1);
+    auto z = (unsigned int)vertices(v,2);
     vpgl_lvcs_sptr lvcs = cam->lvcs();
     double lon, lat, elev;
     cam->img_to_wgs(x, y, z, lon, lat, elev);
@@ -79,8 +81,7 @@ void generate_kml(std::string& kml_filename,
 
   imesh_half_edge_set he = mesh.half_edges();
   std::vector<std::set<unsigned int> > cc = imesh_detect_connected_components(he);
-  for (unsigned i=0; i<cc.size(); i++) {
-    std::set<unsigned int> sel_faces = cc[i];
+  for (const auto& sel_faces : cc) {
     imesh_mesh building = imesh_submesh_from_faces(mesh, sel_faces);
     update_mesh_coord(building, lidar_cam);
     imesh_write_kml(os, building);
@@ -169,7 +170,7 @@ int zip_kmz(zipFile& zf, const char* filenameinzip)
   zip_fileinfo zi;
   unsigned long crcFile=0;
   int size_buf=0;
-  void* buf=VXL_NULLPTR;
+  void* buf=nullptr;
 
   zi.tmz_date.tm_sec = zi.tmz_date.tm_min = zi.tmz_date.tm_hour =
   zi.tmz_date.tm_mday = zi.tmz_date.tm_mon = zi.tmz_date.tm_year = 0;
@@ -193,10 +194,10 @@ int zip_kmz(zipFile& zf, const char* filenameinzip)
 
   int err = 0;
   int opt_compress_level=Z_DEFAULT_COMPRESSION;
-  const char* password=VXL_NULLPTR;
+  const char* password=nullptr;
 
   err = zipOpenNewFileInZip3(zf,filenameinzip,&zi,
-                             VXL_NULLPTR,0,VXL_NULLPTR,0,VXL_NULLPTR ,
+                             nullptr,0,nullptr,0,nullptr ,
                              (opt_compress_level != 0) ? Z_DEFLATED : 0,
                              opt_compress_level,0,
                              -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY,
@@ -208,7 +209,7 @@ int zip_kmz(zipFile& zf, const char* filenameinzip)
   }
   else {
     fin = std::fopen(filenameinzip,"rb");
-    if (fin==VXL_NULLPTR) {
+    if (fin==nullptr) {
         std::printf("error in opening %s for reading\n",filenameinzip);
         return 0;
     }
@@ -216,7 +217,7 @@ int zip_kmz(zipFile& zf, const char* filenameinzip)
 
   size_buf = WRITEBUFFERSIZE;
   buf = (void*)malloc(size_buf);
-  if (buf==VXL_NULLPTR) {
+  if (buf==nullptr) {
     std::printf("Error allocating memory\n");
     return ZIP_INTERNALERROR;
   }
@@ -247,7 +248,7 @@ int zip_kmz(zipFile& zf, const char* filenameinzip)
       std::printf("error in closing %s in the zipfile\n", filenameinzip);
   }
 
-  int errclose = zipClose(zf,VXL_NULLPTR);
+  int errclose = zipClose(zf,nullptr);
 
   if (errclose != ZIP_OK) {
     std::printf("error in closing zipfile\n");
@@ -298,12 +299,12 @@ void generate_kml_collada(std::string& kmz_dir,
     double minz = std::numeric_limits<double>::infinity();
     double meanx = 0.0, meany = 0.0;
     const imesh_vertex_array<3>& verts = building.vertices<3>();
-    for (unsigned int v=0; v<verts.size(); ++v) {
-      if (verts[v][2] < minz) {
-        minz = verts[v][2];
+    for (const auto & vert : verts) {
+      if (vert[2] < minz) {
+        minz = vert[2];
       }
-      meanx += verts[v][0];
-      meany += verts[v][1];
+      meanx += vert[0];
+      meany += vert[1];
     }
     meanx /= verts.size();
     meany /= verts.size();
@@ -343,10 +344,10 @@ void generate_kml_collada(std::string& kmz_dir,
 }
 
 
-bool generate_mesh(std::string fpath_poly,
-                   vil_image_view_base_sptr label_img,
-                   vil_image_view_base_sptr height_img,
-                   vil_image_view_base_sptr ground_img,
+bool generate_mesh(const std::string& fpath_poly,
+                   const vil_image_view_base_sptr& label_img,
+                   const vil_image_view_base_sptr& height_img,
+                   const vil_image_view_base_sptr& ground_img,
                    std::string fpath_mesh,
                    vpgl_geo_camera* const lidar_cam,
                    unsigned& num_of_buildings)
@@ -442,7 +443,7 @@ bool bmdl_generate_mesh_process(bprb_func_process& pro)
     return false;
   }
 
-  vpgl_geo_camera* lidar_cam = static_cast<vpgl_geo_camera*>(camera.ptr());
+  auto* lidar_cam = static_cast<vpgl_geo_camera*>(camera.ptr());
   unsigned num_of_buildings=0;
   return generate_mesh(file_poly, label_img, height_img, ground_img, file_mesh, lidar_cam, num_of_buildings);
 }
@@ -450,11 +451,11 @@ bool bmdl_generate_mesh_process(bprb_func_process& pro)
 bool bmdl_generate_mesh_process_cons(bprb_func_process& pro)
 {
   std::vector<std::string> input_types;
-  input_types.push_back("vcl_string");
-  input_types.push_back("vil_image_view_base_sptr");
-  input_types.push_back("vil_image_view_base_sptr");
-  input_types.push_back("vil_image_view_base_sptr");
-  input_types.push_back("vcl_string");
-  input_types.push_back("vpgl_camera_double_sptr");
+  input_types.emplace_back("vcl_string");
+  input_types.emplace_back("vil_image_view_base_sptr");
+  input_types.emplace_back("vil_image_view_base_sptr");
+  input_types.emplace_back("vil_image_view_base_sptr");
+  input_types.emplace_back("vcl_string");
+  input_types.emplace_back("vpgl_camera_double_sptr");
   return pro.set_input_types(input_types);
 }

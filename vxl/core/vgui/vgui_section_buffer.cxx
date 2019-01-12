@@ -1,7 +1,4 @@
 // This is core/vgui/vgui_section_buffer.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
@@ -26,8 +23,10 @@
 #include <iostream>
 #include "vgui_section_buffer.h"
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_array_1d.h>
 #include <vil1/vil1_image.h>
 #include <vil1/vil1_pixel.h>
@@ -327,7 +326,7 @@ vgui_section_buffer( unsigned in_x, unsigned in_y,
     zoomy_(1.0f),
     allocw_( w_ ),
     alloch_( h_ ),
-    buffer_( VXL_NULLPTR ),
+    buffer_( nullptr ),
     buffer_ok_( false )
 {
   assert( w_ > 0 && h_ > 0 );

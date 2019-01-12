@@ -27,8 +27,10 @@
 #include <iosfwd>
 #include "bsta_distribution.h"
 #include <vnl/vnl_gamma.h>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 // A Weibull distribution does not have a natural, unique extension to
 // multi-dimensional variables. However, various approaches do exist
@@ -49,7 +51,7 @@ class bsta_weibull : public bsta_distribution<T,1>
   bsta_weibull(vector_ const& lambda, vector_ const& k, vector_ const& mu);
 
   //: destructor
-  ~bsta_weibull(){}
+  ~bsta_weibull()= default;
 
   //: the scale parameter
   vector_ lambda() const {return lambda_;}

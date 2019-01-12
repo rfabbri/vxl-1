@@ -8,7 +8,9 @@
 //
 // \author Yi Dong
 // \date August 17, 2013
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_image_view.h>
 #include <vil/vil_load.h>
 #include <volm/volm_tile.h>
@@ -22,8 +24,8 @@
 //: e.g: rural regon like mountain can be low resolution but urban region requires high resolution
 namespace boxm2_change_scene_res_by_geo_cover_process_globals
 {
-  const unsigned n_inputs_ = 3;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 3;
+  constexpr unsigned n_outputs_ = 1;
 
   // function that modify the block metadata accordingly
   void change_block_metadata(boxm2_block_metadata& md, volm_osm_category_io::geo_cover_values const& land_cover, int const& refine_coef)
@@ -89,7 +91,7 @@ bool boxm2_change_scene_res_by_geo_cover_process(bprb_func_process& pro)
     return false;
   }
   vil_image_view_base_sptr img_sptr = vil_load(fname.c_str());
-  vil_image_view<vxl_byte>* img = dynamic_cast<vil_image_view<vxl_byte> * >(img_sptr.ptr());
+  auto* img = dynamic_cast<vil_image_view<vxl_byte> * >(img_sptr.ptr());
 
   // find the image bounding box
   // geo camera inside tile will be used for translation between geo coords and img pixels
@@ -114,10 +116,10 @@ bool boxm2_change_scene_res_by_geo_cover_process(bprb_func_process& pro)
   std::cout << " number of blocks in the scene " << blks.size() << std::endl;
   std::cout << " refine parameter: " << refine_coefficient << std::endl;
   unsigned cnt = 0;
-  for (std::map<boxm2_block_id, boxm2_block_metadata>::iterator mit = blks.begin(); mit != blks.end(); ++mit)
+  for (auto & blk : blks)
   {
-    boxm2_block_id blk_id = mit->first;
-    boxm2_block_metadata md = mit->second;
+    boxm2_block_id blk_id = blk.first;
+    boxm2_block_metadata md = blk.second;
 
     // get the bounding box for current box and transfer it to geo coords
     vgl_box_3d<double> blk_box = md.bbox();

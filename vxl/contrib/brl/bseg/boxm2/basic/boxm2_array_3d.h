@@ -6,22 +6,22 @@
 #include <iostream>
 #include <cstddef>
 #include <iosfwd>
-#include <vcl_compiler.h>
-#include <vcl_compiler.h>
-#include <vcl_cstddef.h>
-#include <vcl_cstdlib.h>
+#include <cstdlib>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #ifdef __OPTIMIZE__
 # define RANGECHECK(i,j,k) ((void)0)
 #else
-# include <vcl_cassert.h>
+#include <cassert>
 # define RANGECHECK(i,j,k) assert(((size_type)i < row1_count_) && \
                    ((size_type)j < row2_count_) && ((size_type)k < row3_count_))
 #endif
 
 //: Simple 3d wrapper over a 1D buffer
 //
-VCL_TEMPLATE_EXPORT template <class T>
+template <class T>
 class boxm2_array_3d
 {
  public:
@@ -31,17 +31,17 @@ class boxm2_array_3d
   typedef T* iterator;
   typedef T const* const_iterator;
 
-  boxm2_array_3d(): buffer_(VXL_NULLPTR), element_(VXL_NULLPTR), row1_count_(0), row2_count_(0), row3_count_(0)
+  boxm2_array_3d(): buffer_(nullptr), element_(nullptr), row1_count_(0), row2_count_(0), row3_count_(0)
   {
-    construct(0,0,0,VXL_NULLPTR);
+    construct(0,0,0,nullptr);
   }
 
-  boxm2_array_3d(size_type n1, size_type n2, size_type n3, T* buffer):buffer_(VXL_NULLPTR), element_(VXL_NULLPTR), row1_count_(0), row2_count_(0), row3_count_(0)
+  boxm2_array_3d(size_type n1, size_type n2, size_type n3, T* buffer):buffer_(nullptr), element_(nullptr), row1_count_(0), row2_count_(0), row3_count_(0)
   {
     construct(n1, n2, n3, buffer);
   }
 
-  boxm2_array_3d(size_type n1, size_type n2, size_type n3, T* buffer, T const& fill_value):buffer_(VXL_NULLPTR), element_(VXL_NULLPTR), row1_count_(0), row2_count_(0), row3_count_(0)
+  boxm2_array_3d(size_type n1, size_type n2, size_type n3, T* buffer, T const& fill_value):buffer_(nullptr), element_(nullptr), row1_count_(0), row2_count_(0), row3_count_(0)
   {
     construct(n1, n2, n3, buffer);
     fill(fill_value);
@@ -117,9 +117,9 @@ class boxm2_array_3d
                          size_type &i1,
                          size_type &i2,
                          size_type &i3) const {
-    ldiv_t div = vcl_ldiv(idx, (row2_count_ * row3_count_));
+    ldiv_t div = std::ldiv(idx, (row2_count_ * row3_count_));
     i1 = div.quot;
-    div = vcl_div(div.rem, row3_count_);
+    div = std::div(div.rem, row3_count_);
     i2 = div.quot;
     i3 = div.rem;
   }
@@ -150,10 +150,10 @@ class boxm2_array_3d
 //
 // formatted I/O
 //
-VCL_TEMPLATE_EXPORT template <class T> std::ostream& operator<<(std::ostream&,
+template <class T> std::ostream& operator<<(std::ostream&,
                                                   boxm2_array_3d<T >const&);
 
-VCL_TEMPLATE_EXPORT template <class T> std::istream& operator>>(std::istream&,
+template <class T> std::istream& operator>>(std::istream&,
                                                   boxm2_array_3d<T >&);
 
 #define BOXM2_ARRAY_3D_INSTANTIATE \

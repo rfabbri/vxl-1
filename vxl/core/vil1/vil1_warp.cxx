@@ -1,12 +1,12 @@
 // This is core/vil1/vil1_warp.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 
 #include "vil1_warp.h"
 #include "vil1_warp.hxx"
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vil1/vil1_rgb.h>
 #include <vil1/vil1_pixel.h>

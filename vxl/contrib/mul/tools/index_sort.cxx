@@ -7,7 +7,9 @@
 #include <iostream>
 #include <exception>
 #include <iterator>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_arg.h>
 #include <vul/vul_file.h>
 #include <mbl/mbl_log.h>
@@ -32,7 +34,7 @@ int main2(int argc, char*argv[])
   const std::string sep="\n";
 
   // Parse the program arguments
-  vul_arg<std::string> in_file(VXL_NULLPTR, "input filename (contains whitespace-separated scalar numeric values");
+  vul_arg<std::string> in_file(nullptr, "input filename (contains whitespace-separated scalar numeric values");
   vul_arg<std::string> out_file("-o", "output filename (contains zero-based indices into input list.", "");
   vul_arg<bool> reverse("-r", "Sort into descending order (default is ascending order)", false);
   vul_arg_parse(argc, argv);

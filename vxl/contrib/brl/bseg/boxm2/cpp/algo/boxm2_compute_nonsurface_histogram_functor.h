@@ -8,7 +8,9 @@
 #include <boxm2/boxm2_data.h>
 #include <boxm2/boxm2_data_base.h>
 #include <boxm2/boxm2_data_traits.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class boxm2_compute_nonsurface_histogram_functor
 {
@@ -18,7 +20,7 @@ class boxm2_compute_nonsurface_histogram_functor
     typedef boxm2_data_traits<BOXM2_AUX2>::datatype aux2_datatype;
 
     //: "default" constructor
-    boxm2_compute_nonsurface_histogram_functor() {}
+    boxm2_compute_nonsurface_histogram_functor() = default;
 
     bool init_data(boxm2_data_base * histo_data,
                    boxm2_stream_cache_sptr str_cache)
@@ -58,7 +60,7 @@ class boxm2_compute_nonsurface_histogram_functor
         unsigned nobs = (unsigned)out0.size();
 
         std::vector<float> temp_histogram(8,0.125f);
-        for (unsigned i =0; i<histo.size(); ++i) histo[i] = 1;
+        for (unsigned char & i : histo) i = 1;
 
         std::vector<float> Iobs;
         std::vector<float> vis;

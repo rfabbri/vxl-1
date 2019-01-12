@@ -2,9 +2,6 @@
 #ifndef clsfy_null_classifier_h_
 #define clsfy_null_classifier_h_
 // Copyright: (C) 2001 British Telecommunications plc
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Describe a null classifier
@@ -16,7 +13,9 @@
 #include "clsfy_classifier_base.h"
 #include <vsl/vsl_fwd.h>
 #include <vnl/vnl_fwd.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //:  A classifier that always returns the same answer.
 class clsfy_null_classifier : public clsfy_classifier_base
@@ -29,16 +28,16 @@ class clsfy_null_classifier : public clsfy_classifier_base
   clsfy_null_classifier(unsigned dc): n_dims_(0u), default_class_(dc) {}
 
   //: Return the probability the input being in each class.
-  virtual void class_probabilities(std::vector<double> &outputs, const vnl_vector<double> &input) const;
+  void class_probabilities(std::vector<double> &outputs, const vnl_vector<double> &input) const override;
 
   //: Log likelihood of being in class
-  virtual double log_l(const vnl_vector<double> &input) const;
+  double log_l(const vnl_vector<double> &input) const override;
 
   //: The number of possible output classes.
-  virtual unsigned n_classes() const;
+  unsigned n_classes() const override;
 
   //: The dimensionality of input vectors.
-  virtual unsigned n_dims() const
+  unsigned n_dims() const override
   { return n_dims_; }
 
   //: Set the number of dimensions the classifier reports that it uses.
@@ -58,22 +57,22 @@ class clsfy_null_classifier : public clsfy_classifier_base
   { default_class_ = dc; }
 
   //: Name of the class
-  virtual std::string is_a() const;
+  std::string is_a() const override;
 
   //: Name of the class
-  virtual bool is_class(std::string const& s) const;
+  bool is_class(std::string const& s) const override;
 
   //: Create a copy on the heap and return base class pointer
-  virtual clsfy_classifier_base* clone() const;
+  clsfy_classifier_base* clone() const override;
 
   //: Print class to os
-  virtual void print_summary(std::ostream& os) const;
+  void print_summary(std::ostream& os) const override;
 
   //: Save class to binary file stream
-  virtual void b_write(vsl_b_ostream& bfs) const;
+  void b_write(vsl_b_ostream& bfs) const override;
 
   //: Load class from binary file stream
-  virtual void b_read(vsl_b_istream& bfs);
+  void b_read(vsl_b_istream& bfs) override;
 
   //: The probabilities of returning a value in each class.
   const std::vector<double> & probs() const;

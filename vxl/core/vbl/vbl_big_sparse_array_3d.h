@@ -1,9 +1,6 @@
 // This is core/vbl/vbl_big_sparse_array_3d.h
 #ifndef vbl_big_sparse_array_3d_h_
 #define vbl_big_sparse_array_3d_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Sparse 3D array
@@ -53,7 +50,9 @@ typedef vxl_uint_32 ulonglong;
 # error "only implemented with 32 and 64-bit ints"
 #endif
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 template <class T>
 class vbl_big_sparse_array_3d
@@ -67,8 +66,8 @@ class vbl_big_sparse_array_3d
   // Constructors/Destructor---------------------------------------------------
 
   //: Construct a vbl_big_sparse_array_3d
-  vbl_big_sparse_array_3d() {}
- ~vbl_big_sparse_array_3d() {}
+  vbl_big_sparse_array_3d() = default;
+ ~vbl_big_sparse_array_3d() = default;
 
   // Potentially clunky copy constructor
   vbl_big_sparse_array_3d(vbl_big_sparse_array_3d<T> const& b) : storage_(b.storage_) {}

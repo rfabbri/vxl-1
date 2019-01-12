@@ -19,7 +19,9 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpgl/file_formats/vpgl_geo_camera.h>
 #include <vbl/vbl_array_2d.h>
 #include <vil/vil_image_view.h>
@@ -34,9 +36,9 @@ class volm_tile
    volm_tile(float lat, float lon, float scale_i, float scale_j, unsigned ni, unsigned nj);
 
    //: parse the name string and construct tile, for now only parses for 'N' and 'W'
-   volm_tile(std::string name, unsigned ni, unsigned nj);
+   volm_tile(const std::string& name, unsigned ni, unsigned nj);
 
-   volm_tile() {}
+   volm_tile() = default;
    std::string get_string();
 
    //: assessors
@@ -60,7 +62,7 @@ class volm_tile
    bool global_to_img(double lon, double lat, unsigned& i, unsigned& j);
 
    //: create a kml file of the tile as a box and with circular marks throughout at every n pixels in each direction
-   void write_kml(std::string name, int n);
+   void write_kml(const std::string& name, int n);
 
    //: mark the uncertainty region around a given location using a gaussian mask, the center has the designated score, the rest diminishes with respect to a cutoff degree
    //  \p lambda_i and \p lambda_j are the radii of the gaussian mask in pixels

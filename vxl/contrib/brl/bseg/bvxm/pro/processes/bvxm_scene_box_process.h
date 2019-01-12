@@ -19,15 +19,17 @@
 #include <iostream>
 #include <string>
 #include <bprb/bprb_func_process.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <bvxm/bvxm_world_params.h>
 
 //: globals variables and functions
 namespace bvxm_scene_box_process_globals
 {
-  const unsigned n_inputs_ = 1;
-  const unsigned n_outputs_ = 6;
+  constexpr unsigned n_inputs_ = 1;
+  constexpr unsigned n_outputs_ = 6;
 }
 
 //: set input and output types

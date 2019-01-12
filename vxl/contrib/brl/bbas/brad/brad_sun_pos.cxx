@@ -8,7 +8,9 @@
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_cost_function.h>
 #include <vnl/algo/vnl_brent_minimizer.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 // Declaration of some constants
 static double twopi  = vnl_math::twopi;
@@ -44,7 +46,7 @@ double solve_eccentric_anomaly(double mean_anomaly, double eccentricity)
       kepler_cost_fn(double mean_anomaly, double eccentricity)
          : vnl_cost_function(1), M_(mean_anomaly), e_(eccentricity) {}
 
-      double f(const vnl_vector<double>& x)
+      double f(const vnl_vector<double>& x) override
       {
          double residual = M_ - (x[0] - e_*std::sin(x[0]));
          return residual*residual;
@@ -66,7 +68,7 @@ double solve_eccentric_anomaly(double mean_anomaly, double eccentricity)
 
 double brad_sun_distance(int year, int month, int day, int hours, int minutes, int seconds)
 {
-   const double J2000 = 2451545.0; // Jan 1, 2000
+   constexpr double J2000 = 2451545.0; // Jan 1, 2000
    double jday = julian_day(year, month, day, hours, minutes, seconds);
 
 #define BRAD_USE_EARTH_SUN_DIST_APPROX
@@ -81,16 +83,16 @@ double brad_sun_distance(int year, int month, int day, int hours, int minutes, i
 #else
    // More Exact calculation valid over longer time period: taken from:
    // "Keplerian Elements for Approximate Positions of the Major Planets", E M Standish JPL/Caltech
-   const double mean_dist0 =  1.00000261;       // au
-   const double d_mean_dist = 0.00000562;     // au / century
-   const double eccentricity0 = 0.01671123;    // unitless
+   constexpr double mean_dist0 = 1.00000261;       // au
+   constexpr double d_mean_dist = 0.00000562;     // au / century
+   constexpr double eccentricity0 = 0.01671123;    // unitless
    const double d_eccentricity =   -0.00004392; // /century
-   const double mean_long0 =  100.46457166;    // degrees
-   const double d_mean_long = 35999.37244981;  // degrees / century
-   const double peri_long0 =  102.93768193;    // degrees
-   const double d_peri_long =  0.32327364;     // degrees / century
+   constexpr double mean_long0 = 100.46457166;    // degrees
+   constexpr double d_mean_long = 35999.37244981;  // degrees / century
+   constexpr double peri_long0 = 102.93768193;    // degrees
+   constexpr double d_peri_long = 0.32327364;     // degrees / century
 
-   const double days_per_century = 36525.6363;
+   constexpr double days_per_century = 36525.6363;
    double T = (jday - J2000)/days_per_century;
    // compute orbit parameters
    double mean_dist = mean_dist0 + T*d_mean_dist;

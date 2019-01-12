@@ -29,8 +29,10 @@
 
 #include <vul/vul_timer.h>
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 template<class F, class T_loc, class T_data, class T_aux = typename boxm_aux_traits<BOXM_AUX_NULL>::sample_datatype>
 class boxm_raytrace_function
@@ -247,14 +249,14 @@ class boxm_raytrace_function
         while (block_vis_iter.next())
         {
             std::vector<vgl_point_3d<int> > block_indices = block_vis_iter.frontier_indices();
-            for (unsigned i=0; i<block_indices.size(); i++) // code for each block
+            for (auto & block_indice : block_indices) // code for each block
             {
                 timer.mark();
-                scene_.load_block(block_indices[i]);
+                scene_.load_block(block_indice);
                 boxm_block<tree_type> * curr_block=scene_.get_active_block();
 
                 if (debug_lvl_ > 0)
-                    std::cout << "processing block at index (" <<block_indices[i] << ')' << std::endl;
+                    std::cout << "processing block at index (" <<block_indice << ')' << std::endl;
                 // make sure block projects to inside of image
                 vgl_box_3d<double> block_bb = curr_block->bounding_box();
 
@@ -268,11 +270,11 @@ class boxm_raytrace_function
 
                 tree_type * tree=curr_block->get_tree();
 
-                boxm_block<aux_tree_type> * curr_aux_block=VXL_NULLPTR;
-                aux_tree_type * aux_tree=VXL_NULLPTR;
+                boxm_block<aux_tree_type> * curr_aux_block=nullptr;
+                aux_tree_type * aux_tree=nullptr;
                 if (step_functor.is_aux_)
                 {
-                   curr_aux_block=aux_scene_.get_block(block_indices[i]);
+                   curr_aux_block=aux_scene_.get_block(block_indice);
                    aux_tree=curr_aux_block->get_tree();
                 }
                 float load_time = (float)timer.all() / 1e3f;
@@ -347,7 +349,7 @@ class boxm_raytrace_function
 
                             // obtain the code for the exit point
                             boct_loc_code<T_loc> exit_loc_code(exit_pt_norm,tree->root_level(), tree->max_val());
-                            cell_type *neighborcell=VXL_NULLPTR;
+                            cell_type *neighborcell=nullptr;
                             if (curr_cell->find_neighbor(face_id,neighborcell,tree->root_level()))
                                 curr_cell=neighborcell->traverse_force(exit_loc_code);
                             else
@@ -576,11 +578,11 @@ class boxm_iterate_cells_function
         while (block_vis_iter.next())
         {
             std::vector<vgl_point_3d<int> > block_indices = block_vis_iter.frontier_indices();
-            for (unsigned i=0; i<block_indices.size(); i++) // code for each block
+            for (auto & block_indice : block_indices) // code for each block
             {
-                scene_.load_block(block_indices[i]);
+                scene_.load_block(block_indice);
                 boxm_block<tree_type> * curr_block=scene_.get_active_block();
-                boxm_block<aux_tree_type> * curr_aux_block=aux_scene_.get_block(block_indices[i]);
+                boxm_block<aux_tree_type> * curr_aux_block=aux_scene_.get_block(block_indice);
                 tree_type * tree=curr_block->get_tree();
                 aux_tree_type * aux_tree=curr_aux_block->get_tree();
 

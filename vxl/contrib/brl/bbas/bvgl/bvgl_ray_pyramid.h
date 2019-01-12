@@ -14,7 +14,9 @@
 #include <string>
 #include <vgl/vgl_ray_3d.h>
 #include <vbl/vbl_array_2d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_ref_count.h>
 #include <vsl/vsl_binary_io.h>
 
@@ -24,7 +26,7 @@ class bvgl_ray_pyramid //: public vbl_ref_count
 {
  public:
   bvgl_ray_pyramid(vbl_array_2d<vgl_ray_3d<float> >& finest_level, unsigned numLevels);
-  ~bvgl_ray_pyramid() {}
+  ~bvgl_ray_pyramid() = default;
 
   // Data Access---------------------------------------------------------------
   vgl_ray_3d<float> const& operator() (std::size_t scale, std::size_t i, std::size_t j) const { return pyramid_[scale][i][j]; }

@@ -26,8 +26,10 @@
 //  6 Jan 2003 - Peter Vanroose - test added for ras images
 // \endverbatim
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <vul/vul_temp_filename.h>
 #include <vpl/vpl.h> // vpl_unlink()
@@ -208,7 +210,7 @@ void vil1_test_image_type_raw(char const* type_name, //!< type for image to read
 // create a colour gif image
 static bool create_colour_gif(const char* filename)
 {
-#ifdef VCL_VC
+#ifdef _MSC_VER
 #pragma warning ( push )
 #pragma warning ( disable : 4305 4309)
 #endif
@@ -238,15 +240,15 @@ static bool create_colour_gif(const char* filename)
     182, 220, 118, 235, 237, 183, 224, 134, 43, 238, 184, 228, 150, 107, 238, 185, 232, 166, 171, 238, 186, 236, 182, 235, 238,
     187, 240, 198, 43, 239, 188, 244, 214, 107, 239, 189, 248, 230, 171, 239, 190, 252, 246, 235, 239, 191, 0, 7, 44, 240, 192, 4,
     23, 108, 240, 193, 8, 39, 172, 240, 194, 168, 6, 4, 0, 59 };
-#ifdef VCL_VC
+#ifdef _MSC_VER
 #pragma warning ( pop )
 #endif
   std::ofstream f(filename, std::ios::out | std::ios::binary);
   if (!f) return false;
   f << "GIF87a";
-  for (int i=0; i<7; ++i) f << a[i];
+  for (unsigned char i : a) f << i;
   for (int i=0; i<256; ++i) f << (unsigned char)i << (unsigned char)i << (unsigned char)0;
-  for (int i=0; i<642; ++i) f << b[i];
+  for (unsigned char i : b) f << i;
   f.close();
   return true;
 }
@@ -254,7 +256,7 @@ static bool create_colour_gif(const char* filename)
 // create a grey gif image
 static bool create_grey_gif(const char* filename)
 {
-#ifdef VCL_VC
+#ifdef _MSC_VER
 #pragma warning ( push )
 #pragma warning ( disable : 4305 4309)
 #endif
@@ -273,15 +275,15 @@ static bool create_grey_gif(const char* filename)
     195, 67, 139, 31, 79, 190, 188, 249, 243, 232, 211, 171, 95, 207, 190, 189, 251, 247, 240, 227, 203, 159, 79, 191, 190, 253,
     251, 248, 243, 235, 223, 207, 191, 191, 255, 255, 0, 6, 40, 224, 128, 4, 22, 104, 224, 129, 8, 38, 168, 224, 130, 12, 54, 232,
     224, 131, 16, 70, 40, 225, 132, 20, 86, 104, 225, 133, 155, 5, 4, 0, 59 };
-#ifdef VCL_VC
+#ifdef _MSC_VER
 #pragma warning ( pop )
 #endif
   std::ofstream f(filename, std::ios::out | std::ios::binary);
   if (!f) return false;
   f << "GIF87a";
-  for (int i=0; i<7; ++i) f << a[i];
+  for (unsigned char i : a) f << i;
   for (int i=0; i<256; ++i) f << (unsigned char)i << (unsigned char)i << (unsigned char)i;
-  for (int i=0; i<336; ++i) f << b[i];
+  for (unsigned char i : b) f << i;
   f.close();
   return true;
 }
@@ -350,7 +352,7 @@ vil1_image CreateTest1bitImage(int wd, int ht)
 {
   vil1_memory_image image(1, wd, ht, 1, 1, VIL1_COMPONENT_FORMAT_UNSIGNED_INT);
   for (int y = 0; y < ht; ++y) {
-    unsigned char* data = new unsigned char[(wd+7)/8];
+    auto* data = new unsigned char[(wd+7)/8];
     for (int x = 0; x < (wd+7)/8; x++)
       data[x] = ((8*x-wd/2)*(y-ht/2)/16) & 0xff;
     // zero the last few bits, if wd is not a multiple of 8:

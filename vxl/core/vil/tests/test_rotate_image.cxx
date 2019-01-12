@@ -1,7 +1,9 @@
 // This is core/vil/tests/test_rotate_image.cxx
 #include <iostream>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_rotate.h>
 
 static void test_rotate_image()
@@ -10,8 +12,8 @@ static void test_rotate_image()
            << " Testing vil_rotate_image\n"
            << "**************************\n";
 
-  const unsigned int ni = 55;
-  const unsigned int nj = 35;
+  constexpr unsigned int ni = 55;
+  constexpr unsigned int nj = 35;
   vil_image_view<float> image, dest1, dest2;
   image.set_size(ni,nj);  image.fill(17.f);
 
@@ -33,7 +35,7 @@ static void test_rotate_image()
     TEST("rotate 720 degrees: content", b, true);
   }
 
-  unsigned int wd = (unsigned int)((ni+nj)/1.4142135623730950488);
+  auto wd = (unsigned int)((ni+nj)/1.4142135623730950488);
 
   // Rotate 45 degrees:
   {

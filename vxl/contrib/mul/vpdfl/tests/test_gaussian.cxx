@@ -7,7 +7,9 @@
 // \author Ian Scott
 // \brief test vpdfl_gaussian, building, sampling, saving etc.
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpl/vpl.h> // vpl_unlink()
 
 #include <vsl/vsl_binary_loader.h>
@@ -123,7 +125,7 @@ void test_gaussian()
   std::cout<<"\n\nPDF sampler: "; vsl_print_summary(std::cout, p_sampler);
   std::cout<<'\n';
 
-  vpdfl_gaussian& g_pdf1 = static_cast<vpdfl_gaussian&>(*p_pdf_built);
+  auto& g_pdf1 = static_cast<vpdfl_gaussian&>(*p_pdf_built);
   vpdfl_gaussian g_pdf2;
   vnl_vector<double> var2(4);
   for (unsigned i=0;i<4;++i) var2[i]=1+i;
@@ -152,8 +154,8 @@ void test_gaussian()
 
   vpdfl_gaussian          pdf_in;
   vpdfl_gaussian_builder  builder_in;
-  vpdfl_pdf_base*         p_base_pdf_in = VXL_NULLPTR;
-  vpdfl_builder_base*     p_base_builder_in = VXL_NULLPTR;
+  vpdfl_pdf_base*         p_base_pdf_in = nullptr;
+  vpdfl_builder_base*     p_base_builder_in = nullptr;
 
   vsl_b_ifstream bfs_in("test_gaussian.bvl.tmp");
   TEST("Opened test_gaussian.bvl.tmp for reading", (!bfs_in), false);
@@ -256,13 +258,13 @@ void test_gaussian()
           "  min_var: 0.1234e-5\n"
           "}\n");
 
-    vcl_unique_ptr<vpdfl_builder_base>
+    std::unique_ptr<vpdfl_builder_base>
             builder = vpdfl_builder_base::new_pdf_builder_from_stream(ss);
 
     TEST("Correct builder",builder->is_a(),"vpdfl_gaussian_builder");
     if (builder->is_a()=="vpdfl_axis_gaussian_builder")
     {
-      vpdfl_gaussian_builder &a_builder = static_cast<vpdfl_gaussian_builder&>(*builder);
+      auto &a_builder = static_cast<vpdfl_gaussian_builder&>(*builder);
       std::cout<<a_builder<<std::endl;
       TEST_NEAR("Min var configured", a_builder.min_var(), 0.1234e-5, 1e-8);
     }

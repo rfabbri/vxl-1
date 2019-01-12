@@ -16,7 +16,9 @@
 #include <iostream>
 #include <vector>
 #include <utility>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_image_view.h>
 
 class brec_glitch
@@ -34,4 +36,3 @@ class brec_glitch
 };
 
 #endif  //brec_glitch_h_
-

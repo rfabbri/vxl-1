@@ -25,7 +25,9 @@
 //         lon(NAD27) = lon(WGS84)-d_lon <- note "-" signs
 //         elev(NAD27) = elev(WGS84)-d_H
 //
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h>
 
 #define degree_to_rad   (vnl_math::pi_over_180)      // Degree to rad conv.
@@ -396,8 +398,8 @@ void nad27n_to_wgs84_alternate
 
 #endif
 
-  prin_lat = (double) nad27_lat;
-  prin_lon = (double) nad27_lon;
+  prin_lat = nad27_lat;
+  prin_lon = nad27_lon;
 
 #ifdef DEBUG_DATUM
   prin_lat_rad = prin_lat * degree_to_rad;
@@ -563,8 +565,8 @@ void nad27n_to_wgs84_alternate
                       + d33*u*u*u*u*u*v*v*v*v*v*v*v*v;
 #endif
 
-  delta_lat_p = (double)delta_lat; // NOTE: delta_lat is in arc seconds
-  delta_lon_p = (double)delta_lon; // NOTE: delta_lon is in arc seconds
+  delta_lat_p = delta_lat; // NOTE: delta_lat is in arc seconds
+  delta_lon_p = delta_lon; // NOTE: delta_lon is in arc seconds
 
 #ifdef DEBUG_DATUM
   ft_lat = 101.0 * delta_lat_p;
@@ -652,8 +654,8 @@ void wgs84_to_nad27n_alternate
 
 #endif
 
-  prin_lat = (double) wgs84_lat;
-  prin_lon = (double) wgs84_lon;
+  prin_lat = wgs84_lat;
+  prin_lon = wgs84_lon;
 
 #ifdef DEBUG_DATUM
   prin_lat_rad = prin_lat * degree_to_rad;
@@ -818,8 +820,8 @@ void wgs84_to_nad27n_alternate
                       + d33*u*u*u*u*u*v*v*v*v*v*v*v*v;
 #endif
 
-  delta_lat_p = (double)delta_lat; // NOTE: delta_lat is in arc seconds
-  delta_lon_p = (double)delta_lon; // NOTE: delta_lon is in arc seconds
+  delta_lat_p = delta_lat; // NOTE: delta_lat is in arc seconds
+  delta_lon_p = delta_lon; // NOTE: delta_lon is in arc seconds
 
 #ifdef DEBUG_DATUM
   ft_lat = 101.0 * delta_lat_p;
@@ -1032,4 +1034,3 @@ void wgs72_to_nad27n
   wgs84_to_nad27n(wgs84_phi, wgs84_lamda, wgs84_hgt,
                   nad27n_phi, nad27n_lamda, nad27n_hgt);
 }
-

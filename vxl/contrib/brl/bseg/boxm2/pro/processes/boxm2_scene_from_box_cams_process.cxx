@@ -14,8 +14,8 @@
 #include <bpgl/bpgl_camera_utils.h>
 namespace boxm2_scene_from_box_cams_process_globals
 {
-  const unsigned n_inputs_ = 8;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 8;
+  constexpr unsigned n_outputs_ = 0;
 }
 bool boxm2_scene_from_box_cams_process_cons(bprb_func_process& pro)
 {
@@ -48,29 +48,30 @@ bool boxm2_scene_from_box_cams_process(bprb_func_process& pro)
     return false;
   }
   //get the inputs
-  std::string camdir  = pro.get_input<std::string>(0);
-  float xmin         = pro.get_input<float>(1);
-  float ymin         = pro.get_input<float>(2);
-  float zmin         = pro.get_input<float>(3);
-  float width        = pro.get_input<float>(4);
-  float height       = pro.get_input<float>(5);
-  float depth        = pro.get_input<float>(6);
+  std::string camdir = pro.get_input<std::string>(0);
+  auto xmin = pro.get_input<float>(1);
+  auto ymin = pro.get_input<float>(2);
+  auto zmin = pro.get_input<float>(3);
+  auto width = pro.get_input<float>(4);
+  auto height = pro.get_input<float>(5);
+  auto depth = pro.get_input<float>(6);
   std::string modeldir= pro.get_input<std::string>(7);
-  double lvcs_origin_lat = pro.get_input<double>(8);
-  double lvcs_origin_lon = pro.get_input<double>(9);
-  double lvcs_origin_elev = pro.get_input<double>(10);
+  auto lvcs_origin_lat = pro.get_input<double>(8);
+  auto lvcs_origin_lon = pro.get_input<double>(9);
+  auto lvcs_origin_elev = pro.get_input<double>(10);
 
   // get the scene bounding box
   vgl_box_3d<double> box(vgl_point_3d<double>(xmin,ymin,zmin),
                          vgl_point_3d<double>(xmin+width,ymin+height,zmin+depth));
   std::vector<vpgl_perspective_camera<double>* > ptrcams = bpgl_camera_utils::cameras_from_directory(camdir);
   std::vector<vpgl_perspective_camera<double> > cams;
-  for(unsigned int i = 0 ; i < ptrcams.size(); i++)
-      cams.push_back( * (ptrcams[i]) );
+  cams.reserve(ptrcams.size());
+for(auto & ptrcam : ptrcams)
+      cams.push_back( * ptrcam );
 
   std::vector<std::string> appearance;
-  appearance.push_back("boxm2_mog3_grey");
-  appearance.push_back("boxm2_num_obs");
+  appearance.emplace_back("boxm2_mog3_grey");
+  appearance.emplace_back("boxm2_num_obs");
 
   std::string scene_dir =modeldir+ "/model";
   if (!vul_file::make_directory_path( scene_dir.c_str()))

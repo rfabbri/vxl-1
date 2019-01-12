@@ -4,14 +4,15 @@
 #include "boxm2_vecf_orbit_param_stats.h"
 #include "boxm2_vecf_plot_orbit.h"
 #include <vnl/algo/vnl_svd.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 void boxm2_vecf_orbit_param_stats::average_params(){
-  for(std::map<std::string, std::pair<boxm2_vecf_orbit_params, boxm2_vecf_orbit_params > >::iterator pit =  param_map_.begin();
-      pit!=param_map_.end(); ++pit){
-    const std::string& pid = pit->first;
+  for(auto & pit : param_map_){
+    const std::string& pid = pit.first;
     boxm2_vecf_orbit_params avg;
-    boxm2_vecf_orbit_params& left_params = (pit->second).first;
-    boxm2_vecf_orbit_params& right_params = (pit->second).second;
+    boxm2_vecf_orbit_params& left_params = (pit.second).first;
+    boxm2_vecf_orbit_params& right_params = (pit.second).second;
     avg.eye_radius_= 0.5*(left_params.eye_radius_ + right_params.eye_radius_);
     devs_[pid]["eye_radius"]=std::fabs(left_params.eye_radius_-avg.eye_radius_);
     avg.iris_radius_= 0.5*(left_params.iris_radius_ + right_params.iris_radius_);
@@ -34,7 +35,7 @@ void boxm2_vecf_orbit_param_stats::average_params(){
     devs_[pid]["scale_y_coef"]=std::fabs(left_params.scale_y_coef_-avg.scale_y_coef_);
     avg.mid_eyelid_crease_z_ = 0.5*(left_params.mid_eyelid_crease_z_ + right_params.mid_eyelid_crease_z_);
     devs_[pid]["mid_eyelid_crease_z"]=std::fabs(left_params.mid_eyelid_crease_z_-avg.mid_eyelid_crease_z_);
-    param_avg_[pit->first] = avg;
+    param_avg_[pit.first] = avg;
   }
 }
 void boxm2_vecf_orbit_param_stats::generate_stats(){
@@ -43,10 +44,9 @@ void boxm2_vecf_orbit_param_stats::generate_stats(){
 }
 void boxm2_vecf_orbit_param_stats::print_stats() {
   std::cout << "patient_id  eye_radius iris_radius lid_radius_off height/width cr_scale_y crease_z_rat\n";
-  for(std::map<std::string, boxm2_vecf_orbit_params>::iterator pit = param_avg_.begin();
-      pit != param_avg_.end(); ++pit){
-    const boxm2_vecf_orbit_params& pr = pit->second;
-    const std::string& pid = pit->first;
+  for(auto & pit : param_avg_){
+    const boxm2_vecf_orbit_params& pr = pit.second;
+    const std::string& pid = pit.first;
     std::cout << pid << ' ' << pr.eye_radius_ << ' '<< devs_[pid]["eye_radius"]<< ' '
              << pr.iris_radius_ << ' '<< devs_[pid]["iris_radius"] << ' '
              << pr.inferior_lid_radius_offset_ << ' ' << devs_[pid]["inferior_lid_radius_offset"];
@@ -58,11 +58,10 @@ void boxm2_vecf_orbit_param_stats::print_stats() {
 }
 void boxm2_vecf_orbit_param_stats::print_xy_fitting_error(){
   std::cout << "patient_id  left_inf_xy left_sup_xy left_sup_crease right_inf_xy right_sup_xy right_sup_crease_xy \n";
-  for(std::map<std::string, std::pair<boxm2_vecf_orbit_params, boxm2_vecf_orbit_params > >::iterator pit =  param_map_.begin();
-      pit!=param_map_.end(); ++pit){
-    const std::string& pid = pit->first;
-    boxm2_vecf_orbit_params& lp = (pit->second).first;
-    boxm2_vecf_orbit_params& rp = (pit->second).second;
+  for(auto & pit : param_map_){
+    const std::string& pid = pit.first;
+    boxm2_vecf_orbit_params& lp = (pit.second).first;
+    boxm2_vecf_orbit_params& rp = (pit.second).second;
 
     std::cout << pid << ' ' << lp.inferior_margin_xy_error_ << ' '
              << lp.superior_margin_xy_error_ << ' '
@@ -75,11 +74,10 @@ void boxm2_vecf_orbit_param_stats::print_xy_fitting_error(){
 
 void boxm2_vecf_orbit_param_stats::print_xyz_fitting_error(){
   std::cout << "patient_id  left_inf_xyz left_sup_xyz left_sup_crease right_inf_xyz right_sup_xyz right_sup_crease_xyz \n";
-  for(std::map<std::string, std::pair<boxm2_vecf_orbit_params, boxm2_vecf_orbit_params > >::iterator pit =  param_map_.begin();
-      pit!=param_map_.end(); ++pit){
-    const std::string& pid = pit->first;
-    boxm2_vecf_orbit_params& lp = (pit->second).first;
-    boxm2_vecf_orbit_params& rp = (pit->second).second;
+  for(auto & pit : param_map_){
+    const std::string& pid = pit.first;
+    boxm2_vecf_orbit_params& lp = (pit.second).first;
+    boxm2_vecf_orbit_params& rp = (pit.second).second;
 
     std::cout << pid << ' ' << lp.inferior_margin_xyz_error_ << ' '
              << lp.superior_margin_xyz_error_ << ' '
@@ -90,11 +88,10 @@ void boxm2_vecf_orbit_param_stats::print_xyz_fitting_error(){
  }
 }
 bool boxm2_vecf_orbit_param_stats::merge_margins_and_crease(){
-  for(std::map<std::string, std::pair<boxm2_vecf_orbit_params, boxm2_vecf_orbit_params > >::iterator pit =  param_map_.begin();
-      pit!=param_map_.end(); ++pit){
-    const std::string& pid = pit->first;
-    boxm2_vecf_orbit_params lp = (pit->second).first;
-    boxm2_vecf_orbit_params rp = (pit->second).second;
+  for(auto & pit : param_map_){
+    const std::string& pid = pit.first;
+    boxm2_vecf_orbit_params lp = (pit.second).first;
+    boxm2_vecf_orbit_params rp = (pit.second).second;
 
     // plot left eye
     double xm_min_left = lp.x_min()-10.0;
@@ -169,10 +166,9 @@ bool boxm2_vecf_orbit_param_stats::plot_merged_margins(std::ofstream& os, unsign
   bvrml_write::write_vrml_header(os);
   float r = 0.5f; // error range 1.0 mm
   // write inferior margins
-  for(std::map<std::string, std::vector<vgl_point_3d<double> > >::iterator pit = merged_inf_margin_.begin();
-      pit != merged_inf_margin_.end(); ++pit){
-     std::vector<vgl_point_3d<double> > inf_pts = pit->second;
-     unsigned n = static_cast<unsigned>(inf_pts.size());
+  for(auto & pit : merged_inf_margin_){
+     std::vector<vgl_point_3d<double> > inf_pts = pit.second;
+     auto n = static_cast<unsigned>(inf_pts.size());
      for(unsigned i = 0; i<n; i+=sample_skip){
        vgl_point_3d<double> pd = inf_pts[i];
        vgl_point_3d<float> pf(static_cast<float>(pd.x()),
@@ -183,10 +179,9 @@ bool boxm2_vecf_orbit_param_stats::plot_merged_margins(std::ofstream& os, unsign
      }
   }
   // write superior margins
-  for(std::map<std::string, std::vector<vgl_point_3d<double> > >::iterator pit = merged_sup_margin_.begin();
-      pit != merged_sup_margin_.end(); ++pit){
-    std::vector<vgl_point_3d<double> > sup_pts = pit->second;
-    unsigned n = static_cast<unsigned>(sup_pts.size());
+  for(auto & pit : merged_sup_margin_){
+    std::vector<vgl_point_3d<double> > sup_pts = pit.second;
+    auto n = static_cast<unsigned>(sup_pts.size());
     for(unsigned i = 0; i<n; i+=sample_skip){
       vgl_point_3d<double> pd = sup_pts[i];
       vgl_point_3d<float> pf(static_cast<float>(pd.x()),
@@ -197,10 +192,9 @@ bool boxm2_vecf_orbit_param_stats::plot_merged_margins(std::ofstream& os, unsign
     }
   }
   // write creases
-  for(std::map<std::string, std::vector<vgl_point_3d<double> > >::iterator pit = merged_crease_.begin();
-      pit != merged_crease_.end(); ++pit){
-    std::vector<vgl_point_3d<double> > crease_pts = pit->second;
-    unsigned n = static_cast<unsigned>(crease_pts.size());
+  for(auto & pit : merged_crease_){
+    std::vector<vgl_point_3d<double> > crease_pts = pit.second;
+    auto n = static_cast<unsigned>(crease_pts.size());
     for(unsigned i = 0; i<n; i+=sample_skip){
       vgl_point_3d<double> pd = crease_pts[i];
       vgl_point_3d<float> pf(static_cast<float>(pd.x()),
@@ -215,10 +209,9 @@ bool boxm2_vecf_orbit_param_stats::plot_merged_margins(std::ofstream& os, unsign
 }
 void boxm2_vecf_orbit_param_stats::compute_feature_vectors(){
   unsigned dim = 12;
-  for(std::map<std::string, std::vector<vgl_point_3d<double> > >::iterator mit = merged_inf_margin_.begin();
-      mit != merged_inf_margin_.end(); ++mit){
-    std::string pid = mit->first;
-    std::vector<vgl_point_3d<double> > inf_pts = mit->second;
+  for(auto & mit : merged_inf_margin_){
+    std::string pid = mit.first;
+    std::vector<vgl_point_3d<double> > inf_pts = mit.second;
     std::vector<vgl_point_3d<double> > sup_pts = merged_sup_margin_[pid];
     std::vector<vgl_point_3d<double> > crease_pts = merged_crease_[pid];
     vgl_point_3d<double> pl = inf_pts[inf_pts.size()-1];
@@ -277,7 +270,7 @@ void boxm2_vecf_orbit_param_stats::compute_covariance_matrix(){
   // compute mean vector
   mean_ = vnl_matrix<double>(dim, 1, 0.0);
   double nv = 0.0;
-  for(std::map<std::string, vnl_matrix<double> >::iterator fit = feature_vectors_.begin();
+  for(auto fit = feature_vectors_.begin();
       fit != feature_vectors_.end(); ++fit, nv+=1.0)
     mean_ += fit->second;
   mean_/=nv;
@@ -286,11 +279,11 @@ void boxm2_vecf_orbit_param_stats::compute_covariance_matrix(){
     std::cout << std::setprecision(2) << mean_[i][0] << ' ';
   std::cout << '\n';
   cov_ = vnl_matrix<double>(dim, dim, 0.0);
-  unsigned m = static_cast<unsigned>(feature_vectors_.size());
+  auto m = static_cast<unsigned>(feature_vectors_.size());
   // the data matrix - rows denote the elements of the feature vector, columns each sample
   vnl_matrix<double> X(dim, m);
   unsigned k = 0;
-  for(std::map<std::string, vnl_matrix<double> >::iterator fit = feature_vectors_.begin();
+  for(auto fit = feature_vectors_.begin();
       fit != feature_vectors_.end(); ++fit, ++k){
     vnl_matrix<double> x = (fit->second - mean_);
     for(unsigned r = 0; r<static_cast<unsigned>(x.rows()); ++r)
@@ -317,7 +310,7 @@ void boxm2_vecf_orbit_param_stats::compute_covariance_matrix(){
   // to produce a diagonal covariance matrix
   vnl_matrix<double> Xw = Ut*X;
   k = 0;
-  for(std::map<std::string, vnl_matrix<double> >::iterator fit = feature_vectors_.begin();
+  for(auto fit = feature_vectors_.begin();
       fit != feature_vectors_.end(); ++fit, ++k){
     std::string pid = fit->first;
     std::cout << pid << ' ' << Xw[0][k] << ' ' << Xw[1][k] << '\n';
@@ -326,7 +319,7 @@ void boxm2_vecf_orbit_param_stats::compute_covariance_matrix(){
 void boxm2_vecf_orbit_param_stats::separation_stats(){
   double avg_ratio = 0.0;
   double ns = 0.0;
-  for(std::map<std::string, std::pair<boxm2_vecf_orbit_params, boxm2_vecf_orbit_params > >::iterator pit =  param_map_.begin();
+  for(auto pit =  param_map_.begin();
       pit!=param_map_.end(); ++pit, ns += 1.0){
     const std::string& pid = pit->first;
     boxm2_vecf_orbit_params& left_params = (pit->second).first;

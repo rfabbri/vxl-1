@@ -19,8 +19,8 @@
 
 namespace boxm_fill_internal_cells_process_globals
 {
-  const unsigned n_inputs_ = 1;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 1;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 //: process takes 1 input and 1 output.
@@ -60,7 +60,7 @@ bool boxm_fill_internal_cells_process(bprb_func_process& pro)
     return false;
   }
 
-  if (boxm_scene<boct_tree<short, float> > *scene_in = dynamic_cast<boxm_scene<boct_tree<short, float> >* > (scene_base.as_pointer()))
+  if (auto *scene_in = dynamic_cast<boxm_scene<boct_tree<short, float> >* > (scene_base.as_pointer()))
   {
     boxm_fill_internal_cells<float> filler;
     pro.set_output_val<boxm_scene_base_sptr>(0, filler.traverse_and_fill(scene_in));
@@ -70,4 +70,3 @@ bool boxm_fill_internal_cells_process(bprb_func_process& pro)
   std::cerr << "In boxm_fill_internal_cells_process: Unsupportted scene type\n";
   return false;
 }
-

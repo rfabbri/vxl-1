@@ -14,7 +14,9 @@
 // \endverbatim
 
 #include <bprb/bprb_parameters.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <brdb/brdb_value.h>
 #include <vil/vil_image_view.h>
 #include <vil/vil_convert.h>
@@ -27,18 +29,18 @@ bool brec_glitch_process_cons(bprb_func_process& pro)
   //inputs
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("vil_image_view_base_sptr"); //input probability frame
-  input_types.push_back("vil_image_view_base_sptr"); //input probability frame's mask
-  input_types.push_back("unsigned"); // size of the inner-square for the glitch mask (e.g. 5 means we're detecting foreground islands of 5x5 on background)
+  input_types.emplace_back("vil_image_view_base_sptr"); //input probability frame
+  input_types.emplace_back("vil_image_view_base_sptr"); //input probability frame's mask
+  input_types.emplace_back("unsigned"); // size of the inner-square for the glitch mask (e.g. 5 means we're detecting foreground islands of 5x5 on background)
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   //output
   std::vector<std::string> output_types;
-  output_types.push_back("vil_image_view_base_sptr");
-  output_types.push_back("vil_image_view_base_sptr");
-  output_types.push_back("vil_image_view_base_sptr");
-  output_types.push_back("vil_image_view_base_sptr");
+  output_types.emplace_back("vil_image_view_base_sptr");
+  output_types.emplace_back("vil_image_view_base_sptr");
+  output_types.emplace_back("vil_image_view_base_sptr");
+  output_types.emplace_back("vil_image_view_base_sptr");
   //output_types.push_back("vil_image_view_base_sptr");  // output the glitch map as well
   //output_types.push_back("vil_image_view_base_sptr");  // output the glitch map as well
   ok = pro.set_output_types(output_types);
@@ -66,7 +68,7 @@ bool brec_glitch_process(bprb_func_process& pro)
   temp = pro.get_input<vil_image_view_base_sptr>(i++);
   vil_image_view<bool> input_mask = *vil_convert_cast(bool(), temp);
 
-  unsigned c_size = pro.get_input<unsigned>(i++);
+  auto c_size = pro.get_input<unsigned>(i++);
 
   vil_image_view<float> out(ni, nj, 1);
   out.fill(0);
@@ -86,9 +88,9 @@ bool brec_glitch_process(bprb_func_process& pro)
         float sum = 0.0f;
         bool all_inside = true;
         float prod_back = 1.0f; float prod_fore = 1.0f;
-        for (unsigned t = 0; t < neighborhood.size(); t++) {
-          int ii = i+neighborhood[t].first;
-          int jj = j+neighborhood[t].second;
+        for (auto & t : neighborhood) {
+          int ii = i+t.first;
+          int jj = j+t.second;
           if (ii >= 0 && jj >= 0 && ii < (int)ni && jj < (int)nj) {
             if (!input_mask(ii, jj)) {
               all_inside = false;
@@ -132,9 +134,9 @@ bool brec_glitch_process(bprb_func_process& pro)
         float sum = 0.0f;
         bool all_inside = true;
         float prod_back = 1.0f; float prod_fore = 1.0f;
-        for (unsigned t = 0; t < neighborhood_outer.size(); t++) {
-          int ii = i+neighborhood_outer[t].first;
-          int jj = j+neighborhood_outer[t].second;
+        for (auto & t : neighborhood_outer) {
+          int ii = i+t.first;
+          int jj = j+t.second;
           if (ii >= 0 && jj >= 0 && ii < (int)ni && jj < (int)nj) {
             if (!input_mask(ii, jj)) {
               all_inside = false;
@@ -201,4 +203,3 @@ bool brec_glitch_process(bprb_func_process& pro)
 
   return true;
 }
-

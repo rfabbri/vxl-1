@@ -13,7 +13,9 @@
 #include <iosfwd>
 #include <gevd/gevd_param_mixin.h>
 #include <sdet/sdet_detector_params.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class sdet_region_classifier_params : public gevd_param_mixin
 {
@@ -34,9 +36,9 @@ class sdet_region_classifier_params : public gevd_param_mixin
                                bool debug
                                );
   sdet_region_classifier_params(const sdet_region_classifier_params& old_params);
- ~sdet_region_classifier_params(){}
+ ~sdet_region_classifier_params() override= default;
 
-  bool SanityCheck();
+  bool SanityCheck() override;
   friend
     std::ostream& operator<<(std::ostream&, const sdet_region_classifier_params& rpp);
  protected:

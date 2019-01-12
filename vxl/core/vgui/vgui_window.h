@@ -1,9 +1,6 @@
 // This is core/vgui/vgui_window.h
 #ifndef vgui_window_h_
 #define vgui_window_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief  An abstract representation of a system window.
@@ -19,7 +16,9 @@ class vgui_menu;
 class vgui_adaptor;
 class vgui_statusbar;
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: An abstract representation of a system window.
 //

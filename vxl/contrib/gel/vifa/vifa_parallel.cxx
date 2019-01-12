@@ -14,30 +14,32 @@
 
 #ifdef DUMP
 #include <vul/vul_sprintf.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 static int pass = 0;
 #endif
 
-const float n_sigma = 2.0;  // on either side of center
+constexpr float n_sigma = 2.0;  // on either side of center
 
 
 vifa_parallel::
 vifa_parallel(iface_list&   faces,
-              bool          contrast_weighted,
+              bool           /*contrast_weighted*/,
               vifa_parallel_params*  params) :
   vifa_parallel_params(params)
 {
   raw_h_ = new vifa_histogram(nbuckets, min_angle, max_angle);
   float  range = max_angle - min_angle;
 
-  for (iface_iterator ifi = faces.begin(); ifi != faces.end(); ++ifi)
+  for (auto & face : faces)
   {
-    edge_list edges; (*ifi)->edges(edges);
+    edge_list edges; face->edges(edges);
 
-    for (edge_iterator ei = edges.begin(); ei != edges.end(); ei++)
+    for (auto & edge : edges)
     {
-      vtol_edge_2d* e = (*ei)->cast_to_edge_2d();
+      vtol_edge_2d* e = edge->cast_to_edge_2d();
 
       if (e)
       {
@@ -110,11 +112,8 @@ vifa_parallel(std::vector<float>&  pixel_orientations,
   raw_h_ = new vifa_histogram(nbuckets, min_angle, max_angle);
   float  range = max_angle - min_angle;
 
-  for (std::vector<float>::iterator p = pixel_orientations.begin();
-       p != pixel_orientations.end(); ++p)
+  for (float theta : pixel_orientations)
   {
-    float  theta = (*p);
-
     while (theta < min_angle)
     {
       theta += range;
@@ -183,7 +182,7 @@ map_gaussian(float&  max_angle,
 {
   bool    set_min_res_flag = true;
 
-  const float  incr = 3.0;  // put me in the params!
+  constexpr float incr = 3.0;  // put me in the params!
   float    max_value;
   float    local_max_angle = find_peak(max_value);
   max_angle = 0.0;
@@ -372,7 +371,7 @@ map_x(float  raw_x)
 vifa_histogram* vifa_parallel::
 normalize_histogram(vifa_histogram* h)
 {
-  vifa_histogram*  norm = new vifa_histogram(nbuckets, min_angle, max_angle);
+  auto*  norm = new vifa_histogram(nbuckets, min_angle, max_angle);
   int        nbuckets = h->GetRes();
   float      area = h->ComputeArea();
   float*      x_vals = h->GetVals();
@@ -415,10 +414,10 @@ find_peak(float&  max_value)
 }
 
 vtol_intensity_face_sptr vifa_parallel::
-get_adjacent_iface(vtol_intensity_face_sptr  known_face,
+get_adjacent_iface(const vtol_intensity_face_sptr&  known_face,
                    vtol_edge_2d*         e)
 {
-  vtol_intensity_face_sptr  adj_face = VXL_NULLPTR;
+  vtol_intensity_face_sptr  adj_face = nullptr;
   face_list faces; e->faces(faces);
 
   // Expect only two intensity faces for 2-D case

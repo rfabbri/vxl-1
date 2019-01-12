@@ -4,7 +4,9 @@
 #include <testlib/testlib_test.h>
 #include <vpdl/vpdl_gaussian_indep.h>
 #include <vnl/vnl_math.h> // for twopi
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 template <class T>
@@ -259,5 +261,3 @@ static void test_gaussian_indep()
 }
 
 TESTMAIN(test_gaussian_indep);
-
-

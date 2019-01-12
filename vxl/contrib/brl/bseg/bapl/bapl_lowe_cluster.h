@@ -14,7 +14,9 @@
 #include <vector>
 #include <iostream>
 #include <utility>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bapl/bapl_lowe_keypoint_sptr.h>
 #include <bapl/bapl_affine_transform.h>
 
@@ -29,7 +31,7 @@ class bapl_lowe_clusterer
   //: Constructor
   bapl_lowe_clusterer(int max_image_dim1, int max_image_dim2, double max_scale);
   //: Destructor
-  ~bapl_lowe_clusterer(){}
+  ~bapl_lowe_clusterer()= default;
 
   //: Hash the keypoint match into the table
   void hash(const bapl_keypoint_match& match);

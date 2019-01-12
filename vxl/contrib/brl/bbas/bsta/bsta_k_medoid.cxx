@@ -5,8 +5,10 @@
 #include "bsta_k_medoid.h"
 //:
 // \file
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 bsta_k_medoid::bsta_k_medoid(const unsigned n_elements, bool verbose)
 {

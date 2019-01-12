@@ -7,8 +7,10 @@
 #include "bpgl_fm_compute_ransac.h"
 #include <vpgl/algo/vpgl_fm_compute_8_point.h>
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_homg_point_2d.h>
 #include <vgl/vgl_homg_line_2d.h>
@@ -38,11 +40,11 @@ bpgl_fm_compute_ransac::compute(
   }
 
   // The following block is hacked from similar code in rrel_homography2d_est.
-  rrel_fm_problem* estimator = new rrel_fm_problem( pr, pl );
+  auto* estimator = new rrel_fm_problem( pr, pl );
   estimator->verbose = false;
-  rrel_muset_obj* ransac = new rrel_muset_obj((int)std::floor(pr.size()*.75));
+  auto* ransac = new rrel_muset_obj((int)std::floor(pr.size()*.75));
   estimator->set_prior_scale( 1.0 );
-  rrel_ran_sam_search* ransam = new rrel_ran_sam_search;
+  auto* ransam = new rrel_ran_sam_search;
   ransam->set_trace_level(trace_level_);
 
   if (!gen_all_)
@@ -103,8 +105,8 @@ rrel_fm_problem::fit_from_minimal_set(
   std::vector< vgl_homg_point_2d<double> > set_pr, set_pl;
   for ( int i = 0; i < 8; i++ ){
     int index = point_indices[i];
-    set_pr.push_back( vgl_homg_point_2d<double>( pr_[index] ) );
-    set_pl.push_back( vgl_homg_point_2d<double>( pl_[index] ) );
+    set_pr.emplace_back( pr_[index] );
+    set_pl.emplace_back( pl_[index] );
   }
 
   vpgl_fundamental_matrix<double> fm;

@@ -2,7 +2,9 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <mbl/mbl_parse_sequence.h>
 #include <vsl/vsl_vector_io.h>

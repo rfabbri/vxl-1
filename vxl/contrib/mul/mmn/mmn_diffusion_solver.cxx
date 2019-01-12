@@ -13,7 +13,9 @@
 // IEEE Trans on Pattern Recog & Machine Intell, July 2007
 
 #include <mmn/mmn_csp_solver.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_vector_ref.h>
 #include <mbl/mbl_exception.h>
 #include <mbl/mbl_stl.h>
@@ -54,9 +56,9 @@ void mmn_diffusion_solver::set_arcs(unsigned num_nodes,const std::vector<mmn_arc
     arcs_ = arcs;
     //Verify consistency
     unsigned max_node=0;
-    for (unsigned i=0; i<arcs.size();++i)
+    for (auto arc : arcs)
     {
-        max_node=std::max(max_node,arcs[i].max_v());
+        max_node=std::max(max_node,arc.max_v());
     }
     if (nnodes_ != max_node+1)
     {
@@ -106,8 +108,8 @@ std::pair<bool,double> mmn_diffusion_solver::operator()(const std::vector<vnl_ve
     for (unsigned inode=0; inode<neighbourhoods.size();++inode)
     {
         const std::vector<std::pair<unsigned,unsigned> >& neighbours=neighbourhoods[inode];
-        std::vector<std::pair<unsigned,unsigned> >::const_iterator neighIter=neighbours.begin();
-        std::vector<std::pair<unsigned,unsigned> >::const_iterator neighIterEnd=neighbours.end();
+        auto neighIter=neighbours.begin();
+        auto neighIterEnd=neighbours.end();
         while (neighIter != neighIterEnd) //do all neighbours of this node
         {
             unsigned arcId=neighIter->second;
@@ -200,8 +202,8 @@ void mmn_diffusion_solver::transform_costs(unsigned inode)
     {
         const std::vector<std::pair<unsigned,unsigned> >& neighbours=graph_.node_data()[inode];
 
-        std::vector<std::pair<unsigned,unsigned> >::const_iterator neighIter=neighbours.begin();
-        std::vector<std::pair<unsigned,unsigned> >::const_iterator neighIterEnd=neighbours.end();
+        auto neighIter=neighbours.begin();
+        auto neighIterEnd=neighbours.end();
         double phiTot=0.0; //total added to node cost
         while (neighIter != neighIterEnd) //Loop over all my neighbours
         {
@@ -261,8 +263,8 @@ void mmn_diffusion_solver::update_potentials_to_neighbours(unsigned inode,
     const std::vector<std::pair<unsigned,unsigned> >& neighbours=graph_.node_data()[inode];
     for (unsigned xlabel=0; xlabel<nStates;++xlabel) //loop over my labels (i.e. each pencil)
     {
-        std::vector<std::pair<unsigned,unsigned> >::const_iterator neighIter=neighbours.begin();
-        std::vector<std::pair<unsigned,unsigned> >::const_iterator neighIterEnd=neighbours.end();
+        auto neighIter=neighbours.begin();
+        auto neighIterEnd=neighbours.end();
         double du=node_cost[xlabel];
         while (neighIter != neighIterEnd) //Loop over all my neighbours
         {
@@ -345,8 +347,8 @@ bool mmn_diffusion_solver::arc_consistent_solution(std::vector<unsigned>& x)
                         std::back_inserter(maxRows),
                         mbl_stl_pred_create_index_adapter(uToNeigh,
                                                           mbl_stl_pred_is_near(umax,epsilon_cost)));
-        std::vector<unsigned>::iterator rowIter=maxRows.begin();
-        std::vector<unsigned>::iterator rowIterEnd=maxRows.end();
+        auto rowIter=maxRows.begin();
+        auto rowIterEnd=maxRows.end();
         while (rowIter != rowIterEnd)
         {
             //And for each such pencil locate the index of the maximising label to which it connects
@@ -440,4 +442,3 @@ bool mmn_diffusion_solver::continue_diffusion()
     }
     return retstate;
 }
-

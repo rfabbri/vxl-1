@@ -19,7 +19,7 @@ class brec_pair_density
  public:
 
   brec_pair_density() : sigma_(0.1) {}
-  virtual ~brec_pair_density() {}
+  virtual ~brec_pair_density() = default;
 
   void set_sigma(double s) { sigma_ = s; }
   double sigma() const { return sigma_; }
@@ -32,4 +32,3 @@ class brec_pair_density
 };
 
 #endif // brec_pair_density_h_
-

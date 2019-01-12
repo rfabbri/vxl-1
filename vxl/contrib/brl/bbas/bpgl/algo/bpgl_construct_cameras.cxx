@@ -1,11 +1,14 @@
 // This is bbas/bpgl/algo/bpgl_construct_cameras.cxx
-#include <iostream>
-#include <cmath>
 #include "bpgl_construct_cameras.h"
+#include <cmath>
+#include <iostream>
+#include <utility>
 //:
 // \file
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_inverse.h>
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_double_3.h>
@@ -19,22 +22,21 @@
 
 //: constructor
 bpgl_construct_cameras::bpgl_construct_cameras()
-{
-}
+= default;
 
 //: constructor with initialization of corresponding points
 bpgl_construct_cameras::bpgl_construct_cameras(
-    std::vector<vgl_point_2d<double> > p0,
+    const std::vector<vgl_point_2d<double> >& p0,
     std::vector<vgl_point_2d<double> > p1,
     const vpgl_calibration_matrix<double>* K )
 {
     points0_=p0;
-    points1_=p1;
+    points1_=std::move(p1);
 
     if ( p0.size() < 8 )
       std::cerr << "ERROR: bpgl_construct_cameras: need at least 7 correspondences.\n";
 
-    if ( K == VXL_NULLPTR ) {
+    if ( K == nullptr ) {
       K_[0][0]=2000;K_[0][1]=0;K_[0][2]=512;
       K_[1][0]=0;K_[1][1]=2000;K_[1][2]=384;
       K_[2][0]=0;K_[2][1]=0;K_[2][2]=1;
@@ -44,8 +46,7 @@ bpgl_construct_cameras::bpgl_construct_cameras(
 }
 
 bpgl_construct_cameras::~bpgl_construct_cameras()
-{
-}
+= default;
 
 //: To construct the cameras according to the correspondence given
 //
@@ -56,14 +57,14 @@ bool bpgl_construct_cameras::construct()
 {
     std::vector<vgl_homg_point_2d<double> > p0,p1;
 
-    for (unsigned int i=0;i<points0_.size();i++)
+    for (auto i : points0_)
     {
-      vgl_homg_point_2d<double> p(points0_[i]);
+      vgl_homg_point_2d<double> p(i);
       p0.push_back(p);
     }
-    for (unsigned int i=0;i<points1_.size();i++)
+    for (auto i : points1_)
     {
-      vgl_homg_point_2d<double> p(points1_[i]);
+      vgl_homg_point_2d<double> p(i);
       p1.push_back(p);
     }
 

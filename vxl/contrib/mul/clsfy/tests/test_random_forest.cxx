@@ -10,7 +10,9 @@
 // \author dac
 // Test construction, IO etc
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h>
 #include <vpl/vpl.h> // vpl_unlink()
 #include <clsfy/clsfy_random_forest.h>
@@ -38,24 +40,24 @@ void test_random_forest()
              << " Testing clsfy_random_forest_builder\n"
              << "*******************************************\n";
 
-    const double varx= 1.0;
-    const double vary = 1.0;
-    const double varz = 1.0;
+    constexpr double varx = 1.0;
+    constexpr double vary = 1.0;
+    constexpr double varz = 1.0;
 
-    const double mux=0.5;
-    const double muy=1.0;
-    const double muz=2.0;
+    constexpr double mux = 0.5;
+    constexpr double muy = 1.0;
+    constexpr double muz = 2.0;
 
     pdf1d_gaussian pdfx(mux,varx);
     pdf1d_gaussian pdfy(muy,vary);
-    pdf1d_sampler* pdfx_sampler = VXL_NULLPTR;
-    pdf1d_sampler* pdfy_sampler = VXL_NULLPTR;
+    pdf1d_sampler* pdfx_sampler = nullptr;
+    pdf1d_sampler* pdfy_sampler = nullptr;
 
     pdf1d_gaussian pdfz(muz,varz);
-    pdf1d_sampler* pdfz_sampler = VXL_NULLPTR;
+    pdf1d_sampler* pdfz_sampler = nullptr;
 
     pdf1d_gaussian pdferror(0.0,0.02*0.02);
-    pdf1d_sampler* pdferror_sampler = VXL_NULLPTR;
+    pdf1d_sampler* pdferror_sampler = nullptr;
 
     pdfx_sampler = pdfx.new_sampler();
 
@@ -72,7 +74,7 @@ void test_random_forest()
 
     pdferror_sampler = pdferror.new_sampler();
 
-    const unsigned NPOINTS=500;
+    constexpr unsigned NPOINTS = 500;
     std::vector<vnl_vector<double > > data(NPOINTS);
 
     vnl_vector<double> xerr(1);
@@ -120,8 +122,8 @@ void test_random_forest()
     clsfy_classifier_base* pBaseClassifier=builder.new_classifier();
     TEST("Type is binary tree",
          pBaseClassifier->is_a()==std::string("clsfy_random_forest"), true);
-    clsfy_random_forest* pClassifier=dynamic_cast<clsfy_random_forest*>(pBaseClassifier);
-    TEST("Can cast to binary tree",pClassifier != VXL_NULLPTR,true);
+    auto* pClassifier=dynamic_cast<clsfy_random_forest*>(pBaseClassifier);
+    TEST("Can cast to binary tree",pClassifier != nullptr,true);
 
     builder.build(*pClassifier,
                   training_set_inputs,
@@ -131,7 +133,7 @@ void test_random_forest()
     std::vector<vnl_vector<double > > testData(NPOINTS);
 
     std::vector<unsigned > test_outputs(NPOINTS,0);
-    const double epsilon=0.05;
+    constexpr double epsilon = 0.05;
     vnl_vector<double > error(1);
     unsigned tp=0;
     for (unsigned i=0; i<NPOINTS; ++i)
@@ -187,8 +189,8 @@ void test_random_forest()
                 ++fnr;
         }
     }
-    double dtp=double(tp);
-    double dtn=double(NPOINTS-tp);
+    auto dtp=double(tp);
+    auto dtn=double(NPOINTS-tp);
     double testTPR=double(tpr)/dtp;
     double testFPR=double(fpr)/dtn;
     double testTNR=double(tnr)/dtn;
@@ -228,8 +230,8 @@ void test_random_forest()
 
     TEST("Type is random forest",
          pBaseClassifierIn->is_a()==std::string("clsfy_random_forest"), true);
-    clsfy_random_forest* pClassifierIn=dynamic_cast<clsfy_random_forest*>(pBaseClassifierIn);
-    TEST("Can cast to random forest",pClassifierIn != VXL_NULLPTR,true);
+    auto* pClassifierIn=dynamic_cast<clsfy_random_forest*>(pBaseClassifierIn);
+    TEST("Can cast to random forest",pClassifierIn != nullptr,true);
 
     {
         unsigned tp=std::count(test_outputs.begin(),test_outputs.end(),1U);
@@ -255,8 +257,8 @@ void test_random_forest()
                     ++fnr;
             }
         }
-        double dtp=double(tp);
-        double dtn=double(NPOINTS-tp);
+        auto dtp=double(tp);
+        auto dtn=double(NPOINTS-tp);
 
         std::cout<<"True Positive Rate " <<double(tpr)/dtp<<'\n'
                 <<"False Positive Rate "<<double(fpr)/dtn<<'\n'
@@ -287,7 +289,7 @@ void test_random_forest()
     }
     // Train again with +ve and -ve data swapped round + see if get same error
     clsfy_classifier_base* pBaseClassifier2=builder.new_classifier();
-    clsfy_random_forest* pClassifier2=dynamic_cast<clsfy_random_forest*>(pBaseClassifier2);
+    auto* pClassifier2=dynamic_cast<clsfy_random_forest*>(pBaseClassifier2);
 
     builder.build(*pClassifier2,
                   training_set_inputs,
@@ -295,7 +297,7 @@ void test_random_forest()
                   training_outputs);
 
     {
-        const unsigned NPOINTS=500;
+        constexpr unsigned NPOINTS = 500;
         unsigned tp=std::count(test_outputs.begin(),test_outputs.end(),1U);
         unsigned tpr=0;
         unsigned tnr=0;
@@ -319,8 +321,8 @@ void test_random_forest()
                     ++fnr;
             }
         }
-        double dtp=double(tp);
-        double dtn=double(NPOINTS-tp);
+        auto dtp=double(tp);
+        auto dtn=double(NPOINTS-tp);
         std::cout<<"True Positive Rate " <<double(tpr)/dtp<<'\n'
                 <<"False Positive Rate "<<double(fpr)/dtn<<'\n'
                 <<"True Negative Rate " <<double(tnr)/dtn<<'\n'
@@ -333,7 +335,7 @@ void test_random_forest()
     {
         std::cout<<"TESTING 3D Data..."<<std::endl;
 
-        const unsigned NPOINTS=500;
+        constexpr unsigned NPOINTS = 500;
         std::vector<vnl_vector<double > > data(NPOINTS);
         std::vector<unsigned  > training_outputs(NPOINTS,0);
 
@@ -361,7 +363,7 @@ void test_random_forest()
         pca_model1.set(mean1,var1);
 
         pdf1d_flat flatDist;
-        pdf1d_sampler* flat_sampler=VXL_NULLPTR;
+        pdf1d_sampler* flat_sampler=nullptr;
         flat_sampler = flatDist.new_sampler();
         vnl_vector<double  > example(3);
 
@@ -421,8 +423,8 @@ void test_random_forest()
         clsfy_classifier_base* pBaseClassifier=builder.new_classifier();
         TEST("Type is random forest",
              pBaseClassifier->is_a()==std::string("clsfy_random_forest"), true);
-        clsfy_random_forest* pClassifier=dynamic_cast<clsfy_random_forest*>(pBaseClassifier);
-        TEST("Can cast to random forest",pClassifier != VXL_NULLPTR,true);
+        auto* pClassifier=dynamic_cast<clsfy_random_forest*>(pBaseClassifier);
+        TEST("Can cast to random forest",pClassifier != nullptr,true);
 
         builder.build(*pClassifier,
                       training_set_inputs,
@@ -491,8 +493,8 @@ void test_random_forest()
             }
         }
         std::cout<<"tp "<<tp<<" tn"<<std::endl;
-        double dtp=double(tp);
-        double dtn=double(NPOINTS-tp);
+        auto dtp=double(tp);
+        auto dtn=double(NPOINTS-tp);
         double testTPR=double(tpr)/dtp;
         double testFPR=double(fpr)/dtn;
         double testTNR=double(tnr)/dtn;
@@ -510,7 +512,7 @@ void test_random_forest()
 
     {
         std::cout<<"TESTING 5D-Hypersphere Data..."<<std::endl;
-        const unsigned NPOINTS=2000;
+        constexpr unsigned NPOINTS = 2000;
         std::vector<vnl_vector<double > > data(NPOINTS);
 
         pdf1d_gaussian pdferror2(0.0,0.02*0.02);
@@ -566,7 +568,7 @@ void test_random_forest()
         clsfy_random_forest_builder builder;
         builder.set_ntrees(500);
         clsfy_classifier_base* pBaseClassifier=builder.new_classifier();
-        clsfy_random_forest* pClassifier=dynamic_cast<clsfy_random_forest*>(pBaseClassifier);
+        auto* pClassifier=dynamic_cast<clsfy_random_forest*>(pBaseClassifier);
 
         std::vector<std::vector<unsigned> > oobIndices;
         builder.set_oob_indices(&oobIndices);
@@ -650,8 +652,8 @@ void test_random_forest()
                         ++fnr;
                 }
             }
-            double dtp=double(tp);
-            double dtn=double(NPOINTS-tp);
+            auto dtp=double(tp);
+            auto dtn=double(NPOINTS-tp);
             double testTPR=double(tpr)/dtp;
             double testFPR=double(fpr)/dtn;
             double testTNR=double(tnr)/dtn;
@@ -693,8 +695,8 @@ void test_random_forest()
                         ++fnr;
                 }
             }
-            double dtp=double(tp);
-            double dtn=double(NPOINTS-tp);
+            auto dtp=double(tp);
+            auto dtn=double(NPOINTS-tp);
             double testTPR=double(tpr)/dtp;
             double testFPR=double(fpr)/dtn;
             double testTNR=double(tnr)/dtn;

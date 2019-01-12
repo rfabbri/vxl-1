@@ -1,6 +1,8 @@
 #include <iostream>
 #include <cmath>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_image_view.h>
 #include <testlib/testlib_test.h>
 #include <vxl_config.h>
@@ -32,7 +34,7 @@ class test_vtol_extract_topology
 static label_image_type
 image_to_label(const image_type& img)
 {
-  const int nplanes = 1;
+  constexpr int nplanes = 1;
   label_image_type img2(img.ni(), img.nj(), nplanes);
   for (unsigned int i=0; i<img.ni(); i++) {
     for (unsigned int j=0; j<img.nj(); j++) {
@@ -155,10 +157,10 @@ test_image_1a()
   label_image_type img( image_to_label( image_1a() ) );
 
   // edge directions
-  const unsigned R = 1;
-  const unsigned D = 2;
-  const unsigned L = 4;
-  const unsigned U = 8;
+  constexpr unsigned R = 1;
+  constexpr unsigned D = 2;
+  constexpr unsigned L = 4;
+  constexpr unsigned U = 8;
   const unsigned LD = L | D;
   const unsigned LR = L | R;
   const unsigned LU = L | U;
@@ -218,10 +220,10 @@ test_image_1b()
   label_image_type img = image_to_label( image_1b() );
 
   // edge directions
-  const unsigned R = 1;
-  const unsigned D = 2;
-  const unsigned L = 4;
-  const unsigned U = 8;
+  constexpr unsigned R = 1;
+  constexpr unsigned D = 2;
+  constexpr unsigned L = 4;
+  constexpr unsigned U = 8;
   const unsigned LD = L | D;
   const unsigned LR = L | R;
   const unsigned LU = L | U;
@@ -332,12 +334,12 @@ test_image_6()
 
 static
 bool
-has_vertex( vtol_intensity_face_sptr face, double x, double y )
+has_vertex( const vtol_intensity_face_sptr& face, double x, double y )
 {
   static const double tol = 1e-5;
 
   vertex_list* verts = face->outside_boundary_vertices();
-  for (vertex_list::iterator itr = verts->begin();
+  for (auto itr = verts->begin();
        itr != verts->end(); ++itr )
   {
     vtol_vertex_2d* v2d = (*itr)->cast_to_vertex_2d();

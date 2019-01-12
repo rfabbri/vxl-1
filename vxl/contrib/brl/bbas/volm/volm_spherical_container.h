@@ -19,7 +19,9 @@
 #include <cmath>
 #include <map>
 #include <vbl/vbl_ref_count.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_point_3d.h>
 #include <bvrml/bvrml_write.h>
 #include <vnl/vnl_math.h>
@@ -43,7 +45,7 @@ class volm_spherical_container : public vbl_ref_count
 {
  public:
   // constructor
-  volm_spherical_container() {}
+  volm_spherical_container() = default;
   volm_spherical_container(float d_solid_ang, float voxel_min, float max_dist);
 
   // accessor
@@ -54,11 +56,11 @@ class volm_spherical_container : public vbl_ref_count
   //: find the interval of the given depth value, i.e. return interval such that d1 <= value < d2 (caution: interval id is 1 + index in depth_interval_map_)
   unsigned char get_depth_interval(double value);
 
-  void draw_template(std::string vrml_file_name, double dmin);
+  void draw_template(const std::string& vrml_file_name, double dmin);
   void draw_helper(std::ofstream& ofs, double dmin);
   //: paint the wireframe of the voxels with the given ids with the given color
-  void draw_template_painted(std::string vrml_file_name, double dmin, std::vector<unsigned int>& ids, float r, float g, float b, float trans);
-  void draw_template_vis_prob(std::string vrml_file_name, double dmin, std::vector<char>& ids);
+  void draw_template_painted(const std::string& vrml_file_name, double dmin, std::vector<unsigned int>& ids, float r, float g, float b, float trans);
+  void draw_template_vis_prob(const std::string& vrml_file_name, double dmin, std::vector<char>& ids);
 
   double min_voxel_res() { return vmin_; }
 
@@ -81,4 +83,3 @@ protected:
 };
 
 #endif  // volm_spherical_container_h_
-

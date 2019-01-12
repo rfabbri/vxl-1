@@ -5,7 +5,9 @@
 #include <vbl/vbl_ref_count.h>
 #include <vbl/io/vbl_io_smart_ptr.h>
 #include <vsl/vsl_binary_io.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class impl : public vbl_ref_count
 {
@@ -13,10 +15,10 @@ class impl : public vbl_ref_count
   static int reftotal;
   int n;
 
-  impl(int nn);
-  impl(impl const& x) : vbl_ref_count(), n(x.n) {}
+  explicit impl(int nn);
+  impl(impl const& x) : vbl_ref_count(x), n(x.n) {}
   impl();
-  ~impl();
+  ~impl() override;
   void Print (std::ostream &str);
   static void checkcount ();
 };

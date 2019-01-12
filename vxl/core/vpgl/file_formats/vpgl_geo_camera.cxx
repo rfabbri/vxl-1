@@ -4,8 +4,10 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_inverse.h>
@@ -36,12 +38,12 @@ vpgl_geo_camera::vpgl_geo_camera(vpgl_geo_camera const& rhs)
   scale_tag_(rhs.scale_tag_)
 {}
 
-bool vpgl_geo_camera::init_geo_camera(vil_image_resource_sptr const geotiff_img,
-                                      vpgl_lvcs_sptr lvcs,
+bool vpgl_geo_camera::init_geo_camera(vil_image_resource_sptr const& geotiff_img,
+                                      const vpgl_lvcs_sptr& lvcs,
                                       vpgl_geo_camera*& camera)
 {
   // check if the image is tiff
-  vil_tiff_image* geotiff_tiff = dynamic_cast<vil_tiff_image*> (geotiff_img.ptr());
+  auto* geotiff_tiff = dynamic_cast<vil_tiff_image*> (geotiff_img.ptr());
   if (!geotiff_tiff) {
       std::cerr << "vpgl_geo_camera::init_geo_camera : Error casting vil_image_resource to a tiff image.\n";
       return false;
@@ -106,7 +108,7 @@ bool vpgl_geo_camera::init_geo_camera(vil_image_resource_sptr const geotiff_img,
 }
 
 //: define a geo_camera by the image file name (filename should have format such as xxx_N35W73_S0.6x0.6_xxx.tif)
-bool vpgl_geo_camera::init_geo_camera(std::string img_name, unsigned ni, unsigned nj, vpgl_lvcs_sptr lvcs, vpgl_geo_camera*& camera)
+bool vpgl_geo_camera::init_geo_camera(const std::string& img_name, unsigned ni, unsigned nj, const vpgl_lvcs_sptr& lvcs, vpgl_geo_camera*& camera)
 {
   // determine the translation matrix from the image file name and construct a geo camera
   std::string name = vul_file::strip_directory(img_name);
@@ -119,12 +121,12 @@ bool vpgl_geo_camera::init_geo_camera(std::string img_name, unsigned ni, unsigne
   // determine the lat, lon, hemisphere (North or South) and direction (East or West)
   std::string hemisphere, direction;
   float lon, lat, scale_lat, scale_lon;
-  std::size_t n = n_coords.find("N");
+  std::size_t n = n_coords.find('N');
   if (n < n_coords.size())
     hemisphere = "N";
   else
     hemisphere = "S";
-  n = n_coords.find("E");
+  n = n_coords.find('E');
   if (n < n_coords.size())
     direction = "E";
   else
@@ -155,7 +157,7 @@ bool vpgl_geo_camera::init_geo_camera(std::string img_name, unsigned ni, unsigne
     std::cout << " lower right corner in the image is: " << hemisphere << lat << direction << lon-scale_lon << std::endl;
   else
     std::cout << " lower right corner in the image is: " << hemisphere << lat << direction << lon+scale_lon << std::endl;
-  vnl_matrix<double> trans_matrix(4,4,0,VXL_NULLPTR);
+  vnl_matrix<double> trans_matrix(4,4,0,nullptr);
   //divide by ni-1 to account for 1 pixel overlap with the next tile
   if (direction == "E") {
     trans_matrix[0][3] = lon - 0.5/(ni-1.0);
@@ -200,7 +202,7 @@ bool vpgl_geo_camera::init_geo_camera(std::string img_name, unsigned ni, unsigne
 }
 
 // loads a geo_camera from the file and uses global WGS84 coordinates, so no need to convert negative values to positives in the global_to_img method as in the previous method
-bool vpgl_geo_camera::init_geo_camera_from_filename(std::string img_name, unsigned ni, unsigned nj, vpgl_lvcs_sptr lvcs, vpgl_geo_camera*& camera)
+bool vpgl_geo_camera::init_geo_camera_from_filename(const std::string& img_name, unsigned ni, unsigned nj, const vpgl_lvcs_sptr& lvcs, vpgl_geo_camera*& camera)
 {
   // determine the translation matrix from the image file name and construct a geo camera
   std::string name = vul_file::strip_directory(img_name);
@@ -213,12 +215,12 @@ bool vpgl_geo_camera::init_geo_camera_from_filename(std::string img_name, unsign
   // determine the lat, lon, hemisphere (North or South) and direction (East or West)
   std::string hemisphere, direction;
   float lon, lat, scale;
-  std::size_t n = n_coords.find("N");
+  std::size_t n = n_coords.find('N');
   if (n < n_coords.size())
     hemisphere = "N";
   else
     hemisphere = "S";
-  n = n_coords.find("E");
+  n = n_coords.find('E');
   if (n < n_coords.size())
     direction = "E";
   else
@@ -247,7 +249,7 @@ bool vpgl_geo_camera::init_geo_camera_from_filename(std::string img_name, unsign
   std::cout << " upper left corner in the image is: " << hemisphere << lat+scale << direction << lon << std::endl;
   std::cout << " lower right corner in the image is: " << hemisphere << lat << direction << lon+scale << std::endl;
 
-  vnl_matrix<double> trans_matrix(4,4,0,VXL_NULLPTR);
+  vnl_matrix<double> trans_matrix(4,4,0,nullptr);
   //divide by ni-1 to account for 1 pixel overlap with the next tile
   trans_matrix[0][3] = lon - 0.5/(ni-1.0);
   trans_matrix[0][0] = scale/(ni-1.0);
@@ -260,7 +262,7 @@ bool vpgl_geo_camera::init_geo_camera_from_filename(std::string img_name, unsign
 
 
 //: init using a tfw file, reads the transformation matrix from the tfw
-bool vpgl_geo_camera::init_geo_camera(std::string tfw_name, vpgl_lvcs_sptr lvcs, int utm_zone, unsigned northing, vpgl_geo_camera*& camera)
+bool vpgl_geo_camera::init_geo_camera(const std::string& tfw_name, const vpgl_lvcs_sptr& lvcs, int utm_zone, unsigned northing, vpgl_geo_camera*& camera)
 {
 
   std::ifstream ifs(tfw_name.c_str());
@@ -355,7 +357,7 @@ void vpgl_geo_camera::backproject(const double u, const double v,
     lvcs_->global_to_local(lon, lat, elev, vpgl_lvcs::wgs84, x, y, z);
 }
 
-void vpgl_geo_camera::translate(double tx, double ty, double z)
+void vpgl_geo_camera::translate(double tx, double ty, double  /*z*/)
 {
   // use the scale values
   if (scale_tag_) {
@@ -515,7 +517,7 @@ void vpgl_geo_camera::save_as_tfw(std::string const& tfw_filename)
   ofs.close();
 }
 
-bool vpgl_geo_camera::img_four_corners_in_utm(const unsigned ni, const unsigned nj, double elev, double& e1, double& n1, double& e2, double& n2)
+bool vpgl_geo_camera::img_four_corners_in_utm(const unsigned ni, const unsigned nj, double  /*elev*/, double& e1, double& n1, double& e2, double& n2)
 {
   if (!is_utm) {
     std::cerr << "In vpgl_geo_camera::img_four_corners_in_utm() -- UTM hasn't been set!\n";
@@ -666,4 +668,3 @@ void vpgl_geo_camera::b_read(vsl_b_istream& is)
     return;
   }
 }
-

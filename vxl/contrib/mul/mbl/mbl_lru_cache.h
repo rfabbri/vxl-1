@@ -10,8 +10,10 @@
 #include <list>
 #include <map>
 #include <utility>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 //: Least recently used cache
 // This cache is optimised for speed and is not very memory efficient.
@@ -61,7 +63,7 @@ public:
       (*it).second.second = l_.begin();
       return &((*it).second.first);
     }
-    else return VXL_NULLPTR;
+    else return nullptr;
   }
 
 

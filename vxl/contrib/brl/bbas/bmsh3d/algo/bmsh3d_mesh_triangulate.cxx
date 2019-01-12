@@ -7,11 +7,13 @@
 // \author MingChing Chang
 
 #include "bmsh3d_mesh_tri.h"
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_vector_3d.h>
 #ifdef DEBUG
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #endif
 
 //: Triangulate the input mesh face F into a set of triangular faces.
@@ -59,8 +61,8 @@ bool bmsh3d_triangulate_face (const bmsh3d_face* F, std::vector<std::vector<int>
     // For any given point P on the 3D polygon, can project to the plane
     //  OP = u e1 + v e2
     vgl_vector_3d<double> op = V->pt() - o;
-    float u = (float) dot_product (op, e1);
-    float v = (float) dot_product (op, e2);
+    auto u = (float) dot_product (op, e1);
+    auto v = (float) dot_product (op, e2);
 
     // Use the (u, v) on the 2D plane.
     // Should compute normal and project to the polygon plane!
@@ -104,10 +106,10 @@ bool bmsh3d_triangulate_face (const bmsh3d_face* F, std::vector<std::vector<int>
 
 bmsh3d_mesh* generate_tri_mesh (bmsh3d_mesh* M)
 {
-  bmsh3d_mesh* triM = new bmsh3d_mesh;
+  auto* triM = new bmsh3d_mesh;
 
   // Put all existing vertices into the new triM
-  std::map<int, bmsh3d_vertex*>::iterator vit = M->vertexmap().begin();
+  auto vit = M->vertexmap().begin();
   for (; vit != M->vertexmap().end(); vit++) {
     bmsh3d_vertex* V = (*vit).second;
 
@@ -118,7 +120,7 @@ bmsh3d_mesh* generate_tri_mesh (bmsh3d_mesh* M)
   }
 
   // Triangulate each face of the mesh
-  std::map<int, bmsh3d_face*>::iterator it = M->facemap().begin();
+  auto it = M->facemap().begin();
   for (; it != M->facemap().end(); it++) {
     bmsh3d_face* F = (*it).second;
 
@@ -130,8 +132,7 @@ bmsh3d_mesh* generate_tri_mesh (bmsh3d_mesh* M)
       // make a new triangular face
       bmsh3d_face* newF = triM->_new_face ();
 
-      for (unsigned int i=0; i<vertices.size(); i++) {
-        bmsh3d_vertex* V = vertices[i];
+      for (auto V : vertices) {
         int id = V->id();
         bmsh3d_vertex* newV = triM->vertexmap (id);
         newF->_ifs_add_vertex (newV);
@@ -145,14 +146,14 @@ bmsh3d_mesh* generate_tri_mesh (bmsh3d_mesh* M)
       bmsh3d_triangulate_face (F, tri_faces);
 
       // For each resulting triangle, add a new face.
-      for (unsigned int i=0; i<tri_faces.size(); i++) {
+      for (auto & tri_face : tri_faces) {
         bmsh3d_face* newF = triM->_new_face ();
 
-        bmsh3d_vertex* V0 = triM->vertexmap (tri_faces[i][0]);
+        bmsh3d_vertex* V0 = triM->vertexmap (tri_face[0]);
         newF->_ifs_add_vertex (V0);
-        bmsh3d_vertex* V1 = triM->vertexmap (tri_faces[i][1]);
+        bmsh3d_vertex* V1 = triM->vertexmap (tri_face[1]);
         newF->_ifs_add_vertex (V1);
-        bmsh3d_vertex* V2 = triM->vertexmap (tri_faces[i][2]);
+        bmsh3d_vertex* V2 = triM->vertexmap (tri_face[2]);
         newF->_ifs_add_vertex (V2);
 
         triM->_add_face (newF);

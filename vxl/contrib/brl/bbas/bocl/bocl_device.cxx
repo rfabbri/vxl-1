@@ -7,7 +7,9 @@
 #include "bocl_utils.h"
 //:
 // \file
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 bocl_device::bocl_device(cl_device_id& device) : device_(device)
@@ -18,7 +20,7 @@ bocl_device::bocl_device(cl_device_id& device) : device_(device)
 
   //Create a context from the device ID
   int status = 1;
-  context_ = clCreateContext(VXL_NULLPTR, 1, &device_, VXL_NULLPTR, VXL_NULLPTR, &status);
+  context_ = clCreateContext(nullptr, 1, &device_, nullptr, nullptr, &status);
   if (!check_val(status,CL_SUCCESS,"clCreateContextFromType failed: " + error_to_string(status))) {
     return;
   }
@@ -45,13 +47,13 @@ std::ostream& operator <<(std::ostream &s, bocl_device& dev)
 
 
 //: Binary save bocl_device  from stream.
-void vsl_b_write(vsl_b_ostream& os, bocl_device const& scene){}
-void vsl_b_write(vsl_b_ostream& os, const bocl_device* &p){}
-void vsl_b_write(vsl_b_ostream& os, bocl_device_sptr& sptr){}
-void vsl_b_write(vsl_b_ostream& os, bocl_device_sptr const& sptr){}
+void vsl_b_write(vsl_b_ostream&  /*os*/, bocl_device const&  /*scene*/){}
+void vsl_b_write(vsl_b_ostream&  /*os*/, const bocl_device* & /*p*/){}
+void vsl_b_write(vsl_b_ostream&  /*os*/, bocl_device_sptr&  /*sptr*/){}
+void vsl_b_write(vsl_b_ostream&  /*os*/, bocl_device_sptr const&  /*sptr*/){}
 
 //: Binary load bocl_device  from stream.
-void vsl_b_read(vsl_b_istream& is, bocl_device &scene){}
-void vsl_b_read(vsl_b_istream& is, bocl_device* p){}
-void vsl_b_read(vsl_b_istream& is, bocl_device_sptr& sptr){}
-void vsl_b_read(vsl_b_istream& is, bocl_device_sptr const& sptr){}
+void vsl_b_read(vsl_b_istream&  /*is*/, bocl_device & /*scene*/){}
+void vsl_b_read(vsl_b_istream&  /*is*/, bocl_device*  /*p*/){}
+void vsl_b_read(vsl_b_istream&  /*is*/, bocl_device_sptr&  /*sptr*/){}
+void vsl_b_read(vsl_b_istream&  /*is*/, bocl_device_sptr const&  /*sptr*/){}

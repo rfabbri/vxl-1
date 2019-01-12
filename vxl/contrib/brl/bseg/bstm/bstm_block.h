@@ -18,7 +18,9 @@
 #include <boxm2/basic/boxm2_array_3d.h>
 #include <vnl/vnl_vector_fixed.h>
 #include <vgl/vgl_vector_3d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //smart pointer stuff
 #include <vbl/vbl_ref_count.h>
@@ -36,7 +38,7 @@ class bstm_block : public vbl_ref_count
 
  public:
 
-  bstm_block(bstm_block_id id, bstm_block_metadata data, char* buffer);
+  bstm_block(const bstm_block_id& id, bstm_block_metadata data, char* buffer);
 
   //: creates empty block from metadata
   bstm_block(bstm_block_metadata data);
@@ -45,7 +47,7 @@ class bstm_block : public vbl_ref_count
   bool init_empty_block(bstm_block_metadata data);
 
   //: default destructor
-  virtual ~bstm_block() { if (buffer_) delete[] buffer_; }
+  ~bstm_block() override { if (buffer_) delete[] buffer_; }
 
   //: all IO manipulates char buffers
   bool b_read(char* buffer);

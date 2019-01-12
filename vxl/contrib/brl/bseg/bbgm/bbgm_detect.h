@@ -18,7 +18,10 @@
 #include "bbgm_image_of.h"
 #include "bbgm_planes_to_sample.h"
 #include <bsta/bsta_detector_mixture.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: For each pixel, detect at all \a se neighbors in bbgm_image
 //  \returns true if detection succeeds at any neighbor

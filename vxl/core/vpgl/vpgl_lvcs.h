@@ -37,7 +37,9 @@
 // \endverbatim
 /////////////////////////////////////////////////////////////////////////////
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_binary_io.h>
 #include <vbl/vbl_ref_count.h>
 //#include <vpgl/vpgl_dll.h>
@@ -232,4 +234,3 @@ inline void vpgl_lvcs::radians_to_dms(double rad, int& degrees, int& minutes, do
   degrees_to_dms(radians_to_degrees(rad), degrees,  minutes, seconds);
 }
 #endif // vpgl_lvcs_h_
-

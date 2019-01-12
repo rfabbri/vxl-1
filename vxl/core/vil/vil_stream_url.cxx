@@ -1,7 +1,4 @@
 // This is core/vil/vil_stream_url.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
@@ -15,10 +12,11 @@
 #include "vil_stream_url.h"
 #include <vil/vil_stream_core.h>
 
-#include <vcl_cassert.h>
+#include <cassert>
 #undef sprintf
-#include <vcl_cstdio.h> // for vcl_snprintf()
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #if defined(unix) || defined(__unix) || defined(__unix__) || defined(__APPLE__)
 
@@ -26,11 +24,8 @@
 # include <netdb.h>        // gethostbyname(), sockaddr_in()
 # include <sys/socket.h>
 # include <netinet/in.h>   // htons()
-# ifdef __alpha
-#  include <fp.h>           // htons() [ on e.g. DEC alpha, htons is in machine/endian.h]
-# endif
 # define SOCKET int
-#elif defined (VCL_WIN32) && !defined(__CYGWIN__)
+#elif defined (_WIN32) && !defined(__CYGWIN__)
 # include <winsock2.h>
 #endif
 
@@ -78,7 +73,7 @@ static std::string encode_base64(const std::string& in)
 {
   std::string out;
   unsigned int i = 0, line_octets = 0;
-  const unsigned int l = (unsigned int)(in.size());
+  const auto l = (unsigned int)(in.size());
   char data[3];
   while (i < l)
   {
@@ -117,7 +112,7 @@ static std::string encode_base64(const std::string& in)
 
 
 vil_stream_url::vil_stream_url(char const *url)
-  : u_(VXL_NULLPTR)
+  : u_(nullptr)
 {
   if (std::strncmp(url, "http://", 7) != 0)
     return; // doesn't look like a URL to me....
@@ -142,7 +137,7 @@ vil_stream_url::vil_stream_url(char const *url)
 
   // port?
   if (host.size() > 0)
-  for (unsigned int i=(unsigned int)(host.size()-1); i>0; --i)
+  for (auto i=(unsigned int)(host.size()-1); i>0; --i)
     if (host[i] == ':') {
       port = std::atoi(host.c_str() + i + 1);
       host = std::string(host.c_str(), host.c_str() + i);
@@ -164,7 +159,7 @@ vil_stream_url::vil_stream_url(char const *url)
            << "port = " << port << std::endl;
 #endif
 
-#if defined(VCL_WIN32) && !defined(__CYGWIN__)
+#if defined(_WIN32) && !defined(__CYGWIN__)
   static int called_WSAStartup;
   if (called_WSAStartup==0)
   {
@@ -182,7 +177,7 @@ vil_stream_url::vil_stream_url(char const *url)
                              SOCK_STREAM,  // two-way, reliable, connection-based stream socket.
                              PF_UNSPEC);   // protocol number.
 
-#if defined(VCL_WIN32) && !defined(__CYGWIN__)
+#if defined(_WIN32) && !defined(__CYGWIN__)
   if (tcp_socket == INVALID_SOCKET) {
     std::cerr << __FILE__ ": failed to create socket.\n";
 # ifndef NDEBUG
@@ -203,7 +198,7 @@ vil_stream_url::vil_stream_url(char const *url)
   hostent *hp = gethostbyname(host.c_str());
   if (! hp) {
     std::cerr << __FILE__ ": failed to lookup host\n";
-#if defined(VCL_WIN32) && !defined(__CYGWIN__)
+#if defined(_WIN32) && !defined(__CYGWIN__)
     closesocket(tcp_socket);
 #else
     close(tcp_socket);
@@ -221,7 +216,7 @@ vil_stream_url::vil_stream_url(char const *url)
   if (connect(tcp_socket , (sockaddr *) &my_addr, sizeof my_addr) < 0) {
     std::cerr << __FILE__ ": failed to connect to host\n";
     //perror(__FILE__);
-#if defined(VCL_WIN32) && !defined(__CYGWIN__)
+#if defined(_WIN32) && !defined(__CYGWIN__)
     closesocket(tcp_socket);
 #else
     close(tcp_socket);
@@ -234,18 +229,18 @@ vil_stream_url::vil_stream_url(char const *url)
   char buffer[4096];
 
   // send HTTP 1.1 request.
-  vcl_snprintf(buffer, 4090, "GET /%s / HTTP/1.1\r\n", path.c_str());
+  std::snprintf(buffer, 4090, "GET /%s / HTTP/1.1\r\n", path.c_str());
   if (auth != "")
-    vcl_snprintf(buffer+std::strlen(buffer), 4090-std::strlen(buffer),
+    std::snprintf(buffer+std::strlen(buffer), 4090-std::strlen(buffer),
                  "Authorization:  Basic %s\n", encode_base64(auth).c_str());
 
-  if (vcl_snprintf(buffer+std::strlen(buffer), 4090-std::strlen(buffer), "\r\n") < 0)
+  if (std::snprintf(buffer+std::strlen(buffer), 4090-std::strlen(buffer), "\r\n") < 0)
   {
     std::cerr << "ERROR: vil_stream_url buffer overflow.";
     std::abort();
   }
 
-#if defined(VCL_WIN32) && !defined(__CYGWIN__)
+#if defined(_WIN32) && !defined(__CYGWIN__)
   if (send(tcp_socket, buffer, (int)std::strlen(buffer), 0) < 0)
   {
     std::cerr << __FILE__ ": error sending HTTP request\n";
@@ -270,7 +265,7 @@ vil_stream_url::vil_stream_url(char const *url)
   {
     unsigned entity_marker = 0; // count end of header CR and LFs
     vil_streampos n;
-#if defined(VCL_WIN32) && !defined(__CYGWIN__)
+#if defined(_WIN32) && !defined(__CYGWIN__)
     while ((n = recv(tcp_socket, buffer, sizeof buffer,0 )) > 0L)
 #else
     while ((n = ::read(tcp_socket, buffer, sizeof buffer)) > 0L)
@@ -314,7 +309,7 @@ vil_stream_url::vil_stream_url(char const *url)
 
 
   // close connection to server.
-#if defined(VCL_WIN32) && !defined(__CYGWIN__)
+#if defined(_WIN32) && !defined(__CYGWIN__)
   closesocket(tcp_socket);
 #else
   close(tcp_socket);
@@ -325,6 +320,6 @@ vil_stream_url::~vil_stream_url()
 {
   if (u_) {
     u_->unref();
-    u_ = VXL_NULLPTR;
+    u_ = nullptr;
   }
 }

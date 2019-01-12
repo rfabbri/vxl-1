@@ -1,7 +1,4 @@
 // This is core/vil/vil_clamp.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Ian Scott.
@@ -15,8 +12,10 @@
 
 #include <cstring>
 #include "vil_clamp.h"
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vil/vil_property.h>
 #include <vil/vil_exception.h>
 
@@ -48,7 +47,7 @@ vil_image_view_base_sptr vil_clamp_image_resource::get_copy_view(unsigned i0, un
                                                                  unsigned j0, unsigned nj) const
 {
   vil_image_view_base_sptr vs = src_->get_copy_view(i0, ni, j0, nj);
-  if (!vs) return VXL_NULLPTR;
+  if (!vs) return nullptr;
 
   switch (vs->pixel_format())
   {
@@ -75,7 +74,7 @@ vil_image_view_base_sptr vil_clamp_image_resource::get_copy_view(unsigned i0, un
   default:
     vil_exception_warning(vil_exception_unsupported_pixel_format(
       vs->pixel_format(), "vil_clamp_image_resource::get_copy_view") );
-    return VXL_NULLPTR;
+    return nullptr;
   }
   return vs;
 }

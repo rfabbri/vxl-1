@@ -7,7 +7,9 @@
 #include <iostream>
 #include <fstream>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_box_3d.h>
 #include <vnl/vnl_vector_fixed.h>
 #include <vil/vil_image_view.h>
@@ -19,7 +21,6 @@
 #include <boxm2/io/boxm2_lru_cache.h>
 #include <vul/vul_file.h>
 #include "../boxm2_vecf_eye_scene.h"
-#include <vul/vul_timer.h>
 #include "../boxm2_vecf_eye_params.h"
 typedef vnl_vector_fixed<unsigned char, 16> uchar16;
 
@@ -122,4 +123,3 @@ void test_eye()
 
   }
 TESTMAIN( test_eye );
-

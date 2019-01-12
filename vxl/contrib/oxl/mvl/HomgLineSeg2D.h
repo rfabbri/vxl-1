@@ -1,9 +1,6 @@
 // This is oxl/mvl/HomgLineSeg2D.h
 #ifndef HomgLineSeg2D_h_
 #define HomgLineSeg2D_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Homogeneous 2D line segment
@@ -20,7 +17,9 @@
 #include <iosfwd>
 #include <mvl/HomgLine2D.h>
 #include <mvl/HomgPoint2D.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class HomgLineSeg2D : public HomgLine2D
 {
@@ -30,10 +29,10 @@ class HomgLineSeg2D : public HomgLine2D
 
   // Constructors/Initializers/Destructors-------------------------------------
 
-  HomgLineSeg2D () {}
+  HomgLineSeg2D () = default;
   HomgLineSeg2D (const HomgPoint2D& point1, const HomgPoint2D& point2);
   HomgLineSeg2D (double x0, double y0, double x1, double y1);
-  ~HomgLineSeg2D () {}
+  ~HomgLineSeg2D () = default;
 
   // Data Access---------------------------------------------------------------
 

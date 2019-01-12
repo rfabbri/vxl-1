@@ -1,9 +1,6 @@
 // This is mul/vil3d/vil3d_image_view_base.h
 #ifndef vil3d_image_view_base_h_
 #define vil3d_image_view_base_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief A base class reference-counting view of some image data.
@@ -18,8 +15,10 @@
 #include <string>
 #include <iostream>
 #include <cstddef>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_pixel_format.h>
 #include <vil/vil_smart_ptr.h>
 #include <vgl/vgl_box_3d.h>
@@ -48,7 +47,7 @@ class vil3d_image_view_base
 
  public:
   // The destructor must be virtual so that the memory chunk is destroyed.
-  virtual ~vil3d_image_view_base() {}
+  virtual ~vil3d_image_view_base() = default;
 
   //: Width
   unsigned ni()  const {return ni_;}
@@ -62,8 +61,8 @@ class vil3d_image_view_base
   //: Return a box describing the voxel region
   vgl_box_3d<int> bounds() const
   {
-    if (size()==0) return vgl_box_3d<int>();  // Empty
-    return vgl_box_3d<int>(0,0,0,ni()-1,nj()-1,nk()-1);
+    if (size()==0) return {};  // Empty
+    return {0,0,0,static_cast<int>(ni()-1),static_cast<int>(nj()-1),static_cast<int>(nk()-1)};
   }
 
   //: The number of pixels.

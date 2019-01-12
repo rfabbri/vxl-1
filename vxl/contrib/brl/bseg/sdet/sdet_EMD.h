@@ -14,7 +14,9 @@
 #include <cmath>
 #include <iostream>
 #include <algorithm>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //#include <sdet/sdet_BS.h>
 
@@ -49,7 +51,7 @@ double sdet_bhat_dist(const sdet_bin hist1[], const sdet_bin hist2[]);
 //------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------
 //Color Histogram distance functions
-double sdet_color_EMD(sdet_color_sig *sig1, sdet_color_sig *sig2, sdet_flow* flow=VXL_NULLPTR, int* flowsize=VXL_NULLPTR);
+double sdet_color_EMD(sdet_color_sig *sig1, sdet_color_sig *sig2, sdet_flow* flow=nullptr, int* flowsize=nullptr);
 double sdet_color_chi_sq_dist(const sdet_color_sig &sig1, const sdet_color_sig &sig2);
 double sdet_color_bhat_dist(const sdet_color_sig &sig1, const sdet_color_sig &sig2);
 //------------------------------------------------------------------------------------------
@@ -73,13 +75,13 @@ public:
 
   sdet_signature()
   {
-    for (int i=0; i<NBINS; i++){
-      bins[i].value=0;
-      bins[i].weight=0;
-      bins[i].wsum=0;
+    for (auto & bin : bins){
+      bin.value=0;
+      bin.weight=0;
+      bin.wsum=0;
     }
   }
-  ~sdet_signature(){}
+  ~sdet_signature()= default;
 
   //: The EMD dist is the default distance between two signatures
   double operator-(const sdet_signature& sig) const
@@ -112,8 +114,8 @@ public:
   double Features[MAXCLUSTERS]; //fixed number of features for now (this is not strictly required)
   double Weights[MAXCLUSTERS];
 
-  sdet_color_sig(){}
-  ~sdet_color_sig(){}
+  sdet_color_sig()= default;
+  ~sdet_color_sig()= default;
 
   //: The EMD dist is the default distance between two signatures
   double operator-(const sdet_color_sig& /*sig1*/) const

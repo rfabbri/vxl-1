@@ -1,14 +1,13 @@
 // This is core/vil/vil_pyramid_image_resource.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 #include <cstring>
 #include <vector>
 #include "vil_pyramid_image_resource.h"
 //:
 // \file
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_property.h>
 #include <vil/vil_convert.h>
 #include <vil/vil_blocked_image_resource.h>
@@ -18,11 +17,9 @@
 #include <vil/vil_load.h>
 
 
-vil_pyramid_image_resource::vil_pyramid_image_resource()
-{}
+vil_pyramid_image_resource::vil_pyramid_image_resource() = default;
 
-vil_pyramid_image_resource::~vil_pyramid_image_resource()
-{}
+vil_pyramid_image_resource::~vil_pyramid_image_resource() = default;
 
 bool vil_pyramid_image_resource::get_property(char const* tag, void* /*value*/) const
 {
@@ -105,7 +102,7 @@ void convert_multi_plane_from_float(std::vector<vil_image_view<float> >& fblk,
                                     vil_image_view<unsigned char>& blk)
 {
   unsigned int ni = fblk[0].ni(), nj = fblk[0].nj();
-  unsigned int np = (unsigned int)(fblk.size());
+  auto np = (unsigned int)(fblk.size());
   for (unsigned int p = 0; p<np; ++p)
     for (unsigned int j = 0; j<nj; ++j)
       for (unsigned int i= 0; i<ni; ++i)
@@ -117,7 +114,7 @@ void convert_multi_plane_from_float(std::vector<vil_image_view<float> >& fblk,
                                     vil_image_view<unsigned short>& blk)
 {
   unsigned int ni = fblk[0].ni(), nj = fblk[0].nj();
-  unsigned int np = (unsigned int)(fblk.size());
+  auto np = (unsigned int)(fblk.size());
   for (unsigned int p = 0; p<np; ++p)
     for (unsigned int j = 0; j<nj; ++j)
       for (unsigned int i= 0; i<ni; ++i)
@@ -302,7 +299,7 @@ decimate(vil_image_resource_sptr const& resc, char const* filename,
          char const* format)
 {
   if (!resc)
-    return VXL_NULLPTR;
+    return nullptr;
   vil_pixel_format fmt = vil_pixel_format_component_format(resc->pixel_format());
   switch (fmt)
   {
@@ -322,14 +319,14 @@ decimate(vil_image_resource_sptr const& resc, char const* filename,
       break;
     default:
       std::cout << "unrecognized pixel format in vil_pyramid_image_resource::decimate()\n";
-      return VXL_NULLPTR;
+      return nullptr;
   }
   //first determine if the resource is blocked, if not create a facade
   vil_blocked_image_resource_sptr brsc = blocked_image_resource(resc);
   if (brsc&&(brsc->size_block_i()%2!=0||brsc->size_block_j()%2!=0))
   {
     std::cout << "Blocked pyramid images must have even block sizes\n";
-    return VXL_NULLPTR;
+    return nullptr;
   }
   if (!brsc)
     brsc = new vil_blocked_image_facade(resc);
@@ -349,7 +346,7 @@ decimate(vil_image_resource_sptr const& resc, char const* filename,
                                      format);
     //fill the resource with decimated blocks.
     if (!blocked_decimate(brsc, dec_resc))
-      return VXL_NULLPTR;
+      return nullptr;
   } //file scope to close resource
   //reopen resource for reading
   vil_image_resource_sptr temp = vil_load_image_resource(filename);

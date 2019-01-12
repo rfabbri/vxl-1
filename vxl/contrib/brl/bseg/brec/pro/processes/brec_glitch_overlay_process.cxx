@@ -15,7 +15,9 @@
 #include <iostream>
 #include <bprb/bprb_func_process.h>
 #include <bprb/bprb_parameters.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <brdb/brdb_value.h>
 #include <vil/vil_image_view.h>
 #include <vil/vil_convert.h>
@@ -29,17 +31,17 @@ bool brec_glitch_overlay_process_cons(bprb_func_process& pro)
   //inputs
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("vil_image_view_base_sptr"); //input probability frame
-  input_types.push_back("vil_image_view_base_sptr"); //input img
-  input_types.push_back("unsigned"); // size of the inner-square for the glitch mask (e.g. 5 means we're detecting foreground islands of 5x5 on background)
+  input_types.emplace_back("vil_image_view_base_sptr"); //input probability frame
+  input_types.emplace_back("vil_image_view_base_sptr"); //input img
+  input_types.emplace_back("unsigned"); // size of the inner-square for the glitch mask (e.g. 5 means we're detecting foreground islands of 5x5 on background)
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   //output
   std::vector<std::string> output_types;
-  output_types.push_back("vil_image_view_base_sptr");  // output float overlayed glitch map
-  output_types.push_back("vil_image_view_base_sptr");  // output float overlayed glitch map as stretched to byte img
-  output_types.push_back("vil_image_view_base_sptr");  // output the glitch map as overlayed on input img
+  output_types.emplace_back("vil_image_view_base_sptr");  // output float overlayed glitch map
+  output_types.emplace_back("vil_image_view_base_sptr");  // output float overlayed glitch map as stretched to byte img
+  output_types.emplace_back("vil_image_view_base_sptr");  // output the glitch map as overlayed on input img
   ok = pro.set_output_types(output_types);
   return ok;
 }
@@ -67,7 +69,7 @@ bool brec_glitch_overlay_process(bprb_func_process& pro)
     return false;
   vil_image_view<vxl_byte> input_img(img);
 
-  unsigned c_size = pro.get_input<unsigned>(i++);  // center size
+  auto c_size = pro.get_input<unsigned>(i++);  // center size
 
   vil_image_view<float> out(ni, nj, 1);
   brec_glitch::extend_prob_to_square_region(c_size, map, out);
@@ -102,4 +104,3 @@ bool brec_glitch_overlay_process(bprb_func_process& pro)
 
   return true;
 }
-

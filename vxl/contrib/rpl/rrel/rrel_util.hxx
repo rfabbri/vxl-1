@@ -8,8 +8,10 @@
 #include <vector>
 #include "rrel_util.h"
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vnl/vnl_math.h>
 
@@ -150,7 +152,7 @@ void rrel_util_intercept_adjust_stats( Ran first, Ran last,
   rrel_util_intercept_adjustment( first, last, center, half_width, dof );
 
   T std_dev = half_width * T(1.4826) * T( 1 + 5.0/(count-dof) );
-  const T mu = 2.5;
+  constexpr T mu = 2.5;
   T bound = mu * std_dev;
 
   Ran begin_itr;

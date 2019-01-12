@@ -8,14 +8,16 @@
 // \author Yi Dong
 // \date April 14, 2014
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpgl/vpgl_utm.h>
 
 // global variables and functions
 namespace vpgl_compute_utm_zone_process_globals
 {
-  const unsigned n_inputs_  = 2;
-  const unsigned n_outputs_ = 4;
+  constexpr unsigned n_inputs_ = 2;
+  constexpr unsigned n_outputs_ = 4;
 }
 
 //: initialization
@@ -48,8 +50,8 @@ bool vpgl_compute_utm_zone_process(bprb_func_process& pro)
   }
   // get input
   unsigned i = 0;
-  double lon = pro.get_input<double>(i++);
-  double lat = pro.get_input<double>(i++);
+  auto lon = pro.get_input<double>(i++);
+  auto lat = pro.get_input<double>(i++);
 
   vpgl_utm utm;
   double x, y;

@@ -7,10 +7,12 @@
 // \date   25 Nov 2002
 
 #include <iostream>
-#include <vcl_memory.h>
+#include <memory>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include "rgrl_scale_estimator.h"
 
-#include <vcl_compiler.h>
 #include <vnl/vnl_matrix.h>
 
 class rrel_objective;
@@ -36,29 +38,29 @@ class rgrl_scale_est_closest
   //robust scale.  The one that is commonly used is the MUSE objective
   //function. The flag \a do_signature_scale determines whether a signature
   //covariance will be estimated.
-  rgrl_scale_est_closest( vcl_unique_ptr<rrel_objective>  obj,
+  rgrl_scale_est_closest( std::unique_ptr<rrel_objective>  obj,
                           bool                          do_signature_scale = false );
 
-  ~rgrl_scale_est_closest();
+  ~rgrl_scale_est_closest() override;
 
   rgrl_scale_sptr
   estimate_unweighted( rgrl_match_set const& match_set,
                        rgrl_scale_sptr const& current_scales,
-                       bool penalize_scaling = false ) const;
+                       bool penalize_scaling = false ) const override;
 
   rgrl_scale_sptr
   estimate_weighted( rgrl_match_set const& match_set,
                      rgrl_scale_sptr const& current_scales,
                      bool use_signature_only = false,
-                     bool penalize_scaling = false) const;
+                     bool penalize_scaling = false) const override;
 
   // Defines type-related functions
   rgrl_type_macro( rgrl_scale_est_closest, rgrl_scale_estimator );
 
  private:
   //disabled
-  rgrl_scale_est_closest( rgrl_scale_est_closest const& );
-  rgrl_scale_est_closest& operator=( rgrl_scale_est_closest const& );
+  rgrl_scale_est_closest( rgrl_scale_est_closest const& ) = delete;
+  rgrl_scale_est_closest& operator=( rgrl_scale_est_closest const& ) = delete;
 
   bool
   compute_geometric_scale( double& scale,
@@ -71,7 +73,7 @@ class rgrl_scale_est_closest
 
  protected:
   bool do_signature_scale_;
-  vcl_unique_ptr<rrel_objective> obj_;
+  std::unique_ptr<rrel_objective> obj_;
 };
 
 #endif // rgrl_scale_est_closest_h_

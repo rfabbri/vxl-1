@@ -8,8 +8,10 @@
 #include <vgl/algo/vgl_fit_lines_2d.h>
 #include <vsol/vsol_polygon_2d.h>
 #include <vnl/vnl_math.h>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #define TOL                   (1.0e-1)
 #define IS_ALMOST_ZERO(X)     (std::abs(X) < TOL)
@@ -23,8 +25,8 @@ bcvr_cv_cor::bcvr_cv_cor()
   open_curve_matching_ = false;
 }
 
-bcvr_cv_cor::bcvr_cv_cor(const bsol_intrinsic_curve_2d_sptr c1,
-                         const bsol_intrinsic_curve_2d_sptr c2,
+bcvr_cv_cor::bcvr_cv_cor(const bsol_intrinsic_curve_2d_sptr& c1,
+                         const bsol_intrinsic_curve_2d_sptr& c2,
                          std::vector< std::pair <int,int> >& map,
                          int n1)
 : final_cost_(0), final_norm_cost_(0)
@@ -34,7 +36,8 @@ bcvr_cv_cor::bcvr_cv_cor(const bsol_intrinsic_curve_2d_sptr c1,
   // save pointers to the original polygons also
   // (might be line fitted versions of input polygons to dbcvr_clsd_cvmatch)
   std::vector<vsol_point_2d_sptr> tmp;
-  for (int i = 0; i<n1; i++)
+  tmp.reserve(n1);
+for (int i = 0; i<n1; i++)
     tmp.push_back(c1->vertex(i));
   poly1_ = new vsol_polygon_2d(tmp);
   tmp.clear();
@@ -48,16 +51,16 @@ bcvr_cv_cor::bcvr_cv_cor(const bsol_intrinsic_curve_2d_sptr c1,
   // keep the arclengths on each interval in increasing order
   // curve1's arclengths are not necessarily starting from 0 and may be larger than length1_
   // because it might be rotated to match curve2
-  for ( unsigned int i = 0 ; i < map.size() ; i++ ) {
-    vsol_point_2d_sptr pt = c2->vertex(map[i].second);
+  for (auto & i : map) {
+    vsol_point_2d_sptr pt = c2->vertex(i.second);
     pts2_.push_back(pt->get_p());
-    arclengths2_.push_back(c2->arcLength(map[i].second));
+    arclengths2_.push_back(c2->arcLength(i.second));
   }
 
-  for ( unsigned int i = 0 ; i < map.size() ; i++ ) {
-    vsol_point_2d_sptr pt = c1->vertex(map[i].first%n1);
+  for (auto & i : map) {
+    vsol_point_2d_sptr pt = c1->vertex(i.first%n1);
     pts1_.push_back(pt->get_p());
-    arclengths1_.push_back(c1->arcLength(map[i].first)); // may not start from 0
+    arclengths1_.push_back(c1->arcLength(i.first)); // may not start from 0
   }
 
   // find total length of curve 2
@@ -148,7 +151,7 @@ double bcvr_cv_cor::get_arclength_on_curve1(double s2)
 }
 
 //: write points to a file
-bool bcvr_cv_cor::write_correspondence(std::string file_name, int increment)
+bool bcvr_cv_cor::write_correspondence(const std::string& file_name, int increment)
 {
   std::ofstream of(file_name.c_str());
   if (!of) {
@@ -199,23 +202,23 @@ void bcvr_cv_cor::b_write(vsl_b_ostream &os) const
     vsl_b_write(os, false);
 
   vsl_b_write(os, arclengths1_.size());
-  for (unsigned i = 0; i < arclengths1_.size(); i++)
-    vsl_b_write(os, arclengths1_[i]);
+  for (double i : arclengths1_)
+    vsl_b_write(os, i);
 
   vsl_b_write(os, arclengths2_.size());
-  for (unsigned i = 0; i < arclengths2_.size(); i++)
-    vsl_b_write(os, arclengths2_[i]);
+  for (double i : arclengths2_)
+    vsl_b_write(os, i);
 
   vsl_b_write(os, pts1_.size());
-  for (unsigned i = 0; i < pts1_.size(); i++) {
-    vsl_b_write(os, pts1_[i].x());
-    vsl_b_write(os, pts1_[i].y());
+  for (auto i : pts1_) {
+    vsl_b_write(os, i.x());
+    vsl_b_write(os, i.y());
   }
 
   vsl_b_write(os, pts2_.size());
-  for (unsigned i = 0; i < pts2_.size(); i++) {
-    vsl_b_write(os, pts2_[i].x());
-    vsl_b_write(os, pts2_[i].y());
+  for (auto i : pts2_) {
+    vsl_b_write(os, i.x());
+    vsl_b_write(os, i.y());
   }
 
   return;
@@ -242,7 +245,7 @@ void bcvr_cv_cor::b_read(vsl_b_istream &is)
         poly1_->b_read(is);
       }
       else
-        poly1_ = VXL_NULLPTR;
+        poly1_ = nullptr;
 
       vsl_b_read(is, poly_available);
       if (poly_available) {
@@ -250,7 +253,7 @@ void bcvr_cv_cor::b_read(vsl_b_istream &is)
         poly2_->b_read(is);
       }
       else
-        poly2_ = VXL_NULLPTR;
+        poly2_ = nullptr;
 
       unsigned cnt;
       vsl_b_read(is, cnt);
@@ -271,14 +274,14 @@ void bcvr_cv_cor::b_read(vsl_b_istream &is)
       for (unsigned i = 0; i < cnt; i++) {
         double x, y;
         vsl_b_read(is, x); vsl_b_read(is, y);
-        pts1_.push_back(vgl_point_2d<double> (x, y));
+        pts1_.emplace_back(x, y);
       }
 
       vsl_b_read(is, cnt);
       for (unsigned i = 0; i < cnt; i++) {
         double x, y;
         vsl_b_read(is, x); vsl_b_read(is, y);
-        pts2_.push_back(vgl_point_2d<double> (x, y));
+        pts2_.emplace_back(x, y);
       }
 
       break;

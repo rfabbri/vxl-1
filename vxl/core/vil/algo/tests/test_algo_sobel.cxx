@@ -5,7 +5,9 @@
 // \file
 // \author Peter Vanroose
 // \date   26 Aug. 2004
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vxl_config.h> // for vxl_byte
 #include <vil/algo/vil_sobel_1x3.h>
 #include <vil/algo/vil_sobel_3x3.h>
@@ -17,7 +19,7 @@ static void test_algo_sobel()
            << "*******************\n";
 
   const unsigned int WD=5, HT=6, X=2, Y=3;
-  const int step=9;
+  constexpr int step = 9;
   const double halfstep=0.5*step,
                qrtrstep=0.25*step,
                eigtstep=0.125*step;

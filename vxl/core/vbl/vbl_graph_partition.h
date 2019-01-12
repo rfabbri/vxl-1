@@ -1,9 +1,6 @@
 // This is core/vbl/vbl_graph_partition.h
 #ifndef vbl_graph_partition_h_
 #define vbl_graph_partition_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Partitions a graph into disjoint connected components
@@ -21,7 +18,9 @@
 // than the smallest weight edge between a pair of adjacent components.
 // The result is a set of isolated sub-graphs of the original graph.
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_disjoint_sets.h>
 #include <vbl/vbl_edge.h>
 #include <vil/vil_image_view.h>

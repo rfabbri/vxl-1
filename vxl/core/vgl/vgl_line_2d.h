@@ -1,9 +1,6 @@
 // This is core/vgl/vgl_line_2d.h
 #ifndef vgl_line_2d_h_
 #define vgl_line_2d_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author Don Hamilton, Peter Tu, Peter Vanroose, Francois BERTEL, Franck Bettinger
@@ -23,8 +20,10 @@
 // \endverbatim
 
 #include <iosfwd>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vgl/vgl_fwd.h> // forward declare vgl_point_2d and vgl_homg_line_2d
 #include <vgl/vgl_vector_2d.h>
 

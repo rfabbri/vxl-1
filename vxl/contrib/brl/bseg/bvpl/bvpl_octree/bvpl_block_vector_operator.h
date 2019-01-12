@@ -18,7 +18,9 @@
 #include <bvpl/kernels/bvpl_kernel.h>
 #include <boxm/boxm_scene.h>
 #include "bvpl_octree_kernel_operator.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //:A class operates a kernel on a boxm_block.
 // This class differes from bvpl_octree_kernel_operator in that it loads neighbor block to process blocks appropriately.
@@ -142,4 +144,3 @@ void bvpl_block_vector_operator::operate(boxm_scene<boct_tree<short, T_data_in >
 }
 
 #endif // bvpl_block_vector_operator_h
-

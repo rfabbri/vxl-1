@@ -1,3 +1,4 @@
+#include <fstream>
 #include "brad_image_atmospherics_est.h"
 //
 #include <vil/vil_image_view.h>
@@ -7,7 +8,6 @@
 
 #include <vil/vil_save.h> // temp
 #include <vil/vil_convert.h>
-#include <fstream>
 
 bool brad_get_visible_band_id(vil_image_view<float> const& radiance,
                               brad_image_metadata const& mdata,
@@ -66,11 +66,11 @@ bool brad_estimate_airlight(vil_image_view<float> const& radiance,
     vil_image_view<float> avg_img;
     avg_img.set_size(ni, nj);
     avg_img.fill(0.0f);
-    for (std::vector<unsigned>::iterator vit = vis_bands.begin(); vit != vis_bands.end(); ++vit)
+    for (unsigned int & vis_band : vis_bands)
       for (int j = 0; j < nj; j++)
         for (int i = 0; i < ni; i++) {
-          float pixel_val = radiance(i, j, *vit);
-          avg_img(i,j) += radiance(i, j, *vit);
+          const float pixel_val = radiance(i, j, vis_band);
+          avg_img(i,j) += pixel_val;
         }
     float minval, maxval;
     vil_math_value_range(avg_img, minval, maxval);
@@ -145,8 +145,6 @@ bool brad_estimate_atmospheric_parameters(vil_image_view<float> const& radiance,
                                           bool constrain_atmospheric_params,
                                           bool average_airlight)
 {
-  unsigned ni = radiance.ni();
-  unsigned nj = radiance.nj();
   unsigned np = radiance.nplanes();
   // get sun irradiance values
   std::string band_type = mdata.band_;
@@ -237,9 +235,8 @@ bool brad_estimate_reflectance_image(vil_image_view<float> const& radiance,
 
   // normalize by average radiance
   double Lsat_horizontal = 0.0;
-  for (std::vector<unsigned>::iterator vit = band_ids.begin(); vit != band_ids.end(); ++vit)
+  for (unsigned int p : band_ids)
   {
-    unsigned p = *vit;
     vil_image_view<float> cur_plane = vil_plane(radiance, p);
     double plane_ave = 0.0;
     for (unsigned j = 0; j < cur_plane.nj(); j++)
@@ -249,7 +246,7 @@ bool brad_estimate_reflectance_image(vil_image_view<float> const& radiance,
     Lsat_horizontal += (plane_ave - airlight[p]);
   }
   Lsat_horizontal /= band_ids.size();
-  float norm_factor = (float)(mean_reflectance / Lsat_horizontal);
+  auto norm_factor = (float)(mean_reflectance / Lsat_horizontal);
 
   // apply normalization
   for (unsigned p = 0; p < np; p++) {
@@ -288,9 +285,8 @@ bool brad_undo_reflectance_estimate(vil_image_view<float> const& reflectance,
     std::vector<unsigned> band_ids;
     brad_get_visible_band_id(radiance, mdata, band_ids);
     double Lsat_horizontal = 0.0;
-    for (std::vector<unsigned>::iterator vit = band_ids.begin(); vit != band_ids.end(); ++vit)
+    for (unsigned int p : band_ids)
     {
-      unsigned p = *vit;
       vil_image_view<float> cur_plane = vil_plane(radiance, p);
       double plane_ave = 0.0;
       for (unsigned j = 0; j < cur_plane.nj(); j++)
@@ -300,7 +296,7 @@ bool brad_undo_reflectance_estimate(vil_image_view<float> const& reflectance,
       Lsat_horizontal += (plane_ave - airlight[p]);
     }
     Lsat_horizontal /= band_ids.size();
-    float norm_factor = (float)(Lsat_horizontal / mean_reflectance);
+    auto norm_factor = (float)(Lsat_horizontal / mean_reflectance);
     // apply inverse
     for (unsigned p = 0; p < np; p++) {
       for (unsigned j = 0; j < nj; j++) {
@@ -413,7 +409,7 @@ bool brad_estimate_reflectance_image_multi(
   }
   Lsat_horizontal /= (max_norm_band - min_norm_band + 1);
 
-  float norm_factor = (float)(mean_reflectance / Lsat_horizontal);
+  auto norm_factor = (float)(mean_reflectance / Lsat_horizontal);
 
   cal_img.set_size(ni, nj, np);
   cal_img.fill(0.0);

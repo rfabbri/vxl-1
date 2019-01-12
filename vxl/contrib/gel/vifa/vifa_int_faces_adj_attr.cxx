@@ -5,8 +5,8 @@ vifa_int_faces_adj_attr::
 vifa_int_faces_adj_attr(void)
   : vifa_int_faces_attr(),
     closure_valid_(false),
-    seed_(VXL_NULLPTR),
-    seed_attr_(VXL_NULLPTR),
+    seed_(nullptr),
+    seed_attr_(nullptr),
     depth_(BAD_DEPTH)
 {
   init();
@@ -14,7 +14,7 @@ vifa_int_faces_adj_attr(void)
 }
 
 vifa_int_faces_adj_attr::
-vifa_int_faces_adj_attr(vtol_intensity_face_sptr     seed,
+vifa_int_faces_adj_attr(const vtol_intensity_face_sptr&     seed,
                         int                          depth,
                         int                          size_filter,
                         vdgl_fit_lines_params*       fitter_params,
@@ -27,7 +27,7 @@ vifa_int_faces_adj_attr(vtol_intensity_face_sptr     seed,
   : vifa_int_faces_attr(fitter_params, gpp_s, gpp_w, cpp, np, factory),
     closure_valid_(false),
     seed_(seed),
-    seed_attr_(VXL_NULLPTR),
+    seed_attr_(nullptr),
     depth_(depth),
     size_filter_(size_filter),
     junk_area_percentage_(junk_area_percentage),
@@ -38,7 +38,7 @@ vifa_int_faces_adj_attr(vtol_intensity_face_sptr     seed,
 }
 
 vifa_int_faces_adj_attr::
-vifa_int_faces_adj_attr(vtol_intensity_face_sptr     seed,
+vifa_int_faces_adj_attr(const vtol_intensity_face_sptr&     seed,
                         int                          depth,
                         iface_list&                  neighborhood,
                         int                          size_filter,
@@ -52,7 +52,7 @@ vifa_int_faces_adj_attr(vtol_intensity_face_sptr     seed,
   : vifa_int_faces_attr(neighborhood, fitter_params, gpp_s, gpp_w, cpp, np, factory),
     closure_valid_(false), // still need to filter on size!
     seed_(seed),
-    seed_attr_(VXL_NULLPTR),
+    seed_attr_(nullptr),
     depth_(depth),
     size_filter_(size_filter),
     junk_area_percentage_(junk_area_percentage),
@@ -63,7 +63,7 @@ vifa_int_faces_adj_attr(vtol_intensity_face_sptr     seed,
 }
 
 void vifa_int_faces_adj_attr::
-SetSeed(vtol_intensity_face_sptr  seed)
+SetSeed(const vtol_intensity_face_sptr&  seed)
 {
   seed_ = seed;
   closure_valid_ = false;
@@ -92,10 +92,10 @@ GetFaceList()
     this->compute_closure();
   }
 
-  iface_list* v = new iface_list;
-  for (iface_iterator f = faces_.begin(); f != faces_.end(); ++f)
+  auto* v = new iface_list;
+  for (auto & face : faces_)
   {
-    v->push_back(*f);
+    v->push_back(face);
   }
 
   return v;
@@ -233,16 +233,16 @@ compute_closure()
     int      original_nbrhood_size = faces_.size();
     float    area_threshold = (seed_->Npix() * junk_area_percentage_);
     iface_list  keep_faces;
-    for (iface_iterator f = faces_.begin(); f != faces_.end(); ++f)
+    for (auto & face : faces_)
     {
-      original_area += (*f)->Npix();
+      original_area += face->Npix();
 
-      if ((*f)->Npix() >= area_threshold)
-        keep_faces.push_back(*f);
+      if (face->Npix() >= area_threshold)
+        keep_faces.push_back(face);
       else
       {
         junk_count_++;
-        junk_area += (*f)->Npix();
+        junk_area += face->Npix();
       }
     }
 
@@ -278,9 +278,9 @@ Collinearity()
   float    coll = 0.0f;
   edge_list edges; seed_->edges(edges);
 
-  for (edge_iterator  ei = edges.begin(); ei != edges.end(); ei++)
+  for (auto & edge : edges)
   {
-    vtol_edge_2d*  e = (*ei)->cast_to_edge_2d();
+    vtol_edge_2d*  e = edge->cast_to_edge_2d();
 
     if (e)
     {
@@ -331,14 +331,13 @@ init()
 
 bool vifa_int_faces_adj_attr::
 add_unique_face(iface_list&               facelist,
-                vtol_intensity_face_sptr  face,
+                const vtol_intensity_face_sptr&  face,
                 int                       size_filter)
 {
-  for (iface_iterator check = facelist.begin();
-       check != facelist.end(); ++check)
+  for (auto & check : facelist)
   {
-    if ((check->ptr()->Xo() == face->Xo()) &&
-        (check->ptr()->Yo() == face->Yo()))
+    if ((check.ptr()->Xo() == face->Xo()) &&
+        (check.ptr()->Yo() == face->Yo()))
       return false;
   }
 
@@ -381,7 +380,7 @@ compute_closure_step(int                       current_depth,
   if (adj_faces)
   {
     // For each adjacent face...
-    iface_iterator fi = adj_faces->begin();
+    auto fi = adj_faces->begin();
     for (; fi != adj_faces->end(); fi++)
     {
       vtol_intensity_face_sptr  adj_face_sptr = (*fi);
@@ -404,7 +403,7 @@ vtol_intensity_face_sptr vifa_int_faces_adj_attr::
 get_adjacent_face_at_edge(vtol_intensity_face_sptr&  known_face,
                           vtol_edge_2d*              e)
 {
-  vtol_intensity_face_sptr  adj_face = VXL_NULLPTR;
+  vtol_intensity_face_sptr  adj_face = nullptr;
   face_list faces; e->faces(faces);
 
   // Expect only one or two intensity faces for 2-D case
@@ -430,16 +429,16 @@ get_adjacent_face_at_edge(vtol_intensity_face_sptr&  known_face,
 iface_list* vifa_int_faces_adj_attr::
 get_adjacent_faces(vtol_intensity_face_sptr&  known_face)
 {
-  iface_list*    faces = VXL_NULLPTR;
+  iface_list*    faces = nullptr;
 
   if (known_face.ptr())
   {
     edge_list edges; known_face->edges(edges);
     faces = new iface_list;
 
-    for (edge_iterator ei = edges.begin(); ei != edges.end(); ei++)
+    for (auto & edge : edges)
     {
-      vtol_edge_2d* e = (*ei)->cast_to_edge_2d();
+      vtol_edge_2d* e = edge->cast_to_edge_2d();
       if (e)
       {
         vtol_intensity_face_sptr  other_f =

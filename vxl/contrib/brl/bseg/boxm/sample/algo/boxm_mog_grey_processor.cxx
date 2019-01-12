@@ -13,7 +13,10 @@
 
 #include "boxm_sigma_normalizer.h"
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Expected value
 boxm_apm_traits<BOXM_APM_MOG_GREY>::obs_datatype
@@ -94,14 +97,14 @@ void boxm_mog_grey_processor::compute_appearance(std::vector<boxm_apm_traits<BOX
 }
 
 void boxm_mog_grey_processor::finalize_appearance(std::vector<boxm_apm_traits<BOXM_APM_MOG_GREY>::obs_datatype> const& obs,
-                                                  std::vector<float> const& obs_weights, // FIXME - unused
+                                                  std::vector<float> const&  /*obs_weights*/, // FIXME - unused
                                                   boxm_apm_traits<BOXM_APM_MOG_GREY>::apm_datatype &model,
                                                   float min_sigma)
 {
   static const unsigned int nmodes = boxm_apm_traits<BOXM_APM_MOG_GREY>::n_gaussian_modes_;
-  const unsigned int nobs = (unsigned int)obs.size();
+  const auto nobs = (unsigned int)obs.size();
   const float min_var = min_sigma*min_sigma;
-  const float big_sigma = (float)vnl_math::sqrt1_2; // maximum possible std. dev for set of samples drawn from [0 1]
+  const auto big_sigma = (float)vnl_math::sqrt1_2; // maximum possible std. dev for set of samples drawn from [0 1]
   const float big_var = big_sigma * big_sigma;
 
   static boxm_sigma_normalizer sigma_norm(0.1f);
@@ -130,10 +133,10 @@ void boxm_mog_grey_processor::compute_appearance(std::vector<boxm_apm_traits<BOX
 {
   static const unsigned int max_nmodes = boxm_apm_traits<BOXM_APM_MOG_GREY>::n_gaussian_modes_;
   const float min_var = min_sigma*min_sigma;
-  const float big_sigma = (float)vnl_math::sqrt1_2; // maximum possible std. dev for set of samples drawn from [0 1]
+  const auto big_sigma = (float)vnl_math::sqrt1_2; // maximum possible std. dev for set of samples drawn from [0 1]
   const float big_var = big_sigma * big_sigma;
 
-  unsigned int nobs = (unsigned int)obs.size();
+  auto nobs = (unsigned int)obs.size();
   if (nobs == 0) {
     // nothing to do.
     return;
@@ -174,7 +177,7 @@ void boxm_mog_grey_processor::compute_appearance(std::vector<boxm_apm_traits<BOX
   std::vector<float> mode_weight_sum(nmodes,0.0f);
 
   // run EM algorithm to maximize expected probability of observations
-  const unsigned int max_its = 50;
+  constexpr unsigned int max_its = 50;
   const float max_converged_weight_change = 1e-3f;
 
   for (unsigned int i=0; i<max_its; ++i) {
@@ -281,4 +284,3 @@ void boxm_mog_grey_processor::compute_appearance(std::vector<boxm_apm_traits<BOX
 
   return;
 }
-

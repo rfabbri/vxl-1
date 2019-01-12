@@ -3,7 +3,9 @@
 #include <fstream>
 #include <bocl/bocl_cl.h>
 #include <vcl_where_root_dir.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vpgl/vpgl_perspective_camera.h>
 #include <vsph/vsph_view_sphere.h>
@@ -187,7 +189,7 @@ int main(int argc,  char** argv)
             {
                 vpgl_camera_double_sptr cam_sptr = view.camera();
                 //set focal length and image size for camera
-                vpgl_perspective_camera<double>* cam = static_cast<vpgl_perspective_camera<double>* >(cam_sptr.ptr());
+                auto* cam = static_cast<vpgl_perspective_camera<double>* >(cam_sptr.ptr());
                 vpgl_calibration_matrix<double> mat = cam->get_calibration();
                 brdb_value_sptr brdb_cam = new brdb_value_t<vpgl_camera_double_sptr>(cam_sptr);
                 mat.set_focal_length(5270.5f);
@@ -223,7 +225,7 @@ int main(int argc,  char** argv)
                 }
 
                 brdb_query_aptr Q = brdb_query_comp_new("id", brdb_query::EQ, img_id);
-                brdb_selection_sptr S = DATABASE->select("vil_image_view_base_sptr_data", vcl_move(Q));
+                brdb_selection_sptr S = DATABASE->select("vil_image_view_base_sptr_data", std::move(Q));
                 if (S->size()!=1) {
                   std::cout << "in bprb_batch_process_manager::set_input_from_db(.) -"
                            << " no selections\n";
@@ -234,10 +236,10 @@ int main(int argc,  char** argv)
                            << " didn't get value\n";
                 }
                 vil_image_view_base_sptr outimg=value->val<vil_image_view_base_sptr>();
-                vil_image_view<float>* expimg_view = static_cast<vil_image_view<float>* >(outimg.ptr());
+                auto* expimg_view = static_cast<vil_image_view<float>* >(outimg.ptr());
                 vil_math_mean<float,float>(mean, *expimg_view,0);
                 std::cout<<el<<' '<<az<<' '<<mean<<std::endl;
-                distances.push_back(ptdistpair(cart_point,mean));
+                distances.emplace_back(cart_point,mean);
                 saved_imgs[uid] = idstream.str();
                 vil_save(*expimg_view, idstream.str().c_str() );
             }
@@ -246,8 +248,7 @@ int main(int argc,  char** argv)
     std::ofstream ofile(outfile().c_str());
     std::sort(distances.begin(), distances.end(), compare_second_element);
 
-    for (unsigned int k = 0 ; k < distances.size(); ++k)
-        ofile<<distances[k].first.x()<<' '<<distances[k].first.y()<<' '<<distances[k].first.z()<<' '<<distances[k].second<<std::endl;
+    for (auto & distance : distances)
+        ofile<<distance.first.x()<<' '<<distance.first.y()<<' '<<distance.first.z()<<' '<<distance.second<<std::endl;
     return 0;
 }
-

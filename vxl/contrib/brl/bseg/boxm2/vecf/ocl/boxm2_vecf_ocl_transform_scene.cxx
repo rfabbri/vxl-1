@@ -1,6 +1,7 @@
 #include <stdexcept>
 #include <iostream>
 #include <algorithm>
+#include <utility>
 #include "boxm2_vecf_ocl_transform_scene.h"
 //:
 // \file
@@ -20,18 +21,20 @@
 #include <boct/boct_bit_tree.h>
 #include <bocl/bocl_kernel.h>
 #include <vcl_where_root_dir.h>
-#include <vcl_compiler.h>
-#include <vnl/vnl_vector_fixed.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+
 typedef vnl_vector_fixed<unsigned char,16> uchar16;
 static bool transform_scene_compiled = false;
-bool boxm2_vecf_ocl_transform_scene::get_scene_appearance( boxm2_scene_sptr scene,
+bool boxm2_vecf_ocl_transform_scene::get_scene_appearance( const boxm2_scene_sptr& scene,
           std::string&      options)
 {
 
     std::vector<std::string> apps = scene->appearances();
     bool foundDataType = false;
-    for (unsigned int i=0; i<apps.size(); ++i) {
-      boxm2_data_type app_type = boxm2_data_info::data_type(apps[i]);
+    for (const auto & app : apps) {
+      boxm2_data_type app_type = boxm2_data_info::data_type(app);
         if ( app_type == BOXM2_MOG3_GREY )
         {
             app_type_ = BOXM2_MOG3_GREY;
@@ -51,8 +54,8 @@ bool boxm2_vecf_ocl_transform_scene::get_scene_appearance( boxm2_scene_sptr scen
     }
 
   color_app_type_id_ = "";
-  for (unsigned int i=0; i<apps.size(); ++i) {
-    if ( apps[i] == boxm2_data_traits<BOXM2_GAUSS_RGB>::prefix(color_app_id_) )
+  for (const auto & app : apps) {
+    if ( app == boxm2_data_traits<BOXM2_GAUSS_RGB>::prefix(color_app_id_) )
     {
       color_app_type_id_ = boxm2_data_traits<BOXM2_GAUSS_RGB>::prefix(color_app_id_);
       std::cout<<"found color data type "<<color_app_type_id_<< " in source scene"<<std::endl;
@@ -67,9 +70,9 @@ bool boxm2_vecf_ocl_transform_scene::get_scene_appearance( boxm2_scene_sptr scen
 }
 
 
-boxm2_vecf_ocl_transform_scene::boxm2_vecf_ocl_transform_scene(boxm2_scene_sptr source_scene,
-                                                               boxm2_scene_sptr target_scene,
-                                                               boxm2_opencl_cache_sptr ocl_cache,
+boxm2_vecf_ocl_transform_scene::boxm2_vecf_ocl_transform_scene(const boxm2_scene_sptr& source_scene,
+                                                               const boxm2_scene_sptr& target_scene,
+                                                               const boxm2_opencl_cache_sptr& ocl_cache,
                                                                std::string gray_app_id,
                                                                std::string color_app_id,
                                                                bool do_alpha,
@@ -78,7 +81,7 @@ boxm2_vecf_ocl_transform_scene::boxm2_vecf_ocl_transform_scene(boxm2_scene_sptr 
   : source_scene_(source_scene),
     target_scene_(target_scene),
     opencl_cache_(ocl_cache),
-    grey_app_id_(gray_app_id), color_app_id_(color_app_id),
+    grey_app_id_(std::move(gray_app_id)), color_app_id_(std::move(color_app_id)),
     do_alpha_(do_alpha),do_interp_(do_interp)
 {
   device_=opencl_cache_->get_device();
@@ -92,17 +95,17 @@ boxm2_vecf_ocl_transform_scene::boxm2_vecf_ocl_transform_scene(boxm2_scene_sptr 
     std::cout<<"target scene buffers failed to initialize"<<std::endl;
 }
 
-boxm2_vecf_ocl_transform_scene::boxm2_vecf_ocl_transform_scene(boxm2_scene_sptr source_scene,
-                                                               boxm2_opencl_cache_sptr ocl_cache,
+boxm2_vecf_ocl_transform_scene::boxm2_vecf_ocl_transform_scene(const boxm2_scene_sptr& source_scene,
+                                                               const boxm2_opencl_cache_sptr& ocl_cache,
                                                                std::string gray_app_id,
                                                                std::string color_app_id,
                                                                bool do_alpha,
                                                                bool do_interp)
 
   :  source_scene_(source_scene),
-     target_scene_(VXL_NULLPTR),
+     target_scene_(nullptr),
      opencl_cache_(ocl_cache),
-     grey_app_id_(gray_app_id), color_app_id_(color_app_id),
+     grey_app_id_(std::move(gray_app_id)), color_app_id_(std::move(color_app_id)),
      do_alpha_(do_alpha),do_interp_(do_interp)
 {
   device_=opencl_cache_->get_device();
@@ -148,8 +151,8 @@ bool boxm2_vecf_ocl_transform_scene::init_target_scene_buffers(boxm2_scene_sptr 
     std::cerr << "Error: boxm2_vecf_ocl_transform_scene: number of blocks > 1" << std::endl;
     return false;
   }
-  std::vector<boxm2_block_id>::iterator iter_blk_target = blocks_target.begin();
-  std::vector<boxm2_block_id>::iterator iter_blk_source = blocks_source.begin();
+  auto iter_blk_target = blocks_target.begin();
+  auto iter_blk_source = blocks_source.begin();
   blk_target_       = opencl_cache_->get_block(target_scene, *iter_blk_target);
   boxm2_block* tblock = opencl_cache_->get_cpu_cache()->get_block(target_scene, *iter_blk_target);
     octree_depth_buff_ = 3;
@@ -291,41 +294,41 @@ bool boxm2_vecf_ocl_transform_scene::init_ocl_trans()
     int status = 0;
     queue_ = clCreateCommandQueue(device_->context(),*(device_->device_id()),CL_QUEUE_PROFILING_ENABLE,&status);
 
-    octree_depth_ = VXL_NULLPTR;
-    blk_info_target_ = VXL_NULLPTR;
-    blk_info_source = VXL_NULLPTR;
-    info_buffer_ = VXL_NULLPTR;
-    blk_target_ = VXL_NULLPTR;
-    alpha_target_ = VXL_NULLPTR;
-    mog_target_ = VXL_NULLPTR;
-    info_buffer_source = VXL_NULLPTR;
-    blk_source = VXL_NULLPTR;
-    alpha_source = VXL_NULLPTR;
-    mog_source = VXL_NULLPTR;
-    nobs_target_ = VXL_NULLPTR;
-    rgb_target_ = VXL_NULLPTR;
-    long_output=VXL_NULLPTR;
+    octree_depth_ = nullptr;
+    blk_info_target_ = nullptr;
+    blk_info_source = nullptr;
+    info_buffer_ = nullptr;
+    blk_target_ = nullptr;
+    alpha_target_ = nullptr;
+    mog_target_ = nullptr;
+    info_buffer_source = nullptr;
+    blk_source = nullptr;
+    alpha_source = nullptr;
+    mog_source = nullptr;
+    nobs_target_ = nullptr;
+    rgb_target_ = nullptr;
+    long_output=nullptr;
     return true;
 }
 // the transform is the inverse, i.e. a map from the target to the source
 // an arbitrary number of blocks are handled, no interpolation
-bool boxm2_vecf_ocl_transform_scene::transform(vgl_rotation_3d<double> rot,
-            vgl_vector_3d<double> trans,
-            vgl_vector_3d<double> scale)
+bool boxm2_vecf_ocl_transform_scene::transform(const vgl_rotation_3d<double>&  /*rot*/,
+            vgl_vector_3d<double>  /*trans*/,
+            vgl_vector_3d<double>  /*scale*/)
 
 {
   return true;
 }
-bool boxm2_vecf_ocl_transform_scene::transform_1_blk(vgl_rotation_3d<double>  rot,
-           vgl_vector_3d<double> trans,
-           vgl_vector_3d<double> scale,
-           bool finish){
+bool boxm2_vecf_ocl_transform_scene::transform_1_blk(const vgl_rotation_3d<double>&   /*rot*/,
+           vgl_vector_3d<double>  /*trans*/,
+           vgl_vector_3d<double>  /*scale*/,
+           bool  /*finish*/){
    return true;
 }
-bool boxm2_vecf_ocl_transform_scene::transform_1_blk_interp(vgl_rotation_3d<double>  rot,
+bool boxm2_vecf_ocl_transform_scene::transform_1_blk_interp(const vgl_rotation_3d<double>&  rot,
                                                             vgl_vector_3d<double> trans,
                                                             vgl_vector_3d<double> scale,
-                                                            bool finish){
+                                                            bool  /*finish*/){
   if(!target_scene_){
     std::cout<< "Error: target scene is not set!"<<std::endl;
     return false;
@@ -389,8 +392,8 @@ bool boxm2_vecf_ocl_transform_scene::transform_1_blk_interp(vgl_rotation_3d<doub
      std::vector<boxm2_block_id> blocks_source = source_scene_->get_block_ids();
      if(blocks_target.size()!=1||blocks_source.size()!=1)
        return false;
-     std::vector<boxm2_block_id>::iterator iter_blk_target = blocks_target.begin();
-     std::vector<boxm2_block_id>::iterator iter_blk_source = blocks_source.begin();
+     auto iter_blk_target = blocks_target.begin();
+     auto iter_blk_source = blocks_source.begin();
 
      vgl_box_3d<float> box_target(info_buffer_->scene_origin[0],info_buffer_->scene_origin[1],info_buffer_->scene_origin[2],
       info_buffer_->scene_origin[0]+info_buffer_->scene_dims[0]*info_buffer_->block_len,
@@ -499,7 +502,7 @@ bool boxm2_vecf_ocl_transform_scene::transform_1_blk_interp(vgl_rotation_3d<doub
 
 bool boxm2_vecf_ocl_transform_scene::
 transform_1_blk_interp_trilin(boxm2_vecf_ocl_vector_field &vec_field,
-                              bool finish)
+                              bool  /*finish*/)
 {
   if(!target_scene_){
     std::cout<< "Error: target scene is not set!"<<std::endl;
@@ -516,8 +519,8 @@ transform_1_blk_interp_trilin(boxm2_vecf_ocl_vector_field &vec_field,
   if(blocks_target.size()!=1||blocks_source.size()!=1) {
     throw std::runtime_error("transform_1_block_interl_trilin() only implemented for single block");
   }
-  std::vector<boxm2_block_id>::iterator iter_blk_target = blocks_target.begin();
-  std::vector<boxm2_block_id>::iterator iter_blk_source = blocks_source.begin();
+  auto iter_blk_target = blocks_target.begin();
+  auto iter_blk_source = blocks_source.begin();
 
   bocl_mem* target_pts = opencl_cache_->get_data<BOXM2_POINT>(target_scene_, *iter_blk_target, 0, false, "target");
 
@@ -631,8 +634,8 @@ transform_1_blk_interp_trilin(boxm2_vecf_ocl_vector_field &vec_field,
   return true;
 }
 
-bool boxm2_vecf_ocl_transform_scene::transform_1_blk_interp_trilin(boxm2_scene_sptr target_scene,
-                                                                   vgl_rotation_3d<double>  rot,
+bool boxm2_vecf_ocl_transform_scene::transform_1_blk_interp_trilin(const boxm2_scene_sptr& target_scene,
+                                                                   const vgl_rotation_3d<double>&  rot,
                                                                    vgl_vector_3d<double> trans,
                                                                    vgl_vector_3d<double> scale,
                                                                    bool finish)
@@ -686,8 +689,8 @@ bool boxm2_vecf_ocl_transform_scene::transform_1_blk_interp_trilin(boxm2_scene_s
 
      std::vector<boxm2_block_id> blocks_target = target_scene_->get_block_ids();
      std::vector<boxm2_block_id> blocks_source = source_scene_->get_block_ids();
-     std::vector<boxm2_block_id>::iterator iter_blk_target = blocks_target.begin();
-     std::vector<boxm2_block_id>::iterator iter_blk_source = blocks_source.begin();
+     auto iter_blk_target = blocks_target.begin();
+     auto iter_blk_source = blocks_source.begin();
 
      if(blocks_target.size()!=1||blocks_source.size()!=1)
        return false;
@@ -735,7 +738,7 @@ bool boxm2_vecf_ocl_transform_scene::transform_1_blk_interp_trilin(boxm2_scene_s
    }
 
    info_buffer_source->data_buffer_length = (int) (alpha_source->num_bytes()/alphaTypeSize);
-   std::size_t data_size_target = static_cast<std::size_t>(info_buffer_->data_buffer_length);
+   auto data_size_target = static_cast<std::size_t>(info_buffer_->data_buffer_length);
 
    bocl_mem_sptr blk_info_source_l  = new bocl_mem(device_->context(), info_buffer_source, sizeof(boxm2_scene_info), " Scene Info Source" );
    blk_info_source_l->create_buffer(CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR);
@@ -751,7 +754,7 @@ bool boxm2_vecf_ocl_transform_scene::transform_1_blk_interp_trilin(boxm2_scene_s
      std::cout << "ERROR: boxm2_vecf_ocl_transform_scene: Unsupported appearance type for source_scene " << boxm2_data_info::prefix(app_type_) << '\n';
      return false;
    }
-   bocl_mem* rgb_source = VXL_NULLPTR;
+   bocl_mem* rgb_source = nullptr;
    if(color_app_type_id_ !=""){
      rgb_source = opencl_cache_->get_data(source_scene_, *iter_blk_source,color_app_type_id_,0,true);
    }

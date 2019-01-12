@@ -7,8 +7,10 @@
 #include <vsol/vsol_point_2d.h>
 #include <vgl/vgl_vector_2d.h>
 #include <vsl/vsl_vector_io.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 //***************************************************************************
 // Initialization
@@ -21,8 +23,8 @@ vsol_polyline_2d::vsol_polyline_2d()
   : vsol_curve_2d()
 {
   storage_=new std::vector<vsol_point_2d_sptr>();
-  p0_ = VXL_NULLPTR;
-  p1_ = VXL_NULLPTR;
+  p0_ = nullptr;
+  p1_ = nullptr;
 }
 
 //---------------------------------------------------------------------------
@@ -35,8 +37,8 @@ vsol_polyline_2d::vsol_polyline_2d(std::vector<vsol_point_2d_sptr> const& new_ve
   storage_=new std::vector<vsol_point_2d_sptr>(new_vertices);
   int n = storage_->size();
   if (n<1) {
-    p0_ = VXL_NULLPTR;
-    p1_ = VXL_NULLPTR;
+    p0_ = nullptr;
+    p1_ = nullptr;
   }
   else {
     p0_ = (*storage_)[0];
@@ -62,10 +64,10 @@ vsol_polyline_2d::vsol_polyline_2d(vsol_polyline_2d const& other)
 //---------------------------------------------------------------------------
 vsol_polyline_2d::~vsol_polyline_2d()
 {
-  for (unsigned i = 0; i < storage_->size(); i++)
-    (*storage_)[i] = VXL_NULLPTR;
-  p0_ = VXL_NULLPTR;
-  p1_ = VXL_NULLPTR;
+  for (auto & i : *storage_)
+    i = nullptr;
+  p0_ = nullptr;
+  p1_ = nullptr;
   delete storage_;
 }
 
@@ -214,8 +216,8 @@ void vsol_polyline_2d::b_read(vsl_b_istream &is)
     return;
   delete storage_;
   storage_ = new std::vector<vsol_point_2d_sptr>();
-  p0_=VXL_NULLPTR;
-  p1_=VXL_NULLPTR;
+  p0_=nullptr;
+  p1_=nullptr;
   bool null_ptr;
   vsl_b_read(is, null_ptr);
   if (!null_ptr)
@@ -254,7 +256,7 @@ void vsol_polyline_2d::print_summary(std::ostream &os) const
 void
 vsl_b_write(vsl_b_ostream &os, const vsol_polyline_2d* p)
 {
-  if (p==VXL_NULLPTR) {
+  if (p==nullptr) {
     vsl_b_write(os, false); // Indicate null pointer stored
   }
   else {
@@ -276,7 +278,7 @@ vsl_b_read(vsl_b_istream &is, vsol_polyline_2d* &p)
     p->b_read(is);
   }
   else
-    p = VXL_NULLPTR;
+    p = nullptr;
 }
 
 void vsol_polyline_2d::describe(std::ostream &strm, int blanking) const

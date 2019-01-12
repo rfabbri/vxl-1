@@ -6,7 +6,9 @@
 #include <vsol/vsol_box_2d.h>
 #include "bsol_algs.h"
 #ifdef DEBUG
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #endif
 
 static void clear_flag(vsol_point_2d_sptr& p)
@@ -75,8 +77,7 @@ bsol_point_index_2d(int nrows, int ncols,
 
 //: Destructor
 bsol_point_index_2d::~bsol_point_index_2d()
-{
-}
+= default;
 
 //:offset to origin of bounds and convert to cell integer coordinates
 bool bsol_point_index_2d::trans(const double x, const double y,
@@ -108,9 +109,8 @@ bool bsol_point_index_2d::add_point(vsol_point_2d_sptr const& p)
 bool bsol_point_index_2d::add_points(std::vector<vsol_point_2d_sptr> const& points)
 {
   bool ok = true;
-  for (std::vector<vsol_point_2d_sptr>::const_iterator pit = points.begin();
-       pit != points.end(); pit++)
-    if (!this->add_point(*pit))
+  for (const auto & point : points)
+    if (!this->add_point(point))
       ok = false;
   return ok;
 }
@@ -123,9 +123,8 @@ bool bsol_point_index_2d::find_point(vsol_point_2d_sptr const& p)
   if (row<0||row>=nrows_||col<0||col>=ncols_)
     return false;
   std::vector<vsol_point_2d_sptr>& points =  point_array_[row][col];
-  for (std::vector<vsol_point_2d_sptr>::iterator pit = points.begin();
-       pit!=points.end(); pit++)
-    if ((*pit)==p)
+  for (auto & point : points)
+    if (point==p)
       return true;
   return false;
 }
@@ -221,9 +220,8 @@ std::vector<vsol_point_2d_sptr> bsol_point_index_2d::points()
     for (int c = 0; c<ncols_; c++)
     {
       std::vector<vsol_point_2d_sptr>& points = point_array_[r][c];
-      for (std::vector<vsol_point_2d_sptr>::iterator pit = points.begin();
-           pit!= points.end(); pit++)
-        out.push_back(*pit);
+      for (auto & point : points)
+        out.push_back(point);
     }
  return out;
 }
@@ -231,9 +229,8 @@ std::vector<vsol_point_2d_sptr> bsol_point_index_2d::points()
 void bsol_point_index_2d::clear_marks()
 {
   std::vector<vsol_point_2d_sptr> pts = this->points();
-  for (std::vector<vsol_point_2d_sptr>::iterator pit = pts.begin();
-       pit!= pts.end(); pit++)
-    clear_flag(*pit);
+  for (auto & pt : pts)
+    clear_flag(pt);
 }
 
 //: origin of the index space
@@ -321,9 +318,8 @@ vsol_box_2d_sptr bsol_point_index_2d::point_bounds()
     for (int c = 0; c<ncols_; c++)
     {
       std::vector<vsol_point_2d_sptr>& points = point_array_[r][c];
-      for (std::vector<vsol_point_2d_sptr>::iterator pit = points.begin();
-           pit!= points.end(); pit++)
-        box->add_point((*pit)->x(), (*pit)->y());
+      for (auto & point : points)
+        box->add_point(point->x(), point->y());
     }
   return box;
 }

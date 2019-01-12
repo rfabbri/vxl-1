@@ -14,7 +14,9 @@
 
 #include <iostream>
 #include <boxm/boxm_scene.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 template <class T_data>
 boxm_scene<boct_tree<short, bool> >* boxm_explore_cells_at_level(boxm_scene<boct_tree<short, T_data> > *scene_in, short level)
@@ -71,7 +73,7 @@ void boxm_remove_level_0_leaves(boxm_scene<boct_tree<short, T_data> > *scene_in)
       //check for level
       short level = cell_in->level();
       if (level == 0) {
-        cell_in = VXL_NULLPTR;
+        cell_in = nullptr;
       }
       else {
         if (level == 1)

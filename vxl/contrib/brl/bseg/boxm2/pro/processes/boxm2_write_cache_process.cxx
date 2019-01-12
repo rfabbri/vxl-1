@@ -10,7 +10,9 @@
 #include <fstream>
 #include <bprb/bprb_func_process.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/io/boxm2_cache.h>
 #include <boxm2/io/boxm2_lru_cache.h>
@@ -20,8 +22,8 @@
 
 namespace boxm2_write_cache_process_globals
 {
-  const unsigned n_inputs_ = 2;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 2;
+  constexpr unsigned n_outputs_ = 0;
 }
 bool boxm2_write_cache_process_cons(bprb_func_process& pro)
 {
@@ -62,4 +64,3 @@ bool boxm2_write_cache_process(bprb_func_process& pro)
     cache->clear_cache();
   return true;
 }
-

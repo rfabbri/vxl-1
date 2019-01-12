@@ -1,10 +1,11 @@
 #include <vector>
-#include <vcl_memory.h>
 #include <iostream>
+#include <memory>
 #include <cmath>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <testlib/testlib_test.h>
-
-#include <vcl_compiler.h>
 
 #include <vnl/vnl_matrix.h>
 #include <vnl/vnl_vector.h>
@@ -61,19 +62,19 @@ static void test_scale_est()
   }
   var /= num_pts;
 
-  vcl_unique_ptr<rrel_objective> obj( new rrel_muset_obj( num_pts ) );
-  rgrl_scale_est_closest closest_est( vcl_move(obj) );
+  std::unique_ptr<rrel_objective> obj( new rrel_muset_obj( num_pts ) );
+  rgrl_scale_est_closest closest_est( std::move(obj) );
 
   // Simple, one-to-one errors
   double one_to_one_scale = 0.0;
   {
     rgrl_match_set ms( rgrl_feature_point::type_id() );
     for ( unsigned i=0; i < from.size(); ++i ) {
-      ms.add_feature_and_match( pf( from[i] ), VXL_NULLPTR, pf( from[i]+err[i] ) );
+      ms.add_feature_and_match( pf( from[i] ), nullptr, pf( from[i]+err[i] ) );
     }
     ms.remap_from_features( *trans );
 
-    rgrl_scale_sptr scale = closest_est.estimate_unweighted( ms, VXL_NULLPTR );
+    rgrl_scale_sptr scale = closest_est.estimate_unweighted( ms, nullptr );
     TEST( "Estimate scale from one-to-one",
           scale->has_geometric_scale() && ! scale->has_signature_inv_covar(), true);
 
@@ -93,11 +94,11 @@ static void test_scale_est()
       for ( unsigned j=0; j < num; ++j ) {
         to.push_back( pf( from[i] + err[i] * ((j+pos)%num + 1) ) );
       }
-      ms.add_feature_and_matches( pf( from[i] ), VXL_NULLPTR, to );
+      ms.add_feature_and_matches( pf( from[i] ), nullptr, to );
     }
     ms.remap_from_features( *trans );
 
-    rgrl_scale_sptr scale = closest_est.estimate_unweighted( ms, VXL_NULLPTR );
+    rgrl_scale_sptr scale = closest_est.estimate_unweighted( ms, nullptr );
     TEST( "Estimate scale from closest in one-to-many",
           scale->has_geometric_scale() && ! scale->has_signature_inv_covar(), true);
 
@@ -111,11 +112,11 @@ static void test_scale_est()
   {
     rgrl_match_set ms( rgrl_feature_point::type_id() );
     for ( unsigned i=0; i < from.size(); ++i ) {
-      ms.add_feature_and_match( pf( from[i] ), VXL_NULLPTR, pf( from[i]+err[i] ) );
+      ms.add_feature_and_match( pf( from[i] ), nullptr, pf( from[i]+err[i] ) );
     }
     ms.remap_from_features( *trans );
 
-    rgrl_scale_sptr scale = allwgt_est.estimate_weighted( ms, VXL_NULLPTR, false );
+    rgrl_scale_sptr scale = allwgt_est.estimate_weighted( ms, nullptr, false );
     TEST( "Estimate weighted scale from one-to-one, unit weight",
           scale->has_geometric_scale() && ! scale->has_signature_inv_covar(), true);
 

@@ -1,7 +1,9 @@
 #include <iostream>
 #include <cstdlib>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <bil/algo/bil_edt.h>
 
@@ -12,7 +14,7 @@
 
 void bil_edt_test(vil_image_view<vxl_uint_32> &im, bool print, bool three_d=false);
 void bil_edt_test_3D(vil_image_view<vxl_uint_32> &im, bool print);
-void bil_edt_test_specific(const vil_image_view<vxl_uint_32> &im, const vil_image_view<vxl_uint_32> dt_brute, bool print, std::string algo);
+void bil_edt_test_specific(const vil_image_view<vxl_uint_32> &im, const vil_image_view<vxl_uint_32>& dt_brute, bool print, const std::string& algo);
 
 #define DATA(I) (I).top_left_ptr()
 
@@ -144,9 +146,9 @@ bil_edt_test(vil_image_view<vxl_uint_32> &im, bool print, bool three_d)
 void
 bil_edt_test_specific(
     const vil_image_view<vxl_uint_32> &im,
-    const vil_image_view<vxl_uint_32> dt_brute,
+    const vil_image_view<vxl_uint_32>& dt_brute,
     bool print,
-    std::string algo)
+    const std::string& algo)
 {
   vil_image_view <vxl_uint_32> dt_algo(vil_copy_deep(im));
 

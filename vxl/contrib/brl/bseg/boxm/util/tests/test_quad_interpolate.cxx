@@ -10,7 +10,9 @@
 #include <boct/boct_tree_cell.h>
 #include <vil/vil_save.h>
 #include <vil/vil_plane.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpgl/vpgl_camera_double_sptr.h>
 #include <vpgl/vpgl_perspective_camera.h>
 #include <vgl/vgl_point_3d.h>
@@ -20,10 +22,10 @@
 static void test_quad_interpolate(int argc, char* argv[])
 {
   std::vector<vgl_point_2d<double> > points;
-  points.push_back(vgl_point_2d<double>(10,10));
-  points.push_back(vgl_point_2d<double>(10,12));
-  points.push_back(vgl_point_2d<double>(12,12));
-  points.push_back(vgl_point_2d<double>(12,10));
+  points.emplace_back(10,10);
+  points.emplace_back(10,12);
+  points.emplace_back(12,12);
+  points.emplace_back(12,10);
 
   double xvals[]={10,10,12,12};
   double yvals[]={10,12,12,10};
@@ -58,10 +60,10 @@ static void test_quad_interpolate(int argc, char* argv[])
   TEST("Interpolated image", true, flag);
 
   std::vector<vgl_point_2d<double> > points1;
-  points.push_back(vgl_point_2d<double>(10.25,10.25));
-  points.push_back(vgl_point_2d<double>(10.25,12.25));
-  points.push_back(vgl_point_2d<double>(12.25,12.25));
-  points.push_back(vgl_point_2d<double>(12.25,10.25));
+  points.emplace_back(10.25,10.25);
+  points.emplace_back(10.25,12.25);
+  points.emplace_back(12.25,12.25);
+  points.emplace_back(12.25,10.25);
 
   double xvals1[]={10.3,10.3,11.4,11.4};
   double yvals1[]={10.3,11.4,11.4,10.3};
@@ -89,7 +91,7 @@ static void test_quad_interpolate(int argc, char* argv[])
     TEST("Opening camera file", true, false);
     return;
   }
-  vpgl_perspective_camera<double>* cam = new vpgl_perspective_camera<double>();
+  auto* cam = new vpgl_perspective_camera<double>();
   ifs >> *cam;
   double xverts[8];
   double yverts[8];

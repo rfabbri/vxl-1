@@ -13,8 +13,10 @@
 #include <vgl/vgl_line_2d.h>
 #include <vgl/vgl_distance.h>
 #include <vil/vil_bilin_interp.h>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: find the next trace point and direction
 bool bmdl_mesh::next_trace_point(unsigned int& i, unsigned int& j, int& dir,
@@ -96,7 +98,7 @@ bool bmdl_mesh::trace_boundary(std::vector<vgl_point_2d<double> >& pts,
     }
     unsigned int pi = i+((dir==0||dir==3)?1:0);
     unsigned int pj = j+((dir/2==0)?1:0);
-    pts.push_back(vgl_point_2d<double>(pi-0.5, pj-0.5));
+    pts.emplace_back(pi-0.5, pj-0.5);
     next_trace_point(i,j,dir,p,value,ni1,nj1,istep,jstep);
   }
   while (i!=i0 || j!=j0 || dir!=2);
@@ -154,10 +156,10 @@ bool bmdl_mesh::is_clipped(const std::vector<vgl_point_2d<double> >& poly,
   // the maximum pixels are ni-1 and nj-1
   --ni;
   --nj;
-  for (unsigned int i=0; i<poly.size(); ++i)
+  for (auto i : poly)
   {
-    if (poly[i].x() < 0.0 || poly[i].y() < 0.0 ||
-        poly[i].x() > ni || poly[i].y() > nj)
+    if (i.x() < 0.0 || i.y() < 0.0 ||
+        i.x() > ni || i.y() > nj)
       return true;
   }
 
@@ -172,7 +174,7 @@ namespace
                              const vgl_point_2d<double>& p1,
                              const vgl_point_2d<double>& p2)
   {
-    unsigned int *binp = VXL_NULLPTR;
+    unsigned int *binp = nullptr;
     if (std::abs(p2.x() - p1.x()) < 0.5)
     {
       binp = &edge_bins(static_cast<unsigned int>(p1.x()+1.0),
@@ -200,7 +202,7 @@ unsigned int bmdl_mesh::link_boundary_edges(const vil_image_view<unsigned int>& 
   edge_labels.fill(0);
 
   unsigned int joint_count = 0;
-  unsigned int last_joint = static_cast<unsigned int>(-1);
+  auto last_joint = static_cast<unsigned int>(-1);
 
   regions.resize(polygons.size());
   for (unsigned int i=0; i<polygons.size(); ++i)
@@ -283,7 +285,7 @@ unsigned int bmdl_mesh::link_boundary_edges(const vil_image_view<unsigned int>& 
           {
             // start a new edge
             edge_idxs.push_back(edges.size());
-            edges.push_back(bmdl_edge(i+1,l));
+            edges.emplace_back(i+1,l);
             edges.back().pts.push_back(pts[k1]);
             edges.back().joint1 = last_joint;
             edges.back().joint2 = joint_count++;
@@ -399,16 +401,15 @@ void bmdl_mesh::simplify_polygon( std::vector<vgl_point_2d<double> >& pts, doubl
 void bmdl_mesh::simplify_boundaries( std::vector<vgl_polygon<double> >& boundaries )
 {
   // fit lines to the data points
-  for (unsigned int i=0; i<boundaries.size(); ++i)
+  for (auto & poly : boundaries)
   {
-    vgl_polygon<double>& poly = boundaries[i];
     for (unsigned int j=0; j<poly.num_sheets(); ++j)
     {
       std::vector<vgl_point_2d<double> >& pts = poly[j];
       // shift point to the edge centers (diagonals line up better this way)
       std::vector<vgl_point_2d<double> > new_pts;
       for (unsigned p1=pts.size()-1, p2=0; p2<pts.size(); p1=p2, ++p2) {
-        new_pts.push_back(vgl_point_2d<double>((pts[p1].x()+pts[p2].x())/2, (pts[p1].y()+pts[p2].y())/2));
+        new_pts.emplace_back((pts[p1].x()+pts[p2].x())/2, (pts[p1].y()+pts[p2].y())/2);
       }
       pts.swap(new_pts);
 
@@ -482,16 +483,16 @@ void bmdl_mesh::simplify_edge( std::vector<vgl_point_2d<double> >& pts, double t
 //: simplify the linked edges by fitting lines
 void bmdl_mesh::simplify_edges( std::vector<bmdl_edge>& edges )
 {
-  for (unsigned int i=0; i<edges.size(); ++i)
+  for (auto & edge : edges)
   {
-    std::vector<vgl_point_2d<double> >& pts = edges[i].pts;
+    std::vector<vgl_point_2d<double> >& pts = edge.pts;
 
     // shift point to the edge centers (diagonals line up better this way)
     std::vector<vgl_point_2d<double> > new_pts;
     new_pts.push_back(pts.front());
     for (unsigned j=1; j<pts.size(); ++j) {
-      new_pts.push_back(vgl_point_2d<double>((pts[j-1].x()+pts[j].x())/2,
-                                             (pts[j-1].y()+pts[j].y())/2));
+      new_pts.emplace_back((pts[j-1].x()+pts[j].x())/2,
+                                             (pts[j-1].y()+pts[j].y())/2);
     }
     new_pts.push_back(pts.back());
     pts.swap(new_pts);
@@ -524,8 +525,8 @@ void bmdl_mesh::mesh_lidar(const std::vector<vgl_polygon<double> >& boundaries,
     }
   }
 
-  imesh_vertex_array<3> *verts = new imesh_vertex_array<3>;
-  imesh_face_array *faces = new imesh_face_array;
+  auto *verts = new imesh_vertex_array<3>;
+  auto *faces = new imesh_face_array;
 
   // create the buildings
   for (unsigned int b=0; b<boundaries.size(); ++b) {
@@ -554,10 +555,10 @@ void bmdl_mesh::mesh_lidar(const std::vector<vgl_polygon<double> >& boundaries,
     faces->push_back(roof);
   }
 
-  vcl_unique_ptr<imesh_vertex_array_base> vb(verts);
-  vcl_unique_ptr<imesh_face_array_base> fb(faces);
-  mesh.set_vertices(vcl_move(vb));
-  mesh.set_faces(vcl_move(fb));
+  std::unique_ptr<imesh_vertex_array_base> vb(verts);
+  std::unique_ptr<imesh_face_array_base> fb(faces);
+  mesh.set_vertices(std::move(vb));
+  mesh.set_faces(std::move(fb));
 }
 
 
@@ -567,7 +568,7 @@ namespace{
                                 const imesh_vertex<3>& v)
   {
     bool found = false;
-    std::vector<unsigned int>::iterator i=vert_stack.begin();
+    auto i=vert_stack.begin();
     for (; i!=vert_stack.end() && verts[*i][2] <= v[2]; ++i)
     {
       if (verts[*i][2] == v[2])
@@ -591,7 +592,7 @@ namespace{
                  const imesh_vertex_array<3>& verts,
                  double height)
   {
-    for (std::vector<unsigned int>::const_iterator i=idxs.begin(); i!=idxs.end(); ++i)
+    for (auto i=idxs.begin(); i!=idxs.end(); ++i)
       if (verts[*i][2] == height)
         return i;
     return idxs.end();
@@ -628,21 +629,21 @@ void bmdl_mesh::mesh_lidar(const std::vector<bmdl_edge>& edges,
   for (unsigned int i = 0; i<regions.size(); ++i)
   {
     const std::vector<unsigned int>& edge_idxs = regions[i].edge_idxs;
-    for (unsigned int j = 0; j<edge_idxs.size(); ++j)
+    for (unsigned int edge_idx : edge_idxs)
     {
-      if (edges[edge_idxs[j]].building1 == i+1)
+      if (edges[edge_idx].building1 == i+1)
       {
-        face_list[i].push_back(edges[edge_idxs[j]].joint1);
+        face_list[i].push_back(edges[edge_idx].joint1);
         // insert two pseudo edge points for disambiguation
-        face_list[i].push_back(num_joints + 2*edge_idxs[j]);
-        face_list[i].push_back(num_joints + 2*edge_idxs[j] + 1);
+        face_list[i].push_back(num_joints + 2*edge_idx);
+        face_list[i].push_back(num_joints + 2*edge_idx + 1);
       }
       else
       {
-        face_list[i].push_back(edges[edge_idxs[j]].joint2);
+        face_list[i].push_back(edges[edge_idx].joint2);
         // insert two pseudo edge points for disambiguation
-        face_list[i].push_back(num_joints + 2*edge_idxs[j] + 1);
-        face_list[i].push_back(num_joints + 2*edge_idxs[j]);
+        face_list[i].push_back(num_joints + 2*edge_idx + 1);
+        face_list[i].push_back(num_joints + 2*edge_idx);
       }
     }
   }
@@ -652,13 +653,12 @@ void bmdl_mesh::mesh_lidar(const std::vector<bmdl_edge>& edges,
   std::vector<std::vector<unsigned int> > edge_to_mesh(edges.size());
   std::vector<std::vector<unsigned int> > joint_vert_stack(num_joints);
 
-  imesh_vertex_array<3> *verts = new imesh_vertex_array<3>;
-  imesh_face_array *faces = new imesh_face_array;
+  auto *verts = new imesh_vertex_array<3>;
+  auto *faces = new imesh_face_array;
 
   // precompute a mesh vertices located at joints
-  for (unsigned int e=0; e<edges.size(); ++e)
+  for (const auto & edge : edges)
   {
-    const bmdl_edge& edge = edges[e];
     const vgl_point_2d<double>& pt1 = edge.pts.front();
     const vgl_point_2d<double>& pt2 = edge.pts.back();
     std::vector<unsigned int>& jvs1 = joint_vert_stack[edge.joint1];
@@ -729,11 +729,11 @@ void bmdl_mesh::mesh_lidar(const std::vector<bmdl_edge>& edges,
       double h2 = bld_heights[f2];
       double h3 = (f3<0)?(*verts)[jvs.front()][2]:bld_heights[f3];
       std::vector<unsigned int> new_stack1;
-      for (unsigned int k=0; k<jvs.size(); ++k)
+      for (unsigned int jv : jvs)
       {
-        double z = (*verts)[jvs[k]][2];
+        double z = (*verts)[jv][2];
         if (z == h1 || z == h2 || z == h3)
-          new_stack1.push_back(jvs[k]);
+          new_stack1.push_back(jv);
       }
       revised_stack[uint_pair(f2,i)] = new_stack1;
 
@@ -741,11 +741,11 @@ void bmdl_mesh::mesh_lidar(const std::vector<bmdl_edge>& edges,
       h2 = bld_heights[f4];
       h3 = (f1<0)?(*verts)[jvs.front()][2]:bld_heights[f1];
       std::vector<unsigned int> new_stack2;
-      for (unsigned int k=0; k<jvs.size(); ++k)
+      for (unsigned int jv : jvs)
       {
-        double z = (*verts)[jvs[k]][2];
+        double z = (*verts)[jv][2];
         if (z == h1 || z == h2 || z == h3)
-          new_stack2.push_back(jvs[k]);
+          new_stack2.push_back(jv);
       }
       revised_stack[uint_pair(f4,i)] = new_stack2;
     }
@@ -762,10 +762,10 @@ void bmdl_mesh::mesh_lidar(const std::vector<bmdl_edge>& edges,
       const std::vector<unsigned int>& edge_idxs = (h<0) ? regions[b].edge_idxs :
                                                           regions[b].hole_edge_idxs[h];
       std::vector< unsigned int > roof;
-      for (unsigned int e=0; e<edge_idxs.size(); ++e)
+      for (unsigned int edge_idx : edge_idxs)
       {
-        const bmdl_edge& edge = edges[edge_idxs[e]];
-        std::vector<unsigned int> e2m = edge_to_mesh[edge_idxs[e]];
+        const bmdl_edge& edge = edges[edge_idx];
+        std::vector<unsigned int> e2m = edge_to_mesh[edge_idx];
         std::vector<vgl_point_2d<double> > pts = edge.pts;
         unsigned int other = 0;
         unsigned int j1 = edge.joint1;
@@ -798,13 +798,12 @@ void bmdl_mesh::mesh_lidar(const std::vector<bmdl_edge>& edges,
         // is this edge attached to the ground?
         bool on_ground = other == 0 || regions[other-1].edge_idxs.empty();
 
-        typedef std::vector<unsigned int>::const_iterator vfitr;
         typedef std::vector<unsigned int>::const_reverse_iterator vritr;
 
-        vfitr i1beg = jvs1.begin(); // first vertex is on ground
-        vfitr i1end = find_by_height(jvs1, *verts, bld_heights[b]);
-        vfitr i2beg = jvs2.begin(); // first vertex is on ground
-        vfitr i2end = find_by_height(jvs2, *verts, bld_heights[b]);
+        auto i1beg = jvs1.begin(); // first vertex is on ground
+        auto i1end = find_by_height(jvs1, *verts, bld_heights[b]);
+        auto i2beg = jvs2.begin(); // first vertex is on ground
+        auto i2end = find_by_height(jvs2, *verts, bld_heights[b]);
         assert(i1end != jvs1.end());
         assert(i2end != jvs2.end());
         if (!on_ground)
@@ -823,7 +822,7 @@ void bmdl_mesh::mesh_lidar(const std::vector<bmdl_edge>& edges,
         if (!on_ground && edge.building1 == b+1) // don't create side faces yet
         {
           // create the base vertices for later faces and attach the current roof
-          std::vector<unsigned int>& e2m_set = edge_to_mesh[edge_idxs[e]];
+          std::vector<unsigned int>& e2m_set = edge_to_mesh[edge_idx];
           roof.push_back(*i1beg);
           for (unsigned int i=1; i<pts.size()-1; ++i) {
             const vgl_point_2d<double>& pt = pts[i];
@@ -898,10 +897,10 @@ void bmdl_mesh::mesh_lidar(const std::vector<bmdl_edge>& edges,
     }
   }
 
-  vcl_unique_ptr<imesh_vertex_array_base> vb(verts);
-  vcl_unique_ptr<imesh_face_array_base> fb(faces);
-  mesh.set_vertices(vcl_move(vb));
-  mesh.set_faces(vcl_move(fb));
+  std::unique_ptr<imesh_vertex_array_base> vb(verts);
+  std::unique_ptr<imesh_face_array_base> fb(faces);
+  mesh.set_vertices(std::move(vb));
+  mesh.set_faces(std::move(fb));
 }
 
 
@@ -958,4 +957,3 @@ void bmdl_mesh::roof_subtract_hole(const imesh_vertex_array<3>& verts,
   new_idxs.push_back(hole[i2]);
   face.insert(face.begin()+i1, new_idxs.begin(), new_idxs.end());
 }
-

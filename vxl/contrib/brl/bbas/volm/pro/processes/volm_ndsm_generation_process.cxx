@@ -19,7 +19,9 @@
 //    Yi Dong Nov, 2015.  Modify the inputs to avoid usage of land cover image and land cover camera
 // \endverbatim
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpgl/file_formats/vpgl_geo_camera.h>
 #include <vil/vil_image_view.h>
 #include <vil/vil_load.h>
@@ -35,8 +37,8 @@
 
 namespace volm_ndsm_generation_process_globals
 {
-  const unsigned n_inputs_  = 11;
-  const unsigned n_outputs_ = 4;
+  constexpr unsigned n_inputs_ = 11;
+  constexpr unsigned n_outputs_ = 4;
 }
 
 bool volm_ndsm_generation_process_cons(bprb_func_process& pro)
@@ -44,16 +46,16 @@ bool volm_ndsm_generation_process_cons(bprb_func_process& pro)
   using namespace volm_ndsm_generation_process_globals;
   // this process takes 6 inputs
   std::vector<std::string> input_types_(n_inputs_);
-  input_types_[0]  = "double";                   // lower left lon of the region
-  input_types_[1]  = "double";                   // lower left lat of the region
-  input_types_[2]  = "double";                   // upper right lon of the region
-  input_types_[3]  = "double";                   // upper right lat of the region
-  input_types_[4]  = "unsigned";                 // desired image size along latitude
-  input_types_[5]  = "unsigned";                 // desired image size along longitude
-  input_types_[6]  = "vcl_string";               // geo index for height maps
-  input_types_[7]  = "vcl_string";               // folder of height map tiles
-  input_types_[8]  = "vcl_string";               // folder of ground images
-  input_types_[9]  = "unsigned";                 // window size
+  input_types_[0] = "double";                   // lower left lon of the region
+  input_types_[1] = "double";                   // lower left lat of the region
+  input_types_[2] = "double";                   // upper right lon of the region
+  input_types_[3] = "double";                   // upper right lat of the region
+  input_types_[4] = "unsigned";                 // desired image size along latitude
+  input_types_[5] = "unsigned";                 // desired image size along longitude
+  input_types_[6] = "vcl_string";               // geo index for height maps
+  input_types_[7] = "vcl_string";               // folder of height map tiles
+  input_types_[8] = "vcl_string";               // folder of ground images
+  input_types_[9] = "unsigned";                 // window size
   input_types_[10] = "float";                    // maximum height limit
   // this process takes 2 outputs
   std::vector<std::string> output_types_(n_outputs_);
@@ -74,17 +76,17 @@ bool volm_ndsm_generation_process(bprb_func_process& pro)
   }
   // get the input
   unsigned in_i = 0;
-  double                    ll_lon = pro.get_input<double>(in_i++);
-  double                    ll_lat = pro.get_input<double>(in_i++);
-  double                    ur_lon = pro.get_input<double>(in_i++);
-  double                    ur_lat = pro.get_input<double>(in_i++);
-  unsigned                    o_ni = pro.get_input<unsigned>(in_i++);
-  unsigned                    o_nj = pro.get_input<unsigned>(in_i++);
+  auto                    ll_lon = pro.get_input<double>(in_i++);
+  auto                    ll_lat = pro.get_input<double>(in_i++);
+  auto                    ur_lon = pro.get_input<double>(in_i++);
+  auto                    ur_lat = pro.get_input<double>(in_i++);
+  auto                    o_ni = pro.get_input<unsigned>(in_i++);
+  auto                    o_nj = pro.get_input<unsigned>(in_i++);
   std::string        geo_index_txt = pro.get_input<std::string>(in_i++);
   std::string         h_map_folder = pro.get_input<std::string>(in_i++);
   std::string           grd_folder = pro.get_input<std::string>(in_i++);
-  unsigned             window_size = pro.get_input<unsigned>(in_i++);
-  float                h_max_limit = pro.get_input<float>(in_i++);
+  auto             window_size = pro.get_input<unsigned>(in_i++);
+  auto                h_max_limit = pro.get_input<float>(in_i++);
 
   if (!vul_file::exists(geo_index_txt)) {
     std::cerr << pro.name() << ": can not find geo index file " << geo_index_txt << "!\n";
@@ -104,9 +106,9 @@ bool volm_ndsm_generation_process(bprb_func_process& pro)
   out_cam->set_scale_format(true);
   std::cerr << "land map region -- lower_left: " << ll_lon << ',' << ll_lat << ", upper_right: " << ur_lon << ',' << ur_lat << std::endl;
   std::cout << "output image size is ni: " << o_ni << ", nj: " << o_nj << std::endl;
-  vil_image_view<float>* out_dsm = new vil_image_view<float>(o_ni, o_nj);
-  vil_image_view<vxl_byte>* out_ndsm = new vil_image_view<vxl_byte>(o_ni, o_nj);
-  vil_image_view<float>* grd_img = new vil_image_view<float>(o_ni, o_nj);
+  auto* out_dsm = new vil_image_view<float>(o_ni, o_nj);
+  auto* out_ndsm = new vil_image_view<vxl_byte>(o_ni, o_nj);
+  auto* grd_img = new vil_image_view<float>(o_ni, o_nj);
   out_dsm->fill(-1.0);
   out_ndsm->fill(255);
   grd_img->fill(-1.0f);
@@ -138,10 +140,10 @@ bool volm_ndsm_generation_process(bprb_func_process& pro)
 
   // load all height maps
   std::vector<volm_img_info> h_infos;
-  for (unsigned leaf_idx = 0; leaf_idx < leaf_ids.size(); leaf_idx++)
+  for (unsigned int leaf_id : leaf_ids)
   {
     std::stringstream img_file_stream;
-    img_file_stream << h_map_folder << "/scene_" << leaf_ids[leaf_idx] << "_h_stereo.tif";
+    img_file_stream << h_map_folder << "/scene_" << leaf_id << "_h_stereo.tif";
     std::string h_img_file = img_file_stream.str();
     if (!vul_file::exists(h_img_file))
       continue;
@@ -152,10 +154,10 @@ bool volm_ndsm_generation_process(bprb_func_process& pro)
 
   // load all ground images
   std::vector<volm_img_info> grd_infos;
-  for (unsigned leaf_idx = 0; leaf_idx < leaf_ids.size(); leaf_idx++)
+  for (unsigned int leaf_id : leaf_ids)
   {
     std::stringstream img_file_stream;
-    img_file_stream << grd_folder << "/scene_" << leaf_ids[leaf_idx] << "_h_stereo_grd.tif";
+    img_file_stream << grd_folder << "/scene_" << leaf_id << "_h_stereo_grd.tif";
     std::string h_img_file = img_file_stream.str();
     if (!vul_file::exists(h_img_file))
       continue;
@@ -175,15 +177,15 @@ bool volm_ndsm_generation_process(bprb_func_process& pro)
       double lon, lat;
       out_cam->img_to_global(i, j, lon, lat);
       bool found = false;
-      for (std::vector<volm_img_info>::iterator vit = h_infos.begin(); (vit != h_infos.end() && !found); ++vit) {
+      for (auto vit = h_infos.begin(); (vit != h_infos.end() && !found); ++vit) {
         vgl_box_2d<double> bbox = vit->bbox;
         bbox.expand_about_centroid(2E-5);
         if (!bbox.contains(lon, lat))
           continue;
         double u, v;
         vit->cam->global_to_img(lon, lat, 0.0, u, v);
-        unsigned uu = (unsigned)std::floor(u+0.5);
-        unsigned vv = (unsigned)std::floor(v+0.5);
+        auto uu = (unsigned)std::floor(u+0.5);
+        auto vv = (unsigned)std::floor(v+0.5);
         if (uu < vit->ni && vv < vit->nj) {
           found = true;
           vil_image_view<float> h_img(vit->img_r);
@@ -204,15 +206,15 @@ bool volm_ndsm_generation_process(bprb_func_process& pro)
       double lon, lat;
       out_cam->img_to_global(i, j, lon, lat);
       bool found = false;
-      for (std::vector<volm_img_info>::iterator vit = grd_infos.begin(); (vit != grd_infos.end() && !found); ++vit) {
+      for (auto vit = grd_infos.begin(); (vit != grd_infos.end() && !found); ++vit) {
         vgl_box_2d<double> bbox = vit->bbox;
         bbox.expand_about_centroid(2E-5);
         if (!bbox.contains(lon, lat))
           continue;
         double u, v;
         vit->cam->global_to_img(lon, lat, 0.0, u, v);
-        unsigned uu = (unsigned)std::floor(u+0.5);
-        unsigned vv = (unsigned)std::floor(v+0.5);
+        auto uu = (unsigned)std::floor(u+0.5);
+        auto vv = (unsigned)std::floor(v+0.5);
         if (uu < vit->ni && vv < vit->nj) {
           found = true;
           vil_image_view<float> g_img(vit->img_r);

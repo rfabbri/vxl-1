@@ -8,7 +8,9 @@
 #include <bpro/core/bbas_pro/bbas_1d_array_string.h>
 #include <vsl/vsl_binary_io.h>
 #include <vil/vil_load.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 namespace bbas_core_brad_update_hist
 {
@@ -19,7 +21,7 @@ namespace bbas_core_brad_update_hist
                            bsta_joint_histogram_3d<float>& hist
                           )
   {
-    unsigned n = (unsigned)paths.data_array.size();
+    auto n = (unsigned)paths.data_array.size();
 
     std::vector<vil_image_resource_sptr> resources;
     for (unsigned i  = 0; i < n; ++i) {
@@ -49,7 +51,7 @@ bool brad_update_joint_hist_3d_process_cons(bprb_func_process& pro)
   input_types[5]="unsigned";//number of rows in a tile
   //one output
   std::vector<std::string> output_types;
-  output_types.push_back("bsta_joint_histogram_3d_base_sptr"); //joint_hist_3d
+  output_types.emplace_back("bsta_joint_histogram_3d_base_sptr"); //joint_hist_3d
 
   return pro.set_input_types(input_types) &&
          pro.set_output_types(output_types);
@@ -72,7 +74,7 @@ bool brad_update_joint_hist_3d_process(bprb_func_process& pro)
   bsta_joint_histogram_3d_base_sptr hptr =
     pro.get_input<bsta_joint_histogram_3d_base_sptr>(1);
 
-  bsta_joint_histogram_3d<float>* hist = dynamic_cast<bsta_joint_histogram_3d<float>*>(hptr.ptr());
+  auto* hist = dynamic_cast<bsta_joint_histogram_3d<float>*>(hptr.ptr());
 
   if (!hist) {
     std::cout << "in update_joint_hist_3d_process, hist can't be cast\n";
@@ -82,9 +84,9 @@ bool brad_update_joint_hist_3d_process(bprb_func_process& pro)
   bbas_1d_array_string_sptr paths =
     pro.get_input<bbas_1d_array_string_sptr>(2);
 
-  double frac = pro.get_input<double>(3);
-  unsigned nit = pro.get_input<unsigned>(4);
-  unsigned njt = pro.get_input<unsigned>(5);
+  auto frac = pro.get_input<double>(3);
+  auto nit = pro.get_input<unsigned>(4);
+  auto njt = pro.get_input<unsigned>(5);
 
   CAST_CALL_EIGENSPACE(es_ptr, hist_update_process(*paths, *ep, frac, nit, njt,*hist), "in update_histogram_process - update function failed")
 
@@ -93,4 +95,3 @@ bool brad_update_joint_hist_3d_process(bprb_func_process& pro)
   pro.set_output_val<bsta_joint_histogram_3d_base_sptr>(0, out_ptr);
   return true;
 }
-

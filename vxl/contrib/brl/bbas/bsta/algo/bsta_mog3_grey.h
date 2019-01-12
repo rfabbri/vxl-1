@@ -13,8 +13,12 @@
 //  April 2016
 // \endverbatim
 
+#include <iostream>
+#include <vector>
 #include <vnl/vnl_vector_fixed.h>
-#include <vcl_vector.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <bsta/algo/bsta_sigma_normalizer.h>
 
@@ -55,15 +59,15 @@ class  bsta_mog3_grey
                                  vnl_vector_fixed<unsigned char, 8> & mog3_3);
 
      static void compute_app_model(vnl_vector_fixed<unsigned char, 8> & apm,
-                                         vcl_vector<float> const& obs,
-                                         vcl_vector<float> const& obs_weights,
-                                         bsta_sigma_normalizer_sptr n_table,
+                                         std::vector<float> const& obs,
+                                         std::vector<float> const& obs_weights,
+                                         const bsta_sigma_normalizer_sptr& n_table,
                                          float min_sigma = 0.01f);
      static void compute_app_model(vnl_vector_fixed<unsigned char, 8> & apm,
-                                   vcl_vector<float> const& obs,
-                                   vcl_vector<float> const& pre,
-                                   vcl_vector<float> const& vis,
-                                   bsta_sigma_normalizer_sptr n_table,
+                                   std::vector<float> const& obs,
+                                   std::vector<float> const& pre,
+                                   std::vector<float> const& vis,
+                                   const bsta_sigma_normalizer_sptr& n_table,
                                    float min_sigma=0.01f);
 
      static void force_mog3_sigmas_to_value(vnl_vector_fixed<unsigned char, 8> & mog3,float sigma);

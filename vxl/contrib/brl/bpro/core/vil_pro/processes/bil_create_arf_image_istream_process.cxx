@@ -7,7 +7,9 @@
 // \file
 
 #include <bprb/bprb_parameters.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_image_view_base.h>
 #include <bil/bil_arf_image_istream.h>
 
@@ -109,7 +111,7 @@ bool bil_arf_seek_frame_process(bprb_func_process& pro)
   }
   //Retrieve filename from input
   bil_arf_image_istream_sptr stream = pro.get_input<bil_arf_image_istream_sptr>(0);
-  unsigned                   frame  = pro.get_input<unsigned>(1);
+  auto                   frame  = pro.get_input<unsigned>(1);
 
   //seek, retrieve image, and output
   stream->seek_frame(frame);
@@ -121,4 +123,3 @@ bool bil_arf_seek_frame_process(bprb_func_process& pro)
   pro.set_output_val<unsigned>(1, time);
   return true;
 }
-

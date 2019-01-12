@@ -19,7 +19,9 @@
 
 #include <brdb/brdb_value.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <boxm/boxm_scene.h>
 #include <boxm/boxm_scene_parser.h>
@@ -28,8 +30,8 @@
 namespace bvpl_create_scene_process_globals
 {
   //this process takes no inputs
-  const unsigned n_inputs_ = 1;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 1;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 //:sets input and output types
@@ -60,7 +62,7 @@ bool bvpl_create_scene_process(bprb_func_process& pro)
     if (!scene_ptr->multi_bin())
     {
       typedef boct_tree<short,bvpl_octree_sample<float> > tree_type;
-      boxm_scene<tree_type>* scene = new boxm_scene<tree_type>();
+      auto* scene = new boxm_scene<tree_type>();
       scene->load_scene(parser);
       scene_ptr = scene;
     }
@@ -69,7 +71,7 @@ bool bvpl_create_scene_process(bprb_func_process& pro)
     if (!scene_ptr->multi_bin())
     {
       typedef boct_tree<short,bvpl_octree_sample<bsta_num_obs<bsta_gauss_sf1> > > tree_type;
-      boxm_scene<tree_type>* scene = new boxm_scene<tree_type>();
+      auto* scene = new boxm_scene<tree_type>();
       scene->load_scene(parser);
       scene_ptr = scene;
     }

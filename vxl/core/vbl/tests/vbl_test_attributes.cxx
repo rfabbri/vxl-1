@@ -1,7 +1,9 @@
 // This is core/vbl/tests/vbl_test_attributes.cxx
 #include <iostream>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_array_1d.h>
 #include <vbl/vbl_array_2d.h>
 #include <vbl/vbl_array_3d.h>
@@ -10,7 +12,7 @@
 static void vbl_test_attributes_1d()
 {
   std::cout << "\n Testing vbl_attributes 1d\n +++++++++++++++++++++++++\n\n";
-  const unsigned n = 10;
+  constexpr unsigned n = 10;
   vbl_array_1d<double> v(n,1.0);
   // set up minima at middle and two ends
   v[0]=0.06;   v[n/2]= 0.05;  v[n-1]=0.04; v[1]=10.0;

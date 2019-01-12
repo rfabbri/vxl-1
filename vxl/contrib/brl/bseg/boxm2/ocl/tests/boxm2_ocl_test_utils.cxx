@@ -141,7 +141,7 @@ void boxm2_ocl_test_utils::print_alpha_scene(boxm2_scene_sptr scene)
 
     //3d array of trees
     const boxm2_array_3d<uchar16>& trees = blk->trees();
-    boxm2_data_traits<BOXM2_ALPHA>::datatype * alpha_data = (boxm2_data_traits<BOXM2_ALPHA>::datatype*) alphas->data_buffer();
+    auto * alpha_data = (boxm2_data_traits<BOXM2_ALPHA>::datatype*) alphas->data_buffer();
 
     //iterate through each block, filtering the root level first
     for (unsigned int x = 0; x < trees.get_row1_count(); ++x) {
@@ -185,17 +185,16 @@ void boxm2_ocl_test_utils::clean_up()
     vul_file::delete_file_glob(s_file_it());
   }
 }
-char* boxm2_ocl_test_utils::construct_block_test_stream(int numBuffers,
+char* boxm2_ocl_test_utils::construct_block_test_stream(int  /*numBuffers*/,
                                                     int treeLen,
                                                     const int* nums,
-                                                    double* dims,
-                                                    int init_level,
-                                                    int max_level,
-                                                    int max_mb )
+                                                    double*  /*dims*/,
+                                                    int  /*init_level*/,
+                                                    int  /*max_level*/,
+                                                    int  /*max_mb*/ )
 {
     typedef vnl_vector_fixed<unsigned char, 16> uchar16;
     typedef vnl_vector_fixed<unsigned short, 2> ushort2;
-    typedef unsigned short                      ushort;
 
     //write size, init_level, max_level, max_mb
     int numTrees = nums[0]*nums[1]*nums[2];
@@ -234,7 +233,7 @@ char* boxm2_ocl_test_utils::construct_block_test_stream(int numBuffers,
     return bsize;
 }
 
-std::string boxm2_ocl_test_utils::save_test_simple_scene(std::string filename )
+std::string boxm2_ocl_test_utils::save_test_simple_scene(const std::string& filename )
 {
     std::string test_dir  = testlib_root_dir()+ "/contrib/brl/bseg/boxm2/ocl/tests/";
     std::string test_file = test_dir + filename;
@@ -301,11 +300,11 @@ std::string boxm2_ocl_test_utils::save_test_simple_scene(std::string filename )
 
   // save the same random data block 8 times
   typedef vnl_vector_fixed<unsigned char, 8> uchar8;
-  const unsigned int array_size = 4; //roughly 20 megs for alpha
-  float * farray = new float[array_size];
-  uchar8* carray = new uchar8[array_size];
+  constexpr unsigned int array_size = 4; //roughly 20 megs for alpha
+  auto * farray = new float[array_size];
+  auto* carray = new uchar8[array_size];
   for (unsigned c=0; c<array_size; ++c) {
-    float rnd = (float) rand.drand32(0,100);
+    auto rnd = (float) rand.drand32(0,100);
     farray[c] = rnd;
     carray[c] = uchar8((unsigned char) rnd);
   }

@@ -1,8 +1,5 @@
 // This is mul/clsfy/clsfy_random_builder.cxx
 // Copyright (c) 2001: British Telecommunications plc
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \brief Implement a random classifier builder
@@ -13,8 +10,10 @@
 #include <string>
 #include "clsfy_random_builder.h"
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vsl/vsl_binary_loader.h>
 #include <clsfy/clsfy_random_classifier.h>
 #include <vnl/vnl_c_vector.h>
@@ -101,7 +100,7 @@ double clsfy_random_builder::build(clsfy_classifier_base& model,
 {
   const unsigned n = outputs.size();
   assert(model.is_class("clsfy_random_classifier"));
-  clsfy_random_classifier &randclass = (clsfy_random_classifier&) model;
+  auto &randclass = (clsfy_random_classifier&) model;
 
   if (nClasses==1) nClasses=2;
 
@@ -114,7 +113,7 @@ double clsfy_random_builder::build(clsfy_classifier_base& model,
     freqs[outputs[i]] ++;
   }
 
-  double sum = (double)(vnl_c_vector<unsigned>::sum(&freqs.front(), nClasses));
+  auto sum = (double)(vnl_c_vector<unsigned>::sum(&freqs.front(), nClasses));
   std::vector<double> probs(nClasses);
   for (unsigned i=0; i < nClasses; ++i)
     probs[i] = freqs[i] / sum;
@@ -149,4 +148,3 @@ clsfy_classifier_base* clsfy_random_builder::new_classifier() const
 {
   return new clsfy_random_classifier();
 }
-

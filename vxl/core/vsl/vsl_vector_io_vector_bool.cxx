@@ -7,7 +7,9 @@
 #include <iostream>
 #include "vsl_vector_io.h"
 #include <vsl/vsl_binary_io.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vcl_deprecated.h>
 
 //====================================================================================
@@ -48,6 +50,3 @@ void vsl_b_read_vec_vec_bool_old(vsl_b_istream& is, std::vector<std::vector<bool
     return;
   }
 }
-
-
-

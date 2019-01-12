@@ -11,7 +11,9 @@
 // \date   November 5, 2003
 // \brief  See vgui_selector_tableau.h for a description of this file.
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vgui/vgui.h>
 #include <vgui/vgui_gl.h>
@@ -219,7 +221,7 @@ void vgui_selector_tableau::clear()
 vgui_tableau_sptr vgui_selector_tableau::active_tableau() const
 {
   std::map<std::string, vgui_parent_child_link>::const_iterator itr = child_map_.find(active_child_);
-  if (itr == child_map_.end()) return VXL_NULLPTR;
+  if (itr == child_map_.end()) return nullptr;
   return itr->second;
 }
 
@@ -228,7 +230,7 @@ vgui_tableau_sptr vgui_selector_tableau::active_tableau() const
 vgui_tableau_sptr vgui_selector_tableau::get_tableau(const std::string& name) const
 {
   std::map<std::string, vgui_parent_child_link>::const_iterator itr = child_map_.find(name);
-  if (itr == child_map_.end()) return VXL_NULLPTR;
+  if (itr == child_map_.end()) return nullptr;
   return itr->second;
 }
 
@@ -445,4 +447,3 @@ void vgui_selector_tableau::get_popup(const vgui_popup_params& params,
     }
   }
 }
-

@@ -65,7 +65,9 @@
 
 #include <iostream>
 #include <fstream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_vector_fixed.h>
 
@@ -100,14 +102,14 @@ typedef std::vector< rgrl_invariant_sptr> landmark_invaraint_vector;
 class command_iteration_update: public rgrl_command
 {
  public:
-  void execute(rgrl_object* caller, const rgrl_event & event )
+  void execute(rgrl_object* caller, const rgrl_event & event ) override
   {
     execute( (const rgrl_object*) caller, event );
   }
 
-  void execute(const rgrl_object* caller, const rgrl_event & /*event*/ )
+  void execute(const rgrl_object* caller, const rgrl_event & /*event*/ ) override
   {
-    const rgrl_feature_based_registration* reg_engine =
+    const auto* reg_engine =
       dynamic_cast<const rgrl_feature_based_registration*>(caller);
     rgrl_transformation_sptr trans = reg_engine->current_transformation();
 
@@ -199,7 +201,7 @@ read_landmark_file( const char* filename,
       // If the single constellation was ambiguous create a copy with
       // the indices shifted to relieve the ambiguity
       if ( single->is_ambiguous() ) {
-        rgrl_invariant_single_landmark* copy =
+        auto* copy =
           new rgrl_invariant_single_landmark( *single, angular_std, width_ratio_std );
         landmark_inv.push_back( copy );
       }

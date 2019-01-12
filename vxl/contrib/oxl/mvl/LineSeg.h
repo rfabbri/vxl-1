@@ -8,7 +8,9 @@
 //-----------------------------------------------------------------------------
 #include <iostream>
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class LineSeg
 {
@@ -23,9 +25,9 @@ class LineSeg
 
  public:
   // Constructors/Destructors--------------------------------------------------
-  LineSeg() {}
+  LineSeg() = default;
   LineSeg(float x0, float y0, float x1, float y1, float theta, float grad_mean);
-  ~LineSeg() {}
+  ~LineSeg() = default;
 };
 
 std::ostream& operator<<(std::ostream&, const LineSeg& l);

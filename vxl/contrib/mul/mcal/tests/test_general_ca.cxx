@@ -25,7 +25,9 @@
 #include <mcal/mcal_pca.h>
 #include <mcal/mcal_sparse_basis_cost.h>
 #include <mcal/mcal_var_basis_cost.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //=======================================================================
 
@@ -146,13 +148,13 @@ void test_general_ca()
           "  basis_cost: mcal_sparse_basis_cost { alpha: 0.1 }\n"
           "}\n");
 
-    vcl_unique_ptr<mcal_component_analyzer>
+    std::unique_ptr<mcal_component_analyzer>
             ca = mcal_component_analyzer::create_from_stream(ss);
 
     TEST("Correct component analyzer",ca->is_a(),"mcal_general_ca");
     if (ca->is_a()=="mcal_general_ca")
     {
-      mcal_general_ca &a_ca = static_cast<mcal_general_ca&>(*ca);
+      auto &a_ca = static_cast<mcal_general_ca&>(*ca);
       std::cout<<a_ca<<std::endl;
       TEST("initial_ca",a_ca.initial_ca().is_a(),"mcal_trivial_ca");
       TEST("basis_cost",a_ca.basis_cost().is_a(),"mcal_sparse_basis_cost");

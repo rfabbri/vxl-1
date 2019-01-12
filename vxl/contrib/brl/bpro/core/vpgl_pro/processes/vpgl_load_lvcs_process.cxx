@@ -9,7 +9,9 @@
 // \date Nov. 11, 2013
 
 #include <bprb/bprb_parameters.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpgl/vpgl_lvcs.h>
 #include <vpgl/vpgl_lvcs_sptr.h>
 
@@ -18,9 +20,9 @@ bool vpgl_load_lvcs_process_cons(bprb_func_process& pro)
 {
   //this process take one input and one output
   std::vector<std::string> input_types;
-  input_types.push_back("vcl_string");  // text file where the lvcs is saved
+  input_types.emplace_back("vcl_string");  // text file where the lvcs is saved
   std::vector<std::string> output_types;
-  output_types.push_back("vpgl_lvcs_sptr");
+  output_types.emplace_back("vpgl_lvcs_sptr");
 
   return pro.set_input_types(input_types) && pro.set_output_types(output_types);
 }
@@ -50,4 +52,3 @@ bool vpgl_load_lvcs_process(bprb_func_process& pro)
   pro.set_output_val<vpgl_lvcs_sptr>(0, lvcs);
   return true;
 }
-

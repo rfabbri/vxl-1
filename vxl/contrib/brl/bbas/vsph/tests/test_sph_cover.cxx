@@ -3,7 +3,9 @@
 #include <vector>
 #include <cstdlib>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsph/vsph_unit_sphere.h>
 #include <vsph/vsph_segment_sphere.h>
 #include <vsph/vsph_sph_point_2d.h>
@@ -27,21 +29,18 @@ static void test_sph_cover()
   bb_a.sub_divide(boxes_a);
   bb_b.sub_divide(boxes_b);
   std::vector<cover_el> cels_a, cels_b;
-  for (std::vector<vsph_sph_box_2d>::iterator bit = boxes_a.begin();
-       bit != boxes_a.end(); ++bit)
-    cels_a.push_back(cover_el(*bit, 1.0));
-  for (std::vector<vsph_sph_box_2d>::iterator bit = boxes_b.begin();
-       bit != boxes_b.end(); ++bit)
-    cels_b.push_back(cover_el(*bit, 1.0));
+  for (auto & bit : boxes_a)
+    cels_a.emplace_back(bit, 1.0);
+  for (auto & bit : boxes_b)
+    cels_b.emplace_back(bit, 1.0);
   vsph_sph_cover_2d cov_a, cov_b, cov_int;
   cov_a.set(1.0, area_a, 1.0, cels_a);
   cov_b.set(1.0, area_b, 1.0, cels_b);
  intersection(cov_a, cov_b, cov_int);
  intersection(bb_a, bb_b, boxes_int);
  double orig_int_area = 0.0;
- for (std::vector<vsph_sph_box_2d>::iterator iit = boxes_int.begin();
-      iit != boxes_int.end(); ++iit)
- orig_int_area += (*iit).area();
+ for (auto & iit : boxes_int)
+ orig_int_area += iit.area();
  double cover_int_area = cov_int.area();
  TEST_NEAR("intersection of disjoint covers", orig_int_area, cover_int_area, 0.001);
  double cover_inter_area = intersection_area(cov_a, cov_b);

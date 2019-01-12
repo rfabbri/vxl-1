@@ -32,15 +32,15 @@ bool brec_recognize_structure_process_cons(bprb_func_process& pro)
 {
   //inputs
   std::vector<std::string> input_types;
-  input_types.push_back("vil_image_view_base_sptr");      // input orig view
-  input_types.push_back("unsigned");      // detector id for the type of structure to be recognized
-  input_types.push_back("float");      // angle to rotate detector for the type of structure to be recognized
+  input_types.emplace_back("vil_image_view_base_sptr");      // input orig view
+  input_types.emplace_back("unsigned");      // detector id for the type of structure to be recognized
+  input_types.emplace_back("float");      // angle to rotate detector for the type of structure to be recognized
                                   // should be passed zero if the original orientation of the detector will be used
   if (pro.set_input_types(input_types))
   { //output
     std::vector<std::string> output_types;
-    output_types.push_back("vil_image_view_base_sptr"); // output prob map
-    output_types.push_back("vil_image_view_base_sptr"); // output map overlayed on orig view as a byte image
+    output_types.emplace_back("vil_image_view_base_sptr"); // output prob map
+    output_types.emplace_back("vil_image_view_base_sptr"); // output map overlayed on orig view as a byte image
     return pro.set_output_types(output_types);
   }
   else
@@ -70,8 +70,8 @@ bool brec_recognize_structure_process(bprb_func_process& pro)
   vul_timer t2;
   t2.mark();
 
-  unsigned d_id = pro.get_input<unsigned>(i++);
-  float angle = pro.get_input<float>(i++);
+  auto d_id = pro.get_input<unsigned>(i++);
+  auto angle = pro.get_input<float>(i++);
 
   brec_part_hierarchy_sptr h;
   switch (d_id) {
@@ -141,21 +141,21 @@ bool brec_recognize_structure2_process_cons(bprb_func_process& pro)
 {
   //inputs
   std::vector<std::string> input_types;
-  input_types.push_back("vil_image_view_base_sptr");      // input orig view
-  input_types.push_back("vil_image_view_base_sptr");      // input view's "foreground" probability map, float img with values in [0,1] range,
+  input_types.emplace_back("vil_image_view_base_sptr");      // input orig view
+  input_types.emplace_back("vil_image_view_base_sptr");      // input view's "foreground" probability map, float img with values in [0,1] range,
                                                           // CAUTION: Convert it before passing to this process if necessary, e.g. if only the background map is available
-  input_types.push_back("brec_part_hierarchy_sptr"); // detector hierarchy for the type of structure to be recognized (needs to be loaded a priori)
-  input_types.push_back("float");      // angle to rotate detector for the type of structure to be recognized
+  input_types.emplace_back("brec_part_hierarchy_sptr"); // detector hierarchy for the type of structure to be recognized (needs to be loaded a priori)
+  input_types.emplace_back("float");      // angle to rotate detector for the type of structure to be recognized
                                   // should be passed zero if the original orientation of the detector will be used
-  input_types.push_back("bool");  // set to true if detecting instances during training (sets rho value of the primitives differently during training)
-  input_types.push_back("double");
+  input_types.emplace_back("bool");  // set to true if detecting instances during training (sets rho value of the primitives differently during training)
+  input_types.emplace_back("double");
 
   if (pro.set_input_types(input_types)) {
     //output
     std::vector<std::string> output_types;
-    output_types.push_back("vil_image_view_base_sptr");      // output prob map
-    output_types.push_back("vil_image_view_base_sptr");      // output map overlayed on orig view as a byte image
-    output_types.push_back("brec_part_hierarchy_detector_sptr");      // output map overlayed on orig view as a byte image
+    output_types.emplace_back("vil_image_view_base_sptr");      // output prob map
+    output_types.emplace_back("vil_image_view_base_sptr");      // output map overlayed on orig view as a byte image
+    output_types.emplace_back("brec_part_hierarchy_detector_sptr");      // output map overlayed on orig view as a byte image
     return pro.set_output_types(output_types);
   }
   else
@@ -194,9 +194,9 @@ bool brec_recognize_structure2_process(bprb_func_process& pro)
   }
 
   brec_part_hierarchy_sptr h = pro.get_input<brec_part_hierarchy_sptr>(i++);
-  float angle = pro.get_input<float>(i++);
+  auto angle = pro.get_input<float>(i++);
   bool training = pro.get_input<bool>(i++);
-  double detection_radius = pro.get_input<double>(i++);
+  auto detection_radius = pro.get_input<double>(i++);
 
   vul_timer t2;
   t2.mark();
@@ -234,4 +234,3 @@ bool brec_recognize_structure2_process(bprb_func_process& pro)
 
   return true;
 }
-

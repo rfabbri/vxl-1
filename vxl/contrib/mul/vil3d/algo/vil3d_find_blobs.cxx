@@ -8,8 +8,10 @@
 // \brief Identify and enumerate all disjoint blobs in a binary image.
 // \author Ian Scott, Kevin de Souza
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vil3d/vil3d_image_view.h>
 #include <vil3d/vil3d_math.h>
@@ -117,7 +119,6 @@ void vil3d_find_blobs(const vil3d_image_view<bool>& src,
   int neighbourhood_jj[] = { 0, -1, 0, -1, -1, -1,  0,  0, +1, +1, +1, -1, -1};
   int neighbourhood_kk[] = { 0, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1,  0,  0};
 
-  typedef std::vector<unsigned>::iterator ITER;
 
   for (unsigned k=0; k<nk; ++k)
     for (unsigned j=0; j<nj; ++j)
@@ -146,10 +147,10 @@ void vil3d_find_blobs(const vil3d_image_view<bool>& src,
         {
           // See how many unique labels neighbouring labels we have
           std::sort(neighbouring_labels.begin(), neighbouring_labels.end());
-          ITER end = std::unique(neighbouring_labels.begin(), neighbouring_labels.end());
+          auto end = std::unique(neighbouring_labels.begin(), neighbouring_labels.end());
           // don't bother erasing unique suffix, just keeping the end iterator
           // will be enough.
-          ITER it=neighbouring_labels.begin();
+          auto it=neighbouring_labels.begin();
           unsigned label = *it++;
           dst(i,j,k) = label;
 
@@ -186,14 +187,14 @@ void vil3d_find_blobs(const vil3d_image_view<bool>& src,
   std::vector<unsigned> labels(renumbering.begin(), renumbering.end());
   std::sort(labels.begin(), labels.end());
   labels.erase(std::unique(labels.begin(), labels.end()), labels.end());
-  const unsigned dodgy = static_cast<unsigned>(-1);
+  const auto dodgy = static_cast<unsigned>(-1);
   std::vector<unsigned> renum_renum(renumbering.size(), dodgy);
   renum_renum[0]=0;
   for (unsigned l=0, n=labels.size(); l<n; ++l)
     renum_renum[labels[l]] = l;
 
-  for (ITER it=renumbering.begin(), end=renumbering.end(); it!=end; ++it)
-    *it=renum_renum[*it];
+  for (unsigned int & it : renumbering)
+    it=renum_renum[it];
 
   // Check than no DODGY values got into the renumbering.
   assert(std::find(renumbering.begin(), renumbering.end(), dodgy)
@@ -212,7 +213,7 @@ void vil3d_find_blobs(const vil3d_image_view<bool>& src,
 //: Convert a label image into a list of chorded regions.
 // A blob label value of n will be returned in dest_regions[n-1].
 void vil3d_blob_labels_to_regions(const vil3d_image_view<unsigned>& src_label,
-                                vcl_vector<vil3d_region>& regions)
+                                std::vector<vil3d_region>& regions)
 {
   regions.clear();
   unsigned ni=src_label.ni();

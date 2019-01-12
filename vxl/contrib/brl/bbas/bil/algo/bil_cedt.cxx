@@ -5,17 +5,17 @@
 // \file
 
 #include <vbl/vbl_array_2d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 bil_cedt::bil_cedt()
-{
-}
+= default;
 
 bil_cedt::~bil_cedt()
-{
-}
+= default;
 
-bil_cedt::bil_cedt(vil_image_view<unsigned char> im)
+bil_cedt::bil_cedt(const vil_image_view<unsigned char>& im)
 {
     img_=im;
     ni_=img_.ni();
@@ -38,7 +38,7 @@ bool bil_cedt::compute_cedt()
                 level(j,i)=1;
         }
     }
-    bil_cedt_heap * heap=new bil_cedt_heap(nj_,ni_);
+    auto * heap=new bil_cedt_heap(nj_,ni_);
 
     // initialize the heap for positive values
     find_dist_trans(level, heap);
@@ -806,4 +806,3 @@ bil_cedt_contour::~bil_cedt_contour()
   delete[] y;
   delete[] dir;
 }
-

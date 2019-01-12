@@ -13,7 +13,9 @@
 #include <vgl/vgl_box_2d.h>
 #include <vgl/vgl_homg_point_2d.h>
 #include <vgl/algo/vgl_homg_operators_2d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_double_3x3.h>
 #include <vnl/vnl_vector_fixed.h>
 #include <vnl/vnl_math.h>
@@ -93,7 +95,7 @@ check_points_on_conics(vgl_conic<double> const& c1, vgl_conic<double> const& c2,
                        std::list<vgl_homg_point_2d<double> > const& pts)
 {
   // verify whether each of the intersection points (in pts) really lie on the conics
-  std::list<vgl_homg_point_2d<double> >::const_iterator it = pts.begin();
+  auto it = pts.begin();
   for (; it != pts.end(); ++it) {
     vgl_homg_point_2d<double> p = *it;
     double fval1, fval2, x, y;
@@ -321,7 +323,7 @@ static void test_conic()
   std::cout << cc << '\n';
   pts = vgl_homg_operators_2d<double>::intersection(c,cc);
   TEST("intersection count = 4", pts.size(), 4);
-  std::list<vgl_homg_point_2d<double> >::iterator it = pts.begin();
+  auto it = pts.begin();
   std::cout << (*it) << '\n';
   TEST_NEAR("first point", (*it), vgl_homg_point_2d<double>(-1.42536,6.85071,1), 1e-6);
   ++it; std::cout << (*it) << '\n';
@@ -333,7 +335,7 @@ static void test_conic()
 
   lines = vgl_homg_operators_2d<double>::common_tangents(c,cc);
   TEST("common tangent count = 4", lines.size(), 4);
-  std::list<vgl_homg_line_2d<double> >::iterator il = lines.begin();
+  auto il = lines.begin();
   std::cout << c << '\n' << cc << '\n';
   for (; il != lines.end(); ++il) std::cout << (*il) << '\n';
 

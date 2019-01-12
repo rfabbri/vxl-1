@@ -2,8 +2,10 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <vxl_config.h> // for vxl_uint_16 etc.
 
@@ -27,7 +29,7 @@ typedef vxl_uint_32 TruePixelType;
 class CheckPixel
 {
  public:
-  virtual ~CheckPixel() {}
+  virtual ~CheckPixel() = default;
   virtual bool operator() ( unsigned int p, unsigned int i, unsigned int j, unsigned int k,
                             const std::vector<TruePixelType>& pixel ) const = 0;
 };
@@ -83,7 +85,7 @@ class CheckGrey : public CheckPixelT<T>
   CheckGrey( const char* file ): CheckPixelT<T>(file) {}
 
   bool operator() ( unsigned int p, unsigned int i, unsigned int j, unsigned int k,
-                    const std::vector<TruePixelType>& pixel ) const
+                    const std::vector<TruePixelType>& pixel ) const override
   {
     assert( p == 0 );
     return this->img_ && pixel.size() == 1 &&
@@ -102,7 +104,7 @@ class CheckColourPlanes : public CheckPixelT<T>
   CheckColourPlanes( const char* file ): CheckPixelT<T>(file) {}
 
   bool operator() ( unsigned int p, unsigned int i, unsigned int j, unsigned int k,
-                    const std::vector<TruePixelType>& pixel) const
+                    const std::vector<TruePixelType>& pixel) const override
   {
     return this->img_ && pixel.size() == 1 && pixel[0] == this->img_(i,j,k,p) &&
       ( !(i > this->img_.ni()/2 && j > this->img_.nj()/2 && k > this->img_.nk()/2)
@@ -169,7 +171,7 @@ bool test( const char* true_data_file, const CheckPixel& check )
 
 void test_file_format_read( int argc, char* argv[] )
 {
-  const unsigned ndir = 4098;
+  constexpr unsigned ndir = 4098;
   char cwd[ndir];
   char *res = vpl_getcwd(cwd, ndir);
   if ( argc >= 2 )

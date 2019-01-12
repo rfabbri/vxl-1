@@ -1,7 +1,9 @@
 #include <vector>
 #include <iostream>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <bbgm/bbgm_image_of.h>
 #include <bsta/bsta_attributes.h>
@@ -44,8 +46,8 @@ void add_random_noise(vil_image_view<float>& img, float std)
 
 static void test_bg_model_speed()
 {
-  const float window_size = 50.0;
-  const unsigned int max_components = 3;
+  constexpr float window_size = 50.0;
+  constexpr unsigned int max_components = 3;
   const float init_var = 0.01f;
   const unsigned int ni = 640, nj = 480;
 
@@ -76,9 +78,9 @@ static void test_bg_model_speed()
 
     bbgm_image_of<obs_mix_gauss_type> model(ni,nj,obs_mix_gauss_type());
 
-    for (unsigned int t=0; t<images.size(); ++t){
+    for (const auto & image : images){
       vul_timer time;
-      update(model,images[t],updater);
+      update(model,image,updater);
       double up_time = time.real() / 1000.0;
       std::cout << " updated in " << up_time << " sec" <<std::endl;
     }
@@ -97,9 +99,9 @@ static void test_bg_model_speed()
 
     bbgm_image_of<obs_mix_gauss_type> model(ni,nj,obs_mix_gauss_type());
 
-    for (unsigned int t=0; t<images.size(); ++t){
+    for (const auto & image : images){
       vul_timer time;
-      update(model,images[t],updater);
+      update(model,image,updater);
       double up_time = time.real() / 1000.0;
       std::cout << " updated in " << up_time << " sec" <<std::endl;
     }

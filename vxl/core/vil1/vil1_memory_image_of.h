@@ -1,9 +1,6 @@
 // This is core/vil1/vil1_memory_image_of.h
 #ifndef vil1_memory_image_of_h_
 #define vil1_memory_image_of_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author awf@robots.ox.ac.uk
@@ -81,7 +78,7 @@ class vil1_memory_image_of : public vil1_memory_image
   vil1_memory_image_of(int sizex, int sizey, T const& value);
 #endif
   //: Clearly, this will deallocate the memory buffer
-  inline ~vil1_memory_image_of() {}
+  inline ~vil1_memory_image_of() = default;
 
   //: This method hides the operator= in the base class.
   vil1_memory_image_of<T>& operator=(vil1_memory_image_of<T> const &);

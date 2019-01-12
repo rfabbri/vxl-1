@@ -6,7 +6,9 @@
 // \file
 
 #include <bprb/bprb_parameters.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_plane_3d.h>
 #include <vgl/vgl_intersection.h>
 #include <vsph/vsph_camera_bounds.h>
@@ -22,7 +24,7 @@ bool vpgl_get_bounding_box_process_cons(bprb_func_process& pro)
 {
   //this process takes one input and has no output:
   std::vector<std::string> input_types;
-  input_types.push_back("vcl_string");    //directory of perspective cameras
+  input_types.emplace_back("vcl_string");    //directory of perspective cameras
   std::vector<std::string> output_types;
   return pro.set_input_types(input_types)
       && pro.set_output_types(output_types);
@@ -69,14 +71,14 @@ bool vpgl_get_bounding_box_process(bprb_func_process& pro)
   double res = 2*(cc-zc).length()*cone_half_angle;
 
   //create an image with this res, and count each pixel
-  unsigned ni = (unsigned) (bbox.width()/res);
-  unsigned nj = (unsigned) (bbox.height()/res);
+  auto ni = (unsigned) (bbox.width()/res);
+  auto nj = (unsigned) (bbox.height()/res);
   vil_image_view<vxl_byte> cntimg(ni, nj);
   std::cout<<"Created Box size: "<<ni<<','<<nj<<std::endl;
-  for (unsigned int i=0; i<cams.size(); ++i)
+  for (const auto & i : cams)
   {
     //project the four corners to the ground plane
-    cam = cams[i];
+    cam = i;
     vgl_ray_3d<double> ul = cam.backproject(0.0, 0.0);
     vgl_ray_3d<double> ur = cam.backproject(2*pp.x(), 0.0);
     vgl_ray_3d<double> bl = cam.backproject(0.0, 2*pp.y());
@@ -132,4 +134,3 @@ bool vpgl_get_bounding_box_process(bprb_func_process& pro)
 
   return good;
 }
-

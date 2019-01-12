@@ -13,8 +13,11 @@
 
 #include <iostream>
 #include <string>
+#include <utility>
 #include <vgl/vgl_polygon.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_ref_count.h>
 #include <vsl/vsl_binary_io.h>
 
@@ -22,10 +25,10 @@ class bvgl_change_obj: public vbl_ref_count
 {
  public:
   bvgl_change_obj(vgl_polygon<double> const& poly) : class_("unknown"), poly_(poly) {}
-  bvgl_change_obj(vgl_polygon<double> const& poly, std::string cls) : class_(cls), poly_(poly) {}
+  bvgl_change_obj(vgl_polygon<double> const& poly, std::string cls) : class_(std::move(cls)), poly_(poly) {}
   bvgl_change_obj(const bvgl_change_obj& other);
-  bvgl_change_obj() {}
-  ~bvgl_change_obj() {}
+  bvgl_change_obj() = default;
+  ~bvgl_change_obj() override = default;
 
   //: binary IO write
   void b_write(vsl_b_ostream& os);

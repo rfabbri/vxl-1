@@ -7,7 +7,10 @@
 #include <vsol/vsol_curve_2d.h>
 #include <vsol/vsol_line_2d.h>
 #include <vdgl/vdgl_digital_curve.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //***************************************************************************
 // Initialization
@@ -21,8 +24,8 @@ vtol_edge_2d::vtol_edge_2d(vtol_vertex_2d_sptr const& new_v1,
                            vtol_vertex_2d_sptr const& new_v2,
                            vsol_curve_2d_sptr const& new_curve)
 {
-  assert(new_v1!=VXL_NULLPTR); v1_=new_v1->cast_to_vertex();
-  assert(new_v2!=VXL_NULLPTR); v2_=new_v2->cast_to_vertex();
+  assert(new_v1!=nullptr); v1_=new_v1->cast_to_vertex();
+  assert(new_v2!=nullptr); v2_=new_v2->cast_to_vertex();
   if (!new_curve)
     curve_=new vsol_line_2d(new_v1->point(),new_v2->point());
   else
@@ -50,7 +53,7 @@ vtol_edge_2d::vtol_edge_2d(vtol_vertex_sptr const& new_v1,
 //: Pseudo copy constructor. Deep copy.
 //---------------------------------------------------------------------------
 vtol_edge_2d::vtol_edge_2d(vtol_edge_2d_sptr const& other)
-  : curve_(VXL_NULLPTR)
+  : curve_(nullptr)
 {
   topology_list::const_iterator i;
   for (i=other->inferiors()->begin();i!=other->inferiors()->end();++i)
@@ -105,7 +108,7 @@ vtol_edge_2d::vtol_edge_2d(vtol_zero_chain_sptr const& new_zero_chain)
     // User must set the type of curve needed.
     // Since guessing could get confusing.
     // So NULL indicates an edge of unknown type.
-    curve_=VXL_NULLPTR;
+    curve_=nullptr;
   touch();
 }
 
@@ -120,13 +123,13 @@ vtol_edge_2d::vtol_edge_2d(zero_chain_list const& newchains)
 {
   // 1) Link the inferiors.
 
-  for (zero_chain_list::const_iterator i=newchains.begin(); i!=newchains.end(); ++i)
-    link_inferior(*i);
+  for (const auto & newchain : newchains)
+    link_inferior(newchain);
 
   // 2) Set v1_ and v2_;
 
   set_vertices_from_zero_chains();
-  curve_=VXL_NULLPTR;
+  curve_=nullptr;
 }
 
 //: Constructor for a linear vtol_edge_2d.
@@ -136,7 +139,7 @@ vtol_edge_2d::vtol_edge_2d(zero_chain_list const& newchains)
 
 vtol_edge_2d::vtol_edge_2d(double x1, double y1,
                            double x2, double y2,
-                           vsol_curve_2d_sptr curve)
+                           const vsol_curve_2d_sptr& curve)
 {
   v1_=new vtol_vertex_2d(x1,y1);
   v2_=new vtol_vertex_2d(x2,y2);

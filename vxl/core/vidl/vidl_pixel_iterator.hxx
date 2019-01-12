@@ -1,9 +1,6 @@
 // This is core/vidl/vidl_pixel_iterator.hxx
 #ifndef vidl_pixel_iterator_hxx_
 #define vidl_pixel_iterator_hxx_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Templated definitions for pixel iterators
@@ -17,7 +14,10 @@
 #include "vidl_pixel_iterator.h"
 #include "vidl_color.h"
 #include <vxl_config.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //-----------------------------------------------------------------------------
 
@@ -47,7 +47,7 @@ class vidl_pixel_iterator_arranged
   }
 
   //: Destructor
-  ~vidl_pixel_iterator_arranged() {}
+  ~vidl_pixel_iterator_arranged() = default;
 
   //: Step to the next pixel
   vidl_pixel_iterator_arranged<AR,FMT>& next()
@@ -75,9 +75,6 @@ class vidl_pixel_iterator_arranged
     vidl_color_component<FMT>::set_all(ptr_,data);
   }
 };
-
-
-#if VCL_CAN_DO_PARTIAL_SPECIALIZATION
 
 template <>
 struct vidl_pixel_iterator_arrange_valid<VIDL_PIXEL_ARRANGE_PLANAR>
@@ -121,7 +118,7 @@ class vidl_pixel_iterator_arranged<VIDL_PIXEL_ARRANGE_PLANAR,FMT>
   }
 
   //: Destructor
-  ~vidl_pixel_iterator_arranged() {}
+  ~vidl_pixel_iterator_arranged() = default;
 
   //: Step to the next pixel
   vidl_pixel_iterator_arranged<VIDL_PIXEL_ARRANGE_PLANAR,FMT>& next()
@@ -197,7 +194,7 @@ class vidl_pixel_iterator_arranged<VIDL_PIXEL_ARRANGE_PACKED,FMT>
   }
 
   //: Destructor
-  ~vidl_pixel_iterator_arranged() {}
+  ~vidl_pixel_iterator_arranged() = default;
 
   //: Step to the next pixel
   vidl_pixel_iterator_arranged<VIDL_PIXEL_ARRANGE_PACKED,FMT>& next()
@@ -231,9 +228,6 @@ class vidl_pixel_iterator_arranged<VIDL_PIXEL_ARRANGE_PACKED,FMT>
 };
 
 
-#endif
-
-
 template <vidl_pixel_format FMT>
 struct vidl_pixel_iterator_valid
 {
@@ -256,14 +250,14 @@ class vidl_pixel_iterator_of : public vidl_pixel_iterator
   vidl_pixel_iterator_of(const vidl_frame& frame) : itr_(frame) {}
 
   //: Destructor
-  virtual ~vidl_pixel_iterator_of<FMT>() {}
+  ~vidl_pixel_iterator_of<FMT>() override = default;
 
   //: Return the pixel format
-  virtual vidl_pixel_format pixel_format() const
+  vidl_pixel_format pixel_format() const override
   { return FMT; }
 
   //: Pre-increment: step to the next pixel
-  virtual vidl_pixel_iterator& operator++ ()
+  vidl_pixel_iterator& operator++ () override
   { itr_.next(); return *this; }
 
   //: Access the data
@@ -271,11 +265,11 @@ class vidl_pixel_iterator_of : public vidl_pixel_iterator
   { return itr_(i); }
 
   //: Copy the pixel data into a byte array
-  virtual void get_data(vxl_byte* data) const
+  void get_data(vxl_byte* data) const override
   { itr_.get(reinterpret_cast<cmp_type*>(data)); }
 
   //: Set the pixel data from a byte array
-  virtual void set_data(const vxl_byte* data)
+  void set_data(const vxl_byte* data) override
   { itr_.set(reinterpret_cast<const cmp_type*>(data)); }
 };
 
@@ -305,10 +299,10 @@ class vidl_pixel_iterator_of<VIDL_PIXEL_FORMAT_MONO_1>
   }
 
   //: Destructor
-  virtual ~vidl_pixel_iterator_of<VIDL_PIXEL_FORMAT_MONO_1>() {}
+  ~vidl_pixel_iterator_of<VIDL_PIXEL_FORMAT_MONO_1>() override = default;
 
   //: Return the pixel format
-  virtual vidl_pixel_format pixel_format() const
+  vidl_pixel_format pixel_format() const override
   { return VIDL_PIXEL_FORMAT_MONO_1; }
 
   //: Step to the next pixel
@@ -324,7 +318,7 @@ class vidl_pixel_iterator_of<VIDL_PIXEL_FORMAT_MONO_1>
   }
 
   //: Pre-increment: step to the next pixel
-  virtual vidl_pixel_iterator& operator++ ()
+  vidl_pixel_iterator& operator++ () override
   {
     return this->next();
   }
@@ -349,13 +343,13 @@ class vidl_pixel_iterator_of<VIDL_PIXEL_FORMAT_MONO_1>
   }
 
   //: Copy the pixel data into a byte array
-  virtual void get_data(vxl_byte* data) const
+  void get_data(vxl_byte* data) const override
   {
     this->get(reinterpret_cast<bool*>(data));
   }
 
   //: Set the pixel data from a byte array
-  virtual void set_data(const vxl_byte* data)
+  void set_data(const vxl_byte* data) override
   {
     this->set(reinterpret_cast<const bool*>(data));
   }

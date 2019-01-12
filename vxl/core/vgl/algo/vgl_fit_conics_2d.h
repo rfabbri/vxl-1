@@ -1,9 +1,6 @@
 // This is core/vgl/algo/vgl_fit_conics_2d.h
 #ifndef vgl_fit_conics_2d_h_
 #define vgl_fit_conics_2d_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Fits a contiguous set of conic segments to a sampled curve
@@ -24,7 +21,9 @@
 //   none
 // \endverbatim
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_conic_segment_2d.h>
 
@@ -44,7 +43,7 @@ class vgl_fit_conics_2d
   vgl_fit_conics_2d(const unsigned min_length = 10,
                     const T tol = 0.01);
 
-  ~vgl_fit_conics_2d() {}
+  ~vgl_fit_conics_2d() = default;
 
   // Operations----------------------------------------------------------------
 

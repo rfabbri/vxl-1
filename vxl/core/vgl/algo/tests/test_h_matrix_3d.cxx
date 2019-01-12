@@ -15,7 +15,9 @@
 #include <sstream>
 #include <testlib/testlib_test.h>
 #include <vgl/algo/vgl_h_matrix_3d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_distance.h>
 #include <vgl/vgl_closest_point.h>
 #include <vgl/vgl_homg_point_3d.h>
@@ -45,7 +47,7 @@ static void test_constructors()
   {
     double gold[] = {1,2,3,4, 5,6,7,8, 9,10,11,12, 13,14,15,16}; // the "ground truth"
     vgl_h_matrix_3d<double> H0(gold);
-    vgl_h_matrix_3d<double> H(H0); H.get(data);
+    const vgl_h_matrix_3d<double>& H(H0); H.get(data);
     TEST( "Copy constructor", equals(data, gold), true );
   }
   {
@@ -179,8 +181,8 @@ static void test_compute_linear_points()
   std::cout << "The gt transform\n" << gt_H << '\n';
 
   //: transform the points
-  for (unsigned i = 0; i < points1.size(); i++)
-    points2.push_back(gt_H(points1[i]));
+  for (const auto & i : points1)
+    points2.push_back(gt_H(i));
 
   vgl_h_matrix_3d_compute_linear hmcl;
   vgl_h_matrix_3d<double> H = hmcl.compute(points1, points2);
@@ -210,8 +212,8 @@ static void test_compute_linear_points()
 
   points2.clear();
   //: transform the points
-  for (unsigned i = 0; i < points1.size(); i++)
-    points2.push_back(gt_H2(points1[i]));
+  for (const auto & i : points1)
+    points2.push_back(gt_H2(i));
 
   vgl_h_matrix_3d_compute_linear hmcl2;
   vgl_h_matrix_3d<double> H2o = hmcl2.compute(points1, points2);
@@ -256,8 +258,8 @@ static void test_compute_affine_points()
   std::cout << "The gt transform\n" << gt_H << '\n';
 
   //: transform the points
-  for (unsigned i = 0; i < points1.size(); i++)
-    points2.push_back(gt_H(points1[i]));
+  for (const auto & i : points1)
+    points2.push_back(gt_H(i));
 
   vgl_h_matrix_3d_compute_affine hmca;
   vgl_h_matrix_3d<double> H = hmca.compute(points1, points2);
@@ -293,8 +295,8 @@ static void test_compute_affine_points()
 
   points2.clear();
   //: transform the points
-  for (unsigned i = 0; i < points1.size(); i++)
-    points2.push_back(gt_H2(points1[i]));
+  for (const auto & i : points1)
+    points2.push_back(gt_H2(i));
 
   vgl_h_matrix_3d_compute_affine hmca2;
   vgl_h_matrix_3d<double> H2a = hmca2.compute(points1, points2);

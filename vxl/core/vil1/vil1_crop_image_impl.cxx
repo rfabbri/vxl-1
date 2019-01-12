@@ -1,7 +1,4 @@
 // This is core/vil1/vil1_crop_image_impl.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 
@@ -16,9 +13,7 @@ vil1_crop_image_impl::vil1_crop_image_impl(vil1_image const& gi, int x0, int y0,
 {
 }
 
-vil1_crop_image_impl::~vil1_crop_image_impl()
-{
-}
+vil1_crop_image_impl::~vil1_crop_image_impl() = default;
 
 //: Return the name of the class;
 std::string vil1_crop_image_impl::is_a() const

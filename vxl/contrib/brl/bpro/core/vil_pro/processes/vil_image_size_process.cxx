@@ -6,7 +6,9 @@
 // \file
 
 #include <bprb/bprb_parameters.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_load.h>
 #include <vil/vil_image_view_base.h>
 
@@ -16,14 +18,14 @@ bool vil_image_size_process_cons(bprb_func_process& pro)
   //input
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("vil_image_view_base_sptr");
+  input_types.emplace_back("vil_image_view_base_sptr");
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   //output
   std::vector<std::string> output_types;
-  output_types.push_back("unsigned");  // ni of the image
-  output_types.push_back("unsigned");  // nj of the image
+  output_types.emplace_back("unsigned");  // ni of the image
+  output_types.emplace_back("unsigned");  // nj of the image
   ok = pro.set_output_types(output_types);
   if (!ok) return ok;
   return true;
@@ -52,4 +54,3 @@ bool vil_image_size_process(bprb_func_process& pro)
   pro.set_output_val<unsigned>(i++, image->nj());
   return true;
 }
-

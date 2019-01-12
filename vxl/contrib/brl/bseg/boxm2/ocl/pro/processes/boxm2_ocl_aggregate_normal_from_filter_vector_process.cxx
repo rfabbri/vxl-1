@@ -32,13 +32,15 @@
 #include <bvpl/kernels/bvpl_kernel.h>
 
 //utilities
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_timer.h>
 
 namespace boxm2_ocl_aggregate_normal_from_filter_vector_process_globals
 {
-  const unsigned n_inputs_ =  4;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 4;
+  constexpr unsigned n_outputs_ = 0;
 
   static std::map<std::string, boxm2_ocl_aggregate_normal_from_filter_vector*> engines;
 }

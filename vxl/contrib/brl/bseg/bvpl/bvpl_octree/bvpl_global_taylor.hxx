@@ -89,7 +89,7 @@ bvpl_global_taylor<T_data, DIM>::bvpl_global_taylor(const std::string &path, con
 
       kernel_vector_->kernels_.clear();
 
-      kernel_vector_->kernels_.resize(DIM, VXL_NULLPTR);
+      kernel_vector_->kernels_.resize(DIM, nullptr);
       //std::string kernel_names[]={"I0", "Ix", "Iy", "Iz", "Ixx", "Iyy", "Izz", "Ixy", "Ixz", "Iyz"};
       for (unsigned ki = 0; ki<DIM; ki++) {
         std::string filename = kernels_path_ + "/" + kernel_names[ki] + ".txt";
@@ -109,11 +109,9 @@ bvpl_global_taylor<T_data, DIM>::bvpl_global_taylor(const std::string &path, con
 template<class T_data, unsigned DIM>
 void bvpl_global_taylor<T_data, DIM>::compute_taylor_coefficients(int scene_id, int block_i, int block_j, int block_k)
 {
-  typedef boct_tree<short,float> float_tree_type;
   typedef boct_tree_cell<short,float> float_cell_type;
 
   typedef boct_tree<short,vnl_vector_fixed<T_data,DIM> > taylor_tree_type;
-  typedef boct_tree_cell<short,vnl_vector_fixed<T_data,DIM> > taylor_cell_type;
 
   boxm_scene_base_sptr data_scene_base =load_scene(scene_id);
   boxm_scene_base_sptr proj_scene_base =load_projection_scene(scene_id);
@@ -378,7 +376,7 @@ boxm_scene_base_sptr bvpl_global_taylor<T_data, DIM>::load_scene (int scene_id)
   if (scene_id<0 || scene_id>((int)scenes_.size() -1))
   {
     std::cerr << "Error in bvpl_global_pca::load_scene: Invalid scene id\n";
-    return VXL_NULLPTR;
+    return nullptr;
   }
   //load scene
   boxm_scene_base_sptr scene_base = new boxm_scene_base();
@@ -393,7 +391,7 @@ boxm_scene_base_sptr bvpl_global_taylor<T_data, DIM>::load_scene (int scene_id)
   }
   else {
     std::cerr << "Error in bvpl_global_pca::load_scene: Invalid appearance model\n";
-    return VXL_NULLPTR;
+    return nullptr;
   }
 
   return scene_base;
@@ -406,7 +404,7 @@ boxm_scene_base_sptr bvpl_global_taylor<T_data, DIM>::load_valid_scene (int scen
   if (scene_id<0 || scene_id>((int)scenes_.size() -1))
   {
     std::cerr << "Error in bvpl_global_taylor::load_scene: Invalid scene id\n";
-    return VXL_NULLPTR;
+    return nullptr;
   }
   //load scene
   boxm_scene_base_sptr aux_scene_base = new boxm_scene_base();
@@ -423,7 +421,7 @@ boxm_scene_base_sptr bvpl_global_taylor<T_data, DIM>::load_valid_scene (int scen
   }
   else {
     std::cerr << "Error in bvpl_global_taylor::load_aux_scene: Invalid appearance model\n";
-    return VXL_NULLPTR;
+    return nullptr;
   }
 
   return aux_scene_base;
@@ -437,14 +435,14 @@ boxm_scene_base_sptr bvpl_global_taylor<T_data, DIM>::load_error_scene (int scen
   if (scene_id<0 || scene_id>=(int)scenes_.size())
   {
     std::cerr << "Error in bvpl_global_taylor::load_error_scene: Invalid scene id\n";
-    return VXL_NULLPTR;
+    return nullptr;
   }
 
   boxm_scene_base_sptr data_scene_base = load_scene(scene_id);
   boxm_scene<boct_tree<short, float> >* data_scene = dynamic_cast<boxm_scene<boct_tree<short, float> >*> (data_scene_base.as_pointer());
   if (!data_scene) {
     std::cerr << "Error in bvpl_global_pca<feature_dim>::init(): Could not cast data scene\n";
-    return VXL_NULLPTR;
+    return nullptr;
   }
 
   std::stringstream aux_scene_ss;
@@ -474,7 +472,7 @@ boxm_scene_base_sptr bvpl_global_taylor<T_data, DIM>::load_error_scene (int scen
   }
   else {
     std::cerr << "Error in bvpl_global_taylor::load_error_scene: Invalid appearance model\n";
-    return VXL_NULLPTR;
+    return nullptr;
   }
 
   return error_scene_base;
@@ -520,7 +518,7 @@ boxm_scene_base_sptr bvpl_global_taylor<T_data, DIM>::load_projection_scene (int
   if (scene_id<0 || scene_id>((int)scenes_.size() -1))
   {
     std::cerr << "Error in bvpl_global_taylor::load_projection_scene: Invalid scene id\n";
-    return VXL_NULLPTR;
+    return nullptr;
   }
   //load scene
   boxm_scene_base_sptr proj_scene_base = new boxm_scene_base();
@@ -538,7 +536,7 @@ boxm_scene_base_sptr bvpl_global_taylor<T_data, DIM>::load_projection_scene (int
   }
   else {
     std::cerr << "Error in bvpl_global_taylor::load_proj_scene: Invalid appearance model\n";
-    return VXL_NULLPTR;
+    return nullptr;
   }
 
   return proj_scene_base;

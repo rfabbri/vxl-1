@@ -1,13 +1,15 @@
 #include <iostream>
 #include <cmath>
+#include <string>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_random.h>
 #include <bil/algo/bil_image_bounds_from_histogram.h>
 #include <vil/vil_image_resource.h>
 #include <vil/vil_image_view.h>
 #include <vil/vil_new.h>
-#include <string>
 
 static void test_image_bounds_from_histogram()
 {

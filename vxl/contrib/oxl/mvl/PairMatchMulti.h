@@ -1,9 +1,6 @@
 // This is oxl/mvl/PairMatchMulti.h
 #ifndef PairMatchMulti_h_
 #define PairMatchMulti_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Set of pairs of integers
@@ -27,7 +24,9 @@
 #include <iostream>
 #include <cstdlib>
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include "PairMatchMultiIterator.h"
 
 template <class T> class vbl_sparse_array_2d;

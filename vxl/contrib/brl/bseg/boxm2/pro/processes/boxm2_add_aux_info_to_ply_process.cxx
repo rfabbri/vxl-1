@@ -16,15 +16,17 @@
 #include <boxm2/cpp/algo/boxm2_mog3_grey_processor.h>
 #include <boct/boct_bit_tree.h>
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <rply.h>
 
 namespace boxm2_add_aux_info_to_ply_process_globals
 {
-  const unsigned n_inputs_ = 4;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 4;
+  constexpr unsigned n_outputs_ = 0;
 
   //helper class to read in bb from file
   class ply_points_reader
@@ -41,7 +43,7 @@ namespace boxm2_add_aux_info_to_ply_process_globals
     void* temp;
     ply_get_argument_user_data(argument, &temp, &index);
 
-    ply_points_reader* parsed_ply =  (ply_points_reader*) temp;
+    auto* parsed_ply =  (ply_points_reader*) temp;
 
     switch (index)
     {
@@ -54,7 +56,7 @@ namespace boxm2_add_aux_info_to_ply_process_globals
       case 2: // "z" coordinate
         parsed_ply->p[2]= (double)ply_get_argument_value(argument);
         // Insert point
-        parsed_ply->points.push_back(vgl_point_3d<double>(parsed_ply->p));
+        parsed_ply->points.emplace_back(parsed_ply->p);
         break;
       default:
         assert(!"This should not happen: index out of range");
@@ -68,7 +70,7 @@ namespace boxm2_add_aux_info_to_ply_process_globals
     ply_points_reader parsed_ply;
     parsed_ply.points = points;
 
-    p_ply ply = ply_open(filename.c_str(), VXL_NULLPTR, 0, VXL_NULLPTR);
+    p_ply ply = ply_open(filename.c_str(), nullptr, 0, nullptr);
     if (!ply) {
       std::cout << "File " << filename << " doesn't exist.";
       return false;
@@ -137,7 +139,7 @@ bool boxm2_add_aux_info_to_ply_process(bprb_func_process& pro)
   read_points_from_ply(input_mesh_filename, points);
 
   //write outgoing mesh header
-  p_ply oply = ply_create(output_mesh_filename.c_str(), PLY_ASCII, VXL_NULLPTR, 0, VXL_NULLPTR);
+  p_ply oply = ply_create(output_mesh_filename.c_str(), PLY_ASCII, nullptr, 0, nullptr);
 
   // HEADER SECTION
   // vertex
@@ -173,9 +175,7 @@ bool boxm2_add_aux_info_to_ply_process(bprb_func_process& pro)
   vnl_vector_fixed<float,3> intensity;
   vgl_point_3d<double> local;
   boxm2_block_id id;
-  for (unsigned  i = 0; i < points.size(); i++) {
-
-    const vgl_point_3d<double> pt = points[i];
+  for (auto pt : points) {
 
     if (!scene->contains(pt, id, local)) {
       std::cout << "ERROR: point: " << pt << " isn't in scene. Exiting...." << std::endl;
@@ -209,17 +209,17 @@ bool boxm2_add_aux_info_to_ply_process(bprb_func_process& pro)
     boxm2_data_base * mog = cache->get_data_base(scene,id,boxm2_data_traits<BOXM2_MOG3_GREY>::prefix(), data_buff_length * mogSize);
 
     //get the actual data
-    boxm2_data_traits<BOXM2_ALPHA>::datatype * alpha_data = (boxm2_data_traits<BOXM2_ALPHA>::datatype*) alpha_base->data_buffer();
+    auto * alpha_data = (boxm2_data_traits<BOXM2_ALPHA>::datatype*) alpha_base->data_buffer();
 //  boxm2_data_traits<BOXM2_POINT>::datatype * points_data = (boxm2_data_traits<BOXM2_POINT>::datatype*) points->data_buffer(); // UNUSED!! -- fixme
-    boxm2_data_traits<BOXM2_NORMAL>::datatype * normals_data = (boxm2_data_traits<BOXM2_NORMAL>::datatype*) normals->data_buffer();
-    boxm2_data_traits<BOXM2_VIS_SCORE>::datatype * vis_data = (boxm2_data_traits<BOXM2_VIS_SCORE>::datatype*) vis->data_buffer();
-    boxm2_data_traits<BOXM2_MOG3_GREY>::datatype * mog_data = (boxm2_data_traits<BOXM2_MOG3_GREY>::datatype*) mog->data_buffer();
+    auto * normals_data = (boxm2_data_traits<BOXM2_NORMAL>::datatype*) normals->data_buffer();
+    auto * vis_data = (boxm2_data_traits<BOXM2_VIS_SCORE>::datatype*) vis->data_buffer();
+    auto * mog_data = (boxm2_data_traits<BOXM2_MOG3_GREY>::datatype*) mog->data_buffer();
 
     float alpha=alpha_data[data_offset];
     double side_len = 1.0 / (double) (1 << depth);
     //store cell probability
     prob = 1.0f - (float)std::exp(-alpha * side_len * mdata.sub_block_dim_.x());
-    unsigned char intensity = (unsigned char)(boxm2_mog3_grey_processor::expected_color(mog_data[data_offset])*255.0f);
+    auto intensity = (unsigned char)(boxm2_mog3_grey_processor::expected_color(mog_data[data_offset])*255.0f);
 
     ply_write(oply, pt.x());
     ply_write(oply, pt.y());

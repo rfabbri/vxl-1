@@ -1,14 +1,11 @@
 // expatpp
+#include <cstring>
+#include <string>
+#include <cassert>
 #ifdef UNDER_CE
-  #include <string.h>
   #include <windows.h>
   #include <dbgapi.h>
   #define assert ASSERT
-#else
-  #include <cstring> // for std::strlen() & strcmp()
-  #include <string>
-  using namespace std;
-  #include <cassert>
 #endif
 #include "expatpp.h"
 
@@ -27,12 +24,12 @@
 #endif
 
 expatpp::expatpp(bool createParser) :
-  mParser(VXL_NULLPTR),  // in case of exception below
+  mParser(nullptr),  // in case of exception below
   mHaveParsed(false)
 {
   if (createParser) {
   // subclasses may call this ctor after parser created!
-    mParser = XML_ParserCreate(VXL_NULLPTR);
+    mParser = XML_ParserCreate(nullptr);
     SetupHandlers();
   }
 }
@@ -78,7 +75,7 @@ void
 expatpp::ReleaseParser()
 {
   ::XML_ParserFree(mParser);
-  mParser = VXL_NULLPTR;
+  mParser = nullptr;
 }
 
 
@@ -142,7 +139,7 @@ XML_Status
 expatpp::XML_Parse(const char *s, int len, int isFinal)
 {
   mHaveParsed = true;
-  const XML_Status retStatus = (const XML_Status) ::XML_Parse(mParser, s, len, isFinal);
+  const auto retStatus = (const XML_Status) ::XML_Parse(mParser, s, len, isFinal);
   if (isFinal)
     CheckFinalStatus(retStatus);
   return retStatus;
@@ -186,7 +183,7 @@ XML_Status
 expatpp::parseString(const char* inString)
 {
 //  ResetParser();
-  const int inLen = strlen(inString);
+  const int inLen = std::strlen(inString);
   return XML_Parse(inString, inLen, 1);
 }
 
@@ -347,7 +344,7 @@ expatpp::getAttribute(const XML_Char* matchingName, const XML_Char** atts)
       return atts[i];  // if 2nd item was missing, this returns 0 safely indicating failure
     }
   }
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 
@@ -511,23 +508,23 @@ expatpp::xmlDeclCallback(void *userData, const XML_Char      *version,
 
 void
 expatpp::attlistDecl(
-  const XML_Char *elname,
-  const XML_Char *attname,
-  const XML_Char *att_type,
-  const XML_Char *dflt,
-  int             isrequired)
+  const XML_Char * /*elname*/,
+  const XML_Char * /*attname*/,
+  const XML_Char * /*att_type*/,
+  const XML_Char * /*dflt*/,
+  int              /*isrequired*/)
 {
 }
 
 
 void
-expatpp::comment( const XML_Char *data)
+expatpp::comment( const XML_Char * /*data*/)
 {
 }
 
 
 void
-expatpp::elementDecl( const XML_Char *name, XML_Content *model)
+expatpp::elementDecl( const XML_Char * /*name*/, XML_Content * /*model*/)
 {
 }
 
@@ -546,20 +543,20 @@ expatpp::endDoctypeDecl()
 
 void
 expatpp::entityDecl(
-  const XML_Char *entityName,
-  int is_parameter_entity,
-  const XML_Char *value,
-  int value_length,
-  const XML_Char *base,
-  const XML_Char *systemId,
-  const XML_Char *publicId,
-  const XML_Char *notationName)
+  const XML_Char * /*entityName*/,
+  int  /*is_parameter_entity*/,
+  const XML_Char * /*value*/,
+  int  /*value_length*/,
+  const XML_Char * /*base*/,
+  const XML_Char * /*systemId*/,
+  const XML_Char * /*publicId*/,
+  const XML_Char * /*notationName*/)
 {
 }
 
 
 void
-expatpp::skippedEntity( const XML_Char *entityName, int is_parameter_entity)
+expatpp::skippedEntity( const XML_Char * /*entityName*/, int  /*is_parameter_entity*/)
 {
 }
 
@@ -571,18 +568,18 @@ expatpp::startCdataSection()
 
 
 void
-expatpp::startDoctypeDecl(const XML_Char *doctypeName,
-        const XML_Char *sysid,
-        const XML_Char *pubid,
-        int has_internal_subset)
+expatpp::startDoctypeDecl(const XML_Char * /*doctypeName*/,
+        const XML_Char * /*sysid*/,
+        const XML_Char * /*pubid*/,
+        int  /*has_internal_subset*/)
 {
 }
 
 
 void
-expatpp::xmlDecl( const XML_Char      *version,
-                                    const XML_Char      *encoding,
-                                    int                  standalone)
+expatpp::xmlDecl( const XML_Char      * /*version*/,
+                                    const XML_Char      * /*encoding*/,
+                                    int                   /*standalone*/)
 {
 }
 
@@ -616,11 +613,11 @@ expatpp::xmlDecl( const XML_Char      *version,
   certainly assumes the parent type.
 */
 expatppNesting::expatppNesting(expatppNesting* parent) :
-  expatpp(parent==VXL_NULLPTR),  // don't create parser - we're taking over from parent if given
+  expatpp(parent==nullptr),  // don't create parser - we're taking over from parent if given
   mDepth(0),
   mSelfDeleting(true),
   mParent(parent),
-  mOwnedChild(VXL_NULLPTR)
+  mOwnedChild(nullptr)
 {
   if ( parent )
   {
@@ -660,7 +657,7 @@ void
 expatppNesting::DeleteChild()
 {
   delete mOwnedChild;
-  mOwnedChild = VXL_NULLPTR;
+  mOwnedChild = nullptr;
 }
 
 
@@ -721,8 +718,8 @@ expatppNesting::returnToParent()
 {
   expatppNesting* ret = mParent;
   ::XML_SetUserData(mParser, mParent);
-  mParent=VXL_NULLPTR;
-  mParser=VXL_NULLPTR;  // prevent parser shutdown by expatpp::~expatpp!!
+  mParent=nullptr;
+  mParser=nullptr;  // prevent parser shutdown by expatpp::~expatpp!!
   if (mSelfDeleting) {
     ret->OwnedChildOrphansItself(this);
     delete this;  // MUST BE LAST THING CALLED IN NON-VIRTUAL FUNCTION, NO MEMBER ACCESS
@@ -735,7 +732,7 @@ void
 expatppNesting::nestedStartElementCallback(void *userData, const XML_Char* name, const XML_Char** atts)
 {
   assert(userData);
-  expatppNesting* nestedParser = (expatppNesting*)userData;
+  auto* nestedParser = (expatppNesting*)userData;
   nestedParser->mDepth++;
   nestedParser->startElement(name, atts);  // probably user override
 }
@@ -752,7 +749,7 @@ expatppNesting::nestedEndElementCallback(void *userData, const XML_Char* name)
   if (!userData)
     return;  //  end tag for root
 
-  expatppNesting* nestedParser = (expatppNesting*)userData;
+  auto* nestedParser = (expatppNesting*)userData;
 // we don't know until we hit a closing tag 'outside' us that our run is done
   if (nestedParser->mDepth==0) {
     expatppNesting* parentParser = nestedParser->returnToParent();

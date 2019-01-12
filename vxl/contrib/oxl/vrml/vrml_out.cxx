@@ -1,7 +1,4 @@
 // This is oxl/vrml/vrml_out.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 
@@ -11,13 +8,15 @@
 #include <map>
 #include "vrml_out.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_printf.h>
 
 // Default ctor
 vrml_out::vrml_out()
 {
-  s_ = VXL_NULLPTR;
+  s_ = nullptr;
   own_ostream_ = false;
 }
 
@@ -35,7 +34,7 @@ vrml_out::vrml_out(char const* filename)
   own_ostream_ = true;
   if (!s_ || !(*s_)) {
     std::cerr << "Cannot open " << filename << " for writing\n";
-    delete s_; s_ = VXL_NULLPTR; own_ostream_ = false;
+    delete s_; s_ = nullptr; own_ostream_ = false;
   }
   else prologue();
 }

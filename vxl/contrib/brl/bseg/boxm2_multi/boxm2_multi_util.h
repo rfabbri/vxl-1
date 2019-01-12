@@ -6,7 +6,9 @@
 #include <iostream>
 #include <vector>
 #include <boxm2/boxm2_scene.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/ocl/boxm2_opencl_cache1.h>
 
 //open cl includes
@@ -20,7 +22,7 @@ class boxm2_multi_util
   public:
 
     // Helper to pick out data type
-    static bool get_scene_appearances( boxm2_scene_sptr    scene,
+    static bool get_scene_appearances( const boxm2_scene_sptr&    scene,
                                        std::string&         data_type,
                                        std::string&         options,
                                        int&                apptypesize);

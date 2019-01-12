@@ -11,7 +11,6 @@
 #include <bocl/bocl_device.h>
 #include <boxm2/io/boxm2_stream_scene_cache.h>
 #include <boxm2/ocl/boxm2_opencl_cache.h>
-#include <boxm2/ocl/boxm2_opencl_cache.h>
 #include <vgl/algo/vgl_rotation_3d.h>
 
 //: A cost function for registering video frames by minimizing square difference in intensities.
@@ -22,7 +21,7 @@ class boxm2_ocl_reg_mutual_info
   boxm2_ocl_reg_mutual_info(boxm2_opencl_cache_sptr& opencl_cache,
                             boxm2_scene_sptr& sceneA,
                             boxm2_scene_sptr& sceneB,
-                            bocl_device_sptr device,
+                            const bocl_device_sptr& device,
                             int nbins,
                             bool do_vary_scale= false);
   ~boxm2_ocl_reg_mutual_info();
@@ -32,7 +31,7 @@ class boxm2_ocl_reg_mutual_info
   double mutual_info(vnl_vector<double> const& x,  int depth  =3 );
  protected:
   bool compile_kernel();
-  bool boxm2_ocl_register_world(vgl_rotation_3d<double>  rot,
+  bool boxm2_ocl_register_world(const vgl_rotation_3d<double>&  rot,
                                 vgl_vector_3d<double> tx,
                                 double s,
                                 int nbins,int depth,

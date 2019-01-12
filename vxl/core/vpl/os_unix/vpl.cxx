@@ -4,13 +4,13 @@
 #define _XOPEN_SOURCE 1 // necessary on alpha
 #undef _XOPEN_SOURCE_EXTENDED
 #define _XOPEN_SOURCE_EXTENDED 1 // usleep is not declared
+#include <cstdlib>
+#include <cstring>
 extern "C" {
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 }
-#include <cstdlib>
-#include <cstring>  // for strdup
 #include <vxl_config.h> // for VXL_UNISTD_*
 
 char *

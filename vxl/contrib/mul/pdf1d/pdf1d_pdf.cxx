@@ -13,8 +13,10 @@
 #include <iostream>
 #include <cmath>
 #include "pdf1d_pdf.h"
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vsl/vsl_indent.h>
 #include <vsl/vsl_binary_loader.h>
 #include <vnl/vnl_math.h>
@@ -30,9 +32,7 @@ pdf1d_pdf::pdf1d_pdf()
 
 //=======================================================================
 
-pdf1d_pdf::~pdf1d_pdf()
-{
-}
+pdf1d_pdf::~pdf1d_pdf() = default;
 
 //=======================================================================
 
@@ -74,7 +74,7 @@ double pdf1d_pdf::log_prob_thresh(double pass_proportion) const
 
   // The number of samples on the less likely side of the boundary.
   // Increase the number for greater reliabililty
-  const unsigned n_stat = 30;
+  constexpr unsigned n_stat = 30;
 
   unsigned nSamples;
   double right;
@@ -385,7 +385,7 @@ double pdf1d_pdf::inverse_cdf(double P) const
   }
   else // Use sampling.
   {
-    const unsigned n_stat = 20;
+    constexpr unsigned n_stat = 20;
     pdf1d_sampler * sampler = new_sampler();
     unsigned n;
     double left, right; // These bracket the result

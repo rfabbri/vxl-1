@@ -1,9 +1,10 @@
 // This is brl/bseg/boxm2/ocl/algo/boxm2_ocl_aggregate_normal_from_filter_vector.cxx
-#include <stdexcept>
-#include <map>
-#include <iostream>
-#include <fstream>
 #include "boxm2_ocl_aggregate_normal_from_filter_vector.h"
+#include <fstream>
+#include <iostream>
+#include <map>
+#include <stdexcept>
+#include <utility>
 
 
 #include <boxm2/ocl/boxm2_ocl_util.h>
@@ -11,12 +12,14 @@
 #include <boxm2/boxm2_data_base.h>
 
 //utilities
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_timer.h>
 
 
 boxm2_ocl_aggregate_normal_from_filter_vector::
-boxm2_ocl_aggregate_normal_from_filter_vector(boxm2_scene_sptr scene, boxm2_opencl_cache_sptr ocl_cache, bocl_device_sptr device, bvpl_kernel_vector_sptr filter_vector,bool optimize_transfers) :
+boxm2_ocl_aggregate_normal_from_filter_vector(const boxm2_scene_sptr& scene, const boxm2_opencl_cache_sptr& ocl_cache, const bocl_device_sptr& device, const bvpl_kernel_vector_sptr& filter_vector,bool optimize_transfers) :
   scene_(scene), ocl_cache_(ocl_cache), device_(device), filter_vector_(filter_vector),optimize_transfers_(optimize_transfers)
 {
   unsigned num_filters = filter_vector->kernels_.size();
@@ -48,7 +51,7 @@ bool boxm2_ocl_aggregate_normal_from_filter_vector::compile_kernel(bocl_kernel &
   src_paths.push_back(source_dir + "scene_info.cl");
   src_paths.push_back(source_dir + "aggregate_filter_response.cl");
 
-  return aggregate_kernel.create_kernel(&device_->context(),device_->device_id(), src_paths, "aggregate", opts, "aggregate");
+  return aggregate_kernel.create_kernel(&device_->context(),device_->device_id(), src_paths, "aggregate", std::move(opts), "aggregate");
 }
 
 
@@ -83,7 +86,7 @@ bool boxm2_ocl_aggregate_normal_from_filter_vector::run(bool clear_cache)
 
   // set up directions buffer (previous code tried to create an array on the stack with variable dimension tsk tsk)
   unsigned num_filters = filter_vector_->kernels_.size();
-  cl_float* directions = new cl_float[4*num_filters];
+  auto* directions = new cl_float[4*num_filters];
 
   //for (unsigned k = 0; k < num_filters; k++) {
   for (unsigned k = 0, count = 0; k < num_filters; k++, count += 4) {
@@ -120,7 +123,7 @@ bool boxm2_ocl_aggregate_normal_from_filter_vector::run(bool clear_cache)
     ocl_cache_->get_block(scene_,blk_iter->first);
     bocl_mem* blk_info  = ocl_cache_->loaded_block_info();
     bocl_mem* alpha     = ocl_cache_->get_data<BOXM2_ALPHA>(scene_,blk_iter->first,0,true);
-    boxm2_scene_info* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
+    auto* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
     int alphaTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_ALPHA>::prefix());
     // check for invalid parameters
     if( alphaTypeSize == 0 ) //This should never happen, it will result in division by zero later

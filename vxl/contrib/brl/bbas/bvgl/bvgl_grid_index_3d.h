@@ -8,14 +8,14 @@
 // \date   6 November 2015
 //
 #include <iostream>
-#include <vcl_compiler.h>
-#include <iostream>
 #include <fstream>
 #include <vector>
 #include <string>
 #include <map>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_plane_3d.h>
 #include <vgl/vgl_vector_3d.h>

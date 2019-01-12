@@ -5,7 +5,9 @@
 // \file
 
 #include <bprb/bprb_parameters.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpgl/vpgl_lvcs.h>
 #include <vpgl/vpgl_lvcs_sptr.h>
 
@@ -19,10 +21,10 @@ bool vpgl_convert_to_local_coordinates_process_cons(bprb_func_process& pro)
   // 3: (float)  elevation
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("vcl_string");
-  input_types.push_back("float");
-  input_types.push_back("float");
-  input_types.push_back("float");
+  input_types.emplace_back("vcl_string");
+  input_types.emplace_back("float");
+  input_types.emplace_back("float");
+  input_types.emplace_back("float");
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
@@ -31,9 +33,9 @@ bool vpgl_convert_to_local_coordinates_process_cons(bprb_func_process& pro)
   // 1: (float) y
   // 2: (float) z
   std::vector<std::string> output_types;
-  output_types.push_back("float");
-  output_types.push_back("float");
-  output_types.push_back("float");
+  output_types.emplace_back("float");
+  output_types.emplace_back("float");
+  output_types.emplace_back("float");
   ok = pro.set_output_types(output_types);
   if (!ok) return ok;
 
@@ -51,9 +53,9 @@ bool vpgl_convert_to_local_coordinates_process(bprb_func_process& pro)
 
   // get the inputs
   std::string lvcs_filename = pro.get_input<std::string>(0);
-  float lat = pro.get_input<float>(1);
-  float lon = pro.get_input<float>(2);
-  float el = pro.get_input<float>(3);
+  auto lat = pro.get_input<float>(1);
+  auto lon = pro.get_input<float>(2);
+  auto el = pro.get_input<float>(3);
 
   vpgl_lvcs lvcs;
   std::ifstream ifs(lvcs_filename.c_str());
@@ -84,10 +86,10 @@ bool vpgl_convert_to_local_coordinates_process2_cons(bprb_func_process& pro)
   // 3: (float)  elevation
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("vpgl_lvcs_sptr");
-  input_types.push_back("double");
-  input_types.push_back("double");
-  input_types.push_back("double");
+  input_types.emplace_back("vpgl_lvcs_sptr");
+  input_types.emplace_back("double");
+  input_types.emplace_back("double");
+  input_types.emplace_back("double");
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
@@ -96,9 +98,9 @@ bool vpgl_convert_to_local_coordinates_process2_cons(bprb_func_process& pro)
   // 1: (double) y
   // 2: (double) z
   std::vector<std::string> output_types;
-  output_types.push_back("double");
-  output_types.push_back("double");
-  output_types.push_back("double");
+  output_types.emplace_back("double");
+  output_types.emplace_back("double");
+  output_types.emplace_back("double");
   ok = pro.set_output_types(output_types);
   if (!ok) return ok;
 
@@ -116,9 +118,9 @@ bool vpgl_convert_to_local_coordinates_process2(bprb_func_process& pro)
 
   // get the inputs
   vpgl_lvcs_sptr lvcs = pro.get_input<vpgl_lvcs_sptr>(0);
-  double lat = pro.get_input<double>(1);
-  double lon = pro.get_input<double>(2);
-  double el = pro.get_input<double>(3);
+  auto lat = pro.get_input<double>(1);
+  auto lon = pro.get_input<double>(2);
+  auto el = pro.get_input<double>(3);
 
   double x,y,z;
   lvcs->global_to_local(lon,lat,el, vpgl_lvcs::wgs84, x, y, z, vpgl_lvcs::DEG, vpgl_lvcs::METERS);
@@ -129,4 +131,3 @@ bool vpgl_convert_to_local_coordinates_process2(bprb_func_process& pro)
 
   return true;
 }
-

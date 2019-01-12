@@ -7,7 +7,9 @@
 #include <iostream>
 #include <fstream>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_box_3d.h>
 #include <vnl/vnl_vector_fixed.h>
 #include <vil/vil_image_view.h>
@@ -19,7 +21,6 @@
 #include <boxm2/io/boxm2_lru_cache.h>
 #include <vul/vul_file.h>
 #include "../boxm2_vecf_orbit_scene.h"
-#include <vul/vul_timer.h>
 #include "../boxm2_vecf_orbit_params.h"
 #include "../boxm2_vecf_eyelid.h"
 #include "../boxm2_vecf_eyelid_crease.h"
@@ -66,4 +67,3 @@ void test_orbit()
 #endif //BUILD_TEST_ORBIT
 }
 TESTMAIN( test_orbit );
-

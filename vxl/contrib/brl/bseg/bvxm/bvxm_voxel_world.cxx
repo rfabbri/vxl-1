@@ -7,8 +7,10 @@
 //:
 // \file
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_plane_3d.h>
 #include <vgl/vgl_vector_3d.h>
 #include <vgl/vgl_box_2d.h>
@@ -44,8 +46,7 @@
 
 //: Destructor
 bvxm_voxel_world::~bvxm_voxel_world()
-{
-}
+= default;
 
 
 //: equality operator
@@ -79,7 +80,7 @@ std::ostream&  operator<<(std::ostream& s, bvxm_voxel_world const& vox_world)
 }
 
 //: save the occupancy grid as an 8-bit 3-d vff image
-bool bvxm_voxel_world::save_occupancy_vff(std::string filename,unsigned scale_idx)
+bool bvxm_voxel_world::save_occupancy_vff(const std::string& filename,unsigned scale_idx)
 {
   // open file for binary writing
   std::fstream ofs(filename.c_str(),std::ios::binary | std::ios::out);
@@ -477,7 +478,6 @@ bool bvxm_voxel_world::update_edges_lidar(vil_image_view_base_sptr& lidar_height
                                           vpgl_camera_double_sptr& camera,
                                           unsigned scale)
 {
-  typedef bvxm_voxel_traits<LIDAR>::voxel_datatype obs_datatype;
   typedef bvxm_voxel_traits<EDGES>::voxel_datatype edges_datatype;
 
   //typedef bvxm_voxel_traits<LIDAR>::lidar_processor lidar_processor;
@@ -516,7 +516,7 @@ bool bvxm_voxel_world::update_edges_lidar(vil_image_view_base_sptr& lidar_height
 
   // get edges probability grid
   bvxm_voxel_grid_base_sptr edges_grid_base = this->get_grid<EDGES>(0,scale);
-  bvxm_voxel_grid<edges_datatype> *edges_grid  = static_cast<bvxm_voxel_grid<edges_datatype>*>(edges_grid_base.ptr());
+  auto *edges_grid  = static_cast<bvxm_voxel_grid<edges_datatype>*>(edges_grid_base.ptr());
 
   bvxm_voxel_grid<edges_datatype>::iterator edges_slab_it = edges_grid->begin();
 
@@ -580,7 +580,7 @@ bool bvxm_voxel_world::update_edges_lidar(vil_image_view_base_sptr& lidar_height
 }
 //: generate a heightmap from the viewpoint of a virtual camera
 // The pixel values are the z values of the most likely voxel intercepted by the corresponding camera ray
-bool bvxm_voxel_world::heightmap(vpgl_camera_double_sptr virtual_camera, vil_image_view<unsigned> &heightmap, vil_image_view<float> &conf_map, unsigned scale_idx)
+bool bvxm_voxel_world::heightmap(const vpgl_camera_double_sptr& virtual_camera, vil_image_view<unsigned> &heightmap, vil_image_view<float> &conf_map, unsigned scale_idx)
 {
   typedef bvxm_voxel_traits<OCCUPANCY>::voxel_datatype ocp_datatype;
 
@@ -612,7 +612,7 @@ bool bvxm_voxel_world::heightmap(vpgl_camera_double_sptr virtual_camera, vil_ima
 
   // get occupancy probability grid
   bvxm_voxel_grid_base_sptr ocp_grid_base = this->get_grid<OCCUPANCY>(0,scale_idx);
-  bvxm_voxel_grid<ocp_datatype> *ocp_grid  = static_cast<bvxm_voxel_grid<ocp_datatype>*>(ocp_grid_base.ptr());
+  auto *ocp_grid  = static_cast<bvxm_voxel_grid<ocp_datatype>*>(ocp_grid_base.ptr());
 
   bvxm_voxel_grid<ocp_datatype>::const_iterator ocp_slab_it = ocp_grid->begin();
 
@@ -651,7 +651,7 @@ bool bvxm_voxel_world::heightmap(vpgl_camera_double_sptr virtual_camera, vil_ima
   vil_image_view_base_sptr conf_img_sptr = new vil_image_view<float>(conf_map);
   bvxm_util::slab_to_img(max_prob_image,conf_img_sptr);
 
-  vil_image_view<float>* heightmap_rough_img = new vil_image_view<float>(heightmap.ni(),heightmap.nj());
+  auto* heightmap_rough_img = new vil_image_view<float>(heightmap.ni(),heightmap.nj());
   vil_image_view_base_sptr heightmap_rough_img_sptr = heightmap_rough_img;
   bvxm_util::slab_to_img(heightmap_rough,heightmap_rough_img_sptr);
   /*
@@ -730,7 +730,7 @@ bool bvxm_voxel_world::heightmap(vpgl_camera_double_sptr virtual_camera, vil_ima
 
 //: generate a heightmap from the viewpoint of a virtual camera
 // The pixel values are the expected z values and variance along the corresponding camera ray
-bool bvxm_voxel_world::heightmap_exp(vpgl_camera_double_sptr virtual_camera, vil_image_view<float> &heightmap, vil_image_view<float> &var, float& max_depth, unsigned scale_idx)
+bool bvxm_voxel_world::heightmap_exp(const vpgl_camera_double_sptr& virtual_camera, vil_image_view<float> &heightmap, vil_image_view<float> &var, float& max_depth, unsigned scale_idx)
 {
   typedef bvxm_voxel_traits<OCCUPANCY>::voxel_datatype ocp_datatype;
 
@@ -792,7 +792,7 @@ bool bvxm_voxel_world::heightmap_exp(vpgl_camera_double_sptr virtual_camera, vil
 
   // get occupancy probability grid
   bvxm_voxel_grid_base_sptr ocp_grid_base = this->get_grid<OCCUPANCY>(0,scale_idx);
-  bvxm_voxel_grid<ocp_datatype> *ocp_grid  = static_cast<bvxm_voxel_grid<ocp_datatype>*>(ocp_grid_base.ptr());
+  auto *ocp_grid  = static_cast<bvxm_voxel_grid<ocp_datatype>*>(ocp_grid_base.ptr());
 
   bvxm_voxel_grid<ocp_datatype>::const_iterator ocp_slab_it = ocp_grid->begin();
 
@@ -884,7 +884,7 @@ bool bvxm_voxel_world::heightmap_exp(vpgl_camera_double_sptr virtual_camera, vil
 }
 
 //: measure the average uncertainty along the rays
-bool bvxm_voxel_world::uncertainty(vpgl_camera_double_sptr virtual_camera, vil_image_view<float> &uncertainty, unsigned scale_idx)
+bool bvxm_voxel_world::uncertainty(const vpgl_camera_double_sptr& virtual_camera, vil_image_view<float> &uncertainty, unsigned scale_idx)
 {
   typedef bvxm_voxel_traits<OCCUPANCY>::voxel_datatype ocp_datatype;
 
@@ -915,7 +915,7 @@ bool bvxm_voxel_world::uncertainty(vpgl_camera_double_sptr virtual_camera, vil_i
 
   // get occupancy probability grid
   bvxm_voxel_grid_base_sptr ocp_grid_base = this->get_grid<OCCUPANCY>(0,scale_idx);
-  bvxm_voxel_grid<ocp_datatype> *ocp_grid  = static_cast<bvxm_voxel_grid<ocp_datatype>*>(ocp_grid_base.ptr());
+  auto *ocp_grid  = static_cast<bvxm_voxel_grid<ocp_datatype>*>(ocp_grid_base.ptr());
 
   bvxm_voxel_grid<ocp_datatype>::const_iterator ocp_slab_it = ocp_grid->begin();
 
@@ -980,34 +980,34 @@ void bvxm_voxel_world::compute_plane_image_H(vpgl_camera_double_sptr const& cam,
   double u=0, v=0;
   vgl_point_3d<float> corner_world;
 
-  voxel_corners_vox.push_back(vgl_homg_point_2d<double>(0,0));
+  voxel_corners_vox.emplace_back(0,0);
   corner_world = this->voxel_index_to_xyz(0,0,k_idx,scale_idx);
   cam->project(corner_world.x(),corner_world.y(),corner_world.z(),u,v);
-  voxel_corners_img.push_back(vgl_homg_point_2d<double>(u,v));
+  voxel_corners_img.emplace_back(u,v);
 
-  voxel_corners_vox.push_back(vgl_homg_point_2d<double>(grid_size.x()-1,0));
+  voxel_corners_vox.emplace_back(grid_size.x()-1,0);
   corner_world = this->voxel_index_to_xyz(grid_size.x()-1,0,k_idx,scale_idx);
   cam->project(corner_world.x(),corner_world.y(),corner_world.z(),u,v);
-  voxel_corners_img.push_back(vgl_homg_point_2d<double>(u,v));
+  voxel_corners_img.emplace_back(u,v);
 
-  voxel_corners_vox.push_back(vgl_homg_point_2d<double>(grid_size.x()-1,grid_size.y()-1));
+  voxel_corners_vox.emplace_back(grid_size.x()-1,grid_size.y()-1);
   corner_world = this->voxel_index_to_xyz(grid_size.x()-1,grid_size.y()-1,k_idx,scale_idx);
   cam->project(corner_world.x(),corner_world.y(),corner_world.z(),u,v);
-  voxel_corners_img.push_back(vgl_homg_point_2d<double>(u,v));
+  voxel_corners_img.emplace_back(u,v);
 
-  voxel_corners_vox.push_back(vgl_homg_point_2d<double>(0,(grid_size.y()-1)));
+  voxel_corners_vox.emplace_back(0,(grid_size.y()-1));
   corner_world = this->voxel_index_to_xyz(0,grid_size.y()-1,k_idx,scale_idx);
   cam->project(corner_world.x(),corner_world.y(),corner_world.z(),u,v);
-  voxel_corners_img.push_back(vgl_homg_point_2d<double>(u,v));
+  voxel_corners_img.emplace_back(u,v);
 
 
   vgl_h_matrix_2d_compute_linear comp_4pt;
   if (!comp_4pt.compute(voxel_corners_img,voxel_corners_vox, H_image_to_plane)) {
     std::cerr << "ERROR computing homography from image to voxel slice.\n";
-    for (unsigned i = 0; i < voxel_corners_img.size(); i++)
-      std::cerr << voxel_corners_img[i] << std::endl;
-    for (unsigned i = 0; i < voxel_corners_vox.size(); i++)
-      std::cerr << voxel_corners_vox[i] << std::endl;
+    for (const auto & i : voxel_corners_img)
+      std::cerr << i << std::endl;
+    for (const auto & i : voxel_corners_vox)
+      std::cerr << i << std::endl;
   }
   if (!comp_4pt.compute(voxel_corners_vox,voxel_corners_img, H_plane_to_image)) {
     std::cerr << "ERROR computing homography from voxel slice to image.\n";

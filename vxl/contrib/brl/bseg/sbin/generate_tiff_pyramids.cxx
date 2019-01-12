@@ -2,7 +2,9 @@
 #include <vector>
 #include <iostream>
 #include <cstdlib>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpl/vpl.h>
 #include <vul/vul_file.h>
 #include <vul/vul_file_iterator.h>
@@ -19,7 +21,7 @@ static void filenames_from_directory(std::string const& dirname,
     // check to see if file is a directory.
     if (vul_file::is_directory(fit()))
       continue;
-    filenames.push_back(fit());
+    filenames.emplace_back(fit());
   }
 }
 
@@ -30,7 +32,7 @@ static bool generate_pyramids(std::string const& image_indir,
 {
   std::string slash;
   //generate the temporary dir
-#ifdef VCL_WIN32
+#ifdef _WIN32
   slash =  "\\";
 #else
   slash = "/";

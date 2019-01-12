@@ -13,7 +13,11 @@
 // \author Raphael Kargon
 // \date Aug 14, 2017
 
-#include <vcl_cstddef.h>
+#include <iostream>
+#include <cstddef>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <boxm2/basic/boxm2_array_1d.h>
 #include <bstm/bstm_data_base.h>
@@ -42,8 +46,8 @@ public:
   // Has science gone too far?
   bstm_data_base *operator->() { return &bstm_data_base_; }
 
-  datatype &operator[](vcl_size_t idx) { return data_array_[idx]; }
-  const datatype &operator[](vcl_size_t idx) const { return data_array_[idx]; }
+  datatype &operator[](std::size_t idx) { return data_array_[idx]; }
+  const datatype &operator[](std::size_t idx) const { return data_array_[idx]; }
 
 private:
   bstm_data_base &bstm_data_base_;

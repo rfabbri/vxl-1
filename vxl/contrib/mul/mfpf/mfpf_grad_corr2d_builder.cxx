@@ -10,8 +10,10 @@
 #include <mfpf/mfpf_grad_corr2d.h>
 #include <vsl/vsl_binary_loader.h>
 #include <vul/vul_string.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <mbl/mbl_parse_block.h>
 #include <mbl/mbl_read_props.h>
@@ -50,9 +52,7 @@ void mfpf_grad_corr2d_builder::set_defaults()
 // Destructor
 //=======================================================================
 
-mfpf_grad_corr2d_builder::~mfpf_grad_corr2d_builder()
-{
-}
+mfpf_grad_corr2d_builder::~mfpf_grad_corr2d_builder() = default;
 
 //: Create new mfpf_grad_corr2d on heap
 mfpf_point_finder* mfpf_grad_corr2d_builder::new_finder() const
@@ -96,7 +96,7 @@ unsigned mfpf_grad_corr2d_builder::model_dim()
 
 //: Initialise building
 // Must be called before any calls to add_example(...)
-void mfpf_grad_corr2d_builder::clear(unsigned n_egs)
+void mfpf_grad_corr2d_builder::clear(unsigned  /*n_egs*/)
 {
   n_added_=0;
 }
@@ -263,7 +263,7 @@ void mfpf_grad_corr2d_builder::build(mfpf_point_finder& pf)
 {
   assert(n_added_>0);
   assert(pf.is_a()=="mfpf_grad_corr2d");
-  mfpf_grad_corr2d& nc = static_cast<mfpf_grad_corr2d&>(pf);
+  auto& nc = static_cast<mfpf_grad_corr2d&>(pf);
 
   vil_image_view<double> mean_x;
   mean_x.deep_copy(sum_x_);
@@ -424,4 +424,3 @@ void mfpf_grad_corr2d_builder::b_read(vsl_b_istream& bfs)
       return;
   }
 }
-

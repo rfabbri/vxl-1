@@ -1,13 +1,15 @@
 #include <iostream>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include "../bjson.h"
 
 
 class IJsonSerializable
 {
 public:
-   virtual ~IJsonSerializable( void ) {};
+   virtual ~IJsonSerializable( void ) = default;;
    virtual void Serialize( Json::Value& root ) =0;
    virtual void Deserialize( Json::Value& root) =0;
 };
@@ -15,16 +17,16 @@ public:
 class TestClassA : public IJsonSerializable
 {
 public:
-        TestClassA( void ){}
-   virtual ~TestClassA( void ){}
-   virtual void Serialize( Json::Value& root ){
+        TestClassA( void )= default;
+   ~TestClassA( void ) override= default;
+   void Serialize( Json::Value& root ) override{
        // serialize primitives
        root["testintA"] = m_nTestInt;
        root["testfloatA"] = m_fTestFloat;
        root["teststringA"] = m_TestString;
        root["testboolA"] = m_bTestBool;
      }
-     virtual void Deserialize( Json::Value& root){
+     void Deserialize( Json::Value& root) override{
    // deserialize primitives
        m_nTestInt = root.get("testintA",0).asInt();
        m_fTestFloat = root.get("testfloatA", 0.0).asDouble();
@@ -51,7 +53,7 @@ class CJsonSerializer
 {
 public:
   static bool Serialize( IJsonSerializable* pObj, std::string& output ){
-    if (pObj == VXL_NULLPTR)
+    if (pObj == nullptr)
       return false;
 
     Json::Value serializeRoot;
@@ -63,7 +65,7 @@ public:
     return true;
   }
   static bool Deserialize( IJsonSerializable* pObj, std::string& input ){
-    if (pObj == VXL_NULLPTR)
+    if (pObj == nullptr)
       return false;
 
     Json::Value deserializeRoot;
@@ -77,7 +79,7 @@ public:
     return true;
   }
 private:
-   CJsonSerializer( void ) {};
+   CJsonSerializer( void ) = default;;
 };
 
 static void test_bjson()

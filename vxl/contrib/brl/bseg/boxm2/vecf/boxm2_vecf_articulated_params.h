@@ -3,7 +3,9 @@
 #include <string>
 #include <boxm2/boxm2_data_traits.h>
 #include <boxm2/boxm2_scene.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 //:
 // \file
 // \brief  Parent class for articulated parameters used in articulated scenes
@@ -17,7 +19,7 @@ class boxm2_vecf_articulated_params{
       app_.fill(static_cast<unsigned char>(0));
       app_[1]=static_cast<unsigned char>(32); app_[2] = static_cast<unsigned char>(255);
   }
-  virtual ~boxm2_vecf_articulated_params(){};
+  virtual ~boxm2_vecf_articulated_params()= default;;
 
   // internal voxel processing parameters
   double neighbor_radius() const {return 1.7320508075688772;}

@@ -9,7 +9,9 @@
 // \author Vishal Jain
 // \date June 3, 2011
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/io/boxm2_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -26,8 +28,8 @@
 
 namespace boxm2_cpp_vis_of_point_process_globals
 {
-    const unsigned n_inputs_ = 6;
-    const unsigned n_outputs_ = 1;
+    constexpr unsigned n_inputs_ = 6;
+    constexpr unsigned n_outputs_ = 1;
     std::size_t lthreads[2]={8,8};
 }
 
@@ -70,22 +72,22 @@ bool boxm2_cpp_vis_of_point_process(bprb_func_process& pro)
     boxm2_scene_sptr scene = pro.get_input<boxm2_scene_sptr>(i++);
     boxm2_cache_sptr cache = pro.get_input<boxm2_cache_sptr>(i++);
     vpgl_camera_double_sptr cam= pro.get_input<vpgl_camera_double_sptr>(i++);
-    float px=pro.get_input<float>(i++);
-    float py=pro.get_input<float>(i++);
-    float pz=pro.get_input<float>(i++);
+    auto px=pro.get_input<float>(i++);
+    auto py=pro.get_input<float>(i++);
+    auto pz=pro.get_input<float>(i++);
 
     bool foundDataType = false;
     std::string data_type;
     std::vector<std::string> apps = scene->appearances();
-    for (unsigned int i=0; i<apps.size(); ++i) {
-        if ( apps[i] == boxm2_data_traits<BOXM2_MOG3_GREY>::prefix() )
+    for (const auto & app : apps) {
+        if ( app == boxm2_data_traits<BOXM2_MOG3_GREY>::prefix() )
         {
-            data_type = apps[i];
+            data_type = app;
             foundDataType = true;
         }
-        else if ( apps[i] == boxm2_data_traits<BOXM2_MOG3_GREY_16>::prefix() )
+        else if ( app == boxm2_data_traits<BOXM2_MOG3_GREY_16>::prefix() )
         {
-            data_type = apps[i];
+            data_type = app;
             foundDataType = true;
         }
     }
@@ -98,7 +100,7 @@ bool boxm2_cpp_vis_of_point_process(bprb_func_process& pro)
     std::vector<boxm2_block_id> vis_order=scene->get_vis_order_from_pt(vgl_point_3d<double>(px,py,pz));
 
     vgl_ray_3d<double> ray;
-    if(vpgl_perspective_camera<double> * pcam=dynamic_cast<vpgl_perspective_camera<double> * > (cam.ptr()))
+    if(auto * pcam=dynamic_cast<vpgl_perspective_camera<double> * > (cam.ptr()))
     {
         vgl_point_3d<double>  qpoint(px,py,pz);
         vgl_point_3d<double>  cam_center=pcam->camera_center();
@@ -111,11 +113,11 @@ bool boxm2_cpp_vis_of_point_process(bprb_func_process& pro)
     for (id = vis_order.begin(); id != vis_order.end(); ++id)
     {
         std::cout<<"Block Id "<<(*id)<<std::endl;
-        boxm2_block *     blk  =  cache->get_block(scene,*id);
+        boxm2_block *     blk = cache->get_block(scene,*id);
         boxm2_data_base *  alph = cache->get_data_base(scene,*id,boxm2_data_traits<BOXM2_ALPHA>::prefix());
         std::vector<boxm2_data_base*> datas;
         datas.push_back(alph);
-        boxm2_scene_info_wrapper *scene_info_wrapper=new boxm2_scene_info_wrapper();
+        auto *scene_info_wrapper=new boxm2_scene_info_wrapper();
         scene_info_wrapper->info=scene->get_blk_metadata(*id);
         boxm2_render_vis_image_functor point_vis_functor;
         point_vis_functor.init_data(datas,&vis_img);

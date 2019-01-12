@@ -5,7 +5,9 @@
 #include <map>
 #include <iostream>
 #include <cstddef>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include "bocl_cl.h"
 #include "bocl_buffer.h"
 
@@ -46,7 +48,7 @@ class bocl_buffer_mgr
 
  private:
   static bocl_buffer_mgr* instance_;
-  bocl_buffer_mgr() {}
+  bocl_buffer_mgr() = default;
   std::map<std::string, bocl_buffer*> buffers_;
 };
 

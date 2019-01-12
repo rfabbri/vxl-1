@@ -8,8 +8,10 @@
 
 #include <vil/vil_plane.h>
 #include <vil/vil_crop.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 //=======================================================================
 // Dflt ctor
@@ -32,9 +34,7 @@ mbl_eps_writer::mbl_eps_writer(const char* path, double nx, double ny)
 // Destructor
 //=======================================================================
 
-mbl_eps_writer::~mbl_eps_writer()
-{
-}
+mbl_eps_writer::~mbl_eps_writer() = default;
 
 //: Define shade of subsequent lines [0,1] = black-white
 void mbl_eps_writer::set_grey_shade(double shade)

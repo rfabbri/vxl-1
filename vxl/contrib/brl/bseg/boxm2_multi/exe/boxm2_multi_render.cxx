@@ -9,7 +9,9 @@
 #include <algo/boxm2_multi_render.h>
 
 #include <vcl_where_root_dir.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //executable args
 #include <vul/vul_arg.h>
@@ -32,8 +34,8 @@
 #include <bprb/bprb_macros.h>
 #include <bprb/bprb_func_process.h>
 
-void test_render_expected_images(boxm2_scene_sptr scene,
-                                 bocl_device_sptr device,
+void test_render_expected_images(const boxm2_scene_sptr& scene,
+                                 const bocl_device_sptr& device,
                                  boxm2_opencl_cache1* cache,
                                  std::vector<vpgl_camera_double_sptr>& cams,
                                  unsigned ni, unsigned nj)
@@ -96,7 +98,7 @@ void test_render_expected_images(boxm2_scene_sptr scene,
     }
 
     brdb_query_aptr Q = brdb_query_comp_new("id", brdb_query::EQ, out_img);
-    brdb_selection_sptr S = DATABASE->select("vil_image_view_base_sptr_data", vcl_move(Q));
+    brdb_selection_sptr S = DATABASE->select("vil_image_view_base_sptr_data", std::move(Q));
     if (S->size()!=1) {
       std::cout << "in bprb_batch_process_manager::set_input_from_db(.) -"
                << " no selections\n";
@@ -164,7 +166,7 @@ int main(int argc,  char** argv)
     vil_image_view<float> out(ni(),nj());
     vul_timer rtimer; rtimer.mark();
     float gpu_time = renderer.render(mcache, out, cams[i]);
-    float rtime = (float) rtimer.all();
+    auto rtime = (float) rtimer.all();
     std::cout<<"Render "<<i<<" time: "<<rtime<<std::endl;
     std::stringstream s; s<<"e:/data/3dModeling/apt/out_"<<i<<".tiff";
     vil_save(out, s.str().c_str());

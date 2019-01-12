@@ -14,7 +14,9 @@
 #include <vector>
 #include <iostream>
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <boxm/boxm_aux_traits.h>
 #include <boxm/boxm_apm_traits.h>
@@ -30,9 +32,9 @@ class boxm_edge_tangent_updater
  public:
 
   boxm_edge_tangent_updater(boxm_scene<boct_tree<T_loc, boxm_inf_line_sample<APM> > > &scene,
-                            std::vector<std::string> const& image_ids, bool use_ransac=true, float ransac_ortho_thres = 0.01f, float ransac_volume_ratio = 128.0f, int ransac_consensus_cnt = 3);
+                            std::vector<std::string>  image_ids, bool use_ransac=true, float ransac_ortho_thres = 0.01f, float ransac_volume_ratio = 128.0f, int ransac_consensus_cnt = 3);
 
-  ~boxm_edge_tangent_updater(){}
+  ~boxm_edge_tangent_updater()= default;
 
   bool add_cells();
 
@@ -54,10 +56,10 @@ class boxm_edge_tangent_refine_updates
  public:
 
   boxm_edge_tangent_refine_updates(boxm_scene<boct_tree<T_loc, boxm_inf_line_sample<APM> > > &scene, int consensus_cnt,
-                                   std::vector<vil_image_view<float> > const& edge_images,
-                                   std::vector<vpgl_camera_double_sptr> const& cameras);
+                                   std::vector<vil_image_view<float> >  edge_images,
+                                   std::vector<vpgl_camera_double_sptr>  cameras);
 
-  ~boxm_edge_tangent_refine_updates() {}
+  ~boxm_edge_tangent_refine_updates() = default;
 
   bool refine_cells();
 

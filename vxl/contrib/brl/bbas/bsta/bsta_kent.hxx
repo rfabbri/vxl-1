@@ -14,7 +14,10 @@
 #include <vgl/vgl_plane_3d.h>
 #include <vgl/vgl_vector_3d.h>
 #endif
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 template <class T>
 bsta_kent<T>::bsta_kent(vnl_matrix_fixed<T,3,3> const& m)

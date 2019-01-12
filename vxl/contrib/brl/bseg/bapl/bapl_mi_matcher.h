@@ -17,7 +17,9 @@
 #include <bapl/bapl_affine_transform.h>
 #include <bapl/bapl_mi_matcher_params.h>
 #include <vil/vil_image_view.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class bapl_affine_roi;
 
@@ -28,13 +30,13 @@ class bapl_mi_matcher
 {
  public:
   //: Constructor
-  bapl_mi_matcher(vil_image_view<vxl_byte> src_image,
-                  vil_image_view<vxl_byte> target_patch,
+  bapl_mi_matcher(const vil_image_view<vxl_byte>& src_image,
+                  const vil_image_view<vxl_byte>& target_patch,
                   bapl_affine_transform init_xform,
                   bapl_mi_matcher_params params = bapl_mi_matcher_params());
 
   //: Constructor
-  bapl_mi_matcher(vil_image_view<vxl_byte> src_image,
+  bapl_mi_matcher(const vil_image_view<vxl_byte>& src_image,
                   bapl_affine_roi& roi,
                   bapl_mi_matcher_params params = bapl_mi_matcher_params());
 
@@ -48,7 +50,7 @@ class bapl_mi_matcher
 
  private:
   //: Default Constructor
-  bapl_mi_matcher();
+  bapl_mi_matcher() = delete;
 
   //: Generate a random transform (close to init_xform_)
   bapl_affine_transform rand_transform();

@@ -4,14 +4,17 @@
 #include <vbl/vbl_array_2d.h>
 #include <vgl/vgl_box_3d.h>
 #include <bkml/bkml_write.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: construct the locs_ and pixels_ vectors by generating a hypothesis according to interval amounts in given the tile.
 //  Intervals are in meters.
 //  Only one elev hypothesis per location for now..
 //  keep only the locations that the scene covers
 void
-boxm2_volm_loc_hypotheses::add_dems(boxm2_scene_sptr scene,
+boxm2_volm_loc_hypotheses::add_dems(const boxm2_scene_sptr& scene,
                                     unsigned interval_i, unsigned interval_j,
                                     float altitude,
                                     std::vector<vil_image_view<float> >& dems, std::vector<vpgl_geo_camera*>& cams)
@@ -48,7 +51,7 @@ boxm2_volm_loc_hypotheses::add_dems(boxm2_scene_sptr scene,
 }
 
 //: add a hypothesis given as a global lon, lat and elev for the pixel (i,j) of the tile
-bool boxm2_volm_loc_hypotheses::add(boxm2_scene_sptr scene, vgl_box_3d<double>& scene_bounding_box, double lon, double lat, double elev, unsigned i, unsigned j)
+bool boxm2_volm_loc_hypotheses::add(const boxm2_scene_sptr& scene, vgl_box_3d<double>& scene_bounding_box, double lon, double lat, double elev, unsigned i, unsigned j)
 {
   double lx, ly, lz;
   scene->lvcs().global_to_local(lon, lat, elev, vpgl_lvcs::wgs84, lx, ly, lz);
@@ -56,7 +59,7 @@ bool boxm2_volm_loc_hypotheses::add(boxm2_scene_sptr scene, vgl_box_3d<double>& 
   if (scene_bounding_box.contains(local)) {
     vgl_point_3d<float> ll((float)lx, (float)ly, (float)lz);
     locs_.push_back(ll);
-    pixels_.push_back(std::pair<unsigned, unsigned>(i,j));
+    pixels_.emplace_back(i,j);
     return true;
   }
   return false;
@@ -69,7 +72,7 @@ bool boxm2_volm_loc_hypotheses::add(double lon, double lat, float cent_x, float 
     return false;
   vgl_point_3d<float> ll(cent_x, cent_y, cent_z);
   locs_.push_back(ll);
-  pixels_.push_back(std::pair<unsigned, unsigned>(i,j));
+  pixels_.emplace_back(i,j);
   return true;
 }
 
@@ -77,7 +80,7 @@ bool boxm2_volm_loc_hypotheses::add(double lon, double lat, float cent_x, float 
 
 
 //: construct by reading from a binary file
-boxm2_volm_loc_hypotheses::boxm2_volm_loc_hypotheses(std::string bin_file)
+boxm2_volm_loc_hypotheses::boxm2_volm_loc_hypotheses(const std::string& bin_file)
 {
   vsl_b_ifstream is(bin_file.c_str());
   if (!is) {
@@ -115,7 +118,7 @@ void boxm2_volm_loc_hypotheses::generate_output_tile(std::vector<float>& scores,
     volm_tile::mark_uncertainty_region(pixels_[i].first,  pixels_[i].second, scores[i], mask, kernel, out);
 }
 
-bool boxm2_volm_loc_hypotheses::write_hypotheses(std::string out_file)
+bool boxm2_volm_loc_hypotheses::write_hypotheses(const std::string& out_file)
 {
   vsl_b_ofstream os(out_file.c_str());
   if (!os)
@@ -131,15 +134,15 @@ void boxm2_volm_loc_hypotheses::b_write(vsl_b_ostream &os) const
   vsl_b_write(os, version());
   tile_.b_write(os);
   vsl_b_write(os, pixels_.size());
-  for (unsigned i = 0; i < pixels_.size(); i++) {
-    vsl_b_write(os, pixels_[i].first);
-    vsl_b_write(os, pixels_[i].second);
+  for (const auto & pixel : pixels_) {
+    vsl_b_write(os, pixel.first);
+    vsl_b_write(os, pixel.second);
   }
   vsl_b_write(os, locs_.size());
-  for (unsigned i = 0; i < locs_.size(); i++) {
-    vsl_b_write(os, locs_[i].x());
-    vsl_b_write(os, locs_[i].y());
-    vsl_b_write(os, locs_[i].z());
+  for (auto loc : locs_) {
+    vsl_b_write(os, loc.x());
+    vsl_b_write(os, loc.y());
+    vsl_b_write(os, loc.z());
   }
 }
 
@@ -156,18 +159,18 @@ void boxm2_volm_loc_hypotheses::b_read(vsl_b_istream &is)
      unsigned s;
      vsl_b_read(is, s);
      pixels_.resize(s, std::pair<unsigned, unsigned>(0,0));
-     for (unsigned i = 0; i < pixels_.size(); i++) {
-       vsl_b_read(is, pixels_[i].first);
-       vsl_b_read(is, pixels_[i].second);
+     for (auto & pixel : pixels_) {
+       vsl_b_read(is, pixel.first);
+       vsl_b_read(is, pixel.second);
      }
      vsl_b_read(is, s);
      locs_.resize(s);
-     for (unsigned i = 0; i < locs_.size(); i++) {
+     for (auto & loc : locs_) {
        float x,y,z;
        vsl_b_read(is, x);
        vsl_b_read(is, y);
        vsl_b_read(is, z);
-       locs_[i] = vgl_point_3d<float>(x,y,z);
+       loc = vgl_point_3d<float>(x,y,z);
      }
      break; }
    default:
@@ -179,7 +182,7 @@ void boxm2_volm_loc_hypotheses::b_read(vsl_b_istream &is)
 }
 
 //: for debugging purposes
-bool boxm2_volm_loc_hypotheses::write_hypotheses_kml(boxm2_scene_sptr scene, std::string kml_file)
+bool boxm2_volm_loc_hypotheses::write_hypotheses_kml(const boxm2_scene_sptr& scene, const std::string& kml_file)
 {
   std::ofstream ofs(kml_file.c_str());
   if (!ofs) {
@@ -197,8 +200,3 @@ bool boxm2_volm_loc_hypotheses::write_hypotheses_kml(boxm2_scene_sptr scene, std
   bkml_write::close_document(ofs);
   return true;
 }
-
-
-
-
-

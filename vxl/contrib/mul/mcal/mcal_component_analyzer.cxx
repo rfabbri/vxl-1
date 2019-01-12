@@ -3,7 +3,9 @@
 #include <iostream>
 #include <cstdlib>
 #include "mcal_component_analyzer.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <mbl/mbl_data_array_wrapper.h>
 #include <mbl/mbl_exception.h>
 #include <mbl/mbl_cloneables_factory.h>
@@ -13,15 +15,11 @@
 
 //=======================================================================
 
-mcal_component_analyzer::mcal_component_analyzer()
-{
-}
+mcal_component_analyzer::mcal_component_analyzer() = default;
 
 //=======================================================================
 
-mcal_component_analyzer::~mcal_component_analyzer()
-{
-}
+mcal_component_analyzer::~mcal_component_analyzer() = default;
 
 //: Compute the mean of the supplied data
 void mcal_component_analyzer::compute_mean(mbl_data_wrapper<vnl_vector<double> >& data,
@@ -82,13 +80,13 @@ std::string  mcal_component_analyzer::is_a() const
 
 
 //: Create a concrete mcal_component_analyzer object, from a text specification.
-vcl_unique_ptr<mcal_component_analyzer>
+std::unique_ptr<mcal_component_analyzer>
   mcal_component_analyzer::create_from_stream(std::istream &is)
 {
   std::string name;
   is >> name;
 
-  vcl_unique_ptr<mcal_component_analyzer> mca;
+  std::unique_ptr<mcal_component_analyzer> mca;
   try
   {
     mca = mbl_cloneables_factory<mcal_component_analyzer>::get_clone(name);

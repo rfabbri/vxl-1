@@ -3,16 +3,19 @@
 // \author Isabel Restrepo
 // \date 25-Jan-2011
 
+#include "bvpl_taylor_basis_factory.h"
 #include <iostream>
 #include <map>
-#include "bvpl_taylor_basis_factory.h"
-#include <vcl_compiler.h>
+#include <utility>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Constructor from filename
 bvpl_taylor_basis_factory::bvpl_taylor_basis_factory(std::string filename)
 {
   //initialize variables
-  filename_ = filename;
+  filename_ = std::move(filename);
   angle_ = 0.0f;
   rotation_axis_ = canonical_rotation_axis_;
   parallel_axis_ = canonical_parallel_axis_;
@@ -26,7 +29,6 @@ bvpl_taylor_basis_factory::bvpl_taylor_basis_factory(std::string filename)
 
 void bvpl_taylor_basis_factory::create_canonical()
 {
-  typedef vgl_point_3d<float> point_3d;
   typedef bvpl_kernel_dispatch dispatch;
 
   std::ifstream ifs(filename_.c_str());
@@ -45,7 +47,7 @@ void bvpl_taylor_basis_factory::create_canonical()
     float weight;
     ifs >> this_loc;
     ifs >> weight;
-    canonical_kernel_.push_back(std::pair<point_3d,dispatch>(this_loc, dispatch(weight)));
+    canonical_kernel_.emplace_back(this_loc, dispatch(weight));
   }
 
   //set the current kernel
@@ -62,7 +64,7 @@ void bvpl_taylor_basis_loader::create_basis(std::map<std::string, bvpl_kernel_sp
   std::vector<std::string> filenames;
   files(filenames);
 
-  std::vector<std::string>::iterator file_it =filenames.begin();
+  auto file_it =filenames.begin();
 
   for (; file_it != filenames.end(); file_it++)
   {
@@ -80,16 +82,15 @@ void bvpl_taylor_basis_loader::files(std::vector<std::string> &filenames)
 {
   if (degree_ == 2)
   {
-    filenames.push_back("I0");
-    filenames.push_back("Ix");
-    filenames.push_back("Iy");
-    filenames.push_back("Iz");
-    filenames.push_back("Ixx");
-    filenames.push_back("Iyy");
-    filenames.push_back("Izz");
-    filenames.push_back("Ixy");
-    filenames.push_back("Ixz");
-    filenames.push_back("Iyz");
+    filenames.emplace_back("I0");
+    filenames.emplace_back("Ix");
+    filenames.emplace_back("Iy");
+    filenames.emplace_back("Iz");
+    filenames.emplace_back("Ixx");
+    filenames.emplace_back("Iyy");
+    filenames.emplace_back("Izz");
+    filenames.emplace_back("Ixy");
+    filenames.emplace_back("Ixz");
+    filenames.emplace_back("Iyz");
   }
 }
-

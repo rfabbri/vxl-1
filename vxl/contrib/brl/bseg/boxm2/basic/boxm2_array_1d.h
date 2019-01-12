@@ -6,8 +6,10 @@
 #include <iosfwd>
 #include <iostream>
 #include <cstddef>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: A simple wrapper for a buffer.
 //  This class does not have ownership over data,
@@ -25,7 +27,7 @@ struct boxm2_array_1d
     typedef T const &const_reference;
 
     //: empty constructor
-    boxm2_array_1d() : begin_(VXL_NULLPTR), end_(VXL_NULLPTR), n_(0) {}
+    boxm2_array_1d() : begin_(nullptr), end_(nullptr), n_(0) {}
 
     //: create a wrapper for a buffer of size n
     boxm2_array_1d(size_type n, T* buffer) {
@@ -85,7 +87,7 @@ struct boxm2_array_1d
     size_type n_;
 };
 
-VCL_TEMPLATE_EXPORT template <class T>
+template <class T>
 std::ostream& operator<<(std::ostream &, boxm2_array_1d<T> const &);
 
 #endif // boxm2_array_1d_h_

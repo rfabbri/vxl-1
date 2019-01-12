@@ -1,14 +1,13 @@
 // This is oxl/osl/examples/break_lines.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation "vul_arg.h"//otherwise "unresolved typeinfo vul_arg_base"
-#endif
 //:
 // \file
 // \author fsm
 
 #include <iostream>
 #include <vul/vul_arg.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <osl/osl_edge.h>
 #include <osl/osl_break_edge.h>
 #include <osl/osl_load_topology.h>
@@ -36,8 +35,8 @@ int main(int argc, char **argv)
 
   //
   std::list<osl_edge*> broken;
-  for (std::list<osl_edge*>::iterator i=edges.begin(); i!=edges.end(); ++i)
-    osl_break_edge(*i, &broken);
+  for (auto & edge : edges)
+    osl_break_edge(edge, &broken);
   osl_topology_ref(broken);
 
   //

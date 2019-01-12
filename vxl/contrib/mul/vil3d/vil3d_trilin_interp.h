@@ -8,8 +8,10 @@
 
 #include <iostream>
 #include <cstddef>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_na.h>
 #include <vil3d/vil3d_image_view.h>
 

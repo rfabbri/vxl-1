@@ -1,8 +1,5 @@
 #ifndef vil_pyramid_image_view_h_
 #define vil_pyramid_image_view_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Representation of a pyramid hierarchy of image views.
@@ -18,7 +15,9 @@
 // \date   Aug 16, 2010
 
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_image_view.h>
 #include <vil/vil_image_view_base.h>
 
@@ -54,7 +53,7 @@ class vil_pyramid_image_view
     // The new object will point to the same underlying image as the rhs.
     vil_pyramid_image_view(const vil_pyramid_image_view<T>& rhs);
 
-    virtual ~vil_pyramid_image_view() {}
+    virtual ~vil_pyramid_image_view() = default;
 
     //: adds a view to the list of view sorted in the right place based on the scale in descending order
     void add_view(vil_image_view_base_sptr &image, double scale);

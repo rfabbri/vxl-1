@@ -14,7 +14,9 @@
 //  <None>
 // \endverbatim
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm/boxm_scene_base.h>
 #include <boxm/boxm_scene.h>
 #include <boxm/algo/boxm_save_scene_raw_general.h>
@@ -22,8 +24,8 @@
 
 namespace boxm_save_scene_raw_process_globals
 {
-  const unsigned n_inputs_ = 4;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 4;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool boxm_save_scene_raw_process_cons(bprb_func_process& pro)
@@ -58,8 +60,8 @@ bool boxm_save_scene_raw_process(bprb_func_process& pro)
   unsigned i = 0;
   boxm_scene_base_sptr scene_ptr = pro.get_input<boxm_scene_base_sptr>(i++);
   std::string filepath = pro.get_input<std::string>(i++);
-  unsigned resolution =  pro.get_input<unsigned>(i++);
-  unsigned whole = pro.get_input<unsigned>(i++);
+  auto resolution =  pro.get_input<unsigned>(i++);
+  auto whole = pro.get_input<unsigned>(i++);
 
   // check the scene's app model
   if (scene_ptr->appearence_model() == BOXM_FLOAT)
@@ -72,7 +74,7 @@ bool boxm_save_scene_raw_process(bprb_func_process& pro)
     else
     {
       typedef boct_tree<short, float > type;
-      boxm_scene<type>* scene = dynamic_cast<boxm_scene<type>*>(scene_ptr.as_pointer());
+      auto* scene = dynamic_cast<boxm_scene<type>*>(scene_ptr.as_pointer());
       if(!scene)
         return false;
       if (!whole) {
@@ -95,7 +97,7 @@ bool boxm_save_scene_raw_process(bprb_func_process& pro)
     else
     {
       typedef boct_tree<short, char > type;
-      boxm_scene<type>* scene = dynamic_cast<boxm_scene<type>*>(scene_ptr.as_pointer());
+      auto* scene = dynamic_cast<boxm_scene<type>*>(scene_ptr.as_pointer());
       if(!scene)
         return false;
       if (!whole) {
@@ -118,7 +120,7 @@ bool boxm_save_scene_raw_process(bprb_func_process& pro)
     else
     {
       typedef boct_tree<short, bool > type;
-      boxm_scene<type>* scene = dynamic_cast<boxm_scene<type>*>(scene_ptr.as_pointer());
+      auto* scene = dynamic_cast<boxm_scene<type>*>(scene_ptr.as_pointer());
       if(!scene)
         return false;
       if (!whole) {

@@ -1,41 +1,41 @@
-#include "brad_appearance_neighborhood_index.h"
-#include <vnl/vnl_math.h>
-#include <cstdlib> // for rand
+#include <cstdlib>
 #include <algorithm>
 #include <iostream>
 #include <iomanip>
+#include "brad_appearance_neighborhood_index.h"
+#include <vnl/vnl_math.h>
 
 brad_appearance_neighborhood_index::brad_appearance_neighborhood_index(std::vector<brad_image_metadata_sptr> const& metadata)
 {
     std::vector<vgl_vector_3d<double > > local_view_dirs;
     std::vector<vgl_vector_3d<double > > local_illum_dirs;
 
-        for(std::vector<brad_image_metadata_sptr>::const_iterator mit = metadata.begin(); mit !=metadata.end(); ++mit){
+        for(const auto & mit : metadata){
     //convert to sun illumination to standard spherical coordinates
-    double sun_sphere_az = 90.0 - (*mit)->sun_azimuth_ + 360.0;
+    double sun_sphere_az = 90.0 - mit->sun_azimuth_ + 360.0;
     if (sun_sphere_az>=360.0) sun_sphere_az -= 360.0;
-    double sun_sphere_el = 90.0 - (*mit)->sun_elevation_;
+    double sun_sphere_el = 90.0 - mit->sun_elevation_;
     double sun_sphere_az_rad = vnl_math::pi_over_180*sun_sphere_az;
     double sun_sphere_el_rad = vnl_math::pi_over_180*sun_sphere_el;
     // convert to Cartesian
-    double s = vcl_sin(sun_sphere_el_rad);
-    double x = s*vcl_cos(sun_sphere_az_rad);
-    double y = s*vcl_sin(sun_sphere_az_rad);
-    double z = vcl_cos(sun_sphere_el_rad);
+    double s = std::sin(sun_sphere_el_rad);
+    double x = s*std::cos(sun_sphere_az_rad);
+    double y = s*std::sin(sun_sphere_az_rad);
+    double z = std::cos(sun_sphere_el_rad);
     vgl_vector_3d<double> ill_dir(x, y, z);
     local_illum_dirs.push_back(-ill_dir);
 
     //convert view direction to standard spherical coordinates
-    double view_sphere_az = 90.0 - (*mit)->view_azimuth_ + 360.0;
+    double view_sphere_az = 90.0 - mit->view_azimuth_ + 360.0;
     if (view_sphere_az>=360.0) view_sphere_az -= 360.0;
-    double view_sphere_el = 90.0 - (*mit)->view_elevation_;
+    double view_sphere_el = 90.0 - mit->view_elevation_;
     double view_sphere_az_rad = vnl_math::pi_over_180*view_sphere_az;
     double view_sphere_el_rad = vnl_math::pi_over_180*view_sphere_el;
     // convert to Cartesian
-    s = vcl_sin(view_sphere_el_rad);
-    x = s*vcl_cos(view_sphere_az_rad);
-    y = s*vcl_sin(view_sphere_az_rad);
-    z = vcl_cos(view_sphere_el_rad);
+    s = std::sin(view_sphere_el_rad);
+    x = s*std::cos(view_sphere_az_rad);
+    y = s*std::sin(view_sphere_az_rad);
+    z = std::cos(view_sphere_el_rad);
     vgl_vector_3d<double> view_dir(x, y, z);
     local_view_dirs.push_back(-view_dir);
   }
@@ -152,7 +152,7 @@ void brad_appearance_neighborhood_index::compute_index(){
   unsigned ptr = 0;
   while(ptr<n){
     unsigned img_idx = img_index[ptr];
-    unsigned nillum = static_cast<unsigned>(near_illum_dir_map_[img_idx].size());
+    auto nillum = static_cast<unsigned>(near_illum_dir_map_[img_idx].size());
     if(nillum < num_illum_neighbors_thresh_){
       ptr++;
       continue;
@@ -186,7 +186,7 @@ void brad_appearance_neighborhood_index::compute_index(){
         ptr++;
   }
   // the set of targets is determined
-  unsigned ntarg = static_cast<unsigned>(targets.size());
+  auto ntarg = static_cast<unsigned>(targets.size());
   if(!ntarg)
     return;
 
@@ -200,7 +200,7 @@ bool brad_appearance_neighborhood_index::force_single_index(unsigned img_idx){
   index_.clear();
   this->fill_view_dir_maps();
   this->fill_near_illum_dir_map();
-  unsigned nillum = static_cast<unsigned>(near_illum_dir_map_[img_idx].size());
+  auto nillum = static_cast<unsigned>(near_illum_dir_map_[img_idx].size());
   if(nillum < num_illum_neighbors_thresh_)
     return false;
   index_[img_idx]=near_illum_dir_map_[img_idx];
@@ -216,7 +216,7 @@ std::vector<unsigned> brad_appearance_neighborhood_index::index(unsigned indx) c
   return iit->second;
 }
 unsigned brad_appearance_neighborhood_index::most_nadir_view() const{
-  unsigned n = static_cast<unsigned>(view_dirs_.size());
+  auto n = static_cast<unsigned>(view_dirs_.size());
   vgl_vector_3d<double> down_z_dir(0.0, 0.0, -1.0);
   double max_dot = 0.0;
   unsigned ret = 0;
@@ -231,7 +231,7 @@ unsigned brad_appearance_neighborhood_index::most_nadir_view() const{
 }
 //predicate functor operator for sorting
 bool brad_appearance_neighborhood_index::operator () (unsigned va, unsigned vb) const{
-  unsigned n = static_cast<unsigned>(view_dirs_.size());
+  auto n = static_cast<unsigned>(view_dirs_.size());
   vgl_vector_3d<double> down_z_dir(0.0, 0.0, -1.0);
   if(va>=n || vb>=n)
     return false;
@@ -240,7 +240,7 @@ bool brad_appearance_neighborhood_index::operator () (unsigned va, unsigned vb) 
   return dpa>dpb;
 }
 std::vector<unsigned> brad_appearance_neighborhood_index::views_in_nadir_order() const{
-  unsigned n = static_cast<unsigned>(view_dirs_.size());
+  auto n = static_cast<unsigned>(view_dirs_.size());
   std::vector<unsigned> views(n);
   for(unsigned i = 0; i<n; ++i)
     views[i]=i;
@@ -248,26 +248,23 @@ std::vector<unsigned> brad_appearance_neighborhood_index::views_in_nadir_order()
   return views;
 }
 void brad_appearance_neighborhood_index::print_index() const{
-  for(std::map<unsigned, std::vector<unsigned> >::const_iterator iit = index_.begin();
-      iit != index_.end(); ++iit){
-    unsigned i_idx = iit->first;
-    const std::vector<unsigned>& nbrs = iit->second;
+  for(const auto & iit : index_){
+    unsigned i_idx = iit.first;
+    const std::vector<unsigned>& nbrs = iit.second;
     std::cout << "t: " << i_idx << "[ ";
-    for(std::vector<unsigned>::const_iterator nit = nbrs.begin();
-        nit != nbrs.end(); ++nit)
-      std::cout << *nit << ' ';
+    for(unsigned int nbr : nbrs)
+      std::cout << nbr << ' ';
     std::cout << "]\n";
   }
 }
 void brad_appearance_neighborhood_index::print_index_angles() const{
-  for(std::map<unsigned, std::vector<unsigned> >::const_iterator iit = index_.begin();
+  for(auto iit = index_.begin();
       iit != index_.end(); ++iit){
     unsigned i_idx = iit->first;
     vgl_vector_3d<double> view_dir_i = view_dirs_[i_idx];
     std::cout << "Target separation[" << i_idx << "]:( ";
-    for(std::map<unsigned, std::vector<unsigned> >::const_iterator jit = index_.begin();
-        jit != index_.end(); ++jit){
-      unsigned j_idx = jit->first;
+    for(const auto & jit : index_){
+      unsigned j_idx = jit.first;
       if(i_idx == j_idx)
         continue;
       vgl_vector_3d<double> view_dir_j = view_dirs_[j_idx];
@@ -276,53 +273,46 @@ void brad_appearance_neighborhood_index::print_index_angles() const{
     std::cout << ")\n";
   }
 
-  for(std::map<unsigned, std::vector<unsigned> >::const_iterator iit = index_.begin();
-      iit != index_.end(); ++iit){
-    unsigned target_idx = iit->first;
+  for(const auto & iit : index_){
+    unsigned target_idx = iit.first;
     vgl_vector_3d<double> view_dir = view_dirs_[target_idx];
     vgl_vector_3d<double> illum_dir = illumination_dirs_[target_idx];
-    const std::vector<unsigned>& illum_neighbors = iit->second;
+    const std::vector<unsigned>& illum_neighbors = iit.second;
     std::map<unsigned, std::vector<unsigned> >::const_iterator kit;
     kit = valid_view_dir_map_.find(target_idx);
     const std::vector<unsigned>& view_neighbors = kit->second;
     std::cout << "\nTarget v(" << view_dir.x() << ' ' << view_dir.y() << ' ' << view_dir.z() << "):I("
               << illum_dir.x() << ' ' << illum_dir.y() << ' ' << illum_dir.z() << ")\n";
     std::cout << " view angles: ";
-    for(std::vector<unsigned>::const_iterator vit = view_neighbors.begin();
-        vit != view_neighbors.end(); vit++)
-      std::cout << 180.0*angle(view_dir, view_dirs_[*vit])/3.14159 << ' ';
+    for(unsigned int view_neighbor : view_neighbors)
+      std::cout << 180.0*angle(view_dir, view_dirs_[view_neighbor])/3.14159 << ' ';
     std::cout << '\n';
     std::cout << " illumination angles: ";
-    for(std::vector<unsigned>::const_iterator nit = illum_neighbors.begin();
-        nit != illum_neighbors.end(); nit++)
-      std::cout << 180.0*angle(illum_dir, illumination_dirs_[*nit])/3.14159 << ' ';
+    for(unsigned int illum_neighbor : illum_neighbors)
+      std::cout << 180.0*angle(illum_dir, illumination_dirs_[illum_neighbor])/3.14159 << ' ';
     std::cout << '\n';
   }
 }
 void brad_appearance_neighborhood_index::print_view_neighbors() const{
   std::cout << "View neighbors\n";
-  for(std::map<unsigned, std::vector<unsigned> >::const_iterator vit =  valid_view_dir_map_.begin();
-      vit !=  valid_view_dir_map_.end(); vit++){
-    unsigned i_idx = vit->first;
-    const std::vector<unsigned>& nbrs = vit->second;
+  for(const auto & vit : valid_view_dir_map_){
+    unsigned i_idx = vit.first;
+    const std::vector<unsigned>& nbrs = vit.second;
     std::cout << "view: " << i_idx << " [ ";
-    for(std::vector<unsigned>::const_iterator nit = nbrs.begin();
-        nit != nbrs.end(); ++nit)
-      std::cout << *nit << ' ';
+    for(unsigned int nbr : nbrs)
+      std::cout << nbr << ' ';
     std::cout << "]\n";
   }
 }
 
 void brad_appearance_neighborhood_index::print_illum_neighbors() const{
   std::cout << "Illumination neighbors\n";
-  for(std::map<unsigned, std::vector<unsigned> >::const_iterator iit =  near_illum_dir_map_.begin();
-      iit !=  near_illum_dir_map_.end(); iit++){
-    unsigned i_idx = iit->first;
-    const std::vector<unsigned>& nbrs = iit->second;
+  for(const auto & iit : near_illum_dir_map_){
+    unsigned i_idx = iit.first;
+    const std::vector<unsigned>& nbrs = iit.second;
     std::cout << "illum: " << i_idx << " [ ";
-    for(std::vector<unsigned>::const_iterator nit = nbrs.begin();
-        nit != nbrs.end(); ++nit)
-      std::cout << *nit << ' ';
+    for(unsigned int nbr : nbrs)
+      std::cout << nbr << ' ';
     std::cout << "]\n";
   }
 }

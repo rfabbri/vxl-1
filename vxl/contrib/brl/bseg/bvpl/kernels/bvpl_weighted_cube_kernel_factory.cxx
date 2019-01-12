@@ -5,7 +5,9 @@
 // \file
 
 #include <vnl/vnl_math.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 // Default Constructor
 bvpl_weighted_cube_kernel_factory::bvpl_weighted_cube_kernel_factory()
@@ -62,7 +64,7 @@ void bvpl_weighted_cube_kernel_factory::create_canonical()
     {
       for (int y=min_y; y<=max_y; y++)
       {
-        canonical_kernel_.push_back(std::pair<point_3d,dispatch>(point_3d(float(x),float(y),float(z)), dispatch(1.0f)));
+        canonical_kernel_.emplace_back(point_3d(float(x),float(y),float(z)), dispatch(1.0f));
       }
     }
   }
@@ -76,5 +78,3 @@ void bvpl_weighted_cube_kernel_factory::create_canonical()
 
   return;
 }
-
-

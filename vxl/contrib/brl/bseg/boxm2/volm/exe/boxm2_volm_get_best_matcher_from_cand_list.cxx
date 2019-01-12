@@ -7,31 +7,34 @@
 // \author Yi Dong
 // \date Aug. 24, 2013
 
-#include <iostream>
-#include <iomanip>
 #include <algorithm>
-#include <vul/vul_arg.h>
-#include <vul/vul_file.h>
-#include <volm/volm_io.h>
-#include <volm/volm_tile.h>
+#include <bkml/bkml_parser.h>
+#include <bkml/bkml_write.h>
+#include <bpgl/depth_map/depth_map_scene.h>
+#include <bpgl/depth_map/depth_map_scene_sptr.h>
+#include <iomanip>
+#include <iostream>
+#include <utility>
+#include <vgl/vgl_intersection.h>
+#include <vil/vil_load.h>
 #include <volm/volm_camera_space.h>
 #include <volm/volm_camera_space_sptr.h>
 #include <volm/volm_geo_index.h>
 #include <volm/volm_geo_index_sptr.h>
+#include <volm/volm_io.h>
 #include <volm/volm_loc_hyp.h>
 #include <volm/volm_loc_hyp_sptr.h>
-#include <bpgl/depth_map/depth_map_scene.h>
-#include <bpgl/depth_map/depth_map_scene_sptr.h>
-#include <vil/vil_load.h>
-#include <bkml/bkml_parser.h>
-#include <bkml/bkml_write.h>
-#include <vgl/vgl_intersection.h>
-#include <vcl_compiler.h>
+#include <volm/volm_tile.h>
+#include <vul/vul_arg.h>
+#include <vul/vul_file.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
-void error_report(std::string error_file, std::string error_msg)
+void error_report(std::string error_file, const std::string& error_msg)
 {
   std::cerr << error_msg;
-  volm_io::write_post_processing_log(error_file, error_msg);
+  volm_io::write_post_processing_log(std::move(error_file), error_msg);
 }
 
 unsigned zone_id(unsigned tile_id)
@@ -57,7 +60,7 @@ bool best_match(vgl_polygon<double> const& poly, std::vector<volm_geo_index_node
   // load the score
   std::vector<volm_score_sptr> scores;
   volm_score::read_scores(scores, score_file);
-  std::vector<volm_score_sptr>::iterator vit = scores.begin();
+  auto vit = scores.begin();
   for (; vit != scores.end(); ++vit) {
     unsigned li = (*vit)->leaf_id_;
     if (std::find(leaf_ids.begin(), leaf_ids.end(), li) == leaf_ids.end())
@@ -211,8 +214,8 @@ int main(int argc, char** argv)
         tile_ids.push_back(t_idx);  zone_ids.push_back(zone_id(t_idx));
       }
     std::cout << " \t region " << r_idx << " intersects with tile: ";
-    for (unsigned ii = 0; ii < tile_ids.size(); ii++)
-      std::cout << tile_ids[ii] << ' ';
+    for (unsigned int tile_id : tile_ids)
+      std::cout << tile_id << ' ';
     std::cout << std::endl;
     // get the best camera and location for current region
     unsigned best_cam_id;

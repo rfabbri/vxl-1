@@ -5,7 +5,10 @@
 // \brief Error term for calculation of correction to projective matrix
 
 #include <mbl/mbl_matxvec.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 m23d_correction_matrix_error::m23d_correction_matrix_error(const vnl_matrix<double>& A,
                               const vnl_vector<double>& rhs,

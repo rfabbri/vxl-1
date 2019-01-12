@@ -1,7 +1,4 @@
 // This is core/vgui/vgui_displaylist3D_tableau.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Philip C. Pritchett, RRG, University of Oxford
@@ -12,7 +9,9 @@
 #include <vector>
 #include "vgui_displaylist3D_tableau.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vgui/vgui_gl.h>
 #include <vgui/vgui_glu.h>
@@ -119,4 +118,3 @@ bool vgui_displaylist3D_tableau::mouse_down(int x, int y, vgui_button button, vg
   }// end deselecting
   return false;
 }
-

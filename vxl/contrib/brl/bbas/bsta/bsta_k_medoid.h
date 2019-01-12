@@ -23,15 +23,17 @@
 
 #include <vector>
 #include <iostream>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_array_2d.h>
 
 class bsta_k_medoid
 {
  public:
   bsta_k_medoid(unsigned n_elements, bool verbose = false);
-  ~bsta_k_medoid(){}
+  ~bsta_k_medoid()= default;
 
   //: insert a distance into the array, the entry j, i is automatically added
   inline void insert_distance(const unsigned i, const unsigned j, double d)

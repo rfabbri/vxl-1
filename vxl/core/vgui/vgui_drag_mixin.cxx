@@ -1,7 +1,4 @@
 // This is core/vgui/vgui_drag_mixin.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 
 //:
 // \file
@@ -12,7 +9,9 @@
 #include <iostream>
 #include "vgui_drag_mixin.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vgui/vgui_event.h>
 
@@ -47,4 +46,3 @@ bool vgui_drag_mixin::mouse_drag(int, int, vgui_button, vgui_modifier)
   if (debug) std::cerr << "vgui_drag_mixin::mouse_drag\n";
   return false;
 }
-

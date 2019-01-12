@@ -11,7 +11,9 @@
 // \author Ozge C. Ozcanli
 // \date April 20, 2016
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/io/boxm2_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -26,8 +28,8 @@
 
 namespace boxm2_cpp_compute_3d_points_and_covs_process_globals
 {
-  const unsigned n_inputs_ = 3;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 3;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool boxm2_cpp_compute_3d_points_and_covs_process_cons(bprb_func_process& pro)
@@ -99,8 +101,8 @@ bool boxm2_cpp_compute_3d_points_and_covs_process(bprb_func_process& pro)
 
 namespace boxm2_cpp_compute_3d_points_and_covs_normalize_process_globals
 {
-  const unsigned n_inputs_ = 3;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 3;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool boxm2_cpp_compute_3d_points_and_covs_normalize_process_cons(bprb_func_process& pro)
@@ -162,5 +164,3 @@ bool boxm2_cpp_compute_3d_points_and_covs_normalize_process(bprb_func_process& p
 
   return true;
 }
-
-

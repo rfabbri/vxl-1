@@ -9,7 +9,9 @@
 #include <boxm2/cpp/algo/boxm2_gauss_grey_processor.h>
 #include <bsta/algo/bsta_sigma_normalizer.h>
 #include <boxm2/io/boxm2_stream_cache.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: compute average pre_i, vis_i and post_i for each cell, save the values in aux
 template <boxm2_data_type APM_TYPE>
@@ -17,7 +19,7 @@ class boxm2_batch_update_opt2_pass2_functor
 {
  public:
   //: "default" constructor
-  boxm2_batch_update_opt2_pass2_functor() {}
+  boxm2_batch_update_opt2_pass2_functor() = default;
 
   bool init_data(std::vector<boxm2_data_base*> & datas,
                  vil_image_view<float> * pre_img,
@@ -130,7 +132,7 @@ class boxm2_batch_update_opt2_functor
   typedef boxm2_data_traits<BOXM2_AUX>::datatype aux_datatype;
 
   //: "default" constructor
-  boxm2_batch_update_opt2_functor() {}
+  boxm2_batch_update_opt2_functor() = default;
 
   bool init_data(boxm2_data_base *alph, boxm2_data_base *mog, boxm2_stream_cache_sptr str_cache, bsta_sigma_normalizer_sptr n_table)
   {

@@ -12,8 +12,10 @@
 #include <vgl/vgl_homg_point_2d.h>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/algo/vgl_homg_operators_2d.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 static const vil_image_view<double> img_d; // dummy local variables, used to initialise
 static const vil_image_view<float>  img_f; // the three "reference" data members -PVr

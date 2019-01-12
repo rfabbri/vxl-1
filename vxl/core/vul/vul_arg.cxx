@@ -1,7 +1,4 @@
 // This is core/vul/vul_arg.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // Note that even though this file defines instances of a templated
@@ -28,8 +25,10 @@
 #include <list>
 #include "vul_arg.h"
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vul/vul_sprintf.h>
 #include <vul/vul_string.h>
@@ -153,8 +152,8 @@ vul_arg_base::vul_arg_base(char const* option_string, char const* helpstring, bo
 void vul_arg_info_list::set_help_option(char const* str)
 {
   // check that the operator isn't already being used
-  for (unsigned int i=0; i<args_.size(); i++) {
-    if (std::strcmp(args_[i]->option(),str) == 0) {
+  for (auto & arg : args_) {
+    if (std::strcmp(arg->option(),str) == 0) {
       std::cerr << "vul_arg_info_list: WARNING: requested help operator already assigned\n";
       return;
     }
@@ -179,8 +178,8 @@ void vul_arg_info_list::include(vul_arg_info_list& l)
 {
   assert(&l != this);
 
-  for (unsigned int i = 0; i < l.args_.size(); ++i)
-    add(l.args_[i]);
+  for (auto & arg : l.args_)
+    add(arg);
 }
 
 //: Display help about each option in the arg list.
@@ -194,18 +193,18 @@ void vul_arg_info_list::display_help( char const*progname)
 
   // Print "prog [-a int] string string"
 
-  for (unsigned int i=0; i< args_.size(); i++) {
-    if (! args_[i]->option_.empty()) {
-      if (!args_[i]->required_) std::cerr << '[';
-      std::cerr << args_[i]->option();
-      if (std::strlen(args_[i]->type_)> 0)
-        std::cerr << ' ' << args_[i]->type_;
-      if (!args_[i]->required_) std::cerr << ']';
+  for (auto & arg : args_) {
+    if (! arg->option_.empty()) {
+      if (!arg->required_) std::cerr << '[';
+      std::cerr << arg->option();
+      if (std::strlen(arg->type_)> 0)
+        std::cerr << ' ' << arg->type_;
+      if (!arg->required_) std::cerr << ']';
       std::cerr << ' ';
     }
     else {
       // options without switches are required.
-      std::cerr << args_[i]->type_ << ' ';
+      std::cerr << arg->type_ << ' ';
     }
   }
 
@@ -215,13 +214,13 @@ void vul_arg_info_list::display_help( char const*progname)
   std::size_t maxl_option  = std::max(std::size_t(8), help_.size()); // Length of "REQUIRED" or help option
   std::size_t maxl_type = 4; // Length of "Type", minimum "bool"
   //  int maxl_default = 0;
-  for (unsigned int i=0; i< args_.size(); i++)
-    if (!args_[i]->help_.empty()) {
-      if (!args_[i]->option_.empty()) {
-        std::size_t l = std::strlen(args_[i]->option());
+  for (auto & arg : args_)
+    if (!arg->help_.empty()) {
+      if (!arg->option_.empty()) {
+        std::size_t l = std::strlen(arg->option());
         if (l > maxl_option) maxl_option = l;
       }
-      std::size_t l = std::strlen(args_[i]->type_);
+      std::size_t l = std::strlen(arg->type_);
       if (l > maxl_type) maxl_type = l;
     }
 
@@ -230,16 +229,16 @@ void vul_arg_info_list::display_help( char const*progname)
 
   // Do required args first
   vul_printf(std::cerr, "REQUIRED:\n");
-  for (unsigned int i=0; i< args_.size(); i++)  // First required without option string
-    if (!args_[i]->help_.empty())
-        if (args_[i]->option_.empty()&& !(args_[i]->required_)) {
-          vul_printf(std::cerr, fmtbuf.c_str(), "", args_[i]->type_, args_[i]->help_.c_str());
-          std::cerr << " ["; args_[i]->print_value(std::cerr); std::cerr << "]\n"; // default
+  for (auto & arg : args_)  // First required without option string
+    if (!arg->help_.empty())
+        if (arg->option_.empty()&& !(arg->required_)) {
+          vul_printf(std::cerr, fmtbuf.c_str(), "", arg->type_, arg->help_.c_str());
+          std::cerr << " ["; arg->print_value(std::cerr); std::cerr << "]\n"; // default
         }
-  for (unsigned int i=0; i< args_.size(); i++) // Then required with option string
-    if (!args_[i]->help_.empty())
-        if (args_[i]->required_  && !args_[i]->option_.empty()) {
-          vul_printf(std::cerr, fmtbuf.c_str(), args_[i]->option(), args_[i]->type_, args_[i]->help_.c_str());
+  for (auto & arg : args_) // Then required with option string
+    if (!arg->help_.empty())
+        if (arg->required_  && !arg->option_.empty()) {
+          vul_printf(std::cerr, fmtbuf.c_str(), arg->option(), arg->type_, arg->help_.c_str());
           std::cerr << '\n'; // ["; args_[i]->print_value(std::cerr); std::cerr << "]\n"; // default
         }
 
@@ -248,11 +247,11 @@ void vul_arg_info_list::display_help( char const*progname)
   // Then others
   vul_printf(std::cerr, "Optional:\n");
   vul_printf(std::cerr, fmtbuf.c_str(), "Switch", "Type", "Help [default value]") << std::endl << std::endl;
-  for (unsigned int i=0; i< args_.size(); i++)
-    if (!args_[i]->help_.empty())
-      if (!args_[i]->option_.empty() && !(args_[i]->required_) ) {
-        vul_printf(std::cerr, fmtbuf.c_str(), args_[i]->option(), args_[i]->type_, args_[i]->help_.c_str());
-        std::cerr << " ["; args_[i]->print_value(std::cerr); std::cerr << "]\n"; // default
+  for (auto & arg : args_)
+    if (!arg->help_.empty())
+      if (!arg->option_.empty() && !(arg->required_) ) {
+        vul_printf(std::cerr, fmtbuf.c_str(), arg->option(), arg->type_, arg->help_.c_str());
+        std::cerr << " ["; arg->print_value(std::cerr); std::cerr << "]\n"; // default
       }
   vul_printf(std::cerr, fmtbuf.c_str(), help_.c_str(), "bool", "Print this message\n");
 
@@ -274,8 +273,8 @@ void vul_arg_info_list::parse(int& argc, char **& argv, bool warn_about_unrecogn
                    << args_[j]->option_ << "]\n";
 
   // 0a. Clear "set" flags on args
-  for (unsigned int i = 0; i < args_.size(); ++i)
-    args_[i]->set_ = false;
+  for (auto & arg : args_)
+    arg->set_ = false;
 
   // Generate shorter command name
   char * cmdname = argv[0]+std::strlen(argv[0]);
@@ -353,7 +352,7 @@ void vul_arg_info_list::parse(int& argc, char **& argv, bool warn_about_unrecogn
     ++argc;
   for (int i = 1; i < argc; ++i)
     argv[i] = my_argv[i-1];
-  argv[argc] = VXL_NULLPTR;
+  argv[argc] = nullptr;
 
   // 4. Error checking.
   //
@@ -375,11 +374,11 @@ void vul_arg_info_list::parse(int& argc, char **& argv, bool warn_about_unrecogn
       }
 
   // 4.3 This is required arguments (including option) have been set
-  for (unsigned int i = 0; i < args_.size(); ++i)
-      if (args_[i]->required_ && ! (args_[i]->set_) ) {
+  for (auto & arg : args_)
+      if (arg->required_ && ! (arg->set_) ) {
          display_help(cmdname);
 
-         std::cerr << "\nargParse::ERROR: Required arg " << args_[i]->option_
+         std::cerr << "\nargParse::ERROR: Required arg " << arg->option_
                   << " not supplied\n\n";
          std::exit(1);
       }
@@ -563,7 +562,7 @@ VDS int parse(vul_arg<int>* argmt, char ** argv)
     return -1;
   }
 
-  char* endptr = VXL_NULLPTR;
+  char* endptr = nullptr;
   double v = std::strtod(argv[0], &endptr);
   if (*endptr != '\0') {
     // There is junk after the number, or no number was found
@@ -597,7 +596,7 @@ VDS int parse(vul_arg<vxl_int_64>* argmt, char ** argv)
   }
 
   // Ensure only digits are present allowing for the special case of an l or L suffix
-  unsigned long len = (unsigned long)std::strlen(argv[0]);
+  auto len = (unsigned long)std::strlen(argv[0]);
   for (unsigned long i=0; i<len; ++i)
   {
     char tmp = argv[0][i];
@@ -634,7 +633,7 @@ VDS int parse(vul_arg<unsigned>* argmt, char ** argv)
     return -1;
   }
 
-  char* endptr = VXL_NULLPTR;
+  char* endptr = nullptr;
   double v = std::strtod(argv[0], &endptr);
   if (*endptr != '\0') {
     // There is junk after the number, or no number was found
@@ -665,7 +664,7 @@ VDS int parse(vul_arg<float>* argmt, char ** argv)
     return -1;
   }
 
-  char* endptr = VXL_NULLPTR;
+  char* endptr = nullptr;
   argmt->value_ = (float)std::strtod(argv[0], &endptr);
   if (*endptr == '\0')
     return 1;
@@ -690,7 +689,7 @@ VDS int parse(vul_arg<double>* argmt, char ** argv)
     return -1;
   }
 
-  char* endptr = VXL_NULLPTR;
+  char* endptr = nullptr;
   argmt->value_ = std::strtod(argv[0], &endptr);
   if (*endptr == '\0')
     return 1;
@@ -773,8 +772,8 @@ VDS void settype(vul_arg<std::list<int> > &argmt) { argmt.type_ = "integer list"
 
 VDS void print_value(std::ostream &s, vul_arg<std::list<int> > const &argmt)
 {
-  for (std::list<int>::const_iterator i=argmt().begin(); i!=argmt().end(); ++i)
-    s << ' ' << *i;
+  for (const auto i : argmt())
+    s << ' ' << i;
 }
 
 VDS int parse(vul_arg<std::list<int> >* argmt, char ** argv)
@@ -789,8 +788,8 @@ VDS void settype(vul_arg<std::vector<int> > &argmt) { argmt.type_ = "integer lis
 
 VDS void print_value(std::ostream &s, vul_arg<std::vector<int> > const &argmt)
 {
-  for (unsigned int i=0; i<argmt().size(); ++i)
-    s << ' ' << argmt()[i];
+  for (int i : argmt())
+    s << ' ' << i;
 }
 
 VDS int parse(vul_arg<std::vector<int> >* argmt, char ** argv)
@@ -799,8 +798,8 @@ VDS int parse(vul_arg<std::vector<int> >* argmt, char ** argv)
   int retval = list_parse(tmp,argv);
   // Defaults should be cleared when the user supplies a value
   argmt->value_.clear();
-  for (std::list<int>::iterator i=tmp.begin(); i!=tmp.end(); ++i)
-    argmt->value_.push_back( *i );
+  for (const auto & i : tmp)
+    argmt->value_.push_back( i );
   return retval;
 }
 
@@ -811,8 +810,8 @@ VDS void settype(vul_arg<std::vector<unsigned> > &argmt) { argmt.type_="integer 
 
 VDS void print_value(std::ostream &s, vul_arg<std::vector<unsigned> > const &argmt)
 {
-  for (unsigned int i=0; i<argmt().size(); ++i)
-    s << ' ' << argmt()[i];
+  for (unsigned int i : argmt())
+    s << ' ' << i;
 }
 
 VDS int parse(vul_arg<std::vector<unsigned> >* argmt, char ** argv)
@@ -821,8 +820,8 @@ VDS int parse(vul_arg<std::vector<unsigned> >* argmt, char ** argv)
   int retval = list_parse(tmp,argv);
   // Defaults should be cleared when the user supplies a value
   argmt->value_.clear();
-  for (std::list<int>::iterator i=tmp.begin(); i!=tmp.end(); ++i)
-    argmt->value_.push_back( unsigned(*i) );
+  for (const auto & i : tmp)
+    argmt->value_.push_back( unsigned(i) );
   return retval;
 }
 
@@ -833,8 +832,8 @@ VDS void settype(vul_arg<std::vector<double> > &argmt) {argmt.type_ = "double li
 
 VDS void print_value(std::ostream &s, vul_arg<std::vector<double> > const &argmt)
 {
-  for (unsigned int i=0; i<argmt().size(); ++i)
-    s << ' ' << argmt()[i];
+  for (double i : argmt())
+    s << ' ' << i;
 }
 
 VDS int parse(vul_arg<std::vector<double> >* argmt, char ** argv)
@@ -853,7 +852,7 @@ VDS int parse(vul_arg<std::vector<double> >* argmt, char ** argv)
   argmt->value_.clear();
   char *current = argv[0];
   while (current) {
-    char* endptr = VXL_NULLPTR;
+    char* endptr = nullptr;
     double tmp = std::strtod(current, &endptr);
     //argmt->value_
     if (*endptr == '\0') {

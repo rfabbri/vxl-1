@@ -4,8 +4,10 @@
 #include "bvgl_articulated_poly.h"
 //:
 // \file
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_numeric_traits.h>
 #include <vgl/vgl_homg_point_2d.h>
@@ -115,9 +117,9 @@ sub_manifold_transform(const double t,
                        std::vector<double > const& basis_angles)
 {
   std::vector<double > angles;
-  for (std::vector<double >::const_iterator ait = basis_angles.begin();
-       ait != basis_angles.end(); ++ait)
-    angles.push_back(t*(*ait));
+  angles.reserve(basis_angles.size());
+for (double basis_angle : basis_angles)
+    angles.push_back(t*basis_angle);
   this->transform(angles);
   this->update();
 }

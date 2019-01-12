@@ -9,16 +9,16 @@
 
 #include <mmn/mmn_order_cost.h>
 #include <mmn/mmn_graph_rep1.h>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <mbl/mbl_parse_block.h>
 #include <mbl/mbl_read_props.h>
 
 //: Default constructor
-mmn_dp_solver::mmn_dp_solver()
-{
-}
+mmn_dp_solver::mmn_dp_solver() = default;
 
 //: Input the arcs that define the graph
 void mmn_dp_solver::set_arcs(unsigned num_nodes,
@@ -41,7 +41,7 @@ void mmn_dp_solver::set_arcs(unsigned num_nodes,
   {
     std::cerr<<"Graph cannot be decomposed - too complex.\n"
             <<"Arc list: ";
-    for (unsigned i=0;i<arcs.size();++i) std::cout<<arcs[i];
+    for (auto arc : arcs) std::cout<<arc;
     std::cerr<<'\n';
     std::abort();
   }
@@ -407,8 +407,8 @@ void mmn_dp_solver::b_write(vsl_b_ostream& bfs) const
 {
   vsl_b_write(bfs,version_no());
   vsl_b_write(bfs,unsigned(deps_.size()));
-  for (unsigned i=0;i<deps_.size();++i)
-    vsl_b_write(bfs,deps_[i]);
+  for (const auto & dep : deps_)
+    vsl_b_write(bfs,dep);
 }
 
 //=======================================================================
@@ -435,4 +435,3 @@ void mmn_dp_solver::b_read(vsl_b_istream& bfs)
       return;
   }
 }
-

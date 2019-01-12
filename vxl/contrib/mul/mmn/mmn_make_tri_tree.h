@@ -11,7 +11,9 @@
 #include <mmn/mmn_arc.h>
 #include <mmn/mmn_triplet.h>
 #include <mmn/mmn_dependancy.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Compute arcs defining a graph s.t. triangles form a tree.
 //  Compute arc of graph such that point belongs to at least one triangle,
@@ -55,4 +57,3 @@ void mmn_make_tri_tree(const vnl_matrix<double>& D,
 
 
 #endif // mmn_make_tri_tree_h_
-

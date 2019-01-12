@@ -1,13 +1,10 @@
 // This is core/vil1/vil1_flipud_impl.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
 
 #include "vil1_flipud_impl.h"
-#include <vcl_climits.h> // for CHAR_BIT
+#include <climits>
 
 vil1_image vil1_flipud_impl::get_plane(unsigned int p) const {
   return new vil1_flipud_impl(base.get_plane(p));

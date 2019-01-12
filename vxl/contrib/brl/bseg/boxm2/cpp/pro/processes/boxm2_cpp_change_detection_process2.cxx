@@ -9,7 +9,9 @@
 // \author Vishal Jain
 // \date Mar 10, 2011
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/io/boxm2_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -24,8 +26,8 @@
 
 namespace boxm2_cpp_change_detection_process2_globals
 {
-  const unsigned n_inputs_ = 6;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 6;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 bool boxm2_cpp_change_detection_process2_cons(bprb_func_process& pro)
@@ -73,15 +75,15 @@ bool boxm2_cpp_change_detection_process2(bprb_func_process& pro)
   bool foundDataType = false;
   std::string data_type;
   std::vector<std::string> apps = scene->appearances();
-  for (unsigned int i=0; i<apps.size(); ++i) {
-    if ( apps[i] == boxm2_data_traits<BOXM2_MOG3_GREY>::prefix() )
+  for (const auto & app : apps) {
+    if ( app == boxm2_data_traits<BOXM2_MOG3_GREY>::prefix() )
     {
-      data_type = apps[i];
+      data_type = app;
       foundDataType = true;
     }
-    else if ( apps[i] == boxm2_data_traits<BOXM2_MOG3_GREY_16>::prefix() )
+    else if ( app == boxm2_data_traits<BOXM2_MOG3_GREY_16>::prefix() )
     {
-      data_type = apps[i];
+      data_type = app;
       foundDataType = true;
     }
   }
@@ -95,11 +97,11 @@ bool boxm2_cpp_change_detection_process2(bprb_func_process& pro)
   }
 
   vil_image_view_base_sptr in_float_img=boxm2_util::prepare_input_image(input_img);
-  if (vil_image_view<float> * in_img=dynamic_cast<vil_image_view<float> *> ( in_float_img.ptr()))
-      if (vil_image_view<float> * exp_img=dynamic_cast<vil_image_view<float> *> ( exp_in_img.ptr()))
+  if (auto * in_img=dynamic_cast<vil_image_view<float> *> ( in_float_img.ptr()))
+      if (auto * exp_img=dynamic_cast<vil_image_view<float> *> ( exp_in_img.ptr()))
       {
           // function call
-          vil_image_view<float> * vis_img=new vil_image_view<float>(in_img->ni(),in_img->nj());
+          auto * vis_img=new vil_image_view<float>(in_img->ni(),in_img->nj());
           vis_img->fill(1.0f);
           std::vector<boxm2_block_id> vis_order=scene->get_vis_blocks(reinterpret_cast<vpgl_generic_camera<double>*>(cam.ptr()));
           if (vis_order.empty())
@@ -112,14 +114,14 @@ bool boxm2_cpp_change_detection_process2(bprb_func_process& pro)
           std::vector<boxm2_block_id>::iterator id;
           for (id = vis_order.begin(); id != vis_order.end(); ++id)
           {
-              boxm2_block *     blk  = cache->get_block(scene,*id);
+              boxm2_block *     blk = cache->get_block(scene,*id);
               boxm2_data_base *  alph = cache->get_data_base(scene,*id,boxm2_data_traits<BOXM2_ALPHA>::prefix());
-              boxm2_data_base *  mog  = cache->get_data_base(scene,*id,data_type);
+              boxm2_data_base *  mog = cache->get_data_base(scene,*id,data_type);
               std::vector<boxm2_data_base*> datas;
               datas.push_back(alph);
               datas.push_back(mog);
 
-              boxm2_scene_info_wrapper *scene_info_wrapper=new boxm2_scene_info_wrapper();
+              auto *scene_info_wrapper=new boxm2_scene_info_wrapper();
               scene_info_wrapper->info=scene->get_blk_metadata(*id);
 
               cd_wu_functor.set_data(datas,in_img,exp_img);

@@ -21,7 +21,9 @@
 #include <bvgl/bvgl_change_obj.h>
 #include <bsta/bsta_joint_histogram.h>
 #include <vgl/vgl_polygon_scan_iterator.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: estimate the initial value as the real variation in the data
 double
@@ -29,15 +31,15 @@ brec_param_estimation::estimate_fg_pair_density_initial_sigma(std::vector<std::p
 {
   //: first find the mean dif
   double mean = 0.0;
-  for (unsigned i = 0; i < pairs.size(); i++) {
-    mean += std::abs(pairs[i].first-pairs[i].second);
+  for (auto & pair : pairs) {
+    mean += std::abs(pair.first-pair.second);
   }
   mean /= pairs.size();
   std::cout << " mean: " << mean << std::endl;
 
   double var = 0.0;
-  for (unsigned i = 0; i < pairs.size(); i++) {
-    var += std::pow(double(std::abs(pairs[i].first-pairs[i].second)-mean), 2.0);
+  for (auto & pair : pairs) {
+    var += std::pow(double(std::abs(pair.first-pair.second)-mean), 2.0);
   }
   var /= pairs.size();
 
@@ -88,9 +90,9 @@ brec_param_estimation::estimate_fg_pair_density_sigma_amoeba(std::vector<std::pa
 }
 
 bool
-brec_param_estimation::create_fg_pairs(vil_image_resource_sptr img, bvgl_changes_sptr c,
+brec_param_estimation::create_fg_pairs(const vil_image_resource_sptr& img, const bvgl_changes_sptr& c,
                                        std::vector<std::pair<float, float> >& pairs,
-                                       bool print_histogram, std::string out_name)
+                                       bool print_histogram, const std::string& out_name)
 {
   unsigned ni = img->ni();
   unsigned nj = img->nj();
@@ -132,7 +134,7 @@ brec_param_estimation::create_fg_pairs(vil_image_resource_sptr img, bvgl_changes
         {
           if (x+1 < (int)ni && mask(x+1, y) == 255) {
             jh.upcount(inp_img(x, y), 1.0f, inp_img(x+1, y), 1.0f);
-            pairs.push_back(std::pair<float, float> (inp_img(x, y), inp_img(x+1, y)));
+            pairs.emplace_back(inp_img(x, y), inp_img(x+1, y));
           }
         }
       }
@@ -147,4 +149,3 @@ brec_param_estimation::create_fg_pairs(vil_image_resource_sptr img, bvgl_changes
 
   return true;
 }
-

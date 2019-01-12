@@ -14,14 +14,14 @@ bool vil_image_pair_process_cons(bprb_func_process& pro)
   //input
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("vil_image_view_base_sptr"); // input image
-  input_types.push_back("vil_image_view_base_sptr"); // input image
+  input_types.emplace_back("vil_image_view_base_sptr"); // input image
+  input_types.emplace_back("vil_image_view_base_sptr"); // input image
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   //output
   std::vector<std::string> output_types;
-  output_types.push_back("vil_image_view_base_sptr");
+  output_types.emplace_back("vil_image_view_base_sptr");
   ok = pro.set_output_types(output_types);
   if (!ok) return ok;
   return true;
@@ -65,7 +65,7 @@ bool vil_image_pair_process(bprb_func_process& pro)
 
       vil_image_view<vxl_byte> bimage1 = vil_convert_cast(vxl_byte(), image1);
 
-      vil_image_view<vxl_byte>* comb = new vil_image_view<vxl_byte>(nip, nj);
+      auto* comb = new vil_image_view<vxl_byte>(nip, nj);
 
       for (unsigned j=0; j<nj; ++j) {
         for (unsigned i=0; i<ni; ++i) {
@@ -86,7 +86,7 @@ bool vil_image_pair_process(bprb_func_process& pro)
       vil_image_view<vil_rgb<vxl_byte> > cimage1 =
         vil_convert_cast(vil_rgb<vxl_byte>(), image1);
 
-      vil_image_view<vil_rgb<vxl_byte> >* comb =
+      auto* comb =
         new vil_image_view<vil_rgb<vxl_byte> >(nip, nj);
 
       for (unsigned j=0; j<nj; ++j) {
@@ -106,4 +106,3 @@ bool vil_image_pair_process(bprb_func_process& pro)
   pro.set_output_val<vil_image_view_base_sptr>(0, out_image);
   return true;
 }
-

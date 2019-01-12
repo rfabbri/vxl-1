@@ -6,12 +6,14 @@
 #include <vil/vil_image_view.h>
 #include <vil/vil_save.h>
 #include <boxm2/boxm2_util.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 boxm2_class_generate_samples::boxm2_class_generate_samples(std::string xml_label,
-                                                           std::string eoPath,
-                                                           std::string irPath,
+                                                           const std::string& eoPath,
+                                                           const std::string& irPath,
                                                            std::size_t K)
 {
   //parse file
@@ -80,4 +82,3 @@ pixel_class(int i, int j, std::vector<vgl_polygon<double> >& polygons, std::vect
       return classes[c];
   return "noclass";
 }
-

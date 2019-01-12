@@ -1,8 +1,9 @@
-#include "carmen_interface.h"
 #include <string>
-#include <vcl_compiler.h>
 #include <iostream>
-#include <iostream>
+#include "carmen_interface.h"
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 int main(int argc, char ** argv)
 {

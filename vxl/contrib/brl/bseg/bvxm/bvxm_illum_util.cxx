@@ -2,8 +2,10 @@
 #include <fstream>
 #include "bvxm_illum_util.h"
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vnl/algo/vnl_svd.h>
 bool bvxm_illum_util::
 load_surface_nhbds(std::string const& path,

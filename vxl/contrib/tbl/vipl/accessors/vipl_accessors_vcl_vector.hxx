@@ -3,7 +3,10 @@
 
 #include "vipl_accessors_vcl_vector.h"
 #include <vipl/section/vipl_filterable_section_container_generator_vcl_vector.hxx>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 template <class DataType>
 DataType fgetpixel(std::vector<DataType> const& i, int x, int y, DataType /* dummy */)

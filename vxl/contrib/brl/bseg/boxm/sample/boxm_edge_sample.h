@@ -4,7 +4,9 @@
 // \file
 
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_rgb.h>
 #include <vsl/vsl_binary_io.h>
 #include <boxm/boxm_aux_traits.h>
@@ -14,7 +16,7 @@ class boxm_edge_sample
 {
  public:
   boxm_edge_sample(): edge_prob_(0), num_obs_(0.0f) {}
-  ~boxm_edge_sample() {}
+  ~boxm_edge_sample() = default;
   static short version_no() { return 1; }
   void print(std::ostream& os) const;
 
@@ -29,7 +31,7 @@ class boxm_aux_edge_sample
 {
  public:
   boxm_aux_edge_sample(): obs_(0), seg_len_(0.0f) { }
-  ~boxm_aux_edge_sample() {}
+  ~boxm_aux_edge_sample() = default;
   static short version_no() { return 1; }
   void print(std::ostream& os) const;
 

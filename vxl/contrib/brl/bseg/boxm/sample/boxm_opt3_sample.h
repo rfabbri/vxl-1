@@ -5,7 +5,9 @@
 
 #include <vector>
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_binary_io.h>
 #include <boxm/boxm_apm_traits.h>
 #include <boxm/boxm_aux_traits.h>
@@ -22,7 +24,7 @@ class boxm_opt3_sample
 
   boxm_opt3_sample()
     : weighted_vis_sum_(0.0f), seg_len_sum_(0.0f), log_pass_prob_sum_(0.0f) { }
-  ~boxm_opt3_sample() {}
+  ~boxm_opt3_sample() = default;
   static short version_no() { return 1; }
   void print(std::ostream& os) const;
 

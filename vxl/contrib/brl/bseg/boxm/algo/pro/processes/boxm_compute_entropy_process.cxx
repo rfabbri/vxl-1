@@ -15,8 +15,8 @@
 //:global variables
 namespace boxm_compute_entropy_process_globals
 {
-  const unsigned n_inputs_ = 1 ;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 1;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 
@@ -61,7 +61,7 @@ bool boxm_compute_entropy_process(bprb_func_process& pro)
   typedef bsta_num_obs<bsta_gauss_sf1> gauss_type;
   typedef boct_tree<short, gauss_type> gauss_tree_type;
 
-  boxm_scene<gauss_tree_type> *gauss_scene = dynamic_cast<boxm_scene<gauss_tree_type>* > (scene_base.as_pointer());
+  auto *gauss_scene = dynamic_cast<boxm_scene<gauss_tree_type>* > (scene_base.as_pointer());
 
   //check input's validity
   if (!gauss_scene) {

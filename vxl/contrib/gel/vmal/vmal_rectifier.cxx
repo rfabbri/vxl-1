@@ -6,7 +6,9 @@
 // \file
 
 #include <vmal/vmal_convert_vtol.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_bounding_box.h>
 #include <vnl/algo/vnl_svd.h>
 #include <vnl/vnl_inverse.h>
@@ -21,28 +23,28 @@
 
 vmal_rectifier::vmal_rectifier()
 {
-  lines0_p_=VXL_NULLPTR;
-  lines0_q_=VXL_NULLPTR;
-  lines1_p_=VXL_NULLPTR;
-  lines1_q_=VXL_NULLPTR;
-  points0_=VXL_NULLPTR;
-  points1_=VXL_NULLPTR;
+  lines0_p_=nullptr;
+  lines0_q_=nullptr;
+  lines1_p_=nullptr;
+  lines1_q_=nullptr;
+  points0_=nullptr;
+  points1_=nullptr;
   rectL =  new vil_image_view<vxl_byte>(1,1,1);
   rectR =  new vil_image_view<vxl_byte>(1,1,1);
   //  rectL =  NULL;
   //  rectR =  NULL;
 }
 
-vmal_rectifier::vmal_rectifier(vmal_multi_view_data_vertex_sptr mvd_vertex,
-                               vmal_multi_view_data_edge_sptr mvd_edge,
+vmal_rectifier::vmal_rectifier(const vmal_multi_view_data_vertex_sptr& mvd_vertex,
+                               const vmal_multi_view_data_edge_sptr& mvd_edge,
                                int ima_height, int ima_width) :
   is_f_compute_(false)
 {
-  lines0_p_=VXL_NULLPTR;
-  lines0_q_=VXL_NULLPTR;
-  lines1_p_=VXL_NULLPTR;
-  lines1_q_=VXL_NULLPTR;
-  points0_=VXL_NULLPTR;
+  lines0_p_=nullptr;
+  lines0_q_=nullptr;
+  lines1_p_=nullptr;
+  lines1_q_=nullptr;
+  points0_=nullptr;
   rectL =  new vil_image_view<vxl_byte>(1,1,1);
   rectR =  new vil_image_view<vxl_byte>(1,1,1);
 
@@ -75,7 +77,7 @@ vmal_rectifier::vmal_rectifier(vmal_multi_view_data_vertex_sptr mvd_vertex,
 vmal_rectifier::vmal_rectifier(std::vector< vnl_vector<double> >* pts0,
                                std::vector< vnl_vector<double> >* pts1,
                                int ima_height, int ima_width) :
-  lines0_p_(VXL_NULLPTR), lines0_q_(VXL_NULLPTR), lines1_p_(VXL_NULLPTR), lines1_q_(VXL_NULLPTR),
+  lines0_p_(nullptr), lines0_q_(nullptr), lines1_p_(nullptr), lines1_q_(nullptr),
   numpoints_(pts0->size()), height_(ima_height), width_(ima_width),
   is_f_compute_(false)
 {
@@ -85,8 +87,8 @@ vmal_rectifier::vmal_rectifier(std::vector< vnl_vector<double> >* pts0,
   // put the points in the proper buffers...
   points0_ = new vnl_double_3[numpoints_];
   points1_ = new vnl_double_3[numpoints_];
-  std::vector< vnl_vector<double> >::iterator vit0 = pts0->begin();
-  std::vector< vnl_vector<double> >::iterator vit1 = pts1->begin();
+  auto vit0 = pts0->begin();
+  auto vit1 = pts1->begin();
   for (int i=0; i<numpoints_; ++i,++vit0,++vit1)
   {
     points0_[i][0] = (*vit0)[0]; // [1]
@@ -523,8 +525,8 @@ void vmal_rectifier::conditional_rectify_rotate180 (
 // through the provided pointers.
 
 void vmal_rectifier::resample(vnl_double_3x3 H0, vnl_double_3x3 H1,
-                              vil_image_view<vxl_byte> imgL,
-                              vil_image_view<vxl_byte> imgR)
+                              const vil_image_view<vxl_byte>& imgL,
+                              const vil_image_view<vxl_byte>& imgR)
 {
   // Find the bound of the image to be resampled
   vnl_double_3 ipointL; // input and output image points

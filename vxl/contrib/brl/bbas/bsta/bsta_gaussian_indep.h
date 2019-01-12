@@ -16,7 +16,9 @@
 #include <iostream>
 #include "bsta_gaussian.h"
 #include <vnl/vnl_vector_fixed.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_random.h>
 
 //: A Gaussian distribution, independent in each dimension

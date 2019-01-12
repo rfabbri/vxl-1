@@ -9,7 +9,9 @@
 #include <bprb/bprb_parameters.h>
 
 #ifdef DEBUG
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #endif
 
 #include <brdb/brdb_value.h>
@@ -47,4 +49,3 @@ bool bvrml_initialize_process(bprb_func_process& pro)
   ofs.close();
   return true;
 }
-

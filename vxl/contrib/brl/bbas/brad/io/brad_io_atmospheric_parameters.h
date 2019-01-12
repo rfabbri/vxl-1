@@ -15,7 +15,9 @@
 #include <iostream>
 #include <brad/brad_atmospheric_parameters.h>
 #include <vsl/vsl_binary_io.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Binary save brad_atmospheric_parameters to stream.
 void
@@ -45,4 +47,3 @@ void vsl_b_read(vsl_b_istream& is, brad_atmospheric_parameters_sptr const& sptr)
 
 
 #endif // brad_io_atmospheric_parameters_h_
-

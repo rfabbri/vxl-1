@@ -1,6 +1,7 @@
 // This is vpgl/algo/vpgl_bundle_adjust_lsqr.cxx
-#include <iostream>
 #include <algorithm>
+#include <iostream>
+#include <utility>
 #include "vpgl_bundle_adjust_lsqr.h"
 //:
 // \file
@@ -8,8 +9,10 @@
 #include <vnl/vnl_vector_ref.h>
 #include <vnl/vnl_double_3.h>
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 
 //: Constructor
@@ -17,12 +20,12 @@ vpgl_bundle_adjust_lsqr::
 vpgl_bundle_adjust_lsqr(unsigned int num_params_per_a,
                         unsigned int num_params_per_b,
                         unsigned int num_params_c,
-                        const std::vector<vgl_point_2d<double> >& image_points,
+                        std::vector<vgl_point_2d<double> >  image_points,
                         const std::vector<std::vector<bool> >& mask)
  : vnl_sparse_lst_sqr_function(mask.size(),num_params_per_a,
                                mask[0].size(),num_params_per_b,
                                num_params_c,mask,2,use_gradient,use_weights),
-   image_points_(image_points),
+   image_points_(std::move(image_points)),
    use_covars_(false),
    scale2_(1.0),
    iteration_count_(0)
@@ -51,9 +54,8 @@ vpgl_bundle_adjust_lsqr(unsigned int num_params_per_a,
 {
   assert(image_points.size() == inv_covars.size());
   vnl_matrix<double> U(2,2,0.0);
-  for (unsigned i=0; i<inv_covars.size(); ++i)
+  for (const auto & S : inv_covars)
   {
-    const vnl_matrix<double>& S = inv_covars[i];
     if (S(0,0) > 0.0) {
       U(0,0) = std::sqrt(S(0,0));
       U(0,1) = S(0,1)/U(0,0);
@@ -88,17 +90,16 @@ vpgl_bundle_adjust_lsqr::f(vnl_vector<double> const& a,
                            vnl_vector<double> const& c,
                            vnl_vector<double>& e)
 {
-  typedef vnl_crs_index::sparse_vector::iterator sv_itr;
   for (unsigned int i=0; i<number_of_a(); ++i)
   {
     //: Construct the ith camera
     vnl_double_3x4 Pi = param_to_cam_matrix(i,a,c);
 
     vnl_crs_index::sparse_vector row = residual_indices_.sparse_row(i);
-    for (sv_itr r_itr=row.begin(); r_itr!=row.end(); ++r_itr)
+    for (auto & r_itr : row)
     {
-      unsigned int j = r_itr->second;
-      unsigned int k = r_itr->first;
+      unsigned int j = r_itr.second;
+      unsigned int k = r_itr.first;
 
       // Construct the jth point
       vnl_vector_fixed<double,4> Xj = param_to_pt_vector(j,b,c);
@@ -162,7 +163,6 @@ vpgl_bundle_adjust_lsqr::jac_blocks(vnl_vector<double> const& a,
                                     std::vector<vnl_matrix<double> >& B,
                                     std::vector<vnl_matrix<double> >& C)
 {
-  typedef vnl_crs_index::sparse_vector::iterator sv_itr;
   for (unsigned int i=0; i<number_of_a(); ++i)
   {
     //: Construct the ith camera
@@ -173,10 +173,10 @@ vpgl_bundle_adjust_lsqr::jac_blocks(vnl_vector<double> const& a,
                                     const_cast<double*>(a.data_block())+index_a(i));
 
     vnl_crs_index::sparse_vector row = residual_indices_.sparse_row(i);
-    for (sv_itr r_itr=row.begin(); r_itr!=row.end(); ++r_itr)
+    for (auto & r_itr : row)
     {
-      unsigned int j = r_itr->second;
-      unsigned int k = r_itr->first;
+      unsigned int j = r_itr.second;
+      unsigned int k = r_itr.first;
       // This is semi const incorrect - there is no vnl_vector_ref_const
       const vnl_vector_ref<double> bj(number_of_params_b(j),
                                       const_cast<double*>(b.data_block())+index_b(j));
@@ -389,4 +389,3 @@ vpgl_bundle_adjust_lsqr::rod_to_matrix(vnl_vector<double> const& r)
 
   return R;
 }
-

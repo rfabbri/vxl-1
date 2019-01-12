@@ -27,13 +27,13 @@ void vsl_print_summary(std::ostream & /*os*/, const bvpl_taylor_scenes_map & )
   return;
 }
 
-void vsl_b_read(vsl_b_istream& is,bvpl_taylor_scenes_map* p)
+void vsl_b_read(vsl_b_istream&  /*is*/,bvpl_taylor_scenes_map*  /*p*/)
 {
   std::cerr << "Error: Trying to save but binary io not implemented\n";
   return;
 }
 
-void vsl_b_write(vsl_b_ostream& os, const bvpl_taylor_scenes_map* &p)
+void vsl_b_write(vsl_b_ostream&  /*os*/, const bvpl_taylor_scenes_map* & /*p*/)
 {
   std::cerr << "Error: Trying to save but binary io not implemented\n";
   return;
@@ -41,7 +41,7 @@ void vsl_b_write(vsl_b_ostream& os, const bvpl_taylor_scenes_map* &p)
 
 void vsl_print_summary(std::ostream& os, const bvpl_taylor_scenes_map* &p)
 {
-  if (p==VXL_NULLPTR)
+  if (p==nullptr)
     os << "NULL PTR";
   else {
     os << "T: ";

@@ -9,7 +9,9 @@
 #include <string>
 #include "vgl_vector_2d.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 template <class T>
 double vgl_vector_2d<T>::length() const
@@ -126,28 +128,28 @@ std::istream&  operator>>(std::istream& is, vgl_vector_2d<T>& p)
 #undef VGL_VECTOR_2D_INSTANTIATE
 #define VGL_VECTOR_2D_INSTANTIATE(T) \
 template class vgl_vector_2d<T >;\
-VCL_INSTANTIATE_INLINE(vgl_vector_2d<T >      operator+    (vgl_vector_2d<T > const&, vgl_vector_2d<T > const&));\
-VCL_INSTANTIATE_INLINE(vgl_vector_2d<T >      operator-    (vgl_vector_2d<T > const&, vgl_vector_2d<T > const&));\
-VCL_INSTANTIATE_INLINE(vgl_vector_2d<T >&     operator+=   (vgl_vector_2d<T >&, vgl_vector_2d<T > const&));\
-VCL_INSTANTIATE_INLINE(vgl_vector_2d<T >&     operator-=   (vgl_vector_2d<T >&, vgl_vector_2d<T > const&));\
-VCL_INSTANTIATE_INLINE(vgl_vector_2d<T >      operator+    (vgl_vector_2d<T > const&));\
-VCL_INSTANTIATE_INLINE(vgl_vector_2d<T >      operator-    (vgl_vector_2d<T > const&));\
-VCL_INSTANTIATE_INLINE(vgl_vector_2d<T >      operator*    (double, vgl_vector_2d<T > const&));\
-VCL_INSTANTIATE_INLINE(vgl_vector_2d<T >      operator*    (vgl_vector_2d<T > const&, double));\
-VCL_INSTANTIATE_INLINE(vgl_vector_2d<T >      operator/    (vgl_vector_2d<T > const&, double));\
-VCL_INSTANTIATE_INLINE(vgl_vector_2d<T >&     operator*=   (vgl_vector_2d<T >&, double));\
-VCL_INSTANTIATE_INLINE(vgl_vector_2d<T >&     operator/=   (vgl_vector_2d<T >&, double));\
-VCL_INSTANTIATE_INLINE(T      dot_product  (vgl_vector_2d<T > const&, vgl_vector_2d<T > const&));\
-VCL_INSTANTIATE_INLINE(T      inner_product(vgl_vector_2d<T > const&, vgl_vector_2d<T > const&));\
-VCL_INSTANTIATE_INLINE(T      cross_product(vgl_vector_2d<T > const&, vgl_vector_2d<T > const&));\
-VCL_INSTANTIATE_INLINE(double cos_angle    (vgl_vector_2d<T > const&, vgl_vector_2d<T > const&));\
+/*template vgl_vector_2d<T >      operator+    (vgl_vector_2d<T > const&, vgl_vector_2d<T > const&); */\
+/*template vgl_vector_2d<T >      operator-    (vgl_vector_2d<T > const&, vgl_vector_2d<T > const&); */\
+/*template vgl_vector_2d<T >&     operator+=   (vgl_vector_2d<T >&, vgl_vector_2d<T > const&); */\
+/*template vgl_vector_2d<T >&     operator-=   (vgl_vector_2d<T >&, vgl_vector_2d<T > const&); */\
+/*template vgl_vector_2d<T >      operator+    (vgl_vector_2d<T > const&); */\
+/*template vgl_vector_2d<T >      operator-    (vgl_vector_2d<T > const&); */\
+/*template vgl_vector_2d<T >      operator*    (double, vgl_vector_2d<T > const&); */\
+/*template vgl_vector_2d<T >      operator*    (vgl_vector_2d<T > const&, double); */\
+/*template vgl_vector_2d<T >      operator/    (vgl_vector_2d<T > const&, double); */\
+/*template vgl_vector_2d<T >&     operator*=   (vgl_vector_2d<T >&, double); */\
+/*template vgl_vector_2d<T >&     operator/=   (vgl_vector_2d<T >&, double); */\
+/*template T      dot_product  (vgl_vector_2d<T > const&, vgl_vector_2d<T > const&); */\
+/*template T      inner_product(vgl_vector_2d<T > const&, vgl_vector_2d<T > const&); */\
+/*template T      cross_product(vgl_vector_2d<T > const&, vgl_vector_2d<T > const&); */\
+/*template double cos_angle    (vgl_vector_2d<T > const&, vgl_vector_2d<T > const&); */\
 template               double angle        (vgl_vector_2d<T > const&, vgl_vector_2d<T > const&);\
 template               double signed_angle (vgl_vector_2d<T > const&, vgl_vector_2d<T > const&);\
 template               bool   orthogonal   (vgl_vector_2d<T > const&, vgl_vector_2d<T > const&, double);\
 template               bool   parallel     (vgl_vector_2d<T > const&, vgl_vector_2d<T > const&, double);\
-VCL_INSTANTIATE_INLINE(double operator/    (vgl_vector_2d<T > const&, vgl_vector_2d<T > const&));\
-VCL_INSTANTIATE_INLINE(vgl_vector_2d<T >&     normalize    (vgl_vector_2d<T >&));\
-VCL_INSTANTIATE_INLINE(vgl_vector_2d<T >      normalized   (vgl_vector_2d<T > const&));\
+/*template double operator/    (vgl_vector_2d<T > const&, vgl_vector_2d<T > const&); */\
+/*template vgl_vector_2d<T >&     normalize    (vgl_vector_2d<T >&); */\
+/*template vgl_vector_2d<T >      normalized   (vgl_vector_2d<T > const&); */\
 template vgl_vector_2d<T >    rotated      (vgl_vector_2d<T > const&, double);\
 template        std::ostream&  operator<<   (std::ostream&, vgl_vector_2d<T >const&);\
 template        std::istream&  operator>>   (std::istream&, vgl_vector_2d<T >&)

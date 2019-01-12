@@ -5,7 +5,9 @@
 #include "btol_edge_algs.h"
 //:
 // \file
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vdgl/vdgl_digital_curve.h>
 #include <vtol/vtol_topology_object_sptr.h>
 #include <vtol/vtol_topology_object.h>
@@ -15,8 +17,7 @@ const double btol_edge_algs::tol = 1e-6;
 
 // Destructor
 btol_edge_algs::~btol_edge_algs()
-{
-}
+= default;
 
 //-----------------------------------------------------------------------------
 //: Splits e at v and returns the two edges e1, e2, which are incident at v.
@@ -98,10 +99,9 @@ vsol_box_2d btol_edge_algs::bounding_box(std::vector<vtol_edge_2d_sptr>& edges)
 {
   vsol_box_2d b;//default box
 
-  for (std::vector<vtol_edge_2d_sptr>::iterator eit = edges.begin();
-       eit != edges.end(); eit++)
+  for (auto & edge : edges)
   {
-    vsol_curve_2d_sptr c = (*eit)->curve();
+    vsol_curve_2d_sptr c = edge->curve();
     if (!c)
     {
       std::cout << "In btol_edge_algs::bounding_box(..) - null curve\n";
@@ -120,7 +120,7 @@ vsol_box_2d btol_edge_algs::bounding_box(std::vector<vtol_edge_2d_sptr>& edges)
 void btol_edge_algs::edge_2d_erase(std::vector<vtol_edge_2d_sptr>& edges,
                                    vtol_edge_2d_sptr const& e)
 {
-  std::vector<vtol_edge_2d_sptr>::iterator eit =
+  auto eit =
     std::find(edges.begin(), edges.end(), e);
   if (eit != edges.end())
     edges.erase(eit);

@@ -26,7 +26,9 @@
 #include <vgl/vgl_homg_point_3d.h>
 #include <vgl/vgl_homg_plane_3d.h>
 #include <vgl/vgl_pointset_3d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //:
 // A class to hold a 3-d projective transformation matrix
@@ -37,8 +39,8 @@ class vgl_h_matrix_3d
  protected:
   vnl_matrix_fixed<T,4,4> t12_matrix_;
  public:
-  vgl_h_matrix_3d() {}
- ~vgl_h_matrix_3d() {}
+  vgl_h_matrix_3d() = default;
+ ~vgl_h_matrix_3d() = default;
   //: Copy constructor
   vgl_h_matrix_3d(vgl_h_matrix_3d<T> const& M) : t12_matrix_(M.get_matrix()) {}
   //: Constructor from a 4x4 matrix, and implicit cast from vnl_matrix_fixed<T,4,4>

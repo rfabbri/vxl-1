@@ -3,6 +3,7 @@
 #define vpgl_ray_intersect_hxx_
 
 #include <iostream>
+#include <utility>
 #include "vpgl_ray_intersect.h"
 //:
 // \file
@@ -11,7 +12,9 @@
 #include <vnl/vnl_numeric_traits.h>
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_double_3.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpgl/vpgl_camera.h>
 
 template<typename T>
@@ -19,18 +22,18 @@ class vpgl_ray_intersect_lsqr : public vnl_least_squares_function
 {
 public:
     //: Constructor
-    vpgl_ray_intersect_lsqr(std::vector<const vpgl_camera<T>* > const& cams,
-                            std::vector<vgl_point_2d<T> > const& image_pts,
+    vpgl_ray_intersect_lsqr(std::vector<const vpgl_camera<T>* >  cams,
+                            std::vector<vgl_point_2d<T> >  image_pts,
                             unsigned num_residuals);
 
     //: Destructor
-    virtual ~vpgl_ray_intersect_lsqr() {}
+    ~vpgl_ray_intersect_lsqr() override = default;
 
     //: The main function.
     //  Given the parameter vector x, compute the vector of residuals fx.
     //  fx has been sized appropriately before the call.
-    virtual void f(vnl_vector<double> const& intersection_point,
-                   vnl_vector<double>& image_errors);
+    void f(vnl_vector<double> const& intersection_point,
+                   vnl_vector<double>& image_errors) override;
 
 #if 0
     //: Called after each LM iteration to print debugging etc.
@@ -45,13 +48,13 @@ protected:
 
 template<typename T>
 vpgl_ray_intersect_lsqr<T>::
-vpgl_ray_intersect_lsqr(std::vector<const vpgl_camera<T>* > const& cams,
-                        std::vector<vgl_point_2d<T> > const& image_pts,
+vpgl_ray_intersect_lsqr(std::vector<const vpgl_camera<T>* > cams,
+                        std::vector<vgl_point_2d<T> > image_pts,
                         unsigned num_residuals) :
 vnl_least_squares_function(3, num_residuals,
                            vnl_least_squares_function::no_gradient ),
-f_cameras_(cams),
-f_image_pts_(image_pts)
+f_cameras_(std::move(cams)),
+f_image_pts_(std::move(image_pts))
 {}
 
 // Define virtual function for the LeastSquaresFunction class.  Given
@@ -64,7 +67,7 @@ void vpgl_ray_intersect_lsqr<T>::f(vnl_vector<double> const& intersection_point,
                                 vnl_vector<double>& image_errors)
 {
     // Get the size of the error vector
-    unsigned dim = image_errors.size()/2;
+    std::size_t dim = static_cast<unsigned int>(image_errors.size() / 2);
 
     // Initialize huge error
     double huge = vnl_numeric_traits<double>::maxval;

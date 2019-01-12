@@ -1,9 +1,6 @@
 // This is core/vgl/vgl_homg_plane_3d.h
 #ifndef vgl_homg_plane_3d_h
 #define vgl_homg_plane_3d_h
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief homogeneous plane in 3D projective space
@@ -21,10 +18,12 @@
 // \endverbatim
 
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_fwd.h> // forward declare vgl_plane_3d and vgl_homg_point_3d
 #include <vgl/vgl_vector_3d.h>
-#include <vcl_cassert.h>
+#include <cassert>
 
 //: Represents a homogeneous 3D plane
 template <class Type>
@@ -37,7 +36,7 @@ class vgl_homg_plane_3d
   Type d_;
 
  public:
-  inline vgl_homg_plane_3d () {}
+  inline vgl_homg_plane_3d () = default;
 
   //: Construct from four Types.
   inline vgl_homg_plane_3d(Type ta, Type tb, Type tc, Type td) : a_(ta), b_(tb), c_(tc), d_(td) {}

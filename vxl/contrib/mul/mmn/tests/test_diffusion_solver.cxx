@@ -9,8 +9,10 @@
 #include <mmn/mmn_graph_rep1.h>
 #include <mmn/mmn_diffusion_solver.h>
 #include <mmn/mmn_dp_solver.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_vector_2d.h>
 
@@ -30,15 +32,15 @@ namespace test_diffusion_bits
 
     void convert_to_minus_log_probs(std::vector<vnl_vector<double> >& node_cost)
     {
-        for (unsigned i=0; i<node_cost.size();++i)
+        for (auto & i : node_cost)
         {
-            double sum=std::accumulate(node_cost[i].begin(),
-                                      node_cost[i].end(),
+            double sum=std::accumulate(i.begin(),
+                                      i.end(),
                                       0.0);
-            node_cost[i]/=sum;
-            for (unsigned j=0; j<node_cost[i].size();j++)
+            i/=sum;
+            for (unsigned j=0; j<i.size();j++)
             {
-                node_cost[i][j] = -std::log(node_cost[i][j]);
+                i[j] = -std::log(i[j]);
             }
         }
     }
@@ -305,8 +307,8 @@ void test_diffusion_solver_loop_b(unsigned n)
 
 void test_diff_best_xy_line()
 {
-    const unsigned NSTAGES=5;
-    const unsigned NPOINTS_PER_STAGE=10;
+    constexpr unsigned NSTAGES = 5;
+    constexpr unsigned NPOINTS_PER_STAGE = 10;
     std::cout<<"==== test test_diffusion_solver best y line ====="<<std::endl;
 
     unsigned n=NSTAGES;
@@ -408,13 +410,13 @@ void test_diff_best_xy_line()
     //Also test using Markov alg
     std::vector<vnl_matrix<double  > > pair_costs_neg=pair_cost;
 
-    for (unsigned i=0;i<pair_costs_neg.size();++i)
+    for (auto & i : pair_costs_neg)
     {
-        for (unsigned j=0; j<pair_costs_neg[i].rows();j++)
+        for (unsigned j=0; j<i.rows();j++)
         {
-            for (unsigned k=0; k<pair_costs_neg[i].cols();k++)
+            for (unsigned k=0; k<i.cols();k++)
             {
-                pair_costs_neg[i](j,k)= -1.0*pair_costs_neg[i](j,k);
+                i(j,k)= -1.0*i(j,k);
             }
         }
     }
@@ -456,14 +458,14 @@ void test_diff_best_xy_line()
 
 void test_diff_5x5grid_easy()
 {
-    const unsigned NSTAGES=5;
-    const unsigned NPOINTS_PER_NODE=10;
+    constexpr unsigned NSTAGES = 5;
+    constexpr unsigned NPOINTS_PER_NODE = 10;
     std::cout<<"==== test test_diffusion_solver 5x5 grid ====="<<std::endl;
 
     unsigned n=NSTAGES*NSTAGES;
     // Generate linked list
     std::vector<mmn_arc> arcs;
-    const double DG=100.0;
+    constexpr double DG = 100.0;
     for (unsigned iy=0;iy<NSTAGES;++iy)
     {
         for (unsigned ix=0;ix<NSTAGES;++ix)
@@ -474,11 +476,11 @@ void test_diff_5x5grid_easy()
 
             if (ix<NSTAGES-1)
             {
-                arcs.push_back(mmn_arc(nodeId,nodeIdRight));
+                arcs.emplace_back(nodeId,nodeIdRight);
             }
             if (iy<NSTAGES-1)
             {
-                arcs.push_back(mmn_arc(nodeId,nodeIdAbove));
+                arcs.emplace_back(nodeId,nodeIdAbove);
             }
         }
     }
@@ -605,13 +607,13 @@ void test_diff_5x5grid_easy()
     }
     std::vector<vnl_matrix<double  > > pair_costs_neg=pair_costs;
 
-    for (unsigned i=0;i<pair_costs_neg.size();++i)
+    for (auto & i : pair_costs_neg)
     {
-        for (unsigned j=0; j<pair_costs_neg[i].rows();j++)
+        for (unsigned j=0; j<i.rows();j++)
         {
-            for (unsigned k=0; k<pair_costs_neg[i].cols();k++)
+            for (unsigned k=0; k<i.cols();k++)
             {
-                pair_costs_neg[i](j,k)= -1.0*pair_costs_neg[i](j,k);
+                i(j,k)= -1.0*i(j,k);
             }
         }
     }
@@ -675,14 +677,14 @@ void test_diff_5x5grid_easy()
 
 void test_diff_5x5grid_hard()
 {
-    const unsigned NSTAGES=5;
-    const unsigned NPOINTS_PER_NODE=10;
+    constexpr unsigned NSTAGES = 5;
+    constexpr unsigned NPOINTS_PER_NODE = 10;
     std::cout<<"==== test test_diffusion_solver 5x5 grid ====="<<std::endl;
 
     unsigned n=NSTAGES*NSTAGES;
     // Generate linked list
     std::vector<mmn_arc> arcs;
-    const double DG=100.0;
+    constexpr double DG = 100.0;
     for (unsigned iy=0;iy<NSTAGES;++iy)
     {
         for (unsigned ix=0;ix<NSTAGES;++ix)
@@ -693,11 +695,11 @@ void test_diff_5x5grid_hard()
 
             if (ix<NSTAGES-1)
             {
-                arcs.push_back(mmn_arc(nodeId,nodeIdRight));
+                arcs.emplace_back(nodeId,nodeIdRight);
             }
             if (iy<NSTAGES-1)
             {
-                arcs.push_back(mmn_arc(nodeId,nodeIdAbove));
+                arcs.emplace_back(nodeId,nodeIdAbove);
             }
         }
     }
@@ -844,13 +846,13 @@ void test_diff_5x5grid_hard()
 
     std::vector<vnl_matrix<double  > > pair_costs_neg=pair_costs;
 
-    for (unsigned i=0;i<pair_costs_neg.size();++i)
+    for (auto & i : pair_costs_neg)
     {
-        for (unsigned j=0; j<pair_costs_neg[i].rows();j++)
+        for (unsigned j=0; j<i.rows();j++)
         {
-            for (unsigned k=0; k<pair_costs_neg[i].cols();k++)
+            for (unsigned k=0; k<i.cols();k++)
             {
-                pair_costs_neg[i](j,k)= -1.0*pair_costs_neg[i](j,k);
+                i(j,k)= -1.0*i(j,k);
             }
         }
     }

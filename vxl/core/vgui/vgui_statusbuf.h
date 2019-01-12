@@ -1,9 +1,6 @@
 // This is core/vgui/vgui_statusbuf.h
 #ifndef vgui_statusbuf_h_
 #define vgui_statusbuf_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief  Statusbar buffer?
@@ -18,7 +15,9 @@
 // \endverbatim
 
 #include <streambuf>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 class vgui_statusbar;
 
 class vgui_statusbuf : public std::streambuf

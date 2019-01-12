@@ -7,8 +7,8 @@ void volm_osm_object_line::print()
   std::cout << " object property: ";
   prop_.print();
   std::cout << " line: " << std::endl;
-  for (unsigned i = 0; i < line_.size(); i++)
-    std::cout << '(' << line_[i].x() << ',' << line_[i].y() << ") ";
+  for (auto & i : line_)
+    std::cout << '(' << i.x() << ',' << i.y() << ") ";
   std::cout << '\n';
 }
 
@@ -20,9 +20,9 @@ void volm_osm_object_line::b_write(vsl_b_ostream& os)
   vsl_b_write(os, prop_.level_);
   vsl_b_write(os, prop_.width_);
   vsl_b_write(os, line_.size());
-  for (unsigned i = 0; i < line_.size(); i++) {
-    vsl_b_write(os, line_[i].x());
-    vsl_b_write(os, line_[i].y());
+  for (auto & i : line_) {
+    vsl_b_write(os, i.x());
+    vsl_b_write(os, i.y());
   }
 }
 
@@ -60,13 +60,13 @@ void volm_osm_object_line::b_read(vsl_b_istream& is)
 
 void vsl_b_write(vsl_b_ostream& os, const volm_osm_object_line* rptr)
 {
-  if (rptr == VXL_NULLPTR) {
+  if (rptr == nullptr) {
     vsl_b_write(os, false);
     return;
   }
   else
     vsl_b_write(os, true);
-  volm_osm_object_line* ptr = const_cast<volm_osm_object_line*>(rptr);
+  auto* ptr = const_cast<volm_osm_object_line*>(rptr);
   ptr->b_write(os);
 }
 
@@ -85,12 +85,12 @@ void vsl_b_read(vsl_b_istream& is, volm_osm_object_line*& rptr)
     rptr->b_read(is);
     return;
   }
-  rptr = VXL_NULLPTR;
+  rptr = nullptr;
 }
 
 void vsl_b_read(vsl_b_istream& is, volm_osm_object_line_sptr& sptr)
 {
-  volm_osm_object_line* rptr = VXL_NULLPTR;
+  volm_osm_object_line* rptr = nullptr;
   vsl_b_read(is, rptr);
   sptr = rptr;
 }

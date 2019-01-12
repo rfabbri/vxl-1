@@ -8,7 +8,10 @@
 #include <vil3d/vil3d_image_view.h>
 #include <vil3d/vil3d_crop.h>
 #include <vil3d/algo/vil3d_structuring_element.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Return minimum of im[offset[k]], k=0..n;
 template <class T>

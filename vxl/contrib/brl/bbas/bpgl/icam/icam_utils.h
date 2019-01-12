@@ -14,7 +14,9 @@
 
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_binary_io.h>
 #include <icam/icam_image.h>
 #include <icam/icam_transform_2d.h>
@@ -43,8 +45,8 @@ class icam_utils
                                             icam_transform_2d const& t);
  private:
   // Private constructor/destructor: only static methods in this class.
-  icam_utils();
-  ~icam_utils();
+  icam_utils() = delete;
+  ~icam_utils() = delete;
 };
 
 #endif // icam_utils_h_

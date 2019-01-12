@@ -1,11 +1,13 @@
 //:
 // \file
-#include "bstm_time_tree.h"
 #include <algorithm>
 #include <cstring>
 #include <iostream>
 #include <list>
-#include <vcl_compiler.h>
+#include "bstm_time_tree.h"
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: default constructor
 bstm_time_tree::bstm_time_tree() : is_owning_(true) {
@@ -285,8 +287,8 @@ std::vector<int> bstm_time_tree::get_leaf_bits(int rootBit) const {
 int bstm_time_tree::max_depth(int rootBit) const {
   int max_index = 0;
   std::vector<int> leaves = get_leaf_bits(rootBit);
-  for (unsigned int i = 0; i < leaves.size(); ++i)
-    max_index = std::max(max_index, leaves[i]);
+  for (int leave : leaves)
+    max_index = std::max(max_index, leave);
   return depth_at(max_index);
 }
 
@@ -295,9 +297,9 @@ std::vector<int> bstm_time_tree::max_depth_leaves() const {
   int max_depth = this->max_depth(0);
   std::vector<int> leaves = get_leaf_bits(0);
   std::vector<int> selected_leaves;
-  for (unsigned int i = 0; i < leaves.size(); ++i)
-    if (depth_at(leaves[i]) == max_depth)
-      selected_leaves.push_back(leaves[i]);
+  for (int leave : leaves)
+    if (depth_at(leave) == max_depth)
+      selected_leaves.push_back(leave);
   return selected_leaves;
 }
 
@@ -407,7 +409,7 @@ void bstm_time_tree::fill_cells(bool (&frames)[32]) {
         this->bit_at(this->child_index(idx) + 1)) {
       continue;
     }
-    this->set_bit_at(idx, 0);
+    this->set_bit_at(idx, false);
   }
 }
 
@@ -454,7 +456,7 @@ std::ostream &operator<<(std::ostream &s, bstm_time_tree &t) {
         s << " ";
       }
     }
-    s << vcl_endl;
+    s << std::endl;
   }
 
   return s;

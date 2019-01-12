@@ -1,16 +1,16 @@
 // This is gel/gtrl/gtrl_triangulation.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author crossge@crd.ge.com
 
+#include <utility>
 #include "gtrl_triangulation.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 // UNIX specific timer close
-#ifdef VCL_WIN32
+#ifdef _WIN32
 #define NO_TIMER
 #endif
 
@@ -27,7 +27,7 @@ extern "C" {
 
 
 gtrl_triangulation::gtrl_triangulation( gtrl_polygon poly)
-  : poly_( poly)
+  : poly_(std::move( poly))
 {
 }
 
@@ -38,7 +38,7 @@ void gtrl_triangulation::run()
 
   // for some reason, the markers don't seem to
   //   like starting at 0
-  const int offset = 100;
+  constexpr int offset = 100;
 
   std::vector<gtrl_vertex_sptr> pointlist;
 
@@ -59,19 +59,19 @@ void gtrl_triangulation::run()
   in.pointmarkerlist= markers;
   in.numberofpointattributes= 0;
   in.numberofholes= 0;
-  in.trianglelist= VXL_NULLPTR;
+  in.trianglelist= nullptr;
 
   // output
   triangulateio out;
-  out.pointlist= VXL_NULLPTR;
-  out.trianglelist= VXL_NULLPTR;
-  out.pointmarkerlist= VXL_NULLPTR;
+  out.pointlist= nullptr;
+  out.trianglelist= nullptr;
+  out.pointmarkerlist= nullptr;
   out.numberofpointattributes= 0;
   out.numberofholes= 0;
   out.numberoftriangleattributes= 0;
 
   // do triangulation
-  triangulate( "-z -i -q", &in, &out, VXL_NULLPTR);
+  triangulate( "-z -i -q", &in, &out, nullptr);
 
   // create any new points that are necessary
   for (int i=0; i< out.numberofpoints; i++)

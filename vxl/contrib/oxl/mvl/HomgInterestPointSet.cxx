@@ -1,7 +1,4 @@
 // This is oxl/mvl/HomgInterestPointSet.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 
@@ -10,8 +7,10 @@
 #include <vector>
 #include "HomgInterestPointSet.h"
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vil1/vil1_memory_image_of.h>
 
@@ -21,11 +20,11 @@
 class HomgInterestPointSetData : public std::vector<HomgInterestPoint>
 {
  public:
-  HomgInterestPointSetData() {}
+  HomgInterestPointSetData() = default;
   HomgInterestPointSetData(int n):
     std::vector<HomgInterestPoint>(n, HomgInterestPoint())
   {}
-  ~HomgInterestPointSetData() { }
+  ~HomgInterestPointSetData() = default;
 };
 
 //: Construct an empty corner set.
@@ -33,7 +32,7 @@ HomgInterestPointSet::HomgInterestPointSet()
 {
   data_ = new HomgInterestPointSetData;
 
-  init_conditioner(VXL_NULLPTR);
+  init_conditioner(nullptr);
 }
 
 //: Construct an empty corner set which will use the given conditioner to convert from image to homogeneous coordinates.
@@ -47,7 +46,7 @@ HomgInterestPointSet::HomgInterestPointSet(const HomgMetric& c)
 //: Load corners from ASCII disk file
 HomgInterestPointSet::HomgInterestPointSet(const char* filename, const HomgMetric& c)
 {
-  data_ = VXL_NULLPTR;
+  data_ = nullptr;
   read(filename, c);
   init_conditioner(c);
 }
@@ -137,7 +136,7 @@ void HomgInterestPointSet::clear()
 {
   delete data_;
   data_ = new HomgInterestPointSetData;
-  set_conditioner(VXL_NULLPTR);
+  set_conditioner(nullptr);
 }
 
 //: Destructor
@@ -221,7 +220,7 @@ vgl_homg_point_2d<double> HomgInterestPointSet::homg_point(int i) const
 {
   assert(i >= 0 && i < int(data_->size()));
   HomgPoint2D& p = (*data_)[i].homg_;
-  return vgl_homg_point_2d<double>(p.x(),p.y(),p.w());
+  return {p.x(),p.y(),p.w()};
 }
 
 //: Return the i'th corner as a HomgPoint2D

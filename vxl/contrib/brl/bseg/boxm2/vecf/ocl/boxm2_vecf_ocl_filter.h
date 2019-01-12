@@ -9,7 +9,9 @@
 #include <iostream>
 #include <vector>
 #include <vbl/vbl_ref_count.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/io/boxm2_cache.h>
 #include <bocl/bocl_mem.h>
 #include <bocl/bocl_device.h>
@@ -26,7 +28,7 @@ class boxm2_vecf_ocl_filter
   //: Constructor.
   boxm2_vecf_ocl_filter(boxm2_scene_sptr& source_scene,
                                  boxm2_scene_sptr& temp_scene,
-                                 boxm2_opencl_cache_sptr ocl_cache);
+                                 const boxm2_opencl_cache_sptr& ocl_cache);
 
   ~boxm2_vecf_ocl_filter();
 
@@ -38,7 +40,7 @@ class boxm2_vecf_ocl_filter
  protected:
   bool compile_filter_kernel();
   bool init_ocl_filter();
-  bool get_scene_appearance(boxm2_scene_sptr scene,
+  bool get_scene_appearance(const boxm2_scene_sptr& scene,
                             std::string&      options);
 
   boxm2_opencl_cache_sptr  opencl_cache_;
@@ -73,5 +75,3 @@ class boxm2_vecf_ocl_filter
 };
 
 #endif
-
-

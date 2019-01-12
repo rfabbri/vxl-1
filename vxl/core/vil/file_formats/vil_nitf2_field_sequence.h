@@ -8,7 +8,9 @@
 #include <map>
 #include <string>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 // not used? #include <iostream>
 
 #include "vil_nitf2.h" // vil_nitf2_istream, vil_nitf2_ostream
@@ -118,7 +120,7 @@ class vil_nitf2_field_sequence
 #endif // 0
 
   // Returns a field with specified tag, or 0 if not found.
-  vil_nitf2_field* get_field(std::string tag) const;
+  vil_nitf2_field* get_field(const std::string& tag) const;
 
   // Removes the field with the specified tag, returning whether successful.
   // Not yet implemented.
@@ -129,13 +131,13 @@ class vil_nitf2_field_sequence
   // current repeat iteration(s) and field_defs must equal the repeat node's
   // field definitions only.
   bool read(vil_nitf2_istream& input,
-            const vil_nitf2_field_definitions* field_defs = VXL_NULLPTR,
-            vil_nitf2_index_vector indexes = vil_nitf2_index_vector());
+            const vil_nitf2_field_definitions* field_defs = nullptr,
+            const vil_nitf2_index_vector& indexes = vil_nitf2_index_vector());
 
   // Attempts to write field sequence to the output stream. Arg
   // 'indexes' is used only during recursive calls to write nested sequences.
   virtual bool write(vil_nitf2_ostream&,
-                     const vil_nitf2_field_definitions* field_defs = VXL_NULLPTR,
+                     const vil_nitf2_field_definitions* field_defs = nullptr,
                      vil_nitf2_index_vector indexes = vil_nitf2_index_vector());
 
   // Create vector fields for the specified field definitions with specified
@@ -148,12 +150,12 @@ class vil_nitf2_field_sequence
                                   const vil_nitf2_index_vector& index, int repeat_count);
 
   // Returns field definition if found
-  vil_nitf2_field_definition* find_field_definition(std::string tag);
+  vil_nitf2_field_definition* find_field_definition(const std::string& tag);
 
   // I allocate the return value, but you own it after I return it to you
   // so you need to delete it.  If you pass in 'tr', then I'll add my stuff to that.
   // otherwise I'll add a new one and return it.  Either way, you own it.
-  virtual vil_nitf2_field::field_tree* get_tree( vil_nitf2_field::field_tree* tr = VXL_NULLPTR ) const;
+  virtual vil_nitf2_field::field_tree* get_tree( vil_nitf2_field::field_tree* tr = nullptr ) const;
 
  private:
   void insert_field( const std::string& str, vil_nitf2_field* field);

@@ -10,7 +10,9 @@
 #include <functional>
 #include <iostream>
 #include <algorithm>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: A bounded priority queue
 // This is identical to a std::priority_queue, but
@@ -24,7 +26,7 @@
 // top() returns the value that is closest to being thrown out,
 // which is the largest value in the case of the default predicate.
 template <class T, class C= std::vector<T>, class O= std::less<
-#ifndef VCL_VC
+#ifndef _MSC_VER
 typename
 #endif
   C::value_type> >

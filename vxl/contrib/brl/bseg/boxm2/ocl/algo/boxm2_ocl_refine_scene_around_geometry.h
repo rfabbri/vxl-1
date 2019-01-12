@@ -3,7 +3,9 @@
 #include <boxm2/boxm2_data_traits.h>
 #include <boct/boct_bit_tree.h>
 #include <vnl/vnl_vector_fixed.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/io/boxm2_cache.h>
 #include <bocl/bocl_device.h>
 #include <boxm2/ocl/boxm2_opencl_cache.h>
@@ -38,9 +40,9 @@ public:
     device_(device)
   {
   std::vector<std::string> valid_types;
-  valid_types.push_back("boxm2_mog6_view_compact");
-  valid_types.push_back("boxm2_mog3_grey");
-  valid_types.push_back("boxm2_gauss_rgb_view");
+  valid_types.emplace_back("boxm2_mog6_view_compact");
+  valid_types.emplace_back("boxm2_mog3_grey");
+  valid_types.emplace_back("boxm2_gauss_rgb_view");
   if (!boxm2_util::verify_appearance(*scene_,valid_types,app_type_,app_type_size_))
     {
     std::cout << "scene doesn't have the correct appearance type - "

@@ -4,7 +4,10 @@
 #include "grid/bvxm_voxel_slab.h"
 #include "grid/bvxm_voxel_slab_iterator.h"
 #ifdef OPTION2 // currently FALSE
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #endif
 
 #include <vgl/vgl_box_2d.h>
@@ -12,7 +15,7 @@
 
 //: Return probability density of observing pixel values
 bvxm_voxel_slab<float>
-bvxm_lidar_processor::prob_density(float z_dim,  bvxm_voxel_slab<float> const& obs, float voxel_width )
+bvxm_lidar_processor::prob_density(float z_dim,  bvxm_voxel_slab<float> const& obs, float  /*voxel_width*/ )
 {
   //the output
   bvxm_voxel_slab<float> probabilities(obs.nx(), obs.ny(), obs.nz());
@@ -63,7 +66,7 @@ bvxm_lidar_processor::prob_density(float z_dim,  bvxm_voxel_slab<float> const& o
   return probabilities;
 }
 
-float bvxm_lidar_processor::prob_density(vil_image_view_base_sptr lidar,
+float bvxm_lidar_processor::prob_density(const vil_image_view_base_sptr& lidar,
                                          float z_dim,
                                          vnl_vector_fixed<float,3>& covar,  // sigma vals
                                          vgl_box_2d<double> lidar_roi,
@@ -86,11 +89,11 @@ float bvxm_lidar_processor::prob_density(vil_image_view_base_sptr lidar,
     for ( int nj = min_j; nj < max_j; nj++ ) {
       float d = -255.f; // dummy initialisation, to avoid compiler warning
       if (lidar->pixel_format() == VIL_PIXEL_FORMAT_BYTE) {
-        if (vil_image_view<unsigned char> *img_view = dynamic_cast<vil_image_view<unsigned char>*>(lidar.ptr()))
+        if (auto *img_view = dynamic_cast<vil_image_view<unsigned char>*>(lidar.ptr()))
           d = (*img_view)(ni, nj);
       }
       else if (lidar->pixel_format() == VIL_PIXEL_FORMAT_FLOAT) {
-        if (vil_image_view<float> *img_view = dynamic_cast<vil_image_view<float>*>(lidar.ptr()))
+        if (auto *img_view = dynamic_cast<vil_image_view<float>*>(lidar.ptr()))
           d = (*img_view)(ni, nj);
       }
       vnl_vector_fixed<float,3> m((float)ni+0.5f, (float)nj+0.5f, d-2.f);

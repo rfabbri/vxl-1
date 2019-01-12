@@ -1,9 +1,6 @@
 // This is core/vgl/vgl_conic_segment_2d.h
 #ifndef vgl_conic_segment_2d_h_
 #define vgl_conic_segment_2d_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author J.L. Mundy  June 18, 2005
@@ -96,8 +93,10 @@
 #include <vgl/vgl_homg_point_2d.h> // data member of this class
 #include <vgl/vgl_conic.h>         // data member of this class
 #include <vgl/vgl_point_2d.h>      // return type of some methods
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 //: Represents a 2D conic segment using two points.
 template <class Type>
@@ -118,7 +117,7 @@ class vgl_conic_segment_2d
  public:
   //: Default constructor - does not initialise!
   //  Use the set() method to make this conic segment useful.
-  inline vgl_conic_segment_2d() {}
+  inline vgl_conic_segment_2d() = default;
 
   //: Copy constructor
   inline vgl_conic_segment_2d(vgl_conic_segment_2d<Type> const& l)
@@ -158,7 +157,7 @@ class vgl_conic_segment_2d
     conic_(co), counterclockwise_(counterclockwise) {}
 
   //: Destructor
-  inline ~vgl_conic_segment_2d() {}
+  inline ~vgl_conic_segment_2d() = default;
 
   //: Normalise the direction of the segment to counterclockwise.
   //  This will also swap the end points if the direction is to be swapped.

@@ -9,7 +9,9 @@
 // \author Vishal Jain
 // \date Apr 23, 2013
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/ocl/boxm2_opencl_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -28,9 +30,9 @@
 
 namespace boxm2_ocl_create_coarser_scene_process_globals
 {
-    const unsigned n_inputs_ = 4;
-    const unsigned n_outputs_ = 0;
-    void compile_kernel(bocl_device_sptr device, bocl_kernel* merge_kernel)
+    constexpr unsigned n_inputs_ = 4;
+    constexpr unsigned n_outputs_ = 0;
+    void compile_kernel(const bocl_device_sptr& device, bocl_kernel* merge_kernel)
     {
         //gather all render sources... seems like a lot for rendering...
         std::vector<std::string> src_paths;
@@ -52,7 +54,7 @@ namespace boxm2_ocl_create_coarser_scene_process_globals
 bool copy_fine_to_coarse(boxm2_block & blk,
                          boxm2_block_metadata & mdata,
                          boxm2_data_base * alpha_base ,
-                         boxm2_cache_sptr cache)
+                         const boxm2_cache_sptr& cache)
 {
     // assuming exactly one scene in cache!
     std::vector<boxm2_scene_sptr> scenes = cache->get_scenes();
@@ -94,7 +96,7 @@ bool copy_fine_to_coarse(boxm2_block & blk,
         {
             for (unsigned k = 0; k < nk; k++)
             {
-                uchar16 tree  = trees(i,j,k);
+                uchar16 tree = trees(i,j,k);
                 boct_bit_tree curr_tree( (unsigned char*) tree.data_block(), 4);
                 for (int ti=0; ti<585; ti++)
                 {
@@ -127,7 +129,7 @@ bool copy_fine_to_coarse(boxm2_block & blk,
                             int data_offset=tree.get_data_index(bit_index,false);
 
                             float alpha_B = alpha_data_B->data()[data_offset];
-                            float side_len_B=static_cast<float>(mdata.sub_block_dim_.x()/((float)(1<<depth)));
+                            auto side_len_B=static_cast<float>(mdata.sub_block_dim_.x()/((float)(1<<depth)));
                             alpha_data->data()[index]=alpha_B*side_len_B/side_len;
                         }
                     }
@@ -181,7 +183,7 @@ bool boxm2_ocl_create_coarser_scene_process(bprb_func_process& pro)
     coarse_scene->set_xml_path(coarse_model_dir+"/scene.xml");
 
     std::vector<boxm2_block_id> scene_blks = scene->get_block_ids();
-    std::vector<boxm2_block_id>::iterator iter = scene_blks.begin();
+    auto iter = scene_blks.begin();
     for(; iter!=scene_blks.end(); iter++)
     {
         boxm2_block_metadata mdata = scene->get_block_metadata_const(*iter);
@@ -201,7 +203,7 @@ bool boxm2_ocl_create_coarser_scene_process(bprb_func_process& pro)
 
     coarse_scene->save_scene();
     std::vector<boxm2_block_id> coarse_scene_blks = coarse_scene->get_block_ids();
-    std::vector<boxm2_block_id>::iterator coarse_iter = coarse_scene_blks.begin();
+    auto coarse_iter = coarse_scene_blks.begin();
     for(; coarse_iter!=coarse_scene_blks.end(); coarse_iter++)
     {
         boxm2_block_metadata mdata = coarse_scene->get_block_metadata(*coarse_iter);

@@ -1,16 +1,20 @@
 //:
 // \file
+#include <iostream>
+#include <fstream>
+#include <string>
 #include <testlib/testlib_test.h>
 #include <bvgl/bvgl_k_nearest_neighbors_3d.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_string.h>
+#include <bvgl/bvgl_k_nearest_neighbors_2d.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_pointset_3d.h>
 #include <bnabo/bnabo.h>
 #define TEST_K_NEAREST_NEIGHBORS 1
 //: Test changes
-static void test_k_nearest_neighbors()
+static void test_k_nearest_neighbors_3d()
 {
 #if TEST_K_NEAREST_NEIGHBORS
 #if 0 // shows nabo usage
@@ -62,12 +66,12 @@ static void test_k_nearest_neighbors()
   vgl_point_3d<double> q(0.5, 0.0, 0.5);
   bool good = knn3d.closest_index(q, index);
   if(good) {
-    vcl_cout << "closest index " << ptset.p(index) << '\n';
+    std::cout << "closest index " << ptset.p(index) << '\n';
   }
   vgl_point_3d<double> cp;
   good = knn3d.closest_point(q, cp);
   if(good) {
-         vcl_cout << "closest point " << cp << '\n';
+         std::cout << "closest point " << cp << '\n';
   }
   double d = (p8-cp).length();
   TEST_NEAR("closest point" , d ,0.0 , 0.001);
@@ -75,7 +79,7 @@ static void test_k_nearest_neighbors()
   unsigned k = 5;
   good = knn3d.knn(q, k, k_neighbors);
   if(good){
-    vcl_cout << "K neighbors\n" << k_neighbors << '\n';
+    std::cout << "K neighbors\n" << k_neighbors << '\n';
     vgl_point_3d<double> nb(1.0, 0.0, 0.0);
     d = (nb-k_neighbors.p(4)).length();
     TEST_NEAR("k neighbors", d, 0.0, 0.001);
@@ -87,12 +91,61 @@ static void test_k_nearest_neighbors()
   vnl_vector<int> k_indices;
   good = knn3d.knn_indices(q, k, k_indices);
   if(good) {
-    vcl_cout << "K neighbor indices\n" << k_indices << '\n';
+    std::cout << "K neighbor indices\n" << k_indices << '\n';
     TEST_EQUAL("k indices", k_indices[4], 4);
   } else {
     TEST("k indices", true, false);
   }
 #endif
+}
+
+static void test_k_nearest_neighbors_2d()
+{
+  vgl_point_2d<double> p0(1.5, 3.0);
+  vgl_point_2d<double> p1(4.0, 0.0);
+  vgl_point_2d<double> p2(-3.0, -2.0);
+  vgl_point_2d<double> p3(0.0, 0.0);
+  vgl_point_2d<double> p4(0.0, 4.0);
+  std::vector<vgl_point_2d<double>> ptset {p0, p1, p2, p3, p4};
+
+  bvgl_k_nearest_neighbors_2d<double> knn2d(ptset);
+
+  unsigned index=0;
+  vgl_point_2d<double> q1(0.5, 0.5);
+  bool good = knn2d.closest_index(q1, index);
+  TEST("closest_index success", good, true);
+  TEST("closest_index correct index", index, 3);
+
+  vgl_point_2d<double> cp;
+  vgl_point_2d<double> q2(-1000, -1000);
+  good = knn2d.closest_point(q2, cp);
+  TEST("closest_point success", good, true);
+  double d = (cp - vgl_point_2d<double>(-3.0, -2.0)).length();
+  TEST_NEAR("closest_point correct point", d, 0, 1e-6);
+
+  vgl_point_2d<double> q3(2.0, 1.0);
+  std::vector<vgl_point_2d<double> > neighbors;
+  good = knn2d.knn(q3, 3, neighbors);
+  TEST("knn success", good, true);
+  bool correct = true;
+  correct &= neighbors.size() == 3;
+  for (auto pt : std::vector<vgl_point_2d<double>>{p0, p1, p3}) {
+    double mindist = 1000.0;
+    for (auto pn : neighbors) {
+      double dist = (pt - pn).length();
+      if (dist < mindist) {
+        mindist = dist;
+      }
+    }
+    correct &= mindist < 1e-6;
+  }
+  TEST("knn correct neighbors", correct, true);
+}
+
+void test_k_nearest_neighbors()
+{
+  test_k_nearest_neighbors_2d();
+  test_k_nearest_neighbors_3d();
 }
 
 TESTMAIN( test_k_nearest_neighbors );

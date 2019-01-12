@@ -18,24 +18,26 @@
 
 #include <bocl/bocl_kernel.h>
 #include <vcl_where_root_dir.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 typedef vnl_vector_fixed<unsigned char,16> uchar16;
-bool boxm2_vecf_ocl_filter::get_scene_appearance( boxm2_scene_sptr scene,
+bool boxm2_vecf_ocl_filter::get_scene_appearance( const boxm2_scene_sptr& scene,
           std::string&      options)
 {
     std::vector<std::string> apps = scene->appearances();
     bool foundDataType = false;
-    for (unsigned int i=0; i<apps.size(); ++i) {
-        if ( apps[i] == boxm2_data_traits<BOXM2_MOG3_GREY>::prefix() )
+    for (const auto & app : apps) {
+        if ( app == boxm2_data_traits<BOXM2_MOG3_GREY>::prefix() )
         {
-            app_type_ = apps[i];
+            app_type_ = app;
             foundDataType = true;
             options=" -D MOG_TYPE_8 ";
         }
-        else if ( apps[i] == boxm2_data_traits<BOXM2_MOG3_GREY_16>::prefix() )
+        else if ( app == boxm2_data_traits<BOXM2_MOG3_GREY_16>::prefix() )
         {
-            app_type_ = apps[i];
+            app_type_ = app;
             foundDataType = true;
             options=" -D MOG_TYPE_16 ";
         }
@@ -52,7 +54,7 @@ bool boxm2_vecf_ocl_filter::get_scene_appearance( boxm2_scene_sptr scene,
 
 boxm2_vecf_ocl_filter::boxm2_vecf_ocl_filter(boxm2_scene_sptr& source_scene,
                                              boxm2_scene_sptr& temp_scene,
-                                             boxm2_opencl_cache_sptr ocl_cache)
+                                             const boxm2_opencl_cache_sptr& ocl_cache)
   : source_scene_(source_scene),
      temp_scene_(temp_scene),
      opencl_cache_(ocl_cache)
@@ -99,17 +101,17 @@ bool boxm2_vecf_ocl_filter::init_ocl_filter()
     lookup->create_buffer(CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR);
     int status = 0;
     queue = clCreateCommandQueue(device_->context(),*(device_->device_id()),CL_QUEUE_PROFILING_ENABLE,&status);
-    ocl_depth = VXL_NULLPTR;
-    blk_info_temp = VXL_NULLPTR;
-    blk_info_source = VXL_NULLPTR;
-    info_buffer = VXL_NULLPTR;
-    blk_temp = VXL_NULLPTR;
-    alpha_temp = VXL_NULLPTR;
-    mog_temp = VXL_NULLPTR;
-    info_buffer_source = VXL_NULLPTR;
-    blk_source = VXL_NULLPTR;
-    alpha_source = VXL_NULLPTR;
-    mog_source = VXL_NULLPTR;
+    ocl_depth = nullptr;
+    blk_info_temp = nullptr;
+    blk_info_source = nullptr;
+    info_buffer = nullptr;
+    blk_temp = nullptr;
+    alpha_temp = nullptr;
+    mog_temp = nullptr;
+    info_buffer_source = nullptr;
+    blk_source = nullptr;
+    alpha_source = nullptr;
+    mog_source = nullptr;
     return true;
 }
 bool boxm2_vecf_ocl_filter::filter(std::vector<float> const& weights, unsigned num_iterations)
@@ -138,8 +140,8 @@ bool boxm2_vecf_ocl_filter::filter(std::vector<float> const& weights, unsigned n
    std::vector<boxm2_block_id> blocks_temp = temp_scene_->get_block_ids();
    if(blocks_temp.size()!=1||blocks_source.size()!=1)
      return false;
-   std::vector<boxm2_block_id>::iterator iter_blk_temp = blocks_temp.begin();
-   std::vector<boxm2_block_id>::iterator iter_blk_source = blocks_source.begin();
+   auto iter_blk_temp = blocks_temp.begin();
+   auto iter_blk_source = blocks_source.begin();
      //Gather information about the temp and setup temp data buffers
    blk_temp       = opencl_cache_->get_block(temp_scene_, *iter_blk_temp);
    alpha_temp     = opencl_cache_->get_data<BOXM2_ALPHA>(temp_scene_, *iter_blk_temp,0,true);
@@ -165,7 +167,7 @@ bool boxm2_vecf_ocl_filter::filter(std::vector<float> const& weights, unsigned n
    alpha_source     = opencl_cache_->get_data<BOXM2_ALPHA>(source_scene_, *iter_blk_source,0,false);
    info_buffer_source->data_buffer_length = (int) (alpha_source->num_bytes()/alphaTypeSize);
    int data_size = info_buffer_source->data_buffer_length;
-   float* output_buff= new float[data_size];
+   auto* output_buff= new float[data_size];
    output = new bocl_mem(device_->context(), output_buff, sizeof(float)*info_buffer_source->data_buffer_length, "output" );
    output->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR );
    output->zero_gpu_buffer(queue);

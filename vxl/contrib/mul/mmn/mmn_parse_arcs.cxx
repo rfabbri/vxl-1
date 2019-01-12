@@ -12,7 +12,9 @@
 #include "mmn_parse_arcs.h"
 #include <mbl/mbl_exception.h>
 #include <mbl/mbl_parse_block.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 void  mmn_parse_arcs(std::istream& is,
@@ -21,8 +23,8 @@ void  mmn_parse_arcs(std::istream& is,
 {
     //First convert node_names to numbers
     std::map<std::string,unsigned> nodeMap;
-    std::vector<std::string>::const_iterator nodeIter=node_names.begin();
-    std::vector<std::string>::const_iterator nodeIterEnd=node_names.end();
+    auto nodeIter=node_names.begin();
+    auto nodeIterEnd=node_names.end();
     unsigned id=0;
     while(nodeIter != nodeIterEnd)
     {
@@ -107,7 +109,7 @@ void  mmn_parse_arcs(std::istream& is,
         }
 
         //Finally add the arc
-        arcs.push_back(mmn_arc(nodeIter1->second,nodeIter2->second));
+        arcs.emplace_back(nodeIter1->second,nodeIter2->second);
 
     }
 }

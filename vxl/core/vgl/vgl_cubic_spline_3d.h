@@ -1,9 +1,6 @@
 // This is core/vgl/vgl_cubic_spline_3d.h
 #ifndef vgl_cubic_spline_3d_h_
 #define vgl_cubic_spline_3d_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief A 3-d cubic spline curve defined by a set of knots (3-d points)
@@ -23,14 +20,16 @@
 // computations are simple enough so everything is in the .h file
 //
 
-#include <vector>
 #include <iostream>
-#include <vcl_compiler.h>
-#include <vgl/vgl_vector_3d.h>
-#include <vgl/vgl_vector_3d.h>
-#include <vgl/vgl_point_3d.h>
+#include <utility>
+#include <vector>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_plane_3d.h>
-#include <vcl_cassert.h>
+#include <vgl/vgl_point_3d.h>
+#include <vgl/vgl_vector_3d.h>
 
 template <class Type>
 class vgl_cubic_spline_3d
@@ -45,10 +44,10 @@ class vgl_cubic_spline_3d
   vgl_cubic_spline_3d(): closed_curve_(false), s_(Type(0.5)) {}
 
   //: Construct from set of knots
-  vgl_cubic_spline_3d(std::vector<vgl_point_3d<Type> > const& knots,
+  vgl_cubic_spline_3d(std::vector<vgl_point_3d<Type> >  knots,
                       Type s = Type(0.5),
                       bool closed = false)
-    : closed_curve_(closed), s_(s), knots_(knots){}
+    : closed_curve_(closed), s_(s), knots_(std::move(knots)){}
 
   //: accessors
   bool closed() const {return closed_curve_;}

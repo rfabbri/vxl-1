@@ -10,7 +10,9 @@
 // \author dac
 // Test construction, IO etc
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpl/vpl.h> // vpl_unlink()
 #include <clsfy/clsfy_binary_tree.h>
 #include <clsfy/clsfy_binary_tree_builder.h>
@@ -32,24 +34,24 @@ void test_binary_tree()
              << " Testing clsfy_binary_tree_builder\n"
              << "*******************************************\n";
 
-    const double varx= 1.0;
-    const double vary = 1.0;
-    const double varz = 1.0;
+    constexpr double varx = 1.0;
+    constexpr double vary = 1.0;
+    constexpr double varz = 1.0;
 
-    const double mux=0.5;
-    const double muy=1.0;
-    const double muz=2.0;
+    constexpr double mux = 0.5;
+    constexpr double muy = 1.0;
+    constexpr double muz = 2.0;
 
     pdf1d_gaussian pdfx(mux,varx);
     pdf1d_gaussian pdfy(muy,vary);
-    pdf1d_sampler* pdfx_sampler = VXL_NULLPTR;
-    pdf1d_sampler* pdfy_sampler = VXL_NULLPTR;
+    pdf1d_sampler* pdfx_sampler = nullptr;
+    pdf1d_sampler* pdfy_sampler = nullptr;
 
     pdf1d_gaussian pdfz(muz,varz);
-    pdf1d_sampler* pdfz_sampler = VXL_NULLPTR;
+    pdf1d_sampler* pdfz_sampler = nullptr;
 
     pdf1d_gaussian pdferror(0.0,0.02*0.02);
-    pdf1d_sampler* pdferror_sampler = VXL_NULLPTR;
+    pdf1d_sampler* pdferror_sampler = nullptr;
 
     pdfx_sampler = pdfx.new_sampler();
 
@@ -113,8 +115,8 @@ void test_binary_tree()
     clsfy_classifier_base* pBaseClassifier=builder.new_classifier();
     TEST("Type is binary tree",
          pBaseClassifier->is_a()==std::string("clsfy_binary_tree"), true);
-    clsfy_binary_tree* pClassifier=dynamic_cast<clsfy_binary_tree*>(pBaseClassifier);
-    TEST("Can cast to binary tree",pClassifier != VXL_NULLPTR,true);
+    auto* pClassifier=dynamic_cast<clsfy_binary_tree*>(pBaseClassifier);
+    TEST("Can cast to binary tree",pClassifier != nullptr,true);
 
     builder.build(*pClassifier,
                   training_set_inputs,
@@ -124,7 +126,7 @@ void test_binary_tree()
     std::vector<vnl_vector<double > > testData(NPOINTS);
 
     std::vector<unsigned > test_outputs(NPOINTS,0);
-    const double epsilon=0.01;
+    constexpr double epsilon = 0.01;
     vnl_vector<double > error(1);
     unsigned tp=0;
     for (unsigned i=0; i<NPOINTS;++i)
@@ -180,8 +182,8 @@ void test_binary_tree()
                 ++fnr;
         }
     }
-    double dtp=double (tp);
-    double dtn=double (NPOINTS-tp);
+    auto dtp=double (tp);
+    auto dtn=double (NPOINTS-tp);
     double testTPR=double (tpr)/dtp;
     double testFPR=double (fpr)/dtn;
     double testTNR=double (tnr)/dtn;
@@ -218,8 +220,8 @@ void test_binary_tree()
 
     TEST("Type is binary tree",
          pBaseClassifierIn->is_a()==std::string("clsfy_binary_tree"), true);
-    clsfy_binary_tree* pClassifierIn=dynamic_cast<clsfy_binary_tree*>(pBaseClassifierIn);
-    TEST("Can cast to binary tree",pClassifierIn != VXL_NULLPTR,true);
+    auto* pClassifierIn=dynamic_cast<clsfy_binary_tree*>(pBaseClassifierIn);
+    TEST("Can cast to binary tree",pClassifierIn != nullptr,true);
 
     {
         unsigned tp=std::count(test_outputs.begin(),test_outputs.end(),1U);
@@ -245,8 +247,8 @@ void test_binary_tree()
                     ++fnr;
             }
         }
-        double dtp=double (tp);
-        double dtn=double (NPOINTS-tp);
+        auto dtp=double (tp);
+        auto dtn=double (NPOINTS-tp);
         std::cout<<"True Positive Rate " <<double(tpr)/dtp<<'\n'
                 <<"False Positive Rate "<<double(fpr)/dtn<<'\n'
                 <<"True Negative Rate " <<double(tnr)/dtn<<'\n'
@@ -288,8 +290,8 @@ void test_binary_tree()
                     ++fnr;
             }
         }
-        double dtp=double (tp);
-        double dtn=double (NPOINTS-tp);
+        auto dtp=double (tp);
+        auto dtn=double (NPOINTS-tp);
         std::cout<<"True Positive Rate " <<double(tpr)/dtp<<'\n'
                 <<"False Positive Rate "<<double(fpr)/dtn<<'\n'
                 <<"True Negative Rate " <<double(tnr)/dtn<<'\n'
@@ -321,7 +323,7 @@ void test_binary_tree()
     }
     // Train again with +ve and -ve data swapped round + see if get same error
     clsfy_classifier_base* pBaseClassifier2=builder.new_classifier();
-    clsfy_binary_tree* pClassifier2=dynamic_cast<clsfy_binary_tree*>(pBaseClassifier2);
+    auto* pClassifier2=dynamic_cast<clsfy_binary_tree*>(pBaseClassifier2);
 
     builder.build(*pClassifier2,
                   training_set_inputs,
@@ -329,7 +331,7 @@ void test_binary_tree()
                   training_outputs);
 
     {
-        const int NPOINTS=500;
+        constexpr int NPOINTS = 500;
         unsigned tp=std::count(test_outputs.begin(),test_outputs.end(),1U);
         unsigned tpr=0;
         unsigned tnr=0;
@@ -353,8 +355,8 @@ void test_binary_tree()
                     ++fnr;
             }
         }
-        double dtp=double (tp);
-        double dtn=double (NPOINTS-tp);
+        auto dtp=double (tp);
+        auto dtn=double (NPOINTS-tp);
         std::cout<<"True Positive Rate " <<double(tpr)/dtp<<'\n'
                 <<"False Positive Rate "<<double(fpr)/dtn<<'\n'
                 <<"True Negative Rate " <<double(tnr)/dtn<<'\n'
@@ -376,7 +378,7 @@ void test_binary_tree()
 
     {
         std::cout<<"TESTING Circle Data..."<<std::endl;
-        const int NPOINTS=2000;
+        constexpr int NPOINTS = 2000;
         std::vector<vnl_vector<double > > data(NPOINTS);
 
         pdf1d_gaussian pdferror2(0.0,0.05*0.05);
@@ -428,8 +430,8 @@ void test_binary_tree()
         clsfy_classifier_base* pBaseClassifier=builder.new_classifier();
         TEST("Type is binary tree",
              pBaseClassifier->is_a()==std::string("clsfy_binary_tree"), true);
-        clsfy_binary_tree* pClassifier=dynamic_cast<clsfy_binary_tree*>(pBaseClassifier);
-        TEST("Can cast to binary tree",pClassifier != VXL_NULLPTR,true);
+        auto* pClassifier=dynamic_cast<clsfy_binary_tree*>(pBaseClassifier);
+        TEST("Can cast to binary tree",pClassifier != nullptr,true);
 
         builder.build(*pClassifier,
                       training_set_inputs,
@@ -498,8 +500,8 @@ void test_binary_tree()
                     ++fnr;
             }
         }
-        double dtp=double (tp);
-        double dtn=double (NPOINTS-tp);
+        auto dtp=double (tp);
+        auto dtn=double (NPOINTS-tp);
         double testTPR=double (tpr)/dtp;
         double testFPR=double (fpr)/dtn;
         double testTNR=double (tnr)/dtn;

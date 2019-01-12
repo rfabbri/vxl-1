@@ -15,7 +15,9 @@
 #include <iostream>
 #include <vector>
 #include <vnl/vnl_vector_fixed.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <bsta/algo/bsta_sigma_normalizer.h>
 
@@ -32,14 +34,14 @@ class  boxm2_gauss_grey_processor
      static void compute_app_model(vnl_vector_fixed<unsigned char, 2> & apm,
                                          std::vector<float> const& obs,
                                          std::vector<float> const& obs_weights,
-                                         bsta_sigma_normalizer_sptr n_table,
+                                         const bsta_sigma_normalizer_sptr& n_table,
                                          float min_sigma = 0.01f);
 
      static void compute_app_model(vnl_vector_fixed<unsigned char, 2> & apm,
                                    std::vector<float> const& obs,
                                    std::vector<float> const& pre,
                                    std::vector<float> const& vis,
-                                   bsta_sigma_normalizer_sptr n_table,
+                                   const bsta_sigma_normalizer_sptr& n_table,
                                    float min_sigma=0.01f);
 };
 

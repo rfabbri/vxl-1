@@ -6,7 +6,10 @@
 // \brief Read all voxels in an image (or pair) and feed into a functor
 // \author Tim Cootes
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil3d/vil3d_image_view.h>
 
 //: Call f(v) for every voxel in the image

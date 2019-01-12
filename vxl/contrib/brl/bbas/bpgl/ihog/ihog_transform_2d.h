@@ -18,7 +18,9 @@
 #include <vnl/vnl_double_3x3.h>
 #include <vnl/vnl_double_2x3.h>
 #include <vsl/vsl_binary_io.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: A quadrilateral region of an image
 class ihog_transform_2d : public vgl_h_matrix_2d<double>, public vbl_ref_count
@@ -41,7 +43,7 @@ class ihog_transform_2d : public vgl_h_matrix_2d<double>, public vbl_ref_count
     : vgl_h_matrix_2d<double>(xform), form_(form) {}
 
   //: Destructor
-  ~ihog_transform_2d() {}
+  ~ihog_transform_2d() override = default;
 
   Form form() const {return form_;}
   void set_form(const Form form) {form_ = form;}
@@ -147,7 +149,7 @@ inline ihog_transform_2d operator*(const ihog_transform_2d& L, const ihog_transf
 //: Binary save ihog_transform_2d* to stream.
 inline void vsl_b_write(vsl_b_ostream &os, ihog_transform_2d const* t)
 {
-  if (t==VXL_NULLPTR) {
+  if (t==nullptr) {
     vsl_b_write(os, false); // Indicate null pointer stored
   }
   else {
@@ -168,7 +170,7 @@ inline void vsl_b_read(vsl_b_istream &is, ihog_transform_2d* &t)
     t->b_read(is);
   }
   else
-    t = VXL_NULLPTR;
+    t = nullptr;
 }
 
 
@@ -179,4 +181,3 @@ inline void vsl_print_summary(std::ostream &os, const ihog_transform_2d* t)
 }
 
 #endif // ihog_transform_2d_h_
-

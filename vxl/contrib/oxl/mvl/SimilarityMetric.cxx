@@ -1,14 +1,13 @@
 // This is oxl/mvl/SimilarityMetric.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 
 #include <iostream>
 #include "SimilarityMetric.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h>
 
 #include <vnl/vnl_double_2.h>
@@ -102,9 +101,7 @@ void SimilarityMetric::make_matrices()
 }
 
 //: Destructor
-SimilarityMetric::~SimilarityMetric()
-{
-}
+SimilarityMetric::~SimilarityMetric() = default;
 
 //: One line printout
 void SimilarityMetric::print(char* msg) const
@@ -128,7 +125,7 @@ vgl_homg_point_2d<double> SimilarityMetric::image_to_homg(vgl_point_2d<double> c
   double ny = p.y();
 
   // homogenize point
-  return vgl_homg_point_2d<double>(nx - centre_x_, ny - centre_y_, inv_scale_);
+  return {nx - centre_x_, ny - centre_y_, inv_scale_};
 }
 
 //: Convert 2D point $(x,y)$ to homogeneous coordinates.
@@ -146,7 +143,7 @@ HomgPoint2D SimilarityMetric::image_to_homg(double x, double y) const
 //: Convert conditioned point p to image coordinates
 vgl_point_2d<double> SimilarityMetric::homg_to_image(vgl_homg_point_2d<double> const& p) const
 {
-  return vgl_point_2d<double>(p.x()/p.w()*inv_scale_+centre_x_, p.y()/p.w()*inv_scale_+centre_y_);
+  return {p.x()/p.w()*inv_scale_+centre_x_, p.y()/p.w()*inv_scale_+centre_y_};
 }
 
 //: Decondition homogeneous point.
@@ -157,7 +154,7 @@ vnl_double_2 SimilarityMetric::homg_to_image(const HomgPoint2D& p) const
   x = x * inv_scale_;
   y = y * inv_scale_;
 
-  return vnl_double_2(x + centre_x_, y + centre_y_);
+  return {x + centre_x_, y + centre_y_};
 }
 
 //: Condition the 2D point p

@@ -19,7 +19,9 @@
 #include <vnl/vnl_fwd.h>
 #include <vnl/vnl_matrix_fixed.h>
 #include <vgl/vgl_fwd.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include "vpgl_perspective_camera.h"
 #include "vpgl_calibration_matrix.h"
@@ -56,7 +58,7 @@ class vpgl_essential_matrix : public vpgl_fundamental_matrix<T>
   const vpgl_essential_matrix<T>& operator=( const vpgl_essential_matrix<T>& em );
 
   //: Destructor
-  virtual ~vpgl_essential_matrix();
+  ~vpgl_essential_matrix() override;
 };
 
 //Public functions

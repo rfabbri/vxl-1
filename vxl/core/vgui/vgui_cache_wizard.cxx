@@ -1,7 +1,4 @@
 // This is core/vgui/vgui_cache_wizard.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \brief See vgui_cache_wizard.h for a description of this file.
@@ -12,8 +9,10 @@
 #include <vil1/vil1_crop.h>
 #include <vil1/vil1_pixel.h>
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vgui/vgui_pixel.h>
 #include <vgui/vgui_macro.h>
@@ -232,7 +231,7 @@ assert(section_ok);
 
 void vgui_cache_wizard::TexImage2D_Brownie(vil1_image img)
 {
-  void *the_pixels = VXL_NULLPTR;
+  void *the_pixels = nullptr;
   bool section_ok;
   // FIXME: the calls to fsm_macro_magic() are identical for each image pixel type.
   // They could be coalesced to reduce code maintenance.

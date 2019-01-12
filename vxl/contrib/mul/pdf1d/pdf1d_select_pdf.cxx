@@ -5,7 +5,10 @@
 // \author Tim Cootes
 // \brief Functions to select a pdf or form of pdf for given data.
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_vector.h>
 
 //: Use the comparator to decide which pdf the data is most like

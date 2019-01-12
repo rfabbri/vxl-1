@@ -1,9 +1,6 @@
 // This is mul/vimt/vimt_image.h
 #ifndef vimt_image_h_
 #define vimt_image_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief A base class for images of any dimension and type
@@ -13,7 +10,9 @@
 #include <iostream>
 #include <iosfwd>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_fwd.h>
 
 //: A base class for images of any dimension and type
@@ -28,10 +27,10 @@ class vimt_image
 
  public:
     //: Dflt ctor
-  vimt_image() {}
+  vimt_image() = default;
 
     //: Destructor
-  virtual ~vimt_image() {}
+  virtual ~vimt_image() = default;
 
     //: Return dimensionality of image
   virtual unsigned n_dims() const = 0;

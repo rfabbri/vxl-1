@@ -1,7 +1,4 @@
 // This is gel/octree/ConvexHull.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation "ConvexHull.h"
-#endif
 //
 // Class: ConvexHull
 // Author: Geoffrey Cross, Oxford RRG
@@ -14,7 +11,9 @@
 #include <iostream>
 #include <cstdlib>
 #include "ConvexHull.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #define CMPM(c,A,B) \
         v = (*(const double*const*)A)[c] - (*(const double*const*)B)[c];\

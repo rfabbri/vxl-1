@@ -7,7 +7,9 @@
 #include <boxm2/boxm2_data_traits.h>
 #include <boct/boct_bit_tree.h>
 #include <vnl/vnl_vector_fixed.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/io/boxm2_cache.h>
 
 class boxm2_merge_block_function
@@ -74,7 +76,7 @@ class boxm2_merge_block_function
 ////////////////////////////////////////////////////////////////////////////////
 //MAIN REFINE FUNCTION
 ////////////////////////////////////////////////////////////////////////////////
-void boxm2_merge_block( boxm2_scene_sptr scene,
+void boxm2_merge_block( const boxm2_scene_sptr& scene,
                         boxm2_block* blk,
                         std::vector<boxm2_data_base*> & datas,
                         float prob_thresh,

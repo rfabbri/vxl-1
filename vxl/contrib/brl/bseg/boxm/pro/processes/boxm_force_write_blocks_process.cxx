@@ -21,7 +21,9 @@
 
 #include <brdb/brdb_value.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <boxm/sample/boxm_sample_multi_bin.h>
 #include <boxm/boxm_scene_parser.h>
@@ -30,8 +32,8 @@
 namespace boxm_force_write_blocks_process_globals
 {
   //this process takes no inputs
-  const unsigned int n_inputs_ = 1;
-  const unsigned int n_outputs_ = 0;
+  constexpr unsigned int n_inputs_ = 1;
+  constexpr unsigned int n_outputs_ = 0;
 }
 
 //:sets input and output types
@@ -64,7 +66,7 @@ bool boxm_force_write_blocks_process(bprb_func_process& pro)
   boxm_scene_base_sptr scene = pro.get_input<boxm_scene_base_sptr>(i++);
 
   // check the input validity
-  if (scene == VXL_NULLPTR) {
+  if (scene == nullptr) {
     std::cout << "boxm_force_write_blocks_process: scene is null, cannot run" << std::endl;
     return false;
   }
@@ -74,21 +76,21 @@ bool boxm_force_write_blocks_process(bprb_func_process& pro)
    case BOXM_APM_MOG_GREY:
     {
       typedef boct_tree<short, boxm_sample<BOXM_APM_MOG_GREY> > tree_type;
-      boxm_scene<tree_type> *s = static_cast<boxm_scene<tree_type>*> (scene.as_pointer());
+      auto *s = static_cast<boxm_scene<tree_type>*> (scene.as_pointer());
       s->force_write_blocks();
       break;
     }
    case BOXM_APM_SIMPLE_GREY:
     {
       typedef boct_tree<short, boxm_sample<BOXM_APM_SIMPLE_GREY> > tree_type;
-      boxm_scene<tree_type> *s = static_cast<boxm_scene<tree_type>*> (scene.as_pointer());
+      auto *s = static_cast<boxm_scene<tree_type>*> (scene.as_pointer());
       s->force_write_blocks();
       break;
     }
    case BOXM_APM_MOB_GREY:
     {
       typedef boct_tree<short, boxm_sample<BOXM_APM_MOB_GREY> > tree_type;
-      boxm_scene<tree_type> *s = static_cast<boxm_scene<tree_type>*> (scene.as_pointer());
+      auto *s = static_cast<boxm_scene<tree_type>*> (scene.as_pointer());
       s->force_write_blocks();
       break;
     }
@@ -98,4 +100,3 @@ bool boxm_force_write_blocks_process(bprb_func_process& pro)
   }
   return true;
 }
-

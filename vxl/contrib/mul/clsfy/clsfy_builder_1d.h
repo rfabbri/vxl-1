@@ -8,12 +8,14 @@
 
 #include <string>
 #include <vector>
-#include <vcl_memory.h>
 #include <iostream>
+#include <memory>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_triple.h>
 #include <vsl/vsl_binary_io.h>
 #include <vnl/vnl_vector.h>
-#include <vcl_compiler.h>
 
 class clsfy_classifier_1d;
 
@@ -23,7 +25,7 @@ class clsfy_builder_1d
  public:
 
   // Destructor
-  virtual ~clsfy_builder_1d() {}
+  virtual ~clsfy_builder_1d() = default;
 
   //: Create empty model
   virtual clsfy_classifier_1d* new_classifier() const = 0;
@@ -86,7 +88,7 @@ class clsfy_builder_1d
   virtual void config(std::istream &as);
 
   //: Load description from a text stream
-  static vcl_unique_ptr<clsfy_builder_1d> new_builder(
+  static std::unique_ptr<clsfy_builder_1d> new_builder(
     std::istream &as);
 };
 

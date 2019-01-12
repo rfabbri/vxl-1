@@ -53,6 +53,7 @@
 // \endverbatim
 
 
+#include <utility>
 #include <vector>
 #include <map>
 #include <iostream>
@@ -65,12 +66,14 @@
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_vector_fixed.h>
 #include <vbl/vbl_ref_count.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 struct sdet_neighbor
 {
-  sdet_neighbor(std::string const& category, vnl_vector<double> const& k_mean)
-  : cat_(category), k_mean_(k_mean){}
+  sdet_neighbor(std::string  category, vnl_vector<double> const& k_mean)
+  : cat_(std::move(category)), k_mean_(k_mean){}
   std::string cat_;
   vnl_vector<double> k_mean_;
 };

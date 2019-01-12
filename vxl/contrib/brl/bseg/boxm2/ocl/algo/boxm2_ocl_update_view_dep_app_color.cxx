@@ -6,7 +6,9 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/ocl/boxm2_opencl_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -27,13 +29,13 @@
 std::map<std::string,std::vector<bocl_kernel*> > boxm2_ocl_update_view_dep_app_color::kernels_;
 
 //Main public method, updates color model
-bool boxm2_ocl_update_view_dep_app_color::update(boxm2_scene_sptr         scene,
+bool boxm2_ocl_update_view_dep_app_color::update(const boxm2_scene_sptr&         scene,
                               bocl_device_sptr         device,
-                              boxm2_opencl_cache_sptr  opencl_cache,
+                              const boxm2_opencl_cache_sptr&  opencl_cache,
                               vpgl_camera_double_sptr  cam,
-                              vil_image_view_base_sptr img,
-                              std::string               ident,
-                              vil_image_view_base_sptr mask_sptr,
+                              const vil_image_view_base_sptr& img,
+                              const std::string&               ident,
+                              const vil_image_view_base_sptr& mask_sptr,
                               bool                     update_alpha,
                               float                    mog_var,
                               std::size_t               startI,
@@ -65,11 +67,11 @@ bool boxm2_ocl_update_view_dep_app_color::update(boxm2_scene_sptr         scene,
   }
   vil_image_view<float> mask;
   if (use_mask) {
-    if (vil_image_view<unsigned char>* mask_char = dynamic_cast<vil_image_view<unsigned char> *>(mask_sptr.ptr())) {
+    if (auto* mask_char = dynamic_cast<vil_image_view<unsigned char> *>(mask_sptr.ptr())) {
       mask.set_size(mask_char->ni(), mask_char->nj());
       vil_convert_stretch_range_limited(*mask_char, mask, (unsigned char)0, (unsigned char)255, 0.0f, 1.0f);
     }
-    else if (vil_image_view<float>* mask_flt = dynamic_cast<vil_image_view<float>*>(mask_sptr.ptr())) {
+    else if (auto* mask_flt = dynamic_cast<vil_image_view<float>*>(mask_sptr.ptr())) {
       mask = *mask_flt;
     }
     else {
@@ -111,30 +113,30 @@ bool boxm2_ocl_update_view_dep_app_color::update(boxm2_scene_sptr         scene,
     std::cout<<"boxm2_ocl_update_color_process::using a non RGBA image!!"<<std::endl;
     return false;
   }
-  vil_image_view<vil_rgba<vxl_byte> >* img_view = static_cast<vil_image_view<vil_rgba<vxl_byte> >* >(byte_img.ptr());
-  unsigned cl_ni=(unsigned)RoundUp(img_view->ni(),(int)local_threads[0]);
-  unsigned cl_nj=(unsigned)RoundUp(img_view->nj(),(int)local_threads[1]);
+  auto* img_view = static_cast<vil_image_view<vil_rgba<vxl_byte> >* >(byte_img.ptr());
+  auto cl_ni=(unsigned)RoundUp(img_view->ni(),(int)local_threads[0]);
+  auto cl_nj=(unsigned)RoundUp(img_view->nj(),(int)local_threads[1]);
   global_threads[0]=cl_ni;
   global_threads[1]=cl_nj;
 
   //set generic cam
-  cl_float* ray_origins    = new cl_float[4*cl_ni*cl_nj];
-  cl_float* ray_directions = new cl_float[4*cl_ni*cl_nj];
+  auto* ray_origins    = new cl_float[4*cl_ni*cl_nj];
+  auto* ray_directions = new cl_float[4*cl_ni*cl_nj];
   bocl_mem_sptr ray_o_buff = opencl_cache->alloc_mem(cl_ni*cl_nj*sizeof(cl_float4), ray_origins, "ray_origins buffer");
   bocl_mem_sptr ray_d_buff = opencl_cache->alloc_mem(cl_ni*cl_nj*sizeof(cl_float4), ray_directions, "ray_directions buffer");
   boxm2_ocl_camera_converter::compute_ray_image( device, queue, cam, cl_ni, cl_nj, ray_o_buff, ray_d_buff, startI, startJ);
 
   //Visibility, Preinf, Norm, and input image buffers
-  float* vis_buff = new float[cl_ni*cl_nj];
-  float* pre_buff = new float[cl_ni*cl_nj];
-  float* norm_buff = new float[cl_ni*cl_nj];
+  auto* vis_buff = new float[cl_ni*cl_nj];
+  auto* pre_buff = new float[cl_ni*cl_nj];
+  auto* norm_buff = new float[cl_ni*cl_nj];
   std::fill(vis_buff, vis_buff+cl_ni*cl_nj, 1.0f);
   std::fill(pre_buff, pre_buff+cl_ni*cl_nj, 0.0f);
   std::fill(norm_buff, norm_buff+cl_ni*cl_nj, 0.0f);
 
   //copy input vals into image
   int numFloats = 4;
-  float* input_buff = new float[numFloats*cl_ni*cl_nj];  //need to store RGB (or YUV values)
+  auto* input_buff = new float[numFloats*cl_ni*cl_nj];  //need to store RGB (or YUV values)
   int count=0;
   for (unsigned int j=0;j<cl_nj;++j) {
     for (unsigned int i=0;i<cl_ni;++i) {
@@ -177,7 +179,7 @@ bool boxm2_ocl_update_view_dep_app_color::update(boxm2_scene_sptr         scene,
 
   // Output Array
   float output_arr[100];
-  for (int i=0; i<100; ++i) output_arr[i] = 0.0f;
+  for (float & i : output_arr) i = 0.0f;
   bocl_mem_sptr  cl_output=new bocl_mem(device->context(), output_arr, sizeof(float)*100, "output buffer");
   cl_output->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
 
@@ -258,7 +260,7 @@ bool boxm2_ocl_update_view_dep_app_color::update(boxm2_scene_sptr         scene,
       bocl_mem* blk       = opencl_cache->get_block(scene,*id);
       bocl_mem* blk_info  = opencl_cache->loaded_block_info();
       bocl_mem* alpha     = opencl_cache->get_data<BOXM2_ALPHA>(scene,*id,0,false);
-      boxm2_scene_info* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
+      auto* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
       int alphaTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_ALPHA>::prefix());
       info_buffer->data_buffer_length = (int) (alpha->num_bytes()/alphaTypeSize);
       blk_info->write_to_buffer((queue));
@@ -524,7 +526,7 @@ bool boxm2_ocl_update_view_dep_app_color::update(boxm2_scene_sptr         scene,
 
 
 //Returns vector of color update kernels (and caches them per device
-std::vector<bocl_kernel*>& boxm2_ocl_update_view_dep_app_color::get_kernels(bocl_device_sptr device, std::string opts)
+std::vector<bocl_kernel*>& boxm2_ocl_update_view_dep_app_color::get_kernels(const bocl_device_sptr& device, const std::string& opts)
 {
   // compile kernels if not already compiled
   std::string identifier = device->device_identifier() + opts;
@@ -534,7 +536,7 @@ std::vector<bocl_kernel*>& boxm2_ocl_update_view_dep_app_color::get_kernels(bocl
   bool UV_only = false;
   if (opts ==" -D MOG_VIEW_DEP_UV " ){
           UV_only = true;
-          vcl_cout<<"updating UV only"<<vcl_endl;
+          std::cout<<"updating UV only"<<std::endl;
   }
 
 
@@ -558,7 +560,7 @@ std::vector<bocl_kernel*>& boxm2_ocl_update_view_dep_app_color::get_kernels(bocl
   src_paths.push_back(source_dir + "bit/cast_ray_bit.cl");
 
   //compilation options
-  vcl_string options = opts;
+  std::string options = opts;
   if (UV_only){
     options += " -D YUV ";
   }
@@ -567,35 +569,35 @@ std::vector<bocl_kernel*>& boxm2_ocl_update_view_dep_app_color::get_kernels(bocl
   std::vector<bocl_kernel*> vec_kernels;
 
   //seg len pass
-  bocl_kernel* seg_len = new bocl_kernel();
+  auto* seg_len = new bocl_kernel();
   std::string seg_opts = options + " -D SEGLEN -D STEP_CELL=step_cell_seglen(aux_args,data_ptr,llid,d)";
   seg_len->create_kernel(&device->context(), device->device_id(), src_paths, "seg_len_main", seg_opts, "update::seg_len");
   vec_kernels.push_back(seg_len);
 
-  bocl_kernel* comp = new bocl_kernel();
+  auto* comp = new bocl_kernel();
   std::string comp_opts = options + " -D COMPRESS_RGB ";
   comp->create_kernel(&device->context(), device->device_id(), non_ray_src, "compress_rgb", comp_opts, "update_color::compress_rgb");
   vec_kernels.push_back(comp);
 
-  bocl_kernel* pre_inf = new bocl_kernel();
+  auto* pre_inf = new bocl_kernel();
   std::string pre_opts = options + " -D PREINF -D STEP_CELL=step_cell_preinf(aux_args,data_ptr,llid,d)";
   pre_inf->create_kernel(&device->context(), device->device_id(), src_paths, "pre_inf_main", pre_opts, "update_color::pre_inf");
   vec_kernels.push_back(pre_inf);
 
   //may need DIFF LIST OF SOURCES FOR THIS GUY
-  bocl_kernel* proc_img = new bocl_kernel();
+  auto* proc_img = new bocl_kernel();
   std::string proc_opts = options + " -D PROC_NORM ";
   proc_img->create_kernel(&device->context(), device->device_id(), non_ray_src, "proc_norm_image", proc_opts, "update_color::proc_norm_image");
   vec_kernels.push_back(proc_img);
 
   //push back cast_ray_bit
-  bocl_kernel* bayes_main = new bocl_kernel();
+  auto* bayes_main = new bocl_kernel();
   std::string bayes_opt = options + " -D BAYES -D STEP_CELL=step_cell_bayes(aux_args,data_ptr,llid,d)";
   bayes_main->create_kernel(&device->context(), device->device_id(), src_paths, "bayes_main", bayes_opt, "update_color::bayes_main");
   vec_kernels.push_back(bayes_main);
 
   //may need DIFF LIST OF SOURCES FOR THSI GUY TOO
-  bocl_kernel* update = new bocl_kernel();
+  auto* update = new bocl_kernel();
   std::string update_opts = options + " -D UPDATE_BIT_SCENE_MAIN";
   update->create_kernel(&device->context(), device->device_id(), non_ray_src, "update_bit_scene_main", update_opts, "update::update_main");
   vec_kernels.push_back(update);
@@ -607,7 +609,7 @@ std::vector<bocl_kernel*>& boxm2_ocl_update_view_dep_app_color::get_kernels(bocl
 
 
 //makes sure appearance types correspond correctly
-bool boxm2_ocl_update_view_dep_app_color::validate_appearances(boxm2_scene_sptr scene,
+bool boxm2_ocl_update_view_dep_app_color::validate_appearances(const boxm2_scene_sptr& scene,
                                                                std::string const& ident,
                                                                std::string& data_type,
                                                                int& appTypeSize,
@@ -616,24 +618,24 @@ bool boxm2_ocl_update_view_dep_app_color::validate_appearances(boxm2_scene_sptr 
 {
   std::vector<std::string> apps = scene->appearances();
   bool foundDataType = false, foundNumObsType = false;
-  for (unsigned int i=0; i<apps.size(); ++i) {
-    if ( apps[i] == boxm2_data_traits<BOXM2_GAUSS_RGB_VIEW>::prefix(ident)&& !foundDataType)
+  for (const auto & app : apps) {
+    if ( app == boxm2_data_traits<BOXM2_GAUSS_RGB_VIEW>::prefix(ident)&& !foundDataType)
     {
-      data_type = apps[i];
+      data_type = app;
       foundDataType = true;
       options=" -D MOG_VIEW_DEP_COLOR";
       appTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_GAUSS_RGB_VIEW>::prefix());
     }
-    else if (apps[i] == boxm2_data_traits<BOXM2_GAUSS_UV_VIEW>::prefix(ident)&& !foundDataType){
-      data_type = apps[i];
+    else if (app == boxm2_data_traits<BOXM2_GAUSS_UV_VIEW>::prefix(ident)&& !foundDataType){
+      data_type = app;
       foundDataType = true;
       options=" -D MOG_VIEW_DEP_UV ";
       appTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_MOG6_VIEW>::prefix());
 
     }
-    else if ( apps[i] == boxm2_data_traits<BOXM2_NUM_OBS_VIEW>::prefix(ident) )
+    else if ( app == boxm2_data_traits<BOXM2_NUM_OBS_VIEW>::prefix(ident) )
     {
-      num_obs_type = apps[i];
+      num_obs_type = app;
       foundNumObsType = true;
     }
   }

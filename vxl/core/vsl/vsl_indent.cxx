@@ -1,7 +1,4 @@
 // This is core/vsl/vsl_indent.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 
@@ -9,9 +6,11 @@
 #include <map>
 #include <utility>
 #include "vsl_indent.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
-const int default_tab = 2;
+constexpr int default_tab = 2;
 
 typedef std::pair<int,int> indent_data_type;
 
@@ -24,7 +23,7 @@ indent_data_type* indent_data(std::ostream& os)
   // which may be mercifully brief
   static maps2i_type indent_data_map;
 
-  maps2i_type::iterator entry = indent_data_map.find(&os);
+  auto entry = indent_data_map.find(&os);
   if (entry==indent_data_map.end())
   {
     // Create a new entry

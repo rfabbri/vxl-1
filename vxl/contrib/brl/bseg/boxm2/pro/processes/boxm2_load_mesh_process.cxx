@@ -9,7 +9,9 @@
 // \author Vishal Jain
 // \date Mar 15, 2013
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_file.h>
 #include <vul/vul_timer.h>
 #include <vnl/vnl_random.h>
@@ -37,8 +39,8 @@
 
 namespace boxm2_load_mesh_process_globals
 {
-  const unsigned n_inputs_  = 1;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 1;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 bool boxm2_load_mesh_process_cons(bprb_func_process& pro)
@@ -65,7 +67,7 @@ bool boxm2_load_mesh_process(bprb_func_process& pro)
     return false;
   }
   unsigned argIdx = 0;
-  std::string mesh_filename   = pro.get_input<std::string>(argIdx++);
+  std::string mesh_filename = pro.get_input<std::string>(argIdx++);
   imesh_mesh_sptr mesh = new imesh_mesh();
   imesh_read(mesh_filename, *(mesh.ptr()));
   std::cout<<"# of faces "<<mesh->num_faces()<<std::endl;

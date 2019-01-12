@@ -16,7 +16,9 @@
 #include <vbl/vbl_ref_count.h>
 #include <vbl/vbl_smart_ptr.h>
 #include <vsl/vsl_binary_io.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_point_3d.h>
 
@@ -63,7 +65,7 @@ public:
                    unsigned char const& land);
 
   //: destructor
-  ~volm_conf_object() {}
+  ~volm_conf_object() override = default;
 
   //: access
   float theta()  const        { return theta_; }
@@ -79,7 +81,7 @@ public:
 
   //: check whether the two configuration object is same or not
   bool is_same(volm_conf_object const& other);
-  bool is_same(volm_conf_object_sptr other_sptr);
+  bool is_same(const volm_conf_object_sptr& other_sptr);
   bool is_same(volm_conf_object const* other_ptr);
 
   //: print method

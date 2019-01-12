@@ -6,12 +6,14 @@
 // \file
 #include <bpro/core/bbas_pro/bbas_1d_array_float.h>
 #include <brad/brad_synoptic_function_1d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 namespace brad_estimate_synoptic_function_1d_process_globals
 {
-  const unsigned n_inputs_  = 5;
-  const unsigned n_outputs_ = 2;
+  constexpr unsigned n_inputs_ = 5;
+  constexpr unsigned n_outputs_ = 2;
 }
 
 
@@ -47,7 +49,7 @@ bool brad_estimate_synoptic_function_1d_process(bprb_func_process& pro)
   bbas_1d_array_float_sptr camera_azim_array = pro.get_input<bbas_1d_array_float_sptr>(i++);
   bool surface = pro.get_input<bool>(i++);
 
-  unsigned num_samples=(unsigned)intensities->data_array.size();
+  auto num_samples=(unsigned)intensities->data_array.size();
   std::vector<double> samples(num_samples,0.0f);
   std::vector<double> vis(num_samples,0.0f);
   std::vector<double> camera_elev(num_samples,0.0f);
@@ -94,4 +96,3 @@ bool brad_estimate_synoptic_function_1d_process(bprb_func_process& pro)
   }
   return true;
 }
-

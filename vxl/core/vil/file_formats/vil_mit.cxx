@@ -12,8 +12,10 @@
 
 static char const* vil_mit_format_tag = "mit";
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <vil/vil_stream.h>
 #include <vil/vil_image_resource.h>
@@ -61,18 +63,18 @@ static char const* vil_mit_format_tag = "mit";
 vil_image_resource_sptr vil_mit_file_format::make_input_image(vil_stream* is)
 {
   is->seek(0L);
-  if (is->file_size() < 8L) return VXL_NULLPTR;
+  if (is->file_size() < 8L) return nullptr;
   unsigned int type = vil_stream_read_little_endian_uint_16(is);
 
   if (!(type == MIT_UNSIGNED ||
         type == MIT_RGB      ||
         type == MIT_SIGNED   ||
         type == MIT_FLOAT    ))
-    return VXL_NULLPTR;
+    return nullptr;
 
   unsigned int bpp = vil_stream_read_little_endian_uint_16(is);
   if (bpp != 1 && bpp != 8 && bpp != 16 && bpp != 32 && bpp != 64)
-    return VXL_NULLPTR;
+    return nullptr;
 
 #ifdef DEBUG
   unsigned int width = vil_stream_read_little_endian_uint_16(is);
@@ -265,7 +267,7 @@ vil_image_view_base_sptr vil_mit_image::get_copy_view(unsigned int x0, unsigned 
 
   vxl_uint_32 rowsize = (pix_size*xs+7)/8;
   vil_memory_chunk_sptr buf = new vil_memory_chunk(rowsize*ys,format_);
-  vxl_byte* ib = reinterpret_cast<vxl_byte*>(buf->data());
+  auto* ib = reinterpret_cast<vxl_byte*>(buf->data());
   for (unsigned int y = y0; y < y0+ys; ++y)
   {
     is_->seek(8L + y*((ni_*pix_size+7)/8) + x0*pix_size/8);
@@ -288,7 +290,7 @@ vil_image_view_base_sptr vil_mit_image::get_copy_view(unsigned int x0, unsigned 
   else if (format_ == VIL_PIXEL_FORMAT_INT_32)  return new vil_image_view<vxl_int_32> (ARGS(vxl_int_32));
   else if (format_ == VIL_PIXEL_FORMAT_FLOAT)   return new vil_image_view<float>      (ARGS(float));
   else if (format_ == VIL_PIXEL_FORMAT_DOUBLE)  return new vil_image_view<double>     (ARGS(double));
-  else return VXL_NULLPTR;
+  else return nullptr;
 #undef ARGS
 }
 
@@ -307,7 +309,7 @@ bool vil_mit_image::put_view(vil_image_view_base const& buf, unsigned int x0, un
           <<ni<<'x'<<nj<<'x'<< buf.nplanes()<<'p'
           <<" at ("<<x0<<','<<y0<<")\n";
 #endif
-  vil_image_view<vxl_byte> const& ibuf = reinterpret_cast<vil_image_view<vxl_byte> const&>(buf);
+  auto const& ibuf = reinterpret_cast<vil_image_view<vxl_byte> const&>(buf);
   bool buf_is_planar = false;
   if (ibuf.istep() == int(components_) && ibuf.jstep() == int(components_*ni) &&
       (ibuf.planestep() == 1 || components_ == 1))
@@ -373,7 +375,7 @@ bool vil_mit_image::put_view(vil_image_view_base const& buf, unsigned int x0, un
     if (buf_is_planar && components_ > 1) // have to interleave pixels
     {
       unsigned int sz = bytes_per_pixel();
-      vxl_byte* tempbuf = new vxl_byte[components_*sz];
+      auto* tempbuf = new vxl_byte[components_*sz];
       for (unsigned int y = y0; y < y0+nj; ++y)
         for (unsigned int x = x0; x < x0+ni; ++x)
         {
@@ -395,7 +397,7 @@ bool vil_mit_image::put_view(vil_image_view_base const& buf, unsigned int x0, un
     }
     else
     {
-      vxl_byte* tempbuf = new vxl_byte[rowsize];
+      auto* tempbuf = new vxl_byte[rowsize];
       for (unsigned int y = y0; y < y0+nj; ++y)
       {
         std::memcpy(tempbuf, ob, rowsize);

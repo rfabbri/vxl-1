@@ -5,7 +5,9 @@
 // \file
 #include <vbl/io/vbl_io_smart_ptr.h>
 #include <vsol/vsol_point_2d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //***************************************************************************
 // Initialization
@@ -40,17 +42,12 @@ vsol_triangle_2d::vsol_triangle_2d(const vsol_point_2d_sptr &new_p0,
 //---------------------------------------------------------------------------
 // Copy constructor
 //---------------------------------------------------------------------------
-vsol_triangle_2d::vsol_triangle_2d(const vsol_triangle_2d &other)
-  : vsol_polygon_2d(other)
-{
-}
+vsol_triangle_2d::vsol_triangle_2d(const vsol_triangle_2d &other) = default;
 
 //---------------------------------------------------------------------------
 // Destructor
 //---------------------------------------------------------------------------
-vsol_triangle_2d::~vsol_triangle_2d()
-{
-}
+vsol_triangle_2d::~vsol_triangle_2d() = default;
 
 //---------------------------------------------------------------------------
 //: Clone `this': creation of a new object and initialization
@@ -237,7 +234,7 @@ vsl_b_read(vsl_b_istream &is, vsol_triangle_2d* &t)
     t->b_read(is);
   }
   else
-    t = VXL_NULLPTR;
+    t = nullptr;
 }
 
 
@@ -249,4 +246,3 @@ inline void vsol_triangle_2d::describe(std::ostream &strm, int blanking) const
     strm << ' ' << *(vertex(i));
   strm << '>' << std::endl;
 }
-

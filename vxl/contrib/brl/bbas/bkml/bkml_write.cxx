@@ -1,26 +1,28 @@
-#include <iostream>
-#include <cstdio>
-#include <iomanip>
-#include "bkml_write.h"
 //:
 // \file
-#include <vcl_compiler.h>
-#include <vcl_cstdio.h>
+#include "bkml_write.h"
+#include <cstdio>
+#include <iomanip>
+#include <iostream>
+#include <utility>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 std::string rgb_color_to_hex_color(int alpha, int rNum, int gNum, int bNum)
 {
   std::string result;
   char a[255];
-  vcl_snprintf(a, 255, "%.2x", alpha);
+  std::snprintf(a, 255, "%.2x", alpha);
   result.append(a );
   char b[255];
-  vcl_snprintf(b, 255, "%.2x", bNum);
+  std::snprintf(b, 255, "%.2x", bNum);
   result.append(b );
   char g[255];
-  vcl_snprintf(g, 255, "%.2x", gNum);
+  std::snprintf(g, 255, "%.2x", gNum);
   result.append(g );
   char r[255];
-  vcl_snprintf(r, 255, "%.2x", rNum);
+  std::snprintf(r, 255, "%.2x", rNum);
   result.append(r );
   return result;
 }
@@ -40,7 +42,7 @@ void bkml_write::close_document(std::ofstream& str)
 }
 
 //: Write a box
-void bkml_write::write_box(std::ofstream &ofs, std::string name, std::string description, vnl_double_2 ul, vnl_double_2 ur, vnl_double_2 ll, vnl_double_2 lr)
+void bkml_write::write_box(std::ofstream &ofs, const std::string& name, const std::string& description, vnl_double_2 ul, vnl_double_2 ur, vnl_double_2 ll, vnl_double_2 lr)
 {
   ofs.precision(8);
   ofs << "<Placemark>\n"
@@ -84,11 +86,11 @@ void bkml_write::write_box(std::ofstream &ofs, std::string name, std::string des
   vnl_double_2 ur(bbox.max_y(), bbox.max_x());
   vnl_double_2 ll(bbox.min_y(), bbox.min_x());
   vnl_double_2 lr(bbox.min_y(), bbox.max_x());
-  bkml_write::write_box(ofs, name, description, ul, ur, ll, lr);
+  bkml_write::write_box(ofs, std::move(name), std::move(description), ul, ur, ll, lr);
 }
 
 //: Write a box with color
-void bkml_write::write_box(std::ofstream &ofs, std::string name, std::string description, vnl_double_2 ul, vnl_double_2 ur, vnl_double_2 ll, vnl_double_2 lr, std::string hex_color, unsigned const& fill)
+void bkml_write::write_box(std::ofstream &ofs, const std::string& name, const std::string& description, vnl_double_2 ul, vnl_double_2 ur, vnl_double_2 ll, vnl_double_2 lr, const std::string& hex_color, unsigned const& fill)
 {
   ofs << "<Placemark>\n"
       << "  <name>" << name << "</name>\n"
@@ -128,7 +130,7 @@ void bkml_write::write_box(std::ofstream &ofs, std::string name, std::string des
                            unsigned char const& r, unsigned char const& g, unsigned char const& b, unsigned char const&a, unsigned const& fill)
 {
   std::string hex_color = rgb_color_to_hex_color((int)a, (int)r, (int)g, (int)b);
-  bkml_write::write_box(ofs, name, description, ul, ur, ll, lr, hex_color, fill);
+  bkml_write::write_box(ofs, std::move(name), std::move(description), ul, ur, ll, lr, hex_color, fill);
 }
 
 // write a polygon with color (only outerBoundary)
@@ -168,8 +170,8 @@ void bkml_write::write_polygon(std::ofstream& ofs, vgl_polygon<double> const& po
         << "    <outerBoundaryIs>\n"
         << "      <LinearRing>\n"
         << "        <coordinates>\n";
-    for (std::vector<vgl_point_2d<double> >::iterator vit = verts.begin(); vit != verts.end(); ++vit)
-      ofs << "          " << std::setprecision(12) << vit->x() << ',' << std::setprecision(12) << vit->y() << ",0\n";
+    for (auto & vert : verts)
+      ofs << "          " << std::setprecision(12) << vert.x() << ',' << std::setprecision(12) << vert.y() << ",0\n";
     ofs << "          " << verts[0].x() << ',' << verts[0].y() << ",0\n";
     ofs << "        </coordinates>\n"
         << "      </LinearRing>\n"
@@ -206,15 +208,15 @@ void bkml_write::write_path(std::ofstream& ofs, std::vector<vgl_point_2d<double>
   ofs << "  <LineString>\n"
       << "    <tessellate>1</tessellate>\n"
       << "      <coordinates>\n        ";
-  for (std::vector<vgl_point_2d<double> >::iterator vit = path.begin(); vit != path.end(); ++vit)
-    ofs << std::setprecision(12) << vit->x() << ',' << std::setprecision(12) << vit->y() << ",0 ";
+  for (auto & vit : path)
+    ofs << std::setprecision(12) << vit.x() << ',' << std::setprecision(12) << vit.y() << ",0 ";
   ofs << "\n      </coordinates>\n"
       << "  </LineString>\n"
       << "</Placemark>\n";
 }
 
 //: put a pin at the given location
-void bkml_write::write_location(std::ofstream &ofs, std::string name, std::string description, double lat, double lon, double elev)
+void bkml_write::write_location(std::ofstream &ofs, const std::string& name, const std::string& description, double lat, double lon, double elev)
 {
   ofs << "<Placemark>\n"
       << "  <name>" << name << "</name>\n"
@@ -275,7 +277,7 @@ void bkml_write::write_location(std::ofstream& ofs, double lat, double lon, doub
       << "</Placemark>\n";
 }
 
-void bkml_write::write_location_as_box(std::ofstream& ofs, double lon, double lat, double elev,
+void bkml_write::write_location_as_box(std::ofstream& ofs, double lon, double lat, double  /*elev*/,
                                        std::string const& name,
                                        std::string const& description,
                                        double const& size,
@@ -289,7 +291,7 @@ void bkml_write::write_location_as_box(std::ofstream& ofs, double lon, double la
   bkml_write::write_box(ofs, name, description, ul, ur, ll, lr, r, g, b);
 }
 
-void bkml_write::write_photo_overlay(std::ofstream& ofs, std::string name,
+void bkml_write::write_photo_overlay(std::ofstream& ofs, const std::string& name,
                                      double lon, double lat, double alt,
                                      double head, double tilt, double roll,
                                      double t_fov, double r_fov, double value)
@@ -319,7 +321,7 @@ void bkml_write::write_photo_overlay(std::ofstream& ofs, std::string name,
 }
 
 void bkml_write::write_kml_style(std::ofstream& ofs,
-                                 std::string style_name,
+                                 const std::string& style_name,
                                  double const& scale,
                                  double const& line_width,
                                  double const& alpha,
@@ -357,9 +359,9 @@ void bkml_write::write_polygon(std::ofstream& ofs,
   int alpha_int = (int)(alpha*255);
   std::string poly_color = rgb_color_to_hex_color(alpha_int, (int)r, (int)g, (int)b);
 
-  for (unsigned i = 0; i < polygon.size(); ++i) {
-    vgl_polygon<double> outer = polygon[i].first;
-    vgl_polygon<double> inner = polygon[i].second;
+  for (const auto & i : polygon) {
+    vgl_polygon<double> outer = i.first;
+    vgl_polygon<double> inner = i.second;
     if (outer[0].empty())
       continue;
     ofs << "<Placemark>\n"
@@ -380,8 +382,8 @@ void bkml_write::write_polygon(std::ofstream& ofs,
         << "    <outerBoundaryIs>\n"
         << "      <LinearRing>\n"
         << "        <coordinates>";
-    for (std::vector<vgl_point_2d<double> >::iterator vit = outer[0].begin(); vit != outer[0].end(); ++vit)
-      ofs << std::setprecision(12) << vit->x() << ',' << std::setprecision(12) << vit->y() << ",0 ";
+    for (auto & vit : outer[0])
+      ofs << std::setprecision(12) << vit.x() << ',' << std::setprecision(12) << vit.y() << ",0 ";
     ofs << std::setprecision(12) << outer[0][0].x() << ',' << std::setprecision(12) << outer[0][0].y() << ",0";
     ofs << "</coordinates>\n"
         << "      </LinearRing>\n"
@@ -391,8 +393,8 @@ void bkml_write::write_polygon(std::ofstream& ofs,
       ofs << "    <innerBoundaryIs>\n"
           << "      <LinearRing>\n"
           << "        <coordinates>";
-      for (std::vector<vgl_point_2d<double> >::iterator vit = inner[in_idx].begin(); vit != inner[in_idx].end(); ++vit)
-        ofs << std::setprecision(12) << vit->x() << ',' << std::setprecision(12) << vit->y() << ",0 ";
+      for (auto & vit : inner[in_idx])
+        ofs << std::setprecision(12) << vit.x() << ',' << std::setprecision(12) << vit.y() << ",0 ";
       ofs << std::setprecision(12) << inner[in_idx][0].x() << ',' << std::setprecision(12) << inner[in_idx][0].y() << ",0";
       ofs << "</coordinates>\n"
           << "      </LinearRing>\n"

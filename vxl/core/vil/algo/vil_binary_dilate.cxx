@@ -4,7 +4,10 @@
 // \author Tim Cootes
 
 #include "vil_binary_dilate.h"
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Dilates src_image to produce dest_image (assumed single plane)
 void vil_binary_dilate(const vil_image_view<bool>& src_image,

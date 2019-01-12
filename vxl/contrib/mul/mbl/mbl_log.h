@@ -75,7 +75,9 @@
 #include <set>
 #include <map>
 #include <ios>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 // define MBL_LOG_DISABLE_ALL_LOGGING to stop all logging.
@@ -89,9 +91,9 @@ class mbl_log_streambuf: public std::streambuf
   mbl_logger* logger_;
  public:
   mbl_log_streambuf(mbl_logger* logger): logger_(logger) {}
-  virtual int sync ();
-  virtual int overflow (int ch);
-  virtual std::streamsize xsputn(const char *ptr, std::streamsize count);
+  int sync () override;
+  int overflow (int ch) override;
+  std::streamsize xsputn(const char *ptr, std::streamsize count) override;
 };
 
 //: A null streambuf ignores all input.
@@ -104,7 +106,7 @@ class mbl_log_null_streambuf: public std::streambuf
 class mbl_log_output_base
 {
  public:
-  virtual ~mbl_log_output_base() {}
+  virtual ~mbl_log_output_base() = default;
   //: Start a new log entry, with id info.
   // Future calls to terminate_flush will be ignored.
   virtual void start_with_manual_termination(int level, const char *srcfile, int srcline)=0;
@@ -141,18 +143,18 @@ class mbl_log_output_stream: public mbl_log_output_base
   mbl_log_output_stream(std::ostream& real_stream, const char *id);
   //: Start a new log entry, with id info.
   // Future calls to terminate_flush will be ignored.
-  virtual void start_with_manual_termination(int level, const char *srcfile, int srcline);
+  void start_with_manual_termination(int level, const char *srcfile, int srcline) override;
   //: Start a new log entry, with id info.
   // Future calls to terminate_flush will be honoured.
-  virtual void start_with_flush_termination(int level, const char *srcfile, int srcline);
+  void start_with_flush_termination(int level, const char *srcfile, int srcline) override;
   //: Add contents to the existing log entry.
-  virtual void append(const char * contents, std::streamsize n_chars);
+  void append(const char * contents, std::streamsize n_chars) override;
   //: Finish the log entry, sent from a stream flush.
-  virtual void terminate_manual();
+  void terminate_manual() override;
   //: Finish the log entry, sent from explicit function call, e.g. by MBL_LOG.
-  virtual void terminate_flush();
+  void terminate_flush() override;
   //: Which logger id are we using.
-  virtual const char *id() {return id_;}
+  const char *id() override {return id_;}
 };
 
 //: Outputs log messages to a named file.
@@ -173,18 +175,18 @@ class mbl_log_output_file: public mbl_log_output_base
   mbl_log_output_file(const std::string &filename, const char *id);
   //: Start a new log entry, with id info.
   // Future calls to terminate_flush will be ignored.
-  virtual void start_with_manual_termination(int level, const char *srcfile, int srcline);
+  void start_with_manual_termination(int level, const char *srcfile, int srcline) override;
   //: Start a new log entry, with id info.
   // Future calls to terminate_flush will be honoured.
-  virtual void start_with_flush_termination(int level, const char *srcfile, int srcline);
+  void start_with_flush_termination(int level, const char *srcfile, int srcline) override;
   //: Add contents to the existing log entry.
-  virtual void append(const char * contents, std::streamsize n_chars);
+  void append(const char * contents, std::streamsize n_chars) override;
   //: Finish the log entry, sent from a stream flush.
-  virtual void terminate_manual();
+  void terminate_manual() override;
   //: Finish the log entry, sent from explicit function call, e.g. by MBL_LOG.
-  virtual void terminate_flush();
+  void terminate_flush() override;
   //: Which logger id are we using.
-  virtual const char *id() {return id_;}
+  const char *id() override {return id_;}
 };
 
 #endif
@@ -218,7 +220,7 @@ class mbl_logger
   //: Default constructor only available to root's default logger.
   mbl_logger();
 
-  mbl_logger(const mbl_logger&); // Hide copy constructor.
+  mbl_logger(const mbl_logger&) = delete; // Hide copy constructor.
 
   //: Update settings in light of changes to the root / configuration.
   void reinitialise();

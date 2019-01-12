@@ -8,14 +8,15 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bprb/bprb_process.h>
 
 //: Constructor
 template <class T>
 bprb_process_manager<T>::bprb_process_manager()
-{
-}
+= default;
 
 //: Insure only one instance is created
 template <class T>
@@ -50,7 +51,7 @@ bprb_process_manager<T>::get_process_by_name( const std::string& name ) const
 {
   std::map< std::string , bprb_process_sptr >::const_iterator it = process_map.find( name );
   if ( it == process_map.end() ) {
-    return VXL_NULLPTR ;
+    return nullptr ;
   }
   return it->second->clone();
 }

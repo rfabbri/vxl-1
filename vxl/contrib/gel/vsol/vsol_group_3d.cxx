@@ -2,7 +2,10 @@
 #include "vsol_group_3d.h"
 //:
 // \file
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_string_io.h>
 #include <vsl/vsl_vector_io.h>
 
@@ -85,7 +88,7 @@ void vsol_group_3d::compute_bounding_box(void) const
   // require
   assert(size()>0);
 
-  std::vector<vsol_spatial_object_3d_sptr>::iterator i = storage_->begin();
+  auto i = storage_->begin();
   set_bounding_box(   (*i)->get_min_x(), (*i)->get_min_y(), (*i)->get_min_z());
   add_to_bounding_box((*i)->get_max_x(), (*i)->get_max_y(), (*i)->get_max_z());
   for (++i; i!=storage_->end(); ++i)
@@ -105,7 +108,7 @@ unsigned int vsol_group_3d::deep_size(void) const
   for (i=storage_->begin(); i!=storage_->end(); ++i)
   {
     vsol_group_3d const* g=(*i)->cast_to_group();
-    if (g!=VXL_NULLPTR)
+    if (g!=nullptr)
       result+=g->deep_size();
     else
       ++result;
@@ -142,7 +145,7 @@ void vsol_group_3d::remove_object(unsigned int i)
   // require
   assert(i<size());
 
-  std::vector<vsol_spatial_object_3d_sptr>::iterator j = storage_->begin() + i;
+  auto j = storage_->begin() + i;
   storage_->erase(j);
 }
 
@@ -158,7 +161,7 @@ vsol_group_3d::is_child(vsol_spatial_object_3d_sptr const& new_object) const
     if ((*i).ptr()==new_object.ptr())
       return true;
     vsol_group_3d const* g=(*i)->cast_to_group();
-    if (g!=VXL_NULLPTR && g->is_child(new_object))
+    if (g!=nullptr && g->is_child(new_object))
       return true;
   }
   return false;
@@ -384,5 +387,5 @@ vsl_b_read(vsl_b_istream &is, vsol_group_3d* &g)
     g->b_read(is);
   }
   else
-    g = VXL_NULLPTR;
+    g = nullptr;
 }

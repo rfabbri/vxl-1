@@ -15,7 +15,9 @@
 #include <iostream>
 #include <sstream>
 #include <expatpplib.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_polygon.h>
 #include <vgl/vgl_point_2d.h>
 
@@ -75,9 +77,9 @@ filename>andy_eze.jpg</filename>
 class bvgl_labelme_parser : public expatpp
 {
  public:
-  bvgl_labelme_parser() {}
+  bvgl_labelme_parser() = default;
   bvgl_labelme_parser(std::string& filename);
-  ~bvgl_labelme_parser(void) {}
+  ~bvgl_labelme_parser(void) override = default;
 
   //image filename/path, category, and size
   std::string image_name() const { return image_name_; }
@@ -106,9 +108,9 @@ class bvgl_labelme_parser : public expatpp
   void trim_string(std::string& s);
 
  private:
-  virtual void startElement(const XML_Char* name, const XML_Char** atts);
-  virtual void endElement(const XML_Char* name);
-  virtual void charData(const XML_Char* s, int len);
+  void startElement(const XML_Char* name, const XML_Char** atts) override;
+  void endElement(const XML_Char* name) override;
+  void charData(const XML_Char* s, int len) override;
 
   //lvcs temp values
   std::vector<vgl_polygon<double> > polygons_;

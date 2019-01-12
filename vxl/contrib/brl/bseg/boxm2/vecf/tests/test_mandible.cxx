@@ -7,7 +7,9 @@
 #include <iostream>
 #include <fstream>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_timer.h>
 #include <vbl/vbl_array_3d.h>
 #include <boxm2/cpp/algo/boxm2_surface_distance_refine.h>
@@ -204,4 +206,3 @@ void test_mandible()
 #endif
 }
 TESTMAIN( test_mandible );
-

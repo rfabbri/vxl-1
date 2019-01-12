@@ -1,7 +1,9 @@
 #include <iostream>
 #include <cmath>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bapl/bapl_lowe_pyramid_set.h>
 #include <vil/vil_image_view.h>
 #include <vil/vil_new.h>
@@ -17,8 +19,8 @@ MAIN( test_lowe_pyramid_set )
   vil_image_view<float> gaussian(512,512);
   for(int i=0; i<512; ++i){
     for(int j=0; j<512; ++j){
-      float x = (float)(i - 256);
-      float y = (float)(j - 256);
+      auto x = (float)(i - 256);
+      auto y = (float)(j - 256);
       gaussian(i,j) = (float)std::exp(-(x*x+y*y)/(2.0*sigma*sigma));
     }
   }
@@ -30,7 +32,7 @@ MAIN( test_lowe_pyramid_set )
   vil_image_resource_sptr gaussian_sptr = vil_new_image_resource_of_view(save_img);
   int octaves = 7;
   int levels = 3;
-  float k = (float)std::pow(2.0,1.0/double(levels));
+  auto k = (float)std::pow(2.0,1.0/double(levels));
   bapl_lowe_pyramid_set pyramids(gaussian_sptr, levels, octaves);
 
   float k2 = k*k;

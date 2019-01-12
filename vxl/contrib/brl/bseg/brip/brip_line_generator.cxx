@@ -2,7 +2,9 @@
 #include <cmath>
 #include "brip_line_generator.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 bool brip_line_generator::generate(bool& init, float xs, float ys,
                                    float xe, float ye,

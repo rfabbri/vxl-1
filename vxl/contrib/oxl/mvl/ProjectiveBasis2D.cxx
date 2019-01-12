@@ -1,15 +1,14 @@
 // This is oxl/mvl/ProjectiveBasis2D.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 //  \file
 
 #include <iostream>
 #include <vector>
 #include "ProjectiveBasis2D.h"
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vnl/vnl_double_3.h>
 #include <vnl/vnl_double_3x3.h>
 #include <vnl/vnl_double_3x4.h>
@@ -46,9 +45,7 @@ ProjectiveBasis2D& ProjectiveBasis2D::operator=(const ProjectiveBasis2D&)
 }
 
 //: Destructor
-ProjectiveBasis2D::~ProjectiveBasis2D()
-{
-}
+ProjectiveBasis2D::~ProjectiveBasis2D() = default;
 
 //:
 // Find the transformation which maps the 4 points to the canonical

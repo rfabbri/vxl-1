@@ -7,7 +7,9 @@
 #include <imesh/imesh_vertex.h>
 #include <vgl/vgl_box_3d.h>
 #include <vgl/vgl_vector_3d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: function to convert a mesh in global coordinates to a mesh in local coordinates
 void covert_global_mesh_to_local(imesh_mesh & inmesh,vpgl_lvcs& lvcs)

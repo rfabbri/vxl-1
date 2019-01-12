@@ -5,7 +5,9 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpgl/vpgl_camera.h>
 #include <vpgl/vpgl_perspective_camera.h>
 #include <vpgl/vpgl_generic_camera.h>
@@ -13,8 +15,8 @@
 
 namespace vpgl_generate_3d_point_from_depth_process_globals
 {
-    const unsigned n_inputs_ = 4;
-    const unsigned n_outputs_ = 3;
+    constexpr unsigned n_inputs_ = 4;
+    constexpr unsigned n_outputs_ = 3;
 }
 //: Init function
 bool vpgl_generate_3d_point_from_depth_process_cons(bprb_func_process& pro)
@@ -49,15 +51,15 @@ bool vpgl_generate_3d_point_from_depth_process(bprb_func_process& pro)
   // get the inputs
   unsigned i=0;
   vpgl_camera_double_sptr cam_ptr = pro.get_input<vpgl_camera_double_sptr>(i++);
-  float u = pro.get_input<float>(i++);
-  float v = pro.get_input<float>(i++);
-  float t = pro.get_input<float>(i++);
+  auto u = pro.get_input<float>(i++);
+  auto v = pro.get_input<float>(i++);
+  auto t = pro.get_input<float>(i++);
 
   vgl_ray_3d<double> ray;
-  if(vpgl_perspective_camera<double>* cam = dynamic_cast<vpgl_perspective_camera<double>*>(cam_ptr.ptr())) {
+  if(auto* cam = dynamic_cast<vpgl_perspective_camera<double>*>(cam_ptr.ptr())) {
     ray=cam->backproject_ray(vgl_point_2d<double>(u,v));
   }
-  else if(vpgl_generic_camera<double>* cam = dynamic_cast<vpgl_generic_camera<double>*>(cam_ptr.ptr())) {
+  else if(auto* cam = dynamic_cast<vpgl_generic_camera<double>*>(cam_ptr.ptr())) {
     ray = cam->ray(u,v);
   }
   else {
@@ -72,4 +74,3 @@ bool vpgl_generate_3d_point_from_depth_process(bprb_func_process& pro)
   pro.set_output_val<float>(2, (float)pt3d.z());
   return true;
 }
-

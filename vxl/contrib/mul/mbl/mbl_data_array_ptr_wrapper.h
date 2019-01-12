@@ -1,9 +1,6 @@
 // This is mul/mbl/mbl_data_array_ptr_wrapper.h
 #ifndef mbl_data_array_ptr_wrapper_h
 #define mbl_data_array_ptr_wrapper_h
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author Tim Cootes
@@ -12,7 +9,9 @@
 #include <iostream>
 #include <vector>
 #include <mbl/mbl_data_wrapper.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: A wrapper to provide access to objects through C-arrays of pointers
 template<class T>
@@ -41,39 +40,39 @@ class mbl_data_array_ptr_wrapper : public mbl_data_wrapper<T>
   void set(const T*const* data, unsigned long n);
 
   //: Default destructor
-  virtual ~mbl_data_array_ptr_wrapper();
+  ~mbl_data_array_ptr_wrapper() override;
 
   //: Number of objects available
-  virtual unsigned long size() const;
+  unsigned long size() const override;
 
   //: Return pointer to start of data array
   const T*const* data() const { return data_; }
 
   //: Reset so that current() returns first object
-  virtual void reset();
+  void reset() override;
 
   //: Return current object
-  virtual const T& current();
+  const T& current() override;
 
   //: Move to next object, returning true if is valid
-  virtual bool next();
+  bool next() override;
 
   //: Return current index
   //  First example has index 0
-  virtual unsigned long index() const;
+  unsigned long index() const override;
 
   //: Move to element n
   //  First example has index 0
-  virtual void set_index(unsigned long n);
+  void set_index(unsigned long n) override;
 
   //: Create copy on heap and return base pointer
-  virtual mbl_data_wrapper< T >* clone() const;
+  mbl_data_wrapper< T >* clone() const override;
 
   //: Name of the class
-  virtual std::string is_a() const;
+  std::string is_a() const override;
 
   //: True if this is (or is derived from) class named s
-  virtual bool is_class(std::string const& s) const;
+  bool is_class(std::string const& s) const override;
 };
 
 #endif // mbl_data_array_ptr_wrapper_h

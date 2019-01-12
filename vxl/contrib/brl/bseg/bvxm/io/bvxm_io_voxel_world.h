@@ -5,7 +5,9 @@
 
 #include <iostream>
 #include <vsl/vsl_binary_io.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bvxm/bvxm_voxel_world.h>
 #include <bvxm/bvxm_world_params.h>
 
@@ -25,4 +27,3 @@ void vsl_b_write(vsl_b_ostream& os, const bvxm_voxel_world* &p);
 void vsl_print_summary(std::ostream& os, const bvxm_voxel_world* &p);
 
 #endif
-

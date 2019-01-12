@@ -11,35 +11,35 @@
 // \endverbatim
 //
 
-#include <iostream>
 #include <algorithm>
-#include <vul/vul_file.h>
-#include <vul/vul_arg.h>
-#include <vcl_where_root_dir.h>
 #include <bkml/bkml_write.h>
-#include <volm/volm_osm_parser.h>
+#include <iostream>
+#include <utility>
+#include <vcl_where_root_dir.h>
 #include <volm/volm_io.h>
-#include <vcl_compiler.h>
+#include <volm/volm_osm_parser.h>
+#include <vul/vul_arg.h>
+#include <vul/vul_file.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
-static void error(std::string error_file, std::string error_msg)
+static void error(std::string error_file, const std::string& error_msg)
 {
   std::cerr << error_msg;
-  volm_io::write_post_processing_log(error_file, error_msg);
+  volm_io::write_post_processing_log(std::move(error_file), error_msg);
 }
 
 static void write_pts_to_kml(std::ofstream& ofs, std::string const& key, std::string const& value,
-                             std::map<std::pair<std::string, std::string>, volm_land_layer> const& osm_land_table,
                              std::vector<vgl_point_2d<double> > const& osm_pts,
                              std::vector<std::vector<std::pair<std::string, std::string> > > const& osm_pt_keys);
 
 static void write_lines_to_kml(std::ofstream& ofs, std::string const& key, std::string const& value,
-                               std::map<std::pair<std::string, std::string>, volm_land_layer> const& osm_land_table,
                                std::vector<std::vector<vgl_point_2d<double> > > osm_lines,
                                std::vector<std::vector<std::pair<std::string, std::string> > > osm_line_keys,
                                unsigned char const& r, unsigned char const& g, unsigned char const& b);
 
 static void write_polys_to_kml(std::ofstream& ofs, std::string const& key, std::string const& value,
-                               std::map<std::pair<std::string, std::string>, volm_land_layer> const& osm_land_table,
                                std::vector<vgl_polygon<double> > osm_polys,
                                std::vector<std::vector<std::pair<std::string, std::string> > > osm_poly_keys,
                                unsigned char const& r, unsigned char const& g, unsigned char const& b);
@@ -102,11 +102,11 @@ int main(int argc, char** argv)
   lon_min = bbox.min_x();  lat_min = bbox.min_y();
   lon_max = bbox.max_x();  lat_max = bbox.max_y();
   std::vector<vgl_point_2d<double> > outlines;
-  outlines.push_back(vgl_point_2d<double>(lon_min, lat_min));
-  outlines.push_back(vgl_point_2d<double>(lon_max, lat_min));
-  outlines.push_back(vgl_point_2d<double>(lon_max, lat_max));
-  outlines.push_back(vgl_point_2d<double>(lon_min, lat_max));
-  outlines.push_back(vgl_point_2d<double>(lon_min, lat_min));
+  outlines.emplace_back(lon_min, lat_min);
+  outlines.emplace_back(lon_max, lat_min);
+  outlines.emplace_back(lon_max, lat_max);
+  outlines.emplace_back(lon_min, lat_max);
+  outlines.emplace_back(lon_min, lat_min);
   bkml_write::write_path(ofs, outlines, "outline", "outline", 1.0, 3.0, 1.0, 255, 255, 255);
 
   std::vector<vgl_point_2d<double> > osm_pts;
@@ -123,19 +123,19 @@ int main(int argc, char** argv)
   {
     std::cout << " parsing all points having key \"" << key() << "\" and value \"" << value() << "\" in osm to kml..." << std::endl;
     volm_osm_parser::parse_points(osm_pts, osm_pt_keys, osm_file());
-    write_pts_to_kml(ofs, key(), value(), osm_land_table, osm_pts, osm_pt_keys);
+    write_pts_to_kml(ofs, key(), value(), osm_pts, osm_pt_keys);
   }
   else if (geometry().compare("lines") == 0)
   {
     std::cout << " parsing all roads having key \"" << key() << "\" and value \"" << value() << "\" in osm to kml..." << std::endl;
     volm_osm_parser::parse_lines(osm_lines, osm_line_keys, osm_file());
-    write_lines_to_kml(ofs, key(), value(), osm_land_table, osm_lines, osm_line_keys, (unsigned char)rgb_r(), (unsigned char)rgb_g(), (unsigned char)rgb_b());
+    write_lines_to_kml(ofs, key(), value(), osm_lines, osm_line_keys, (unsigned char)rgb_r(), (unsigned char)rgb_g(), (unsigned char)rgb_b());
   }
   else if (geometry().compare("poly") == 0)
   {
     std::cout << " parsing all regions having key \"" << key() << "\" and value \"" << value() << "\" in osm to kml..." << std::endl;
     volm_osm_parser::parse_polygons(osm_polys, osm_poly_keys, osm_file());
-    write_polys_to_kml(ofs, key(), value(), osm_land_table, osm_polys, osm_poly_keys, (unsigned char)rgb_r(), (unsigned char)rgb_g(), (unsigned char)rgb_b());
+    write_polys_to_kml(ofs, key(), value(), osm_polys, osm_poly_keys, (unsigned char)rgb_r(), (unsigned char)rgb_g(), (unsigned char)rgb_b());
   }
   else {
     std::cout << " parsing location points having key \"" << key() << "\" and value \"" << value() << "\" in osm to kml..." << std::endl;
@@ -147,9 +147,9 @@ int main(int argc, char** argv)
     std::cout << " parsing regions having key \"" << key() << "\" and value \"" << value() << "\" in osm to kml..." << std::endl;
     volm_osm_parser::parse_polygons(osm_polys, osm_poly_keys, osm_file());
     std::cout << osm_polys.size() << " regions are parsed from osm file" << std::flush << std::endl;
-    write_pts_to_kml(ofs, key(), value(), osm_land_table, osm_pts, osm_pt_keys);
-    write_lines_to_kml(ofs, key(), value(), osm_land_table, osm_lines, osm_line_keys, (unsigned char)rgb_r(), (unsigned char)rgb_g(), (unsigned char)rgb_b());
-    write_polys_to_kml(ofs, key(), value(), osm_land_table, osm_polys, osm_poly_keys, (unsigned char)rgb_r(), (unsigned char)rgb_g(), (unsigned char)rgb_b());
+    write_pts_to_kml(ofs, key(), value(), osm_pts, osm_pt_keys);
+    write_lines_to_kml(ofs, key(), value(), osm_lines, osm_line_keys, (unsigned char)rgb_r(), (unsigned char)rgb_g(), (unsigned char)rgb_b());
+    write_polys_to_kml(ofs, key(), value(), osm_polys, osm_poly_keys, (unsigned char)rgb_r(), (unsigned char)rgb_g(), (unsigned char)rgb_b());
   }
   bkml_write::close_document(ofs);
   ofs.close();
@@ -159,13 +159,12 @@ int main(int argc, char** argv)
 
 
 void write_pts_to_kml(std::ofstream& ofs, std::string const& key, std::string const& value,
-                      std::map<std::pair<std::string, std::string>, volm_land_layer> const& osm_land_table,
                       std::vector<vgl_point_2d<double> > const& osm_pts,
                       std::vector<std::vector<std::pair<std::string, std::string> > > const& osm_pt_keys)
 {
 
   std::map<std::pair<std::string, std::string>, volm_land_layer>::const_iterator mit;
-  unsigned num_pts = (unsigned)osm_pts.size();
+  auto num_pts = (unsigned)osm_pts.size();
   for (unsigned i = 0; i < num_pts; i++) {
     std::vector<std::pair<std::string, std::string> > curr_keys = osm_pt_keys[i];
     std::string name, description;
@@ -207,13 +206,12 @@ void write_pts_to_kml(std::ofstream& ofs, std::string const& key, std::string co
 }
 
 void write_lines_to_kml(std::ofstream& ofs, std::string const& key, std::string const& value,
-                        std::map<std::pair<std::string, std::string>, volm_land_layer> const& osm_land_table,
                         std::vector<std::vector<vgl_point_2d<double> > > osm_lines,
                         std::vector<std::vector<std::pair<std::string, std::string> > > osm_line_keys,
                         unsigned char const& r, unsigned char const& g, unsigned char const& b)
 {
   std::map<std::pair<std::string, std::string>, volm_land_layer>::const_iterator mit;
-  unsigned num_lines = (unsigned)osm_lines.size();
+  auto num_lines = (unsigned)osm_lines.size();
   for (unsigned i = 0; i < num_lines; i++) {
     std::vector<std::pair<std::string, std::string> > curr_keys = osm_line_keys[i];
     std::string name, description;
@@ -254,13 +252,12 @@ void write_lines_to_kml(std::ofstream& ofs, std::string const& key, std::string 
 }
 
 void write_polys_to_kml(std::ofstream& ofs, std::string const& key, std::string const& value,
-                        std::map<std::pair<std::string, std::string>, volm_land_layer> const& osm_land_table,
                         std::vector<vgl_polygon<double> > osm_polys,
                         std::vector<std::vector<std::pair<std::string, std::string> > > osm_poly_keys,
                         unsigned char const& r, unsigned char const& g, unsigned char const& b)
 {
   std::map<std::pair<std::string, std::string>, volm_land_layer>::const_iterator mit;
-  unsigned num_polys = (unsigned)osm_polys.size();
+  auto num_polys = (unsigned)osm_polys.size();
   for (unsigned i = 0; i < num_polys; i++) {
     std::vector<std::pair<std::string, std::string> > curr_keys = osm_poly_keys[i];
     std::string name, description;
@@ -317,7 +314,7 @@ bool find_key_value_from_tags(std::string const& key, std::string const& value,
     name = "all=all";
     return true;
   }
-  for (std::vector<std::pair<std::string, std::string> >::iterator vit = tags.begin(); ( vit != tags.end() && !found); ++vit)
+  for (auto vit = tags.begin(); ( vit != tags.end() && !found); ++vit)
   {
     if (key.compare("all") == 0 && value.compare(vit->second) == 0)
     {  found = true;  name = vit->first + "=" + vit->second; }
@@ -332,9 +329,9 @@ bool find_key_value_from_tags(std::string const& key, std::string const& value,
 void generate_description(std::vector<std::pair<std::string, std::string> >& tags, std::string& description)
 {
   description.clear();
-  for (std::vector<std::pair<std::string, std::string> >::iterator vit = tags.begin(); vit != tags.end(); ++vit)
+  for (auto & tag : tags)
   {
-    description += vit->first + "=" + vit->second + " ";
+    description += tag.first + "=" + tag.second + " ";
   }
   // replace all unsupported characters in kml to "_"
   std::replace(description.begin(), description.end(), '&', '_');

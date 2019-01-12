@@ -1,9 +1,6 @@
 // This is oxl/mvl/PairMatchSet.h
 #ifndef PairMatchSet_h_
 #define PairMatchSet_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Set of pairs of integers
@@ -31,7 +28,9 @@
 #include <iostream>
 #include <iosfwd>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <mvl/MatchSet.h>
 
 class PairMatchSet : public MatchSet
@@ -49,7 +48,7 @@ class PairMatchSet : public MatchSet
   PairMatchSet(const PairMatchSet& that);
   PairMatchSet& operator=(const PairMatchSet& that);
 
-  virtual ~PairMatchSet();
+  ~PairMatchSet() override;
 
   // Data Control--------------------------------------------------------------
   void set_size(unsigned size);
@@ -77,7 +76,7 @@ class PairMatchSet : public MatchSet
   // ******* ITERATOR
   class iterator
   {
-    VCL_SAFE_BOOL_DEFINE;
+
     const PairMatchSet* c_;
     int match_index_;
     int i1, i2;
@@ -92,7 +91,7 @@ class PairMatchSet : public MatchSet
     iterator& operator ++ (/*prefix*/) { next(); return *this; }
     bool isfull() const;
     //: Return true if the iterator has not yet enumerated all matches.
-    operator safe_bool() const { return match_index_ < c_->size() ? VCL_SAFE_BOOL_TRUE : VXL_NULLPTR; }
+    explicit operator bool() const { return match_index_ < c_->size() ? true : false; }
     //: Return false if the iterator has not yet enumerated all matches.
     bool operator!() const { return match_index_ < c_->size() ? false : true; }
    private:

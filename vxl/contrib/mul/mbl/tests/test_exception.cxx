@@ -1,7 +1,9 @@
 // This is mul/mbl/tests/test_exception.cxx
 #include <iostream>
 #include <typeinfo>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <mbl/mbl_exception.h>
 #include <testlib/testlib_test.h>
 #include <vul/vul_file.h>
@@ -12,8 +14,6 @@ void test_exception()
   std::cout << "*************************\n"
            << "  Testing mbl_exception\n"
            << "*************************\n";
-
-#if VCL_HAS_EXCEPTIONS
   {
     bool caught_error = false;
     bool returned = false;
@@ -64,13 +64,6 @@ void test_exception()
     }
     TEST("Caught Exception 3", caught_error && !returned, true);
   }
-#else
-  // No exceptions - all we can do is check that mbl_exception_warning, etc. doesn't abort.
-  mbl_exception_warning(mbl_exception_abort("This is just a test"));
-  const char *filename="There_is_no_way_this_directory_should_exist/try_to_create_this";
-  vpl_mkdir(filename);
-  mbl_exception_throw_os_error(filename);
-#endif
 }
 
 TESTMAIN(test_exception);

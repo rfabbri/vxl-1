@@ -14,18 +14,19 @@
 #include <bprb/bprb_null_process.h>
 #include <bprb/bprb_parameters.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Constructor
-bprb_batch_process_manager::bprb_batch_process_manager() : current_process_(VXL_NULLPTR),
+bprb_batch_process_manager::bprb_batch_process_manager() : current_process_(nullptr),
                                                            verbose_(true)
 {
 }
 
 //: Destructor
 bprb_batch_process_manager::~bprb_batch_process_manager()
-{
-}
+= default;
 
 bool bprb_batch_process_manager::clear()
 {
@@ -97,7 +98,7 @@ set_input(unsigned i, brdb_value_sptr const& input)
 //: set input from the database
 bool bprb_batch_process_manager::set_input_from_db(unsigned i,
                                                    unsigned id,
-                                                   std::string type)
+                                                   const std::string& type)
 {
   if (!current_process_)
     return false;
@@ -107,7 +108,7 @@ bool bprb_batch_process_manager::set_input_from_db(unsigned i,
   // query to get the data
   brdb_query_aptr Q = brdb_query_comp_new("id", brdb_query::EQ, id);
 
-  brdb_selection_sptr selec = DATABASE->select(relation_name, vcl_move(Q));
+  brdb_selection_sptr selec = DATABASE->select(relation_name, std::move(Q));
   if (selec->size()!=1) {
     std::cout << "in bprb_batch_process_manager::set_input_from_db(.) - no selections\n";
     return false;
@@ -141,7 +142,7 @@ bool bprb_batch_process_manager::set_input_from_db(unsigned i,
   // query to get the data
   brdb_query_aptr Q = brdb_query_comp_new("id", brdb_query::EQ, id);
 
-  brdb_selection_sptr selec = DATABASE->select(relation_name, vcl_move(Q));
+  brdb_selection_sptr selec = DATABASE->select(relation_name, std::move(Q));
   if (!selec||selec->size()!=1) {
     std::cout << "in bprb_batch_process_manager::set_input_from_db(.) - no selections\n";
     return false;
@@ -216,12 +217,12 @@ bool bprb_batch_process_manager::remove_data(unsigned id)
 {
   bool removed = false;
   std::set<std::string> names = DATABASE->get_all_relation_names();
-  for (std::set<std::string>::iterator nit = names.begin();
+  for (auto nit = names.begin();
        nit != names.end()&&!removed; ++nit) {
     // query to get the data
     brdb_query_aptr Q = brdb_query_comp_new("id", brdb_query::EQ, id);
 
-    brdb_selection_sptr selec = DATABASE->select(*nit, vcl_move(Q));
+    brdb_selection_sptr selec = DATABASE->select(*nit, std::move(Q));
     if (selec->size()!=1)
       continue;
     selec->delete_tuples();
@@ -284,9 +285,9 @@ void bprb_batch_process_manager::print_db()
 }
 
 
-bool bprb_batch_process_manager::set_stdout(std::string file)
+bool bprb_batch_process_manager::set_stdout(const std::string& file)
 {
-   return std::freopen (file.c_str(),"a",stdout) != VXL_NULLPTR;
+   return std::freopen (file.c_str(),"a",stdout) != nullptr;
 }
 
 
@@ -295,7 +296,7 @@ bool bprb_batch_process_manager::reset_stdout()
 #ifdef WIN32
   return std::fclose(stdout) == 0 && std::freopen("CON","w",stdout) != NULL;
 #else
-  return std::fclose(stdout) == 0 && std::freopen("/dev/tty","w",stdout) != VXL_NULLPTR;
+  return std::fclose(stdout) == 0 && std::freopen("/dev/tty","w",stdout) != nullptr;
 #endif
 }
 

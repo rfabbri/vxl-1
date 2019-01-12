@@ -1,10 +1,10 @@
+#include <fstream>
+#include <map>
 #include "boxm2_vecf_skin.h"
 #include <bvrml/bvrml_write.h>
 #include <vgl/vgl_intersection.h>
 #include <vgl/vgl_box_3d.h>
 #include <vgl/vgl_bounding_box.h>
-#include <fstream>
-#include <map>
 
 boxm2_vecf_skin::boxm2_vecf_skin(std::string const& geometry_file, unsigned nbins): nbins_(nbins),has_appearance_(false){
   std::ifstream istr(geometry_file.c_str());
@@ -118,14 +118,14 @@ void boxm2_vecf_skin::display_vrml(std::ofstream& ostr) const{
       bvrml_write::write_vrml_cylinder(ostr, p, n, r, h, 0.0f, 1.0f, 0.3f, 1);
     else{
       double a = appearance_[i];
-      float grey = static_cast<float>(a/255.0);
+      auto grey = static_cast<float>(a/255.0);
       bvrml_write::write_vrml_cylinder(ostr, p, n, r, h, grey, grey, grey, 1);
   }
   }
   ostr.close();
 }
 
-bool boxm2_vecf_skin::inverse_vector_field(vgl_point_3d<double> const& target_pt, vgl_vector_3d<double>& inv_vf) const{
+bool boxm2_vecf_skin::inverse_vector_field(vgl_point_3d<double> const&  /*target_pt*/, vgl_vector_3d<double>& inv_vf) const{
   const vgl_vector_3d<double>& off = params_.offset_;
   inv_vf.set(-off.x(), -off.y(), -off.z());
   return true;

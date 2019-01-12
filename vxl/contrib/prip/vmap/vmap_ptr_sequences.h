@@ -17,8 +17,10 @@
 #include <vector>
 #include <algorithm>
 #include "vmap_types.h"
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 //:
 template< typename F, typename Ref, typename Ptr, typename It >
@@ -32,13 +34,13 @@ class vmap_ptr_iterator_wrapper
   typedef F element_type ;
 
   //:
-  vmap_ptr_iterator_wrapper() {}
+  vmap_ptr_iterator_wrapper() = default;
 
   //:
   vmap_ptr_iterator_wrapper(const self_type &it) :it_(it.it_) {}
 
   //:
-  ~vmap_ptr_iterator_wrapper() {}
+  ~vmap_ptr_iterator_wrapper() = default;
 
   //:
   self_type & operator=(const self_type &it)
@@ -121,7 +123,7 @@ class vmap_ptr_sequence
 
  public:
   //:
-  vmap_ptr_sequence() : begin_(VXL_NULLPTR), end_(VXL_NULLPTR) {}
+  vmap_ptr_sequence() : begin_(nullptr), end_(nullptr) {}
 
   //:
   vmap_ptr_sequence(const vmap_ptr_sequence<D> & arg ) : begin_(arg.begin_), end_(arg.end_) {}
@@ -219,7 +221,7 @@ class vmap_ptr_sequence
   //:
   void clear()
   {
-    begin_=end_=VXL_NULLPTR ;
+    begin_=end_=nullptr ;
   }
 
  private:
@@ -251,7 +253,7 @@ class vmap_owning_sequence: public vmap_ptr_sequence<D>
 
  public:
   //:
-  vmap_owning_sequence() {}
+  vmap_owning_sequence() = default;
 
   //:
   vmap_owning_sequence(const self_type & arg ) : vmap_ptr_sequence<D>(arg)

@@ -1,7 +1,4 @@
 // This is mul/vpdfl/vpdfl_gaussian_kernel_pdf.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \brief Multi-variate spherical gaussian_kernel_pdf kernel PDF.
@@ -13,8 +10,10 @@
 #include <cmath>
 #include "vpdfl_gaussian_kernel_pdf.h"
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vnl/vnl_math.h>
 #include <vpdfl/vpdfl_gaussian_kernel_pdf_sampler.h>
@@ -22,15 +21,11 @@
 
 //=======================================================================
 
-vpdfl_gaussian_kernel_pdf::vpdfl_gaussian_kernel_pdf()
-{
-}
+vpdfl_gaussian_kernel_pdf::vpdfl_gaussian_kernel_pdf() = default;
 
 //=======================================================================
 
-vpdfl_gaussian_kernel_pdf::~vpdfl_gaussian_kernel_pdf()
-{
-}
+vpdfl_gaussian_kernel_pdf::~vpdfl_gaussian_kernel_pdf() = default;
 
 
 //=======================================================================
@@ -69,7 +64,7 @@ double vpdfl_gaussian_kernel_pdf::log_p(const vnl_vector<double>& x) const
 
 vpdfl_sampler_base* vpdfl_gaussian_kernel_pdf::new_sampler() const
 {
-  vpdfl_gaussian_kernel_pdf_sampler *i = new vpdfl_gaussian_kernel_pdf_sampler;
+  auto *i = new vpdfl_gaussian_kernel_pdf_sampler;
   i->set_model(*this);
   return i;
 }

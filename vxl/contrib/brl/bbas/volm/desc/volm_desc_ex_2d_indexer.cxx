@@ -1,7 +1,9 @@
 #include <iostream>
 #include <algorithm>
 #include "volm_desc_ex_2d_indexer.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_load.h>
 #include <vgl/vgl_area.h>
 
@@ -60,7 +62,7 @@ bool volm_desc_ex_2d_indexer::get_next()
         classification_maps_[i].ni = classification_maps_[i].img_r->ni(); classification_maps_[i].nj = classification_maps_[i].img_r->nj();
       }
       // compute the lon and lat images (if not already computed!)
-      std::map<unsigned, vil_image_view_base_sptr >::iterator lon_it = lon_imgs.find(i);
+      auto lon_it = lon_imgs.find(i);
       if (lon_it == lon_imgs.end()) {
         vil_image_view<double> lon_img(classification_maps_[i].ni, classification_maps_[i].nj);
         vil_image_view<double> lat_img(classification_maps_[i].ni, classification_maps_[i].nj);
@@ -90,30 +92,30 @@ bool volm_desc_ex_2d_indexer::get_next()
 
 bool volm_desc_ex_2d_indexer::extract(double lat, double lon, double elev, std::vector<unsigned char>& values)
 {
-  volm_desc_ex_land_only* desc = new volm_desc_ex_land_only(ndists_, nlands_, radius_);
+  auto* desc = new volm_desc_ex_land_only(ndists_, nlands_, radius_);
 
   // use location to create a local vertical coordinate system, to get distances in meters
   vpgl_lvcs_sptr lvcs = new vpgl_lvcs(lat, lon, elev, vpgl_lvcs::wgs84, vpgl_lvcs::DEG, vpgl_lvcs::METERS);
 
   // find the four corners
   std::vector<std::pair<double, double> > corners;
-  corners.push_back(std::pair<double, double>(lon-largest_rad_seconds_, lat-largest_rad_seconds_));
-  corners.push_back(std::pair<double, double>(lon+largest_rad_seconds_, lat-largest_rad_seconds_));
-  corners.push_back(std::pair<double, double>(lon+largest_rad_seconds_, lat+largest_rad_seconds_));
-  corners.push_back(std::pair<double, double>(lon-largest_rad_seconds_, lat+largest_rad_seconds_));
+  corners.emplace_back(lon-largest_rad_seconds_, lat-largest_rad_seconds_);
+  corners.emplace_back(lon+largest_rad_seconds_, lat-largest_rad_seconds_);
+  corners.emplace_back(lon+largest_rad_seconds_, lat+largest_rad_seconds_);
+  corners.emplace_back(lon-largest_rad_seconds_, lat+largest_rad_seconds_);
 
   // find out which images need to be considered and the corners in pixels in each image
   std::map<unsigned, std::vector<std::pair<int, int> > > imgs_and_corners;
   double u,v;
-  for (unsigned k = 0; k < current_leaf_maps_.size(); k++) {
-    vpgl_geo_camera* cam = classification_maps_[current_leaf_maps_[k]].cam;
-    int ni = (int)classification_maps_[current_leaf_maps_[k]].ni;
-    int nj = (int)classification_maps_[current_leaf_maps_[k]].nj;
+  for (unsigned int current_leaf_map : current_leaf_maps_) {
+    vpgl_geo_camera* cam = classification_maps_[current_leaf_map].cam;
+    int ni = (int)classification_maps_[current_leaf_map].ni;
+    int nj = (int)classification_maps_[current_leaf_map].nj;
     bool at_least_one = false;
     int min_i = ni-1, min_j = nj-1, max_i = 0, max_j = 0;
-    for (unsigned m = 0; m < corners.size(); m++) {
+    for (auto & corner : corners) {
       double lon_abs, lat_abs;
-      lon_abs = corners[m].first;  lat_abs = corners[m].second;
+      lon_abs = corner.first;  lat_abs = corner.second;
       //if (lon_abs < 0) lon_abs = -lon_abs;
       //if (lat_abs < 0) lat_abs = -lat_abs;
       cam->global_to_img(lon_abs, lat_abs, 0.0, u, v);
@@ -130,20 +132,20 @@ bool volm_desc_ex_2d_indexer::extract(double lat, double lon, double elev, std::
     }
     if (at_least_one) {
       std::vector<std::pair<int, int> > tmp;
-      tmp.push_back(std::pair<int, int>(min_i, min_j));
-      tmp.push_back(std::pair<int, int>(max_i, max_j));
-      imgs_and_corners[current_leaf_maps_[k]] = tmp;
+      tmp.emplace_back(min_i, min_j);
+      tmp.emplace_back(max_i, max_j);
+      imgs_and_corners[current_leaf_map] = tmp;
     }
   }
 
-  for (std::map<unsigned, std::vector<std::pair<int, int> > >::iterator it = imgs_and_corners.begin(); it != imgs_and_corners.end(); it++) {
-    vil_image_view<unsigned char> map(classification_maps_[it->first].img_r);
-    int min_i = it->second[0].first;
-    int min_j = it->second[0].second;
-    int max_i = it->second[1].first;
-    int max_j = it->second[1].second;
-    vil_image_view<double> lon_img(lon_imgs[it->first]);
-    vil_image_view<double> lat_img(lat_imgs[it->first]);
+  for (auto & imgs_and_corner : imgs_and_corners) {
+    vil_image_view<unsigned char> map(classification_maps_[imgs_and_corner.first].img_r);
+    int min_i = imgs_and_corner.second[0].first;
+    int min_j = imgs_and_corner.second[0].second;
+    int max_i = imgs_and_corner.second[1].first;
+    int max_j = imgs_and_corner.second[1].second;
+    vil_image_view<double> lon_img(lon_imgs[imgs_and_corner.first]);
+    vil_image_view<double> lat_img(lat_imgs[imgs_and_corner.first]);
 
     for (int i = min_i; i <= max_i; i++)
       for (int j = min_j; j <= max_j; j++) {
@@ -178,4 +180,3 @@ bool volm_desc_ex_2d_indexer::write_params_file()
     return false;
   return true;
 }
-

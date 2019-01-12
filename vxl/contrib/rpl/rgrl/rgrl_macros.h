@@ -5,9 +5,12 @@
 
 #include <typeinfo>
 #include <iostream>
-#include <vcl_compiler.h>
+#include <vcl_compiler_detection.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
-#if defined(VCL_VC) || defined(VCL_GCC)
+#if defined(_MSC_VER) || defined(__GNUC__)
 # define RGRL_HERE __FUNCTION__
 #else
 # define RGRL_HERE __FILE__
@@ -66,7 +69,7 @@
      typedef superclassname  superclass; \
      static const std::type_info& type_id() \
          { return typeid(self); } \
-     virtual bool is_type( const std::type_info& type ) const\
+     bool is_type( const std::type_info& type ) const override\
          { return (typeid(self) == type)!=0 || this->superclass::is_type(type); }
 
 #if 0

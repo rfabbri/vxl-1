@@ -26,7 +26,9 @@
 #include <vul/vul_timer.h>
 #include <boxm2/ocl/algo/boxm2_ocl_camera_converter.h>
 #include <boxm2/boxm2_util.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_save.h>
 #include <vil/vil_resample_nearest.h>
 
@@ -35,10 +37,10 @@
 
 namespace boxm2_ocl_compute_visibility_process_globals
 {
-    const unsigned n_inputs_ = 10;
-    const unsigned n_outputs_ = 0;
+    constexpr unsigned n_inputs_ = 10;
+    constexpr unsigned n_outputs_ = 0;
     std::size_t lthreads[2]={8,8};
-    void compile_kernel(bocl_device_sptr device,std::vector<bocl_kernel*> & vec_kernels)
+    void compile_kernel(const bocl_device_sptr& device,std::vector<bocl_kernel*> & vec_kernels)
     {
         //gather all render sources... seems like a lot for rendering...
         std::vector<std::string> src_paths;
@@ -58,7 +60,7 @@ namespace boxm2_ocl_compute_visibility_process_globals
         options += " -D STEP_CELL=step_cell_vis(aux_args.alpha,data_ptr,d*linfo->block_len,aux_args.vis)";
 
         //have kernel construct itself using the context and device
-        bocl_kernel * ray_trace_kernel=new bocl_kernel();
+        auto * ray_trace_kernel=new bocl_kernel();
 
         ray_trace_kernel->create_kernel( &device->context(),
                                          device->device_id(),
@@ -111,9 +113,9 @@ bool boxm2_ocl_compute_visibility_process(bprb_func_process& pro)
     boxm2_opencl_cache_sptr opencl_cache= pro.get_input<boxm2_opencl_cache_sptr>(i++);
     std::string camsfile= pro.get_input<std::string>(i++);
     std::string indir= pro.get_input<std::string>(i++);
-    float x = pro.get_input<float>(i++);
-    float y = pro.get_input<float>(i++);
-    float z = pro.get_input<float>(i++);
+    auto x = pro.get_input<float>(i++);
+    auto y = pro.get_input<float>(i++);
+    auto z = pro.get_input<float>(i++);
     std::string outdir= pro.get_input<std::string>(i++);
     int scale = pro.get_input<int>(i++);
 
@@ -163,8 +165,8 @@ bool boxm2_ocl_compute_visibility_process(bprb_func_process& pro)
         cl_ni=RoundUp(tfinals[count]->ni(),lthreads[0]);
         cl_nj=RoundUp(tfinals[count]->nj(),lthreads[1]);
 
-        float* rayd_buff = new float[cl_ni*cl_nj*4];
-        float* vis_buff = new float[cl_ni*cl_nj];
+        auto* rayd_buff = new float[cl_ni*cl_nj*4];
+        auto* vis_buff = new float[cl_ni*cl_nj];
         int num=0;
         for (unsigned int j=0;j<cl_nj;++j)
             for (unsigned int i=0;i<cl_ni;++i)
@@ -199,7 +201,7 @@ bool boxm2_ocl_compute_visibility_process(bprb_func_process& pro)
 
     // Output Array
     float output_arr[100];
-    for (int i=0; i<100; ++i) output_arr[i] = 0.0f;
+    for (float & i : output_arr) i = 0.0f;
     bocl_mem_sptr  cl_output=opencl_cache->alloc_mem(sizeof(float)*100, output_arr, "output buffer");
     cl_output->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
 
@@ -217,18 +219,18 @@ bool boxm2_ocl_compute_visibility_process(bprb_func_process& pro)
 
     std::vector<boxm2_block_id> vis_order = boxm2_util::order_about_a_block(scene,pt_id);
     std::vector<boxm2_block_id>::iterator id;
-    bocl_mem * ray_image = opencl_cache->alloc_mem(4*cl_ni*cl_nj*sizeof(float),VXL_NULLPTR,"ray direction buffer");
+    bocl_mem * ray_image = opencl_cache->alloc_mem(4*cl_ni*cl_nj*sizeof(float),nullptr,"ray direction buffer");
     ray_image->create_buffer(CL_MEM_READ_WRITE | CL_MEM_ALLOC_HOST_PTR);
 
-    bocl_mem * vis_image = opencl_cache->alloc_mem(cl_ni*cl_nj*sizeof(float), VXL_NULLPTR,"ray direction buffer");
+    bocl_mem * vis_image = opencl_cache->alloc_mem(cl_ni*cl_nj*sizeof(float), nullptr,"ray direction buffer");
     vis_image->create_buffer(CL_MEM_READ_WRITE | CL_MEM_ALLOC_HOST_PTR);
     for (id = vis_order.begin(); id != vis_order.end(); ++id)
     {
         boxm2_block_metadata mdata = scene->get_block_metadata(*id);
         vul_timer transfer;
-        bocl_mem* blk           = opencl_cache->get_block(scene,*id);
-        bocl_mem* alpha         = opencl_cache->get_data<BOXM2_ALPHA>(scene,*id);
-        bocl_mem * blk_info     = opencl_cache->loaded_block_info();
+        bocl_mem* blk = opencl_cache->get_block(scene,*id);
+        bocl_mem* alpha = opencl_cache->get_data<BOXM2_ALPHA>(scene,*id);
+        bocl_mem * blk_info = opencl_cache->loaded_block_info();
         transfer_time          += (float) transfer.all();
 
         //std::cout<<"bytes in cache "<<opencl_cache->bytes_in_cache()<<std::endl;
@@ -279,7 +281,7 @@ bool boxm2_ocl_compute_visibility_process(bprb_func_process& pro)
     std::cout<<"Writing Vis Images"<<std::endl;
     for (unsigned int count = 0 ; count < tfinals.size(); count ++)
     {
-        float * vis_buf = (float*)vis_buffs[count];
+        auto * vis_buf = (float*)vis_buffs[count];
         vil_image_view<bool> visbool(tfinals[count]->ni(),tfinals[count]->nj());
         visbool.fill(false);
         for (unsigned c=0;c<tfinals[count]->nj();c++)

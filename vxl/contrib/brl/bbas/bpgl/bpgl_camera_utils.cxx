@@ -6,7 +6,9 @@
 #include "bpgl_camera_utils.h"
 //:
 // \file
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_file.h>
 #include <vul/vul_file_iterator.h>
 #include <vgl/vgl_point_2d.h>
@@ -128,7 +130,7 @@ vpgl_perspective_camera<double> bpgl_camera_utils::
 }
 
 //: returns a list of cameras from specified directory
-std::vector<vpgl_perspective_camera<double>* > bpgl_camera_utils::cameras_from_directory(std::string dir)
+std::vector<vpgl_perspective_camera<double>* > bpgl_camera_utils::cameras_from_directory(const std::string& dir)
 {
     std::vector<vpgl_perspective_camera<double>* > toReturn;
     if (!vul_file::is_directory(dir.c_str()) ) {
@@ -153,7 +155,7 @@ std::vector<vpgl_perspective_camera<double>* > bpgl_camera_utils::cameras_from_d
     {
         //load camera from file
         std::ifstream ifs(iter->c_str());
-        vpgl_perspective_camera<double>* pcam =new vpgl_perspective_camera<double>;
+        auto* pcam =new vpgl_perspective_camera<double>;
         if (!ifs.is_open()) {
             std::cerr << "Failed to open file " << *iter << '\n';
             return toReturn;
@@ -180,7 +182,7 @@ horizon(vpgl_perspective_camera<double> const& cam)
   return hor_line;
 }
 
-std::string bpgl_camera_utils::get_string(double ni, double nj, double right_f, double top_f, double alt, double head, double tilt, double roll)
+std::string bpgl_camera_utils::get_string(double  /*ni*/, double  /*nj*/, double  /*right_f*/, double top_f, double  /*alt*/, double head, double tilt, double roll)
 {
   std::stringstream str;
   str << "_h_" << head << "_t_" << tilt << "_r_" << roll << "_top_fov_" << top_f;

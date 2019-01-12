@@ -1,9 +1,6 @@
 // This is core/vidl/vidl_istream.h
 #ifndef vidl_istream_h_
 #define vidl_istream_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief A base class for input video streams
@@ -21,7 +18,7 @@ class vidl_istream
   //: Constructor
   vidl_istream() : ref_count_(0) {}
   //: Destructor
-  virtual ~vidl_istream() {}
+  virtual ~vidl_istream() = default;
 
   //: Return true if the stream is open for reading
   virtual bool is_open() const = 0;

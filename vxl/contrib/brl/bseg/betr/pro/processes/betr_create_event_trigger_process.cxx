@@ -1,6 +1,7 @@
 // This is brl/bseg/betr/pro/processes/betr_create_event_trigger_process.cxx
 #include <iostream>
 #include <fstream>
+#include <string>
 #include <bprb/bprb_func_process.h>
 #include <vpgl/vpgl_lvcs.h>
 //:
@@ -9,15 +10,16 @@
 //
 
 
-#include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <betr/betr_event_trigger.h>
 #include <vgl/vgl_point_3d.h>
 
 namespace betr_create_event_trigger_process_globals
 {
-  const unsigned n_inputs_  = 5;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 5;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 bool betr_create_event_trigger_process_cons(bprb_func_process& pro)
@@ -26,11 +28,11 @@ bool betr_create_event_trigger_process_cons(bprb_func_process& pro)
 
   //process takes 5 inputs
   std::vector<std::string> input_types_(n_inputs_);
-  input_types_[0]  = "float";
-  input_types_[1]  = "float";
-  input_types_[2]  = "float";
-  input_types_[3]  = "vcl_string";
-  input_types_[4]  = "bool";
+  input_types_[0] = "float";
+  input_types_[1] = "float";
+  input_types_[2] = "float";
+  input_types_[3] = "vcl_string";
+  input_types_[4] = "bool";
   // process has 1 output
   std::vector<std::string> output_types_(n_outputs_);
   output_types_[0] = "betr_event_trigger_sptr";
@@ -47,10 +49,10 @@ bool betr_create_event_trigger_process(bprb_func_process& pro)
   }
   //get the inputs
   unsigned i = 0;
-  float lon = pro.get_input<float>(i++);
-  float lat = pro.get_input<float>(i++);
-  float elev = pro.get_input<float>(i++);
-  std::string name = pro.get_input<vcl_string>(i++);
+  auto lon = pro.get_input<float>(i++);
+  auto lat = pro.get_input<float>(i++);
+  auto elev = pro.get_input<float>(i++);
+  std::string name = pro.get_input<std::string>(i++);
   bool verbose = pro.get_input<bool>(i);
 
   vpgl_lvcs lvcs(lat, lon, elev, vpgl_lvcs::wgs84, vpgl_lvcs::DEG);

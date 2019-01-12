@@ -1,7 +1,4 @@
 // This is oxl/mvl/FMatrix.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 
@@ -9,8 +6,10 @@
 #include <fstream>
 #include "FMatrix.h"
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vul/vul_printf.h>
 
@@ -89,9 +88,7 @@ FMatrix::FMatrix(const PMatrix& P2)
 //--------------------------------------------------------------
 //
 //: Destructor
-FMatrix::~FMatrix()
-{
-}
+FMatrix::~FMatrix() = default;
 
 //---------------------------------------------------------------
 //: Read from ASCII std::istream
@@ -140,7 +137,7 @@ FMatrix FMatrix::read(std::istream& s)
 vgl_homg_line_2d<double> FMatrix::image1_epipolar_line(const vgl_homg_point_2d<double>& x2) const
 {
   vgl_homg_point_2d<double> p = ft_matrix_ * x2;
-  return vgl_homg_line_2d<double>(p.x(),p.y(),p.w()); // dual point
+  return {p.x(),p.y(),p.w()}; // dual point
 }
 
 //--------------------------------------------------------------
@@ -158,7 +155,7 @@ HomgLine2D FMatrix::image1_epipolar_line(const HomgPoint2D& x2) const
 vgl_homg_line_2d<double> FMatrix::image2_epipolar_line(const vgl_homg_point_2d<double>& x1) const
 {
   vgl_homg_point_2d<double> p = f_matrix_ * x1;
-  return vgl_homg_line_2d<double>(p.x(),p.y(),p.w()); // dual point
+  return {p.x(),p.y(),p.w()}; // dual point
 }
 
 //----------------------------------------------------------------

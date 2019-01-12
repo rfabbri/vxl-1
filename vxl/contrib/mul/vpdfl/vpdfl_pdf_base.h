@@ -1,9 +1,6 @@
 // This is mul/vpdfl/vpdfl_pdf_base.h
 #ifndef vpdfl_pdf_base_h
 #define vpdfl_pdf_base_h
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Base class for Multi-Variate Probability Density Function classes.
@@ -15,7 +12,9 @@
 #include <iosfwd>
 #include <vnl/io/vnl_io_vector.h>
 #include <vsl/vsl_binary_io.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //=======================================================================
 
@@ -68,7 +67,7 @@ class vpdfl_pdf_base
   //: Gradient and value of PDF at x
   //  Computes gradient of PDF at x, and returns the prob at x in p
   virtual void gradient(vnl_vector<double>& g,
-                        const vnl_vector<double>& x, double& p) const =0;
+                        const vnl_vector<double>& x, double& p) const = 0;
 
   //: Gradient and value of log(p(x)) at x
   //  Computes gradient df/dx of f(x)=log(p(x)) at x.

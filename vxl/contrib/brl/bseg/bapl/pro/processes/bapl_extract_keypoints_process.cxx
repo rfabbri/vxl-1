@@ -31,14 +31,14 @@ bool bapl_extract_keypoints_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("vil_image_view_base_sptr"); // input image
-  input_types.push_back("vcl_string"); // path and name of output keypoint file (a list of keypoint descriptors in a simple txt file)
+  input_types.emplace_back("vil_image_view_base_sptr"); // input image
+  input_types.emplace_back("vcl_string"); // path and name of output keypoint file (a list of keypoint descriptors in a simple txt file)
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   std::vector<std::string> output_types;
-  output_types.push_back("vil_image_view_base_sptr");  // output color image with keypoints marked
-  output_types.push_back("bapl_keypoint_set_sptr");    // output a set of keypoints
+  output_types.emplace_back("vil_image_view_base_sptr");  // output color image with keypoints marked
+  output_types.emplace_back("bapl_keypoint_set_sptr");    // output a set of keypoints
   ok = pro.set_output_types(output_types);
   if (!ok) return ok;
   return true;
@@ -74,9 +74,9 @@ bool bapl_extract_keypoints_process(bprb_func_process& pro)
 
   vil_image_view<vxl_byte> output_img;
   output_img.deep_copy(input_image);
-  for (unsigned i=0;i<keypoints.size();++i){
+  for (const auto & keypoint : keypoints){
     bapl_lowe_keypoint_sptr kp;
-    kp.vertical_cast(keypoints[i]);
+    kp.vertical_cast(keypoint);
     int ii = int(kp->location_i()+0.5); int jj = int(kp->location_j()+0.5);
     if (ii >= 0 && jj >= 0 && ii < (int)output_img.ni() && jj < (int)output_img.nj())
       //if (kp->scale()>1.1)
@@ -97,9 +97,9 @@ bool bapl_extract_keypoints_process(bprb_func_process& pro)
   }
   ofs << keypoints.size() << " ";
   int len = 128; ofs << len << std::endl;
-  for (unsigned i = 0; i < keypoints.size(); i++) {
+  for (const auto & keypoint : keypoints) {
     bapl_lowe_keypoint_sptr kp;
-    kp.vertical_cast(keypoints[i]);
+    kp.vertical_cast(keypoint);
     ofs << kp->location_j() << " " << kp->location_i() << " "; // i <-> y, j <-> x
     ofs << kp->scale() << " " << kp->orientation() << std::endl;
     vnl_vector_fixed<double, 128> desc = kp->descriptor();
@@ -119,13 +119,13 @@ bool bapl_draw_keypoints_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("vil_image_view_base_sptr"); // input image
-  input_types.push_back("bapl_keypoint_set_sptr");
+  input_types.emplace_back("vil_image_view_base_sptr"); // input image
+  input_types.emplace_back("bapl_keypoint_set_sptr");
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   std::vector<std::string> output_types;
-  output_types.push_back("vil_image_view_base_sptr");  // output color image with keypoints marked
+  output_types.emplace_back("vil_image_view_base_sptr");  // output color image with keypoints marked
   ok = pro.set_output_types(output_types);
   if (!ok) return ok;
   return true;
@@ -159,9 +159,9 @@ bool bapl_draw_keypoints_process(bprb_func_process& pro)
     output_img_b.deep_copy(input_image);
   }
 
-  for (unsigned i=0;i<keypoints.size();++i){
+  for (const auto & keypoint : keypoints){
     bapl_lowe_keypoint_sptr kp;
-    kp.vertical_cast(keypoints[i]);
+    kp.vertical_cast(keypoint);
     int ii = int(kp->location_i()+0.5); int jj = int(kp->location_j()+0.5);
     if (ii >= 0 && jj >= 0 && ii < (int)output_img.ni() && jj < (int)output_img.nj())
       //if (kp->scale()>1.1)
@@ -180,11 +180,11 @@ bool bapl_load_keypoints_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("vcl_string"); // path and name of input keypoint file (a list of keypoint descriptors in a simple txt file)
+  input_types.emplace_back("vcl_string"); // path and name of input keypoint file (a list of keypoint descriptors in a simple txt file)
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
   std::vector<std::string> output_types;
-  output_types.push_back("bapl_keypoint_set_sptr");    // output a set of keypoints
+  output_types.emplace_back("bapl_keypoint_set_sptr");    // output a set of keypoints
   ok = pro.set_output_types(output_types);
   if (!ok) return ok;
   return true;
@@ -208,7 +208,7 @@ bool bapl_load_keypoints_process(bprb_func_process& pro)
   std::ifstream ifs(key_path.c_str());
   if (!ifs.is_open()) {
     std::cerr << "Failed to open file " << key_path.c_str() << std::endl;
-    return 0;
+    return false;
   }
   int n; ifs >> n; int len; ifs >> len;
   std::cout << "Found " << n << " keypoints.\n";

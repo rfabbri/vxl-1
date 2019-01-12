@@ -1,7 +1,4 @@
 // This is oxl/mvl/LineSegSet.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 //  \file
 
@@ -10,7 +7,9 @@
 #include <vector>
 #include "LineSegSet.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <mvl/ImageMetric.h>
 #include <mvl/HomgPoint2D.h>
@@ -19,7 +18,7 @@
 LineSegSet::LineSegSet():
   hlines_(0)
 {
-  conditioner_ = VXL_NULLPTR;
+  conditioner_ = nullptr;
 }
 
 // Copy ctor
@@ -30,17 +29,10 @@ LineSegSet::LineSegSet(const LineSegSet& that):
 }
 
 // Assignment
-LineSegSet& LineSegSet::operator=(const LineSegSet& that)
-{
-  hlines_ = that.hlines_;
-  conditioner_ = that.conditioner_;
-  return *this;
-}
+LineSegSet& LineSegSet::operator=(const LineSegSet& that) = default;
 
 // Destructor
-LineSegSet::~LineSegSet()
-{
-}
+LineSegSet::~LineSegSet() = default;
 
 //: Construct from ascii file
 LineSegSet::LineSegSet(const char* filename, const HomgMetric& c)
@@ -119,9 +111,7 @@ int LineSegSet::FindNearestLineIndex(double /*x*/, double /*y*/)
 //: Save lines to ASCII file
 bool LineSegSet::save_ascii(std::ostream& f) const
 {
-  for (unsigned i = 0; i < hlines_.size(); ++i) {
-    HomgLineSeg2D const& l = hlines_[i];
-
+  for (const auto & l : hlines_) {
     vnl_double_2 p1 = conditioner_.homg_to_image(l.get_point1());
     vnl_double_2 p2 = conditioner_.homg_to_image(l.get_point2());
 
@@ -163,5 +153,5 @@ HomgLineSeg2D* LineSegSet::pick_line(double x, double y)
   if (i >= 0)
     return &hlines_[i];
   else
-    return VXL_NULLPTR;
+    return nullptr;
 }

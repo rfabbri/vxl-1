@@ -9,7 +9,9 @@
 // \author Ozge C. Ozcanli
 // \date May 12, 2011
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/io/boxm2_stream_cache.h>
 #include <boxm2/io/boxm2_cache.h>
 #include <boxm2/boxm2_scene.h>
@@ -25,8 +27,8 @@
 //: run batch update
 namespace boxm2_cpp_batch_update_nonsurface_model_process_globals
 {
-  const unsigned n_inputs_  = 3;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 3;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool boxm2_cpp_batch_update_nonsurface_model_process_cons(bprb_func_process& pro)
@@ -67,10 +69,10 @@ bool boxm2_cpp_batch_update_nonsurface_model_process(bprb_func_process& pro)
   std::vector<boxm2_block_id> blk_ids = scene->get_block_ids();
   std::vector<boxm2_block_id>::iterator id;
   for (id = blk_ids.begin(); id != blk_ids.end(); id++) {
-    boxm2_data_base *  alpha  = cache->get_data_base(scene,*id,boxm2_data_traits<BOXM2_ALPHA>::prefix(),0,true);
+    boxm2_data_base *  alpha = cache->get_data_base(scene,*id,boxm2_data_traits<BOXM2_ALPHA>::prefix(),0,true);
 
     // pass num_bytes = 0 to make sure disc is read if not already in memory
-    boxm2_data_base *  entropy_histo_air  = cache->get_data_base(scene,*id,boxm2_data_traits<BOXM2_AUX0>::prefix("entropy_histo_air"),alpha->buffer_length(),false);
+    boxm2_data_base *  entropy_histo_air = cache->get_data_base(scene,*id,boxm2_data_traits<BOXM2_AUX0>::prefix("entropy_histo_air"),alpha->buffer_length(),false);
     boxm2_compute_empty_model_gradient_functor data_functor;
     data_functor.init_data(entropy_histo_air, str_cache);
     int histo_entropy_airTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_AUX0>::prefix());
@@ -81,11 +83,10 @@ bool boxm2_cpp_batch_update_nonsurface_model_process(bprb_func_process& pro)
         return false;
     }
 
-    int data_buff_length  = (int)(entropy_histo_air->buffer_length()/histo_entropy_airTypeSize);
+    int data_buff_length = (int)(entropy_histo_air->buffer_length()/histo_entropy_airTypeSize);
     boxm2_data_serial_iterator<boxm2_compute_empty_model_gradient_functor>(data_buff_length,data_functor);
 
     cache->remove_data_base(scene,*id,boxm2_data_traits<BOXM2_AUX0>::prefix("entropy_histo_air"));
   }
   return true;
 }
-

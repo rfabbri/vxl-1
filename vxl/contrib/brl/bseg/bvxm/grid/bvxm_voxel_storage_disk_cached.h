@@ -5,7 +5,9 @@
 
 #include <iostream>
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #ifdef BVXM_USE_FSTREAM64
 #include <vil/vil_stream_fstream64.h>
 #else
@@ -23,18 +25,18 @@ class bvxm_voxel_storage_disk_cached : public bvxm_voxel_storage<T>
 {
  public:
   bvxm_voxel_storage_disk_cached(std::string storage_filename, vgl_vector_3d<unsigned int> grid_size, vxl_int_64 max_cache_size);
-  virtual ~bvxm_voxel_storage_disk_cached();
+  ~bvxm_voxel_storage_disk_cached() override;
 
-  virtual bool initialize_data(T const& value);
-  virtual bvxm_voxel_slab<T> get_slab(unsigned slice_idx, unsigned slab_thickness);
-  virtual void put_slab();
+  bool initialize_data(T const& value) override;
+  bvxm_voxel_slab<T> get_slab(unsigned slice_idx, unsigned slab_thickness) override;
+  void put_slab() override;
 
   //: return number of observations
-  virtual unsigned num_observations() const;
+  unsigned num_observations() const override;
   //: increment the number of observations
-  virtual void increment_observations();
+  void increment_observations() override;
   //: zero the number of observations
-  virtual void zero_observations();
+  void zero_observations() override;
  protected:
 
    bool fill_cache(unsigned start_slice_idx);

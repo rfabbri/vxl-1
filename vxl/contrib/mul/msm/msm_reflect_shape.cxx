@@ -7,7 +7,10 @@
 // \author Tim Cootes
 
 #include "msm_reflect_shape.h"
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Reflect points in the line x=ax, then re-number
 //  On exit, new_points[i] = points[relabel[i]] reflected in x=ax
@@ -27,4 +30,3 @@ void msm_reflect_shape_along_x(const msm_points& points,
     new_points.set_point(sym_pts[i],x,p.y());
   }
 }
-

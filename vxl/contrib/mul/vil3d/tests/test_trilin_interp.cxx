@@ -1,7 +1,9 @@
 // This is mul/vil3d/tests/test_trilin_interp.cxx
 #include <iostream>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil3d/vil3d_image_view.h>
 #include <vil3d/vil3d_trilin_interp.h>
 

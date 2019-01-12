@@ -8,7 +8,9 @@
 #include <algorithm>
 #include <fstream>
 #include <vul/vul_arg.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <mbl/mbl_mask.h>
 
 // IO helpers - see below for definition
@@ -31,9 +33,9 @@ int main(int argc, char **argv)
     "\n"
   );
 
-  vul_arg<std::string> valueA_filename(VXL_NULLPTR,"Filename of values file A");
-  vul_arg<std::string> valueB_filename(VXL_NULLPTR,"Filename of values file B");
-  vul_arg<std::string> mask_filename(VXL_NULLPTR,"Filename of mask");
+  vul_arg<std::string> valueA_filename(nullptr,"Filename of values file A");
+  vul_arg<std::string> valueB_filename(nullptr,"Filename of values file B");
+  vul_arg<std::string> mask_filename(nullptr,"Filename of mask");
   vul_arg<std::string> output_filename("-out","Filename for output - sent to standard out if not set");
   vul_arg<bool> use_blanks("-b", "Keep blank lines in values files (they are stripped by default)");
   vul_arg_parse(argc, argv);

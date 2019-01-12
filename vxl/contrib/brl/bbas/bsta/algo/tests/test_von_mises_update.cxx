@@ -5,7 +5,9 @@
 #include <bsta/algo/bsta_von_mises_updater.h>
 #include <bsta/bsta_attributes.h>
 #include <vgl/vgl_point_2d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h>
 // do not remove the following text
 // Approved for public release, distribution unlimited (DISTAR Case 14389)
@@ -93,10 +95,8 @@ void test_von_mises_update_type(T epsilon, const std::string& type_name)
 
 static void test_von_mises_update()
 {
-#if VCL_CAN_DO_PARTIAL_SPECIALIZATION
   test_von_mises_update_type(1e-5f,"float");
   test_von_mises_update_type(1e-5 ,"double");
-#endif
 }
 
 TESTMAIN(test_von_mises_update);

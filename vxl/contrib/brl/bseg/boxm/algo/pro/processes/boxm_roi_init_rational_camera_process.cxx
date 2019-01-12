@@ -40,14 +40,14 @@
 //: globals variables and functions
 namespace boxm_roi_init_rational_camera_process_globals
 {
-  const unsigned n_inputs_ = 3;
-  const unsigned n_outputs_ = 3;
+  constexpr unsigned n_inputs_ = 3;
+  constexpr unsigned n_outputs_ = 3;
 
   // functions
   bool roi_init(std::string const& image_path,
                 vpgl_rational_camera<double>* camera,
                 vgl_box_3d<double> box,
-                vpgl_lvcs lvcs,
+                const vpgl_lvcs& lvcs,
                 float uncertainty,
                 vil_image_view<unsigned char>* nitf_image_unsigned_char,
                 vpgl_local_rational_camera<double>& local_camera);
@@ -109,8 +109,8 @@ bool boxm_roi_init_rational_camera_process(bprb_func_process& pro)
   //voxel_world
   boxm_scene_base_sptr scene = pro.get_input<boxm_scene_base_sptr>(i++);
 
-  vil_image_view<unsigned char>* img_ptr = new vil_image_view<unsigned char>();
-  vpgl_rational_camera<double>* rat_camera =
+  auto* img_ptr = new vil_image_view<unsigned char>();
+  auto* rat_camera =
   dynamic_cast<vpgl_rational_camera<double>*> (camera.as_pointer());
 
   if (!rat_camera) {
@@ -123,7 +123,7 @@ bool boxm_roi_init_rational_camera_process(bprb_func_process& pro)
       scene->appearence_model() == BOXM_EDGE_FLOAT ||
       scene->appearence_model() == BOXM_EDGE_LINE) {
     typedef boct_tree<short, boxm_sample<BOXM_APM_MOG_GREY> > tree_type;
-    boxm_scene<tree_type> *s = static_cast<boxm_scene<tree_type>*> (scene.as_pointer());
+    auto *s = static_cast<boxm_scene<tree_type>*> (scene.as_pointer());
 
     if (!roi_init(image_path, rat_camera, s->get_world_bbox(),(s->lvcs()), uncertainty, img_ptr, local_camera)) {
       std::cerr << "The process has failed!\n";
@@ -153,7 +153,7 @@ bool boxm_roi_init_rational_camera_process(bprb_func_process& pro)
 bool boxm_roi_init_rational_camera_process_globals::roi_init(std::string const& image_path,
                                                              vpgl_rational_camera<double>* camera,
                                                              vgl_box_3d<double> box,
-                                                             vpgl_lvcs lvcs,
+                                                             const vpgl_lvcs& lvcs,
                                                              float uncertainty,
                                                              vil_image_view<unsigned char>* nitf_image_unsigned_char,
                                                              vpgl_local_rational_camera<double>& local_camera)
@@ -167,7 +167,7 @@ bool boxm_roi_init_rational_camera_process_globals::roi_init(std::string const& 
     return false;
   }
 
-  vil_nitf2_image* nitf =  static_cast<vil_nitf2_image*> (img.ptr());
+  auto* nitf =  static_cast<vil_nitf2_image*> (img.ptr());
 
   vgl_box_2d<double>* roi_box = project_box(camera, lvcs, box, uncertainty);
 
@@ -212,7 +212,7 @@ bool boxm_roi_init_rational_camera_process_globals::roi_init(std::string const& 
           vxl_uint_16 curr_pixel_val = nitf_image_vxl_uint_16(m,n,p);
 
           if (bigendian) {
-            unsigned char* arr = (unsigned char*) &curr_pixel_val;
+            auto* arr = (unsigned char*) &curr_pixel_val;
             // [defgh3][5abc]
             // --> [abcdefgh]
             unsigned char big = *arr;
@@ -230,7 +230,7 @@ bool boxm_roi_init_rational_camera_process_globals::roi_init(std::string const& 
             curr_pixel_val >>= 8;
           }
 
-          unsigned char pixel_val = static_cast<unsigned char> (curr_pixel_val);
+          auto pixel_val = static_cast<unsigned char> (curr_pixel_val);
 
 #if 0
           //This is how Thom uses to get the region
@@ -286,11 +286,10 @@ vgl_box_2d<double>*boxm_roi_init_rational_camera_process_globals::project_box( v
   vgl_box_3d<double> cam_box(center, 2*r, 2*r, 2*r, vgl_box_3d<double>::centre);
   std::vector<vgl_point_3d<double> > cam_corners = boxm_utils::corners_of_box_3d(cam_box);
   std::vector<vgl_point_3d<double> > box_corners = boxm_utils::corners_of_box_3d(box);
-  vgl_box_2d<double>* roi = new vgl_box_2d<double>();
+  auto* roi = new vgl_box_2d<double>();
 
   double lon, lat, gz;
-  for (unsigned i=0; i<cam_corners.size(); i++) {
-    vgl_point_3d<double> cam_corner = cam_corners[i];
+  for (auto cam_corner : cam_corners) {
     lvcs.local_to_global(cam_corner.x(), cam_corner.y(), cam_corner.z(),
                          vpgl_lvcs::wgs84, lon, lat, gz, vpgl_lvcs::DEG, vpgl_lvcs::METERS);
     vpgl_rational_camera<double>* new_cam = cam->clone();
@@ -299,9 +298,9 @@ vgl_box_2d<double>*boxm_roi_init_rational_camera_process_globals::project_box( v
     new_cam->set_offset(vpgl_rational_camera<double>::Z_INDX, gz);
 
     // project the box
-    for (unsigned int j=0; j < box_corners.size(); j++) {
+    for (auto & box_corner : box_corners) {
       // convert the box corners to world coordinates
-      lvcs.local_to_global(box_corners[j].x(), box_corners[j].y(), box_corners[j].z(),
+      lvcs.local_to_global(box_corner.x(), box_corner.y(), box_corner.z(),
                            vpgl_lvcs::wgs84, lon, lat, gz, vpgl_lvcs::DEG, vpgl_lvcs::METERS);
       vgl_point_2d<double> p2d = new_cam->project(vgl_point_3d<double>(lon, lat, gz));
       roi->add(p2d);
@@ -309,4 +308,3 @@ vgl_box_2d<double>*boxm_roi_init_rational_camera_process_globals::project_box( v
   }
   return roi;
 }
-

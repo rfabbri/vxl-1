@@ -1,9 +1,6 @@
 // This is mul/vimt3d/vimt3d_slice.h
 #ifndef vimt3d_slice_h_
 #define vimt3d_slice_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author Chris Wolstenholme
@@ -14,7 +11,10 @@
 #include <vimt3d/vimt3d_image_3d_of.h>
 #include <vimt3d/vimt3d_transform_3d.h>
 #include <vimt/vimt_transform_2d.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Return a 2D view of slice k of 3D image aligned as (j,i).
 //  result(x,y,p)=im(y,x,k,p)

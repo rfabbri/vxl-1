@@ -4,7 +4,9 @@
 //:
 // \file
 #include <vsl/vsl_vector_io.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 unsigned volm_desc_ex_land_only::locate_idx(double const& target, std::vector<double> const& arr) const
 {
@@ -46,20 +48,20 @@ volm_desc_ex_land_only::volm_desc_ex_land_only(depth_map_scene_sptr const& dms,
   // sky (land id = 0, distant = 1E6)
   if (!dms->sky().empty()) {
     std::vector<depth_map_region_sptr> sky = dms->sky();
-    for (unsigned s_idx = 0; s_idx < sky.size(); s_idx++)
-      this->set_count(sky[s_idx]->min_depth(), sky[s_idx]->land_id(), (unsigned char)1);
+    for (auto & s_idx : sky)
+      this->set_count(s_idx->min_depth(), s_idx->land_id(), (unsigned char)1);
   }
   // ground
   if (!dms->ground_plane().empty()) {
     std::vector<depth_map_region_sptr> grd = dms->ground_plane();
-    for (unsigned g_idx = 0; g_idx < grd.size(); g_idx++)
-      this->set_count(grd[g_idx]->min_depth(), grd[g_idx]->land_id(), (unsigned char)1);
+    for (auto & g_idx : grd)
+      this->set_count(g_idx->min_depth(), g_idx->land_id(), (unsigned char)1);
   }
   // other objects
   if (!dms->scene_regions().empty()) {
     std::vector<depth_map_region_sptr> obj = dms->scene_regions();
-    for (unsigned o_idx = 0; o_idx < obj.size(); o_idx++)
-      this->set_count(obj[o_idx]->min_depth(), obj[o_idx]->land_id(), (unsigned char)1);
+    for (auto & o_idx : obj)
+      this->set_count(o_idx->min_depth(), o_idx->land_id(), (unsigned char)1);
   }
 }
 
@@ -85,7 +87,7 @@ volm_desc_ex_land_only::volm_desc_ex_land_only(std::vector<unsigned char> const&
   this->initialize_bin(initial_mag);
 
   // ingest index to histogram
-  unsigned nrays = (unsigned)index_dst.size();
+  auto nrays = (unsigned)index_dst.size();
   assert( nrays == index_combined.size() && " in volm_desx_ex, dist/land/orient indice has different number of rays");
   for (unsigned r_idx = 0; r_idx < nrays; r_idx++) {
     if (index_dst[r_idx] == 253 || index_combined[r_idx] == 253)         // invalid
@@ -107,7 +109,7 @@ volm_desc_ex_land_only::volm_desc_ex_land_only(std::vector<unsigned char> const&
   }
 }
 
-void volm_desc_ex_land_only::initialize_bin(unsigned char const& mag)
+void volm_desc_ex_land_only::initialize_bin(unsigned char const&  /*mag*/)
 {
   for (unsigned bin_id = 0; bin_id < nbins_; bin_id++)
     h_[bin_id] = (unsigned char)0;
@@ -152,8 +154,8 @@ void volm_desc_ex_land_only::print() const
   std::cout << "descriptor name: " << name_ << '\n';
   std::cout << "number of depth bins: " << ndists_ << '\n'
      << "radius interval: ";
-  for (unsigned ridx = 0; ridx < radius_.size(); ridx++)
-    std::cout << radius_[ridx] << ' ';
+  for (double radiu : radius_)
+    std::cout << radiu << ' ';
   std::cout << '\n'
            << "number of land bins: " << nlands_ << '\n'
            << "histogram info:\n";

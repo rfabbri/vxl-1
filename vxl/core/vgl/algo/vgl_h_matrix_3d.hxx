@@ -8,8 +8,11 @@
 #include <limits>
 #include <cstdlib>
 #include "vgl_h_matrix_3d.h"
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#include <vcl_compiler_detection.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_plane_3d.h>
 #include <vnl/vnl_inverse.h>
 #include <vnl/vnl_numeric_traits.h>

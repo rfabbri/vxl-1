@@ -8,7 +8,9 @@
 
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_fwd.h>
 
 class rrel_wls_obj;
@@ -159,7 +161,7 @@ class rrel_estimation_problem
   // to 0.
   virtual bool weighted_least_squares_fit( vnl_vector<double>& params,
                                            vnl_matrix<double>& norm_covar,
-                                           const std::vector<double>* weights=VXL_NULLPTR ) const = 0;
+                                           const std::vector<double>* weights=nullptr ) const = 0;
 
  protected:
   //: Set the degrees of freedom.

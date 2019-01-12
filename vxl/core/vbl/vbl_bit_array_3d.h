@@ -1,9 +1,6 @@
 // This is core/vbl/vbl_bit_array_3d.h
 #ifndef vbl_bit_array_3d_h_
 #define vbl_bit_array_3d_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief contains classes vbl_bit_array_3d_base and vbl_bit_array_3d
@@ -20,7 +17,9 @@
 //-----------------------------------------------------------------------------
 
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class vbl_bit_array_3d
 {
@@ -92,7 +91,7 @@ class vbl_bit_array_3d
 
   // Helpers-------------------------------------------------------------------
 
-  void destruct() { delete[] data_; data_=VXL_NULLPTR; }
+  void destruct() { delete[] data_; data_=nullptr; }
   void construct(unsigned int m, unsigned int n, unsigned int p);
 
   void index(unsigned int x, unsigned int y, unsigned int z,

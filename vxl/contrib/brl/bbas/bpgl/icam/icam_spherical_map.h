@@ -21,7 +21,9 @@
 #include <vector>
 #include <vil/vil_image_view.h>
 #include <vbl/vbl_ref_count.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpgl/vpgl_camera_double_sptr.h>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_ray_3d.h>
@@ -39,7 +41,7 @@ class icam_spherical_map : public vbl_ref_count
     origin_(origin), radius_(radius), theta_cap_(theta_cap){}
 
   //: Destructor
-  ~icam_spherical_map(){}
+  ~icam_spherical_map() override= default;
   //: images must be RGB byte. Cameras projective or perspective
 
   void set_data(std::vector<vil_image_view<vxl_byte> > const& images,

@@ -13,7 +13,9 @@
 //   <none yet>
 // \endverbatim
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bprb/bprb_parameters.h>
 #include <bvxm/grid/bvxm_voxel_grid_base.h>
 #include <bvxm/grid/bvxm_voxel_grid.h>
@@ -23,8 +25,8 @@
 
 namespace bvpl_convert_id_to_hue_process_globals
 {
-  const unsigned n_inputs_ =5;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 5;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 
@@ -75,9 +77,9 @@ bool bvpl_convert_id_to_hue_process(bprb_func_process& pro)
     std::cerr << "In bvpl_convert_id_to_hue_process -- one of the input grids is not valid!\n";
     return false;
   }
-  if (bvxm_voxel_grid<int> *id_grid = dynamic_cast< bvxm_voxel_grid<int >* >(id_base.ptr()))
+  if (auto *id_grid = dynamic_cast< bvxm_voxel_grid<int >* >(id_base.ptr()))
   {
-    if (bvxm_voxel_grid<float> *response_grid = dynamic_cast< bvxm_voxel_grid<float >* >(response_base.ptr()))
+    if (auto *response_grid = dynamic_cast< bvxm_voxel_grid<float >* >(response_base.ptr()))
     {
       //assign hue values evenly dristributed on the color wheel
       //the wheel starts and ends on red, so we don't want to get back to the end
@@ -99,7 +101,7 @@ bool bvpl_convert_id_to_hue_process(bprb_func_process& pro)
       bvpl_write_colors_to_svg(kernel_vector,colors,map_output_file);
       return true;
     }
-    if (bvxm_voxel_grid<bsta_num_obs<bsta_gauss_sf1 > > *response_grid = dynamic_cast< bvxm_voxel_grid<bsta_num_obs<bsta_gauss_sf1 > >* >(response_base.ptr()))
+    if (auto *response_grid = dynamic_cast< bvxm_voxel_grid<bsta_num_obs<bsta_gauss_sf1 > >* >(response_base.ptr()))
     {
       //assign hue values evenly dristributed on the color wheel
       //the wheel starts and ends on red, so we don't want to get back to the end

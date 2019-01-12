@@ -8,7 +8,9 @@
 // \author Kola Babalola
 
 #include <vil3d/vil3d_image_view.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil3d/vil3d_convert.h>
 #include <vil3d/algo/vil3d_threshold.h>
 

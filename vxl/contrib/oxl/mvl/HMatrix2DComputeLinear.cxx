@@ -5,8 +5,10 @@
 //:
 //  \file
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vnl/algo/vnl_svd.h>
 #include <mvl/HMatrix2D.h>
 #include <mvl/HomgMetric.h>
@@ -27,8 +29,8 @@ HMatrix2DComputeLinear::HMatrix2DComputeLinear(bool allow_ideal_points):
 //
 // FSM - this is now done by HMatrix2DComputeDesign.
 
-const int TM_UNKNOWNS_COUNT = 9;
-const double DEGENERACY_THRESHOLD = 0.00001;  // FSM. see below.
+constexpr int TM_UNKNOWNS_COUNT = 9;
+constexpr double DEGENERACY_THRESHOLD = 0.00001;  // FSM. see below.
 
 //-----------------------------------------------------------------------------
 //

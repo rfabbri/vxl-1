@@ -55,14 +55,16 @@
 #include <boxm2/boxm2_block.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_data.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/algo/vgl_rotation_3d.h>
 #include "boxm2_vecf_eye_params.h"
 class boxm2_vecf_eye_scene : public boxm2_scene
 {
  public:
- boxm2_vecf_eye_scene(): alpha_data_(VXL_NULLPTR), app_data_(VXL_NULLPTR), nobs_data_(VXL_NULLPTR), sphere_(VXL_NULLPTR), sphere_dist_(VXL_NULLPTR), iris_(VXL_NULLPTR), pupil_(VXL_NULLPTR),
-    target_alpha_data_(VXL_NULLPTR),target_app_data_(VXL_NULLPTR), target_nobs_data_(VXL_NULLPTR){}
+ boxm2_vecf_eye_scene(): alpha_data_(nullptr), app_data_(nullptr), nobs_data_(nullptr), sphere_(nullptr), sphere_dist_(nullptr), iris_(nullptr), pupil_(nullptr),
+    target_alpha_data_(nullptr),target_app_data_(nullptr), target_nobs_data_(nullptr){}
 
   //: set parameters
   void set_params(boxm2_vecf_eye_params const& params){ params_ = params;}
@@ -72,7 +74,7 @@ class boxm2_vecf_eye_scene : public boxm2_scene
   boxm2_vecf_eye_scene(std::string const& scene_file, bool initialize = false);
 
   //: map eye data to the target scene
-  void map_to_target(boxm2_scene_sptr target_scene, std::string const& app_id="");
+  void map_to_target(const boxm2_scene_sptr& target_scene, std::string const& app_id="");
 
   //: compute an inverse vector field defined at sphere points (debug helper)
   std::vector<vgl_vector_3d<double> > inverse_vector_field(vgl_rotation_3d<double> const& rot) const;

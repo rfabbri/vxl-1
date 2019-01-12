@@ -13,12 +13,14 @@
 #include <boxm2/boxm2_block.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_data.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_image_view.h>
 #include <vpgl/vpgl_camera_double_sptr.h>
 class boxm2_vecf_particle{
  public:
- boxm2_vecf_particle(): p_(0.0f), cam_(VXL_NULLPTR), tx_(0.0), ty_(0.0), s_(0.0),
+ boxm2_vecf_particle(): p_(0.0f), cam_(nullptr), tx_(0.0), ty_(0.0), s_(0.0),
     rx_(0.0),ry_(0.0),rz_(0.0){}
  boxm2_vecf_particle(float p, vpgl_camera_double_sptr const& cam): p_(p), cam_(cam),
     tx_(0.0), ty_(0.0), s_(0.0), rx_(0.0),ry_(0.0),rz_(0.0){}
@@ -41,7 +43,7 @@ class boxm2_vecf_particle{
 class boxm2_vecf_shuttle_scene : public boxm2_scene
 {
  public:
- boxm2_vecf_shuttle_scene(): alpha_data_(VXL_NULLPTR), app_data_(VXL_NULLPTR), nobs_data_(VXL_NULLPTR){}
+ boxm2_vecf_shuttle_scene(): alpha_data_(nullptr), app_data_(nullptr), nobs_data_(nullptr){}
 
   boxm2_vecf_shuttle_scene(std::string const& scene_file, std::string const& imesh_file);
 
@@ -50,17 +52,17 @@ class boxm2_vecf_shuttle_scene : public boxm2_scene
   boxm2_scene_sptr scene(){ return base_model_;}
 
   vil_image_view<float> silhouette(vpgl_camera_double_sptr const& cam, unsigned ni, unsigned nj) const;
-  void generate_particles(vpgl_camera_double_sptr cam, double txmin, double txmax, double dtx);
-  void generate_particles_txy(vpgl_camera_double_sptr cam,
+  void generate_particles(const vpgl_camera_double_sptr& cam, double txmin, double txmax, double dtx);
+  void generate_particles_txy(const vpgl_camera_double_sptr& cam,
                           double txmin, double txmax, double dtx,
                           double tymin, double tymax, double dty);
   void generate_particles_txs(vpgl_camera_double_sptr cam,
                           double txmin, double txmax, double dtx,
                           double smin, double smax, double ds);
-  void generate_particles_txry(vpgl_camera_double_sptr cam,
+  void generate_particles_txry(const vpgl_camera_double_sptr& cam,
                                double txmin, double txmax, double dtx,
                                double rymin, double rymax, double dry);
-  void generate_particles_txrz(vpgl_camera_double_sptr cam,
+  void generate_particles_txrz(const vpgl_camera_double_sptr& cam,
                                double txmin, double txmax, double dtx,
                                double rzmin, double rzmax, double drz);
   void evaluate_particles(vil_image_view<vxl_byte> const& observed_img, vgl_box_2d<int> const& bkg_box);

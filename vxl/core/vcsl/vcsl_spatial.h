@@ -21,7 +21,6 @@
 #include <vcsl/vcsl_spatial_transformation_sptr.h>
 #include <vcsl/vcsl_graph_sptr.h>
 #include <vnl/vnl_vector.h>
-#include <vcl_compiler.h>
 class vcsl_cartesian_2d;
 class vcsl_polar;
 class vcsl_cartesian_3d;
@@ -30,7 +29,9 @@ class vcsl_spherical;
 
 
 // This is needed for icc-7.0 to solve a strange link problem.
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #define VCSL_SPATIAL_VECTOR_BOOL std::vector<bool>
 
 //: A spatial coordinate system
@@ -46,21 +47,21 @@ class vcsl_spatial
   //***************************************************************************
 
   // Default constructor
-  vcsl_spatial() {}
+  vcsl_spatial() = default;
 
   // Destructor
-  virtual ~vcsl_spatial();
+  ~vcsl_spatial() override;
 
   //***************************************************************************
   // Because VXL does not necessarily use dynamic_cast<>
   //***************************************************************************
 
-  virtual const vcsl_spatial *cast_to_spatial() const { return this; }
-  virtual const vcsl_cartesian_2d *cast_to_cartesian_2d() const {return VXL_NULLPTR; }
-  virtual const vcsl_polar *cast_to_polar() const {return VXL_NULLPTR; }
-  virtual const vcsl_cartesian_3d *cast_to_cartesian_3d() const {return VXL_NULLPTR; }
-  virtual const vcsl_cylindrical *cast_to_cylindrical() const {return VXL_NULLPTR; }
-  virtual const vcsl_spherical *cast_to_spherical() const {return VXL_NULLPTR; }
+  const vcsl_spatial *cast_to_spatial() const override { return this; }
+  virtual const vcsl_cartesian_2d *cast_to_cartesian_2d() const {return nullptr; }
+  virtual const vcsl_polar *cast_to_polar() const {return nullptr; }
+  virtual const vcsl_cartesian_3d *cast_to_cartesian_3d() const {return nullptr; }
+  virtual const vcsl_cylindrical *cast_to_cylindrical() const {return nullptr; }
+  virtual const vcsl_spherical *cast_to_spherical() const {return nullptr; }
 
   //***************************************************************************
   // Status report

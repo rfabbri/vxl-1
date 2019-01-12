@@ -9,7 +9,9 @@
 // \author Vishal Jain
 // \date Mar 10, 2011
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/io/boxm2_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -23,8 +25,8 @@
 
 namespace boxm2_ocl_refine_scene_around_geometry_globals
 {
-  const unsigned n_inputs_ =  7;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 7;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool boxm2_ocl_refine_scene_around_geometry_process_cons(bprb_func_process& pro)
@@ -66,7 +68,7 @@ bool boxm2_ocl_refine_scene_around_geometry_process(bprb_func_process& pro)
   bocl_device_sptr device= pro.get_input<bocl_device_sptr>(i++);
   bvpl_kernel_vector_sptr filter_vector = pro.get_input<bvpl_kernel_vector_sptr>(i++);
   int  num_times = pro.get_input<int>(i++);
-  float p_thresh = pro.get_input<float>(i++);
+  auto p_thresh = pro.get_input<float>(i++);
   bool refine_gpu = pro.get_input<bool>(i++);
 
   bool foundDataType = false;

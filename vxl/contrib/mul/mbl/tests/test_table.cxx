@@ -6,7 +6,9 @@
 // \date 2005-02-02
 
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <mbl/mbl_table.h>
 #include <testlib/testlib_test.h>
 

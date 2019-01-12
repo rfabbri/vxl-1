@@ -19,8 +19,10 @@
 #include "vidl_ffmpeg_pixel_format.h"
 #include "vidl_frame.h"
 #include "vidl_convert.h"
-#include <vcl_compiler.h>
-#include <vcl_climits.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <climits>
 #include <vil/vil_memory_chunk.h>
 
 extern "C" {

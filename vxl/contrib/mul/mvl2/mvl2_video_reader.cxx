@@ -1,6 +1,3 @@
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \brief A base class for cameras/virtual cameras
@@ -11,11 +8,11 @@
 #include <algorithm>
 #include <fstream>
 #include "mvl2_video_reader.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
-mvl2_video_reader::mvl2_video_reader()
-{
-}
+mvl2_video_reader::mvl2_video_reader() = default;
 
 mvl2_video_reader::~mvl2_video_reader()
 {
@@ -27,7 +24,7 @@ std::string mvl2_video_reader::is_a() const
   return std::string("mvl2_video_reader");
 }
 
-std::vector<std::string> mvl2_video_reader::load_configs(std::string filename)
+std::vector<std::string> mvl2_video_reader::load_configs(const std::string& filename)
 {
   config_names_.clear();
   config_sizes_.clear();
@@ -44,11 +41,11 @@ std::vector<std::string> mvl2_video_reader::load_configs(std::string filename)
   config_strings_.push_back(config_string);
   config_filenames_.push_back(config_filename);
 
-  std::ifstream* config_file=new std::ifstream(filename.c_str());
+  auto* config_file=new std::ifstream(filename.c_str());
   if (!(*config_file))
   {
     const char* val;
-    if ((val=std::getenv("VIDL2RC"))==VXL_NULLPTR)
+    if ((val=std::getenv("VIDL2RC"))==nullptr)
     {
       std::cerr << "VIDL2RC environment variable not defined.\n"
                << "Cannot find configuration file for video input.\n";
@@ -99,7 +96,7 @@ void mvl2_video_reader::display_configs()
   }
 }
 
-bool mvl2_video_reader::use_config(std::string configname)
+bool mvl2_video_reader::use_config(const std::string& configname)
 {
   std::size_t position=std::find(config_names_.begin(), config_names_.end(), configname) - config_names_.begin();
   if (position<config_names_.size())

@@ -12,14 +12,16 @@
 #include <wx/wx.h>
 #endif
 
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vgui/vgui_message.h>
 #include "bitmaps/prev.xpm"
 #include "bitmaps/play.xpm"
 #include "bitmaps/pause.xpm"
 #include "bitmaps/next.xpm"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 IMPLEMENT_DYNAMIC_CLASS( wxVideoControl, wxPanel )
@@ -334,4 +336,3 @@ void wxVideoControl::OnKillTextFocus( wxCommandEvent& event )
   wxVideoControl* vc = dynamic_cast<wxVideoControl*>(text->GetParent());
   text->SetValue(wxString::Format(wxT("%d"),vc->frame_));
 }
-

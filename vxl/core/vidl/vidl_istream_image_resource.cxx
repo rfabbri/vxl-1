@@ -1,7 +1,4 @@
 // This is core/vidl/vidl_istream_image_resource.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 
@@ -10,8 +7,10 @@
 #include <vidl/vidl_istream.h>
 #include "vidl_convert.h"
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vil/vil_image_view.h>
 
@@ -74,8 +73,7 @@ vidl_istream_image_resource::
 
 
 vidl_istream_image_resource::~vidl_istream_image_resource()
-{
-}
+= default;
 
 
 unsigned
@@ -118,10 +116,10 @@ vidl_istream_image_resource::get_copy_view(unsigned i0, unsigned ni,
                                            unsigned j0, unsigned nj) const
 {
   if (!istream_)
-    return VXL_NULLPTR;
+    return nullptr;
 
   int curr_frame = istream_->frame_number();
-  vidl_frame_sptr frame = VXL_NULLPTR;
+  vidl_frame_sptr frame = nullptr;
   if (curr_frame == frame_number_)
     frame = istream_->current_frame();
   if (curr_frame + 1 == frame_number_) {
@@ -134,7 +132,7 @@ vidl_istream_image_resource::get_copy_view(unsigned i0, unsigned ni,
   }
 
   if (!frame)
-    return VXL_NULLPTR;
+    return nullptr;
 
   // try the wrap the frame in an image view
   vil_image_view_base_sptr view = vidl_convert_wrap_in_view(*frame);
@@ -145,12 +143,12 @@ vidl_istream_image_resource::get_copy_view(unsigned i0, unsigned ni,
     vidl_convert_to_view(*frame,*view);
   }
   if (!view)
-    return VXL_NULLPTR;
+    return nullptr;
 
   if (i0 == 0 && j0 == 0 && ni == view->ni() && nj == view->nj())
     return view;
 
-  if (i0 + ni > view->ni() || j0 + nj > view->nj()) return VXL_NULLPTR;
+  if (i0 + ni > view->ni() || j0 + nj > view->nj()) return nullptr;
 
   switch (view->pixel_format())
   {
@@ -180,7 +178,7 @@ vidl_istream_image_resource::get_copy_view(unsigned i0, unsigned ni,
     break;
   }
 
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 
@@ -221,6 +219,5 @@ vidl_istream_image_resource::create_empty_view() const
    default:
     break;
   }
-  return VXL_NULLPTR;
+  return nullptr;
 }
-

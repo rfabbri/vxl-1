@@ -1,9 +1,6 @@
 // This is core/vgl/algo/vgl_p_matrix.h
 #ifndef vgl_p_matrix_h_
 #define vgl_p_matrix_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief General 3x4 perspective projection matrix
@@ -28,7 +25,9 @@
 // \endverbatim
 
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vnl/algo/vnl_algo_fwd.h> // for vnl_svd
 #include <vnl/vnl_matrix.h>
@@ -64,10 +63,10 @@ class vgl_p_matrix
   explicit vgl_p_matrix(vnl_matrix_fixed<T, 3, 4> const& P);
   //: Construct from 3x3 matrix A and vector a. P = [A a].
   vgl_p_matrix(const vnl_matrix_fixed<T,3,3>& A, const vnl_vector_fixed<T,3>& a)
-  : svd_(VXL_NULLPTR) { set(A,a); }
+  : svd_(nullptr) { set(A,a); }
   //: Deprecated; use the vnl_matrix_fixed variant instead
   vgl_p_matrix(const vnl_matrix<T>& A, const vnl_vector<T>& a)
-  : svd_(VXL_NULLPTR) { set(A,a); }
+  : svd_(nullptr) { set(A,a); }
 
   vgl_p_matrix(const vgl_p_matrix& P);
  ~vgl_p_matrix();

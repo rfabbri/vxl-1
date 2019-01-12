@@ -12,7 +12,9 @@
 #include <boxm2/boxm2_blocks_vis_graph.h>
 #include <vnl/vnl_vector_fixed.h>
 #include <vpgl/vpgl_generic_camera.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 void create_scene(boxm2_scene_sptr & scene)
 {
   //create block metadata
@@ -56,9 +58,9 @@ void test_block_vis_graph()
   boxm2_block_vis_graph g(scene->blocks(),gcam);
   std::vector<boxm2_block_id> ids = g.get_ordered_ids();
   std::cout<<"Order is "<<std::endl;
-  for (unsigned i = 0; i < ids.size(); i++)
+  for (const auto & id : ids)
   {
-      std::cout<<ids[i]<<std::endl;
+      std::cout<<id<<std::endl;
   }
 }
 TESTMAIN( test_block_vis_graph );

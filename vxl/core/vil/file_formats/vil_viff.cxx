@@ -3,8 +3,10 @@
 #include <iostream>
 #include <cstring>
 #include "vil_viff.h"
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 static char const* vil_viff_format_tag = "viff";
 
@@ -43,15 +45,15 @@ static inline void swap(void* p,int length)
 vil_image_resource_sptr vil_viff_file_format::make_input_image(vil_stream* is)
 {
   // Attempt to read header
-  if (!is) return VXL_NULLPTR;
+  if (!is) return nullptr;
   is->seek(0L);
   vil_viff_xvimage header;
   if (VIFF_HEADERSIZE != is->read((void*)(&header),VIFF_HEADERSIZE))
-    return VXL_NULLPTR;
+    return nullptr;
 
   if (header.identifier != (char)XV_FILE_MAGIC_NUM ||
       header.file_type != (char)XV_FILE_TYPE_XVIFF)
-    return VXL_NULLPTR;
+    return nullptr;
 
   vxl_uint_32 dst = header.data_storage_type;
   if ((dst & 0xff) == 0)
@@ -70,7 +72,7 @@ vil_image_resource_sptr vil_viff_file_format::make_input_image(vil_stream* is)
     default:
       std::cout << "vil_viff: non supported data type: VFF_TYP "
                << header.data_storage_type << std::endl;
-      return VXL_NULLPTR;
+      return nullptr;
   }
 }
 
@@ -250,7 +252,7 @@ vil_image_view_base_sptr vil_viff_image::get_copy_view(unsigned int x0, unsigned
   vxl_uint_32 rowsize = (pix_size*xs+7)/8;
   vxl_uint_32 tbytes = rowsize*ys*nplanes_;
   vil_memory_chunk_sptr buf = new vil_memory_chunk(tbytes,format_);
-  vxl_byte* ib = reinterpret_cast<vxl_byte*>(buf->data());
+  auto* ib = reinterpret_cast<vxl_byte*>(buf->data());
   for (unsigned int p = 0; p<nplanes_; ++p) {
     for (unsigned int y = y0; y < y0+ys; ++y) {
       is_->seek(start_of_data_ + p*nj_*((ni_*pix_size+7)/8)
@@ -275,7 +277,7 @@ vil_image_view_base_sptr vil_viff_image::get_copy_view(unsigned int x0, unsigned
   else if (format_ == VIL_PIXEL_FORMAT_DOUBLE)         return new vil_image_view<double>              (ARGS(double));
   else if (format_ == VIL_PIXEL_FORMAT_COMPLEX_FLOAT)  return new vil_image_view<std::complex<float> > (ARGS(std::complex<float>));
   else if (format_ == VIL_PIXEL_FORMAT_COMPLEX_DOUBLE) return new vil_image_view<std::complex<double> >(ARGS(std::complex<double>));
-  else return VXL_NULLPTR;
+  else return nullptr;
 #undef ARGS
 }
 
@@ -295,7 +297,7 @@ bool vil_viff_image::put_view(vil_image_view_base const& buf, unsigned int x0, u
            << " at ("<<x0<<','<<y0<<")\n";
 #endif
   //std::cout << "buf=" << buf << '\n';
-  vil_image_view<vxl_byte> const& ibuf = reinterpret_cast<vil_image_view<vxl_byte> const&>(buf);
+  auto const& ibuf = reinterpret_cast<vil_image_view<vxl_byte> const&>(buf);
   //std::cout << "ibuf=" << ibuf << '\n';
   if (ibuf.istep() != 1 || ibuf.jstep() != int(ni) ||
       (ibuf.planestep() != int(ni*nj) && nplanes() != 1))
@@ -331,7 +333,7 @@ bool vil_viff_image::put_view(vil_image_view_base const& buf, unsigned int x0, u
         ob += rowsize;
       }
   else { // !endian_consistent_ ==> must swap bytes
-    vxl_byte* tempbuf = new vxl_byte[rowsize];
+    auto* tempbuf = new vxl_byte[rowsize];
     for (unsigned int p = 0; p<nplanes_; ++p)
       for (unsigned int y = y0; y < y0+nj; ++y) {
         std::memcpy(tempbuf, ob, rowsize);
@@ -376,7 +378,7 @@ void vil_viff_image::set_ispare1(vxl_uint_32 ispare1)
 {
   header_.ispare1 = ispare1;
   int longsize = sizeof(vxl_uint_32);
-  vxl_byte* bytes = new vxl_byte[longsize];
+  auto* bytes = new vxl_byte[longsize];
   std::memcpy(bytes,&ispare1,longsize);
   if (!endian_consistent_)
     swap(bytes,longsize);
@@ -390,7 +392,7 @@ void vil_viff_image::set_ispare2(vxl_uint_32 ispare2)
 {
   header_.ispare2 = ispare2;
   int longsize = sizeof(vxl_uint_32);
-  vxl_byte* bytes = new vxl_byte[longsize];
+  auto* bytes = new vxl_byte[longsize];
   std::memcpy(bytes,&ispare2,longsize);
   if (!endian_consistent_)
     swap(bytes,longsize);
@@ -404,7 +406,7 @@ void vil_viff_image::set_fspare1(float fspare1)
 {
   header_.fspare1 = fspare1;
   int floatsize = sizeof(float);
-  vxl_byte* bytes = new vxl_byte[floatsize];
+  auto* bytes = new vxl_byte[floatsize];
   std::memcpy(bytes,&fspare1,floatsize);
   if (!endian_consistent_)
     swap(bytes,floatsize);
@@ -419,7 +421,7 @@ void vil_viff_image::set_fspare2(float fspare2)
 {
   header_.fspare2 = fspare2;
   int floatsize = sizeof(float);
-  vxl_byte* bytes = new vxl_byte[floatsize];
+  auto* bytes = new vxl_byte[floatsize];
   std::memcpy(bytes,&fspare2,floatsize);
   if (!endian_consistent_)
     swap(bytes,floatsize);

@@ -4,6 +4,7 @@
 // \file
 #include <iostream>
 #include <iosfwd>
+#include <utility>
 #include "boxm2_multi_cache_group.h"
 #include "boxm2_multi_util.h"
 #include <boxm2/basic/boxm2_block_id.h>
@@ -11,7 +12,9 @@
 #include <boxm2/ocl/boxm2_opencl_cache1.h>
 #include <vgl/vgl_box_3d.h>
 #include <vpgl/vpgl_camera_double_sptr.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: a helper class that groups together contiguous blocks across devices.
 // Essentially this enforces that a group contains just one block per device,
@@ -29,8 +32,8 @@
 class boxm2_multi_cache_group
 {
   public:
-    boxm2_multi_cache_group() {}
-    boxm2_multi_cache_group(std::vector<boxm2_block_id> ids):ids_(ids) {}
+    boxm2_multi_cache_group() = default;
+    boxm2_multi_cache_group(std::vector<boxm2_block_id> ids):ids_(std::move(ids)) {}
 
     //: add a block to the group
     void add_block(boxm2_block_metadata data, boxm2_opencl_cache1* cache) {
@@ -40,12 +43,12 @@ class boxm2_multi_cache_group
       caches_.push_back(cache);
 
       //so they are the right size...
-      vis_imgs_.push_back(VXL_NULLPTR);
-      pre_imgs_.push_back(VXL_NULLPTR);
+      vis_imgs_.push_back(nullptr);
+      pre_imgs_.push_back(nullptr);
     }
 
     //: visibility order of blocks from camera (returns indices)
-    std::vector<int> order_from_cam(vpgl_camera_double_sptr cam);
+    std::vector<int> order_from_cam(const vpgl_camera_double_sptr& cam);
 
     //: set visibility image, set pre image
     void set_vis(int i, float* vis) { vis_imgs_[i] = vis; }

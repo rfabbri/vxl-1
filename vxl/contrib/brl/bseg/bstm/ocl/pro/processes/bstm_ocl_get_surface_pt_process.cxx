@@ -13,7 +13,9 @@
 #include <algorithm>
 #include <bprb/bprb_func_process.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bstm/ocl/bstm_opencl_cache.h>
 #include <bstm/bstm_scene.h>
 #include <bstm/bstm_block.h>
@@ -30,7 +32,6 @@
 #include <bocl/bocl_kernel.h>
 #include <vul/vul_timer.h>
 #include <boxm2/ocl/algo/boxm2_ocl_camera_converter.h>
-#include <bstm/ocl/bstm_ocl_util.h>
 #include <vsph/vsph_camera_bounds.h>
 #include <vgl/vgl_ray_3d.h>
 #include <boct/boct_bit_tree.h>
@@ -38,13 +39,13 @@
 
 namespace bstm_ocl_get_surface_pt_process_globals
 {
-  const unsigned n_inputs_ = 10;
-  const unsigned n_outputs_ = 3;
+  constexpr unsigned n_inputs_ = 10;
+  constexpr unsigned n_outputs_ = 3;
   std::size_t lthreads[2]={8,8};
 
   static std::map<std::string,std::vector<bocl_kernel*> > kernels;
 
-  void compile_kernel(bocl_device_sptr device,std::vector<bocl_kernel*> & vec_kernels, std::string opts)
+  void compile_kernel(const bocl_device_sptr& device,std::vector<bocl_kernel*> & vec_kernels, const std::string& opts)
   {
     //gather all render sources... seems like a lot for rendering...
     std::vector<std::string> src_paths;
@@ -63,7 +64,7 @@ namespace bstm_ocl_get_surface_pt_process_globals
     options += " -D STEP_CELL=step_cell_surface_pt(aux_args,data_ptr_tt,d*linfo->block_len,posx*linfo->block_len+linfo->origin.x,posy*linfo->block_len+linfo->origin.y,posz*linfo->block_len+linfo->origin.z)";
 
     //have kernel construct itself using the context and device
-    bocl_kernel * ray_trace_kernel=new bocl_kernel();
+    auto * ray_trace_kernel=new bocl_kernel();
 
     std::cout << "Compiling with options: " << options << std::endl;
     ray_trace_kernel->create_kernel( &device->context(),
@@ -117,12 +118,12 @@ bool bstm_ocl_get_surface_pt_process(bprb_func_process& pro)
   bstm_scene_sptr scene =pro.get_input<bstm_scene_sptr>(i++);
   bstm_opencl_cache_sptr opencl_cache= pro.get_input<bstm_opencl_cache_sptr>(i++);
   vpgl_camera_double_sptr cam= pro.get_input<vpgl_camera_double_sptr>(i++);
-  unsigned ni=pro.get_input<unsigned>(i++);
-  unsigned nj=pro.get_input<unsigned>(i++);
-  unsigned pixel_x=pro.get_input<unsigned>(i++);
-  unsigned pixel_y=pro.get_input<unsigned>(i++);
-  float time = pro.get_input<float>(i++);
-  float prob_t = pro.get_input<float>(i++);
+  auto ni=pro.get_input<unsigned>(i++);
+  auto nj=pro.get_input<unsigned>(i++);
+  auto pixel_x=pro.get_input<unsigned>(i++);
+  auto pixel_y=pro.get_input<unsigned>(i++);
+  auto time = pro.get_input<float>(i++);
+  auto prob_t = pro.get_input<float>(i++);
 
 
   //: create a command queue.
@@ -154,15 +155,15 @@ bool bstm_ocl_get_surface_pt_process(bprb_func_process& pro)
   // create all buffers
   unsigned cl_ni=RoundUp(ni,8);
   unsigned cl_nj=RoundUp(nj,8);
-  cl_float* ray_origins = new cl_float[4*cl_ni*cl_nj];
-  cl_float* ray_directions = new cl_float[4*cl_ni*cl_nj];
+  auto* ray_origins = new cl_float[4*cl_ni*cl_nj];
+  auto* ray_directions = new cl_float[4*cl_ni*cl_nj];
   bocl_mem_sptr ray_o_buff = opencl_cache->alloc_mem(cl_ni*cl_nj*sizeof(cl_float4), ray_origins, "ray_origins buffer");
   bocl_mem_sptr ray_d_buff = opencl_cache->alloc_mem(cl_ni*cl_nj*sizeof(cl_float4), ray_directions, "ray_directions buffer");
   boxm2_ocl_camera_converter::compute_ray_image( device, queue, cam, cl_ni, cl_nj, ray_o_buff, ray_d_buff);
 
   // Output Array
   float output_arr[100];
-  for (int i=0; i<100; ++i) output_arr[i] = -1.0f;
+  for (float & i : output_arr) i = -1.0f;
   bocl_mem_sptr  cl_output=new bocl_mem(device->context(), output_arr, sizeof(float)*100, "output buffer");
   cl_output->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
 
@@ -178,7 +179,7 @@ bool bstm_ocl_get_surface_pt_process(bprb_func_process& pro)
   bocl_mem_sptr exp_img_dim=new bocl_mem(device->context(), img_dim_buff, sizeof(int)*4, "image dims");
   exp_img_dim->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
 
-  cl_float cl_prob_t = (cl_float)prob_t;
+  auto cl_prob_t = (cl_float)prob_t;
   bocl_mem_sptr prob_t_mem =new bocl_mem(device->context(), &cl_prob_t, sizeof(cl_float), "prob t buffer");
   prob_t_mem->create_buffer(CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR);
 
@@ -198,7 +199,7 @@ bool bstm_ocl_get_surface_pt_process(bprb_func_process& pro)
       if(!mdata.contains_t(time,local_time))
         continue;
 
-      cl_float cl_time = (cl_float)local_time;
+      auto cl_time = (cl_float)local_time;
       bocl_mem_sptr time_mem =new bocl_mem(device->context(), &cl_time, sizeof(cl_float), "time instance buffer");
       time_mem->create_buffer(CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR);
 
@@ -206,10 +207,10 @@ bool bstm_ocl_get_surface_pt_process(bprb_func_process& pro)
 
       //write the image values to the buffer
       vul_timer transfer;
-      bocl_mem* blk       = opencl_cache->get_block(*id);
-      bocl_mem* blk_info  = opencl_cache->loaded_block_info();
-      bocl_mem* blk_t     = opencl_cache->get_time_block(*id);
-      bocl_mem* alpha     = opencl_cache->get_data<BSTM_ALPHA>(*id);
+      bocl_mem* blk = opencl_cache->get_block(*id);
+      bocl_mem* blk_info = opencl_cache->loaded_block_info();
+      bocl_mem* blk_t = opencl_cache->get_time_block(*id);
+      bocl_mem* alpha = opencl_cache->get_data<BSTM_ALPHA>(*id);
       transfer_time += (float) transfer.all();
 
       ////3. SET args

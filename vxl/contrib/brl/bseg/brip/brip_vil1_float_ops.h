@@ -24,7 +24,9 @@
 #include <vector>
 #include <iostream>
 #include <complex>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_matrix.h>
 #include <vbl/vbl_array_2d.h>
 #include <vsol/vsol_box_2d_sptr.h>
@@ -37,7 +39,7 @@
 class brip_vil1_float_ops
 {
  public:
-  ~brip_vil1_float_ops() {}
+  ~brip_vil1_float_ops() = default;
 
   //: convolves with the specified kernel
   static vil1_memory_image_of<float>
@@ -305,7 +307,7 @@ class brip_vil1_float_ops
                                         const float f0, const float radius,
                                         const float fx, const float fy);
   //: Default constructor is private
-  brip_vil1_float_ops() {}
+  brip_vil1_float_ops() = default;
 };
 
 #endif // brip_vil1_float_ops_h_

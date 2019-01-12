@@ -2,7 +2,9 @@
 #include <cmath>
 #include <vil/vil_image_view.h>
 #include <vnl/vnl_math.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include "brad_image_metadata.h"
 #include "brad_atmospheric_parameters.h"
@@ -64,4 +66,3 @@ bool brad_estimate_shadow_prob(vil_image_view<float> const& radiance_image, brad
   }
   return true;
 }
-

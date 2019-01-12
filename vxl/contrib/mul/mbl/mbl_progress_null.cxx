@@ -1,6 +1,3 @@
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \brief Progress class that does nothing.
@@ -10,12 +7,10 @@
 #include "mbl_progress_null.h"
 
 //: Constructor
-mbl_progress_null::mbl_progress_null()
-{}
+mbl_progress_null::mbl_progress_null() = default;
 
 //: Destructor
-mbl_progress_null::~mbl_progress_null()
-{}
+mbl_progress_null::~mbl_progress_null() = default;
 
 //: Name of the class
 std::string mbl_progress_null::is_a() const
@@ -35,4 +30,3 @@ void mbl_progress_null::on_set_progress(const std::string&,const int )
 void mbl_progress_null::on_end_progress(const std::string &)
 {
 }
-

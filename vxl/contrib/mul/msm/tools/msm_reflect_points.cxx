@@ -6,7 +6,9 @@
 #include <iostream>
 #include <cstdlib>
 #include <msm/msm_points.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <msm/msm_reflect_shape.h>
 #include <vul/vul_arg.h>
 
@@ -52,4 +54,3 @@ int main(int argc, char** argv)
 
   return 0;
 }
-

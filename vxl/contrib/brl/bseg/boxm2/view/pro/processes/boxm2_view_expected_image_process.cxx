@@ -11,7 +11,9 @@
 #include <vnl/vnl_math.h>
 
 #include <boxm2/view/boxm2_include_glew.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/ocl/boxm2_opencl_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -38,8 +40,8 @@
 
 namespace boxm2_view_expected_image_process_globals
 {
-  const unsigned n_inputs_ = 6;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 6;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool boxm2_view_expected_image_process_cons(bprb_func_process& pro)

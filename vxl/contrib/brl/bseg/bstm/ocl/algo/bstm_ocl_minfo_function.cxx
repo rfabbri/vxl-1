@@ -1,3 +1,4 @@
+#include <utility>
 #include "bstm_ocl_minfo_function.h"
 
 #include <vcl_where_root_dir.h>
@@ -7,9 +8,10 @@
 #include <boxm2/ocl/boxm2_ocl_util.h>
 #include <vul/vul_timer.h>
 
-bstm_ocl_minfo_function::bstm_ocl_minfo_function(bocl_device_sptr device, bstm_scene_sptr scene, bstm_opencl_cache_sptr opencl_cache,
+
+bstm_ocl_minfo_function::bstm_ocl_minfo_function(const bocl_device_sptr& device, const bstm_scene_sptr& scene, const bstm_opencl_cache_sptr& opencl_cache,
                         vgl_box_3d<double> bb,vgl_rotation_3d<double> rot, vgl_vector_3d<double> T, float time1, float time2, std::string kernel_opt,int nbins ):
-                        device_(device), scene_(scene), opencl_cache_(opencl_cache),bb_(bb), T_(T), time1_(time1), time2_(time2), R_(rot), kernel_opt_(kernel_opt),
+                        device_(device), scene_(scene), opencl_cache_(opencl_cache),bb_(bb), T_(T), time1_(time1), time2_(time2), R_(std::move(rot)), kernel_opt_(std::move(kernel_opt)),
                         app_nbins_(nbins), surf_nbins_(2), app_view_dir_num_(8)
 {
   //get blocks that intersect the provided bounding box.
@@ -109,7 +111,7 @@ void bstm_ocl_minfo_function::init_ocl_minfo()
   lookup_->create_buffer(CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR);
 
   // output buffer for debugging
-  for (unsigned int i = 0; i < 1000; ++i) output_buff[i] = 0;
+  for (float & i : output_buff) i = 0;
   output_ = new bocl_mem(device_->context(), output_buff, sizeof(cl_float)*1000, "output" );
   output_->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR );
 }
@@ -201,7 +203,7 @@ float bstm_ocl_minfo_function::evaluate()
 
       //load blk info and write appropriate info to several buffers
       bocl_mem* blk_info = opencl_cache_->loaded_block_info();
-      bstm_scene_info* info_buffer = (bstm_scene_info*) blk_info->cpu_buffer();
+      auto* info_buffer = (bstm_scene_info*) blk_info->cpu_buffer();
 
       //load scene origin
       target_blk_origin_buff[0] = info_buffer->scene_origin[0];
@@ -318,8 +320,8 @@ float bstm_ocl_minfo_function::evaluate()
     surf_joint_histogram_buff[i] /= sum_surf_joint_hist;
 
 
-  float * surf_histA = new float[surf_nbins_];
-  float * surf_histB = new float[surf_nbins_];
+  auto * surf_histA = new float[surf_nbins_];
+  auto * surf_histB = new float[surf_nbins_];
 
   for (unsigned int k = 0; k<surf_nbins_; ++k)
     {
@@ -376,9 +378,9 @@ float bstm_ocl_minfo_function::evaluate()
 
   float mi_app = 0.0f;
 
-  float * app_hist = new float[app_nbins_* app_nbins_*app_view_dir_num_];
-  float * app_histA = new float[app_nbins_];
-  float * app_histB = new float[app_nbins_];
+  auto * app_hist = new float[app_nbins_* app_nbins_*app_view_dir_num_];
+  auto * app_histA = new float[app_nbins_];
+  auto * app_histB = new float[app_nbins_];
 
   for (unsigned int view_dir_num = 0; view_dir_num < app_view_dir_num_; ++view_dir_num)
     {

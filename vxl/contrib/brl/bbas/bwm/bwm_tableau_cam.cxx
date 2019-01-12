@@ -28,7 +28,9 @@
 
 
 #include <volm/volm_category_io.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_file.h>
 
 #define NUM_CIRCL_SEC 12
@@ -123,7 +125,7 @@ void bwm_tableau_cam::move_obj_by_vertex()
 {
   // first check if master tableau is set
   bwm_observer_cam* mt = bwm_observer_mgr::BWM_MASTER_OBSERVER;
-  if (mt == VXL_NULLPTR) {
+  if (mt == nullptr) {
     std::cerr << "Master Tableau is not selected, please select one different than the current one!\n";
     return;
   }

@@ -19,7 +19,9 @@
 // \endverbatim
 //
 #include <bprb/bprb_parameters.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpgl/vpgl_rational_camera.h>
 #include <vpgl/vpgl_local_rational_camera.h>
 #include <vul/vul_file.h>
@@ -37,13 +39,13 @@
 bool vpgl_isfm_rational_camera_process_cons(bprb_func_process& pro)
 {
     std::vector<std::string> input_types;
-    input_types.push_back("vcl_string");  // track file
-    input_types.push_back("vcl_string");  // output folder to write the corrected cams
-    input_types.push_back("float"); // radius in pixels for the disagreement among inliers, e.g. 2 pixels
+    input_types.emplace_back("vcl_string");  // track file
+    input_types.emplace_back("vcl_string");  // output folder to write the corrected cams
+    input_types.emplace_back("float"); // radius in pixels for the disagreement among inliers, e.g. 2 pixels
     std::vector<std::string> output_types;
-    output_types.push_back("vpgl_camera_double_sptr");
-    output_types.push_back("float"); // projection error
-    output_types.push_back("float"); // % inlier
+    output_types.emplace_back("vpgl_camera_double_sptr");
+    output_types.emplace_back("float"); // projection error
+    output_types.emplace_back("float"); // % inlier
     return pro.set_input_types(input_types)
         && pro.set_output_types(output_types);
 }
@@ -58,7 +60,7 @@ bool vpgl_isfm_rational_camera_process(bprb_func_process& pro)
     // get the inputs
     std::string trackfile = pro.get_input<std::string>(0);
     std::string nonseedcamdir = pro.get_input<std::string>(1);
-    float pix_rad = pro.get_input<float>(2);
+    auto pix_rad = pro.get_input<float>(2);
 #if 0
     //: load seed cams
     vul_file_iterator iter(seedcamdir + "/*corrected*rpb");
@@ -130,14 +132,14 @@ bool vpgl_isfm_rational_camera_process(bprb_func_process& pro)
         ifs >> numfeatures;
         int id; float u, v;
         ifs >> id >> u >> v;
-        currpts.push_back(vgl_point_2d<double>(u, v));
+        currpts.emplace_back(u, v);
         std::vector<int> ids;
         std::vector<vgl_point_2d<double> > pts;
         for (unsigned int j = 1; j < numfeatures; j++)
         {
             int id; float u, v;
             ifs >> id >> u >> v;
-            pts.push_back(vgl_point_2d<double>(u, v));
+            pts.emplace_back(u, v);
             ids.push_back(id);
         }
         trackimgids.push_back(ids);
@@ -171,9 +173,9 @@ bool vpgl_isfm_rational_camera_process(bprb_func_process& pro)
 
     // remove unrealistic trans
     std::vector<vgl_vector_2d<double> > cam_trans_new;
-    for (unsigned i = 0; i < cam_trans.size(); i++)
-      if (cam_trans[i].x() >= -1000) {
-        cam_trans_new.push_back(cam_trans[i]);
+    for (auto & cam_tran : cam_trans)
+      if (cam_tran.x() >= -1000) {
+        cam_trans_new.push_back(cam_tran);
       }
     if (cam_trans_new.empty()) {
       std::cerr << pro.name() << ": can not find any valid translations, exit without correction!\n";
@@ -210,8 +212,8 @@ bool vpgl_isfm_rational_camera_process(bprb_func_process& pro)
     }
     // use the average correspondence with the most number of inliers to correct camera
     vgl_vector_2d<double> sum(0.0, 0.0);
-    for (unsigned k = 0; k < inliers[max_i].size(); k++)
-        sum += cam_trans_new[inliers[max_i][k]];
+    for (unsigned int k : inliers[max_i])
+        sum += cam_trans_new[k];
     sum /= (double)inliers[max_i].size();
 
     std::cout << "camera: " << uncorrectedcam
@@ -224,9 +226,9 @@ bool vpgl_isfm_rational_camera_process(bprb_func_process& pro)
     // evaluate the correction error and inlier percentage
     double error = 0.0;
     vpgl_rational_camera<double>  rcam = (*cam);
-    for (unsigned k = 0; k < inliers[max_i].size(); k++) {
-        vgl_point_2d<double> uvp = rcam.project(reconstructed_points[inliers[max_i][k]]);
-        error += ((img_points[inliers[max_i][k]] - uvp) - sum).sqr_length();
+    for (unsigned int k : inliers[max_i]) {
+        vgl_point_2d<double> uvp = rcam.project(reconstructed_points[k]);
+        error += ((img_points[k] - uvp) - sum).sqr_length();
     }
     error = std::sqrt(error) / (double)inliers[max_i].size();
     double inlierpercent = (double)max / (double)cam_trans_new.size() * 100;

@@ -9,7 +9,9 @@
 #include <string>
 #include <iostream>
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_fwd.h>
 #include <mipa/mipa_block_normaliser.h>
 #include <mipa/mipa_identity_normaliser.h>
@@ -37,22 +39,22 @@ class mipa_ms_block_normaliser : public mipa_block_normaliser
       nscales_(nscales), include_overall_histogram_(include_overall_histogram) {}
 
   //: Apply transform independently to each block (at multi-scales)
-  virtual void normalise(vnl_vector<double>& v) const;
+  void normalise(vnl_vector<double>& v) const override;
 
   //: Name of the class
-  virtual std::string is_a() const;
+  std::string is_a() const override;
 
   //: Create a copy on the heap and return base class pointer
-  virtual mipa_vector_normaliser* clone() const;
+  mipa_vector_normaliser* clone() const override;
 
   //: Print class to os
-  virtual void print_summary(std::ostream& os) const;
+  void print_summary(std::ostream& os) const override;
 
   //: Save class to binary file stream
-  virtual void b_write(vsl_b_ostream& bfs) const;
+  void b_write(vsl_b_ostream& bfs) const override;
 
   //: Load class from binary file stream
-  virtual void b_read(vsl_b_istream& bfs);
+  void b_read(vsl_b_istream& bfs) override;
 
   //: Initialise from a text stream.
   // syntax
@@ -67,8 +69,8 @@ class mipa_ms_block_normaliser : public mipa_block_normaliser
   //   nscales: 2
   // }
   // \endverbatim
-  virtual void config_from_stream(
-      std::istream &is, const mbl_read_props_type &extra_props);
+  void config_from_stream(
+      std::istream &is, const mbl_read_props_type &extra_props) override;
 
   void set_nscales(unsigned n)
       {nscales_ = n;}

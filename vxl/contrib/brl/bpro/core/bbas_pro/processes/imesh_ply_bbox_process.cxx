@@ -9,14 +9,16 @@
 // \author Vishal Jain
 // \date jan 26, 2011
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <imesh/imesh_fileio.h>
 #include <vgl/vgl_box_3d.h>
 
 namespace imesh_ply_bbox_process_globals
 {
-  const unsigned n_inputs_ = 1;
-  const unsigned n_outputs_ = 6;
+  constexpr unsigned n_inputs_ = 1;
+  constexpr unsigned n_outputs_ = 6;
 }
 
 bool imesh_ply_bbox_process_cons(bprb_func_process& pro)
@@ -47,7 +49,7 @@ bool imesh_ply_bbox_process(bprb_func_process& pro)
   }
 
   //get the inputs
-  std::string   mesh_file  = pro.get_input<std::string>(0);
+  std::string   mesh_file = pro.get_input<std::string>(0);
   imesh_mesh mesh ;
   imesh_read(mesh_file, mesh);
 

@@ -1,9 +1,6 @@
 // This is core/vgl/vgl_affine_coordinates.h
 #ifndef vgl_affine_coordinates_h_
 #define vgl_affine_coordinates_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Computes 2-d and 3-d affine coordinates of point sets
@@ -20,10 +17,12 @@
 // Converts points into baycentric coordinates given an affine basis
 // For 2-d, three points are required to form the basis
 // For 3-d, four points are required to form the basis
-#include <vcl_compiler.h>
+#include <vector>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_point_3d.h>
-#include <vector>
 
 // Points are all coplanar. The first three points in pts are the basis, pts[0] is the origin
 template <class T>

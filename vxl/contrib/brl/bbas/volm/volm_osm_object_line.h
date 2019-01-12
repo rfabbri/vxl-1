@@ -14,13 +14,16 @@
 // \endverbatim
 
 #include <iostream>
+#include <utility>
 #include <vector>
 #include "volm_category_io.h"
 #include <vbl/vbl_ref_count.h>
 #include <vbl/vbl_smart_ptr.h>
 #include <vsl/vsl_binary_io.h>
 #include <vgl/vgl_point_2d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class volm_osm_object_line;
 typedef vbl_smart_ptr<volm_osm_object_line> volm_osm_object_line_sptr;
@@ -32,7 +35,7 @@ public:
   volm_osm_object_line() : prop_(0, "invalid", 0, 0.0, vil_rgb<vxl_byte>(0,0,0)) { line_.clear(); }
 
   //: constructor
-  volm_osm_object_line(volm_land_layer prop, std::vector<vgl_point_2d<double> > line) : prop_(prop), line_(line) {}
+  volm_osm_object_line(volm_land_layer prop, std::vector<vgl_point_2d<double> > line) : prop_(prop), line_(std::move(line)) {}
 
   //: accessors
   std::vector<vgl_point_2d<double> >& line() { return line_; }

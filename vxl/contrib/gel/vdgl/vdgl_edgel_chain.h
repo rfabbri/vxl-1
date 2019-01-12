@@ -1,9 +1,6 @@
 // This is gel/vdgl/vdgl_edgel_chain.h
 #ifndef vdgl_edgel_chain_h
 #define vdgl_edgel_chain_h
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Represents an edgel list which is a 2d set of edgels
@@ -16,15 +13,18 @@
 //   10-Sep-2004 Peter Vanroose Added copy ctor with explicit vbl_ref_count init
 // \endverbatim
 
-#include <iostream>
 #include <iosfwd>
+#include <iostream>
+#include <utility>
 #include <vector>
-#include <vcl_compiler.h>
-#include <vul/vul_timestamp.h>
-#include <vbl/vbl_ref_count.h>
-#include <vsl/vsl_binary_io.h>
 #include "vdgl_edgel_chain_sptr.h"
+#include <vbl/vbl_ref_count.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vdgl/vdgl_edgel.h>
+#include <vsl/vsl_binary_io.h>
+#include <vul/vul_timestamp.h>
 
 class vdgl_edgel_chain : public vul_timestamp,
                          public vbl_ref_count
@@ -33,8 +33,8 @@ class vdgl_edgel_chain : public vul_timestamp,
  public:
 
   // Constructors/Destructors--------------------------------------------------
-  vdgl_edgel_chain() {}
-  vdgl_edgel_chain(std::vector<vdgl_edgel> const& edgels) : es_( edgels) {}
+  vdgl_edgel_chain() = default;
+  vdgl_edgel_chain(std::vector<vdgl_edgel>  edgels) : es_(std::move( edgels)) {}
 
   //: make a straight edgel chain from p0 to p1.
   //  Useful for boundary filling and debugging
@@ -42,7 +42,7 @@ class vdgl_edgel_chain : public vul_timestamp,
                     const double x1, const double y1);
   vdgl_edgel_chain(vdgl_edgel_chain const& x)
     : vul_timestamp(), vbl_ref_count(), es_(x.es_) {}
-  ~vdgl_edgel_chain() {}
+  ~vdgl_edgel_chain() override = default;
 
   // Operators----------------------------------------------------------------
 

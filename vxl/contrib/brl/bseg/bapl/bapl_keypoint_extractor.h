@@ -15,7 +15,9 @@
 #include <iostream>
 #include <vector>
 #include <vxl_config.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_image_view.h>
 #include <vil/vil_image_resource.h>
 #include <bapl/bapl_keypoint_sptr.h>
@@ -32,7 +34,7 @@ bool bapl_keypoint_extractor( const vil_image_resource_sptr & image,
 
 //: Find the peaks in the DoG pyramid
 void bapl_dog_peaks( std::vector<vgl_point_3d<float> >& peak_pts,
-                     bapl_lowe_pyramid_set_sptr pyramid_set,
+                     const bapl_lowe_pyramid_set_sptr& pyramid_set,
                      float curve_ratio = 10.0f);
 
 class bapl_lowe_orientation

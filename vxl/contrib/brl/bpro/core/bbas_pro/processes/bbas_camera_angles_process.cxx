@@ -13,7 +13,9 @@
 #include <vpgl/vpgl_camera.h>
 #include <vpgl/vpgl_local_rational_camera.h>
 #include <vpgl/algo/vpgl_backproject.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: set input and output types
 bool bbas_camera_angles_process_cons(bprb_func_process& pro)
@@ -56,9 +58,9 @@ bool bbas_camera_angles_process(bprb_func_process& pro)
   double pt_z = pro.get_input<float>(3);
 
   // make sure camera is using a local coordinate frame
-  vpgl_local_rational_camera<double> *local_cam = dynamic_cast<vpgl_local_rational_camera<double>*>(camera.ptr());
+  auto *local_cam = dynamic_cast<vpgl_local_rational_camera<double>*>(camera.ptr());
   if (!local_cam) {
-    vpgl_rational_camera<double> *rcam = dynamic_cast<vpgl_rational_camera<double>*>(camera.ptr());
+    auto *rcam = dynamic_cast<vpgl_rational_camera<double>*>(camera.ptr());
     if (rcam) {
       // rational camera operates on geodetic coordinates, but we need a Euclidean space.
       double lat = pt_y;
@@ -78,7 +80,7 @@ bool bbas_camera_angles_process(bprb_func_process& pro)
   camera->project(pt_x,pt_y,pt_z, pt_u,pt_v);
 
   // backproject to plane above and below point
-  const double plane_dist = 10.0; // arbitrary distance above and below focus point to backproject to.
+  constexpr double plane_dist = 10.0; // arbitrary distance above and below focus point to backproject to.
   const double z_low = pt_z - plane_dist;
   const double z_high = pt_z + plane_dist;
   vgl_point_2d<double> img_pt(pt_u,pt_v);

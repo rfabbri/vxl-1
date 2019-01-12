@@ -33,7 +33,9 @@
 #include <vector>
 #include <iostream>
 #include <vsl/vsl_binary_io.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_matrix.h>
 #include <vil/vil_image_resource.h>
@@ -52,9 +54,9 @@ class brad_eigenspace : public brad_eigenspace_base
   brad_eigenspace(unsigned nib, unsigned njb, T funct)
   : funct_(funct), nib_(nib), njb_(njb), covar_valid_(false), eigensystem_valid_(false) {}
 
-  virtual ~brad_eigenspace() {}
+  ~brad_eigenspace() override = default;
 
-  virtual std::string feature_vector_type() {return funct_.type();}
+  std::string feature_vector_type() override {return funct_.type();}
 
   //: compute the covariance matrix from image resources
   bool compute_covariance_matrix(std::vector<vil_image_resource_sptr> const& rescs);

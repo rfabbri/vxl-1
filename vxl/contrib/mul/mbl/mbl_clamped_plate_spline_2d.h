@@ -13,7 +13,9 @@
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_matrix.h>
 #include <vsl/vsl_binary_io.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //=======================================================================
 //: Construct clamped plate spline to map 2D points in unit disk.
@@ -107,5 +109,3 @@ void vsl_b_read(vsl_b_istream& bfs, mbl_clamped_plate_spline_2d& b);
 std::ostream& operator<<(std::ostream& os,const mbl_clamped_plate_spline_2d& b);
 
 #endif
-
-

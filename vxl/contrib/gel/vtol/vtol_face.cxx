@@ -3,7 +3,10 @@
 //:
 // \file
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vtol/vtol_macros.h>
 #include <vtol/vtol_two_chain.h>
 #include <vtol/vtol_vertex.h>
@@ -11,12 +14,12 @@
 #include <vtol/vtol_one_chain.h>
 #include <vtol/vtol_list_functions.h>
 
-void vtol_face::link_inferior(vtol_one_chain_sptr inf)
+void vtol_face::link_inferior(const vtol_one_chain_sptr& inf)
 {
   vtol_topology_object::link_inferior(inf->cast_to_topology_object());
 }
 
-void vtol_face::unlink_inferior(vtol_one_chain_sptr inf)
+void vtol_face::unlink_inferior(const vtol_one_chain_sptr& inf)
 {
   vtol_topology_object::unlink_inferior(inf->cast_to_topology_object());
 }
@@ -38,7 +41,7 @@ vtol_face::~vtol_face()
 
 vertex_list *vtol_face::outside_boundary_vertices(void)
 {
-  vertex_list *new_ref_list = new vertex_list;
+  auto *new_ref_list = new vertex_list;
   std::vector<vtol_vertex*>* ptr_list = this->outside_boundary_compute_vertices();
 
   // copy the lists
@@ -81,7 +84,7 @@ std::vector<vtol_zero_chain*> *vtol_face::outside_boundary_compute_zero_chains(v
 
 zero_chain_list *vtol_face::outside_boundary_zero_chains(void)
 {
-  zero_chain_list *new_ref_list = new zero_chain_list;
+  auto *new_ref_list = new zero_chain_list;
   std::vector<vtol_zero_chain*>* ptr_list = this->outside_boundary_compute_zero_chains();
 
   // copy the lists
@@ -115,7 +118,7 @@ std::vector<vtol_edge*> *vtol_face::outside_boundary_compute_edges(void)
 //---------------------------------------------------------------------------
 edge_list *vtol_face::outside_boundary_edges(void)
 {
-  edge_list *new_ref_list = new edge_list;
+  auto *new_ref_list = new edge_list;
   std::vector<vtol_edge*>* ptr_list = this->outside_boundary_compute_edges();
 
   // copy the lists
@@ -138,7 +141,7 @@ std::vector<vtol_edge*> *vtol_face::compute_edges(void)
 one_chain_list *vtol_face::outside_boundary_one_chains(void)
 {
   std::vector<vtol_one_chain*>* ptr_list= outside_boundary_compute_one_chains();
-  one_chain_list *ref_list= new one_chain_list;
+  auto *ref_list= new one_chain_list;
 
   for (std::vector<vtol_one_chain*>::const_iterator i=ptr_list->begin();
        i!=ptr_list->end(); ++i)
@@ -264,7 +267,7 @@ vtol_one_chain_sptr vtol_face::get_one_chain(int which)
   else
   {
     std::cerr << "Tried to get bad edge_loop from face\n";
-    return VXL_NULLPTR;
+    return nullptr;
   }
 }
 
@@ -298,7 +301,7 @@ bool vtol_face::add_hole_cycle(vtol_one_chain_sptr new_hole)
 
 one_chain_list *vtol_face::get_hole_cycles(void)
 {
-  one_chain_list * result=new one_chain_list;
+  auto * result=new one_chain_list;
 
   topology_list::const_iterator ii;
   for (ii=inferiors()->begin();ii!=inferiors()->end();++ii)
@@ -348,7 +351,7 @@ void vtol_face::describe(std::ostream &strm,
   print();
   for (unsigned int i=0;i<inferiors()->size();++i)
   {
-    if ((inferiors_[i])->cast_to_one_chain()!=VXL_NULLPTR)
+    if ((inferiors_[i])->cast_to_one_chain()!=nullptr)
       (inferiors_[i])->cast_to_one_chain()->describe(strm,blanking);
     else
       std::cout << "*** Odd inferior for a face\n";
@@ -378,8 +381,8 @@ void vtol_face::compute_bounding_box() const
 {
   this->empty_bounding_box();
   edge_list edges; this->edges(edges);
-  for (edge_list::iterator eit = edges.begin();eit != edges.end(); ++eit)
-    this->add_to_bounding_box((*eit)->get_bounding_box());
+  for (auto & edge : edges)
+    this->add_to_bounding_box(edge->get_bounding_box());
 }
 
 //: This method determines if a vtol_face is a hole of another vtol_face.
@@ -390,8 +393,8 @@ bool vtol_face::IsHoleP() const
   vtol_edge_sptr e = edges->front();
   delete edges;
   std::list<vtol_topology_object*> const* chains = e->superiors_list();
-  for (std::list<vtol_topology_object*>::const_iterator i=chains->begin(); i!=chains->end(); ++i)
-    if ((*i)->cast_to_one_chain()->numsup() > 0)
+  for (auto chain : *chains)
+    if (chain->cast_to_one_chain()->numsup() > 0)
       return true;
   return false;
 }

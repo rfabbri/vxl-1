@@ -1,7 +1,4 @@
 // This is gel/vdgl/vdgl_edgel_chain.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 
@@ -10,8 +7,10 @@
 #include <cstdlib>
 #include "vdgl_edgel_chain.h"
 #include <vgl/vgl_distance.h>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 vdgl_edgel_chain::vdgl_edgel_chain( const double x0, const double y0,
                                     const double x1, const double y1)
@@ -19,7 +18,7 @@ vdgl_edgel_chain::vdgl_edgel_chain( const double x0, const double y0,
   bool init = true, done = false;//should be internal statics but seems not to work
   double x, y; // the intermediate pixels
   while (this->line_gen(x0, y0, x1, y1, init, done, x, y))
-      es_.push_back(vdgl_edgel( x, y));
+      es_.emplace_back( x, y);
 }
 
 bool vdgl_edgel_chain::add_edgel( const vdgl_edgel &e)
@@ -59,11 +58,12 @@ bool vdgl_edgel_chain::add_edgels( const std::vector<vdgl_edgel> &es, int index)
   else
   {
     std::vector<vdgl_edgel> temp;
-    for (int i=0; i< index; i++)
+    temp.reserve(index);
+for (int i=0; i< index; i++)
       temp.push_back( es_[i]);
 
-    for (unsigned int i=0; i< es.size(); i++)
-      temp.push_back( es[i]);
+    for (const auto & e : es)
+      temp.push_back( e);
 
     for (unsigned int i=index; i< es_.size(); i++)
       temp.push_back( es_[i]);
@@ -136,7 +136,7 @@ bool vdgl_edgel_chain::line_gen(double xs, double ys, double xe, double ye,
                                 double& x, double& y)
 {
   assert(xs >= 0.0); assert(ys >= 0.0);
-  const double pix_edge = 1.0; //We are working at scale = 1.0
+  constexpr double pix_edge = 1.0; //We are working at scale = 1.0
   static double xi=0.0, yi=0.0;
   if (init)
   {
@@ -177,7 +177,7 @@ bool vdgl_edgel_chain::line_gen(double xs, double ys, double xe, double ye,
     //Check if we have advanced by more than .5 pixels
     x = (xi/pix_edge);
     y = (yi/pix_edge);
-    double dx1 = (double)(int(x)-xp), dy1 = (double)(int(y)-yp);
+    auto dx1 = (double)(int(x)-xp), dy1 = (double)(int(y)-yp);
     if (std::abs(dx1)>(.5*pix_edge)||std::abs(dy1)>(.5*pix_edge))
       return true;
   }
@@ -210,12 +210,12 @@ void vdgl_edgel_chain::b_write(vsl_b_ostream &os) const
 {
   vsl_b_write(os, version());
   vsl_b_write(os, es_.size());
-  for (unsigned int i = 0; i<es_.size(); i++)
+  for (const auto & e : es_)
   {
-    vsl_b_write(os, es_[i].get_x());
-    vsl_b_write(os, es_[i].get_y());
-    vsl_b_write(os, es_[i].get_grad());
-    vsl_b_write(os, es_[i].get_theta());
+    vsl_b_write(os, e.get_x());
+    vsl_b_write(os, e.get_y());
+    vsl_b_write(os, e.get_grad());
+    vsl_b_write(os, e.get_theta());
   }
 }
 //: Binary load self from stream (not typically used)
@@ -284,7 +284,7 @@ vsl_b_read(vsl_b_istream &is, vdgl_edgel_chain* &ec)
     ec->b_read(is);
   }
   else
-    ec = VXL_NULLPTR;
+    ec = nullptr;
 }
 
 //: Print human readable summary of vdgl_edgel_chain* to a stream.
@@ -293,4 +293,3 @@ vsl_print_summary(std::ostream &os, const vdgl_edgel_chain* e)
 {
   os << *e;
 }
-

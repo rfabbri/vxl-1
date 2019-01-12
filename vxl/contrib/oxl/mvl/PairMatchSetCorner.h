@@ -1,9 +1,6 @@
 // This is oxl/mvl/PairMatchSetCorner.h
 #ifndef PairMatchSetCorner_h_
 #define PairMatchSetCorner_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Matches between corners
@@ -34,7 +31,7 @@ class PairMatchSetCorner : public PairMatchSet
   PairMatchSetCorner(HomgInterestPointSet const* corners1, HomgInterestPointSet const* corners2);
   PairMatchSetCorner(const PairMatchSetCorner& that);
   PairMatchSetCorner& operator=(const PairMatchSetCorner& that);
- ~PairMatchSetCorner();
+ ~PairMatchSetCorner() override;
 
   // Data Access---------------------------------------------------------------
   void extract_matches(std::vector <HomgPoint2D>& points1, std::vector <int>& corner_index_1,

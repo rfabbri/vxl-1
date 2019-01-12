@@ -1,14 +1,16 @@
 #include <iostream>
 #include <map>
 #include "boxm2_extract_point_cloud.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/boxm2_data_traits.h>
 #include <boxm2/basic/boxm2_array_3d.h>
 #include <boxm2/boxm2_util.h>
 #include <boct/boct_bit_tree.h>
 
 
-bool boxm2_extract_point_cloud::extract_point_cloud(boxm2_scene_sptr scene, boxm2_cache_sptr cache,
+bool boxm2_extract_point_cloud::extract_point_cloud(boxm2_scene_sptr scene, const boxm2_cache_sptr& cache,
                                                     float prob_thresh, unsigned int depth)
 {
   typedef vnl_vector_fixed<unsigned char, 16> uchar16;
@@ -38,8 +40,8 @@ bool boxm2_extract_point_cloud::extract_point_cloud(boxm2_scene_sptr scene, boxm
     //3d array of trees
     const boxm2_array_3d<uchar16>& trees = cache->get_block(scene,id)->trees();
 
-    boxm2_data_traits<BOXM2_ALPHA>::datatype * alpha_data = (boxm2_data_traits<BOXM2_ALPHA>::datatype*) alpha->data_buffer();
-    boxm2_data_traits<BOXM2_POINT>::datatype * points_data = (boxm2_data_traits<BOXM2_POINT>::datatype*) points->data_buffer();
+    auto * alpha_data = (boxm2_data_traits<BOXM2_ALPHA>::datatype*) alpha->data_buffer();
+    auto * points_data = (boxm2_data_traits<BOXM2_POINT>::datatype*) points->data_buffer();
 
     for ( unsigned i = 0 ; i < (alpha->buffer_length() /alphaTypeSize) ; ++i)
     {

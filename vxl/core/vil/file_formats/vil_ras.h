@@ -1,9 +1,6 @@
 // This is core/vil/file_formats/vil_ras.h
 #ifndef vil_ras_file_format_h_
 #define vil_ras_file_format_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author Amitha Perera
@@ -28,13 +25,13 @@ class vil_image_view_base;
 class vil_ras_file_format : public vil_file_format
 {
  public:
-  virtual char const* tag() const;
-  virtual vil_image_resource_sptr make_input_image( vil_stream* vs );
-  virtual vil_image_resource_sptr make_output_image(vil_stream* vs,
+  char const* tag() const override;
+  vil_image_resource_sptr make_input_image( vil_stream* vs ) override;
+  vil_image_resource_sptr make_output_image(vil_stream* vs,
                                                     unsigned ni,
                                                     unsigned nj,
                                                     unsigned nplanes,
-                                                    vil_pixel_format format);
+                                                    vil_pixel_format format) override;
 };
 
 //: Generic image implementation for Sun raster files
@@ -55,8 +52,6 @@ class vil_ras_image : public vil_image_resource
   vxl_uint_32 map_length_;
   vxl_uint_8* col_map_;
 
-  vil_pixel_format format_;
-
   bool read_header();
   bool write_header();
 
@@ -69,15 +64,15 @@ class vil_ras_image : public vil_image_resource
                 unsigned nj,
                 unsigned nplanes,
                 vil_pixel_format format );
-  virtual ~vil_ras_image();
+  ~vil_ras_image() override;
 
   // Inherit the documentation from vil_image_resource
 
-  virtual unsigned nplanes() const;
-  virtual unsigned ni() const;
-  virtual unsigned nj() const;
+  unsigned nplanes() const override;
+  unsigned ni() const override;
+  unsigned nj() const override;
 
-  virtual vil_pixel_format pixel_format() const;
+  vil_pixel_format pixel_format() const override;
 
   //: Create a read/write view of a copy of this data.
   //
@@ -88,13 +83,13 @@ class vil_ras_image : public vil_image_resource
   // stored RGB.
   //
   // \return 0 if unable to get view of correct size, or if resource is write-only.
-  virtual vil_image_view_base_sptr get_copy_view(unsigned i0, unsigned ni,
-                                                 unsigned j0, unsigned nj) const;
+  vil_image_view_base_sptr get_copy_view(unsigned i0, unsigned ni,
+                                                 unsigned j0, unsigned nj) const override;
 
-  virtual bool put_view(const vil_image_view_base& im, unsigned i0, unsigned j0);
+  bool put_view(const vil_image_view_base& im, unsigned i0, unsigned j0) override;
 
-  char const* file_format() const;
-  bool get_property(char const *tag, void *prop = VXL_NULLPTR) const;
+  char const* file_format() const override;
+  bool get_property(char const *tag, void *prop = nullptr) const override;
 };
 
 #endif // vil_ras_file_format_h_

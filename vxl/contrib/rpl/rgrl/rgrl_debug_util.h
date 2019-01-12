@@ -10,18 +10,20 @@
 #include <string>
 #include <rgrl/rgrl_command.h>
 #include <rgrl/rgrl_mask_sptr.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: observer to view transformations at each iteration of feature-based registration engine
 class rgrl_debug_feature_iteration_print: public rgrl_command
 {
  public:
-  void execute(rgrl_object* caller, const rgrl_event & event )
+  void execute(rgrl_object* caller, const rgrl_event & event ) override
   {
     execute( (const rgrl_object*) caller, event );
   }
 
-  void execute(const rgrl_object* caller, const rgrl_event & event );
+  void execute(const rgrl_object* caller, const rgrl_event & event ) override;
 };
 
 
@@ -36,16 +38,16 @@ class rgrl_debug_feature_iteration_save_matches: public rgrl_command
  public:
 
   //: constructor
-  rgrl_debug_feature_iteration_save_matches( const std::string& path,
-                                             const std::string& prefix,
-                                             const rgrl_mask_sptr& from_roi = VXL_NULLPTR );
+  rgrl_debug_feature_iteration_save_matches( std::string  path,
+                                             std::string  prefix,
+                                             const rgrl_mask_sptr& from_roi = nullptr );
 
-  void execute(rgrl_object* caller, const rgrl_event & event )
+  void execute(rgrl_object* caller, const rgrl_event & event ) override
   {
     execute( (const rgrl_object*) caller, event );
   }
 
-  void execute(const rgrl_object* caller, const rgrl_event & event );
+  void execute(const rgrl_object* caller, const rgrl_event & event ) override;
 };
 
 

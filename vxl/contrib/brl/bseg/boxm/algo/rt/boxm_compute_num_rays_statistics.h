@@ -3,7 +3,9 @@
 
 #include <iostream>
 #include <boxm/boxm_scene.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bsta/bsta_histogram.h>
 #include <boxm/basic/boxm_num_rays_functor.h>
 #include <boxm/sample/boxm_scalar_sample.h>
@@ -23,7 +25,6 @@ bool compute_ray_statistics(boxm_scene<boct_tree<T_loc, T_data > >& scene,
   raytracer.run(num_rays_functor);
 
   typedef boct_tree<T_loc, T_data > tree_type;
-  typedef boct_tree_cell<T_loc,T_data > cell_type;
 
   typedef boct_tree<T_loc, boxm_scalar_sample<sample_datatype> > aux_tree_type;
   typedef boct_tree_cell<T_loc,boxm_scalar_sample<sample_datatype> > aux_cell_type;

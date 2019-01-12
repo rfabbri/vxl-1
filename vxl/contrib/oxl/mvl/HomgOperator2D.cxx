@@ -1,7 +1,4 @@
 // This is oxl/mvl/HomgOperator2D.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 
@@ -9,8 +6,10 @@
 #include <vector>
 #include "HomgOperator2D.h"
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_matrix.h>
@@ -352,8 +351,8 @@ static vnl_vector<double> most_orthogonal_vector(const std::vector<HomgLine2D>& 
 {
   vnl_scatter_3x3<double> scatter_matrix;
 
-  for (unsigned i = 0; i < inpoints.size(); i++)
-    scatter_matrix.add_outer_product(inpoints[i].get_vector());
+  for (const auto & inpoint : inpoints)
+    scatter_matrix.add_outer_product(inpoint.get_vector());
 
   return scatter_matrix.minimum_eigenvector().as_ref();
 }

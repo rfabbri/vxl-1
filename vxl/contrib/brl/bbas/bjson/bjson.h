@@ -165,9 +165,19 @@ license you like.
 
 #ifndef JSON_CONFIG_H_INCLUDED
 #define JSON_CONFIG_H_INCLUDED
-#include <stddef.h>
-#include <string> //typedef String
-#include <stdint.h> //typedef int64_t, uint64_t
+#include <cstddef>
+#include <string>
+#include <vector>
+#include <exception>
+#include <map>
+#include <deque>
+#include <iosfwd>
+#include <stack>
+#include <istream>
+#include <ostream>
+#include <cstdlib>
+#include <sstream>
+#include <cstdint> //typedef int64_t, uint64_t
 
 /// If defined, indicates that json library is embedded in CppTL library.
 //# define JSON_IN_CPPTL 1
@@ -489,12 +499,8 @@ public:
 #if !defined(JSON_IS_AMALGAMATION)
 #include "forwards.h"
 #endif // if !defined(JSON_IS_AMALGAMATION)
-#include <string>
-#include <vector>
-#include <exception>
 
 #ifndef JSON_USE_CPPTL_SMALLMAP
-#include <map>
 #else
 #include <cpptl/smallmap.h>
 #endif
@@ -532,7 +538,7 @@ namespace Json {
  */
 class JSON_API Exception : public std::exception {
 public:
-  Exception(JSONCPP_STRING const& msg);
+  Exception(JSONCPP_STRING  msg);
   ~Exception() JSONCPP_NOEXCEPT JSONCPP_OVERRIDE;
   char const* what() const JSONCPP_NOEXCEPT JSONCPP_OVERRIDE;
 protected:
@@ -1371,11 +1377,6 @@ inline void swap(Json::Value& a, Json::Value& b) { a.swap(b); }
 #include "features.h"
 #include "value.h"
 #endif // if !defined(JSON_IS_AMALGAMATION)
-#include <deque>
-#include <iosfwd>
-#include <stack>
-#include <string>
-#include <istream>
 
 // Disable warning C4251: <data member>: <type> needs to have dll-interface to
 // be used by...
@@ -1575,7 +1576,7 @@ private:
                                    Location& current,
                                    Location end,
                                    unsigned int& unicode);
-  bool addError(const JSONCPP_STRING& message, Token& token, Location extra = 0);
+  bool addError(const JSONCPP_STRING& message, Token& token, Location extra = nullptr);
   bool recoverFromError(TokenType skipUntilToken);
   bool addErrorAndRecover(const JSONCPP_STRING& message,
                           Token& token,
@@ -1607,7 +1608,7 @@ private:
  */
 class JSON_API CharReader {
 public:
-  virtual ~CharReader() {}
+  virtual ~CharReader() = default;
   /** \brief Read a Value from a <a HREF="http://www.json.org">JSON</a>
    document.
    * The document must be a UTF-8 encoded string containing the document to read.
@@ -1631,7 +1632,7 @@ public:
 
   class JSON_API Factory {
   public:
-    virtual ~Factory() {}
+    virtual ~Factory() = default;
     /** \brief Allocate a CharReader via operator new().
      * \throw std::exception if something goes wrong (e.g. invalid settings)
      */
@@ -1788,9 +1789,6 @@ JSON_API JSONCPP_ISTREAM& operator>>(JSONCPP_ISTREAM&, Value&);
 #if !defined(JSON_IS_AMALGAMATION)
 #include "value.h"
 #endif // if !defined(JSON_IS_AMALGAMATION)
-#include <vector>
-#include <string>
-#include <ostream>
 
 // Disable warning C4251: <data member>: <type> needs to have dll-interface to
 // be used by...
@@ -1937,7 +1935,7 @@ class JSON_API FastWriter : public Writer {
 
 public:
   FastWriter();
-  ~FastWriter() JSONCPP_OVERRIDE {}
+  ~FastWriter() JSONCPP_OVERRIDE = default;
 
   void enableYAMLCompatibility();
 
@@ -1989,7 +1987,7 @@ private:
 class JSON_API StyledWriter : public Writer {
 public:
   StyledWriter();
-  ~StyledWriter() JSONCPP_OVERRIDE {}
+  ~StyledWriter() JSONCPP_OVERRIDE = default;
 
 public: // overridden from Writer
   /** \brief Serialize a Value in <a HREF="http://www.json.org">JSON</a> format.
@@ -2051,7 +2049,7 @@ private:
 class JSON_API StyledStreamWriter {
 public:
   StyledStreamWriter(JSONCPP_STRING indentation = "\t");
-  ~StyledStreamWriter() {}
+  ~StyledStreamWriter() = default;
 
 public:
   /** \brief Serialize a Value in <a HREF="http://www.json.org">JSON</a> format.
@@ -2130,8 +2128,6 @@ JSON_API JSONCPP_OSTREAM& operator<<(JSONCPP_OSTREAM&, const Value& root);
 #ifndef CPPTL_JSON_ASSERTIONS_H_INCLUDED
 #define CPPTL_JSON_ASSERTIONS_H_INCLUDED
 
-#include <stdlib.h>
-#include <sstream>
 
 #if !defined(JSON_IS_AMALGAMATION)
 #include "config.h"

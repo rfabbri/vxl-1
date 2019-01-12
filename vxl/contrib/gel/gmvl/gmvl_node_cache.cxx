@@ -1,26 +1,21 @@
 // This is gel/gmvl/gmvl_node_cache.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author crossge@crd.ge.com
 
 #include <iostream>
 #include "gmvl_node_cache.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 // constructors and destructors
-gmvl_node_cache::gmvl_node_cache()
-{
-}
+gmvl_node_cache::gmvl_node_cache() = default;
 
-gmvl_node_cache::~gmvl_node_cache()
-{
-}
+gmvl_node_cache::~gmvl_node_cache() = default;
 
 // trivial accessors
-void gmvl_node_cache::add( const gmvl_node_sptr node)
+void gmvl_node_cache::add( const gmvl_node_sptr& node)
 {
   node->ref_= nodes_.size();
   nodes_.push_back( node);
@@ -48,16 +43,16 @@ void gmvl_node_cache::add( const gmvl_node_sptr node)
   }
 }
 
-void gmvl_node_cache::remove( const gmvl_node_sptr node)
+void gmvl_node_cache::remove( const gmvl_node_sptr& node)
 {
   std::vector<gmvl_node_sptr> newnodes;
 
-  for (unsigned int i=0; i< nodes_.size(); ++i)
+  for (auto & i : nodes_)
   {
-    if (nodes_[i].ptr()!= node.ptr())
+    if (i.ptr()!= node.ptr())
     {
-      nodes_[i]->ref_= newnodes.size();
-      newnodes.push_back( nodes_[i]);
+      i->ref_= newnodes.size();
+      newnodes.push_back( i);
     }
   }
 
@@ -66,22 +61,22 @@ void gmvl_node_cache::remove( const gmvl_node_sptr node)
   rebuild();
 }
 
-bool gmvl_node_cache::cached( const gmvl_node_sptr node) const
+bool gmvl_node_cache::cached( const gmvl_node_sptr& node) const
 {
   return node->ref_!= -1;
 }
 
 // clever accessors
 
-std::vector<gmvl_node_sptr> gmvl_node_cache::get( const std::string type) const
+std::vector<gmvl_node_sptr> gmvl_node_cache::get( const std::string& type) const
 {
   std::vector<gmvl_node_sptr> empty;
 
-  for (unsigned int i=0; i< typecache_.size(); ++i)
+  for (const auto & i : typecache_)
   {
-    if (typecache_[i].first== type)
+    if (i.first== type)
     {
-      return typecache_[i].second;
+      return i.second;
     }
   }
 
@@ -92,15 +87,15 @@ void gmvl_node_cache::rebuild()
 {
   typecache_.clear();
 
-  for (unsigned int i=0; i< nodes_.size(); ++i)
+  for (auto & node : nodes_)
   {
     bool found= false;
 
     for (unsigned int j=0; j< typecache_.size() && !found; ++j)
     {
-      if (typecache_[j].first== nodes_[i]->type_)
+      if (typecache_[j].first== node->type_)
       {
-        typecache_[j].second.push_back( nodes_[i]);
+        typecache_[j].second.push_back( node);
         found= true;
       }
     }
@@ -109,8 +104,8 @@ void gmvl_node_cache::rebuild()
     {
       std::pair<std::string,std::vector<gmvl_node_sptr> > pair;
 
-      pair.first= nodes_[i]->type_;
-      pair.second.push_back( nodes_[i]);
+      pair.first= node->type_;
+      pair.second.push_back( node);
 
       typecache_.push_back( pair);
     }
@@ -120,8 +115,8 @@ void gmvl_node_cache::rebuild()
 // input and output
 std::ostream &operator<<( std::ostream &os, const gmvl_node_cache &c)
 {
-  for (unsigned int i=0; i< c.nodes_.size(); ++i)
-    os << *c.nodes_[i] << ' ';
+  for (const auto & node : c.nodes_)
+    os << *node << ' ';
 
   return os;
 }

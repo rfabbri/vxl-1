@@ -1,9 +1,6 @@
 // This is mul/mbl/mbl_clusters.hxx
 #ifndef mbl_clusters_hxx_
 #define mbl_clusters_hxx_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief  Class to record clusters of data, for faster neighbour finding
@@ -12,15 +9,17 @@
 #include <iostream>
 #include <algorithm>
 #include "mbl_clusters.h"
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_binary_io.h>
 #include <vsl/vsl_vector_io.h>
 
 //: Default constructor
 template<class T, class D>
 mbl_clusters<T,D>::mbl_clusters()
-  : data_(VXL_NULLPTR)
+  : data_(nullptr)
 {
 }
 
@@ -68,7 +67,7 @@ void mbl_clusters<T,D>::set_data_ptr(const std::vector<T>& data)
 template<class T, class D>
 unsigned mbl_clusters<T,D>::nearest(const T& t, double& d) const
 {
-  assert(data_!=VXL_NULLPTR);
+  assert(data_!=nullptr);
 
   // Initialise with first in data
   unsigned best_i = 0;
@@ -84,10 +83,10 @@ unsigned mbl_clusters<T,D>::nearest(const T& t, double& d) const
     {
       // There may be a point in the cluster closer than the current best
       const std::vector<unsigned>& ind = index_[j];
-      for (unsigned i=0;i<ind.size();++i)
+      for (unsigned int i : ind)
       {
-        double di=D::d(data_ptr[ind[i]],t);
-        if (di<d) { d=di; best_i=ind[i]; }
+        double di=D::d(data_ptr[i],t);
+        if (di<d) { d=di; best_i=i; }
       }
     }
   }
@@ -102,7 +101,7 @@ template<class T, class D>
 unsigned mbl_clusters<T,D>::nearest(const T& t, double& d,
                    const std::vector<unsigned>& c_list) const
 {
-  assert(data_!=VXL_NULLPTR);
+  assert(data_!=nullptr);
 
   // Initialise with first in set for c_list[0]
   unsigned best_i = 0;
@@ -111,18 +110,17 @@ unsigned mbl_clusters<T,D>::nearest(const T& t, double& d,
   const T* data_ptr = &data()[0];
 
   // Try each cluster in turn
-  for (unsigned k=0;k<c_list.size();++k)
+  for (unsigned int j : c_list)
   {
-    unsigned j=c_list[k];
     double dj = D::d(t,p_[j]);
     if (dj-r_[j]<d)
     {
       // There may be a point in the cluster closer than the current best
       const std::vector<unsigned>& ind = index_[j];
-      for (unsigned i=0;i<ind.size();++i)
+      for (unsigned int i : ind)
       {
-        double di=D::d(data_ptr[ind[i]],t);
-        if (di<d) { d=di; best_i=ind[i]; }
+        double di=D::d(data_ptr[i],t);
+        if (di<d) { d=di; best_i=i; }
       }
     }
   }
@@ -203,9 +201,8 @@ void mbl_clusters<T,D>::nearest_clusters(const T& t, double& max_d,
   std::vector<double> d1;
 
   // Try each cluster in turn, recording any that might include closest
-  for (unsigned k=0;k<c_list.size();++k)
+  for (unsigned int j : c_list)
   {
-    unsigned j=c_list[k];
     double dj = D::d(t,p_[j]);
     if (dj-r_[j]<=max_d)
     {
@@ -319,9 +316,8 @@ unsigned mbl_clusters<T,D>::clusters_within_d(const T& t, double d,
   c_list.resize(0);
   nearest_c=0;
   min_d = d+1;
-  for (unsigned j=0;j<in_list.size();++j)
+  for (unsigned int i : in_list)
   {
-    unsigned i=in_list[j];
     double di=D::d(t,p_[i]);
     if (di<=d)
     {
@@ -363,10 +359,10 @@ void mbl_clusters<T,D>::in_clusters(const std::vector<unsigned>& c_list,
                                     std::vector<unsigned>& o_list) const
 {
   o_list.resize(0);
-  for (unsigned i=0;i<c_list.size();++i)
+  for (unsigned int i : c_list)
   {
-    const std::vector<unsigned>& ind = index()[c_list[i]];
-    for (unsigned j=0;j<ind.size();++j) o_list.push_back(ind[j]);
+    const std::vector<unsigned>& ind = index()[i];
+    for (unsigned int j : ind) o_list.push_back(j);
   }
 }
 
@@ -428,7 +424,7 @@ void mbl_clusters<T,D>::b_read(vsl_b_istream& bfs)
     return;
   }
 
-  data_=VXL_NULLPTR;
+  data_=nullptr;
 }
 
 //: Binary file stream output operator for class reference

@@ -6,7 +6,9 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_box_3d.h>
 
@@ -88,12 +90,12 @@ void bvxm_world_param_parser::startElement(const char* name, const char** atts)
         bvxm_world_param_parser_convert(std::string(atts[i+1]), max_scale_);
 }
 
-void bvxm_world_param_parser::endElement(const XML_Char* name)
+void bvxm_world_param_parser::endElement(const XML_Char*  /*name*/)
 {
 }
 
 //Grabs data from points
-void bvxm_world_param_parser::charData(const XML_Char* s, int len)
+void bvxm_world_param_parser::charData(const XML_Char*  /*s*/, int  /*len*/)
 {
 }
 

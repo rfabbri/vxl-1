@@ -1,7 +1,9 @@
 #include <iostream>
 #include <testlib/testlib_test.h>
 #include <bcvr/bcvr_cvmatch.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 MAIN_ARGS(test_cvmatch)
 {
@@ -26,7 +28,7 @@ MAIN_ARGS(test_cvmatch)
   // Actually testing copy constructor of bsol_intrinsic_curve_2d
   TEST("create curve2 from curve1 ", curve_2d2->size(), 10);
 
-  bcvr_cvmatch* curveMatch = new bcvr_cvmatch();
+  auto* curveMatch = new bcvr_cvmatch();
   curveMatch->setCurve1 (curve_2d1);
   curveMatch->setCurve2 (curve_2d2);
   curveMatch->Match ();
@@ -39,7 +41,7 @@ MAIN_ARGS(test_cvmatch)
   curve_2d2_n->readCONFromFile( (dir_base+data_file).c_str() );
   TEST("load line2.con ", curve_2d2_n->size(), 12);
 
-  bcvr_cvmatch* curveMatch2 = new bcvr_cvmatch();
+  auto* curveMatch2 = new bcvr_cvmatch();
   curveMatch2->setCurve1 (curve_2d1);
   curveMatch2->setCurve2 (curve_2d2_n);
   curveMatch2->Match ();

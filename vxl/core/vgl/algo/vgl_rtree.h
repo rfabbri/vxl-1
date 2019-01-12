@@ -1,9 +1,6 @@
 // This is core/vgl/algo/vgl_rtree.h
 #ifndef vgl_rtree_h_
 #define vgl_rtree_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author fsm
@@ -11,7 +8,9 @@
 //--------------------------------------------------------------------------------
 
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 // forward declare all classes.
 template <class V, class B, class C> class vgl_rtree_probe;
 template <class V, class B, class C> class vgl_rtree_node;
@@ -25,7 +24,7 @@ template <class V, class B, class C>
 class vgl_rtree_probe
 {
  public:
-  virtual ~vgl_rtree_probe() { }
+  virtual ~vgl_rtree_probe() = default;
   //: return true if the probe "meets" the given object.
   virtual bool meets(V const &v) const { B b; C::init(b, v); return meets(b); }
   virtual bool meets(B const &b) const =0;
@@ -122,7 +121,7 @@ class vgl_rtree_iterator_base
   unsigned int i;
 
   vgl_rtree_iterator_base(node *root) : current(root), i(0) { }
-  vgl_rtree_iterator_base() : current(VXL_NULLPTR), i(0) { }
+  vgl_rtree_iterator_base() : current(nullptr), i(0) { }
 
   void operator_pp();
   void operator_mm();
@@ -147,7 +146,7 @@ class vgl_rtree_iterator : public vgl_rtree_iterator_base<V, B, C>
   typedef vgl_rtree_node<V, B, C> node;
 
   vgl_rtree_iterator(node *root) : base(root) { }
-  vgl_rtree_iterator() { }
+  vgl_rtree_iterator() = default;
 
   V &operator*() const { return base::current->vts[base::i]; }
 
@@ -169,7 +168,7 @@ class vgl_rtree_const_iterator : public vgl_rtree_iterator_base<V, B, C>
 
   vgl_rtree_const_iterator(node *root) : base(root) { }
   vgl_rtree_const_iterator(vgl_rtree_iterator<V, B, C> const &that) : base(that) { }
-  vgl_rtree_const_iterator() { }
+  vgl_rtree_const_iterator() = default;
 
   V const &operator*() const { return base::current->vts[base::i]; }
 
@@ -244,11 +243,11 @@ template <class V, class B, class C>
 class vgl_rtree
 {
  public:
-  vgl_rtree() : root(VXL_NULLPTR) { }
+  vgl_rtree() : root(nullptr) { }
   ~vgl_rtree() {
     if (root)
       delete root;
-    root = VXL_NULLPTR;
+    root = nullptr;
   }
 
   //
@@ -269,7 +268,7 @@ class vgl_rtree
     if (root)
       root->add(v);
     else
-      root = new node(VXL_NULLPTR/*parent*/, v);
+      root = new node(nullptr/*parent*/, v);
   }
 
   //: remove one element from the rtree.
@@ -284,7 +283,7 @@ class vgl_rtree
 
       if (root->total_vts == 0) {
         delete root;
-        root = VXL_NULLPTR;
+        root = nullptr;
       }
     }
   }
@@ -306,7 +305,7 @@ class vgl_rtree
     i.current->erase(i.i);
     if (root->total_vts == 0) {
       delete root;
-      root = VXL_NULLPTR;
+      root = nullptr;
     }
   }
 

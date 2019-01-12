@@ -3,7 +3,9 @@
 #include <iostream>
 #include <testlib/testlib_test.h>
 #include <vgl/vgl_convex.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 static void test_convex()
 {
@@ -11,15 +13,15 @@ static void test_convex()
            << "Inputs\n";
   // Simple triangle
   std::vector<vgl_point_2d<double> > pts;
-  pts.push_back( vgl_point_2d<double>(0.0, 0.0) );
-  pts.push_back( vgl_point_2d<double>(0.0, 0.0) );
-  pts.push_back( vgl_point_2d<double>(5.0, 0.0) );
-  pts.push_back( vgl_point_2d<double>(3.0, 1.0) );
-  pts.push_back( vgl_point_2d<double>(2.0, 1.0) );
-  pts.push_back( vgl_point_2d<double>(0.0, 5.0) );
+  pts.emplace_back(0.0, 0.0 );
+  pts.emplace_back(0.0, 0.0 );
+  pts.emplace_back(5.0, 0.0 );
+  pts.emplace_back(3.0, 1.0 );
+  pts.emplace_back(2.0, 1.0 );
+  pts.emplace_back(0.0, 5.0 );
 
-  for (unsigned i=0; i < pts.size(); ++i)
-    std::cout << '(' << pts[i].x() <<','<<pts[i].y()<<") ";
+  for (auto & pt : pts)
+    std::cout << '(' << pt.x() <<','<<pt.y()<<") ";
   std::cout << std::endl;
 
   vgl_polygon<double> poly=vgl_convex_hull(pts);

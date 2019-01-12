@@ -7,27 +7,28 @@
 // \brief List of points making a curve - for defining boundaries
 // \author Tim Cootes
 
-#include <vcl_compiler.h>
-#include <vsl/vsl_indent.h>
-#include <vsl/vsl_binary_io.h>
-#include <vsl/vsl_vector_io.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <mbl/mbl_parse_block.h>
-#include <mbl/mbl_read_props.h>
 #include <mbl/mbl_parse_int_list.h>
 #include <mbl/mbl_parse_keyword_list.h>
+#include <mbl/mbl_read_props.h>
+#include <utility>
+#include <vsl/vsl_binary_io.h>
+#include <vsl/vsl_indent.h>
+#include <vsl/vsl_vector_io.h>
 #include <vul/vul_string.h>
-#include <vcl_cassert.h>
 
 // Default Constructor
-msm_curve::msm_curve()
-{
-}
+msm_curve::msm_curve() = default;
 
 //: Define as range of indices [lo,hi]
 msm_curve::msm_curve(unsigned lo, unsigned hi,
                      bool open, std::string name)
 {
-  set(lo,hi,open,name);
+  set(lo,hi,open,std::move(name));
 }
 
 void msm_curve::set(const std::vector<unsigned>& index,
@@ -35,7 +36,7 @@ void msm_curve::set(const std::vector<unsigned>& index,
 {
   index_ = index;
   open_=open;
-  name_=name;
+  name_=std::move(name);
 }
 
 //: Define as range of indices [lo,hi]
@@ -46,7 +47,7 @@ void msm_curve::set(unsigned lo, unsigned hi,
   index_.resize(1+hi-lo);
   for (unsigned i=lo;i<=hi;++i) index_[i-lo]=i;
   open_=open;
-  name_=name;
+  name_=std::move(name);
 }
 
 //: Return the largest index value
@@ -64,8 +65,8 @@ unsigned msm_curve::max_index() const
 //  Useful when concatenating models
 void msm_curve::add_index_offset(int offset)
 {
-  for (unsigned i=0;i<index_.size();++i)
-    index_[i]=unsigned (index_[i]+offset);
+  for (unsigned int & i : index_)
+    i=unsigned (i+offset);
 }
 
 //: Equality test
@@ -220,9 +221,7 @@ void vsl_print_summary(std::ostream& os,const msm_curve& b)
 
 
 //: Default constructor
-msm_curves::msm_curves()
-{
-}
+msm_curves::msm_curves() = default;
 
 
 //: Construct as a single curve
@@ -230,7 +229,7 @@ msm_curves::msm_curves(unsigned lo, unsigned hi,
                        bool open, std::string name)
 {
   resize(1);
-  operator[](0)=msm_curve(lo,hi,open,name);
+  operator[](0)=msm_curve(lo,hi,open,std::move(name));
 }
 
 //: Return index of first curve with given name, or -1
@@ -341,21 +340,20 @@ void vsl_b_read(vsl_b_istream& bfs, msm_curves& c)
 
 //: If curve_data starts with { then parse, else assume it is a filename and load.
 // If curves_data="-" return empty curves
-void msm_curves::parse_or_load(const vcl_string& curves_data)
+void msm_curves::parse_or_load(const std::string& curves_data)
 {
   if (curves_data=="-")
     resize(0);
   else
   if (curves_data[0]=='{')
   {
-    vcl_istringstream crv_ss(curves_data);
+    std::istringstream crv_ss(curves_data);
     config_from_stream(crv_ss);
   }
   else
   if (!read_text_file(curves_data))
   {
-    vcl_string err_msg="Failed to load curves from "+curves_data;
+    std::string err_msg="Failed to load curves from "+curves_data;
     throw mbl_exception_parse_error(err_msg);
   }
 }
-

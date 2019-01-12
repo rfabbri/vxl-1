@@ -11,7 +11,9 @@
 #include <vgl/vgl_vector_3d.h>
 #include <vnl/io/vnl_io_matrix.h>
 #include <vsl/vsl_binary_io.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_quaternion.h>
 
 //=======================================================================
@@ -71,7 +73,7 @@ class vimt3d_transform_3d
   // error in icc 8.0 (internal error: 0_1270)
 
   //: Destructor
-  ~vimt3d_transform_3d() {}
+  ~vimt3d_transform_3d() = default;
 
   //: True if identity.
   bool is_identity() const { return form_==Identity; }
@@ -218,7 +220,7 @@ class vimt3d_transform_3d
 
   //: Returns the coordinates of the origin
   vgl_point_3d<double>  origin() const
-    { return vgl_point_3d<double> (tt_==1?xt_:xt_/tt_,tt_==1?yt_:yt_/tt_,tt_==1?zt_:zt_/tt_); }
+    { return {tt_==1?xt_:xt_/tt_,tt_==1?yt_:yt_/tt_,tt_==1?zt_:zt_/tt_}; }
 
   //: Modifies the transformation so that origin == p.
   // Modifies the transformation so that
@@ -238,20 +240,20 @@ class vimt3d_transform_3d
     switch (form_)
     {
      case Identity :
-      return vgl_point_3d<double> (x,y,z);
+      return {x,y,z};
      case Translation :
-      return vgl_point_3d<double> (x+xt_,y+yt_,z+zt_);
+      return {x+xt_,y+yt_,z+zt_};
      case ZoomOnly :
-      return vgl_point_3d<double> (
+      return {
         x*xx_+xt_,
         y*yy_+yt_,
-        z*zz_+zt_);
+        z*zz_+zt_};
 //   case RigidBody, Similarity, Affine :
      default :
-      return vgl_point_3d<double> (
+      return {
         x*xx_+y*xy_+z*xz_+xt_,
         x*yx_+y*yy_+z*yz_+yt_,
-        x*zx_+y*zy_+z*zz_+zt_);
+        x*zx_+y*zy_+z*zz_+zt_};
     }
   }
 
@@ -277,14 +279,14 @@ class vimt3d_transform_3d
      case Translation:
       return dp;
      case ZoomOnly :
-      return vgl_vector_3d<double> (dp.x()*xx_,
+      return {dp.x()*xx_,
                                     dp.y()*yy_,
-                                    dp.z()*zz_);
+                                    dp.z()*zz_};
 //   case RigidBody, Similarity, Affine :
      default : // Don't worry that the returned value is independent of p --- this is correct.
-      return vgl_vector_3d<double> (dp.x()*xx_+dp.y()*xy_+dp.z()*xz_,
+      return {dp.x()*xx_+dp.y()*xy_+dp.z()*xz_,
                                     dp.x()*yx_+dp.y()*yy_+dp.z()*yz_,
-                                    dp.x()*zx_+dp.y()*zy_+dp.z()*zz_);
+                                    dp.x()*zx_+dp.y()*zy_+dp.z()*zz_};
     }
   }
 

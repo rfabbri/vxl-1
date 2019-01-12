@@ -8,20 +8,22 @@
 #include <vil/vil_image_resource.h>
 #include <vil/vil_load.h>
 #include <vil/file_formats/vil_nitf2_image.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bprb/bprb_func_process.h>
 //: set input and output types
 bool vil_nitf_bits_per_pixel_process_cons(bprb_func_process& pro)
 {
   //input, a path to an nitf image
   std::vector<std::string> input_types;
-  input_types.push_back("vcl_string"); // 0 nitf path
+  input_types.emplace_back("vcl_string"); // 0 nitf path
   if (!pro.set_input_types(input_types))
     return false;
 
   //output, extracts IDATIM property from the NITF image subheader
   std::vector<std::string> output_types;
-  output_types.push_back("int"); // bits/pixel
+  output_types.emplace_back("int"); // bits/pixel
   return pro.set_output_types(output_types);
 }
 
@@ -42,7 +44,7 @@ bool vil_nitf_bits_per_pixel_process(bprb_func_process& pro)
   if (!image)
   {
     std::cout << "NITF image load failed in vil_nitf_date_time_process\n";
-    return 0;
+    return false;
   }
 
   std::string format = image->file_format();
@@ -51,11 +53,11 @@ bool vil_nitf_bits_per_pixel_process(bprb_func_process& pro)
   if (prefix != "nitf")
   {
     std::cout << "source image is not NITF in vil_nitf_date_time_process\n";
-    return 0;
+    return false;
   }
 
     //cast to an nitf2_image
-  vil_nitf2_image *nitf_image = static_cast<vil_nitf2_image*>(image.ptr());
+  auto *nitf_image = static_cast<vil_nitf2_image*>(image.ptr());
 
     //get NITF information
   std::vector< vil_nitf2_image_subheader* > headers = nitf_image->get_image_headers();
@@ -74,4 +76,3 @@ bool vil_nitf_bits_per_pixel_process(bprb_func_process& pro)
   pro.set_output_val<int>(0, bits);
   return true;
 }
-

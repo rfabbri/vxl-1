@@ -33,9 +33,10 @@ bool vul_debug_core_dump(const char * filename);
 bool vul_debug_core_dump_in_windows_se(const char * filename,
                                        void* pep);
 #include <exception>
-#include <vcl_config_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
-#if VCL_HAS_EXCEPTIONS
 //: A translated structured exception.
 class vul_debug_windows_structured_exception : public std::exception
 {
@@ -45,13 +46,10 @@ class vul_debug_windows_structured_exception : public std::exception
   unsigned code() const;
   //: Related execution address.
   void *address() const;
-  virtual const char *what( ) const throw();
+  const char *what( ) const throw() override;
   vul_debug_windows_structured_exception(void * ex_ptr) : ex_ptr_(ex_ptr) {}
-  virtual ~vul_debug_windows_structured_exception() throw() {}
+  ~vul_debug_windows_structured_exception() throw() override = default;
 };
-#else
-class vul_debug_windows_structured_exception {};
-#endif //  VCL_HAS_EXCEPTIONS
 
 //: Setup the system to core dump and throw a C++ exception on detection of a Structured Exception
 // The system will throw vul_debug_windows_structured_exception.

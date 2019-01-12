@@ -76,7 +76,7 @@ int brad_sun_dir_index::index(double geo_sun_azimuth,
   return min_i;
 }
 
-int brad_sun_dir_index::index(double x, double y, double z,double & min_angle) const
+int brad_sun_dir_index::index(double x, double y, double z,double &  /*min_angle*/) const
 {
   vnl_double_3 dir(x, y, z);
   double min_ang = std::fabs(angle(cone_axes_[0], dir));
@@ -113,7 +113,7 @@ std::vector<vnl_double_3> brad_sun_dir_index::major_path()
     double el = mean_el + dl*major_v[1];
     double x, y, z;
     hist_.convert_to_cartesian(az, el, x, y, z);
-    ret.push_back(vnl_double_3(x, y, z));
+    ret.emplace_back(x, y, z);
   }
   return ret;
 }
@@ -123,9 +123,8 @@ void brad_sun_dir_index::print_to_vrml(std::ostream& os)
   //output the sun dir histogram, also encodes the vrml header
   hist_.print_to_vrml(os, 0.25);
   std::vector<vnl_double_3> path = this->major_path();
-  for (std::vector<vnl_double_3>::iterator vit = path.begin();
-       vit != path.end(); ++vit) {
-    double x = (*vit)[0], y = (*vit)[1], z = (*vit)[2];
+  for (auto & vit : path) {
+    double x = vit[0], y = vit[1], z = vit[2];
     os<< "Transform {\n"
       << "translation " << x << ' ' << y << ' '
       << ' ' << z << '\n'

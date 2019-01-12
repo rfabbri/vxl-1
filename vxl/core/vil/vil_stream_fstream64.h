@@ -2,9 +2,6 @@
 #ifndef vil_stream_fstream64_h_
 #define vil_stream_fstream64_h_
 #ifdef VIL_USE_FSTREAM64
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief A vil_stream implementation that can handle files bigger than 2GB
@@ -15,7 +12,9 @@
 // \author  rob@stellarscience.com
 // \date 28 Jun 05
 
-#include "vcl_compiler.h"
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_stream.h>
 
 //: A vil_stream implementation using std::fstream
@@ -24,7 +23,7 @@ class vil_stream_fstream64 : public vil_stream
  public:
   vil_stream_fstream64(char const* filename, char const* mode);
 
-#if defined(VCL_WIN32) && VXL_USE_WIN_WCHAR_T
+#if defined(_WIN32) && VXL_USE_WIN_WCHAR_T
   vil_stream_fstream64(wchar_t const* filename, char const* mode);
 #endif
 

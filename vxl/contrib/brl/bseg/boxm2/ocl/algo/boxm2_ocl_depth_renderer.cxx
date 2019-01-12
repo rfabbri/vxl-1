@@ -10,7 +10,9 @@
 #include <stdexcept>
 #include "boxm2_ocl_depth_renderer.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/ocl/boxm2_opencl_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -28,9 +30,9 @@
 #include <vul/vul_timer.h>
 
 boxm2_ocl_depth_renderer
-::boxm2_ocl_depth_renderer(boxm2_scene_sptr scene,
-                           boxm2_opencl_cache_sptr ocl_cache,
-                           std::string ident) :
+::boxm2_ocl_depth_renderer(const boxm2_scene_sptr& scene,
+                           const boxm2_opencl_cache_sptr& ocl_cache,
+                           const std::string&  /*ident*/) :
   scene_(scene),
   opencl_cache_(ocl_cache),
   buffers_allocated_(false),
@@ -121,30 +123,30 @@ boxm2_ocl_depth_renderer
   delete[] ray_directions_buff_;
 
   opencl_cache_->unref_mem(depth_image_.ptr());
-  depth_image_ = bocl_mem_sptr(VXL_NULLPTR);
+  depth_image_ = bocl_mem_sptr(nullptr);
   opencl_cache_->unref_mem(vis_image_.ptr());
-  vis_image_ = bocl_mem_sptr(VXL_NULLPTR);
+  vis_image_ = bocl_mem_sptr(nullptr);
   opencl_cache_->unref_mem(prob_image_.ptr());
-  prob_image_ = bocl_mem_sptr(VXL_NULLPTR);
+  prob_image_ = bocl_mem_sptr(nullptr);
   opencl_cache_->unref_mem(var_image_.ptr());
-  var_image_ = bocl_mem_sptr(VXL_NULLPTR);
+  var_image_ = bocl_mem_sptr(nullptr);
   opencl_cache_->unref_mem(t_infinity_image_.ptr());
-  t_infinity_image_ = bocl_mem_sptr(VXL_NULLPTR);
+  t_infinity_image_ = bocl_mem_sptr(nullptr);
   opencl_cache_->unref_mem(ray_origins_image_.ptr());
-  ray_origins_image_ = bocl_mem_sptr(VXL_NULLPTR);
+  ray_origins_image_ = bocl_mem_sptr(nullptr);
   opencl_cache_->unref_mem(ray_directions_image_.ptr());
-  ray_directions_image_ = bocl_mem_sptr(VXL_NULLPTR);
+  ray_directions_image_ = bocl_mem_sptr(nullptr);
 
   opencl_cache_->unref_mem(tnearfar_.ptr());
-  tnearfar_ = bocl_mem_sptr(VXL_NULLPTR);
+  tnearfar_ = bocl_mem_sptr(nullptr);
   opencl_cache_->unref_mem(img_dim_.ptr());
-  img_dim_ = bocl_mem_sptr(VXL_NULLPTR);
+  img_dim_ = bocl_mem_sptr(nullptr);
   opencl_cache_->unref_mem(cl_output_.ptr());
-  cl_output_ = bocl_mem_sptr(VXL_NULLPTR);
+  cl_output_ = bocl_mem_sptr(nullptr);
   opencl_cache_->unref_mem(cl_subblk_dim_.ptr());
-  cl_subblk_dim_ = bocl_mem_sptr(VXL_NULLPTR);
+  cl_subblk_dim_ = bocl_mem_sptr(nullptr);
   opencl_cache_->unref_mem(lookup_.ptr());
-  lookup_ = bocl_mem_sptr(VXL_NULLPTR);
+  lookup_ = bocl_mem_sptr(nullptr);
 
   buffers_allocated_ = false;
   return true;
@@ -180,7 +182,7 @@ boxm2_ocl_depth_renderer
 
 bool
 boxm2_ocl_depth_renderer
-::render(vpgl_camera_double_sptr camera, unsigned ni, unsigned nj, float nearfactor, float farfactor)
+::render(vpgl_camera_double_sptr camera, unsigned ni, unsigned nj, float  /*nearfactor*/, float  /*farfactor*/)
 {
   render_success_ = false;
 
@@ -242,12 +244,12 @@ boxm2_ocl_depth_renderer
 
   subblk_dim_ = 0.0f; // in case there are no visible blocks;
 
-  for (std::vector<boxm2_block_id>::iterator id = vis_order.begin(); id != vis_order.end(); ++id) {
+  for (auto & id : vis_order) {
 
-    boxm2_block_metadata mdata = scene_->get_block_metadata(*id);
+    boxm2_block_metadata mdata = scene_->get_block_metadata(id);
 
-    bocl_mem* blk       = opencl_cache_->get_block(scene_,*id);
-    bocl_mem* alpha     = opencl_cache_->get_data<BOXM2_ALPHA>(scene_,*id);
+    bocl_mem* blk       = opencl_cache_->get_block(scene_,id);
+    bocl_mem* alpha     = opencl_cache_->get_data<BOXM2_ALPHA>(scene_,id);
     bocl_mem* blk_info  = opencl_cache_->loaded_block_info();
     subblk_dim_         = mdata.sub_block_dim_.x(); // assume this is not changing per block
 
@@ -326,7 +328,7 @@ boxm2_ocl_depth_renderer
 
 bool
 boxm2_ocl_depth_renderer
-::compile_kernels(bocl_device_sptr device)
+::compile_kernels(const bocl_device_sptr&  /*device*/)
 {
   {
     std::vector<std::string> src_paths;
@@ -382,4 +384,3 @@ boxm2_ocl_depth_renderer
   }
   return true;
 }
-

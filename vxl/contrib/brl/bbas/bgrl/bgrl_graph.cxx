@@ -7,12 +7,13 @@
 #include "bgrl_edge.h"
 #include <vbl/io/vbl_io_smart_ptr.h>
 #include <vsl/vsl_set_io.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Constructor
 bgrl_graph::bgrl_graph()
-{
-}
+= default;
 
 //: Copy Constructor
 // \note this provides a deep copy of the graph
@@ -22,22 +23,20 @@ bgrl_graph::bgrl_graph(const bgrl_graph& graph)
   std::map<bgrl_vertex_sptr, bgrl_vertex_sptr> old_to_new;
 
   // copy vertices and outgoing edges
-  for ( std::set<bgrl_vertex_sptr>::const_iterator itr = graph.vertices_.begin();
-        itr != graph.vertices_.end();  ++itr )
+  for (const auto & vertice : graph.vertices_)
   {
-    bgrl_vertex_sptr vertex_copy((*itr)->clone());
-    old_to_new[*itr] = vertex_copy;
+    bgrl_vertex_sptr vertex_copy(vertice->clone());
+    old_to_new[vertice] = vertex_copy;
     vertices_.insert(vertex_copy);
   }
 
   // link up new edges to new vertices
-  for ( std::set<bgrl_vertex_sptr>::const_iterator v_itr = vertices_.begin();
-        v_itr != vertices_.end();  ++v_itr )
+  for (const auto & vertice : vertices_)
   {
-    for ( std::set<bgrl_edge_sptr>::const_iterator e_itr = (*v_itr)->out_edges_.begin();
-          e_itr != (*v_itr)->out_edges_.end();  ++e_itr )
+    for ( auto e_itr = vertice->out_edges_.begin();
+          e_itr != vertice->out_edges_.end();  ++e_itr )
     {
-      std::map<bgrl_vertex_sptr, bgrl_vertex_sptr>::iterator find_new = old_to_new.find((*e_itr)->to_);
+      auto find_new = old_to_new.find((*e_itr)->to_);
       if ( find_new != old_to_new.end() ){
         (*e_itr)->to_ = find_new->second.ptr();
         find_new->second->in_edges_.insert(*e_itr);
@@ -80,11 +79,11 @@ bgrl_graph::add_edge( const bgrl_vertex_sptr& v1,
                       const bgrl_edge_sptr& model_edge )
 {
   if (!v1 || !v2)
-    return VXL_NULLPTR;
+    return nullptr;
   if ( vertices_.count(v1) == 0 && !this->add_vertex(v1) )
-    return VXL_NULLPTR;
+    return nullptr;
   if ( vertices_.count(v2) == 0 && !this->add_vertex(v2) )
-    return VXL_NULLPTR;
+    return nullptr;
 
   return v1->add_edge_to(v2, model_edge);
 }
@@ -105,14 +104,14 @@ bgrl_graph::purge()
 {
   bool retval = false;
 
-  for ( vertex_iterator v_itr = vertices_.begin();
+  for ( auto v_itr = vertices_.begin();
         v_itr != vertices_.end(); ++v_itr )
   {
     bgrl_vertex_sptr curr_vertex = *v_itr;
     // remove the NULL edges
     retval = curr_vertex->purge() || retval;
     // remove edges to vertices not in this graph
-    for ( edge_iterator e_itr = curr_vertex->out_edges_.begin();
+    for ( auto e_itr = curr_vertex->out_edges_.begin();
           e_itr != curr_vertex->out_edges_.end(); ++e_itr )
     {
       if (vertices_.find((*e_itr)->to_) == vertices_.end()) {
@@ -121,7 +120,7 @@ bgrl_graph::purge()
       }
     }
     // remove edges from vertices not in this graph
-    for ( edge_iterator e_itr = curr_vertex->in_edges_.begin();
+    for ( auto e_itr = curr_vertex->in_edges_.begin();
           e_itr != curr_vertex->in_edges_.end(); ++e_itr )
     {
       if (vertices_.find((*e_itr)->from_) == vertices_.end()) {
@@ -219,7 +218,7 @@ bgrl_graph::version(  ) const
 //-----------------------------------------------------------------------------------------
 
 //: Constructor
-bgrl_graph::iterator::iterator( bgrl_graph* graph, bgrl_search_func_sptr func )
+bgrl_graph::iterator::iterator( bgrl_graph* graph, const bgrl_search_func_sptr& func )
  : graph_(graph), search_func_(func),
    use_internal_(false), internal_(graph->vertices_.begin())
 {
@@ -230,7 +229,7 @@ bgrl_graph::iterator::iterator( bgrl_graph* graph, bgrl_search_func_sptr func )
 
 //: Constructor - for end iterator
 bgrl_graph::iterator::iterator( bgrl_graph* graph )
- : graph_(graph),  search_func_(VXL_NULLPTR),
+ : graph_(graph),  search_func_(nullptr),
    use_internal_(true), internal_(graph->vertices_.end())
 {
 }
@@ -272,7 +271,7 @@ bgrl_graph::iterator::operator * () const
 {
   if (use_internal_)
     if (internal_ == this->graph_->vertices_.end())
-      return VXL_NULLPTR;
+      return nullptr;
     else
       return *internal_;
   else
@@ -326,7 +325,7 @@ vsl_b_read(vsl_b_istream &is, bgrl_graph* &g)
     g->b_read(is);
   }
   else
-    g = VXL_NULLPTR;
+    g = nullptr;
 }
 
 
@@ -338,4 +337,3 @@ vsl_print_summary(std::ostream &os, const bgrl_graph* g)
   g->print_summary(os);
   os << '}';
 }
-

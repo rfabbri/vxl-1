@@ -11,13 +11,16 @@
 // \endverbatim
 //
 
-#include <iostream>
 #include <algorithm>
+#include <iostream>
+#include <utility>
+#include <vgl/vgl_intersection.h>
 #include <vul/vul_arg.h>
 #include <vul/vul_file.h>
 #include <vul/vul_file_iterator.h>
-#include <vgl/vgl_intersection.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <volm/volm_io.h>
 #include <volm/volm_io_tools.h>
 #include <volm/volm_tile.h>
@@ -27,9 +30,9 @@
 #include <bkml/bkml_parser.h>
 
 
-static void error(std::string log_file, std::string msg)
+static void error(std::string log_file, const std::string& msg)
 {
-  std::cerr << msg;  volm_io::write_post_processing_log(log_file, msg);
+  std::cerr << msg;  volm_io::write_post_processing_log(std::move(log_file), msg);
 }
 
 int main(int argc, char** argv)
@@ -131,7 +134,7 @@ int main(int argc, char** argv)
       if (l_idx != leaf_idx())
         continue;
 
-    bvgl_2d_geo_index_node<volm_conf_land_map_indexer_sptr>* leaf_ptr = dynamic_cast<bvgl_2d_geo_index_node<volm_conf_land_map_indexer_sptr>*>(leaves[l_idx].ptr());
+    auto* leaf_ptr = dynamic_cast<bvgl_2d_geo_index_node<volm_conf_land_map_indexer_sptr>*>(leaves[l_idx].ptr());
     leaf_ptr->contents_ = new volm_conf_land_map_indexer(leaf_ptr->extent_, density());
     std::cout << "--------------------------------------------------------------------------\n";
     std::cout << "\t adding locations into region: " << leaf_ptr->extent_ << " (leaf id: " << l_idx << ")...\n";
@@ -140,14 +143,14 @@ int main(int argc, char** argv)
     if (is_land_map())
     {
       std::cout << "\t adding locations from " << map_info.size() << " land maps\n";
-      for (unsigned m_idx = 0; m_idx < map_info.size(); m_idx++) {
-        vil_image_view<vxl_byte>* image = dynamic_cast<vil_image_view<vxl_byte>*>(map_info[m_idx].img_r.ptr());
+      for (auto & m_idx : map_info) {
+        auto* image = dynamic_cast<vil_image_view<vxl_byte>*>(m_idx.img_r.ptr());
         if (!image) {
-          log << "ERROR: load image view failed for land map: " << map_info[m_idx].img_name << '\n';  error(log_file, log.str());
+          log << "ERROR: load image view failed for land map: " << m_idx.img_name << '\n';  error(log_file, log.str());
           return volm_io::EXE_ARGUMENT_ERROR;
         }
-        if (!leaf_ptr->contents_->add_locations(*image, map_info[m_idx].cam)) {
-          log << "ERROR: adding locations from land map: " << map_info[m_idx].img_name << "failed\n";  error(log_file, log.str());
+        if (!leaf_ptr->contents_->add_locations(*image, m_idx.cam)) {
+          log << "ERROR: adding locations from land map: " << m_idx.img_name << "failed\n";  error(log_file, log.str());
           return volm_io::EXE_ARGUMENT_ERROR;
         }
       }
@@ -189,9 +192,9 @@ int main(int argc, char** argv)
 
     // add sme data
     std::cout << "\t adding locations from " << sme_objects.size() << " SME objects...\n";
-    for (unsigned i = 0; i < sme_objects.size(); i++) {
-      vgl_point_3d<double> sme_pt(sme_objects[i].first.x(), sme_objects[i].first.y(), -1.0);
-      leaf_ptr->contents_->add_locations(sme_pt, (unsigned char)sme_objects[i].second);
+    for (auto & sme_object : sme_objects) {
+      vgl_point_3d<double> sme_pt(sme_object.first.x(), sme_object.first.y(), -1.0);
+      leaf_ptr->contents_->add_locations(sme_pt, (unsigned char)sme_object.second);
     }
     std::cout << "\t   " << leaf_ptr->contents_->nlocs() << " locations (" << leaf_ptr->contents_->nland_type() << " land types) are added after loading SME data"
              << std::flush << std::endl;

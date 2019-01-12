@@ -15,8 +15,10 @@
 #include <vector>
 #include "bgrl2_edge.h"
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 class bgrl2_hg_vertex;
 class bgrl2_hg_hyperedge;
@@ -77,7 +79,7 @@ class bgrl2_hg_edge // : public bgrl2_edge
   }
   void disconnect_vertex (int i) {
     assert (i==0 || i==1);
-    connecting_vertices_[i] = VXL_NULLPTR;
+    connecting_vertices_[i] = nullptr;
   }
 
   void connect_hyperedge (bgrl2_hg_hyperedge* hyperedge) {
@@ -100,13 +102,12 @@ class bgrl2_hg_edge // : public bgrl2_edge
 
   bgrl2_hg_edge ()
   {
-    connecting_vertices_[0] = VXL_NULLPTR;
-    connecting_vertices_[1] = VXL_NULLPTR;
+    connecting_vertices_[0] = nullptr;
+    connecting_vertices_[1] = nullptr;
   }
 
   ~bgrl2_hg_edge ()
-  {
-  }
+  = default;
 };
 
 #endif // bgrl2_hg_edge_h_

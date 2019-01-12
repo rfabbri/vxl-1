@@ -6,7 +6,9 @@
 //
 
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_load.h>
 #include <vgui/vgui.h>
 #include <vgui/vgui_menu.h>
@@ -19,9 +21,9 @@
 #include <vgui/vgui_clear_tableau.h>
 
 //global pointer to the rubberband tableau
-static vgui_easy2D_tableau_sptr easy = VXL_NULLPTR;
-static vgui_image_tableau_sptr itab = VXL_NULLPTR;
-static vgui_shell_tableau_sptr shell = VXL_NULLPTR;
+static vgui_easy2D_tableau_sptr easy = nullptr;
+static vgui_image_tableau_sptr itab = nullptr;
+static vgui_shell_tableau_sptr shell = nullptr;
 
 //the meunu callback functions
 static void range_mapping()

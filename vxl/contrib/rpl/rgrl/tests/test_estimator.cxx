@@ -6,8 +6,10 @@
 #include <testlib/testlib_test.h>
 //:
 // \file
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <vnl/vnl_matrix.h>
 #include <vnl/vnl_vector.h>
@@ -63,6 +65,7 @@ namespace {
     return v;
   }
 
+#if 0
   vnl_vector<double>
   random_3d_normal_error( )
   {
@@ -72,6 +75,7 @@ namespace {
     v[2] = random.normal64();
     return v;
   }
+#endif
 
   vnl_vector<double>
   random_2d_vector( )
@@ -91,6 +95,7 @@ namespace {
     return v;
   }
 
+#if 0
   vnl_vector<double>
   random_1d_vector( )
   {
@@ -106,6 +111,7 @@ namespace {
     v[0] = random.normal64();
     return v;
   }
+#endif
 
   vnl_vector<double>
   inhomo( vnl_vector<double> p )
@@ -217,7 +223,7 @@ namespace {
       {
         rgrl_match_set_sptr ms = new rgrl_match_set( rgrl_feature_point::type_id() );
         for ( unsigned i=0; i < from_pts.size(); ++i ) {
-          ms->add_feature_and_match( from_pts[i], VXL_NULLPTR, to_pts[i] );
+          ms->add_feature_and_match( from_pts[i], nullptr, to_pts[i] );
         }
 
         rgrl_estimator_sptr est = new rgrl_est_affine();
@@ -225,22 +231,22 @@ namespace {
         rgrl_transformation_sptr trans = est->estimate( ms, null3d_trans );
         TEST("Underconstrained (not enough correspondences)", !trans, true);
         if ( trans ) {
-          rgrl_trans_affine* aff_trans = dynamic_cast<rgrl_trans_affine*>(trans.as_pointer());
+          auto* aff_trans = dynamic_cast<rgrl_trans_affine*>(trans.as_pointer());
           std::cout << "Estimated (shouldn't have):\nA=\n"<<aff_trans->A()<<"\nt="<<aff_trans->t()<<'\n';
         }
       }
 
       {
         rgrl_match_set_sptr ms = new rgrl_match_set( rgrl_feature_point::type_id() );
-        ms->add_feature_and_match( from_pts[0], VXL_NULLPTR, to_pts[0] );
+        ms->add_feature_and_match( from_pts[0], nullptr, to_pts[0] );
         for ( unsigned i=0; i < from_pts.size(); ++i ) {
-          ms->add_feature_and_match( from_pts[i], VXL_NULLPTR, to_pts[i] );
+          ms->add_feature_and_match( from_pts[i], nullptr, to_pts[i] );
         }
 
         rgrl_transformation_sptr trans = rgrl_est_affine().estimate( ms, null3d_trans );
         TEST("Underconstrained (samples not independent)", !trans, true);
         if ( trans ) {
-          rgrl_trans_affine* aff_trans = dynamic_cast<rgrl_trans_affine*>(trans.as_pointer());
+          auto* aff_trans = dynamic_cast<rgrl_trans_affine*>(trans.as_pointer());
           std::cout << "Estimated (shouldn't have):\nA=\n"<<aff_trans->A()<<"\nt="<<aff_trans->t()<<'\n';
         }
       }
@@ -255,14 +261,14 @@ namespace {
       {
         rgrl_match_set_sptr ms = new rgrl_match_set( rgrl_feature_point::type_id() );
         for ( unsigned i=0; i < from_pts.size(); ++i ) {
-          ms->add_feature_and_match( from_pts[i], VXL_NULLPTR, to_pts[i] );
+          ms->add_feature_and_match( from_pts[i], nullptr, to_pts[i] );
         }
 
         rgrl_transformation_sptr trans = rgrl_est_affine().estimate( ms, null3d_trans );
         TEST("Minimal set of correspondences", !trans, false);
         if ( trans ) {
           TEST("Result is affine (is_type())", trans->is_type(rgrl_trans_affine::type_id()) , true);
-          rgrl_trans_affine* aff_trans = dynamic_cast<rgrl_trans_affine*>(trans.as_pointer());
+          auto* aff_trans = dynamic_cast<rgrl_trans_affine*>(trans.as_pointer());
           TEST("Result is affine (dynamic_cast)", !aff_trans, false);
           std::cout << "Estimated:\nA=\n"<<aff_trans->A()<<"\nt="<<aff_trans->t()
                    << "\n\nTrue:\nA=\n"<<A<<"\nt="<<t<<std::endl;
@@ -292,14 +298,14 @@ namespace {
       {
         rgrl_match_set_sptr ms = new rgrl_match_set( rgrl_feature_point::type_id());
         for ( unsigned i=0; i < from_pts.size(); ++i ) {
-          ms->add_feature_and_match( from_pts[i], VXL_NULLPTR, to_pts[i] );
+          ms->add_feature_and_match( from_pts[i], nullptr, to_pts[i] );
         }
 
         rgrl_transformation_sptr trans = rgrl_est_affine().estimate( ms, null3d_trans );
         TEST("Many correspondences (zero error)", !trans, false);
         if ( trans ) {
           TEST("Result is affine (is_type())", trans->is_type(rgrl_trans_affine::type_id()) , true);
-          rgrl_trans_affine* aff_trans = dynamic_cast<rgrl_trans_affine*>(trans.as_pointer());
+          auto* aff_trans = dynamic_cast<rgrl_trans_affine*>(trans.as_pointer());
           TEST("Result is affine (dynamic_cast)", !aff_trans, false);
           std::cout << "Estimated:\nA=\n"<<aff_trans->A()<<"\nt="<<aff_trans->t()
                    << "\n\nTrue:\nA=\n"<<A<<"\nt="<<t<<std::endl;
@@ -311,14 +317,14 @@ namespace {
       {
         rgrl_match_set_sptr ms = new rgrl_match_set( rgrl_feature_point::type_id());
         for ( unsigned i=0; i < from_pts.size(); ++i ) {
-          ms->add_feature_and_match( from_pts[i], VXL_NULLPTR, to_pts[i] );
+          ms->add_feature_and_match( from_pts[i], nullptr, to_pts[i] );
         }
 
         // add two zero weighted outliers
-        ms->add_feature_and_match( pf( vec3d( 4.0, 1.0, 8.0 ) ), VXL_NULLPTR,
+        ms->add_feature_and_match( pf( vec3d( 4.0, 1.0, 8.0 ) ), nullptr,
                                    pf( vec3d( 4.0, 1.0, 8.0 ) ),
                                    0.0 );
-        ms->add_feature_and_match( pf( vec3d( 2.0, 5.0, 8.0 ) ), VXL_NULLPTR,
+        ms->add_feature_and_match( pf( vec3d( 2.0, 5.0, 8.0 ) ), nullptr,
                                    pf( vec3d( 2.0, 7.0, 4.0 ) ),
                                    0.0 );
 
@@ -326,7 +332,7 @@ namespace {
         TEST("With zero wgted outliers (zero error)", !trans, false);
         if ( trans ) {
           TEST("Result is affine (is_type())", trans->is_type(rgrl_trans_affine::type_id()) , true);
-          rgrl_trans_affine* aff_trans = dynamic_cast<rgrl_trans_affine*>(trans.as_pointer());
+          auto* aff_trans = dynamic_cast<rgrl_trans_affine*>(trans.as_pointer());
           TEST("Result is affine (dynamic_cast)", !aff_trans, false);
           std::cout << "Estimated:\nA=\n"<<aff_trans->A()<<"\nt="<<aff_trans->t()
                    << "\n\nTrue:\nA=\n"<<A<<"\nt="<<t<<std::endl;
@@ -374,7 +380,7 @@ namespace {
       //
       rgrl_match_set_sptr ms = new rgrl_match_set( rgrl_feature_point::type_id());
       for ( unsigned i=0; i < from.size(); ++i ) {
-        ms->add_feature_and_match( pf(from[i]), VXL_NULLPTR, pf(to[i]), wgt[i] );
+        ms->add_feature_and_match( pf(from[i]), nullptr, pf(to[i]), wgt[i] );
       }
       rgrl_transformation_sptr trans = rgrl_est_affine().estimate( ms, null3d_trans );
       TEST("Weighted least squares", !trans, false);
@@ -388,7 +394,7 @@ namespace {
 
       if ( trans ) {
         TEST("Result is affine (is_type())", trans->is_type(rgrl_trans_affine::type_id()), true );
-        rgrl_trans_affine* aff_trans = dynamic_cast<rgrl_trans_affine*>(trans.as_pointer());
+        auto* aff_trans = dynamic_cast<rgrl_trans_affine*>(trans.as_pointer());
         TEST("Result is affine (dynamic_cast)", !aff_trans, false);
         std::cout << "Estimated:\nA=\n"<<aff_trans->A()<<"\nt="<<aff_trans->t()<<"\ncovar="<<aff_trans->covar()
                  << "\n\nTrue:\nA=\n"<<A<<"\nt="<<t<<"\ncovar="<<covar<<std::endl;
@@ -550,28 +556,28 @@ namespace {
       {
         rgrl_match_set_sptr ms = new rgrl_match_set( rgrl_feature_point::type_id(), rgrl_feature_trace_pt::type_id() );
         for ( unsigned i=0; i < from.size(); ++i ) {
-          ms->add_feature_and_match( pf( from[i] ), VXL_NULLPTR, tf( to[i], to_tang[i] ) );
+          ms->add_feature_and_match( pf( from[i] ), nullptr, tf( to[i], to_tang[i] ) );
         }
 
         rgrl_transformation_sptr trans = rgrl_est_affine().estimate( ms, null2d_trans );
         TEST("Underconstrained (not enough correspondences)", !trans, true);
         if ( trans ) {
-          rgrl_trans_affine* aff_trans = dynamic_cast<rgrl_trans_affine*>(trans.as_pointer());
+          auto* aff_trans = dynamic_cast<rgrl_trans_affine*>(trans.as_pointer());
           std::cout << "Estimated (shouldn't have):\nA=\n"<<aff_trans->A()<<"\nt="<<aff_trans->t()<<'\n';
         }
       }
 
       {
         rgrl_match_set_sptr ms = new rgrl_match_set( rgrl_feature_point::type_id(), rgrl_feature_trace_pt::type_id() );
-        ms->add_feature_and_match( pf( from[0] ), VXL_NULLPTR, tf( to[0], to_tang[0] ) );
+        ms->add_feature_and_match( pf( from[0] ), nullptr, tf( to[0], to_tang[0] ) );
         for ( unsigned i=0; i < from.size(); ++i ) {
-          ms->add_feature_and_match( pf( from[i] ), VXL_NULLPTR, tf( to[i], to_tang[i] ) );
+          ms->add_feature_and_match( pf( from[i] ), nullptr, tf( to[i], to_tang[i] ) );
         }
 
         rgrl_transformation_sptr trans = rgrl_est_affine().estimate( ms, null2d_trans );
         TEST("Underconstrained (samples not independent)", !trans, true);
         if ( trans ) {
-          rgrl_trans_affine* aff_trans = dynamic_cast<rgrl_trans_affine*>(trans.as_pointer());
+          auto* aff_trans = dynamic_cast<rgrl_trans_affine*>(trans.as_pointer());
           std::cout << "Estimated (shouldn't have):\nA=\n"<<aff_trans->A()<<"\nt="<<aff_trans->t()<<'\n';
         }
       }
@@ -583,14 +589,14 @@ namespace {
       {
         rgrl_match_set_sptr ms = new rgrl_match_set( rgrl_feature_point::type_id(), rgrl_feature_trace_pt::type_id() );
         for ( unsigned i=0; i < from.size(); ++i ) {
-          ms->add_feature_and_match( pf( from[i] ), VXL_NULLPTR, tf( to[i], to_tang[i] ) );
+          ms->add_feature_and_match( pf( from[i] ), nullptr, tf( to[i], to_tang[i] ) );
         }
 
         rgrl_transformation_sptr trans = rgrl_est_affine().estimate( ms, null2d_trans );
         TEST("Minimal set of correspondences", !trans, false);
         if ( trans ) {
           TEST("Result is affine (is_type())", trans->is_type(rgrl_trans_affine::type_id()), true );
-          rgrl_trans_affine* aff_trans = dynamic_cast<rgrl_trans_affine*>(trans.as_pointer());
+          auto* aff_trans = dynamic_cast<rgrl_trans_affine*>(trans.as_pointer());
           TEST("Result is affine (dynamic_cast)", !aff_trans, false);
           std::cout << "Estimated:\nA=\n"<<aff_trans->A()<<"\nt="<<aff_trans->t()
                    << "\n\nTrue:\nA=\n"<<A<<"\nt="<<t<<std::endl;
@@ -611,14 +617,14 @@ namespace {
       {
         rgrl_match_set_sptr ms = new rgrl_match_set( rgrl_feature_point::type_id(), rgrl_feature_trace_pt::type_id() );
         for ( unsigned i=0; i < from.size(); ++i ) {
-          ms->add_feature_and_match( pf( from[i] ), VXL_NULLPTR, tf( to[i], to_tang[i] ) );
+          ms->add_feature_and_match( pf( from[i] ), nullptr, tf( to[i], to_tang[i] ) );
         }
 
         rgrl_transformation_sptr trans = rgrl_est_affine().estimate( ms, null2d_trans );
         TEST("Many correspondences (zero normal error)", !trans, false);
         if ( trans ) {
           TEST("Result is affine (is_type())", trans->is_type(rgrl_trans_affine::type_id()) , true);
-          rgrl_trans_affine* aff_trans = dynamic_cast<rgrl_trans_affine*>(trans.as_pointer());
+          auto* aff_trans = dynamic_cast<rgrl_trans_affine*>(trans.as_pointer());
           TEST("Result is affine (dynamic_cast)", !aff_trans, false);
           std::cout << "Estimated:\nA=\n"<<aff_trans->A()<<"\nt="<<aff_trans->t()
                    << "\n\nTrue:\nA=\n"<<A<<"\nt="<<t<<std::endl;
@@ -630,14 +636,14 @@ namespace {
       {
         rgrl_match_set_sptr ms = new rgrl_match_set( rgrl_feature_point::type_id(), rgrl_feature_trace_pt::type_id() );
         for ( unsigned i=0; i < from.size(); ++i ) {
-          ms->add_feature_and_match( pf( from[i] ), VXL_NULLPTR, tf( to[i], to_tang[i] ) );
+          ms->add_feature_and_match( pf( from[i] ), nullptr, tf( to[i], to_tang[i] ) );
         }
 
         // add two zero weighted outliers
-        ms->add_feature_and_match( pf( vec2d( 4.0, 1.0 ) ), VXL_NULLPTR,
+        ms->add_feature_and_match( pf( vec2d( 4.0, 1.0 ) ), nullptr,
                                    tf( vec2d( 4.0, 1.0 ), vec2d( 5.0, 1.0 ) ),
                                    0.0 );
-        ms->add_feature_and_match( pf( vec2d( 2.0, 5.0 ) ), VXL_NULLPTR,
+        ms->add_feature_and_match( pf( vec2d( 2.0, 5.0 ) ), nullptr,
                                    tf( vec2d( 2.0, 7.0 ), vec2d( 1.0, 1.0 ) ),
                                    0.0 );
 
@@ -645,7 +651,7 @@ namespace {
         TEST("With zero wgted outliers (zero normal error)", !trans, false);
         if ( trans ) {
           TEST("Result is affine (is_type())", trans->is_type(rgrl_trans_affine::type_id()), true );
-          rgrl_trans_affine* aff_trans = dynamic_cast<rgrl_trans_affine*>(trans.as_pointer());
+          auto* aff_trans = dynamic_cast<rgrl_trans_affine*>(trans.as_pointer());
           TEST("Result is affine (dynamic_cast)", !aff_trans, false);
           std::cout << "Estimated:\nA=\n"<<aff_trans->A()<<"\nt="<<aff_trans->t()
                    << "\n\nTrue:\nA=\n"<<A<<"\nt="<<t<<std::endl;
@@ -710,7 +716,7 @@ namespace {
       //
       rgrl_match_set_sptr ms = new rgrl_match_set( rgrl_feature_point::type_id(), rgrl_feature_trace_pt::type_id() );
       for ( unsigned i=0; i < from.size(); ++i ) {
-        ms->add_feature_and_match( pf( from[i] ), VXL_NULLPTR, tf( to[i], to_tang[i] ), wgt[i] );
+        ms->add_feature_and_match( pf( from[i] ), nullptr, tf( to[i], to_tang[i] ), wgt[i] );
       }
       rgrl_transformation_sptr trans = rgrl_est_affine().estimate( ms, null2d_trans );
       TEST("Weighted least squares", !trans, false);
@@ -724,7 +730,7 @@ namespace {
 
       if ( trans ) {
         TEST("Result is affine (is_type())", trans->is_type(rgrl_trans_affine::type_id()), true );
-        rgrl_trans_affine* aff_trans = dynamic_cast<rgrl_trans_affine*>(trans.as_pointer());
+        auto* aff_trans = dynamic_cast<rgrl_trans_affine*>(trans.as_pointer());
         TEST("Result is affine (dynamic_cast)", !aff_trans, false);
         std::cout << "Estimated:\nA=\n"<<aff_trans->A()<<"\nt="<<aff_trans->t()<<"\ncovar="<<aff_trans->covar()
                  << "\n\nTrue:\nA=\n"<<A<<"\nt="<<t<<"\ncovar="<<covar<<std::endl;
@@ -943,7 +949,7 @@ namespace {
         to_pts.push_back(to_pt);
         rgrl_feature_sptr from_feature = new rgrl_feature_point( pts[i] );
         rgrl_feature_sptr to_feature = new rgrl_feature_point( to_pt );
-        match_set->add_feature_and_match( from_feature, VXL_NULLPTR, to_feature, 1.0 );
+        match_set->add_feature_and_match( from_feature, nullptr, to_feature, 1.0 );
       }
       rgrl_set_of<rgrl_match_set_sptr> set;
       set.push_back(match_set);
@@ -1097,7 +1103,7 @@ namespace {
       to_pts.push_back(to_pt);
       rgrl_feature_sptr from_feature = new rgrl_feature_point( pts[i] );
       rgrl_feature_sptr to_feature = new rgrl_feature_point( to_pt );
-      match_set->add_feature_and_match( from_feature, VXL_NULLPTR, to_feature, 1.0 );
+      match_set->add_feature_and_match( from_feature, nullptr, to_feature, 1.0 );
     }
     rgrl_set_of<rgrl_match_set_sptr> set;
     set.push_back(match_set);
@@ -1207,7 +1213,7 @@ namespace {
     {
       rgrl_match_set_sptr ms = new rgrl_match_set( rgrl_feature_point::type_id() );
       for ( unsigned i=0; i < from_pts.size(); ++i ) {
-        ms->add_feature_and_match( from_pts[i], VXL_NULLPTR, to_pts[i] );
+        ms->add_feature_and_match( from_pts[i], nullptr, to_pts[i] );
       }
 
       rgrl_trans_quadratic dummy_trans(2);
@@ -1215,7 +1221,7 @@ namespace {
       TEST("Estimate Quadratic", !trans, false);
       if ( trans ) {
         TEST("Result is quadratic (is_type())", trans->is_type(rgrl_trans_quadratic::type_id()), true );
-        rgrl_trans_quadratic* q_trans = dynamic_cast<rgrl_trans_quadratic*>(trans.as_pointer());
+        auto* q_trans = dynamic_cast<rgrl_trans_quadratic*>(trans.as_pointer());
         TEST("Result is quadratic (dynamic_cast)", !q_trans, false );
         std::cout << "Estimated:\nQ=\n"<<q_trans->Q()<<"\nA=\n"<<q_trans->A()<<"\nt="<<q_trans->t()
                  << "\n\nTrue:\nQ=\n"<<Q<<"\nA=\n"<<A<<"\nt="<<t<<std::endl;
@@ -1259,7 +1265,7 @@ namespace {
     {
       rgrl_match_set_sptr ms = new rgrl_match_set( rgrl_feature_point::type_id() );
       for ( unsigned i=0; i < from_pts.size(); ++i ) {
-        ms->add_feature_and_match( from_pts[i], VXL_NULLPTR, to_pts[i] );
+        ms->add_feature_and_match( from_pts[i], nullptr, to_pts[i] );
       }
 
       rgrl_trans_similarity dummy_trans(2);
@@ -1267,7 +1273,7 @@ namespace {
       TEST("Estimate Similarity", !trans, false);
       if ( trans ) {
         TEST("Result is similarity (is_type())", trans->is_type(rgrl_trans_similarity::type_id()), true );
-        rgrl_trans_similarity* s_trans = dynamic_cast<rgrl_trans_similarity*>(trans.as_pointer());
+        auto* s_trans = dynamic_cast<rgrl_trans_similarity*>(trans.as_pointer());
         TEST("Result is similarity (dynamic_cast)", !s_trans, false );
         std::cout << "Estimated:\nA=\n"<<s_trans->A()<<"\nt="<<s_trans->t()
                  << "\n\nTrue:\nA=\n"<<A<<"\nt="<<t<<std::endl;
@@ -1344,7 +1350,7 @@ namespace {
     {
       rgrl_match_set_sptr ms = new rgrl_match_set( rgrl_feature_point::type_id() );
       for ( unsigned i=0; i < from_pts.size(); ++i ) {
-        ms->add_feature_and_match( from_pts[i], VXL_NULLPTR, to_pts[i] );
+        ms->add_feature_and_match( from_pts[i], nullptr, to_pts[i] );
       }
 
       rgrl_trans_quadratic dummy_trans(2);
@@ -1352,7 +1358,7 @@ namespace {
       TEST("Estimate Reduced Quadratic", !trans, false);
       if ( trans ) {
         TEST("Result is quadratic (is_type())", trans->is_type(rgrl_trans_reduced_quad::type_id()), true );
-        rgrl_trans_reduced_quad* q_trans = dynamic_cast<rgrl_trans_reduced_quad*>(trans.as_pointer());
+        auto* q_trans = dynamic_cast<rgrl_trans_reduced_quad*>(trans.as_pointer());
         TEST("Result is quadratic (dynamic_cast)", !q_trans, false);
         std::cout << "Estimated:\nQ=\n"<<q_trans->Q()<<"\nA=\n"<<q_trans->A()<<"\nt="<<q_trans->t()
                  << "\n\nTrue:\nQ=\n"<<Q<<"\nA=\n"<<A<<"\nt="<<t<<std::endl;
@@ -1444,7 +1450,7 @@ namespace {
     {
       rgrl_match_set_sptr ms = new rgrl_match_set( rgrl_feature_point::type_id() );
       for ( unsigned i=0; i < from_pts.size(); ++i ) {
-        ms->add_feature_and_match( from_pts[i], VXL_NULLPTR, to_pts[i] );
+        ms->add_feature_and_match( from_pts[i], nullptr, to_pts[i] );
     }
 
       rgrl_trans_rigid dummy_trans(3);
@@ -1454,7 +1460,7 @@ namespace {
       if ( trans )
       {
         TEST("Result is rigid (is_type())", trans->is_type(rgrl_trans_rigid::type_id()), true );
-        rgrl_trans_rigid* s_trans = dynamic_cast<rgrl_trans_rigid*>(trans.as_pointer());
+        auto* s_trans = dynamic_cast<rgrl_trans_rigid*>(trans.as_pointer());
         TEST("Result is rigid (dynamic_cast)", !s_trans, false);
         std::cout << "Estimated:\nR=\n"<<s_trans->R()<<"\nt="<<s_trans->t()
                  << "\n\nTrue:\nR=\n"<<A<<"\nt="<<t<<std::endl;
@@ -1560,7 +1566,7 @@ namespace {
       rgrl_match_set_sptr ms = new rgrl_match_set( rgrl_feature_point::type_id());
 
       for (unsigned i=0; i < n; ++i) {
-        ms->add_feature_and_match( new rgrl_feature_point(d2_p[i].as_ref()), VXL_NULLPTR,
+        ms->add_feature_and_match( new rgrl_feature_point(d2_p[i].as_ref()), nullptr,
                                    new rgrl_feature_point(d2_q[i].as_ref()) );
       }
       rgrl_estimator_sptr estimator = new rgrl_est_homography2d();
@@ -1591,7 +1597,7 @@ namespace {
     }
   }
 
-  void test_homography2d_lm(rgrl_estimator_sptr estimator)
+  void test_homography2d_lm(const rgrl_estimator_sptr& estimator)
   {
     vnl_double_3x3 H(0.0), est_H(0.0);
     vnl_matrix<double> cofact;
@@ -1684,7 +1690,7 @@ namespace {
       rgrl_match_set_sptr ms = new rgrl_match_set( rgrl_feature_point::type_id());
 
       for (unsigned i=0; i < n; ++i) {
-        ms->add_feature_and_match( new rgrl_feature_point(d2_p[i].as_ref()), VXL_NULLPTR,
+        ms->add_feature_and_match( new rgrl_feature_point(d2_p[i].as_ref()), nullptr,
                                    new rgrl_feature_point(d2_q[i].as_ref()) );
       }
 
@@ -1709,7 +1715,7 @@ namespace {
       // error STD = 0.5
       {
         vnl_double_3x3 perturbed_H( H );
-        const double err_std = 0.5;
+        constexpr double err_std = 0.5;
         for ( unsigned i=0; i<3; ++i )
           for ( unsigned j=0; j<3; ++j )
             perturbed_H( 0, 0 ) += random.drand32()*err_std;
@@ -1727,7 +1733,7 @@ namespace {
       // error STD = 1
       {
         vnl_double_3x3 perturbed_H( H );
-        const double err_std = 1;
+        constexpr double err_std = 1;
         for ( unsigned i=0; i<3; ++i )
           for ( unsigned j=0; j<3; ++j )
             perturbed_H( 0, 0 ) += random.drand32()*err_std;
@@ -1745,7 +1751,7 @@ namespace {
       // error STD = 50
       {
         vnl_double_3x3 perturbed_H( H );
-        const double err_std = 50;
+        constexpr double err_std = 50;
         for ( unsigned i=0; i<3; ++i )
           for ( unsigned j=0; j<3; ++j )
             perturbed_H( 0, 0 ) += random.drand32()*err_std;
@@ -1778,7 +1784,7 @@ namespace {
   }
 
   void
-  test_homography2d_points_on_circle(rgrl_estimator_sptr estimator)
+  test_homography2d_points_on_circle(const rgrl_estimator_sptr& estimator)
   {
     vnl_double_3x3 H;
     H.set_identity();
@@ -1800,7 +1806,7 @@ namespace {
 
 
     vnl_double_2 pt, mapped;
-    const double c = 10;
+    constexpr double c = 10;
     bool xform_is_good=true;
 
     for ( unsigned int num=20; num<200; num+=16 )
@@ -1825,7 +1831,7 @@ namespace {
       rgrl_match_set_sptr ms = new rgrl_match_set( rgrl_feature_point::type_id());
 
       for (unsigned int i=0; i < num; ++i) {
-        ms->add_feature_and_match( new rgrl_feature_point(p[i].as_ref()), VXL_NULLPTR,
+        ms->add_feature_and_match( new rgrl_feature_point(p[i].as_ref()), nullptr,
                                    new rgrl_feature_point(q[i].as_ref()) );
       }
 
@@ -1854,7 +1860,7 @@ namespace {
   }
 
   void
-  test_homo2d_rad_points_on_circle(rgrl_estimator_sptr estimator,
+  test_homo2d_rad_points_on_circle(const rgrl_estimator_sptr& estimator,
                                    vnl_double_2 const& camera_centre)
   {
     vnl_double_3x3 H;
@@ -1881,7 +1887,7 @@ namespace {
 
 
     vnl_double_2 pt, mapped, centre_mapped;
-    const double c = 20;
+    constexpr double c = 20;
     bool xform_is_good=true;
 
     for ( unsigned int num=12; num<100; num+=16 )
@@ -1908,7 +1914,7 @@ namespace {
       rgrl_match_set_sptr ms = new rgrl_match_set( rgrl_feature_point::type_id());
 
       for (unsigned int i=0; i < num; ++i) {
-        ms->add_feature_and_match( new rgrl_feature_point(p[i].as_ref()), VXL_NULLPTR,
+        ms->add_feature_and_match( new rgrl_feature_point(p[i].as_ref()), nullptr,
                                    new rgrl_feature_point(q[i].as_ref()) );
       }
 
@@ -1947,7 +1953,7 @@ namespace {
   }
 
   void
-  test_homography2d_points_on_circle_w_noise( rgrl_estimator_sptr estimator,
+  test_homography2d_points_on_circle_w_noise( const rgrl_estimator_sptr& estimator,
                                               double noise_level,
                                               double tol_xform,
                                               double tol_trans_error )
@@ -1964,7 +1970,7 @@ namespace {
     std::vector< vnl_double_2 > p, q;
 
     vnl_double_2 pt, mapped;
-    const double c = 20;
+    constexpr double c = 20;
     bool cov_is_good = true;
     bool homography_is_good = true;
     for ( unsigned int num=12; num<200; num+=16 )
@@ -1995,7 +2001,7 @@ namespace {
       rgrl_match_set_sptr ms = new rgrl_match_set( rgrl_feature_point::type_id());
 
       for (unsigned int i=0; i < num; ++i) {
-        ms->add_feature_and_match( new rgrl_feature_point(p[i].as_ref()), VXL_NULLPTR,
+        ms->add_feature_and_match( new rgrl_feature_point(p[i].as_ref()), nullptr,
                                    new rgrl_feature_point(q[i].as_ref()) );
       }
 
@@ -2074,7 +2080,7 @@ test_rad_dis_homo2d_lm()
   vnl_double_3x3 H;  H.set_identity();
   vnl_double_3x3 initH(H);
   const double k1_from = -1e-6;
-  const double k1_to = 0;
+  constexpr double k1_to = 0;
   vnl_vector<double> centre(2,0.0);
   rgrl_transformation_sptr true_xform = new rgrl_trans_rad_dis_homo2d( H.as_ref(), k1_from, k1_to, centre, centre );
 
@@ -2094,7 +2100,7 @@ test_rad_dis_homo2d_lm()
       rgrl_feature_sptr to_sptr = from_sptr->transform( *true_xform );
 
       // add feature
-      ms->add_feature_and_match( from_sptr, VXL_NULLPTR, to_sptr );
+      ms->add_feature_and_match( from_sptr, nullptr, to_sptr );
     }
 
   // remap features
@@ -2169,7 +2175,7 @@ static void test_estimator()
     vnl_double_2 camera_centre( 0.0, 0.0 );
     std::cout << "using camera centre " << camera_centre << std::endl;
 
-    rgrl_est_homo2d_proj_rad* homo2d_rad_est
+    auto* homo2d_rad_est
       = new rgrl_est_homo2d_proj_rad( 1, camera_centre );
     homo2d_rad_est->set_rel_thres( 1e-6 );
     homo2d_rad_est->set_max_num_iter( 5000 );
@@ -2184,7 +2190,7 @@ static void test_estimator()
     vnl_double_2 camera_centre( 5.0, 10.0 );
     std::cout << "using camera centre " << camera_centre << std::endl;
 
-    rgrl_est_homo2d_proj_rad* homo2d_rad_est
+    auto* homo2d_rad_est
       = new rgrl_est_homo2d_proj_rad( 1, camera_centre );
     homo2d_rad_est->set_rel_thres( 1e-6 );
     homo2d_rad_est->set_max_num_iter( 5000 );

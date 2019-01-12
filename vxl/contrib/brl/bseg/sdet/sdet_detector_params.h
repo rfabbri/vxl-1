@@ -63,7 +63,9 @@
 //-----------------------------------------------------------------------------
 #include <iostream>
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <gevd/gevd_param_mixin.h>
 
 class sdet_detector_params : public gevd_param_mixin
@@ -82,9 +84,9 @@ class sdet_detector_params : public gevd_param_mixin
                        int cyc = 2, int ndim = 2);
 
   sdet_detector_params(const sdet_detector_params& old_params);
-  ~sdet_detector_params() {}
+  ~sdet_detector_params() override = default;
   friend std::ostream& operator<<(std::ostream&, const sdet_detector_params& dp);
-  bool SanityCheck();
+  bool SanityCheck() override;
 #if 0
   void Describe(ParamModifier& mod);
 #endif

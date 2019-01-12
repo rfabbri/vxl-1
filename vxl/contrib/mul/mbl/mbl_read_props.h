@@ -50,7 +50,9 @@
 #include <iostream>
 #include <iosfwd>
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: The type of the property dictionary
 class mbl_read_props_type : public std::map<std::string, std::string >

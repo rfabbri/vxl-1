@@ -11,7 +11,10 @@
 #include <vil/vil_convert.h>
 #include <vil3d/vil3d_trilin_interp.h>
 #include <vil3d/vil3d_plane.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 inline bool vil3dresample_trilin_corner_in_image(double x0, double y0, double z0,

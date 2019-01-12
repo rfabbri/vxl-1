@@ -1,7 +1,4 @@
 // This is core/vil1/vil1_copy.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \brief Contains function vil1_copy()
@@ -16,7 +13,10 @@
 
 #include "vil1_copy.h"
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil1/vil1_image.h>
 #include <vil1/vil1_memory_image.h>
 
@@ -37,7 +37,7 @@ void vil1_copy(vil1_image const& in, vil1_image& out)
   // Simple implementation copies the whole buffer at once
   // This is only valid if planes and components are identical,
   // not just their product.  Hence the assert above.
-  unsigned char* buf = new unsigned char[in.get_size_bytes()];
+  auto* buf = new unsigned char[in.get_size_bytes()];
 #ifdef DEBUG
   std::cerr << "...vil1_copy() doing get_section()\n";
 #endif

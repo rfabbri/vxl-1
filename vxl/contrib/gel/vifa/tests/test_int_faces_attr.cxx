@@ -1,7 +1,9 @@
 // This is gel/vifa/tests/test_int_faces_attr.cxx
 #include <iostream>
 #include <ostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vxl_config.h>
 #include <testlib/testlib_test.h>
 #include <sdet/sdet_detector_params.h>
@@ -71,9 +73,9 @@ static void test_int_faces_attr(int argc, char* argv[])
     test_ifa_factory  tif;
     vifa_int_faces_attr  ifsa(region_list,
                               &flp,
-                              VXL_NULLPTR,
-                              VXL_NULLPTR,
-                              VXL_NULLPTR,
+                              nullptr,
+                              nullptr,
+                              nullptr,
                               &np,
                               &tif);
 
@@ -89,8 +91,8 @@ static void test_int_faces_attr(int argc, char* argv[])
                << attr_names.size() << " attribute names:\n";
 
       // Dump the attribute vector
-      std::vector<std::string>::iterator  ani = attr_names.begin();
-      std::vector<float>::iterator      ai = attrs.begin();
+      auto  ani = attr_names.begin();
+      auto      ai = attrs.begin();
       for (; (ai != attrs.end()) && (ani != attr_names.end()); ai++, ani++)
         std::cout << (*ani) << ": " << (*ai) << std::endl;
     }

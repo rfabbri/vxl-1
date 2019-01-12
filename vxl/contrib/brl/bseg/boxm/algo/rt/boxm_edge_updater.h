@@ -4,7 +4,9 @@
 #include <vector>
 #include <iostream>
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <boxm/boxm_aux_traits.h>
 #include <boxm/boxm_apm_traits.h>
@@ -17,9 +19,9 @@ class boxm_edge_updater
 {
  public:
   boxm_edge_updater(boxm_scene<boct_tree<T_loc, boxm_edge_sample<APM> > > &scene,
-                    std::vector<std::string> const& image_ids);
+                    std::vector<std::string>  image_ids);
 
-  ~boxm_edge_updater(){}
+  ~boxm_edge_updater()= default;
 
   bool add_cells();
 

@@ -1,7 +1,4 @@
 // This is core/vil1/vil1_skip_image_impl.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
@@ -10,9 +7,11 @@
 #include <vector>
 #include "vil1_skip_image_impl.h"
 
-#include <vcl_climits.h> // CHAR_BIT
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <climits>// CHAR_BIT
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 vil1_skip_image_impl::vil1_skip_image_impl(vil1_image const &underlying, unsigned sx, unsigned sy)
   : base(underlying)
@@ -58,7 +57,7 @@ bool vil1_skip_image_impl::get_section(void * buf, int x0, int y0, int w, int h)
   std::vector<unsigned char> buffer(buffer_size);
 
   // destination, as a unsigned char*
-  unsigned char *dst = static_cast<unsigned char*>(buf);
+  auto *dst = static_cast<unsigned char*>(buf);
 
   // for each raster
   for (int j=0; j<h; ++j) {

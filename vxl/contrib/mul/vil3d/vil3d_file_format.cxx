@@ -1,7 +1,4 @@
 // This is mul/vil3d/vil3d_file_format.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \brief Base for objects capable of reading/writing different image formats.
@@ -10,7 +7,9 @@
 #include <iostream>
 #include <vector>
 #include "vil3d_file_format.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_open.h>
 #include <vil3d/file_formats/vil3d_analyze_format.h>
 #include <vil3d/file_formats/vil3d_gipl_format.h>
@@ -63,8 +62,8 @@ class vil3d_file_formats
   }
   ~vil3d_file_formats()
   {
-    for (unsigned i=0; i<v.size(); ++i)
-      delete v[i];
+    for (auto & i : v)
+      delete i;
 
     v.clear();
   }
@@ -89,4 +88,3 @@ const vil3d_file_format& vil3d_file_format::format(unsigned i)
 {
   return *formats_available.v[i];
 }
-

@@ -1,7 +1,9 @@
 #include <iostream>
 #include <vector>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_double_3x3.h>
 #include <vnl/vnl_double_3.h>
 #include <vnl/vnl_vector.h>
@@ -101,7 +103,7 @@ static void test_homography2d_est()
     param /= param.two_norm();
     TEST("(Translation) minimal-set estimation", (param-true_param).two_norm() < tol, true);
 
-    homo_est.weighted_least_squares_fit(param, cofact, VXL_NULLPTR);
+    homo_est.weighted_least_squares_fit(param, cofact, nullptr);
     if (param[0]<0)  param = -param;
     param /= param.two_norm();
     TEST("(Translation) Weighted Least Squares", (param-true_param).two_norm() < tol, true);
@@ -126,7 +128,7 @@ static void test_homography2d_est()
     param /= param.two_norm();
     TEST("(Similarity) minimal-set estimation", (param-true_param).two_norm() < tol, true);
 
-    homo_est.weighted_least_squares_fit(param, cofact, VXL_NULLPTR);
+    homo_est.weighted_least_squares_fit(param, cofact, nullptr);
     if (param[0]<0)  param = -param;
     param /= param.two_norm();
     TEST("(Similarity) Weighted Least Squares", (param-true_param).two_norm() < tol, true);
@@ -149,7 +151,7 @@ static void test_homography2d_est()
     param /= param.two_norm();
     TEST("(Affine) minimal-set estimation", (param-true_param).two_norm() < tol, true);
 
-    homo_est.weighted_least_squares_fit(param, cofact, VXL_NULLPTR);
+    homo_est.weighted_least_squares_fit(param, cofact, nullptr);
     if (param[0]<0)  param = -param;
     param /= param.two_norm();
     TEST("(Affine) Weighted Least Squares", (param-true_param).two_norm() < tol, true);

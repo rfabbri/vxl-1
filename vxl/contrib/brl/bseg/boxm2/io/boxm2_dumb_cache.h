@@ -4,24 +4,26 @@
 // \file
 #include <iostream>
 #include <boxm2/io/boxm2_cache1.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: boxm2_dumb_cache - example realization of abstract cache class
 class boxm2_dumb_cache : public boxm2_cache1
 {
   public:
     boxm2_dumb_cache(boxm2_scene* scene);
-    ~boxm2_dumb_cache();
+    ~boxm2_dumb_cache() override;
 
     //: returns block pointer to block specified by ID
-    virtual boxm2_block* get_block(boxm2_block_id id);
+    boxm2_block* get_block(boxm2_block_id id) override;
 
     //: returns data_base pointer (THIS IS NECESSARY BECAUSE TEMPLATED FUNCTIONS CANNOT BE VIRTUAL)
-    virtual boxm2_data_base* get_data_base(boxm2_block_id, std::string type, std::size_t num_bytes=0, bool read_only = true);
+    boxm2_data_base* get_data_base(boxm2_block_id, std::string type, std::size_t num_bytes=0, bool read_only = true) override;
 
     //: deletes data from dumb cache
-    virtual void remove_data_base(boxm2_block_id, std::string type);
-    virtual void replace_data_base(boxm2_block_id id, std::string type, boxm2_data_base* replacement);
+    void remove_data_base(boxm2_block_id, std::string type) override;
+    void replace_data_base(boxm2_block_id id, std::string type, boxm2_data_base* replacement) override;
 
     //: returns data pointer to data block specified by ID
     template <boxm2_data_type T>
@@ -29,21 +31,21 @@ class boxm2_dumb_cache : public boxm2_cache1
 
     //: dumps writeable data onto disk
     // \todo not yet implemented
-    virtual void write_to_disk() { std::cerr << "write_to_disk() not yet implemented!!!\n"; }
+    void write_to_disk() override { std::cerr << "write_to_disk() not yet implemented!!!\n"; }
 
     //: disable the write process
     // \todo not yet implemented
-    virtual void disable_write() { std::cerr << "disable_write() not yet implemented!!!\n"; }
+    void disable_write() override { std::cerr << "disable_write() not yet implemented!!!\n"; }
 
     //: delete all the memory
-    virtual void clear_cache() { std::cerr << "clear_cache() not yet implemented!!!\n"; }
+    void clear_cache() override { std::cerr << "clear_cache() not yet implemented!!!\n"; }
   private:
 
     //: private update cache method (very simple)
     void update_block_cache(boxm2_block* blk);
 
     //: private update method (very simple)
-    void update_data_base_cache(boxm2_data_base* dat, std::string type);
+    void update_data_base_cache(boxm2_data_base* dat, const std::string& type);
 
     //: private update block cache method
     template <boxm2_data_type T>

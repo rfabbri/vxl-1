@@ -18,7 +18,9 @@
 #include <vgl/vgl_closest_point.h>
 #include <boxm2/boxm2_util.h>
 #include <boxm2/io/boxm2_lru_cache.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <imesh/imesh_mesh.h>
 #include <imesh/imesh_fileio.h>
 #include <vnl/vnl_matrix_fixed.h>
@@ -28,7 +30,7 @@ static double gauss(double d, double sigma){
 }
 void boxm2_vecf_shuttle_scene::extract_block_data(){
   std::vector<boxm2_block_id> blocks = base_model_->get_block_ids();
-  std::vector<boxm2_block_id>::iterator iter_blk = blocks.begin();
+  auto iter_blk = blocks.begin();
   blk_ = boxm2_cache::instance()->get_block(base_model_, *iter_blk);
 
   boxm2_data_base *  alpha_base  = boxm2_cache::instance()->get_data_base(base_model_,*iter_blk,boxm2_data_traits<BOXM2_ALPHA>::prefix());
@@ -44,13 +46,13 @@ void boxm2_vecf_shuttle_scene::extract_block_data(){
   nobs_data_=new boxm2_data<BOXM2_NUM_OBS>(nobs_base->data_buffer(),nobs_base->buffer_length(),nobs_base->block_id());
 }
 boxm2_vecf_shuttle_scene::boxm2_vecf_shuttle_scene(std::string const& scene_file):
-  base_model_(new boxm2_scene(scene_file)), alpha_data_(VXL_NULLPTR), app_data_(VXL_NULLPTR), nobs_data_(VXL_NULLPTR)
+  base_model_(new boxm2_scene(scene_file)), alpha_data_(nullptr), app_data_(nullptr), nobs_data_(nullptr)
 {
   boxm2_lru_cache::create(base_model_);
   this->extract_block_data();
 }
 boxm2_vecf_shuttle_scene::boxm2_vecf_shuttle_scene(std::string const& scene_file, std::string const& imesh_file):
-  base_model_(new boxm2_scene(scene_file)), alpha_data_(VXL_NULLPTR), app_data_(VXL_NULLPTR), nobs_data_(VXL_NULLPTR)
+  base_model_(new boxm2_scene(scene_file)), alpha_data_(nullptr), app_data_(nullptr), nobs_data_(nullptr)
 {
   //need to delete scene files
   boxm2_lru_cache::create(base_model_);
@@ -66,7 +68,7 @@ vil_image_view<float> boxm2_vecf_shuttle_scene::silhouette(vpgl_camera_double_sp
     std::cout << "currently only support affine cameras" << std::endl;
     return ret;
   }
-  vpgl_affine_camera<double>* acam = dynamic_cast<vpgl_affine_camera<double>* >(cam.ptr());
+  auto* acam = dynamic_cast<vpgl_affine_camera<double>* >(cam.ptr());
   if(!acam){
           std::cout << "currently only support affine cameras" << std::endl;
     return ret;
@@ -76,7 +78,7 @@ vil_image_view<float> boxm2_vecf_shuttle_scene::silhouette(vpgl_camera_double_sp
   int dimz = (linfo->scene_dims)[2];
   double lenz = 2.0*dimz*(linfo->block_len);
   acam->set_viewing_distance(lenz);
-  vpgl_generic_camera<double>* gcam = new vpgl_generic_camera<double>;
+  auto* gcam = new vpgl_generic_camera<double>;
   bool good = vpgl_generic_camera_convert::convert(*acam, ni, nj, *gcam);
   if(!good){
     std::cout << "failed to convert affine camera" << std::endl;
@@ -85,7 +87,7 @@ vil_image_view<float> boxm2_vecf_shuttle_scene::silhouette(vpgl_camera_double_sp
   vpgl_camera_double_sptr camd = (vpgl_camera<double>*)gcam;
   ret.set_size(ni, nj);
   ret.fill(1.0f);
-  vil_image_view<float>* vis= new vil_image_view<float>(ni, nj);
+  auto* vis= new vil_image_view<float>(ni, nj);
   vis->fill(1.0f);
   boxm2_render_silhouette(linfo, blk_, alpha_data_, camd, &ret, vis, ni, nj);
   return ret;
@@ -94,25 +96,25 @@ vil_image_view<float> boxm2_vecf_shuttle_scene::silhouette(vpgl_camera_double_sp
 bool boxm2_vecf_particle::operator () (boxm2_vecf_particle const& p0, boxm2_vecf_particle const& p1){
   return (p0.p_ > p1.p_);
 }
-void boxm2_vecf_shuttle_scene::generate_particles(vpgl_camera_double_sptr cam, double txmin, double txmax, double dtx){
+void boxm2_vecf_shuttle_scene::generate_particles(const vpgl_camera_double_sptr& cam, double txmin, double txmax, double dtx){
   if(cam->type_name() != "vpgl_affine_camera"){
     std::cout << "currently only support affine cameras" << std::endl;
     return;
   }
   particles_.clear();
-  vpgl_affine_camera<double>* acam = dynamic_cast<vpgl_affine_camera<double>*>(cam.ptr());
+  auto* acam = dynamic_cast<vpgl_affine_camera<double>*>(cam.ptr());
   vnl_matrix_fixed<double,3,4> cam_mat = (*acam).get_matrix();
   for(double tx = txmin; tx<=txmax; tx+=dtx){
     vnl_matrix_fixed<double,3,4> temp = cam_mat;
     temp[0][3] += tx;
-    vpgl_affine_camera<double>* tacm = new vpgl_affine_camera<double>(temp);
+    auto* tacm = new vpgl_affine_camera<double>(temp);
     vpgl_camera_double_sptr tdcam(tacm);
     boxm2_vecf_particle part(0.0f, tdcam);
     part.tx_ = tx;
     particles_.push_back(part);
   }
 }
-void boxm2_vecf_shuttle_scene::generate_particles_txry(vpgl_camera_double_sptr cam,
+void boxm2_vecf_shuttle_scene::generate_particles_txry(const vpgl_camera_double_sptr& cam,
                                                       double txmin, double txmax, double dtx,
                                                       double rymin, double rymax, double dry){
 if(cam->type_name() != "vpgl_affine_camera"){
@@ -120,7 +122,7 @@ if(cam->type_name() != "vpgl_affine_camera"){
     return;
   }
   particles_.clear();
-  vpgl_affine_camera<double>* acam = dynamic_cast<vpgl_affine_camera<double>*>(cam.ptr());
+  auto* acam = dynamic_cast<vpgl_affine_camera<double>*>(cam.ptr());
   vnl_matrix_fixed<double,3,4> cam_mat = (*acam).get_matrix();
   for(double tx = txmin; tx<=txmax; tx+=dtx){
     for(double ry = rymin; ry<=rymax; ry+=dry){
@@ -136,7 +138,7 @@ if(cam->type_name() != "vpgl_affine_camera"){
       m*=R;
       temp.update(m);
 #endif
-      vpgl_affine_camera<double>* tacm = new vpgl_affine_camera<double>(temp);
+      auto* tacm = new vpgl_affine_camera<double>(temp);
       vpgl_camera_double_sptr tdcam(tacm);
       boxm2_vecf_particle part(0.0f, tdcam);
       part.tx_ = tx;
@@ -145,7 +147,7 @@ if(cam->type_name() != "vpgl_affine_camera"){
     }
   }
 }
-void boxm2_vecf_shuttle_scene::generate_particles_txrz(vpgl_camera_double_sptr cam,
+void boxm2_vecf_shuttle_scene::generate_particles_txrz(const vpgl_camera_double_sptr& cam,
                                                        double txmin, double txmax, double dtx,
                                                        double rzmin, double rzmax, double drz){
 if(cam->type_name() != "vpgl_affine_camera"){
@@ -153,7 +155,7 @@ if(cam->type_name() != "vpgl_affine_camera"){
     return;
   }
   particles_.clear();
-  vpgl_affine_camera<double>* acam = dynamic_cast<vpgl_affine_camera<double>*>(cam.ptr());
+  auto* acam = dynamic_cast<vpgl_affine_camera<double>*>(cam.ptr());
   vnl_matrix_fixed<double,3,4> cam_mat = (*acam).get_matrix();
   for(double tx = txmin; tx<=txmax; tx+=dtx){
     for(double rz = rzmin; rz<=rzmax; rz+=drz){
@@ -169,7 +171,7 @@ if(cam->type_name() != "vpgl_affine_camera"){
       m*=R;
       temp.update(m);
 #endif
-      vpgl_affine_camera<double>* tacm = new vpgl_affine_camera<double>(temp);
+      auto* tacm = new vpgl_affine_camera<double>(temp);
       vpgl_camera_double_sptr tdcam(tacm);
       boxm2_vecf_particle part(0.0f, tdcam);
       part.tx_ = tx;
@@ -178,7 +180,7 @@ if(cam->type_name() != "vpgl_affine_camera"){
     }
   }
 }
-void boxm2_vecf_shuttle_scene::generate_particles_txy(vpgl_camera_double_sptr cam,
+void boxm2_vecf_shuttle_scene::generate_particles_txy(const vpgl_camera_double_sptr& cam,
                                                   double txmin, double txmax, double dtx,
                                                   double tymin, double tymax, double dty){
   if(cam->type_name() != "vpgl_affine_camera"){
@@ -186,7 +188,7 @@ void boxm2_vecf_shuttle_scene::generate_particles_txy(vpgl_camera_double_sptr ca
     return;
   }
   particles_.clear();
-  vpgl_affine_camera<double>* acam = dynamic_cast<vpgl_affine_camera<double>*>(cam.ptr());
+  auto* acam = dynamic_cast<vpgl_affine_camera<double>*>(cam.ptr());
   vnl_matrix_fixed<double,3,4> cam_mat = (*acam).get_matrix();
   for(double tx = txmin; tx<=txmax; tx+=dtx){
     for(double ty = tymin; ty<=tymax; ty+=dty){
@@ -198,7 +200,7 @@ void boxm2_vecf_shuttle_scene::generate_particles_txy(vpgl_camera_double_sptr ca
       m *= s;
       temp.update(m);
 #endif
-      vpgl_affine_camera<double>* tacm = new vpgl_affine_camera<double>(temp);
+      auto* tacm = new vpgl_affine_camera<double>(temp);
       vpgl_camera_double_sptr tdcam(tacm);
       boxm2_vecf_particle part(0.0f, tdcam);
       part.tx_ = tx;
@@ -217,7 +219,7 @@ void boxm2_vecf_shuttle_scene::evaluate_particles(vil_image_view<vxl_byte> const
   double n = 0.0;
   for(int j = jmin; j<=jmax; ++j)
     for(int i = imin; i<=imax; ++i){
-      double x = static_cast<double>(observed_img(i,j));
+      auto x = static_cast<double>(observed_img(i,j));
       xsum += x;
       xsqsum += x*x;
       n += 1.0;
@@ -233,17 +235,16 @@ void boxm2_vecf_shuttle_scene::evaluate_particles(vil_image_view<vxl_byte> const
   n = 0.0;
   for(int j = 0; j<static_cast<int>(nj); ++j)
     for(int i = 0; i<static_cast<int>(ni); ++i){
-      double x = static_cast<double>(observed_img(i,j));
+      auto x = static_cast<double>(observed_img(i,j));
       txsum += x;
       txsqsum += x*x;
       n += 1.0;
     }
   total_mean_ = txsum/n;
   total_var_ = txsqsum/n - (total_mean_*total_mean_);
-  for(std::vector<boxm2_vecf_particle>::iterator pit = particles_.begin();
-      pit != particles_.end(); ++pit){
+  for(auto & particle : particles_){
     double log_p = 0.0;
-    vil_image_view<float> sil = this->silhouette(pit->cam_, ni, nj);
+    vil_image_view<float> sil = this->silhouette(particle.cam_, ni, nj);
     silhouettes_.push_back(sil);
     for(unsigned j = 0; j<nj; ++j)
       for(unsigned i = 0; i<ni; ++i){
@@ -254,8 +255,8 @@ void boxm2_vecf_shuttle_scene::evaluate_particles(vil_image_view<vxl_byte> const
         if(sil_inside != obs_inside)
           log_p -= 100.0;
       }
-    pit->p_ = log_p/(ni*nj);
-    pit->print_txrz();
+    particle.p_ = log_p/(ni*nj);
+    particle.print_txrz();
   }
 }
 
@@ -263,7 +264,7 @@ void boxm2_vecf_shuttle_scene::save_silhouettes(std::string const& base_dir){
   // assume dir has ending /
   std::string name = "silhouette";
   unsigned index = 0;
-  for(std::vector<vil_image_view<float> >::iterator sit = silhouettes_.begin();
+  for(auto sit = silhouettes_.begin();
       sit != silhouettes_.end(); ++sit, ++index){
     std::stringstream ss;
     ss << index;
@@ -274,13 +275,13 @@ void boxm2_vecf_shuttle_scene::save_silhouettes(std::string const& base_dir){
 void boxm2_vecf_shuttle_scene::save_cameras(std::string const& base_dir){
   std::string name = "affine_cam";
   unsigned index = 0;
-  for(std::vector<boxm2_vecf_particle>::iterator pit = particles_.begin();
+  for(auto pit = particles_.begin();
       pit != particles_.end(); ++pit, ++index){
     std::stringstream ss;
     ss << index;
     std::string path = base_dir + name + "_" + ss.str() + ".txt";
     std::ofstream ostr(path.c_str());
-    vpgl_affine_camera<double>* afcam = dynamic_cast<vpgl_affine_camera<double>*>((pit->cam_).ptr());
+    auto* afcam = dynamic_cast<vpgl_affine_camera<double>*>((pit->cam_).ptr());
     if(!afcam){
       std::cout << "FATAL - null affine camera for index " << index << std::endl;
       return;

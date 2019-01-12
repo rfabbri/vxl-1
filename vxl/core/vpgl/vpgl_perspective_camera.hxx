@@ -4,9 +4,10 @@
 //:
 // \file
 
-#include <iostream>
-#include <fstream>
 #include <algorithm>
+#include <fstream>
+#include <iostream>
+#include <utility>
 #include "vpgl_perspective_camera.h"
 
 #include <vgl/vgl_point_2d.h>
@@ -25,8 +26,10 @@
 #include <vul/vul_file.h>
 #include <vul/vul_file_iterator.h>
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vnl/vnl_trace.h>
 
@@ -45,8 +48,8 @@ template <class T>
 vpgl_perspective_camera<T>::vpgl_perspective_camera(
   const vpgl_calibration_matrix<T>& K,
   const vgl_point_3d<T>& camera_center,
-  const vgl_rotation_3d<T>& R ) :
-  K_( K ), camera_center_( camera_center ), R_( R )
+  const vgl_rotation_3d<T> R ) :
+  K_( K ), camera_center_( camera_center ), R_(std::move( R ))
 {
   recompute_matrix();
 }
@@ -55,9 +58,9 @@ vpgl_perspective_camera<T>::vpgl_perspective_camera(
 template <class T>
 vpgl_perspective_camera<T>::vpgl_perspective_camera(
   const vpgl_calibration_matrix<T>& K,
-  const vgl_rotation_3d<T>& R,
+  const vgl_rotation_3d<T> R,
   const vgl_vector_3d<T>& t) :
-  K_( K ),  R_( R )
+  K_( K ),  R_(std::move( R ))
 {
   this->set_translation(t);
   recompute_matrix();
@@ -545,13 +548,12 @@ std::vector<vpgl_perspective_camera<T> > cameras_from_directory(std::string dir,
   std::sort(cam_files.begin(), cam_files.end());
 
   //take sorted lists and load from file
-  for (std::vector<std::string>::iterator iter = cam_files.begin();
-       iter != cam_files.end(); ++iter)
+  for (auto & cam_file : cam_files)
   {
-    std::ifstream ifs(iter->c_str());
+    std::ifstream ifs(cam_file.c_str());
     vpgl_perspective_camera<T> pcam;
     if (!ifs.is_open()) {
-      std::cerr << "Failed to open file " << *iter << '\n';
+      std::cerr << "Failed to open file " << cam_file << '\n';
     }
     else  {
       ifs >> pcam;

@@ -1,9 +1,6 @@
 // This is oxl/mvl/MatchSet.h
 #ifndef MatchSet_h_
 #define MatchSet_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Base class for correspondences
@@ -32,8 +29,8 @@ class MatchSet
 //: Return true if i is not the "NoMatch" value.
   static inline bool matchp(int i) { return i != NoMatch; }
 
-  MatchSet() {}
-  virtual ~MatchSet() {}
+  MatchSet() = default;
+  virtual ~MatchSet() = default;
 };
 
 #endif // MatchSet_h_

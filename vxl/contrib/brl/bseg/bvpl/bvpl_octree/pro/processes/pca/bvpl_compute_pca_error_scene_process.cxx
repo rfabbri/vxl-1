@@ -16,13 +16,15 @@
 
 #include <vul/vul_file.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 // global variables
 namespace bvpl_compute_pca_error_scene_process_globals
 {
-  const unsigned n_inputs_ = 3;        //directory path, where pca_info.xml is
-  const unsigned n_outputs_ = 0;       //error file
+  constexpr unsigned n_inputs_ = 3;        //directory path, where pca_info.xml is
+  constexpr unsigned n_outputs_ = 0;       //error file
 }
 
 
@@ -74,7 +76,7 @@ bool bvpl_compute_pca_error_scene_process(bprb_func_process& pro)
   unsigned i = 0;
   std::string pca_dir = pro.get_input<std::string>(i++);
   bvpl_pca_error_scenes_sptr pca_error_scenes = pro.get_input<bvpl_pca_error_scenes_sptr>(i++);
-  unsigned num_components = pro.get_input<unsigned>(i++);
+  auto num_components = pro.get_input<unsigned>(i++);
 
   if (!vul_file::is_directory(pca_dir))
     return false;
@@ -82,7 +84,7 @@ bool bvpl_compute_pca_error_scene_process(bprb_func_process& pro)
   if (!pca_error_scenes)
     return false;
 
-  bvpl_discover_pca_kernels *pca_extractor = new bvpl_discover_pca_kernels(pca_dir);
+  auto *pca_extractor = new bvpl_discover_pca_kernels(pca_dir);
   vgl_vector_3d<unsigned int> num_blocks = pca_extractor->data_scene_dim();
   boxm_scene<boct_tree<short, float> >* error_scene = dynamic_cast<boxm_scene<boct_tree<short, float> >*> (pca_error_scenes->get_scene(num_components).as_pointer());
 

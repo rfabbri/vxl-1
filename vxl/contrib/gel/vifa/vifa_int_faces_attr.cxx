@@ -7,7 +7,9 @@
 #include "vifa_int_faces_attr.h"
 //:
 // \file
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vtol/vtol_edge.h>
 #include <vifa/vifa_incr_var.h>
 #include <vifa/vifa_parallel.h>
@@ -92,13 +94,13 @@ init()
   cached_4_parallel_ = -1;
   cached_80_parallel_ = -1;
 
-  npobj_ = VXL_NULLPTR;
+  npobj_ = nullptr;
 
   attr_vec_.reserve(NumHistAttributes());
   for (int i=0; i < NumHistAttributes(); i++)
   {
     // can't do it below; garbage values trap in unref
-    attr_vec_.push_back(VXL_NULLPTR);
+    attr_vec_.push_back(nullptr);
   }
 
   perimeter_ = -1.f;
@@ -178,13 +180,13 @@ GetEdges()
   }
 
   // Get edges from all faces, remove duplicates
-  for (iface_iterator f = faces_.begin(); f != faces_.end(); ++f)
+  for (auto & face : faces_)
   {
-    edge_list fedges; (*f)->edges(fedges);
+    edge_list fedges; face->edges(fedges);
     edge_2d_iterator  edges_pos_;
-    for (edge_iterator ei = fedges.begin(); ei != fedges.end(); ei++)
+    for (auto & fedge : fedges)
     {
-      vtol_edge_2d*  e_ptr = (*ei)->cast_to_edge_2d();
+      vtol_edge_2d*  e_ptr = fedge->cast_to_edge_2d();
 
       if (e_ptr)
       {
@@ -212,13 +214,12 @@ ComputeCentroid()
     float  x_area_sum = 0;
     float  y_area_sum = 0;
 
-    for (attr_iterator ai = attr_map_.begin();
-         ai != attr_map_.end(); ++ai)
+    for (auto & ai : attr_map_)
     {
-      float  area = (*ai)->Area();
+      float  area = ai->Area();
       area_sum += area;
-      x_area_sum += area * (*ai)->Xo();
-      y_area_sum += area * (*ai)->Yo();
+      x_area_sum += area * ai->Xo();
+      y_area_sum += area * ai->Yo();
     }
 
     if (!area_sum)
@@ -262,9 +263,9 @@ ComputeSingleFaceAttributes(bool forceP)
     return true;
 
   attr_map_.clear();
-  for (iface_iterator f = faces_.begin(); f != faces_.end(); ++f)
+  for (auto & face : faces_)
   {
-    vifa_int_face_attr_sptr fattr = factory_new_attr(*f);
+    vifa_int_face_attr_sptr fattr = factory_new_attr(face);
 
     if (!(fattr->valid_p()))
       return false;
@@ -339,26 +340,26 @@ GetNativeAttributes(std::vector<float>& attrs)
 void vifa_int_faces_attr::
 GetAttributeNames(std::vector<std::string>& names)
 {
-  names.push_back("gArea");
-  names.push_back("gPerimeterLength");
-  names.push_back("gWeightedPerimeterLength");
-  names.push_back("gComplexity");
-  names.push_back("gWeightedComplexity");
-  names.push_back("gStrongParallel");
-  names.push_back("gWeakParallel");
-  names.push_back("gTwoPeakParallel");
-  names.push_back("gFourPeakParallel");
-  names.push_back("gEightyPercentParallel");
+  names.emplace_back("gArea");
+  names.emplace_back("gPerimeterLength");
+  names.emplace_back("gWeightedPerimeterLength");
+  names.emplace_back("gComplexity");
+  names.emplace_back("gWeightedComplexity");
+  names.emplace_back("gStrongParallel");
+  names.emplace_back("gWeakParallel");
+  names.emplace_back("gTwoPeakParallel");
+  names.emplace_back("gFourPeakParallel");
+  names.emplace_back("gEightyPercentParallel");
 
-  for (int i = 0; i < NUM_HIST_ATTRIBUTES; i++)
+  for (auto attr_name : attr_names)
   {
-    std::string  name(attr_names[i]);
+    std::string  name(attr_name);
     names.push_back("mean" + name);
   }
 
-  for (int i = 0; i < NUM_HIST_ATTRIBUTES; i++)
+  for (auto attr_name : attr_names)
   {
-    std::string  name(attr_names[i]);
+    std::string  name(attr_name);
     names.push_back("sd" + name);
   }
 }
@@ -383,11 +384,8 @@ MakeAttrHist(std::vector<float>& attr_vals)
   // Get value range
   float  max_val = 0;
   float  min_val = 1000000;
-  for (std::vector<float>::iterator vali = attr_vals.begin();
-       vali != attr_vals.end(); ++vali)
+  for (float val : attr_vals)
   {
-    float val = *vali;
-
     if (val > max_val)
       max_val = val;
 
@@ -401,9 +399,8 @@ MakeAttrHist(std::vector<float>& attr_vals)
                                                     max_val);
 
   // Populate histogram
-  for (std::vector<float>::iterator vali = attr_vals.begin();
-       vali != attr_vals.end(); ++vali)
-    val_hist->UpCount(*vali);
+  for (float & attr_val : attr_vals)
+    val_hist->UpCount(attr_val);
 
   return val_hist;
 }
@@ -422,7 +419,7 @@ GetMeanAttr(int attr_index)
       // Create list of attr vals and attr histogram
       std::vector<float>  vals(attr_map_.size());
       int          index = 0;
-      for (attr_iterator ai = attr_map_.begin();
+      for (auto ai = attr_map_.begin();
            ai != attr_map_.end(); ++ai, ++index)
       {
         vifa_int_face_attr_sptr  attr_ptr = *ai;
@@ -510,8 +507,8 @@ Area()
   if (!attr_map_.empty())
   {
     area_ = 0;
-    for (attr_iterator ai = attr_map_.begin(); ai != attr_map_.end(); ++ai)
-      area_ += (*ai)->Area();
+    for (auto & ai : attr_map_)
+      area_ += ai->Area();
 
     return area_;
   }
@@ -530,7 +527,7 @@ AspectRatio()
 edge_list* vifa_int_faces_attr::
 GetPerimeterEdges()
 {
-  edge_list*  p_edges = new edge_list;
+  auto*  p_edges = new edge_list;
 
   if (faces_.empty())
   {
@@ -543,13 +540,12 @@ GetPerimeterEdges()
   std::map<int, int>::iterator  edge_count_pos;
 
   int  edge_index = 0;
-  for (iface_iterator f = faces_.begin(); f != faces_.end(); ++f)
+  for (auto & face : faces_)
   {
-    edge_list edges; (*f)->edges(edges);
+    edge_list edges; face->edges(edges);
 
-    for (edge_iterator ei = edges.begin(); ei != edges.end(); ei++)
+    for (const auto& e : edges)
     {
-      vtol_edge_sptr  e = *ei;
       int        e_id = e->get_id();
 
       if (e_id == 0)
@@ -570,12 +566,11 @@ GetPerimeterEdges()
   }
 
   int  unique_count = 0;
-  for (iface_iterator f = faces_.begin(); f != faces_.end(); ++f)
+  for (auto & face : faces_)
   {
-    edge_list edges; (*f)->edges(edges);
-    for (edge_iterator ei = edges.begin(); ei != edges.end(); ei++)
+    edge_list edges; face->edges(edges);
+    for (const auto& e : edges)
     {
-      vtol_edge_sptr  e = *ei;
       int        count;
 
       edge_count_pos = edge_count.find(e->get_id());
@@ -614,9 +609,9 @@ PerimeterLength()
   edge_list*  p_edges = this->GetPerimeterEdges();
   if (p_edges)
   {
-    for (edge_iterator eit = p_edges->begin(); eit != p_edges->end(); ++eit)
+    for (auto & p_edge : *p_edges)
     {
-      vtol_edge_2d*  e = (*eit)->cast_to_edge_2d();
+      vtol_edge_2d*  e = p_edge->cast_to_edge_2d();
 
       if (e)
         perimeter_ += float(e->curve()->length());
@@ -646,9 +641,9 @@ WeightedPerimeterLength()
 
     float  weighted_perimeter_sum = 0;
     float  contrast_sum = 0;
-    for (edge_iterator eit = p_edges->begin(); eit != p_edges->end(); ++eit)
+    for (auto & p_edge : *p_edges)
     {
-      vtol_edge_2d*  e = (*eit)->cast_to_edge_2d();
+      vtol_edge_2d*  e = p_edge->cast_to_edge_2d();
 
       if (e)
       {
@@ -658,9 +653,9 @@ WeightedPerimeterLength()
 
 //        std::cout << edge_faces->size() << " faces found" << endl;
 
-        for (face_iterator fi=edge_faces.begin(); fi != edge_faces.end(); ++fi)
+        for (auto & edge_face : edge_faces)
         {
-          vtol_intensity_face*  int_f = (*fi)->cast_to_intensity_face();
+          vtol_intensity_face*  int_f = edge_face->cast_to_intensity_face();
 
           if (!int_f)
           {
@@ -670,9 +665,9 @@ WeightedPerimeterLength()
           }
 
           bool in_face = false;
-          for (iface_iterator f = faces_.begin(); f != faces_.end(); ++f)
+          for (auto & face : faces_)
           {
-            if (**f == *int_f)
+            if (*face == *int_f)
             {
               in_face = true;
               in_faces.push_back(int_f);
@@ -691,10 +686,10 @@ WeightedPerimeterLength()
 
         float  i_intensity_sum = 0;
         float  i_area_sum = 0;
-        for (iface_iterator f = in_faces.begin(); f != in_faces.end(); ++f)
+        for (auto & in_face : in_faces)
         {
-          i_intensity_sum += ((*f)->Io() * (*f)->Npix());
-          i_area_sum += (*f)->Npix();
+          i_intensity_sum += (in_face->Io() * in_face->Npix());
+          i_area_sum += in_face->Npix();
         }
 
 //        std::cout << "i_intensity_sum = " << i_intensity_sum
@@ -704,11 +699,10 @@ WeightedPerimeterLength()
 
         float  o_intensity_sum = 0;
         float  o_area_sum = 0;
-        for (iface_iterator f = out_faces.begin();
-             f != out_faces.end(); ++f)
+        for (auto & out_face : out_faces)
         {
-          o_intensity_sum += ((*f)->Io() * (*f)->Npix());
-          o_area_sum += (*f)->Npix();
+          o_intensity_sum += (out_face->Io() * out_face->Npix());
+          o_area_sum += out_face->Npix();
         }
 
 //        std::cout << "o_intensity_sum = " << o_intensity_sum
@@ -836,7 +830,7 @@ EightyPercentParallel()
 }
 
 vifa_int_face_attr_sptr vifa_int_faces_attr::
-factory_new_attr(vtol_intensity_face_sptr face)
+factory_new_attr(const vtol_intensity_face_sptr& face)
 {
   if (factory_)
     return factory_->obtain_int_face_attr(face,

@@ -13,7 +13,9 @@
 
 #include <iostream>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vcsl/vcsl_cartesian_3d.h>
 #include <vcsl/vcsl_scale.h>
 #include <vcsl/vcsl_graph.h>
@@ -123,7 +125,7 @@ static void test_scale()
 
   std::cout<<"Filling motion..."<< std::flush;
   motion.reserve(1);
-  motion.push_back(scale.ptr());
+  motion.emplace_back(scale.ptr());
   std::cout<<"done"<<std::endl;
 
   std::cout<<"Attaching motion to cs0..."<< std::flush;

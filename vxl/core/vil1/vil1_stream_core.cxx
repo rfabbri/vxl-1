@@ -1,17 +1,17 @@
 // This is core/vil1/vil1_stream_core.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 // \author fsm
 
 #include "vil1_stream_core.h"
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 vil1_stream_core::~vil1_stream_core()
 {
-  for (unsigned i=0; i<block_.size(); ++i)
-    delete [] block_[i];
+  for (auto & i : block_)
+    delete [] i;
   block_.clear();
 }
 

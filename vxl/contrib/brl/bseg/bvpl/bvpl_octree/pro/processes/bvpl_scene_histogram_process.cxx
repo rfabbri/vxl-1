@@ -14,8 +14,8 @@
 //:global variables
 namespace bvpl_scene_histogram_process_globals
 {
-  const unsigned n_inputs_  = 1;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 1;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 
@@ -51,7 +51,7 @@ bool bvpl_scene_histogram_process(bprb_func_process& pro)
     case BOXM_FLOAT:
     {
       typedef boct_tree<short, float > tree_type;
-      boxm_scene<tree_type> *scene_in = static_cast<boxm_scene<tree_type>* > (scene_base.as_pointer());
+      auto *scene_in = static_cast<boxm_scene<tree_type>* > (scene_base.as_pointer());
       bsta_histogram<float> hist;
       bvpl_compute_scene_statistics(scene_in, hist);
       hist.pretty_print();

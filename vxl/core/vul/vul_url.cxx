@@ -1,7 +1,4 @@
 // This is core/vul/vul_url.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Ian Scott
@@ -16,30 +13,25 @@
 #include <cstdlib>
 #include <sstream>
 #include <fstream>
+#include <iostream>
 #include "vul_url.h"
-#include <vcl_cstdio.h> // for vcl_snprintf()
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vul/vul_file.h>
 
-#if defined(unix) || defined(__unix) || defined(__unix__)
-
+#if defined (_WIN32) && !defined(__CYGWIN__)
+# include <winsock2.h>
+#else
 # include <unistd.h>       // read(), write(), close()
 # include <netdb.h>        // gethostbyname(), sockaddr_in()
 # include <sys/socket.h>
 # include <netinet/in.h>   // htons()
-# ifdef __alpha
-#  include <fp.h>          // htons() [ on e.g. DEC alpha, htons is in machine/endian.h ]
-# endif
 # define SOCKET int
-
-#elif defined (VCL_WIN32) && !defined(__CYGWIN__)
-
-# include <winsock2.h>
-
 #endif // unix
 
-#if defined(VCL_WIN32) && !defined(__CYGWIN__)
+#if defined(_WIN32) && !defined(__CYGWIN__)
 // So that we don't call WSAStartup more than we need to
 static int called_WSAStartup = 0;
 #endif
@@ -103,7 +95,7 @@ std::istream * vul_http_open(char const *url)
            << "port = " << port << std::endl;
 #endif
 
-#if defined(VCL_WIN32) && !defined(__CYGWIN__)
+#if defined(_WIN32) && !defined(__CYGWIN__)
   if (called_WSAStartup==0)
   {
     WORD wVersionRequested;
@@ -120,7 +112,7 @@ std::istream * vul_http_open(char const *url)
                              SOCK_STREAM,  // two-way, reliable,
                                            // connection-based stream socket.
                              PF_UNSPEC);   // protocol number.
-#if defined(VCL_WIN32) && !defined(__CYGWIN__)
+#if defined(_WIN32) && !defined(__CYGWIN__)
   if (tcp_socket == INVALID_SOCKET) {
 # ifndef NDEBUG
     std::cerr << __FILE__ "error code : " << WSAGetLastError() << '\n';
@@ -129,7 +121,7 @@ std::istream * vul_http_open(char const *url)
   if (tcp_socket < 0) {
 #endif
     std::cerr << __FILE__ ": failed to create socket.\n";
-    return VXL_NULLPTR;
+    return nullptr;
   }
 
 #ifdef DEBUG
@@ -141,13 +133,13 @@ std::istream * vul_http_open(char const *url)
   if (! hp) {
     std::cerr << __FILE__ ": failed to lookup host\n";
 
-#if defined(VCL_WIN32) && !defined(__CYGWIN__)
+#if defined(_WIN32) && !defined(__CYGWIN__)
     closesocket(tcp_socket);
 #else
     close(tcp_socket);
 #endif
 
-    return VXL_NULLPTR;
+    return nullptr;
   }
 
   // make socket address.
@@ -162,47 +154,47 @@ std::istream * vul_http_open(char const *url)
     std::cerr << __FILE__ ": failed to connect to host\n";
     //perror(__FILE__);
 
-#if defined(VCL_WIN32) && !defined(__CYGWIN__)
+#if defined(_WIN32) && !defined(__CYGWIN__)
     closesocket(tcp_socket);
 #else
     close(tcp_socket);
 #endif
 
-    return VXL_NULLPTR;
+    return nullptr;
   }
 
   // buffer for data transfers over socket.
   char buffer[4096];
 
   // send HTTP 1.1 request.
-  vcl_snprintf(buffer, 4090-std::strlen(buffer),
+  std::snprintf(buffer, 4090-std::strlen(buffer),
                "GET %s HTTP/1.1\r\nUser-Agent: vul_url\r\nHost: %s\r\nAccept: */*\r\n",
                url, host.c_str());
 
   if (auth != "")
-    vcl_snprintf(buffer+std::strlen(buffer), 4090-std::strlen(buffer),
+    std::snprintf(buffer+std::strlen(buffer), 4090-std::strlen(buffer),
                  "Authorization: Basic %s\r\n",
                  vul_url::encode_base64(auth).c_str());
 
-  if (vcl_snprintf(buffer+std::strlen(buffer), 4090-std::strlen(buffer), "\r\n") < 0)
+  if (std::snprintf(buffer+std::strlen(buffer), 4090-std::strlen(buffer), "\r\n") < 0)
   {
     std::cerr << "ERROR: vul_http_open buffer overflow.";
     std::abort();
   }
 
-#if defined(VCL_WIN32) && !defined(__CYGWIN__)
+#if defined(_WIN32) && !defined(__CYGWIN__)
   if (send(tcp_socket, buffer, (int)std::strlen(buffer), 0) < 0) {
 #else
   if (::write(tcp_socket, buffer, std::strlen(buffer)) < 0) {
 #endif
     std::cerr << __FILE__ ": error sending HTTP request\n";
 
-#if defined(VCL_WIN32) && !defined(__CYGWIN__)
+#if defined(_WIN32) && !defined(__CYGWIN__)
     closesocket(tcp_socket);
 #else
     close(tcp_socket);
 #endif
-    return VXL_NULLPTR;
+    return nullptr;
   }
 
 
@@ -210,7 +202,7 @@ std::istream * vul_http_open(char const *url)
   std::string contents;
   {
     int n;
-#if defined(VCL_WIN32) && !defined(__CYGWIN__)
+#if defined(_WIN32) && !defined(__CYGWIN__)
     while ((n = recv(tcp_socket, buffer, sizeof buffer,0 )) > 0) {
 #else
     while ((n = ::read(tcp_socket, buffer, sizeof buffer)) > 0) {
@@ -223,7 +215,7 @@ std::istream * vul_http_open(char const *url)
   }
 
   // close connection to server.
-#if defined(VCL_WIN32) && !defined(__CYGWIN__)
+#if defined(_WIN32) && !defined(__CYGWIN__)
   closesocket(tcp_socket);
 #else
   close(tcp_socket);
@@ -235,12 +227,12 @@ std::istream * vul_http_open(char const *url)
 
   if (contents.find("HTTP/1.1 200") == contents.npos)
   {
-    return VXL_NULLPTR;
+    return nullptr;
   }
   std::string::size_type n = contents.find("\r\n\r\n");
   if (n == contents.npos)
   {
-    return VXL_NULLPTR;
+    return nullptr;
   }
 
   contents.erase(0,n+4);
@@ -307,7 +299,7 @@ bool vul_http_exists(char const *url)
            << "port = " << port << std::endl;
 #endif
 
-#if defined(VCL_WIN32) && !defined(__CYGWIN__)
+#if defined(_WIN32) && !defined(__CYGWIN__)
   if (called_WSAStartup==0)
   {
     WORD wVersionRequested;
@@ -325,7 +317,7 @@ bool vul_http_exists(char const *url)
                                            // connection-based stream socket.
                              PF_UNSPEC);   // protocol number.
 
-#if defined(VCL_WIN32) && !defined(__CYGWIN__)
+#if defined(_WIN32) && !defined(__CYGWIN__)
   if (tcp_socket == INVALID_SOCKET) {
 # ifndef NDEBUG
     std::cerr << "error code : " << WSAGetLastError() << std::endl;
@@ -360,7 +352,7 @@ bool vul_http_exists(char const *url)
   {
     std::cerr << __FILE__ ": failed to connect to host\n";
     //perror(__FILE__);
-#if defined(VCL_WIN32) && !defined(__CYGWIN__)
+#if defined(_WIN32) && !defined(__CYGWIN__)
     closesocket(tcp_socket);
 #else
     close(tcp_socket);
@@ -373,28 +365,28 @@ bool vul_http_exists(char const *url)
   char buffer[4096];
 
   // send HTTP 1.1 request.
-  vcl_snprintf(buffer, 4090,
+  std::snprintf(buffer, 4090,
                "HEAD %s HTTP/1.1\r\nUser-Agent: vul_url\r\nHost: %s\r\nAccept: */*\r\n",
                url, host.c_str());
   if (auth != "")
-    vcl_snprintf(buffer+std::strlen(buffer), 4090-std::strlen(buffer),
+    std::snprintf(buffer+std::strlen(buffer), 4090-std::strlen(buffer),
                  "Authorization: Basic %s\r\n",
                  vul_url::encode_base64(auth).c_str() );
 
-  if (vcl_snprintf(buffer+std::strlen(buffer), 4090-std::strlen(buffer), "\r\n") < 0)
+  if (std::snprintf(buffer+std::strlen(buffer), 4090-std::strlen(buffer), "\r\n") < 0)
   {
     std::cerr << "ERROR: vul_http_exists buffer overflow.";
     std::abort();
   }
 
-#if defined(VCL_WIN32) && !defined(__CYGWIN__)
+#if defined(_WIN32) && !defined(__CYGWIN__)
   if (send(tcp_socket, buffer, (int)std::strlen(buffer), 0) < 0) {
 #else
   if (::write(tcp_socket, buffer, std::strlen(buffer)) < 0) {
 #endif
     std::cerr << __FILE__ ": error sending HTTP request\n";
 
-#if defined(VCL_WIN32) && !defined(__CYGWIN__)
+#if defined(_WIN32) && !defined(__CYGWIN__)
     closesocket(tcp_socket);
 #else
     close(tcp_socket);
@@ -407,7 +399,7 @@ bool vul_http_exists(char const *url)
   std::string contents;
   {
     int n;
-#if defined(VCL_WIN32) && !defined(__CYGWIN__)
+#if defined(_WIN32) && !defined(__CYGWIN__)
     if ((n = recv(tcp_socket, buffer, sizeof buffer,0 )) > 0) {
 #else
     if ((n = ::read(tcp_socket, buffer, sizeof buffer)) > 0) {
@@ -417,7 +409,7 @@ bool vul_http_exists(char const *url)
     }
     else
     {
-#if defined(VCL_WIN32) && !defined(__CYGWIN__)
+#if defined(_WIN32) && !defined(__CYGWIN__)
       closesocket(tcp_socket);
 #else
       close(tcp_socket);
@@ -427,7 +419,7 @@ bool vul_http_exists(char const *url)
   }
 
   // close connection to server.
-#if defined(VCL_WIN32) && !defined(__CYGWIN__)
+#if defined(_WIN32) && !defined(__CYGWIN__)
   closesocket(tcp_socket);
 #else
   close(tcp_socket);
@@ -445,7 +437,7 @@ std::istream * vul_url::open(const char * url, std::ios::openmode mode)
 {
   // check for null pointer or empty strings.
   if (!url || !*url)
-    return VXL_NULLPTR;
+    return nullptr;
   unsigned int l = (unsigned int)std::strlen(url);
 
   // check for filenames beginning "file:".
@@ -461,7 +453,7 @@ std::istream * vul_url::open(const char * url, std::ios::openmode mode)
   {
     std::cerr << __LINE__ << "ERROR:\n vul_read_url(const char * url)\n"
       "Doesn't support FTP yet, url=" << url << std::endl;
-    return VXL_NULLPTR;
+    return nullptr;
   }
 
   // try an ordinary filename
@@ -511,6 +503,10 @@ bool vul_url::is_url(const char * url)
 
   // maybe it's an http URL?
   if (l > 7 && std::strncmp(url, "http://", 7) == 0)
+    return true;
+
+  // maybe it's an https URL?
+  if (l > 8 && std::strncmp(url, "https://", 7) == 0)
     return true;
 
   // maybe it's an ftp URL?

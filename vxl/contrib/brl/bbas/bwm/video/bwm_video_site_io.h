@@ -10,14 +10,16 @@
  #define _LIB
 #endif
 #include <expatpp.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include "bwm_video_corr_sptr.h"
 
 class bwm_video_site_io : public expatpp
 {
  public:
   bwm_video_site_io(void);
-  ~bwm_video_site_io(void) {}
+  ~bwm_video_site_io(void) override = default;
   bool open(std::string const& xml_path);
   void clear();
   void set_name(std::string name) { name_ = name; }
@@ -40,12 +42,12 @@ class bwm_video_site_io : public expatpp
 
  private:
   bool fail_;
-  virtual void startElement(const XML_Char* name, const XML_Char** atts);
-  virtual void endElement(const XML_Char* name);
-  virtual void charData(const XML_Char* s, int len);
+  void startElement(const XML_Char* name, const XML_Char** atts) override;
+  void endElement(const XML_Char* name) override;
+  void charData(const XML_Char* s, int len) override;
 
   void handleAtts(const XML_Char** atts);
-  void cdataHandler(std::string name, std::string data);
+  void cdataHandler(const std::string& name, std::string data);
   void init_params();
   //Data
   int mDepth;

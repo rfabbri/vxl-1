@@ -13,7 +13,9 @@
 
 #include <iostream>
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bprb/bprb_func_process.h>
 #include <bprb/bprb_parameters.h>
 #include <bvxm/grid/bvxm_voxel_grid_base.h>
@@ -31,8 +33,8 @@
 #include <vnl/vnl_float_4.h>
 namespace bvxm_load_grid_process_globals
 {
-  const unsigned n_inputs_ = 2;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 2;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 

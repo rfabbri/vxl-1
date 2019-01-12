@@ -1,14 +1,16 @@
 #include <iostream>
 #include <cmath>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bil/algo/bil_scale_image.h>
 #include <vil/vil_image_view.h>
 #include <vil/vil_save.h>
 #include <vil/vil_convert.h>
 
 
-static void save_and_display(const vil_image_view<float> img,
+static void save_and_display(const vil_image_view<float>& img,
                              const std::string& name)
 {
   vil_image_view<vxl_byte> save_img;
@@ -41,7 +43,7 @@ static void test_bil_scale_image()
 
   int octaves = 5;
   int levels = 3;
-  float k = (float)std::pow(2.0,1.0/double(levels));
+  auto k = (float)std::pow(2.0,1.0/double(levels));
   bil_scale_image<float> gauss_scale(levels, octaves);
 
   bil_scale_image<float> dog_scale;

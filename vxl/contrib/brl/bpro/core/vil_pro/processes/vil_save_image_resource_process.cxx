@@ -6,7 +6,9 @@
 // \file
 
 #include <bprb/bprb_parameters.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_save.h>
 #include <vil/vil_image_resource.h>
 
@@ -16,8 +18,8 @@ bool vil_save_image_resource_process_cons(bprb_func_process& pro)
   //input
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("vil_image_resource_sptr");
-  input_types.push_back("vcl_string");
+  input_types.emplace_back("vil_image_resource_sptr");
+  input_types.emplace_back("vcl_string");
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
@@ -52,4 +54,3 @@ bool vil_save_image_resource_process(bprb_func_process& pro)
   }
   return true;
 }
-

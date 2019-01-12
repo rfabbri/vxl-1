@@ -25,7 +25,9 @@
 //
 #include <iostream>
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_matrix_fixed.h>
 #include <vnl/vnl_math.h>
 #include <vil/vil_image_view.h>
@@ -57,7 +59,7 @@ class icam_minimizer
                  icam_minimizer_params const& params,
                  bool verbose=false);
 
-  virtual ~icam_minimizer() {}
+  virtual ~icam_minimizer() = default;
 
   //: number of pyramid levels
   unsigned n_levels() const {return dt_pyramid_.n_levels();}

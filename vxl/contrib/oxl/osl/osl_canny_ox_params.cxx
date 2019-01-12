@@ -1,7 +1,4 @@
 // This is oxl/osl/osl_canny_ox_params.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
@@ -27,5 +24,4 @@ osl_canny_ox_params::osl_canny_ox_params()
 }
 
 
-osl_canny_ox_params::~osl_canny_ox_params() {
-}
+osl_canny_ox_params::~osl_canny_ox_params() = default;

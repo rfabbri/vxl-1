@@ -13,7 +13,9 @@
 // \author Ian Scott
 // Test construction, IO etc.
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <clsfy/clsfy_rbf_parzen.h>
 #include <clsfy/clsfy_k_nearest_neighbour.h>
 #include <clsfy/clsfy_binary_hyperplane.h>
@@ -41,7 +43,7 @@ void test_binary_hyperplane()
            << "*****************************\n";
 
   std::vector<vpdfl_axis_gaussian_sampler *> generator(2);//
-  const unsigned nDims = 2;
+  constexpr unsigned nDims = 2;
   vnl_vector<double> mean0(nDims), var0(nDims), mean1(nDims), var1(nDims);
   vpdfl_axis_gaussian PDF0, PDF1;
 
@@ -57,8 +59,8 @@ void test_binary_hyperplane()
   vnl_random rng;
   rng.reseed(111333);
 
-  const unsigned nSamples = 50;
-  const unsigned nTestSamples = 501;
+  constexpr unsigned nSamples = 50;
+  constexpr unsigned nTestSamples = 501;
   std::vector<vnl_vector<double> > trainingVectors(nSamples);
   std::vector<vnl_vector<double> > testVectors(nTestSamples);
   std::vector<unsigned> labels(nSamples);
@@ -141,7 +143,7 @@ void test_binary_hyperplane()
 
   clsfy_binary_hyperplane_ls_builder builder;
 
-  clsfy_binary_hyperplane *pClassifier =
+  auto *pClassifier =
     (clsfy_binary_hyperplane*) builder.new_classifier();
   std::cout << "Finding Least Squares Separator using least squares\n";
   mbl_data_array_wrapper<vnl_vector<double> > training_set(trainingVectors);
@@ -225,7 +227,7 @@ void test_binary_hyperplane()
 void test_clsfy_geman_mcclure_build()
 {
     std::vector<vpdfl_axis_gaussian_sampler *> generator(2);//
-    const unsigned nDims = 2;
+    constexpr unsigned nDims = 2;
     vnl_vector<double> meanPos(nDims), varPos(nDims), meanNeg(nDims), varNeg(nDims),origin(nDims);
     double d=1.0/vnl_math::sqrt2;
     origin.fill(0.0);
@@ -255,8 +257,8 @@ void test_clsfy_geman_mcclure_build()
     vnl_random rng;
     rng.reseed(111333);
 
-    const unsigned nSamples = 200;
-    const unsigned nTestSamples = 1000;
+    constexpr unsigned nSamples = 200;
+    constexpr unsigned nTestSamples = 1000;
     std::vector<vnl_vector<double> > trainingVectors(nSamples);
     std::vector<vnl_vector<double> > testVectors(nTestSamples);
     std::vector<unsigned> labels(nSamples);
@@ -324,7 +326,7 @@ void test_clsfy_geman_mcclure_build()
     //First do an ordinary least squares build for comparison
     clsfy_binary_hyperplane_ls_builder builder;
 
-    clsfy_binary_hyperplane *pClassifier =
+    auto *pClassifier =
         (clsfy_binary_hyperplane*) builder.new_classifier();
     std::cout << "Finding Least Squares Separator using least squares\n";
     mbl_data_array_wrapper<vnl_vector<double> > training_set(trainingVectors);
@@ -442,4 +444,3 @@ void test_clsfy_geman_mcclure_build()
 }
 
 TESTMAIN(test_binary_hyperplane);
-

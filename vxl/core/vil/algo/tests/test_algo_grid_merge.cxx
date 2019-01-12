@@ -1,7 +1,9 @@
 // This is core/vil/algo/tests/test_algo_grid_merge.cxx
 #include <iostream>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/algo/vil_grid_merge.h>
 
 static void test_grid_merge_byte()

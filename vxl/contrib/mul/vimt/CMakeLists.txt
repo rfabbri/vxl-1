@@ -43,10 +43,14 @@ target_link_libraries(vimt mbl ${VXL_LIB_PREFIX}vil_algo ${VXL_LIB_PREFIX}vgl ${
 
 add_subdirectory(algo)
 
-if(BUILD_EXAMPLES)
+if(VXL_BUILD_EXAMPLES)
   add_subdirectory(examples)
 endif()
 
 if(BUILD_TESTING)
   add_subdirectory(tests)
+endif()
+
+if (VXL_BUILD_OBJECT_LIBRARIES)
+  add_library(vimt-obj OBJECT ${vimt_sources})
 endif()

@@ -1,9 +1,6 @@
 // This is core/vbl/vbl_disjoint_sets.h
 #ifndef vbl_disjoint_sets_h_
 #define vbl_disjoint_sets_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief implements a disjoint set (union, find)
@@ -15,7 +12,9 @@
 //-----------------------------------------------------------------------------
 
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include "vbl_array_1d.h"
 // Disjoint Set Data Structure
 // Author: Emil Stefanov
@@ -65,7 +64,7 @@ class vbl_disjoint_sets
   // Internal node data structure used for representing an element
   struct node
   {
-  node():rank(0), index(0), parent(VXL_NULLPTR), size(1){}
+  node():rank(0), index(0), parent(nullptr), size(1){}
     //: represents the approximate max height of the node in its subtree
     int rank;
     int index; // The index of the element the node represents

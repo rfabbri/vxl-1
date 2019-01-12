@@ -19,8 +19,8 @@
 
 namespace boxm_split_scene_process_globals
 {
-  const unsigned n_inputs_ = 1;
-  const unsigned n_outputs_ = 2;
+  constexpr unsigned n_inputs_ = 1;
+  constexpr unsigned n_outputs_ = 2;
 }
 
 //: process takes 1 input and two outputs.
@@ -72,7 +72,7 @@ bool boxm_split_scene_process(bprb_func_process& pro)
   typedef boxm_apm_traits<BOXM_APM_MOG_GREY>::obs_mathtype alpha_type;
   typedef boct_tree<short, alpha_type> alpha_tree_type;
 
-  boxm_scene<sample_tree_type> *scene_in = static_cast<boxm_scene<sample_tree_type>* > (scene_base.as_pointer());
+  auto *scene_in = static_cast<boxm_scene<sample_tree_type>* > (scene_base.as_pointer());
 
   // parameters of the output scene are the same as those of the input scene
   boxm_scene<apm_tree_type> *apm_scene = new boxm_scene<apm_tree_type>(scene_in->lvcs(), scene_in->origin(), scene_in->block_dim(), scene_in->world_dim(),
@@ -95,4 +95,3 @@ bool boxm_split_scene_process(bprb_func_process& pro)
 
   return true;
 }
-

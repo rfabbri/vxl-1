@@ -10,7 +10,9 @@
 // \author Vishal Jain
 // \date Mar 10, 2011
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/io/boxm2_cache.h>
 #include <boxm2/io/boxm2_stream_cache.h>
 #include <boxm2/boxm2_scene.h>
@@ -30,8 +32,8 @@
 
 namespace boxm2_cpp_render_z_images_process_globals
 {
-  const unsigned n_inputs_ =  4;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 4;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool boxm2_cpp_render_z_images_process_cons(bprb_func_process& pro)
@@ -63,7 +65,7 @@ bool  boxm2_cpp_render_z_images_process(bprb_func_process& pro)
   boxm2_scene_sptr scene =pro.get_input<boxm2_scene_sptr>(i++);
   boxm2_cache_sptr cache =pro.get_input<boxm2_cache_sptr>(i++);
   std::string data_identifier= pro.get_input<std::string>(i++);
-  std::string outdir         = pro.get_input<std::string>(i++);
+  std::string outdir = pro.get_input<std::string>(i++);
 
   vgl_box_3d<double> bbox=scene->bounding_box();
   std::vector<boxm2_block_id> vis_order = scene->get_block_ids();// (vpgl_perspective_camera<double>*) cam.ptr());
@@ -79,9 +81,9 @@ bool  boxm2_cpp_render_z_images_process(bprb_func_process& pro)
     yint += mdata.sub_block_dim_.y()/num_octree_cells;
     zint += mdata.sub_block_dim_.z()/num_octree_cells;
   }
-  unsigned int ni = (unsigned int)(bbox.width() /xint -1);
-  unsigned int nj = (unsigned int)(bbox.height()/yint -1);
-  unsigned int nz = (unsigned int)(bbox.depth() /zint -1);
+  auto ni = (unsigned int)(bbox.width() /xint -1);
+  auto nj = (unsigned int)(bbox.height()/yint -1);
+  auto nz = (unsigned int)(bbox.depth() /zint -1);
 
   for (unsigned k = 0;k<nz;++k)
   {
@@ -112,8 +114,8 @@ bool  boxm2_cpp_render_z_images_process(bprb_func_process& pro)
         int bit_index=tree.traverse(local);
         int index=tree.get_data_index(bit_index,false);
 
-        boxm2_data_base     *  float_base  = cache->get_data_base(scene,id,data_identifier);
-        float * buffer = reinterpret_cast<float*>(float_base->data_buffer());
+        boxm2_data_base     *  float_base = cache->get_data_base(scene,id,data_identifier);
+        auto * buffer = reinterpret_cast<float*>(float_base->data_buffer());
         img(i,j) = buffer[index];
       }
     }

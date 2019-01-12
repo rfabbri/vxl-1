@@ -1,6 +1,8 @@
 #include <iostream>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_vector_2d.h>
 #include <vgl/vgl_vector_3d.h>
@@ -14,17 +16,17 @@
 
 static void test_optimize_camera()
 {
-  const double max_t_err = 100.0; // maximum translation error to introduce
+  constexpr double max_t_err = 100.0; // maximum translation error to introduce
   const double max_r_err = vnl_math::pi/2; // maximum rotation error to introduce (radians)
-  const double max_p_err = 0.5; // maximum image error to introduce (pixels)
+  constexpr double max_p_err = 0.5; // maximum image error to introduce (pixels)
 
   std::vector<vgl_homg_point_3d<double> > world;
-  world.push_back(vgl_homg_point_3d<double>(1.0, 0.0, 0.0));
-  world.push_back(vgl_homg_point_3d<double>(0.0, 1.0, 0.0));
-  world.push_back(vgl_homg_point_3d<double>(0.0, 0.0, 1.0));
-  world.push_back(vgl_homg_point_3d<double>(1.0, 1.0, 0.0));
-  world.push_back(vgl_homg_point_3d<double>(0.0, 1.0, 1.0));
-  world.push_back(vgl_homg_point_3d<double>(1.0, 0.0, 1.0));
+  world.emplace_back(1.0, 0.0, 0.0);
+  world.emplace_back(0.0, 1.0, 0.0);
+  world.emplace_back(0.0, 0.0, 1.0);
+  world.emplace_back(1.0, 1.0, 0.0);
+  world.emplace_back(0.0, 1.0, 1.0);
+  world.emplace_back(1.0, 0.0, 1.0);
 
   vpgl_calibration_matrix<double> K(2000.0,vgl_homg_point_2d<double>(512,384));
   vgl_homg_point_3d<double> c(10.0,10.0,10.0);
@@ -35,8 +37,8 @@ static void test_optimize_camera()
   std::vector<vgl_point_2d<double> > image;
   vnl_random rnd;
   // project each point adding uniform noise in a [-max_p_err, max_p_err] pixel window
-  for (unsigned int i=0; i<world.size(); ++i){
-    vgl_homg_point_2d<double> hpt = cam(world[i]);
+  for (const auto & i : world){
+    vgl_homg_point_2d<double> hpt = cam(i);
     vgl_vector_2d<double> err(rnd.drand32()-0.5, rnd.drand32()-0.5);
     err *= max_p_err;
     image.push_back(vgl_point_2d<double>(hpt.x()/hpt.w(), hpt.y()/hpt.w())+err);

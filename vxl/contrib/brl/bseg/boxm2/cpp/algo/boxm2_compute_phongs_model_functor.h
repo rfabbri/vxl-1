@@ -7,7 +7,9 @@
 #include <iostream>
 #include <algorithm>
 #include <boxm2/io/boxm2_stream_cache.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <brad/brad_phongs_model_est.h>
 #include <boxm2/cpp/algo/boxm2_phongs_model_processor.h>
 #include <bsta/bsta_histogram.h>
@@ -23,7 +25,7 @@ class boxm2_compute_phongs_model_functor
     typedef boxm2_data_traits<BOXM2_AUX3>::datatype aux3_datatype;
 
     //: "default" constructor
-    boxm2_compute_phongs_model_functor() {}
+    boxm2_compute_phongs_model_functor() = default;
 
     bool init_data(float sun_elev,
                    float sun_azim,

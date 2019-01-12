@@ -1,7 +1,4 @@
 // This is core/vgui/vgui_blender_tableau.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Philip C. Pritchett, RRG, University of Oxford
@@ -11,7 +8,9 @@
 #include <iostream>
 #include "vgui_blender_tableau.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vil/vil_load.h>
 #include <vil/vil_new.h>
@@ -30,8 +29,8 @@ vgui_blender_tableau::
 vgui_blender_tableau(char const* file,
                      vgui_range_map_params_sptr const& rmp,
                      float a)
-  : renderer_(VXL_NULLPTR),
-    vil_renderer_(VXL_NULLPTR),
+  : renderer_(nullptr),
+    vil_renderer_(nullptr),
     rmp_(rmp),
     alpha_(a)
 {
@@ -47,8 +46,8 @@ vgui_blender_tableau::
 vgui_blender_tableau(vil1_image const& img,
                      vgui_range_map_params_sptr const& rmp,
                      float a)
-  : renderer_(VXL_NULLPTR),
-    vil_renderer_(VXL_NULLPTR),
+  : renderer_(nullptr),
+    vil_renderer_(nullptr),
     rmp_(rmp),
     alpha_(a)
 {
@@ -64,8 +63,8 @@ vgui_blender_tableau::
 vgui_blender_tableau(vil_image_resource_sptr const& img,
                      vgui_range_map_params_sptr const& rmp,
                      float a)
-  : renderer_(VXL_NULLPTR),
-    vil_renderer_(VXL_NULLPTR),
+  : renderer_(nullptr),
+    vil_renderer_(nullptr),
     rmp_(rmp),
     alpha_(a)
 {
@@ -81,8 +80,8 @@ vgui_blender_tableau::
 vgui_blender_tableau(vil_image_view_base const& img,
                      vgui_range_map_params_sptr const& rmp,
                      float a)
-  : renderer_(VXL_NULLPTR),
-    vil_renderer_(VXL_NULLPTR),
+  : renderer_(nullptr),
+    vil_renderer_(nullptr),
     rmp_(rmp),
     alpha_(a)
 {

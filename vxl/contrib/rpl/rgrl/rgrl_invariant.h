@@ -21,10 +21,10 @@ class rgrl_invariant
   : public rgrl_object
 {
  public:
-  rgrl_invariant() {}
+  rgrl_invariant() = default;
 
   //:
-  virtual ~rgrl_invariant() {}
+  ~rgrl_invariant() override = default;
 
   //: Estimate the xform mapping \a from to the current feature
   virtual bool estimate(rgrl_invariant_sptr         from,
@@ -49,7 +49,7 @@ class rgrl_invariant
 
  private:
   // disabled
-  rgrl_invariant& operator=( rgrl_invariant const& );
+  rgrl_invariant& operator=( rgrl_invariant const& ) = delete;
 
  private:
   // a 0-length dummy vector

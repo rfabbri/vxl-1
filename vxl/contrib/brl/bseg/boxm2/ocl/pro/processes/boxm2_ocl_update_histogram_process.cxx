@@ -9,7 +9,9 @@
 // \author Vishal Jain
 // \date Mar 10, 2011
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/ocl/boxm2_opencl_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -28,10 +30,10 @@
 
 namespace boxm2_ocl_update_histogram_process_globals
 {
-  const unsigned n_inputs_ =  5;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 5;
+  constexpr unsigned n_outputs_ = 0;
   std::size_t local_threads[]={8,8};
-  void compile_kernel(bocl_device_sptr device,std::vector<bocl_kernel*> & vec_kernels)
+  void compile_kernel(const bocl_device_sptr& device,std::vector<bocl_kernel*> & vec_kernels)
   {
     std::vector<std::string> src_paths;
     std::string source_dir = boxm2_ocl_util::ocl_src_root();
@@ -48,13 +50,13 @@ namespace boxm2_ocl_update_histogram_process_globals
     std::string options = " -D INTENSITY ";
     options += " -D MOG_TYPE_8 ";
     //create all passes
-    bocl_kernel* seg_len = new bocl_kernel();
+    auto* seg_len = new bocl_kernel();
     std::string seg_opts = options + "-D DETERMINISTIC -D CUMLEN -D STEP_CELL=step_cell_cumlen(aux_args,data_ptr,llid,d) ";
     seg_len->create_kernel(&device->context(), device->device_id(), src_paths, "cum_len_main", seg_opts, "update::seg_len");
     vec_kernels.push_back(seg_len);
 
 
-    bocl_kernel* update_hist = new bocl_kernel();
+    auto* update_hist = new bocl_kernel();
     std::string hist_opts = options + "-D DETERMINISTIC -D UPDATE_HIST -D STEP_CELL=step_cell_update_hist(aux_args,data_ptr,llid,d) ";
     update_hist->create_kernel(&device->context(), device->device_id(), src_paths, "update_hist_main", hist_opts, "update::hist");
     vec_kernels.push_back(update_hist);
@@ -63,7 +65,7 @@ namespace boxm2_ocl_update_histogram_process_globals
     clean_seg_kernels_src.push_back(source_dir + "scene_info.cl");
     clean_seg_kernels_src.push_back(source_dir + "bit/batchkernels.cl");
 
-    bocl_kernel* clean_seg_len = new bocl_kernel();
+    auto* clean_seg_len = new bocl_kernel();
     std::string clean_seg_len_opts = options + " -D CLEAN_SEG_LEN ";
     clean_seg_len->create_kernel(&device->context(), device->device_id(), clean_seg_kernels_src, "clean_seg_len_main", clean_seg_len_opts, "clean::seg_len");
     vec_kernels.push_back(clean_seg_len);
@@ -139,8 +141,8 @@ bool boxm2_ocl_update_histogram_process(bprb_func_process& pro)
 
   unsigned cl_ni=RoundUp(ni,local_threads[0]);
   unsigned cl_nj=RoundUp(nj,local_threads[1]);
-  float* buff = new float[cl_ni*cl_nj];
-  if (vil_image_view<float> * in_img_float=dynamic_cast<vil_image_view<float> *>(in_img.ptr()))
+  auto* buff = new float[cl_ni*cl_nj];
+  if (auto * in_img_float=dynamic_cast<vil_image_view<float> *>(in_img.ptr()))
   {
     int count=0;
     for (unsigned j=0;j<cl_nj;j++)
@@ -153,7 +155,7 @@ bool boxm2_ocl_update_histogram_process(bprb_func_process& pro)
   }
   else
     return false;
-  float* vis_buff = new float[cl_ni*cl_nj];
+  auto* vis_buff = new float[cl_ni*cl_nj];
   for (unsigned i=0;i<cl_ni*cl_nj;i++) vis_buff[i]=1.0f;
 
   bocl_mem_sptr in_image=new bocl_mem(device->context(),buff,cl_ni*cl_nj*sizeof(float),"exp image buffer");
@@ -173,7 +175,7 @@ bool boxm2_ocl_update_histogram_process(bprb_func_process& pro)
 
   // Output Array
   float output_arr[100];
-  for (int i=0; i<100; ++i) output_arr[i] = 0.0f;
+  for (float & i : output_arr) i = 0.0f;
   bocl_mem_sptr  cl_output=new bocl_mem(device->context(), output_arr, sizeof(float)*100, "output buffer");
   cl_output->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
 
@@ -199,9 +201,9 @@ bool boxm2_ocl_update_histogram_process(bprb_func_process& pro)
       {
         //write the image values to the buffer
         vul_timer transfer;
-        bocl_mem * blk       = opencl_cache->get_block(scene,*id);
-        bocl_mem * blk_info  = opencl_cache->loaded_block_info();
-        bocl_mem * aux       = opencl_cache->get_data<BOXM2_AUX>(scene,*id);
+        bocl_mem * blk = opencl_cache->get_block(scene,*id);
+        bocl_mem * blk_info = opencl_cache->loaded_block_info();
+        bocl_mem * aux = opencl_cache->get_data<BOXM2_AUX>(scene,*id);
 
         transfer_time += (float) transfer.all();
 
@@ -228,11 +230,11 @@ bool boxm2_ocl_update_histogram_process(bprb_func_process& pro)
       else if (kernelindex==1)
       {
         vul_timer transfer;
-        bocl_mem * blk       = opencl_cache->get_block(scene,*id);
-        bocl_mem * blk_info  = opencl_cache->loaded_block_info();
-        bocl_mem * alpha     = opencl_cache->get_data<BOXM2_ALPHA>(scene,*id);
-        bocl_mem * hist      = opencl_cache->get_data<BOXM2_BATCH_HISTOGRAM>(scene,*id);
-        bocl_mem * aux       = opencl_cache->get_data<BOXM2_AUX>(scene,*id);
+        bocl_mem * blk = opencl_cache->get_block(scene,*id);
+        bocl_mem * blk_info = opencl_cache->loaded_block_info();
+        bocl_mem * alpha = opencl_cache->get_data<BOXM2_ALPHA>(scene,*id);
+        bocl_mem * hist = opencl_cache->get_data<BOXM2_BATCH_HISTOGRAM>(scene,*id);
+        bocl_mem * aux = opencl_cache->get_data<BOXM2_AUX>(scene,*id);
 
         transfer_time += (float) transfer.all();
 
@@ -261,10 +263,10 @@ bool boxm2_ocl_update_histogram_process(bprb_func_process& pro)
       else if (kernelindex==2) // clean seg len
       {
         vul_timer transfer;
-        bocl_mem * blk_info  = opencl_cache->loaded_block_info();
-        bocl_mem * aux       = opencl_cache->get_data<BOXM2_AUX>(scene,*id);
+        bocl_mem * blk_info = opencl_cache->loaded_block_info();
+        bocl_mem * aux = opencl_cache->get_data<BOXM2_AUX>(scene,*id);
 
-        boxm2_scene_info* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
+        auto* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
         int aux_type_size = boxm2_data_info::datasize(boxm2_data_traits<BOXM2_AUX>::prefix());
         info_buffer->data_buffer_length = (int) (aux->num_bytes()/aux_type_size);
         blk_info->write_to_buffer(queue);

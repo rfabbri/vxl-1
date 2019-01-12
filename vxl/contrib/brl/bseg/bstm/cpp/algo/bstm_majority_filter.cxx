@@ -1,18 +1,20 @@
 #include <iostream>
 #include <algorithm>
 #include "bstm_majority_filter.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
-bstm_majority_filter::bstm_majority_filter(bstm_block_metadata data, bstm_block* blk, bstm_time_block* blk_t, bstm_data_base* changes)
+bstm_majority_filter::bstm_majority_filter(bstm_block_metadata data, bstm_block* blk, bstm_time_block*  /*blk_t*/, bstm_data_base* changes)
 {
 
   boxm2_array_3d<uchar16>& trees = blk->trees();
 
   std::size_t data_size = changes->buffer_length();
   bstm_data_base* new_change = new bstm_data_base(new char[data_size], data_size, data.id_);
-  bstm_data_traits<BSTM_CHANGE>::datatype*  new_change_data = (bstm_data_traits<BSTM_CHANGE>::datatype*) new_change->data_buffer();
-  bstm_data_traits<BSTM_CHANGE>::datatype * change_data = (bstm_data_traits<BSTM_CHANGE>::datatype*) changes->data_buffer();
+  auto*  new_change_data = (bstm_data_traits<BSTM_CHANGE>::datatype*) new_change->data_buffer();
+  auto * change_data = (bstm_data_traits<BSTM_CHANGE>::datatype*) changes->data_buffer();
 
   //iterate through each tree
   for (unsigned int x = 0; x < trees.get_row1_count(); ++x) {
@@ -37,10 +39,9 @@ bstm_majority_filter::bstm_majority_filter(bstm_block_metadata data, bstm_block*
 
           //get each prob and sort it
           std::vector<float> probs;
-          for (unsigned int i=0; i<neighborPoints.size(); ++i)
+          for (auto abCenter : neighborPoints)
           {
             //load neighbor block/tree
-            vgl_point_3d<double> abCenter = neighborPoints[i];
             vgl_point_3d<int>    blkIdx((int) abCenter.x(),
                                         (int) abCenter.y(),
                                         (int) abCenter.z() );
@@ -113,21 +114,21 @@ bstm_majority_filter::neighbor_points( vgl_point_3d<double>& cellCenter, double 
   for(int i = 1; i < 3; i++) {
     //neighbors along X
     if ( cellCenter.x() + i*side_len < trees.get_row1_count() )
-      toReturn.push_back( vgl_point_3d<double>(cellCenter.x()+i*side_len, cellCenter.y(), cellCenter.z()) );
+      toReturn.emplace_back(cellCenter.x()+i*side_len, cellCenter.y(), cellCenter.z() );
     if ( cellCenter.x() - i*side_len >= 0 )
-      toReturn.push_back( vgl_point_3d<double>(cellCenter.x()-i*side_len, cellCenter.y(), cellCenter.z()) );
+      toReturn.emplace_back(cellCenter.x()-i*side_len, cellCenter.y(), cellCenter.z() );
 
     //neighbors along Y
     if ( cellCenter.y() + i*side_len < trees.get_row2_count() )
-      toReturn.push_back( vgl_point_3d<double>(cellCenter.x(), cellCenter.y()+i*side_len, cellCenter.z()) );
+      toReturn.emplace_back(cellCenter.x(), cellCenter.y()+i*side_len, cellCenter.z() );
     if ( cellCenter.y() - i*side_len >= 0 )
-      toReturn.push_back( vgl_point_3d<double>(cellCenter.x(), cellCenter.y()-i*side_len, cellCenter.z()) );
+      toReturn.emplace_back(cellCenter.x(), cellCenter.y()-i*side_len, cellCenter.z() );
 
     //neighbors along Z
     if ( cellCenter.z() + i*side_len < trees.get_row3_count() )
-      toReturn.push_back( vgl_point_3d<double>(cellCenter.x(), cellCenter.y(), cellCenter.z()+i*side_len) );
+      toReturn.emplace_back(cellCenter.x(), cellCenter.y(), cellCenter.z()+i*side_len );
     if ( cellCenter.z() - i*side_len >= 0 )
-      toReturn.push_back( vgl_point_3d<double>(cellCenter.x(), cellCenter.y(), cellCenter.z()-i*side_len) );
+      toReturn.emplace_back(cellCenter.x(), cellCenter.y(), cellCenter.z()-i*side_len );
   }
   return toReturn;
 }

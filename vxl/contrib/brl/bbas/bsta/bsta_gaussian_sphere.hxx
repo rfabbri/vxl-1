@@ -7,8 +7,10 @@
 #include <iostream>
 #include <limits>
 #include "bsta_gaussian_sphere.h"
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_erf.h>
 
 namespace

@@ -28,7 +28,7 @@ static void test_osm_object_line()
 {
   std::vector<vgl_point_2d<double> > line;
   for (unsigned i = 0; i < 10; i++)
-    line.push_back(vgl_point_2d<double>(12.31*i, 19.80*i));
+    line.emplace_back(12.31*i, 19.80*i);
   volm_land_layer prop(2, "invalid", 0, 1.0);
   volm_osm_object_line_sptr osm_road = new volm_osm_object_line(prop, line);
   // test binary io
@@ -117,16 +117,16 @@ static void test_osm_object_ids()
   volm_osm_object_ids_sptr obj_sptr = new volm_osm_object_ids("./volm_osm_object_ids.bin");
   std::cout << " number of location points: " << obj_sptr->num_pts() << std::endl;
   std::vector<unsigned> pt_ids_in = obj_sptr->pt_ids();
-  for (unsigned i = 0; i < pt_ids_in.size(); i++)
-    std::cout << ' ' << pt_ids_in[i];
+  for (unsigned int i : pt_ids_in)
+    std::cout << ' ' << i;
   std::cout << std::endl;
   std::vector<unsigned> line_ids_in = obj_sptr->line_ids();
-  for (unsigned i = 0; i < line_ids_in.size(); i++)
-    std::cout << ' ' << line_ids_in[i];
+  for (unsigned int i : line_ids_in)
+    std::cout << ' ' << i;
   std::cout << std::endl;
   std::vector<unsigned> region_ids_in = obj_sptr->region_ids();
-  for (unsigned i = 0; i < region_ids_in.size(); i++)
-    std::cout << ' ' << region_ids_in[i];
+  for (unsigned int i : region_ids_in)
+    std::cout << ' ' << i;
   std::cout << std::endl;
   TEST("volm_osm_object_ids io: ", obj_ids.num_pts(), pt_ids_in.size());
   TEST("volm_osm_object_ids io: ", obj_ids.num_lines(), line_ids_in.size());
@@ -155,7 +155,7 @@ static void test_osm_object()
   for (unsigned i = 0; i < 5; i++) {
     std::vector<vgl_point_2d<double> > line;
     for (unsigned j = 0; j < 4; j++)
-      line.push_back(vgl_point_2d<double>(1.2*j+i, 3.1+i+j));
+      line.emplace_back(1.2*j+i, 3.1+i+j);
     volm_osm_object_line_sptr loc_line = new volm_osm_object_line(volm_land_layer(i, "temp", 0, 0.0), line);
     loc_lines.push_back(loc_line);
   }

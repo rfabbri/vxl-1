@@ -8,7 +8,9 @@
 #include <vpgl/vpgl_rational_camera.h>
 #include <vpgl/vpgl_local_rational_camera.h>
 #include <vpgl/algo/vpgl_rational_adjust_onept.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: initialization
 bool vpgl_get_rpc_offsets_process_cons(bprb_func_process& pro)
@@ -16,13 +18,13 @@ bool vpgl_get_rpc_offsets_process_cons(bprb_func_process& pro)
   //this process takes one input: the filename
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("vpgl_camera_double_sptr");
+  input_types.emplace_back("vpgl_camera_double_sptr");
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   std::vector<std::string> output_types;
-  output_types.push_back("double");  // ofset x
-  output_types.push_back("double");  // ofset y
+  output_types.emplace_back("double");  // ofset x
+  output_types.emplace_back("double");  // ofset y
   ok = pro.set_output_types(output_types);
   if (!ok) return ok;
 
@@ -40,9 +42,9 @@ bool vpgl_get_rpc_offsets_process(bprb_func_process& pro)
   // get the inputs
   vpgl_camera_double_sptr cam = pro.get_input<vpgl_camera_double_sptr>(0);
 
-  vpgl_local_rational_camera<double>* cam_local_rat = dynamic_cast<vpgl_local_rational_camera<double>*>(cam.ptr());
+  auto* cam_local_rat = dynamic_cast<vpgl_local_rational_camera<double>*>(cam.ptr());
   if (!cam_local_rat) {
-    vpgl_rational_camera<double>* cam_rational = dynamic_cast<vpgl_rational_camera<double>*>(cam.ptr());
+    auto* cam_rational = dynamic_cast<vpgl_rational_camera<double>*>(cam.ptr());
     if (!cam_rational) {
       std::cerr << "In vpgl_correct_rational_camera_process() input is not of type: vpgl_rational_camera<double>\n";
       return false;
@@ -66,4 +68,3 @@ bool vpgl_get_rpc_offsets_process(bprb_func_process& pro)
   pro.set_output_val<double>(1, offset_v);
   return true;
 }
-

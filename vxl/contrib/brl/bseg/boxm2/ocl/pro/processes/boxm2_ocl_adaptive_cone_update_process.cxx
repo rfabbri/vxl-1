@@ -1,7 +1,8 @@
 // This is brl/bseg/boxm2/ocl/pro/processes/boxm2_ocl_adaptive_cone_update_process.cxx
-#include <iostream>
-#include <fstream>
 #include <bprb/bprb_func_process.h>
+#include <fstream>
+#include <iostream>
+#include <utility>
 //:
 // \file
 // \brief  OpenCL accelerated Cone Update process
@@ -9,7 +10,9 @@
 // \author Andrew Miller
 // \date June 1, 2011
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/ocl/boxm2_opencl_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -29,10 +32,10 @@
 
 namespace boxm2_ocl_adaptive_cone_update_process_globals
 {
-  const unsigned n_inputs_  = 6;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 6;
+  constexpr unsigned n_outputs_ = 0;
 
-  void compile_kernel(bocl_device_sptr device,std::vector<bocl_kernel*> & vec_kernels,std::string opts)
+  void compile_kernel(const bocl_device_sptr& device,std::vector<bocl_kernel*> & vec_kernels,std::string opts)
   {
     //gather all render sources... seems like a lot for rendering...
     std::vector<std::string> src_paths;
@@ -51,10 +54,10 @@ namespace boxm2_ocl_adaptive_cone_update_process_globals
     src_paths.push_back(source_dir + "cone/cast_adaptive_cone_ray.cl");
 
     //compilation options
-    std::string options = opts;
+    const std::string& options = std::move(opts);
 
     //proc norm pass computes the proc_norm image, mean_obs for each cell
-    bocl_kernel* pass_one = new bocl_kernel();
+    auto* pass_one = new bocl_kernel();
     std::string one_opts = options + " -D PASSONE ";
     one_opts += " -D IMG_TYPE=float ";
     one_opts += " -D STEP_CELL=step_cell(aux_args,data_ptr,intersect_volume) ";
@@ -63,7 +66,7 @@ namespace boxm2_ocl_adaptive_cone_update_process_globals
     vec_kernels.push_back(pass_one);
 
     //computes bayes ratio for each cell
-    bocl_kernel* bayes_main = new bocl_kernel();
+    auto* bayes_main = new bocl_kernel();
     std::string bayes_opt = options + " -D BAYES ";
     bayes_opt += " -D IMG_TYPE=float ";
     bayes_opt += " -D STEP_CELL=step_cell(aux_args,data_ptr,intersect_volume)  ";
@@ -73,7 +76,7 @@ namespace boxm2_ocl_adaptive_cone_update_process_globals
     vec_kernels.push_back(bayes_main);
 
     //may need
-    bocl_kernel* update = new bocl_kernel();
+    auto* update = new bocl_kernel();
     update->create_kernel(&device->context(),device->device_id(), non_ray_src, "update_cone_data", options, "cone_update::update_data");
     vec_kernels.push_back(update);
     return ;
@@ -130,24 +133,24 @@ bool boxm2_ocl_adaptive_cone_update_process(bprb_func_process& pro)
   bool foundDataType = false, foundNumObsType = false;
   std::string data_type,num_obs_type,options;
   std::vector<std::string> apps = scene->appearances();
-  for (unsigned int i=0; i<apps.size(); ++i) {
-    if ( apps[i] == boxm2_data_traits<BOXM2_MOG3_GREY>::prefix() )
+  for (const auto & app : apps) {
+    if ( app == boxm2_data_traits<BOXM2_MOG3_GREY>::prefix() )
     {
-      data_type = apps[i];
+      data_type = app;
       foundDataType = true;
       options=" -D MOG_TYPE_8 ";
       // boxm2_data_info::datasize(boxm2_data_traits<BOXM2_MOG3_GREY>::prefix());
     }
-    else if ( apps[i] == boxm2_data_traits<BOXM2_MOG3_GREY_16>::prefix() )
+    else if ( app == boxm2_data_traits<BOXM2_MOG3_GREY_16>::prefix() )
     {
-      data_type = apps[i];
+      data_type = app;
       foundDataType = true;
       options=" -D MOG_TYPE_16 ";
       // boxm2_data_info::datasize(boxm2_data_traits<BOXM2_MOG3_GREY_16>::prefix());
     }
-    else if ( apps[i] == boxm2_data_traits<BOXM2_NUM_OBS>::prefix() )
+    else if ( app == boxm2_data_traits<BOXM2_NUM_OBS>::prefix() )
     {
-      num_obs_type = apps[i];
+      num_obs_type = app;
       foundNumObsType = true;
     }
   }

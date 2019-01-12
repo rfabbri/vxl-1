@@ -11,13 +11,13 @@ breg3d_zero_occupancy_borders_process::breg3d_zero_occupancy_borders_process()
   // process takes 2 inputs:
   //input[0]: The border size
   //input[2]: The voxel world
-  input_data_.resize(2,brdb_value_sptr(VXL_NULLPTR));
+  input_data_.resize(2,brdb_value_sptr(nullptr));
   input_types_.resize(2);
   input_types_[0] = "unsigned";
   input_types_[1] = "bvxm_voxel_world_sptr";
 
   // process has 0 outputs.
-  output_data_.resize(0,brdb_value_sptr(VXL_NULLPTR));
+  output_data_.resize(0,brdb_value_sptr(nullptr));
   output_types_.resize(0);
 }
 
@@ -28,10 +28,10 @@ bool breg3d_zero_occupancy_borders_process::execute()
   if (!this->verify_inputs())
     return false;
 
-  brdb_value_t<unsigned>* input0 =
+  auto* input0 =
       static_cast<brdb_value_t<unsigned>* >(input_data_[0].ptr());
 
-  brdb_value_t<bvxm_voxel_world_sptr>* input1 =
+  auto* input1 =
       static_cast<brdb_value_t<bvxm_voxel_world_sptr>* >(input_data_[1].ptr());
 
   // get the plane z level
@@ -64,5 +64,3 @@ bool breg3d_zero_occupancy_borders_process::execute()
   }
   return true;
 }
-
-

@@ -3,7 +3,9 @@
 
 #include <iostream>
 #include <cstring>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpl/vpl.h>
 #include <testlib/testlib_test.h>
 #include <gevd/gevd_bufferxy.h>
@@ -14,7 +16,7 @@ void
 test_gevd_bufferxy()
 {
   // test first type of constructor
-  gevd_bufferxy * gbxy1 = new gevd_bufferxy(3,5,8);
+  auto * gbxy1 = new gevd_bufferxy(3,5,8);
 
   TEST("GetBitsPixel",  gbxy1->GetBitsPixel(),  8);
   TEST("GetBytesPixel", gbxy1->GetBytesPixel(), 1);
@@ -36,7 +38,7 @@ test_gevd_bufferxy()
   TEST("GetElementAddr", strdat, "n");
 
   // test second type of constructor
-  gevd_bufferxy * gbxy2 = new gevd_bufferxy(3,5,8,gbxy1->GetBuffer());
+  auto * gbxy2 = new gevd_bufferxy(3,5,8,gbxy1->GetBuffer());
 
   TEST("GetBitsPixel2", gbxy2->GetBitsPixel(), 8);
   TEST("GetBytesPixel2",gbxy2->GetBytesPixel(),1);
@@ -50,7 +52,7 @@ test_gevd_bufferxy()
   TEST("GetElementAddr2", strdat, "n");
 
   // test third type of constructor
-  gevd_bufferxy * gbxy3 = new gevd_bufferxy(*gbxy2);
+  auto * gbxy3 = new gevd_bufferxy(*gbxy2);
 
   TEST("GetBitsPixel3", gbxy3->GetBitsPixel(), 8);
   TEST("GetBytesPixel3",gbxy3->GetBytesPixel(),1);

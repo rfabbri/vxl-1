@@ -1,11 +1,11 @@
 // This is oxl/mvl/HMatrix2DEuclideanCompute.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 
 #include "HMatrix2DEuclideanCompute.h"
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vnl/vnl_double_2.h>
 #include <vnl/vnl_double_2x2.h>
@@ -22,7 +22,7 @@
 //
 HMatrix2DEuclideanCompute::HMatrix2DEuclideanCompute(void) : HMatrix2DCompute() { }
 
-HMatrix2DEuclideanCompute::~HMatrix2DEuclideanCompute() { }
+HMatrix2DEuclideanCompute::~HMatrix2DEuclideanCompute() = default;
 
 //
 //

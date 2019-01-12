@@ -6,13 +6,15 @@
 #include <iostream>
 #include <boxm2/cpp/algo/boxm2_cast_ray_function.h>
 #include <vil/vil_image_view.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class boxm2_cast_intensities_functor
 {
  public:
   //: "default" constructor
-  boxm2_cast_intensities_functor() {}
+  boxm2_cast_intensities_functor() = default;
 
   bool init_data(boxm2_data_base* data, vil_image_view<float> * input_img)
   {
@@ -36,7 +38,7 @@ class boxm2_data_print_functor
 {
  public:
   //: "default" constructor
-  boxm2_data_print_functor() {}
+  boxm2_data_print_functor() = default;
 
   bool init_data(boxm2_data_base* data, std::size_t data_size, std::string prefix)
   {
@@ -49,7 +51,7 @@ class boxm2_data_print_functor
   {
     int byte_ind = index*(int)data_size_;
     char * arr = buf_->cell_buffer(byte_ind, data_size_);
-    return arr != VXL_NULLPTR;
+    return arr != nullptr;
   }
 
  private:

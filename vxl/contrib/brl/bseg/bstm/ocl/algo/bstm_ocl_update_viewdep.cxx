@@ -10,7 +10,9 @@
 // \author Ali Osman Ulusoy
 // \date May 10, 2013
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bstm/ocl/bstm_opencl_cache.h>
 #include <bstm/bstm_scene.h>
 #include <bstm/bstm_block.h>
@@ -31,14 +33,14 @@
 std::map<std::string,std::vector<bocl_kernel*> > bstm_ocl_update_viewdep::kernels_;
 
 //Main public method, updates color model
-bool bstm_ocl_update_viewdep::update(bstm_scene_sptr         scene,
+bool bstm_ocl_update_viewdep::update(const bstm_scene_sptr&         scene,
                                 bocl_device_sptr         device,
-                                bstm_opencl_cache_sptr  opencl_cache,
+                                const bstm_opencl_cache_sptr&  opencl_cache,
                                 vpgl_camera_double_sptr  cam,
-                                vil_image_view_base_sptr img,
+                                const vil_image_view_base_sptr& img,
                                 float                   time,
                                 float                   mog_var,
-                                vil_image_view_base_sptr mask_sptr,
+                                const vil_image_view_base_sptr& mask_sptr,
                                 bool                     update_alpha,
                                 bool                    update_changes_only)
 {
@@ -63,7 +65,7 @@ bool bstm_ocl_update_viewdep::update(bstm_scene_sptr         scene,
      use_mask = true;
    }
 #endif
-   vil_image_view<unsigned char >* mask_map = VXL_NULLPTR;
+   vil_image_view<unsigned char >* mask_map = nullptr;
    if (use_mask) {
      mask_map = dynamic_cast<vil_image_view<unsigned char> *>(mask_sptr.ptr());
      if (!mask_map) {
@@ -93,24 +95,24 @@ bool bstm_ocl_update_viewdep::update(bstm_scene_sptr         scene,
 
    //grab input image, establish cl_ni, cl_nj (so global size is divisible by local size)
    vil_image_view_base_sptr float_img = bstm_util::prepare_input_image(img, true);
-   vil_image_view<float>* img_view = static_cast<vil_image_view<float>* >(float_img.ptr());
-   unsigned cl_ni=(unsigned)RoundUp(img_view->ni(),(int)local_threads[0]);
-   unsigned cl_nj=(unsigned)RoundUp(img_view->nj(),(int)local_threads[1]);
+   auto* img_view = static_cast<vil_image_view<float>* >(float_img.ptr());
+   auto cl_ni=(unsigned)RoundUp(img_view->ni(),(int)local_threads[0]);
+   auto cl_nj=(unsigned)RoundUp(img_view->nj(),(int)local_threads[1]);
    global_threads[0]=cl_ni;
    global_threads[1]=cl_nj;
 
    //set generic cam
-   cl_float* ray_origins    = new cl_float[4*cl_ni*cl_nj];
-   cl_float* ray_directions = new cl_float[4*cl_ni*cl_nj];
+   auto* ray_origins    = new cl_float[4*cl_ni*cl_nj];
+   auto* ray_directions = new cl_float[4*cl_ni*cl_nj];
    bocl_mem_sptr ray_o_buff = opencl_cache->alloc_mem(cl_ni*cl_nj*sizeof(cl_float4), ray_origins, "ray_origins buffer");
    bocl_mem_sptr ray_d_buff = opencl_cache->alloc_mem(cl_ni*cl_nj*sizeof(cl_float4), ray_directions, "ray_directions buffer");
    boxm2_ocl_camera_converter::compute_ray_image( device, queue, cam, cl_ni, cl_nj, ray_o_buff, ray_d_buff);
 
    //Visibility, Preinf, Norm, and input image buffers
-   float* vis_buff = new float[cl_ni*cl_nj];
-   float* pre_buff = new float[cl_ni*cl_nj];
-   float* norm_buff = new float[cl_ni*cl_nj];
-   float* input_buff=new float[cl_ni*cl_nj];
+   auto* vis_buff = new float[cl_ni*cl_nj];
+   auto* pre_buff = new float[cl_ni*cl_nj];
+   auto* norm_buff = new float[cl_ni*cl_nj];
+   auto* input_buff=new float[cl_ni*cl_nj];
    for (unsigned i=0;i<cl_ni*cl_nj;i++)
    {
      vis_buff[i]=1.0f;
@@ -168,7 +170,7 @@ bool bstm_ocl_update_viewdep::update(bstm_scene_sptr         scene,
 
    // Output Array
    float output_arr[100];
-   for (int i=0; i<100; ++i) output_arr[i] = -1.0f;
+   for (float & i : output_arr) i = -1.0f;
    bocl_mem_sptr  cl_output=new bocl_mem(device->context(), output_arr, sizeof(float)*100, "output buffer");
    cl_output->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
 
@@ -257,7 +259,7 @@ bool bstm_ocl_update_viewdep::update(bstm_scene_sptr         scene,
        bocl_mem* alpha     = opencl_cache->get_data<BSTM_ALPHA>(*id,0,false);
        bocl_mem* blk_info  = opencl_cache->loaded_block_info();
        bocl_mem* blk_t_info= opencl_cache->loaded_time_block_info();
-       bstm_scene_info* info_buffer_t = (bstm_scene_info*) blk_t_info->cpu_buffer();
+       auto* info_buffer_t = (bstm_scene_info*) blk_t_info->cpu_buffer();
 
        //figure out sizes
        int alphaTypeSize = (int)bstm_data_info::datasize(bstm_data_traits<BSTM_ALPHA>::prefix());
@@ -456,7 +458,7 @@ bool bstm_ocl_update_viewdep::update(bstm_scene_sptr         scene,
 
 
 //Returns vector of color update kernels (and caches them per device
-std::vector<bocl_kernel*>& bstm_ocl_update_viewdep::get_kernels(bocl_device_sptr device, std::string opts, bool isRGB)
+std::vector<bocl_kernel*>& bstm_ocl_update_viewdep::get_kernels(const bocl_device_sptr& device, const std::string& opts, bool  /*isRGB*/)
 {
   // compile kernels if not already compiled
   std::string identifier = device->device_identifier() + opts;
@@ -483,36 +485,36 @@ std::vector<bocl_kernel*>& bstm_ocl_update_viewdep::get_kernels(bocl_device_sptr
   src_paths.push_back(source_dir + "bit/cast_ray_bit.cl");
 
   //compilation options
-  std::string options = opts;
+  const std::string& options = opts;
 
   //populate vector of kernels
   std::vector<bocl_kernel*> vec_kernels;
 
   //seg len pass
-  bocl_kernel* seg_len = new bocl_kernel();
+  auto* seg_len = new bocl_kernel();
   std::string seg_opts = options + " -D SEGLEN -D STEP_CELL=step_cell_seglen(aux_args,data_ptr,data_ptr_tt,d)";
   seg_len->create_kernel(&device->context(), device->device_id(), src_paths, "seg_len_main", seg_opts, "update::seg_len");
   vec_kernels.push_back(seg_len);
 
 
-  bocl_kernel* pre_inf = new bocl_kernel();
+  auto* pre_inf = new bocl_kernel();
   std::string pre_opts = options + " -D PREINF -D STEP_CELL=step_cell_preinf(aux_args,data_ptr,data_ptr_tt,d)";
   pre_inf->create_kernel(&device->context(), device->device_id(), src_paths, "pre_inf_main", pre_opts, "update::pre_inf");
   vec_kernels.push_back(pre_inf);
 
   //may need DIFF LIST OF SOURCES FOR THIS GUY
-  bocl_kernel* proc_img = new bocl_kernel();
+  auto* proc_img = new bocl_kernel();
   std::string proc_opts = options + " -D PROC_NORM ";
   proc_img->create_kernel(&device->context(), device->device_id(), non_ray_src, "proc_norm_image", proc_opts, "update::proc_norm_image");
   vec_kernels.push_back(proc_img);
 
   //push back cast_ray_bit
-  bocl_kernel* bayes_main = new bocl_kernel();
+  auto* bayes_main = new bocl_kernel();
   std::string bayes_opt = options + " -D BAYES -D STEP_CELL=step_cell_bayes(aux_args,data_ptr,data_ptr_tt,d)";
   bayes_main->create_kernel(&device->context(), device->device_id(), src_paths, "bayes_main", bayes_opt, "update::bayes_main");
   vec_kernels.push_back(bayes_main);
 
-  bocl_kernel* update = new bocl_kernel();
+  auto* update = new bocl_kernel();
   std::string update_opts = options + " -D UPDATE_BIT_SCENE_MAIN ";
   update->create_kernel(&device->context(), device->device_id(), non_ray_src, "update_bit_scene_main", update_opts, "update::update_main");
   vec_kernels.push_back(update);
@@ -524,7 +526,7 @@ std::vector<bocl_kernel*>& bstm_ocl_update_viewdep::get_kernels(bocl_device_sptr
 
 
 //makes sure appearance types correspond correctly
-bool bstm_ocl_update_viewdep::validate_appearances(bstm_scene_sptr scene,
+bool bstm_ocl_update_viewdep::validate_appearances(const bstm_scene_sptr& scene,
                                             std::string& data_type,
                                             int& appTypeSize,
                                             std::string& num_obs_type,
@@ -532,30 +534,30 @@ bool bstm_ocl_update_viewdep::validate_appearances(bstm_scene_sptr scene,
 {
   std::vector<std::string> apps = scene->appearances();
   bool foundDataType = false, foundNumObsType = false;
-  for (unsigned int i=0; i<apps.size(); ++i) {
-    if ( apps[i] == bstm_data_traits<BSTM_MOG6_VIEW>::prefix() )
+  for (const auto & app : apps) {
+    if ( app == bstm_data_traits<BSTM_MOG6_VIEW>::prefix() )
     {
-      data_type = apps[i];
+      data_type = app;
       foundDataType = true;
       options+= " -D MOG_VIEW_DEP ";
       appTypeSize = (int)bstm_data_info::datasize(bstm_data_traits<BSTM_MOG6_VIEW>::prefix());
     }
-    else if ( apps[i] == bstm_data_traits<BSTM_MOG6_VIEW_COMPACT>::prefix() )
+    else if ( app == bstm_data_traits<BSTM_MOG6_VIEW_COMPACT>::prefix() )
     {
-      data_type = apps[i];
+      data_type = app;
       foundDataType = true;
       options+=" -D MOG_VIEW_DEP_COMPACT ";
       appTypeSize = (int)bstm_data_info::datasize(bstm_data_traits<BSTM_MOG6_VIEW_COMPACT>::prefix());
     }
 
-    else if( apps[i] == bstm_data_traits<BSTM_NUM_OBS_VIEW>::prefix())
+    else if( app == bstm_data_traits<BSTM_NUM_OBS_VIEW>::prefix())
     {
-      num_obs_type = apps[i];
+      num_obs_type = app;
       foundNumObsType = true;
     }
-    else if( apps[i] == bstm_data_traits<BSTM_NUM_OBS_VIEW_COMPACT>::prefix())
+    else if( app == bstm_data_traits<BSTM_NUM_OBS_VIEW_COMPACT>::prefix())
     {
-      num_obs_type = apps[i];
+      num_obs_type = app;
       options+= " -D NUM_OBS_VIEW_COMPACT ";
       foundNumObsType = true;
     }

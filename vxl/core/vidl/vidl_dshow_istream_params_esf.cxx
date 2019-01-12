@@ -15,7 +15,9 @@
 
 #include <vidl/vidl_dshow.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vbl/vbl_triple.h>
 
@@ -41,8 +43,8 @@ namespace
                                      "ESF_GOPSTRUCTURE_IPB"};
 
   // widths for formatting help (iomanip setw)
-  const int w1 = 25;
-  const int w2 = 8;
+  constexpr int w1 = 25;
+  constexpr int w2 = 8;
 
   inline void print_4_column_row(const std::string& str,
                                  long val, long min, long max)

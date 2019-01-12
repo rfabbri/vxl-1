@@ -2,8 +2,10 @@
 #include <iostream>
 #include <cmath>
 #include <vector>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <vnl/vnl_random.h>
 #include <mbl/mbl_k_means.h>
@@ -24,9 +26,9 @@ void test_k_means()
   vnl_random rng;
   rng.reseed(123456);
 
-  const unsigned nCentres = 64;
-  const unsigned nSamples = 1000;
-  const unsigned nDims = 3;
+  constexpr unsigned nCentres = 64;
+  constexpr unsigned nSamples = 1000;
+  constexpr unsigned nDims = 3;
 
   std::cout << "Find " << nCentres << " clusters from " << nSamples
            << ' ' << nDims << "-D points.\n";

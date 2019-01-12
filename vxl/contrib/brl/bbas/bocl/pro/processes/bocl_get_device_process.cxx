@@ -14,13 +14,15 @@
 //   <none yet>
 // \endverbatim
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bocl/bocl_manager.h>
 
 namespace bocl_get_device_process_globals
 {
-  const unsigned n_inputs_ = 1;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 1;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 bool bocl_get_device_process_cons(bprb_func_process& pro)

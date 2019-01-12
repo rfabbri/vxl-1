@@ -5,7 +5,10 @@
 // \date October 01, 2008
 
 #include <bvxm/grid/bvxm_voxel_slab.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 double brec_bg_pair_density::operator()(const double y0, const double y1)
 {
@@ -75,7 +78,7 @@ bool brec_bg_pair_density::generate_mixture_image()
   //1) get probability mixtures of all pixels in image
   if (voxel_type_ == "apm_mog_rgb") {
     world_->mixture_of_gaussians_image<APM_MOG_RGB>(observation, mog_image_sptr, bin_);
-    bvxm_voxel_slab<rgb_mog_type>* mog_image_ptr = dynamic_cast<bvxm_voxel_slab<rgb_mog_type>*>(mog_image_sptr.ptr());
+    auto* mog_image_ptr = dynamic_cast<bvxm_voxel_slab<rgb_mog_type>*>(mog_image_sptr.ptr());
 
     bvxm_voxel_traits<APM_MOG_RGB>::appearance_processor apm_processor;
     bvxm_voxel_slab<rgb_obs_datatype> exp_img = apm_processor.expected_color(*mog_image_ptr);
@@ -91,7 +94,7 @@ bool brec_bg_pair_density::generate_mixture_image()
   else if (voxel_type_ == "apm_mog_grey")
   {
     world_->mixture_of_gaussians_image<APM_MOG_GREY>(observation, mog_image_sptr, bin_);
-    bvxm_voxel_slab<grey_mog_type>* mog_image_ptr = dynamic_cast<bvxm_voxel_slab<grey_mog_type>*>(mog_image_sptr.ptr());
+    auto* mog_image_ptr = dynamic_cast<bvxm_voxel_slab<grey_mog_type>*>(mog_image_sptr.ptr());
 
     bvxm_voxel_traits<APM_MOG_GREY>::appearance_processor apm_processor;
     bvxm_voxel_slab<float> exp_img = apm_processor.expected_color(*mog_image_ptr);
@@ -220,5 +223,3 @@ brec_bg_pair_density::initialize_bg_map(vil_image_view<float>& prob_density, vil
 
   return true;
 }
-
-

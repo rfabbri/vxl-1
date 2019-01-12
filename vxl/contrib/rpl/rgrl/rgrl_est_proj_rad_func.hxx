@@ -22,8 +22,10 @@
 #include <vnl/algo/vnl_levenberg_marquardt.h>
 #include <vnl/algo/vnl_svd.h>
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 template <unsigned int Tdim, unsigned int Fdim>
 rgrl_est_proj_rad_func<Tdim, Fdim>::
@@ -116,9 +118,9 @@ apply_radial_distortion( vnl_vector_fixed<double, Tdim>      & mapped,
 
   double base = 1;
   double coeff = 0;
-  for ( unsigned i=0; i<radk.size(); ++i ) {
+  for (double i : radk) {
     base *= radial_dist;
-    coeff += radk[i] * base;
+    coeff += i * base;
   }
   mapped = p + coeff*centred;
 }
@@ -154,9 +156,9 @@ reduced_proj_rad_jacobian( vnl_matrix<double>                            & base_
   // compute radial distortion coefficient
   double base = 1;
   double coeff = 0;
-  for ( unsigned i=0; i<rad_k.size(); ++i ) {
+  for (double i : rad_k) {
     base *= radial_dist;
-    coeff += rad_k[i] * base;
+    coeff += i * base;
   }
 
   // two part computation for dD_dx
@@ -235,9 +237,9 @@ full_proj_rad_jacobian( vnl_matrix<double>                            & base_jac
   // compute radial distortion coefficient
   double base = 1;
   double coeff = 0;
-  for ( unsigned i=0; i<rad_k.size(); ++i ) {
+  for (double i : rad_k) {
     base *= radial_dist;
-    coeff += rad_k[i] * base;
+    coeff += i * base;
   }
 
   // two part computation for dD_dx
@@ -310,9 +312,9 @@ proj_jac_wrt_loc( vnl_matrix_fixed<double, Tdim, Fdim>          & jac_loc,
   // compute radial distortion coefficient
   double base = 1;
   double coeff = 0;
-  for ( unsigned i=0; i<rad_k.size(); ++i ) {
+  for (double i : rad_k) {
     base *= radial_dist;
-    coeff += rad_k[i] * base;
+    coeff += i * base;
   }
 
   // two part computation for dD_dx
@@ -367,7 +369,7 @@ f(vnl_vector<double> const& x, vnl_vector<double>& fx)
 
   for ( unsigned ms = 0; ms<this->matches_ptr_->size(); ++ms )
   {
-    if ( (*this->matches_ptr_)[ms] != VXL_NULLPTR ) // if pointer is valid
+    if ( (*this->matches_ptr_)[ms] != nullptr ) // if pointer is valid
     {
       rgrl_match_set const& one_set = *((*this->matches_ptr_)[ms]);
       for ( FIter fi=one_set.from_begin(); fi!=one_set.from_end(); ++fi ) {

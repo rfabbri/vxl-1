@@ -6,7 +6,9 @@
 #include <iostream>
 #include <fstream>
 #include <vul/vul_arg.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vimt3d/vimt3d_save.h>
 #include <vimt3d/vimt3d_image_3d_of.h>
 #include <vil/vil_image_view.h>
@@ -23,7 +25,7 @@ void print_usage()
 
 template<class imT>
 int load_images(const std::vector<std::string>& names,
-                 imT im_type,
+                 imT  /*im_type*/,
                  double wx, double wy, double wz,
                  const std::string& output_path)
 {
@@ -114,6 +116,6 @@ int main(int argc, char** argv)
   if (im_type()=="byte")
     return load_images(names,vxl_byte(),wx(),wy(),wz(),output_path());
 
-  vcl_cout<<"Loading in as float images."<<vcl_endl;
+  std::cout<<"Loading in as float images."<<std::endl;
   return load_images(names,float(),wx(),wy(),wz(),output_path());
 }

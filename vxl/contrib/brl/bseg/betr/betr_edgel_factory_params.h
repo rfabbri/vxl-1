@@ -24,7 +24,9 @@
 //   min_region_edge_length_ - the smallest dimension (in pixels) allowed for the region of interest for
 //                             computing edges.
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include "betr_params.h"
 #include <sdet/sdet_detector_params.h>
 class betr_edgel_factory_params : public betr_params
@@ -38,14 +40,14 @@ class betr_edgel_factory_params : public betr_params
     det_params_.noise_multiplier = 0.75;
   }
   //: check values of parameters to flag illegal values
-  virtual bool sanity_check(std::string& errors) const;
-  virtual void serialize( Json::Value& root ) const{
+  bool sanity_check(std::string& errors) const override;
+  void serialize( Json::Value& root ) const override{
     root["gradient_range"] = gradient_range_;
     root["nbins"] = nbins_;
     root["upsample_factor"] = upsample_factor_;
     root["min_region_edge_length"] = min_region_edge_length_;
   }
-  virtual void deserialize( Json::Value& root){
+  void deserialize( Json::Value& root) override{
     gradient_range_ = root.get("gradient_range",gradient_range_).asDouble();
     nbins_ = root.get("nbins", nbins_).asInt();
     upsample_factor_ = root.get("upsample_factor",upsample_factor_).asDouble();
@@ -62,4 +64,3 @@ std::ostream&  operator<<(std::ostream& s, betr_edgel_factory_params const& efp)
 std::istream&  operator>>(std::istream& s, betr_edgel_factory_params& efp);
 
 #endif   // DO NOT ADD CODE AFTER THIS LINE! END OF DEFINITION FOR CLASS betr_edgel_factory_params.
-

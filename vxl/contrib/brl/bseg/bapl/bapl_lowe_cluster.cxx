@@ -6,7 +6,9 @@
 #include <iostream>
 #include <algorithm>
 #include "bapl_lowe_cluster.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h>
 
 #include <bapl/bapl_lowe_keypoint.h>
@@ -105,10 +107,9 @@ bapl_lowe_clusterer::estimate_all_affine( std::vector< bapl_affine_transform >& 
 
     // Add all matches that agree with the estimate
     matches.clear();
-    for ( std::vector< bapl_keypoint_match >::const_iterator itr = all_matches_.begin();
-          itr != all_matches_.end(); ++itr ) {
-      if ( this->is_inlier(A, *itr) )
-        matches.push_back(*itr);
+    for (const auto & all_matche : all_matches_) {
+      if ( this->is_inlier(A, all_matche) )
+        matches.push_back(all_matche);
     }
 
     // Get a better estimate and remove outliers
@@ -116,17 +117,15 @@ bapl_lowe_clusterer::estimate_all_affine( std::vector< bapl_affine_transform >& 
 
     transforms.push_back(A);
     // for now, merge matches into inliers
-    for ( std::vector< bapl_keypoint_match >::iterator m_itr = matches.begin();
-          m_itr != matches.end();  ++m_itr ) {
+    for (auto & matche : matches) {
       bool already_found = false;
-      for ( std::vector< bapl_keypoint_match >::iterator i_itr = inliers.begin();
-            i_itr != inliers.end();  ++i_itr ) {
-        if ( m_itr->second == i_itr->second ){
+      for (auto & inlier : inliers) {
+        if ( matche.second == inlier.second ){
           already_found = true;
           break;
         }
       }
-      if ( !already_found ) inliers.push_back(*m_itr);
+      if ( !already_found ) inliers.push_back(matche);
     }
     std::cout << "current inliers size: "<<matches.size() << std::endl;
   }
@@ -158,7 +157,7 @@ bapl_lowe_clusterer::estimate_affine( bapl_affine_transform& transform,
     else {
       transform = bapl_affine_transform(p[0], p[1], p[2], p[3], p[4], p[5]);
 
-      for ( std::vector< bapl_keypoint_match >::iterator itr = matches.begin();
+      for ( auto itr = matches.begin();
             itr != matches.end();  ++itr ) {
         if ( !this->is_inlier(transform, *itr) ){
           matches.erase(itr);
@@ -210,4 +209,3 @@ bapl_lowe_clusterer::is_inlier( const bapl_affine_transform& A,
          std::fabs(err_x) < trans_step_*0.25 &&
          std::fabs(err_y) < trans_step_*0.25;
 }
-

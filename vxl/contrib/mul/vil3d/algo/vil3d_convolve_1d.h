@@ -12,7 +12,10 @@
 // If you don't want this to happen, the behaviour you want is not
 // called "convolution".
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/algo/vil_convolve_1d.h>
 #include <vil3d/vil3d_image_view.h>
 
@@ -105,4 +108,3 @@ inline void vil3d_convolve_1d(const vil3d_image_view<srcT>& src_im,
 }
 
 #endif // vil3d_algo_convolve_1d_h_
-

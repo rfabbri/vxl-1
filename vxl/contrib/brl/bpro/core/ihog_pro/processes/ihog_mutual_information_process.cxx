@@ -5,7 +5,9 @@
 // \file
 // \brief A process for computing mutual information between two images
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <ihog/ihog_minimizer.h>
 #include <ihog/ihog_world_roi.h>
 #include <ihog/ihog_minfo_cost_func.h>
@@ -21,11 +23,11 @@ bool ihog_mutual_information_process_cons(bprb_func_process& pro)
   //  2) mask
 
   std::vector<std::string> input_types;
-  input_types.push_back("vil_image_view_base_sptr");
-  input_types.push_back("vil_image_view_base_sptr");
-  input_types.push_back("vil_image_view_base_sptr");
+  input_types.emplace_back("vil_image_view_base_sptr");
+  input_types.emplace_back("vil_image_view_base_sptr");
+  input_types.emplace_back("vil_image_view_base_sptr");
   std::vector<std::string> output_types;
-  output_types.push_back("float");
+  output_types.emplace_back("float");
   return pro.set_input_types(input_types)
       && pro.set_output_types(output_types);
 }
@@ -60,10 +62,10 @@ bool ihog_mutual_information_process(bprb_func_process& pro)
   }
 
   vil_image_view<float> mask(ni,nj);
-  if (vil_image_view<vxl_byte>* mask_byte = dynamic_cast<vil_image_view<vxl_byte>*>(mask_in.ptr())) {
+  if (auto* mask_byte = dynamic_cast<vil_image_view<vxl_byte>*>(mask_in.ptr())) {
     vil_convert_stretch_range_limited(*mask_byte, mask, vxl_byte(0), vxl_byte(255), 0.0f, 1.0f);
   }
-  else if (vil_image_view<bool>* mask_bool = dynamic_cast<vil_image_view<bool>*>(mask_in.ptr())) {
+  else if (auto* mask_bool = dynamic_cast<vil_image_view<bool>*>(mask_in.ptr())) {
     vil_convert_cast(*mask_bool, mask);
   }
   else {
@@ -93,4 +95,3 @@ bool ihog_mutual_information_process(bprb_func_process& pro)
 
   return true;
 }
-

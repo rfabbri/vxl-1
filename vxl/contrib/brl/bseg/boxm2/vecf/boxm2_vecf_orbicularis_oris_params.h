@@ -8,8 +8,8 @@
 // \author Yi Dong
 // \date   January, 2016
 //
-#include "boxm2_vecf_articulated_params.h"
 #include <iostream>
+#include "boxm2_vecf_articulated_params.h"
 #include <vgl/vgl_vector_3d.h>
 #include <vnl/vnl_vector_fixed.h>
 class boxm2_vecf_orbicularis_oris_params : public boxm2_vecf_articulated_params
@@ -23,7 +23,7 @@ class boxm2_vecf_orbicularis_oris_params : public boxm2_vecf_articulated_params
     scale_factor_(1.0)
   {}
 
-  ~boxm2_vecf_orbicularis_oris_params() {}
+  ~boxm2_vecf_orbicularis_oris_params() override = default;
   //: principal stretches are applied on two principal direction axes, L1 and L2.  In general, deformation of orbicularis oris happens
   //  symmetrically in its circular plane such that L1 == x and L2 == y by default (no rotation).  Specifying L1 and L2 accordingly
   //  gives the rotation orbicularis oris needs, i.e., tilt, heading, etc., to align the global coordinates (x,y,z) to principal directions (L1,L2,L1xL2)

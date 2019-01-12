@@ -1,7 +1,4 @@
 // This is core/vil/vil_memory_image.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Ian Scott
@@ -13,8 +10,10 @@
 
 #include <cstdlib>
 #include "vil_memory_image.h"
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vxl_config.h> // for vxl_uint_32 etc.
 #include <vil/vil_image_view.h>
 #include <vil/vil_copy.h>
@@ -106,7 +105,7 @@ vil_memory_image::vil_memory_image(vil_image_view_base const &view)
 vil_image_view_base_sptr vil_memory_image::get_copy_view(unsigned i0, unsigned n_i,
                                                          unsigned j0, unsigned n_j) const
 {
-  if (i0 + n_i > view_->ni() || j0 + n_j > view_->nj()) return VXL_NULLPTR;
+  if (i0 + n_i > view_->ni() || j0 + n_j > view_->nj()) return nullptr;
 
   switch (view_->pixel_format())
   {
@@ -134,7 +133,7 @@ vil_image_view_base_sptr vil_memory_image::get_copy_view(unsigned i0, unsigned n
    macro(VIL_PIXEL_FORMAT_COMPLEX_DOUBLE , std::complex<double>)
 #undef macro
    default:
-    return VXL_NULLPTR;
+    return nullptr;
   }
 }
 
@@ -143,7 +142,7 @@ vil_image_view_base_sptr vil_memory_image::get_copy_view(unsigned i0, unsigned n
 vil_image_view_base_sptr vil_memory_image::get_view(unsigned i0, unsigned n_i,
                                                     unsigned j0, unsigned n_j) const
 {
-  if (i0 + n_i > view_->ni() || j0 + n_j > view_->nj()) return VXL_NULLPTR;
+  if (i0 + n_i > view_->ni() || j0 + n_j > view_->nj()) return nullptr;
 
   switch (view_->pixel_format())
   {
@@ -170,7 +169,7 @@ vil_image_view_base_sptr vil_memory_image::get_view(unsigned i0, unsigned n_i,
    macro(VIL_PIXEL_FORMAT_COMPLEX_DOUBLE , std::complex<double>)
 #undef macro
    default:
-    return VXL_NULLPTR;
+    return nullptr;
   }
 }
 
@@ -218,7 +217,6 @@ bool vil_memory_image::put_view(const vil_image_view_base& im,unsigned i0, unsig
    default:
     std::cerr << "WARNING: vil_memory_image::put_view()\n"
              << "\t Unexpected pixel type" << view_->pixel_format() << std::endl;
-    return 0;
+    return false;
   }
 }
-

@@ -8,7 +8,9 @@
 #include "../vil_math_functors.h"
 #include <vil/vil_convert.h>
 #include <bprb/bprb_parameters.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_image_view_base.h>
 #include <vil/vil_transform.h>
 #include <vil/vil_math.h>
@@ -19,15 +21,15 @@ bool vil_map_image_binary_process_cons(bprb_func_process& pro)
   //input
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("vil_image_view_base_sptr");
-  input_types.push_back("vil_image_view_base_sptr");
-  input_types.push_back("vcl_string");
+  input_types.emplace_back("vil_image_view_base_sptr");
+  input_types.emplace_back("vil_image_view_base_sptr");
+  input_types.emplace_back("vcl_string");
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   //output
   std::vector<std::string> output_types;
-  output_types.push_back("vil_image_view_base_sptr");
+  output_types.emplace_back("vil_image_view_base_sptr");
   ok = pro.set_output_types(output_types);
   if (!ok) return ok;
   return true;
@@ -77,7 +79,7 @@ bool vil_map_image_binary_process(bprb_func_process& pro)
   vil_image_view_base_sptr map_image;
   if (image1->pixel_format()==VIL_PIXEL_FORMAT_BYTE)
   {
-    vil_image_view<vxl_byte>* temp = new vil_image_view<vxl_byte>;
+    auto* temp = new vil_image_view<vxl_byte>;
     vil_convert_stretch_range(dest, *temp);
     map_image = temp;
   }
@@ -87,4 +89,3 @@ bool vil_map_image_binary_process(bprb_func_process& pro)
   pro.set_output_val<vil_image_view_base_sptr>(0, map_image);
   return true;
 }
-

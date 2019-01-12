@@ -6,8 +6,10 @@
 #include <cmath>
 #include "bsta_joint_histogram_3d.h"
 
-#include <vcl_compiler.h>
-#include<vcl_cstdlib.h>//for div
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cstdlib>//for div
 #include "bsta_gauss.h"
 #include <vnl/vnl_math.h> // for log2e == 1/std::log(2.0)
 template <class T>

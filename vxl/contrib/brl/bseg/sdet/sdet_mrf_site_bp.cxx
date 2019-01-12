@@ -6,7 +6,9 @@
 // \file
 
 #include <vnl/vnl_numeric_traits.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 sdet_mrf_site_bp::sdet_mrf_site_bp(unsigned n_labels, float lambda, float truncation_cost)
   : lambda_(lambda), truncation_cost_(truncation_cost), prior_(0),
@@ -51,8 +53,8 @@ void sdet_mrf_site_bp::set_cur_message(unsigned nq, unsigned fp, float msg)
 std::vector<float> sdet_mrf_site_bp::prior_message(unsigned nq)
 {
   std::vector<float> temp;
-  for (unsigned i = 0; i< msg_[prior_][nq].size(); i++)
-  temp.push_back(msg_[prior_][nq][i]);
+  for (short i : msg_[prior_][nq])
+  temp.push_back(i);
   return temp;
 }
 

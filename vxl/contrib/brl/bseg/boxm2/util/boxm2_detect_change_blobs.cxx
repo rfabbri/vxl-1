@@ -6,7 +6,10 @@
 #include <vil/algo/vil_binary_dilate.h>
 #include <vil/algo/vil_binary_erode.h>
 #include <vil/algo/vil_threshold.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 float boxm2_change_blob::percent_overlap(boxm2_change_blob& blob)
@@ -14,9 +17,9 @@ float boxm2_change_blob::percent_overlap(boxm2_change_blob& blob)
   //find number of matching pairs, divided by this area's size
   std::vector<PairType> other = blob.get_pixels();
   float numOverlap = 0.0f;
-  for (unsigned int i=0; i<pixels_.size(); ++i) {
-    for (unsigned int j=0; j<other.size(); ++j) {
-      if (pixels_[i] == other[j]) {
+  for (auto & pixel : pixels_) {
+    for (auto j : other) {
+      if (pixel == j) {
         ++numOverlap;
         break;
       }

@@ -11,7 +11,9 @@
 
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_least_squares_function.h>
 #include <vgl/vgl_point_3d.h>
@@ -27,16 +29,16 @@ class sdet_adjust_lsqr : public vnl_least_squares_function
 {
  public:
   //: Constructor
-  sdet_adjust_lsqr( std::vector<vgl_point_3d<double> > const& img_pts,
+  sdet_adjust_lsqr( std::vector<vgl_point_3d<double> >  img_pts,
                     unsigned int num_unknowns, unsigned int num_residuals,
                     int n_peaks);
 
   // Destructor
-  virtual ~sdet_adjust_lsqr() {}
+  ~sdet_adjust_lsqr() override = default;
 
   //: The main function.
   //  Given the parameter vector x, compute the vector of residuals fx.
-  virtual void f(vnl_vector<double> const& x, vnl_vector<double>& fx);
+  void f(vnl_vector<double> const& x, vnl_vector<double>& fx) override;
 
 #if 0
   //: Called after each LM iteration to print debugging etc.
@@ -54,9 +56,9 @@ class sdet_adjust_lsqr : public vnl_least_squares_function
 class sdet_gauss_fit
 {
  public:
-  ~sdet_gauss_fit(){}
+  ~sdet_gauss_fit()= default;
 
-  static vnl_vector<double> adjust(std::vector<vgl_point_3d<double> > img_pts,
+  static vnl_vector<double> adjust(const std::vector<vgl_point_3d<double> >& img_pts,
                                    std::vector<vsol_point_2d_sptr> ps_list,
                                    int n_peaks,
                                    std::ofstream& outfile,

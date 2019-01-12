@@ -1,9 +1,6 @@
 // This is core/vgui/vgui_blackbox_tableau.h
 #ifndef vgui_blackbox_tableau_h_
 #define vgui_blackbox_tableau_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief  Tableau for event record and playback.
@@ -24,7 +21,9 @@
 #include "vgui_blackbox_tableau_sptr.h"
 #include <vgui/vgui_wrapper_tableau.h>
 #include <vgui/vgui_event.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Tableau for event record and playback.
 //

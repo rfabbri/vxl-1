@@ -17,14 +17,16 @@
 //  classifier processes
 //
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_vector.h>
 #include <vil/vil_image_view.h>
 #include <vsl/vsl_binary_io.h>
 class brad_grad_int_feature_vector
 {
  public:
-  brad_grad_int_feature_vector(){}
+  brad_grad_int_feature_vector()= default;
 
   brad_grad_int_feature_vector(float min_int, float max_int, float min_grad,
                                float max_grad, unsigned nbins)
@@ -32,7 +34,7 @@ class brad_grad_int_feature_vector
     min_grad_(min_grad), max_grad_(max_grad),
     nbins_(nbins) {}
 
-  ~brad_grad_int_feature_vector() {}
+  ~brad_grad_int_feature_vector() = default;
 
   //: vector of histogram probabilities computed from the input view, plus entropy
   vnl_vector<double> operator() (vil_image_view<float> const& view) const;

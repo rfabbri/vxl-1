@@ -8,6 +8,8 @@
 #include <vul/vul_file_iterator.h>
 #include <vpl/vpl.h>
 
+#include <utility>
+
 void init_tree(boct_tree<short,float> *tree, unsigned i)
 {
   tree-> split(); //now we have 8 cells
@@ -27,9 +29,9 @@ boxm_scene<boct_tree<short, float> >* create_scene(unsigned world_dimx,unsigned 
 
     vgl_vector_3d<unsigned> world_dim(world_dimx,world_dimy,world_dimz); //number of blocks in a scene
 
-  boxm_scene<boct_tree<short, float> > *scene = new boxm_scene<boct_tree<short, float> >(lvcs, origin, block_dim, world_dim);
+  auto *scene = new boxm_scene<boct_tree<short, float> >(lvcs, origin, block_dim, world_dim);
   std::string scene_path("./");
-  scene->set_paths(scene_path,  scene_name);
+  scene->set_paths(scene_path,  std::move(scene_name));
 
   unsigned cell_index = 7;
   boxm_block_iterator<boct_tree<short, float> > iter=scene->iterator();
@@ -44,7 +46,7 @@ boxm_scene<boct_tree<short, float> >* create_scene(unsigned world_dimx,unsigned 
     if (uniform)
       init_val = 0.8f;
 
-    boct_tree<short,float> *tree = new boct_tree<short,float>(init_val, 3, 1);
+    auto *tree = new boct_tree<short,float>(init_val, 3, 1);
     //tree->print();
     init_tree(tree, cell_index);
     //tree->print();

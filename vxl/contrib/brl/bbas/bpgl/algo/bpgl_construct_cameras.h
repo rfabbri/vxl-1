@@ -20,7 +20,9 @@
 #include <iostream>
 #include <vector>
 #include <vgl/vgl_point_2d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_point_3d.h>
 #include <vnl/vnl_double_3x3.h>
 #include <vpgl/vpgl_calibration_matrix.h>
@@ -35,9 +37,9 @@ class bpgl_construct_cameras
 
     //: constructor initializing the set of points
     bpgl_construct_cameras(
-      std::vector<vgl_point_2d<double> > p0,
+      const std::vector<vgl_point_2d<double> >& p0,
       std::vector<vgl_point_2d<double> > p1,
-      const vpgl_calibration_matrix<double>* K = VXL_NULLPTR );
+      const vpgl_calibration_matrix<double>* K = nullptr );
 
     ~bpgl_construct_cameras();
 

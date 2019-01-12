@@ -7,7 +7,9 @@
 // \author  Ian Scott
 
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_triple.h>
 class vsl_b_ostream;
 class vsl_b_istream;

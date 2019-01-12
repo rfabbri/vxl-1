@@ -21,7 +21,9 @@
 #include <vcsl/vcsl_spatial_transformation_sptr.h>
 
 #include <vbl/vbl_ref_count.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_quaternion.h>
 
@@ -45,7 +47,7 @@ class vcsl_spatial_transformation : public vbl_ref_count
 
  protected:
   // Default constructor. Do nothing
-  vcsl_spatial_transformation() {}
+  vcsl_spatial_transformation() = default;
 
  public:
   // Copy constructor
@@ -53,7 +55,7 @@ class vcsl_spatial_transformation : public vbl_ref_count
     : vbl_ref_count(), beat_(x.beat_), interpolator_(x.interpolator_) {}
 
   // Destructor. Do nothing
-  virtual ~vcsl_spatial_transformation() {}
+  ~vcsl_spatial_transformation() override = default;
 
   //***************************************************************************
   // Status report

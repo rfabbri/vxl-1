@@ -5,7 +5,9 @@
 #include <iosfwd>
 #include <iostream>
 #include <cstddef>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: simple wrapper for a 1D buffer (re interpreted as 2D)
 template <class T>
@@ -114,7 +116,7 @@ class boxm2_array_2d
   size_type num_cols_;
 
   void construct() {
-    rows_ = VXL_NULLPTR;
+    rows_ = nullptr;
     num_rows_ = 0;
     num_cols_ = 0;
   }
@@ -129,7 +131,7 @@ class boxm2_array_2d
         rows_[i] = buffer + i * n;
     }
     else {
-      rows_ = VXL_NULLPTR;
+      rows_ = nullptr;
     }
   }
 
@@ -141,7 +143,7 @@ class boxm2_array_2d
   }
 };
 
-VCL_TEMPLATE_EXPORT template <class T>
+template <class T>
 std::ostream& operator<<(std::ostream &, boxm2_array_2d<T> const &);
 
 #define BOXM2_ARRAY_2D_INSTANTIATE \

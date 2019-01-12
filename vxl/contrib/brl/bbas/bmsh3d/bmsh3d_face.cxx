@@ -18,8 +18,10 @@
 //
 //-------------------------------------------------------------------------
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_distance.h>
 
@@ -33,14 +35,14 @@
 void bmsh3d_face::get_incident_HEs (std::vector<bmsh3d_halfedge*>& incident_HEs) const
 {
   bmsh3d_halfedge* HE = halfedge_;
-  if (HE == VXL_NULLPTR)
+  if (HE == nullptr)
     return;
   do {
-    assert (HE != VXL_NULLPTR);
+    assert (HE != nullptr);
     incident_HEs.push_back (HE);
     HE = HE->next();
   }
-  while (HE != halfedge_ && HE != VXL_NULLPTR);
+  while (HE != halfedge_ && HE != nullptr);
 }
 
 void bmsh3d_face::get_incident_Es (std::vector<bmsh3d_edge*>& incident_Es) const
@@ -61,7 +63,7 @@ unsigned int bmsh3d_face::n_incident_Es () const
     count++;
     HE = HE->next();
   }
-  while (HE != halfedge_ && HE != VXL_NULLPTR);
+  while (HE != halfedge_ && HE != nullptr);
   return count;
 }
 
@@ -69,7 +71,7 @@ bool bmsh3d_face::is_E_incident (const bmsh3d_edge* inputE) const
 {
   bmsh3d_halfedge* HE = halfedge_;
   // If the next is NULL, it is a loop curve.
-  if (HE->next() == VXL_NULLPTR) {
+  if (HE->next() == nullptr) {
     if (HE->edge() == inputE)
       return true;
     else
@@ -89,19 +91,19 @@ bool bmsh3d_face::is_E_incident (const bmsh3d_edge* inputE) const
 bmsh3d_halfedge* bmsh3d_face::find_bnd_HE () const
 {
   bmsh3d_halfedge* HE = halfedge_;
-  if (HE->next() == VXL_NULLPTR) {
-    if (HE->pair() == VXL_NULLPTR)
+  if (HE->next() == nullptr) {
+    if (HE->pair() == nullptr)
       return HE;
     else
-      return VXL_NULLPTR;
+      return nullptr;
   }
   do { // Traverse through the circular list of halfedges.
-    if (HE->pair() == VXL_NULLPTR)
+    if (HE->pair() == nullptr)
       return HE;
     HE = HE->next();
   }
   while (HE != halfedge_);
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 bool bmsh3d_face::is_V_incident_via_HE (const bmsh3d_vertex* inputV) const
@@ -109,7 +111,7 @@ bool bmsh3d_face::is_V_incident_via_HE (const bmsh3d_vertex* inputV) const
   bmsh3d_halfedge* HE = halfedge_;
   // if the next is NULL, it is a loop curve.
   // this will not happen for the fullshock mesh.
-  if (HE->next() == VXL_NULLPTR) {
+  if (HE->next() == nullptr) {
     if (HE->edge()->sV() == inputV || HE->edge()->eV() == inputV)
       return true;
     else
@@ -129,8 +131,8 @@ bmsh3d_vertex* bmsh3d_face::get_next_V_via_HE (const bmsh3d_vertex* inputV) cons
 {
   bmsh3d_halfedge* HE = halfedge_;
   // if the next is NULL, it is a loop curve.
-  if (HE->next() == VXL_NULLPTR)
-    return VXL_NULLPTR;
+  if (HE->next() == nullptr)
+    return nullptr;
   do { // traverse through the circular list of halfedges,
     bmsh3d_halfedge* nextHE = HE->next();
     // find the vertex incident with both HE and nextHE
@@ -141,7 +143,7 @@ bmsh3d_vertex* bmsh3d_face::get_next_V_via_HE (const bmsh3d_vertex* inputV) cons
   }
   while (HE != halfedge_);
   assert (0);
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 //: Given a vertex V and an edge of this face incident to V, find the other edge of this face incident to V.
@@ -157,7 +159,7 @@ bmsh3d_edge* bmsh3d_face::find_other_E (const bmsh3d_vertex* inputV,
   }
   while (HE != halfedge_);
   assert (0);
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 //: Given a vertex V and a halfedge of this face incident to V, find the other halfedge of this face incident of V.
@@ -173,17 +175,17 @@ bmsh3d_halfedge* bmsh3d_face::find_other_HE (const bmsh3d_vertex* inputV,
   }
   while (HE != halfedge_);
   assert (0);
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 //: Given a vertex V and an edge of this face incident to V, find the next edge (following the circular halfedge list) of this face incident to V.
 bmsh3d_edge* bmsh3d_face::find_next_E (const bmsh3d_vertex* inputV,
                                        const bmsh3d_edge* inputE) const
 {
-  if (halfedge_ == VXL_NULLPTR)
-    return VXL_NULLPTR;
-  if (halfedge_->next() == VXL_NULLPTR)
-    return VXL_NULLPTR;
+  if (halfedge_ == nullptr)
+    return nullptr;
+  if (halfedge_->next() == nullptr)
+    return nullptr;
 
   // traverse through the circular list of halfedges
   bmsh3d_halfedge* HE = halfedge_;
@@ -203,7 +205,7 @@ bmsh3d_edge* bmsh3d_face::find_next_E (const bmsh3d_vertex* inputV,
   }
   while (HE != halfedge_);
   assert (0);
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 //: Given a vertex V and a halfedge of this face incident to V, find the next halfedge (following the circular halfedge list) of this face incident to V.
@@ -212,10 +214,10 @@ bmsh3d_edge* bmsh3d_face::find_next_E (const bmsh3d_vertex* inputV,
 bmsh3d_halfedge* bmsh3d_face::find_next_HE(const bmsh3d_vertex* inputV,
                                            const bmsh3d_halfedge* inputHE) const
 {
-  if (halfedge_ == VXL_NULLPTR)
-    return VXL_NULLPTR;
-  if (halfedge_->next() == VXL_NULLPTR)
-    return VXL_NULLPTR;
+  if (halfedge_ == nullptr)
+    return nullptr;
+  if (halfedge_->next() == nullptr)
+    return nullptr;
 
   // traverse through the circular list of halfedges
   bmsh3d_halfedge* HE = halfedge_;
@@ -235,23 +237,23 @@ bmsh3d_halfedge* bmsh3d_face::find_next_HE(const bmsh3d_vertex* inputV,
   }
   while (HE != halfedge_);
   assert (0);
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 //: get the two edges incident at this vertex and compute their angle
 double bmsh3d_face::angle_at_V (const bmsh3d_vertex* inputV) const
 {
-  bmsh3d_edge* E1 = VXL_NULLPTR;
-  bmsh3d_edge* E2 = VXL_NULLPTR;
+  bmsh3d_edge* E1 = nullptr;
+  bmsh3d_edge* E2 = nullptr;
 
   // Get the two edges of the face incident at the inputV
   bmsh3d_halfedge* HE = halfedge_;
   do {
     bmsh3d_edge* E = HE->edge();
     if (E->is_V_incident (inputV)) {
-      if (E1 == VXL_NULLPTR)
+      if (E1 == nullptr)
         E1 = E;
-      else if (E2 == VXL_NULLPTR) {
+      else if (E2 == nullptr) {
         E2 = E;
       }
       else
@@ -290,8 +292,8 @@ bool bmsh3d_face::all_Vs_incident (std::vector<bmsh3d_vertex*>& vertices) const
 {
   // Put all input vertices into the VSet.
   std::set<bmsh3d_vertex*> VSet;
-  for (unsigned int i=0; i<vertices.size(); i++)
-    VSet.insert (vertices[i]);
+  for (auto vertice : vertices)
+    VSet.insert (vertice);
   assert (VSet.size() == vertices.size());
 
   // Go through the halfedge loop and remove incident vertices from VSet.
@@ -334,8 +336,8 @@ void bmsh3d_face::_get_ordered_Vs_MHE(std::vector<bmsh3d_vertex*>& vertices) con
 
 void bmsh3d_face::_get_ordered_Vs_IFS(std::vector<bmsh3d_vertex*>& vertices) const
 {
-  for (unsigned int i=0; i<vertices_.size(); i++)
-    vertices.push_back (vertices_[i]);
+  for (auto vertice : vertices_)
+    vertices.push_back (vertice);
 }
 
 void bmsh3d_face::get_ordered_V_ids (std::vector<int>& vids) const
@@ -365,8 +367,8 @@ void bmsh3d_face::_get_ordered_V_ids_MHE(std::vector<int>& vids) const
 
 void bmsh3d_face::_get_ordered_V_ids_IFS(std::vector<int>& vids) const
 {
-  for (unsigned int i=0; i<vertices_.size(); i++)
-    vids.push_back (vertices_[i]->id());
+  for (auto vertice : vertices_)
+    vids.push_back (vertice->id());
 }
 
 //###############################################################
@@ -384,7 +386,7 @@ void bmsh3d_face::_ifs_track_ordered_vertices()
   bmsh3d_halfedge* HE = halfedge_;
   // if the next is NULL, it is a loop curve.
   //  this will not happen for the fullshock mesh.
-  if (HE->next() == VXL_NULLPTR) {
+  if (HE->next() == nullptr) {
     vertices_.push_back (HE->edge()->eV());
     return;
   }
@@ -405,16 +407,14 @@ bool bmsh3d_face::_is_ifs_valid(bmsh3d_mesh* M)
 {
   // Check if there is repeated vertices.
   std::set<bmsh3d_vertex*> Vset;
-  for (unsigned int i=0; i<vertices_.size(); i++) {
-    bmsh3d_vertex* V = vertices_[i];
+  for (auto V : vertices_) {
     Vset.insert (V);
   }
   if (Vset.size() != vertices_.size())
     return false;
 
   // Check if each V is inside M.
-  for (unsigned int i=0; i<vertices_.size(); i++) {
-    const bmsh3d_vertex* V = vertices_[i];
+  for (auto V : vertices_) {
     if (! M->contains_V (V->id()))
       return false;
   }
@@ -423,8 +423,7 @@ bool bmsh3d_face::_is_ifs_valid(bmsh3d_mesh* M)
 
 bool bmsh3d_face::_ifs_inside_box(const vgl_box_3d<double>& box) const
 {
-  for (unsigned int i=0; i<vertices_.size(); i++) {
-    const bmsh3d_vertex* V = vertices_[i];
+  for (auto V : vertices_) {
     if (!box.contains (V->pt()))
       return false;
   }
@@ -433,8 +432,7 @@ bool bmsh3d_face::_ifs_inside_box(const vgl_box_3d<double>& box) const
 
 bool bmsh3d_face::_ifs_outside_box(const vgl_box_3d<double>& box) const
 {
-  for (unsigned int i=0; i<vertices_.size(); i++) {
-    const bmsh3d_vertex* V = vertices_[i];
+  for (auto V : vertices_) {
     if (box.contains (V->pt()))
       return false;
   }
@@ -501,11 +499,10 @@ vgl_vector_3d<double> bmsh3d_face::compute_normal()
   vgl_point_3d<double> centroid = this->compute_center_pt();
   vgl_vector_3d<double> normal(0.0, 0.0, 0.0);
 
-  for (unsigned i=0; i<inc_edges.size(); i++) {
-    bmsh3d_edge* E = inc_edges[i];
+  for (auto E : inc_edges) {
     bmsh3d_halfedge* HE = E->get_HE_of_F (this);
-    bmsh3d_vertex* sV = (bmsh3d_vertex*)HE->s_vertex();
-    bmsh3d_vertex* eV = (bmsh3d_vertex*)HE->e_vertex();
+    auto* sV = (bmsh3d_vertex*)HE->s_vertex();
+    auto* eV = (bmsh3d_vertex*)HE->e_vertex();
     vgl_point_3d<double> p0 = sV->pt();
     vgl_point_3d<double> p1 = eV->pt();
     vgl_vector_3d<double> v0 = p0 - centroid;
@@ -524,11 +521,11 @@ vgl_vector_3d<double> bmsh3d_face::compute_normal()
 //  Also be careful in the empty and starting cases.
 void bmsh3d_face::_connect_HE_to_end(bmsh3d_halfedge* inputHE)
 {
-  if (halfedge_ == VXL_NULLPTR) { // 1)
+  if (halfedge_ == nullptr) { // 1)
     halfedge_ = inputHE;
     return;
   }
-  else if (halfedge_->next() == VXL_NULLPTR) { // 2) Only one halfedge there
+  else if (halfedge_->next() == nullptr) { // 2) Only one halfedge there
     halfedge_->set_next (inputHE);
     inputHE->set_next (halfedge_);
     return;
@@ -548,11 +545,11 @@ void bmsh3d_face::_connect_HE_to_end(bmsh3d_halfedge* inputHE)
 //  return true if success.
 bool bmsh3d_face::_remove_HE(bmsh3d_halfedge* inputHE)
 {
-  if (halfedge_ == VXL_NULLPTR) // 1)
+  if (halfedge_ == nullptr) // 1)
     return false;
-  else if (halfedge_->next() == VXL_NULLPTR) { // 2)
+  else if (halfedge_->next() == nullptr) { // 2)
     if (halfedge_ == inputHE) {
-      halfedge_ = VXL_NULLPTR;
+      halfedge_ = nullptr;
       return true;
     }
     else
@@ -579,7 +576,7 @@ bool bmsh3d_face::_remove_HE(bmsh3d_halfedge* inputHE)
 void bmsh3d_face::connect_E_to_end (bmsh3d_edge* E)
 {
   // The halfedge will be deleted when the sheet disconnect from the sheet.
-  bmsh3d_halfedge* HE = new bmsh3d_halfedge (E, this);
+  auto* HE = new bmsh3d_halfedge (E, this);
   // Handle the both-way connectivity of halfedge-face.
   _connect_HE_to_end(HE);
   // Handle the both-way connectivity of halfedge-edge.
@@ -600,7 +597,7 @@ void bmsh3d_face::disconnect_E (bmsh3d_halfedge* HE)
 //: Sort the incident halfedges to form a circular list
 bool bmsh3d_face::_sort_HEs_circular()
 {
-  if (halfedge_ == VXL_NULLPTR)
+  if (halfedge_ == nullptr)
     return false;
 
   // put all halfedges into a vector
@@ -639,9 +636,9 @@ void bmsh3d_face::_discon_all_incident_Es ()
 //: reverse the orientation of chain of halfedges of this face.
 void bmsh3d_face::_reverse_HE_chain ()
 {
-  if (halfedge_ == VXL_NULLPTR)
+  if (halfedge_ == nullptr)
     return;
-  if (halfedge_->next() == VXL_NULLPTR)
+  if (halfedge_->next() == nullptr)
     return;
 
   std::vector<bmsh3d_halfedge*> HE_chain;
@@ -665,9 +662,9 @@ void bmsh3d_face::_reverse_HE_chain ()
 void bmsh3d_face::set_orientation(bmsh3d_halfedge* new_start_he,
                                   bmsh3d_vertex*   new_next_v)
 {
-  if (halfedge_ == VXL_NULLPTR)
+  if (halfedge_ == nullptr)
     return;
-  if (halfedge_->next() == VXL_NULLPTR)
+  if (halfedge_->next() == nullptr)
     return;
 
   // set the new_start_he (should check)
@@ -704,10 +701,10 @@ void bmsh3d_face::getInfo (std::ostringstream& ostrm)
   int n_sides = n_incident_Es ();
   std::sprintf (s, " %d incident edges in order: ", n_sides); ostrm<<s;
 
-  if (halfedge_ == VXL_NULLPTR) {
+  if (halfedge_ == nullptr) {
     std::sprintf (s, "NONE "); ostrm<<s;
   }
-  else if (halfedge_->next() == VXL_NULLPTR) {
+  else if (halfedge_->next() == nullptr) {
     std::sprintf (s, "%d ", (halfedge_)->edge()->id()); ostrm<<s;
   }
   else {
@@ -721,10 +718,10 @@ void bmsh3d_face::getInfo (std::ostringstream& ostrm)
 
   // the incident vertices in order
   std::sprintf (s, "\n %d incident vertices in order: ", n_sides); ostrm<<s;
-  if (halfedge_ == VXL_NULLPTR) {
+  if (halfedge_ == nullptr) {
     std::sprintf (s, "NONE "); ostrm<<s;
   }
-  else if (halfedge_->next() == VXL_NULLPTR) {
+  else if (halfedge_->next() == nullptr) {
     bmsh3d_halfedge* HE = halfedge_;
     assert (HE->edge()->sV() == HE->edge()->eV());
     std::sprintf (s, "%d ", HE->edge()->sV()->id()); ostrm<<s;
@@ -887,7 +884,7 @@ bmsh3d_edge* bmsh3d_face::m2t_edge_against_vertex (bmsh3d_vertex* inputV)
   }
   while (HE != halfedge_);
 
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 bmsh3d_halfedge* bmsh3d_face::m2t_halfedge_against_vertex (bmsh3d_vertex* inputV)
@@ -905,7 +902,7 @@ bmsh3d_halfedge* bmsh3d_face::m2t_halfedge_against_vertex (bmsh3d_vertex* inputV
   }
   while (HE != halfedge_);
 
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 //: for 2-manifold mesh, given input_face, find the neighboring face sharing the inputV.
@@ -930,14 +927,14 @@ bmsh3d_face* bmsh3d_face::m2t_nbr_face_against_vertex (bmsh3d_vertex* inputV)
         return HE->face();
       }
       else {
-        return VXL_NULLPTR;
+        return nullptr;
       }
     }
     HE = HE->next();
   }
   while (HE != halfedge_);
 
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 //: (redundant) for 2-manifold mesh, given input_face, find the neighboring face sharing incident v1 and v2
@@ -960,14 +957,14 @@ bmsh3d_face* bmsh3d_face::m2t_nbr_face_sharing_edge (bmsh3d_vertex* v1, bmsh3d_v
         return HE->face();
       }
       else {
-        return VXL_NULLPTR;
+        return nullptr;
       }
     }
     HE = HE->next();
   }
   while (HE != halfedge_);
 
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 //: for triangular mesh only, given v1, v2, find v3
@@ -989,7 +986,7 @@ bmsh3d_vertex* bmsh3d_face::t_3rd_vertex (const bmsh3d_vertex* V1, const bmsh3d_
   while (HE != halfedge_);
 
   assert (0);
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 bmsh3d_vertex* bmsh3d_face::t_vertex_against_edge (const bmsh3d_edge* E) const
@@ -1003,7 +1000,7 @@ bmsh3d_vertex* bmsh3d_face::t_vertex_against_edge (const bmsh3d_edge* E) const
 
 bmsh3d_halfedge* _find_prev_in_HE_chain (const bmsh3d_halfedge* inputHE)
 {
-  bmsh3d_halfedge* HE = (bmsh3d_halfedge*) inputHE; // casting away const !!!
+  auto* HE = (bmsh3d_halfedge*) inputHE; // casting away const !!!
   while (HE->next() != inputHE)
     HE = HE->next();
   return HE;
@@ -1012,7 +1009,7 @@ bmsh3d_halfedge* _find_prev_in_HE_chain (const bmsh3d_halfedge* inputHE)
 //: disconnect all associated halfedges from their edges from the given headHE.
 void _delete_HE_chain (bmsh3d_halfedge* & headHE)
 {
-  if (headHE == VXL_NULLPTR)
+  if (headHE == nullptr)
     return;
 
   bmsh3d_halfedge* nextHE = headHE->next();
@@ -1031,7 +1028,7 @@ void _delete_HE_chain (bmsh3d_halfedge* & headHE)
   bmsh3d_edge* E = headHE->edge();
   E->_disconnect_HE (headHE);
   delete headHE;
-  headHE = VXL_NULLPTR;
+  headHE = nullptr;
 }
 
 //  Return: the set of incident edges that get disconnected.
@@ -1039,7 +1036,7 @@ void _delete_HE_chain (bmsh3d_halfedge* & headHE)
 void _delete_HE_chain (bmsh3d_halfedge* & headHE,
                        std::vector<bmsh3d_edge*>& incident_edge_list)
 {
-  if (headHE == VXL_NULLPTR)
+  if (headHE == nullptr)
     return;
 
   bmsh3d_halfedge* nextHE = headHE->next();
@@ -1059,7 +1056,7 @@ void _delete_HE_chain (bmsh3d_halfedge* & headHE,
   bmsh3d_edge* E = headHE->edge();
   E->_disconnect_HE (headHE);
   delete headHE;
-  headHE = VXL_NULLPTR;
+  headHE = nullptr;
   incident_edge_list.push_back (E);
 }
 
@@ -1069,8 +1066,7 @@ bmsh3d_halfedge* _find_next_halfedge(bmsh3d_halfedge* input_he,
                                      std::vector<bmsh3d_halfedge*>& incident_HEs)
 {
   // Search for the next halfedge that's not the input_he
-  for (unsigned int i=0; i<incident_HEs.size(); i++) {
-    bmsh3d_halfedge* HE = incident_HEs[i];
+  for (auto HE : incident_HEs) {
     bmsh3d_edge* E = HE->edge();
     // skip if HE is the input_he
     if (HE == input_he)
@@ -1078,7 +1074,7 @@ bmsh3d_halfedge* _find_next_halfedge(bmsh3d_halfedge* input_he,
     if (E->is_V_incident (eV))
       return HE;
   }
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 //: Assume the mesh face is planar and compute a 2D planar coordinate for it.
@@ -1162,7 +1158,7 @@ vgl_point_2d<double> get_2d_proj_pt (vgl_point_3d<double> P, const vgl_point_3d<
 {
   double x = dot_product (P - A, AX);
   double y = dot_product (P - A, AY);
-  return vgl_point_2d<double> (x, y);
+  return {x, y};
 }
 
 //: determine the center point of the patch
@@ -1171,17 +1167,17 @@ vgl_point_3d<double> compute_cen (const std::vector<bmsh3d_vertex*>& vertices)
   double x=0.0, y=0.0, z=0.0;
   assert (vertices.size() != 0);
 
-  for (unsigned int i=0; i<vertices.size(); i++) {
-    x += vertices[i]->pt().x();
-    y += vertices[i]->pt().y();
-    z += vertices[i]->pt().z();
+  for (auto vertice : vertices) {
+    x += vertice->pt().x();
+    y += vertice->pt().y();
+    z += vertice->pt().z();
   }
 
   x /= vertices.size();
   y /= vertices.size();
   z /= vertices.size();
 
-  return vgl_point_3d<double>(x,y,z);
+  return {x,y,z};
 }
 
 //: compute the normal of the face
@@ -1228,8 +1224,8 @@ bool is_tri_non_acute (const std::vector<bmsh3d_vertex*>& vertices)
 //
 bool is_F_extraneous (bmsh3d_face* F)
 {
-  assert (F->halfedge() != VXL_NULLPTR);
-  assert (F->halfedge()->next() != VXL_NULLPTR);
+  assert (F->halfedge() != nullptr);
+  assert (F->halfedge()->next() != nullptr);
   bmsh3d_halfedge* HE = F->halfedge();
   do {
     bmsh3d_edge* E = HE->edge();
@@ -1245,10 +1241,10 @@ bool is_F_extraneous (bmsh3d_face* F)
 bmsh3d_face* get_F_sharing_Es (bmsh3d_edge* E1, bmsh3d_edge* E2)
 {
   // Loop through all incident faces of E1 and find the face incident to E2.
-  if (E1->halfedge() == VXL_NULLPTR) {
-    return VXL_NULLPTR;
+  if (E1->halfedge() == nullptr) {
+    return nullptr;
   }
-  else if (E1->halfedge()->pair() == VXL_NULLPTR) {
+  else if (E1->halfedge()->pair() == nullptr) {
     bmsh3d_face* F = E1->halfedge()->face();
     if (F->is_E_incident (E2))
       return F;
@@ -1263,7 +1259,7 @@ bmsh3d_face* get_F_sharing_Es (bmsh3d_edge* E1, bmsh3d_edge* E2)
     }
     while (HE != E1->halfedge());
   }
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 //###############################################################

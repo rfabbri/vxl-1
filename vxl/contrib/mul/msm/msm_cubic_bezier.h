@@ -10,8 +10,10 @@
 #include <iosfwd>
 #include <string>
 #include <vector>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_fwd.h>
 #include <vgl/vgl_point_2d.h>
 
@@ -73,7 +75,7 @@ class msm_cubic_bezier
   void set_points(const std::vector<vgl_point_2d<double> >&pts, bool closed=false);
 
   // Destructor
-  ~msm_cubic_bezier() {}
+  ~msm_cubic_bezier() = default;
 
   //: Number of points defining the curve
   std::size_t size() const { return bnode_.size(); }
@@ -100,7 +102,7 @@ class msm_cubic_bezier
   vgl_vector_2d<double> normal(unsigned i, double t) const
   {
     vgl_vector_2d<double> v=tangent(i,t);
-    return vgl_vector_2d<double>(-v.y(),v.x());
+    return {-v.y(),v.x()};
   }
 
   //: Create n_pts points equally spaced between start and end nodes (inclusive)

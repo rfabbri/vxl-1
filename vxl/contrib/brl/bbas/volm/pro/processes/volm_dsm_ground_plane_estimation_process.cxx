@@ -1,4 +1,6 @@
 // This is contrib/brl/bbas/volm/pro/process/volm_dsm_ground_plane_estimation_process.cxx
+#include <iostream>
+#include <string>
 #include <bprb/bprb_func_process.h>
 //:
 // \file
@@ -9,13 +11,9 @@
 //    none yet
 // \endverbatim
 
-#include <iostream>
-#include <string>
 #include <vil/vil_math.h>
 #include <bsta/bsta_histogram.h>
 #include <mbl/mbl_thin_plate_spline_3d.h>
-//#include <vcl_string.h>
-//#include <vcl_iostream.h>
 #include <vil/vil_image_view.h>
 #include <vgl/vgl_point_3d.h>
 #include <vnl/vnl_math.h>
@@ -24,8 +22,8 @@
 
 namespace volm_dsm_ground_plane_estimation_process_globals
 {
-  const unsigned int n_inputs_ = 4;
-  const unsigned int n_outputs_ = 1;
+  constexpr unsigned int n_inputs_ = 4;
+  constexpr unsigned int n_outputs_ = 1;
 }
 
 bool volm_dsm_ground_plane_estimation_process_cons(bprb_func_process& pro)
@@ -53,16 +51,16 @@ bool volm_dsm_ground_plane_estimation_process(bprb_func_process& pro)
   vil_image_view_base_sptr img_res = pro.get_input<vil_image_view_base_sptr>(in_i++);
   int N = pro.get_input<int>(in_i++);
   int window_size = pro.get_input<int>(in_i++);
-  float invalid_pixel = pro.get_input<float>(in_i++);
+  auto invalid_pixel = pro.get_input<float>(in_i++);
 
-  vil_image_view<float>* in_img = dynamic_cast<vil_image_view<float>*>(img_res.ptr());
+  auto* in_img = dynamic_cast<vil_image_view<float>*>(img_res.ptr());
   if (!in_img) {
     std::cerr << pro.name() << ": Unsupported image pixel format -- " << img_res->pixel_format() << ", only float is supported!\n";
     return false;
   }
   int ni = static_cast<int>(in_img->ni());
   int nj = static_cast<int>(in_img->nj());
-  vil_image_view<float>* out = new vil_image_view<float>(ni, nj);
+  auto* out = new vil_image_view<float>(ni, nj);
 
   std::vector<vgl_point_3d<double> > src_pts, dst_pts;
 
@@ -78,7 +76,7 @@ bool volm_dsm_ground_plane_estimation_process(bprb_func_process& pro)
       float min = 1000000.0f;
       for (int ii = s_i; ii < e_i; ii++) {
         for (int jj = s_j; jj < e_j; jj++) {
-          if ( vcl_abs((*in_img)(ii,jj)-invalid_pixel) < 1E-3 )
+          if ( std::abs((*in_img)(ii,jj)-invalid_pixel) < 1E-3 )
             continue;
           if ( (*in_img)(ii,jj) < min )
             min = (*in_img)(ii,jj);
@@ -108,7 +106,7 @@ bool volm_dsm_ground_plane_estimation_process(bprb_func_process& pro)
       float min = 1000000.0f;
       for (int ii = s_i; ii < e_i; ii++) {
         for (int jj = s_j; jj < e_j; jj++) {
-          if ( vcl_abs((*in_img)(ii,jj)-invalid_pixel) < 1E-3 )
+          if ( std::abs((*in_img)(ii,jj)-invalid_pixel) < 1E-3 )
             continue;
           if ( (*in_img)(ii,jj) < min )
             min = (*in_img)(ii,jj);
@@ -136,7 +134,7 @@ bool volm_dsm_ground_plane_estimation_process(bprb_func_process& pro)
         for (int m = -N; m < N; m++) {
           int uu = i+k;
           int vv = j+m;
-          if ( vcl_abs((*in_img)(uu,vv)-invalid_pixel) < 1E-3 )
+          if ( std::abs((*in_img)(uu,vv)-invalid_pixel) < 1E-3 )
             continue;
           if ( (*in_img)(uu,vv) < min ) {
             min = (*in_img)(uu,vv);
@@ -165,7 +163,7 @@ bool volm_dsm_ground_plane_estimation_process(bprb_func_process& pro)
   out->fill(invalid_pixel);
   for (int i = 0; i < ni; i++) {
     for (int j = 0; j < nj; j++) {
-      if (vcl_abs((*in_img)(i,j)-invalid_pixel) < 1E-3 )
+      if (std::abs((*in_img)(i,j)-invalid_pixel) < 1E-3 )
         continue;
       vgl_point_3d<double> p(i,j,(*in_img)(i,j));
       vgl_point_3d<double> new_p = tps(p);
@@ -182,8 +180,8 @@ bool volm_dsm_ground_plane_estimation_process(bprb_func_process& pro)
 //: process to estimate a ground plane from original height maps using an edge map.  The edge map is used to control windows size
 namespace volm_dsm_ground_plane_estimation_edge_process_globals
 {
-  const unsigned int n_inputs_ = 4;
-  const unsigned int n_outputs_ = 1;
+  constexpr unsigned int n_inputs_ = 4;
+  constexpr unsigned int n_outputs_ = 1;
 
   int window_size_from_nearest_edge(vil_image_view<vxl_byte>* edge_img, int const& i, int const& j, int const& search_range);
 }
@@ -213,14 +211,14 @@ bool volm_dsm_ground_plane_estimation_edge_process(bprb_func_process& pro)
   vil_image_view_base_sptr img_res = pro.get_input<vil_image_view_base_sptr>(in_i++);
   vil_image_view_base_sptr edge_img_res = pro.get_input<vil_image_view_base_sptr>(in_i++);
   int N = pro.get_input<int>(in_i++);
-  float invalid_pixel = pro.get_input<float>(in_i++);
+  auto invalid_pixel = pro.get_input<float>(in_i++);
 
-  vil_image_view<float>* in_img = dynamic_cast<vil_image_view<float>*>(img_res.ptr());
+  auto* in_img = dynamic_cast<vil_image_view<float>*>(img_res.ptr());
   if (!in_img) {
     std::cerr << pro.name() << ": Unsupported image pixel format -- " << img_res->pixel_format() << ", only float is supported!\n";
     return false;
   }
-  vil_image_view<vxl_byte>* edge_img = dynamic_cast<vil_image_view<vxl_byte>*>(edge_img_res.ptr());
+  auto* edge_img = dynamic_cast<vil_image_view<vxl_byte>*>(edge_img_res.ptr());
   if (!edge_img) {
     std::cerr << pro.name() << ": Unsupported edge image pixel format -- " << edge_img_res->pixel_format() << ", only byte is supported!\n";
     return false;
@@ -231,7 +229,7 @@ bool volm_dsm_ground_plane_estimation_edge_process(bprb_func_process& pro)
     std::cerr << pro.name() << ": height image and edge image size do not match!\n";
     return false;
   }
-  vil_image_view<float>* out = new vil_image_view<float>(ni, nj);
+  auto* out = new vil_image_view<float>(ni, nj);
   int search_range = ni;
   if (search_range > nj)
     search_range = nj;
@@ -330,8 +328,8 @@ int volm_dsm_ground_plane_estimation_edge_process_globals::window_size_from_near
 // reference http://www.sciencedirect.com/science/article/pii/S0924271608000956
 namespace volm_dsm_ground_filter_mgf_process_globals
 {
-  const unsigned n_inputs_ = 5;
-  const unsigned n_outputs_ = 2;
+  constexpr unsigned n_inputs_ = 5;
+  constexpr unsigned n_outputs_ = 2;
 
   bool nearest_ground_elev(vil_image_view<float> const& img,
                            vil_image_view<vxl_byte> const& grd_mask,
@@ -372,15 +370,15 @@ bool volm_dsm_ground_filter_mgf_process(bprb_func_process& pro)
   // get the inputs
   unsigned in_i = 0;
   vil_image_view_base_sptr dsm_img_res = pro.get_input<vil_image_view_base_sptr>(in_i++);
-  float window_size = pro.get_input<float>(in_i++);
-  float elev_thres = pro.get_input<float>(in_i++);
-  float slop_thres_deg = pro.get_input<float>(in_i++);
-  float pixel_res  = pro.get_input<float>(in_i++);
+  auto window_size = pro.get_input<float>(in_i++);
+  auto elev_thres = pro.get_input<float>(in_i++);
+  auto slop_thres_deg = pro.get_input<float>(in_i++);
+  auto pixel_res = pro.get_input<float>(in_i++);
 
   // compute slope threshold
   float slop_thres = std::tan(slop_thres_deg / vnl_math::deg_per_rad) * pixel_res;
   // load the image
-  vil_image_view<float>* in_img = dynamic_cast<vil_image_view<float>*>(dsm_img_res.ptr());
+  auto* in_img = dynamic_cast<vil_image_view<float>*>(dsm_img_res.ptr());
   if (!in_img) {
     std::cerr << pro.name() << ": Unsupported image pixel format -- " << dsm_img_res->pixel_format() << ", only float is supported!\n";
     return false;
@@ -423,12 +421,12 @@ bool volm_dsm_ground_filter_mgf_process(bprb_func_process& pro)
     bt_img(i, 0) = (*in_img)(i,0) - (*in_img)(i,1);
   }
 
-  vil_image_view<vxl_byte>* grd_mask = new vil_image_view<vxl_byte>(ni, nj);
+  auto* grd_mask = new vil_image_view<vxl_byte>(ni, nj);
   grd_mask->fill(0);
 
   // generate initial ground mask
-  unsigned nw_i = (unsigned)std::floor(ni/window_size + 0.5f);
-  unsigned nw_j = (unsigned)std::floor(nj/window_size + 0.5f);
+  auto nw_i = (unsigned)std::floor(ni/window_size + 0.5f);
+  auto nw_j = (unsigned)std::floor(nj/window_size + 0.5f);
 
   // find minimum as ground pixel for each window
   std::map<std::pair<unsigned, unsigned>, float> local_grd_elev;
@@ -691,7 +689,7 @@ bool volm_dsm_ground_filter_mgf_process(bprb_func_process& pro)
   tps.build(src_pts, dst_pts);
 
   // apply to other points
-  vil_image_view<float>* grd_img = new vil_image_view<float>(ni, nj);
+  auto* grd_img = new vil_image_view<float>(ni, nj);
   grd_img->fill(-1.0f);
   for (unsigned i = 0; i < ni; i++) {
     for (unsigned j = 0; j < nj; j++) {
@@ -797,8 +795,7 @@ bool volm_dsm_ground_filter_mgf_process_globals::ground_linear_regression(vil_im
       std::vector<unsigned> after_grd_pts;
       std::vector<float> after_gre_elev;
       // remove points that have more than three times of the standard deviation of the regression
-      for (unsigned k = 0; k < grd_pts.size(); k++) {
-        unsigned i = grd_pts[k];
+      for (unsigned int i : grd_pts) {
         float elev;
         if (is_horizontal) elev = img(i,j);
         else               elev = img(j,i);

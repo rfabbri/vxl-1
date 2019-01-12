@@ -6,7 +6,9 @@
 // \author fsm
 // \brief  See vgui_wrapper_tableau.h for a description of this file.
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgui/vgui_event.h>
 
 //--------------------------------------------------------------------------------
@@ -59,7 +61,7 @@ bool vgui_wrapper_tableau::remove_child(vgui_tableau_sptr const& c)
     return false;
   }
   else {
-    child.assign(VXL_NULLPTR);
+    child.assign(nullptr);
     return true;
   }
 }

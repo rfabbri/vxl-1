@@ -4,7 +4,9 @@
 // \file
 #include <iostream>
 #include <vsl/vsl_binary_io.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpgl/vpgl_perspective_camera.h>
 #include "vsph_sph_box_2d.h"
 #include "vsph_sph_point_2d.h"
@@ -46,7 +48,7 @@ class vsph_utils
     ray_spherical_coordinates(vpgl_perspective_camera<double> const& cam,
                               double u, double v,
                               double& elevation, double& azimuth,
-                              std::string units = "radians");
+                              const std::string& units = "radians");
 
   //: project an image polygon onto the surface of the unit sphere with origin at the camera center.
   // The edges of the spherical polygon are circular arcs but only the vertices
@@ -59,12 +61,12 @@ class vsph_utils
   static vgl_polygon<double>
     project_poly_onto_unit_sphere(vpgl_perspective_camera<double> const& cam,
                                   vgl_polygon<double> const& image_poly,
-                                  std::string units = "radians");
+                                  const std::string& units = "radians");
 
   // find the spherical bounding box for an image with camera
-  static vsph_sph_box_2d box_from_camera(vpgl_perspective_camera<double> const& cam, std::string units);
+  static vsph_sph_box_2d box_from_camera(vpgl_perspective_camera<double> const& cam, const std::string& units);
     //read a set of unit sphere ray data (assumed in unsigned char format)
-  static bool read_ray_index_data(std::string path, std::vector<unsigned char>& data);
+  static bool read_ray_index_data(const std::string& path, std::vector<unsigned char>& data);
   //total azimuth arc length from min_ph through c_ph to max_ph.
   static double arc_len(double min_ph, double max_ph, double c_ph);
 
@@ -74,7 +76,7 @@ class vsph_utils
   // a streamlined function for porting to parallel computation
   static double sph_inter_area(vsph_sph_box_2d const& b1, vsph_sph_box_2d const& b2);
  private: // only static functions in this class: disallow instantiation
-  vsph_utils();
+  vsph_utils() = delete;
 };
 
 #endif

@@ -1,9 +1,6 @@
 // This is core/vil/file_formats/vil_geotiff_header.h
 #ifndef vil_geotiff_header_h_
 #define vil_geotiff_header_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author    Gamze Tunali
@@ -21,7 +18,9 @@
 // \endverbatim
 
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <tiffio.h>
 #include <geotiffio.h>
 
@@ -61,7 +60,7 @@ class vil_geotiff_header
   bool get_key_value(geokey_t key, void** value,
                      int& size, int& length, tagtype_t& type);
 
-  void print_gtif(){ if (gtif_) GTIFPrint(gtif_, VXL_NULLPTR, VXL_NULLPTR); }
+  void print_gtif(){ if (gtif_) GTIFPrint(gtif_, nullptr, nullptr); }
 
  private:
 

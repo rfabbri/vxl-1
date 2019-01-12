@@ -8,9 +8,12 @@
 #include <iostream>
 #include <algorithm>
 #include <stdexcept>
+#include <utility>
 #include "boxm2_ocl_vis_score_renderer.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/ocl/boxm2_opencl_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -28,12 +31,12 @@
 #include <vul/vul_timer.h>
 
 boxm2_ocl_vis_score_renderer
-::boxm2_ocl_vis_score_renderer(boxm2_scene_sptr scene,
-                               boxm2_opencl_cache_sptr ocl_cache,
+::boxm2_ocl_vis_score_renderer(const boxm2_scene_sptr& scene,
+                               const boxm2_opencl_cache_sptr& ocl_cache,
                                std::string ident) :
   scene_(scene),
   opencl_cache_(ocl_cache),
-  ident_(ident),
+  ident_(std::move(ident)),
   buffers_allocated_(false),
   render_success_(false)
 {
@@ -91,15 +94,15 @@ boxm2_ocl_vis_score_renderer
   delete[] max_omega_buff_;
 
   opencl_cache_->unref_mem(exp_vis_score_image_.ptr());
-  exp_vis_score_image_ = bocl_mem_sptr(VXL_NULLPTR);
+  exp_vis_score_image_ = bocl_mem_sptr(nullptr);
   opencl_cache_->unref_mem(vis_image_.ptr());
-  vis_image_ = bocl_mem_sptr(VXL_NULLPTR);
+  vis_image_ = bocl_mem_sptr(nullptr);
   opencl_cache_->unref_mem(max_omega_image_.ptr());
-  max_omega_image_ = bocl_mem_sptr(VXL_NULLPTR);
+  max_omega_image_ = bocl_mem_sptr(nullptr);
   opencl_cache_->unref_mem(img_dim_.ptr());
-  img_dim_ = bocl_mem_sptr(VXL_NULLPTR);
+  img_dim_ = bocl_mem_sptr(nullptr);
   opencl_cache_->unref_mem(tnearfar_.ptr());
-  tnearfar_ = bocl_mem_sptr(VXL_NULLPTR);
+  tnearfar_ = bocl_mem_sptr(nullptr);
 
   buffers_allocated_ = false;
   return true;
@@ -229,7 +232,7 @@ boxm2_ocl_vis_score_renderer
 
 bool
 boxm2_ocl_vis_score_renderer
-::compile_kernels(bocl_device_sptr device)
+::compile_kernels(const bocl_device_sptr& device)
 {
 
     std::vector<std::string> src_paths;

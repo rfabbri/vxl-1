@@ -16,7 +16,9 @@
 #include <vector>
 #include <brip/brip_kernel.h>
 #include <vnl/vnl_math.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Gaussian derivative kernel base class
 class brip_gaussian_kernel : public brip_kernel
@@ -37,13 +39,13 @@ class brip_gaussian_kernel : public brip_kernel
     compute_kernel();
   }
   //: destructor
-  ~brip_gaussian_kernel(){}
+  ~brip_gaussian_kernel() override= default;
 
   //: compute the kernel
   virtual void compute_kernel(bool /*separated_kernels_only*/=false){}
 
   //: recompute kernel with given subpixel shifts
-  virtual void recompute_kernel(double dx_=0.0, double dy_=0.0, double theta_=0.0)
+  void recompute_kernel(double dx_=0.0, double dy_=0.0, double theta_=0.0) override
   {
     dx = dx_;
     dy = dy_;
@@ -58,10 +60,10 @@ class brip_G_Lhalf_kernel : public brip_gaussian_kernel
 {
  public:
   brip_G_Lhalf_kernel(double sigma_, double dx_=0.0, double dy_=0.0, double theta_=0.0): brip_gaussian_kernel(sigma_, dx_, dy_, theta_){}
-  ~brip_G_Lhalf_kernel(){}
+  ~brip_G_Lhalf_kernel() override= default;
 
   //: compute the kernel
-  virtual void compute_kernel(bool /*separated_kernels_only*/=false)
+  void compute_kernel(bool /*separated_kernels_only*/=false) override
   {
     double ssq = sigma*sigma;
     //double pisig2 = vnl_math::twopi*ssq;
@@ -91,10 +93,10 @@ class brip_G_Rhalf_kernel : public brip_gaussian_kernel
 {
  public:
   brip_G_Rhalf_kernel(double sigma_, double dx_=0.0, double dy_=0.0, double theta_=0.0): brip_gaussian_kernel(sigma_, dx_, dy_, theta_){}
-  ~brip_G_Rhalf_kernel(){}
+  ~brip_G_Rhalf_kernel() override= default;
 
   //: compute the kernel
-  virtual void compute_kernel(bool /*separated_kernels_only*/=false)
+  void compute_kernel(bool /*separated_kernels_only*/=false) override
   {
     double ssq = sigma*sigma;
     //double pisig2 = vnl_math::twopi*ssq;
@@ -124,10 +126,10 @@ class brip_G_kernel : public brip_gaussian_kernel
 {
  public:
   brip_G_kernel(double sigma_, double dx_=0.0, double dy_=0.0): brip_gaussian_kernel(sigma_, dx_, dy_){}
-  ~brip_G_kernel(){}
+  ~brip_G_kernel() override= default;
 
   //: compute the kernel
-  virtual void compute_kernel(bool separated_kernels_only=false)
+  void compute_kernel(bool separated_kernels_only=false) override
   {
     double ssq = sigma*sigma;
     double sq2pisig = vnl_math::sqrt2pi*sigma;
@@ -154,10 +156,10 @@ class brip_Gx_kernel : public brip_gaussian_kernel
 {
  public:
   brip_Gx_kernel(double sigma_, double dx_=0.0, double dy_=0.0): brip_gaussian_kernel(sigma_, dx_, dy_){}
-  ~brip_Gx_kernel(){}
+  ~brip_Gx_kernel() override= default;
 
   //: compute the kernel
-  virtual void compute_kernel(bool separated_kernels_only=false)
+  void compute_kernel(bool separated_kernels_only=false) override
   {
     double ssq = sigma*sigma;
     double sq2pisig = vnl_math::sqrt2pi*sigma;
@@ -184,10 +186,10 @@ class brip_Gy_kernel : public brip_gaussian_kernel
 {
  public:
   brip_Gy_kernel(double sigma_, double dx_=0.0, double dy_=0.0): brip_gaussian_kernel(sigma_, dx_, dy_){}
-  ~brip_Gy_kernel(){}
+  ~brip_Gy_kernel() override= default;
 
   //: compute the kernel
-  virtual void compute_kernel(bool separated_kernels_only=false)
+  void compute_kernel(bool separated_kernels_only=false) override
   {
     double ssq = sigma*sigma;
     double sq2pisig = vnl_math::sqrt2pi*sigma;
@@ -214,10 +216,10 @@ class brip_Gxx_kernel : public brip_gaussian_kernel
 {
  public:
   brip_Gxx_kernel(double sigma_, double dx_=0.0, double dy_=0.0): brip_gaussian_kernel(sigma_, dx_, dy_){}
-  ~brip_Gxx_kernel(){}
+  ~brip_Gxx_kernel() override= default;
 
   //: compute the kernel
-  virtual void compute_kernel(bool separated_kernels_only=false)
+  void compute_kernel(bool separated_kernels_only=false) override
   {
     double ssq = sigma*sigma;
     double sq2pisig = vnl_math::sqrt2pi*sigma;
@@ -244,10 +246,10 @@ class brip_Gxy_kernel : public brip_gaussian_kernel
 {
  public:
   brip_Gxy_kernel(double sigma_, double dx_=0.0, double dy_=0.0): brip_gaussian_kernel(sigma_, dx_, dy_){}
-  ~brip_Gxy_kernel(){}
+  ~brip_Gxy_kernel() override= default;
 
   //: compute the kernel
-  virtual void compute_kernel(bool separated_kernels_only=false)
+  void compute_kernel(bool separated_kernels_only=false) override
   {
     double ssq = sigma*sigma;
     double sq2pisig = vnl_math::sqrt2pi*sigma;
@@ -274,10 +276,10 @@ class brip_Gyy_kernel : public brip_gaussian_kernel
 {
  public:
   brip_Gyy_kernel(double sigma_, double dx_=0.0, double dy_=0.0): brip_gaussian_kernel(sigma_, dx_, dy_){}
-  ~brip_Gyy_kernel(){}
+  ~brip_Gyy_kernel() override= default;
 
   //: compute the kernel
-  virtual void compute_kernel(bool separated_kernels_only=false)
+  void compute_kernel(bool separated_kernels_only=false) override
   {
     double ssq = sigma*sigma;
     double sq2pisig = vnl_math::sqrt2pi*sigma;
@@ -304,10 +306,10 @@ class brip_Gxxx_kernel : public brip_gaussian_kernel
 {
  public:
   brip_Gxxx_kernel(double sigma_, double dx_=0.0, double dy_=0.0): brip_gaussian_kernel(sigma_, dx_, dy_){}
-  ~brip_Gxxx_kernel(){}
+  ~brip_Gxxx_kernel() override= default;
 
   //: compute the kernel
-  virtual void compute_kernel(bool separated_kernels_only=false)
+  void compute_kernel(bool separated_kernels_only=false) override
   {
     double ssq = sigma*sigma;
     double sq2pisig = vnl_math::sqrt2pi*sigma;
@@ -334,10 +336,10 @@ class brip_Gxxy_kernel : public brip_gaussian_kernel
 {
  public:
   brip_Gxxy_kernel(double sigma_, double dx_=0.0, double dy_=0.0): brip_gaussian_kernel(sigma_, dx_, dy_){}
-  ~brip_Gxxy_kernel(){}
+  ~brip_Gxxy_kernel() override= default;
 
   //: compute the kernel
-  virtual void compute_kernel(bool separated_kernels_only=false)
+  void compute_kernel(bool separated_kernels_only=false) override
   {
     double ssq = sigma*sigma;
     double sq2pisig = vnl_math::sqrt2pi*sigma;
@@ -364,10 +366,10 @@ class brip_Gxyy_kernel : public brip_gaussian_kernel
 {
  public:
   brip_Gxyy_kernel(double sigma_, double dx_=0.0, double dy_=0.0): brip_gaussian_kernel(sigma_, dx_, dy_){}
-  ~brip_Gxyy_kernel(){}
+  ~brip_Gxyy_kernel() override= default;
 
   //: compute the kernel
-  virtual void compute_kernel(bool separated_kernels_only=false)
+  void compute_kernel(bool separated_kernels_only=false) override
   {
     double ssq = sigma*sigma;
     double sq2pisig = vnl_math::sqrt2pi*sigma;
@@ -394,10 +396,10 @@ class brip_Gyyy_kernel : public brip_gaussian_kernel
 {
  public:
   brip_Gyyy_kernel(double sigma_, double dx_=0.0, double dy_=0.0): brip_gaussian_kernel(sigma_, dx_, dy_){}
-  ~brip_Gyyy_kernel(){}
+  ~brip_Gyyy_kernel() override= default;
 
   //: compute the kernel
-  virtual void compute_kernel(bool separated_kernels_only=false)
+  void compute_kernel(bool separated_kernels_only=false) override
   {
     double ssq = sigma*sigma;
     double sq2pisig = vnl_math::sqrt2pi*sigma;

@@ -8,8 +8,10 @@
 // \brief Construct thin plate spline to map 2D to 2D
 // \author Tim Cootes
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vsl/vsl_indent.h>
 #include <vsl/vsl_vector_io.h>
 #include <vnl/algo/vnl_svd.h>
@@ -34,9 +36,7 @@ mbl_clamped_plate_spline_2d::mbl_clamped_plate_spline_2d()
 // Destructor
 //=======================================================================
 
-mbl_clamped_plate_spline_2d::~mbl_clamped_plate_spline_2d()
-{
-}
+mbl_clamped_plate_spline_2d::~mbl_clamped_plate_spline_2d() = default;
 
 //: Check that all points are inside unit circle
 bool mbl_clamped_plate_spline_2d::all_in_unit_circle(const std::vector<vgl_point_2d<double> >& pts)
@@ -240,7 +240,7 @@ vgl_point_2d<double> mbl_clamped_plate_spline_2d::operator()(double x, double y)
     y_sum += (Ui * Wy_data[i]);
   }
 
-  return vgl_point_2d<double>(x_sum,y_sum);
+  return {x_sum,y_sum};
 }
 
 //=======================================================================
@@ -261,11 +261,11 @@ short mbl_clamped_plate_spline_2d::version_no() const
 void mbl_clamped_plate_spline_2d::print_summary(std::ostream& os) const
 {
   os<<"\nfx:";
-  for (unsigned int i=0;i<Wx_.size();++i)
-    os<<" "<<Wx_[i];
+  for (double i : Wx_)
+    os<<" "<<i;
   os<<"\nfy:";
-  for (unsigned int i=0;i<Wy_.size();++i)
-    os<<" "<<Wy_[i];
+  for (double i : Wy_)
+    os<<" "<<i;
   os<<'\n';
 }
 

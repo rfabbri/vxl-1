@@ -1,9 +1,6 @@
 // This is core/vul/vul_sprintf.h
 #ifndef vul_sprintf_h_
 #define vul_sprintf_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief creates a formatted ANSI C++ string
@@ -20,7 +17,9 @@
 
 #include <string>
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: C++ conforming replacement to the ANSI C functions sprintf and printf.
 // vul_sprintf works in the same way as sprintf but is itself an ANSI C++ string
@@ -40,7 +39,7 @@ struct vul_sprintf : public std::string
   //   vul_sprintf(std::string fmt, ...);
   vul_sprintf(char const *fmt, ...);
 
-#ifndef VCL_WIN32
+#ifndef _WIN32
   // assignment
   vul_sprintf& operator=(std::string const& s)
   { std::string::operator=(s); return *this; }

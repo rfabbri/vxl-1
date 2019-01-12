@@ -1,8 +1,5 @@
 #ifndef mbl_progress_composite_h_
 #define mbl_progress_composite_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 
 
 //:
@@ -17,7 +14,9 @@
 #include <iosfwd>
 #include <vsl/vsl_binary_io.h>
 #include <mbl/mbl_progress.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //=======================================================================
 //:  A composite  of progress objects.
@@ -34,7 +33,7 @@ class mbl_progress_composite : public mbl_progress
   mbl_progress_composite();
 
   //: Destructor
-  virtual ~mbl_progress_composite();
+  ~mbl_progress_composite() override;
 
   //: Adds a progress object to the composite.
   //  These are assumed to exist for the lifetime of this object.
@@ -53,18 +52,18 @@ class mbl_progress_composite : public mbl_progress
 
   //: Called when set_estimate_iterations() is called for a given identifier.
   //  \param identifier The operation being monitored.
-  virtual void on_set_estimated_iterations(const std::string &identifier,
-                                           const int total_iterations);
+  void on_set_estimated_iterations(const std::string &identifier,
+                                           const int total_iterations) override;
 
   //: Called when set_progress() is called for a given identifier.
   //  \param identifier The operation being monitored.
   //  \param progress The new progress status.
-  virtual void on_set_progress(const std::string &identifier,
-                               const int progress);
+  void on_set_progress(const std::string &identifier,
+                               const int progress) override;
 
   //: Called when end_progress() is called for a given identifier.
   //  \param identifier The operation being monitored.
-  virtual void on_end_progress(const std::string &identifier);
+  void on_end_progress(const std::string &identifier) override;
 
  private:
 

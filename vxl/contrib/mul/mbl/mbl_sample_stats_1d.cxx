@@ -6,17 +6,19 @@
 //:
 // \file
 #include <vsl/vsl_vector_io.h>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 //=========================================================================
 mbl_sample_stats_1d::mbl_sample_stats_1d(const std::vector<double> &samples)
 {
   clear();
-  for (unsigned i=0, n=samples.size(); i<n; ++i)
+  for (double sample : samples)
   {
-    add_sample(samples[i]);
+    add_sample(sample);
   }
 }
 
@@ -25,9 +27,9 @@ mbl_sample_stats_1d::mbl_sample_stats_1d(const std::vector<double> &samples)
 mbl_sample_stats_1d::mbl_sample_stats_1d(const vnl_vector<double> &samples)
 {
   clear();
-  for (unsigned i=0, n=samples.size(); i<n; ++i)
+  for (double sample : samples)
   {
-    add_sample(samples[i]);
+    add_sample(sample);
   }
 }
 
@@ -40,9 +42,7 @@ mbl_sample_stats_1d::mbl_sample_stats_1d()
 
 
 //=========================================================================
-mbl_sample_stats_1d::~mbl_sample_stats_1d()
-{
-}
+mbl_sample_stats_1d::~mbl_sample_stats_1d() = default;
 
 
 //=========================================================================
@@ -81,8 +81,8 @@ double mbl_sample_stats_1d::mean() const
 double mbl_sample_stats_1d::mean_of_absolutes() const
 {
   double abs_sum = 0;
-  for (unsigned i=0, n=samples_.size(); i<n; ++i)
-    abs_sum+=std::fabs(samples_[i]);
+  for (double sample : samples_)
+    abs_sum+=std::fabs(sample);
   return abs_sum/samples_.size();
 }
 
@@ -100,11 +100,11 @@ double mbl_sample_stats_1d::median() const
 
       std::vector<double> tmp=samples_;
 
-      std::vector<double>::iterator index_it0 = tmp.begin() + index;
+      auto index_it0 = tmp.begin() + index;
       std::nth_element(tmp.begin(),index_it0,tmp.end(),std::less<double>());
       double v0 = *index_it0;
 
-      std::vector<double>::iterator index_it1 = tmp.begin() + index + 1;
+      auto index_it1 = tmp.begin() + index + 1;
       std::nth_element(tmp.begin(),index_it1,tmp.end(),std::less<double>());
       double v1 = *index_it1;
       ret = v0 + v1;
@@ -116,7 +116,7 @@ double mbl_sample_stats_1d::median() const
 
       std::vector<double> tmp=samples_;
 
-      std::vector<double>::iterator index_it = tmp.begin() + index;
+      auto index_it = tmp.begin() + index;
       std::nth_element(tmp.begin(),index_it,tmp.end(),std::less<double>());
 
       ret = *index_it;
@@ -145,21 +145,21 @@ double mbl_sample_stats_1d::quantile(double q) const
   // Get the integer index immediately below (and enforce the bounds)
   double f0 = std::floor(float_index);
   f0 = f0<0.0 ? 0.0 : f0>n-1.0 ? n-1.0 : f0;
-  unsigned i0 = static_cast<unsigned>(f0);
+  auto i0 = static_cast<unsigned>(f0);
 
   // Get the integer index immediately above (and enforce the bounds)
   double f1 = std::ceil(float_index);
   f1 = f1<0.0 ? 0.0 : f1>n-1.0 ? n-1.0 : f1;
-  unsigned i1 = static_cast<unsigned>(f1);
+  auto i1 = static_cast<unsigned>(f1);
 
   // Get the 2 values bracketing the specified quantile position
   std::vector<double> tmp = samples_;
 
-  std::vector<double>::iterator index_it0 = tmp.begin() + i0;
+  auto index_it0 = tmp.begin() + i0;
   std::nth_element(tmp.begin(), index_it0, tmp.end(), std::less<double>());
   double v0 = *index_it0;
 
-  std::vector<double>::iterator index_it1 = tmp.begin() + i1;
+  auto index_it1 = tmp.begin() + i1;
   std::nth_element(tmp.begin(), index_it1, tmp.end(), std::less<double>());
   double v1 = *index_it1;
 
@@ -180,7 +180,7 @@ double mbl_sample_stats_1d::nth_percentile(int n) const
   int index=int(fact*(samples_.size()-1));
   std::vector<double> tmp=samples_;
 
-  std::vector<double>::iterator index_it = tmp.begin() + index;
+  auto index_it = tmp.begin() + index;
   std::nth_element(tmp.begin(),index_it,tmp.end(),std::less<double>());
   double ret = *index_it;
   return ret;
@@ -252,9 +252,9 @@ double mbl_sample_stats_1d::skewness() const
     double s=sd();
     double m=mean();
 
-    for (unsigned i=0, n=samples_.size(); i<n; ++i)
+    for (double sample : samples_)
     {
-      double tmp=samples_[i]-m;
+      double tmp=sample-m;
       skew += (tmp*tmp*tmp) ;
     }
 
@@ -281,9 +281,9 @@ double mbl_sample_stats_1d::kurtosis() const
     double s=sd();
     double m=mean();
 
-    for (unsigned i=0, n=samples_.size(); i<n; ++i)
+    for (double sample : samples_)
     {
-      double tmp=samples_[i]-m;
+      double tmp=sample-m;
       kurt += (tmp*tmp*tmp*tmp) ;
     }
 
@@ -336,9 +336,9 @@ double mbl_sample_stats_1d::rms() const
 mbl_sample_stats_1d& mbl_sample_stats_1d::operator+=(const mbl_sample_stats_1d& s1)
 {
   // add new samples
-  for (unsigned i=0;i<s1.samples().size();++i)
+  for (double i : s1.samples())
   {
-    add_sample(s1.samples()[i]);
+    add_sample(i);
   }
 
   return *this ;
@@ -472,4 +472,3 @@ void vsl_b_read(vsl_b_istream& bfs, mbl_sample_stats_1d& b)
 {
   b.b_read(bfs);
 }
-

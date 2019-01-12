@@ -14,7 +14,9 @@
 #include <bvxm/bvxm_image_metadata.h>
 #include <bvxm/bvxm_voxel_world.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <brdb/brdb_value.h>
 #include <brip/brip_vil_float_ops.h>
@@ -33,20 +35,20 @@ bool bvxm_create_mog_image_process_cons(bprb_func_process& pro)
   //6: nj
   std::vector<std::string> input_types_;
 
-  input_types_.push_back("bvxm_voxel_world_sptr");
-  input_types_.push_back("vcl_string");
-  input_types_.push_back("unsigned");
-  input_types_.push_back("unsigned");
-  input_types_.push_back("vpgl_camera_double_sptr");
-  input_types_.push_back("unsigned");
-  input_types_.push_back("unsigned");
+  input_types_.emplace_back("bvxm_voxel_world_sptr");
+  input_types_.emplace_back("vcl_string");
+  input_types_.emplace_back("unsigned");
+  input_types_.emplace_back("unsigned");
+  input_types_.emplace_back("vpgl_camera_double_sptr");
+  input_types_.emplace_back("unsigned");
+  input_types_.emplace_back("unsigned");
 
   if (!pro.set_input_types(input_types_))
     return false;
 
   //output
   std::vector<std::string> output_types_;
-  output_types_.push_back("bvxm_voxel_slab_base_sptr");
+  output_types_.emplace_back("bvxm_voxel_slab_base_sptr");
   return pro.set_output_types(output_types_);
 }
 
@@ -56,13 +58,13 @@ bool bvxm_create_mog_image_process(bprb_func_process& pro)
   unsigned i = 0;
   bvxm_voxel_world_sptr world = pro.get_input<bvxm_voxel_world_sptr>(i++);
   std::string voxel_type = pro.get_input<std::string>(i++);
-  unsigned bin_index = pro.get_input<unsigned>(i++);;
-  unsigned scale_index = pro.get_input<unsigned>(i++);
+  auto bin_index = pro.get_input<unsigned>(i++);;
+  auto scale_index = pro.get_input<unsigned>(i++);
 
   vpgl_camera_double_sptr camera = pro.get_input<vpgl_camera_double_sptr>(i++);
 
-  unsigned ni = pro.get_input<unsigned>(i++);
-  unsigned nj = pro.get_input<unsigned>(i++);
+  auto ni = pro.get_input<unsigned>(i++);
+  auto nj = pro.get_input<unsigned>(i++);
 
   if (!camera) {
     std::cout << pro.name() <<" :--  Input 1  is not valid!\n";

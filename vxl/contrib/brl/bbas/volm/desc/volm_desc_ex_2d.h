@@ -16,9 +16,11 @@
 //
 #include <iostream>
 #include "volm_desc.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <volm_io.h>
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vsl/vsl_binary_io.h>
 #include <bpgl/depth_map/depth_map_region.h>
 #include <bpgl/depth_map/depth_map_region_sptr.h>
@@ -29,7 +31,7 @@ class volm_desc_ex_2d : public volm_desc
 {
 public:
   //: default constructor
-  volm_desc_ex_2d() {}
+  volm_desc_ex_2d() = default;
 
   //: constructor to create an empty descriptor
   volm_desc_ex_2d(std::vector<double> const& radius,
@@ -38,7 +40,7 @@ public:
                   unsigned char const& initial_mag = 0);
 
   //: destructor
-  ~volm_desc_ex_2d() {}
+  ~volm_desc_ex_2d() override = default;
 
   //: initialize the histogram with given value
   void initialize_bin(unsigned char const& mag);
@@ -76,21 +78,21 @@ public:
   void set_count(double const& dist, unsigned const& land, double const& heading, unsigned char const& count);
 
   //: similarity method -- calculate the intersection of two histogram, normalized by current histogram
-  float similarity(volm_desc_sptr other);
+  float similarity(volm_desc_sptr other) override;
 
   //: screen print
-  void print() const;
+  void print() const override;
 
   // ================  binary I/O ===================
 
   //: version
-  unsigned version() const { return 1; }
+  unsigned version() const override { return 1; }
 
   //: binary IO write
-  void b_write(vsl_b_ostream& os);
+  void b_write(vsl_b_ostream& os) override;
 
   //: binary IO read
-  void b_read(vsl_b_istream& is);
+  void b_read(vsl_b_istream& is) override;
 
 
 private:

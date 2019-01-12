@@ -1,9 +1,6 @@
 // This is core/vgui/vgui_soview2D.h
 #ifndef vgui_soview2D_h_
 #define vgui_soview2D_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author Philip C. Pritchett, Robotics Research Group, University of Oxford
@@ -26,7 +23,9 @@
 
 #include <iosfwd>
 #include "vgui_soview.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include "vgui_gl.h"
 
@@ -304,7 +303,7 @@ class vgui_soview2D_linestrip : public vgui_soview2D
   vgui_soview2D_linestrip(unsigned, float const *, float const *);
 
   //: Constructor - create a default 2D linestrip.
-  vgui_soview2D_linestrip() : n(0), x(VXL_NULLPTR), y(VXL_NULLPTR) {}
+  vgui_soview2D_linestrip() : n(0), x(nullptr), y(nullptr) {}
 
   //: Destructor - delete this 2D linestrip.
   ~vgui_soview2D_linestrip();
@@ -344,7 +343,7 @@ class vgui_soview2D_polygon : public vgui_soview2D
   vgui_soview2D_polygon(unsigned, float const *, float const *, bool fill);
 
   //: Constructor - create a default 2D polygon.
-  vgui_soview2D_polygon() : n(0), x(VXL_NULLPTR), y(VXL_NULLPTR) {}
+  vgui_soview2D_polygon() : n(0), x(nullptr), y(nullptr) {}
 
   //: Destructor - delete this 2D polygon.
   ~vgui_soview2D_polygon();

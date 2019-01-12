@@ -31,24 +31,26 @@
 #include <mvl/HMatrix2DCompute4Point.h>
 #include <mvl/HMatrix2D.h>
 #include <mvl/AffineMetric.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class HMatrix2DComputeMLESAC : public HMatrix2DComputeRobust
 {
  public:
   //: Initialize HMatrix2DComputeRobust object.
   HMatrix2DComputeMLESAC(double std);
-  virtual ~HMatrix2DComputeMLESAC();
+  ~HMatrix2DComputeMLESAC() override;
 
-  virtual double calculate_term(std::vector<double>& residuals,
+  double calculate_term(std::vector<double>& residuals,
                                 std::vector<bool>& inlier_list,
-                                int& count);
-  virtual double calculate_residual(HomgPoint2D& one,
+                                int& count) override;
+  double calculate_residual(HomgPoint2D& one,
                                     HomgPoint2D& two,
-                                    HMatrix2D* F);
-  virtual double calculate_residual(vgl_homg_point_2d<double>& one,
+                                    HMatrix2D* F) override;
+  double calculate_residual(vgl_homg_point_2d<double>& one,
                                     vgl_homg_point_2d<double>& two,
-                                    HMatrix2D* F);
+                                    HMatrix2D* F) override;
 };
 
 #endif // HMatrix2DComputeMLESAC_h_

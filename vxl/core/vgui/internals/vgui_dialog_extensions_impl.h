@@ -1,9 +1,6 @@
 // This is core/vgui/internals/vgui_dialog_extensions_impl.h
 #ifndef vgui_dialog_extensions_impl_h_
 #define vgui_dialog_extensions_impl_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief  vgui_dialog_extensions_impl is the abstract base class for dialog_extensions implementation.
@@ -15,7 +12,9 @@
 // \endverbatim
 
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include "vgui_dialog_impl.h"
 
 //: vgui_dialog_extensions_impl is the abstract base class for dialog extensions implementation.

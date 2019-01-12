@@ -15,13 +15,15 @@
 // \endverbatim
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_array_2d.h>
 #include <vbl/vbl_array_3d.h>
 class bsta_gauss
 {
  public:
-  ~bsta_gauss(){}
+  ~bsta_gauss()= default;
   static double bsta_gaussian(const double x, const double sigma);
 
   static void bsta_1d_gaussian_kernel(const double sigma, const double fuzz,
@@ -41,7 +43,7 @@ class bsta_gauss
                                vbl_array_3d<double>& out_buf);
  private:
   //only static methods
-  bsta_gauss();
+  bsta_gauss() = delete;
 };
 
 #endif // bsta_gauss_h_

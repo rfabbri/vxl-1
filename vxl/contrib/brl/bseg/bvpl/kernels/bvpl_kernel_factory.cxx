@@ -7,7 +7,9 @@
 //:
 // \file
 #include <vnl/vnl_vector_fixed.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 //: Returns a kernel along the local rotation_axis_ and rotated around this axis an amount angle_
@@ -25,7 +27,7 @@ bvpl_kernel_factory::create()
 
 //: Returns a kernel along the rotation_axis and rotated around this axis an amount angle
 bvpl_kernel
-bvpl_kernel_factory::create(vnl_float_3 rotation_axis, float angle)
+bvpl_kernel_factory::create(vnl_float_3 rotation_axis, float  /*angle*/)
 {
   this->set_rotation_axis(rotation_axis);
   kernel_type final_float_kernel = rotate(angle_);
@@ -40,7 +42,7 @@ bvpl_kernel_factory::create(vnl_float_3 rotation_axis, float angle)
 bvpl_kernel_iterator
 bvpl_kernel_factory::interpolate(kernel_type const& kernel)
 {
-  kernel_type::const_iterator kernel_it = kernel.begin();
+  auto kernel_it = kernel.begin();
   std::vector<std::pair<vgl_point_3d<int>, bvpl_kernel_dispatch> >  kernel_out;
 
     //Kernels shouldn't get any bigger than this, so this initial values work
@@ -56,7 +58,7 @@ bvpl_kernel_factory::interpolate(kernel_type const& kernel)
     int x0 = (int)std::floor((kernel_it->first).x()+0.5f);
     int y0 = (int)std::floor((kernel_it->first).y()+0.5f);
     int z0 = (int)std::floor((kernel_it->first).z()+0.5f);
-    kernel_out.push_back(std::make_pair(vgl_point_3d<int>(x0,y0,z0), (kernel_it->second)));
+    kernel_out.emplace_back(vgl_point_3d<int>(x0,y0,z0), (kernel_it->second));
 
     if ( x0 > max_x) max_x =  x0;
     if ( y0 > max_y) max_y =  y0;
@@ -187,14 +189,14 @@ bvpl_kernel_factory::rotate(float angle)
 
 //: Rotates "class-kernel_" using the given rotation matrix
 bvpl_kernel_factory::kernel_type
-bvpl_kernel_factory::rotate(vgl_rotation_3d<float> R)
+bvpl_kernel_factory::rotate(const vgl_rotation_3d<float>& R)
 {
 #ifdef DEBUG
   std::cout << "Rotating kernel using the following matrix" << std::endl
            << R.as_matrix() << std::endl;
 #endif
 
-  std::vector<std::pair<vgl_point_3d<float>, bvpl_kernel_dispatch> >::iterator kernel_it =this->kernel_.begin();
+  auto kernel_it =this->kernel_.begin();
   std::vector<std::pair<vgl_point_3d<float>, bvpl_kernel_dispatch> > kernel;
 
   //for efficiency and accuracy, get the rotation matrix of R and use the matrix for multiplicatiom
@@ -208,7 +210,7 @@ bvpl_kernel_factory::rotate(vgl_rotation_3d<float> R)
                                                      float((*kernel_it).first.y()),
                                                      float((*kernel_it).first.z()));
 
-    kernel.push_back(std::make_pair(vgl_point_3d<float>(new_coord[0],new_coord[1],new_coord[2]), (kernel_it->second)));
+    kernel.emplace_back(vgl_point_3d<float>(new_coord[0],new_coord[1],new_coord[2]), (kernel_it->second));
 
     // As it is implemented now, if many points round to a single integer, then that integer is used multiple times
     // This may be a good solution, and avoids the problem of getting unequal number of symbols
@@ -226,7 +228,5 @@ vgl_vector_3d<int> bvpl_kernel_factory::dim()
   y = max_point_.y()-min_point_.y() + 1;
   z = max_point_.z()-min_point_.z() + 1;
 
-  return vgl_vector_3d<int>(x,y,z);
+  return {x,y,z};
 }
-
-

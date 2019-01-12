@@ -5,7 +5,10 @@
 
 #include "ihog_sample_grid_bilin.h"
 #include <vil/vil_resample_bilin.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Constructor
 ihog_world_roi::ihog_world_roi( unsigned int n_u,  unsigned int n_v,
@@ -81,4 +84,3 @@ ihog_world_roi::resample( const ihog_image<float>& image) const
   result.set_world2im(d_i2w.inverse());
   return result.image();
 }
-

@@ -10,7 +10,10 @@
 #if 0
 #include <vgl/vgl_vector_2d.h>
 #endif
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Return the original point that was distorted to this location (inverse of distort)
 // \param init is an initial guess at the solution for the iterative solver

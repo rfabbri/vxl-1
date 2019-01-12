@@ -11,7 +11,9 @@
 #include <algorithm>
 #include <bprb/bprb_func_process.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/ocl/boxm2_opencl_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -35,15 +37,15 @@
 
 namespace boxm2_ocl_update_aux_per_view_naa_process_globals
 {
-  const unsigned n_inputs_  = 10;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 10;
+  constexpr unsigned n_outputs_ = 0;
   enum {
-    UPDATE_SEGLEN         = 0,
-    UPDATE_AUX_PREVIS     = 1,
+    UPDATE_SEGLEN = 0,
+    UPDATE_AUX_PREVIS = 1,
     CONVERT_AUX_INT_FLOAT = 2
   };
 
-  bool compile_kernel(bocl_device_sptr device,std::vector<bocl_kernel*> & vec_kernels,std::string opts)
+  bool compile_kernel(const bocl_device_sptr& device,std::vector<bocl_kernel*> & vec_kernels,const std::string& opts)
   {
     //gather all render sources... seems like a lot for rendering...
     std::vector<std::string> src_paths;
@@ -59,7 +61,7 @@ namespace boxm2_ocl_update_aux_per_view_naa_process_globals
     src_paths.push_back(source_dir + "bit/update_naa_kernels.cl");
 
     //convert aux buffer int values to float (just divide by SEGLENFACTOR
-    bocl_kernel* convert_aux_int_float = new bocl_kernel();
+    auto* convert_aux_int_float = new bocl_kernel();
     if (!convert_aux_int_float->create_kernel(&device->context(),device->device_id(), src_paths, "convert_aux_int_to_float", opts+" -D CONVERT_AUX ", "batch_update::convert_aux_int_to_float")) {
       std::cerr << "ERROR compiling kernel convert_aux_int_float\n";
       return false;
@@ -70,7 +72,7 @@ namespace boxm2_ocl_update_aux_per_view_naa_process_globals
     src_paths.push_back(source_dir + "bit/cast_ray_bit.cl");
 
     // push back seg_len kernel
-    bocl_kernel* seg_len = new bocl_kernel();
+    auto* seg_len = new bocl_kernel();
     std::string seg_opts = "-D SEGLEN -D STEP_CELL=step_cell_seglen(aux_args,data_ptr,llid,d) ";
     if (!seg_len->create_kernel(&device->context(),device->device_id(), src_paths, "seg_len_main", seg_opts, "update::seg_len")) {
       std::cerr << "ERROR compiling kernel seg_len\n";
@@ -79,7 +81,7 @@ namespace boxm2_ocl_update_aux_per_view_naa_process_globals
     vec_kernels.push_back(seg_len);
 
     //push back cast_ray_bit
-    bocl_kernel* aux_previs_naa_kernel = new bocl_kernel();
+    auto* aux_previs_naa_kernel = new bocl_kernel();
     std::string aux_opt = opts + " -D AUX_PREVIS_NAA -D STEP_CELL=step_cell_aux_previs_naa(aux_args,data_ptr,llid,d) ";
     if (!aux_previs_naa_kernel->create_kernel(&device->context(),device->device_id(), src_paths, "aux_previs_main_naa", aux_opt, "batch_update::aux_previs_main_naa")) {
       std::cerr << "ERROR compiling kernel aux_previs_naa_kernel\n";
@@ -138,23 +140,23 @@ bool boxm2_ocl_update_aux_per_view_naa_process(bprb_func_process& pro)
   float gpu_time=0.0f;
   //get the inputs
   unsigned i = 0;
-  bocl_device_sptr device               = pro.get_input<bocl_device_sptr>(i++);
-  boxm2_scene_sptr scene                = pro.get_input<boxm2_scene_sptr>(i++);
-  boxm2_opencl_cache_sptr opencl_cache  = pro.get_input<boxm2_opencl_cache_sptr>(i++);
-  vpgl_camera_double_sptr cam           = pro.get_input<vpgl_camera_double_sptr>(i++);
-  vil_image_view_base_sptr img          = pro.get_input<vil_image_view_base_sptr>(i++);
-  brad_image_metadata_sptr metadata        = pro.get_input<brad_image_metadata_sptr>(i++);
+  bocl_device_sptr device = pro.get_input<bocl_device_sptr>(i++);
+  boxm2_scene_sptr scene = pro.get_input<boxm2_scene_sptr>(i++);
+  boxm2_opencl_cache_sptr opencl_cache = pro.get_input<boxm2_opencl_cache_sptr>(i++);
+  vpgl_camera_double_sptr cam = pro.get_input<vpgl_camera_double_sptr>(i++);
+  vil_image_view_base_sptr img = pro.get_input<vil_image_view_base_sptr>(i++);
+  brad_image_metadata_sptr metadata = pro.get_input<brad_image_metadata_sptr>(i++);
   brad_atmospheric_parameters_sptr atm_params = pro.get_input<brad_atmospheric_parameters_sptr>(i++);
-  std::string suffix                     = pro.get_input<std::string>(i++);
-  vil_image_view_base_sptr alt_prior_base    = pro.get_input<vil_image_view_base_sptr>(i++);
-  vil_image_view_base_sptr alt_density_base  = pro.get_input<vil_image_view_base_sptr>(i++);
+  std::string suffix = pro.get_input<std::string>(i++);
+  vil_image_view_base_sptr alt_prior_base = pro.get_input<vil_image_view_base_sptr>(i++);
+  vil_image_view_base_sptr alt_density_base = pro.get_input<vil_image_view_base_sptr>(i++);
 
-  vil_image_view<float> *alt_prior = dynamic_cast<vil_image_view<float>*>(alt_prior_base.ptr());
+  auto *alt_prior = dynamic_cast<vil_image_view<float>*>(alt_prior_base.ptr());
   if (!alt_prior) {
     std::cerr << "ERROR casting alt_prior to vil_image_view<float>\n";
     return false;
   }
-  vil_image_view<float> *alt_density = dynamic_cast<vil_image_view<float>*>(alt_density_base.ptr());
+  auto *alt_density = dynamic_cast<vil_image_view<float>*>(alt_density_base.ptr());
   if (!alt_density) {
     std::cerr << "ERROR casting alt_density to vil_image_view<float>\n";
     return false;
@@ -181,10 +183,10 @@ bool boxm2_ocl_update_aux_per_view_naa_process(bprb_func_process& pro)
   std::string data_type,num_obs_type,options;
   std::vector<std::string> apps = scene->appearances();
   int appTypeSize;
-  for (unsigned int i=0; i<apps.size(); ++i) {
-    if ( apps[i] == boxm2_data_traits<BOXM2_NORMAL_ALBEDO_ARRAY>::prefix() )
+  for (const auto & app : apps) {
+    if ( app == boxm2_data_traits<BOXM2_NORMAL_ALBEDO_ARRAY>::prefix() )
     {
-      data_type = apps[i];
+      data_type = app;
       foundDataType = true;
       options=" -D BOXM2_NORMAL_ALBEDO_ARRAY ";
       appTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_NORMAL_ALBEDO_ARRAY>::prefix());
@@ -215,17 +217,17 @@ bool boxm2_ocl_update_aux_per_view_naa_process(bprb_func_process& pro)
 
   //grab input image, establish cl_ni, cl_nj (so global size is divisible by local size)
   vil_image_view_base_sptr float_img=boxm2_util::prepare_input_image(img);
-  vil_image_view<float>* img_view = static_cast<vil_image_view<float>* >(float_img.ptr());
-  unsigned cl_ni=(unsigned)RoundUp(img_view->ni(),(int)local_threads[0]);
-  unsigned cl_nj=(unsigned)RoundUp(img_view->nj(),(int)local_threads[1]);
+  auto* img_view = static_cast<vil_image_view<float>* >(float_img.ptr());
+  auto cl_ni=(unsigned)RoundUp(img_view->ni(),(int)local_threads[0]);
+  auto cl_nj=(unsigned)RoundUp(img_view->nj(),(int)local_threads[1]);
   global_threads[0]=cl_ni;
   global_threads[1]=cl_nj;
 
   // buffers for holding radiance scales per normal
-  float* radiance_scales_buff = new float[num_normals];
-  float* radiance_offsets_buff = new float[num_normals];
-  float* radiance_var_scales_buff = new float[num_normals];
-  float* radiance_var_offsets_buff = new float[num_normals];
+  auto* radiance_scales_buff = new float[num_normals];
+  auto* radiance_offsets_buff = new float[num_normals];
+  auto* radiance_var_scales_buff = new float[num_normals];
+  auto* radiance_var_offsets_buff = new float[num_normals];
 
   // compute offsets and scales for linear radiance model
   for (unsigned n=0; n < num_normals; ++n) {
@@ -247,8 +249,8 @@ bool boxm2_ocl_update_aux_per_view_naa_process(bprb_func_process& pro)
   }
 
   //set generic cam
-  cl_float* ray_origins = new cl_float[4*cl_ni*cl_nj];
-  cl_float* ray_directions = new cl_float[4*cl_ni*cl_nj];
+  auto* ray_origins = new cl_float[4*cl_ni*cl_nj];
+  auto* ray_directions = new cl_float[4*cl_ni*cl_nj];
   std::cout << "allocating ray_o_buff: ni = " << cl_ni << ", nj = " << cl_nj << "  size = " << cl_ni*cl_nj*sizeof(cl_float4) << std::endl;
   bocl_mem_sptr ray_o_buff = opencl_cache->alloc_mem( cl_ni*cl_nj * sizeof(cl_float4) , ray_origins,"ray_origins buffer");
   std::cout << "allocating ray_d_buff: ni = " << cl_ni << ", nj = " << cl_nj << std::endl;
@@ -256,9 +258,9 @@ bool boxm2_ocl_update_aux_per_view_naa_process(bprb_func_process& pro)
   boxm2_ocl_camera_converter::compute_ray_image( device, queue, cam, cl_ni, cl_nj, ray_o_buff, ray_d_buff);
 
   //Visibility, Preinf, Norm, and input image buffers
-  float* vis_buff = new float[cl_ni*cl_nj];
-  float* pre_buff = new float[cl_ni*cl_nj];
-  float* input_buff=new float[cl_ni*cl_nj];
+  auto* vis_buff = new float[cl_ni*cl_nj];
+  auto* pre_buff = new float[cl_ni*cl_nj];
+  auto* input_buff=new float[cl_ni*cl_nj];
 
   int count=0;
   for (unsigned int j=0;j<cl_nj;++j) {
@@ -314,7 +316,7 @@ bool boxm2_ocl_update_aux_per_view_naa_process(bprb_func_process& pro)
 
   // Output Array
   float output_arr[100];
-  for (int i=0; i<100; ++i) output_arr[i] = 0.0f;
+  for (float & i : output_arr) i = 0.0f;
   bocl_mem_sptr  cl_output=new bocl_mem(device->context(), output_arr, sizeof(float)*100, "output buffer");
   cl_output->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
 
@@ -342,26 +344,26 @@ bool boxm2_ocl_update_aux_per_view_naa_process(bprb_func_process& pro)
 
       //write the image values to the buffer
       vul_timer transfer;
-      bocl_mem* blk       = opencl_cache->get_block(scene,*id);
-      bocl_mem* blk_info  = opencl_cache->loaded_block_info();
-      bocl_mem* alpha     = opencl_cache->get_data<BOXM2_ALPHA>(scene,*id,0,false);
-      boxm2_scene_info* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
+      bocl_mem* blk = opencl_cache->get_block(scene,*id);
+      bocl_mem* blk_info = opencl_cache->loaded_block_info();
+      bocl_mem* alpha = opencl_cache->get_data<BOXM2_ALPHA>(scene,*id,0,false);
+      auto* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
       int alphaTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_ALPHA>::prefix());
       unsigned int num_cells = alpha->num_bytes()/alphaTypeSize;
       info_buffer->data_buffer_length = (int)num_cells;
       blk_info->write_to_buffer((queue));
       // get appearance model
-      bocl_mem* naa_apm   = opencl_cache->get_data(scene,*id,data_type,num_cells*appTypeSize, true);
+      bocl_mem* naa_apm = opencl_cache->get_data(scene,*id,data_type,num_cells*appTypeSize, true);
 
       //grab an appropriately sized AUX data buffer
-      int auxTypeSize  = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_AUX0>::prefix());
-      bocl_mem *aux0   = opencl_cache->get_data(scene,*id, boxm2_data_traits<BOXM2_AUX0>::prefix(suffix),info_buffer->data_buffer_length*auxTypeSize,false);
-      auxTypeSize      = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_AUX1>::prefix());
-      bocl_mem *aux1   = opencl_cache->get_data(scene,*id, boxm2_data_traits<BOXM2_AUX1>::prefix(suffix),info_buffer->data_buffer_length*auxTypeSize,false);
-      auxTypeSize      = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_AUX2>::prefix());
-      bocl_mem *aux2   = opencl_cache->get_data(scene,*id,boxm2_data_traits<BOXM2_AUX2>::prefix(suffix), info_buffer->data_buffer_length*auxTypeSize,false);
-      auxTypeSize      = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_AUX3>::prefix());
-      bocl_mem *aux3   = opencl_cache->get_data(scene,*id,boxm2_data_traits<BOXM2_AUX3>::prefix(suffix), info_buffer->data_buffer_length*auxTypeSize,false);
+      int auxTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_AUX0>::prefix());
+      bocl_mem *aux0 = opencl_cache->get_data(scene,*id, boxm2_data_traits<BOXM2_AUX0>::prefix(suffix),info_buffer->data_buffer_length*auxTypeSize,false);
+      auxTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_AUX1>::prefix());
+      bocl_mem *aux1 = opencl_cache->get_data(scene,*id, boxm2_data_traits<BOXM2_AUX1>::prefix(suffix),info_buffer->data_buffer_length*auxTypeSize,false);
+      auxTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_AUX2>::prefix());
+      bocl_mem *aux2 = opencl_cache->get_data(scene,*id,boxm2_data_traits<BOXM2_AUX2>::prefix(suffix), info_buffer->data_buffer_length*auxTypeSize,false);
+      auxTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_AUX3>::prefix());
+      bocl_mem *aux3 = opencl_cache->get_data(scene,*id,boxm2_data_traits<BOXM2_AUX3>::prefix(suffix), info_buffer->data_buffer_length*auxTypeSize,false);
 
       transfer_time += (float) transfer.all();
       if (i==UPDATE_SEGLEN)

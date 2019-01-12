@@ -7,7 +7,9 @@
 // \file
 
 #include <bprb/bprb_parameters.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpgl/vpgl_camera.h>
 #include <vpgl/vpgl_proj_camera.h>
 #include <vpgl/io/vpgl_io_proj_camera.h>
@@ -19,9 +21,9 @@ bool vpgl_load_proj_camera_process_cons(bprb_func_process& pro)
 {
   //this process takes one input: the filename, and one output: the camera
   std::vector<std::string> input_types;
-  input_types.push_back("vcl_string");
+  input_types.emplace_back("vcl_string");
   std::vector<std::string> output_types;
-  output_types.push_back("vpgl_camera_double_sptr");  // label image
+  output_types.emplace_back("vpgl_camera_double_sptr");  // label image
   return pro.set_input_types(input_types)
       && pro.set_output_types(output_types);
 }
@@ -40,7 +42,7 @@ bool vpgl_load_proj_camera_process(bprb_func_process& pro)
 
   std::string ext = vul_file::extension(camera_filename);
   if (ext == ".vsl") { // load binary
-    vpgl_proj_camera<double>* procamp = new vpgl_proj_camera<double>();
+    auto* procamp = new vpgl_proj_camera<double>();
     vsl_b_ifstream ins(camera_filename.c_str());
     vsl_b_read(ins, *procamp);
     ins.close();
@@ -68,4 +70,3 @@ bool vpgl_load_proj_camera_process(bprb_func_process& pro)
 
   return true;
 }
-

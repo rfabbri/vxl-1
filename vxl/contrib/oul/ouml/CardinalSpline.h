@@ -7,12 +7,14 @@
 #include <vnl/vnl_matrix.h>
 #include <vnl/vnl_vector_fixed.h>
 #include <vnl/vnl_matrix_fixed.h>
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vnl/io/vnl_io_vector_fixed.hxx>
 #include <vnl/io/vnl_io_matrix.hxx>
 #include <vsl/vsl_binary_io.h>
 #include <vsl/vsl_vector_io.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 // A 3D cardinal spline class. See Hearn and Baker, "Computer
 // Graphics", C Version, Second Edition, page 325. Cardinal splines
@@ -40,8 +42,7 @@ class CardinalSpline
     {
         setMc(s);
     }
-    CardinalSpline(const CardinalSpline &cs):
-        controlPoints(cs.controlPoints), Mc(cs.Mc), s(cs.s) {}
+    CardinalSpline(const CardinalSpline &cs) = default;
     CardinalSpline &operator =(const CardinalSpline &cs) {
         if (&cs != this)
         {
@@ -51,7 +52,7 @@ class CardinalSpline
         }
         return *this;
     }
-    ~CardinalSpline() {}
+    ~CardinalSpline() = default;
 
     Vector3D getPoint(double t) const;
     std::vector<Vector3D> getPoints(int num_points) const;
@@ -69,8 +70,8 @@ class CardinalSpline
     // return the mean of the control pts
     Vector3D mean_control_pts() const {
         Vector3D mean(0.0);
-        for (unsigned i=0; i<controlPoints.size(); i++)
-            mean += controlPoints[i];
+        for (const auto & controlPoint : controlPoints)
+            mean += controlPoint;
         mean /= (double)controlPoints.size();
         return mean;
     }
@@ -82,8 +83,8 @@ class CardinalSpline
     void print_summary(std::ostream &os) const {
         os << "Cardinal Spline:\n"
            << "\tcontrolPts =\n";
-        for (unsigned i=0; i<controlPoints.size(); i++)
-            os << "\t\t" << controlPoints[i] << std::endl;
+        for (const auto & controlPoint : controlPoints)
+            os << "\t\t" << controlPoint << std::endl;
     }
     std::string is_a() const {return std::string("CardinalSpline");}
     bool is_class(const std::string &s) const {return s==is_a();}
@@ -97,8 +98,8 @@ class CardinalSpline
     }
 
     void translate(const Vector3D &t){
-        for (unsigned i=0; i<controlPoints.size(); i++)
-            controlPoints[i] += t;
+        for (auto & controlPoint : controlPoints)
+            controlPoint += t;
     }
 
  private:

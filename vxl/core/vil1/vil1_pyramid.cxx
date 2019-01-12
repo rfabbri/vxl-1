@@ -1,15 +1,14 @@
 // This is core/vil1/vil1_pyramid.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
 
 #include <iostream>
 #include "vil1_pyramid.h"
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil1/vil1_resample.h>
 #include <vil1/vil1_memory_image.h>
 
@@ -19,9 +18,7 @@ vil1_pyramid::vil1_pyramid(vil1_image const &I, cache_strategy cs_)
   levels.push_back(I);
 }
 
-vil1_pyramid::~vil1_pyramid()
-{
-}
+vil1_pyramid::~vil1_pyramid() = default;
 
 vil1_image vil1_pyramid::operator[](unsigned i)
 {

@@ -7,7 +7,9 @@
 // \author Tim Cootes
 // \brief test vpdfl_axis_gaussian, building, sampling, saving, etc.
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpdfl/vpdfl_axis_gaussian.h>
 #include <vpdfl/vpdfl_axis_gaussian_builder.h>
 #include <vpdfl/vpdfl_axis_gaussian_sampler.h>
@@ -121,8 +123,8 @@ void test_axis_gaussian()
 
   vpdfl_axis_gaussian_builder builder0_in;
   vpdfl_axis_gaussian gauss0_in;
-  vpdfl_pdf_base            *base_pdf_ptr_in  = VXL_NULLPTR;
-  vpdfl_builder_base *base_builder_ptr_in  = VXL_NULLPTR;
+  vpdfl_pdf_base            *base_pdf_ptr_in  = nullptr;
+  vpdfl_builder_base *base_builder_ptr_in  = nullptr;
 
   vsl_b_ifstream bfs_in("test_axis_gaussian.bvl.tmp");
   TEST("Opened test_axis_gaussian.bvl.tmp for reading", (!bfs_in), false);
@@ -196,13 +198,13 @@ void test_axis_gaussian()
           "  min_var: 0.1234e-5\n"
           "}\n");
 
-    vcl_unique_ptr<vpdfl_builder_base>
+    std::unique_ptr<vpdfl_builder_base>
             builder = vpdfl_builder_base::new_pdf_builder_from_stream(ss);
 
     TEST("Correct builder",builder->is_a(),"vpdfl_axis_gaussian_builder");
     if (builder->is_a()=="vpdfl_axis_gaussian_builder")
     {
-      vpdfl_axis_gaussian_builder &a_builder = static_cast<vpdfl_axis_gaussian_builder&>(*builder);
+      auto &a_builder = static_cast<vpdfl_axis_gaussian_builder&>(*builder);
       std::cout<<a_builder<<std::endl;
       TEST_NEAR("Min var configured", a_builder.min_var(), 0.1234e-5, 1e-8);
     }

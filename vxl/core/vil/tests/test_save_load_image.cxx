@@ -29,7 +29,9 @@
 //   14 Nov 2011 - Gehua Yang     - added tests for saving/loading 32bpp ARGB image with PNG, TIFF, and BMP format
 // \endverbatim
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vxl_config.h> // for vxl_byte
 #include <vil/vil_config.h> // for HAS_JPEG
@@ -190,7 +192,7 @@ bool test_image_equal(char const* type_name,
 // create a colour gif image
 static bool create_colour_gif(const char* filename)
 {
-#ifdef VCL_VC
+#ifdef _MSC_VER
 #pragma warning ( push )
 #pragma warning ( disable : 4305 4309)
 #endif
@@ -220,15 +222,15 @@ static bool create_colour_gif(const char* filename)
     182, 220, 118, 235, 237, 183, 224, 134, 43, 238, 184, 228, 150, 107, 238, 185, 232, 166, 171, 238, 186, 236, 182, 235, 238,
     187, 240, 198, 43, 239, 188, 244, 214, 107, 239, 189, 248, 230, 171, 239, 190, 252, 246, 235, 239, 191, 0, 7, 44, 240, 192, 4,
     23, 108, 240, 193, 8, 39, 172, 240, 194, 168, 6, 4, 0, 59 };
-#ifdef VCL_VC
+#ifdef _MSC_VER
 #pragma warning ( pop )
 #endif
   std::ofstream f(filename, std::ios::binary);
   if (!f) return false;
   f << "GIF87a";
-  for (int i=0; i<7; ++i) f << a[i];
+  for (unsigned char i : a) f << i;
   for (int i=0; i<256; ++i) f << (unsigned char)i << (unsigned char)i << (unsigned char)0;
-  for (int i=0; i<642; ++i) f << b[i];
+  for (unsigned char i : b) f << i;
   f.close();
   return true;
 }
@@ -236,7 +238,7 @@ static bool create_colour_gif(const char* filename)
 // create a grey gif image
 static bool create_grey_gif(const char* filename)
 {
-#ifdef VCL_VC
+#ifdef _MSC_VER
 #pragma warning ( push )
 #pragma warning ( disable : 4305 4309)
 #endif
@@ -255,15 +257,15 @@ static bool create_grey_gif(const char* filename)
     195, 67, 139, 31, 79, 190, 188, 249, 243, 232, 211, 171, 95, 207, 190, 189, 251, 247, 240, 227, 203, 159, 79, 191, 190, 253,
     251, 248, 243, 235, 223, 207, 191, 191, 255, 255, 0, 6, 40, 224, 128, 4, 22, 104, 224, 129, 8, 38, 168, 224, 130, 12, 54, 232,
     224, 131, 16, 70, 40, 225, 132, 20, 86, 104, 225, 133, 155, 5, 4, 0, 59 };
-#ifdef VCL_VC
+#ifdef _MSC_VER
 #pragma warning ( pop )
 #endif
   std::ofstream f(filename, std::ios::binary);
   if (!f) return false;
   f << "GIF87a";
-  for (int i=0; i<7; ++i) f << a[i];
+  for (unsigned char i : a) f << i;
   for (int i=0; i<256; ++i) f << (unsigned char)i << (unsigned char)i << (unsigned char)i;
-  for (int i=0; i<336; ++i) f << b[i];
+  for (unsigned char i : b) f << i;
   f.close();
   return true;
 }
@@ -334,7 +336,7 @@ void vil_test_image_type(char const* type_name, // type for image to read and wr
   // and the temporary image file (fname) is closed and can be
   // unlinked below.  If the underlying image file is not closed, the
   // unlink will fail.
-  image3 = VXL_NULLPTR;
+  image3 = nullptr;
 
   // NOTE: Test below may not be correct for NITF images.  One common format
   //     for NITF images is 11 bits per pixel stored in 2 bytes.  For these
@@ -518,7 +520,7 @@ static void test_vil_save_image_resource()
 #endif
 }
 
-#if defined(VCL_WIN32) && VXL_USE_WIN_WCHAR_T
+#if defined(_WIN32) && VXL_USE_WIN_WCHAR_T
 static void test_vil_save_image_resource_wchar()
 {
   vil_image_view<vxl_byte> view = CreateTest8bitImage(251, 153);
@@ -531,7 +533,7 @@ static void test_vil_save_image_resource_wchar()
     _wunlink(out_path);
 #endif
 }
-#endif // defined(VCL_WIN32) && VXL_USE_WIN_WCHAR_T
+#endif // defined(_WIN32) && VXL_USE_WIN_WCHAR_T
 
 
 static void test_save_load_image()
@@ -681,7 +683,7 @@ static void test_save_load_image()
 #endif
     }
 
-#if defined(VCL_WIN32) && VXL_USE_WIN_WCHAR_T
+#if defined(_WIN32) && VXL_USE_WIN_WCHAR_T
     {
       std::wstring out_wpath(L"wchar_test_save_load_jpeg.jpg");
       TEST("[wchar_t] Saving JPEG",vil_save(small_greyscale_image, out_wpath.c_str()),true);
@@ -696,7 +698,7 @@ static void test_save_load_image()
       _wunlink(out_wpath.c_str());
 #endif
     }
-#endif // defined(VCL_WIN32) && VXL_USE_WIN_WCHAR_T
+#endif // defined(_WIN32) && VXL_USE_WIN_WCHAR_T
   }
 #endif
 
@@ -705,9 +707,9 @@ static void test_save_load_image()
 #if 1
   test_vil_save_image_resource();
 
-# if defined(VCL_WIN32) && VXL_USE_WIN_WCHAR_T
+# if defined(_WIN32) && VXL_USE_WIN_WCHAR_T
   test_vil_save_image_resource_wchar();
-# endif // defined(VCL_WIN32) && VXL_USE_WIN_WCHAR_T
+# endif // defined(_WIN32) && VXL_USE_WIN_WCHAR_T
 
 #endif
 }

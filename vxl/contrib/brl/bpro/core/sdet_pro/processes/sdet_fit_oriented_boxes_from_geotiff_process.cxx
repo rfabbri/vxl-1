@@ -17,8 +17,8 @@
 
 namespace sdet_fit_oriented_boxes_from_geotiff_process_globals
 {
-  const unsigned n_inputs_ = 4;
-  const unsigned n_outputs_ = 2;
+  constexpr unsigned n_inputs_ = 4;
+  constexpr unsigned n_outputs_ = 2;
   unsigned polygon_size(vgl_polygon<int> const& poly);
 }
 
@@ -63,16 +63,16 @@ bool sdet_fit_oriented_boxes_from_geotiff_process(bprb_func_process& pro)
   unsigned in_i = 0;
   vil_image_view_base_sptr in_img_sptr = pro.get_input<vil_image_view_base_sptr>(in_i++);
   vpgl_camera_double_sptr  in_cam_sptr = pro.get_input<vpgl_camera_double_sptr>(in_i++);
-  unsigned pixel_thres = pro.get_input<unsigned>(in_i++);
-  std::string out_kml  = pro.get_input<std::string>(in_i++);
+  auto pixel_thres = pro.get_input<unsigned>(in_i++);
+  std::string out_kml = pro.get_input<std::string>(in_i++);
 
   // check inputs
-  vil_image_view<vxl_byte>* in_img = dynamic_cast<vil_image_view<vxl_byte>*>(in_img_sptr.ptr());
+  auto* in_img = dynamic_cast<vil_image_view<vxl_byte>*>(in_img_sptr.ptr());
   if (!in_img) {
     std::cerr << pro.name() << ": Unsupported input image pixel type: " << in_img_sptr->pixel_format() << ", only Byte is supported!\n";
     return false;
   }
-  vpgl_geo_camera* cam = dynamic_cast<vpgl_geo_camera*>(in_cam_sptr.ptr());
+  auto* cam = dynamic_cast<vpgl_geo_camera*>(in_cam_sptr.ptr());
   if (!cam) {
     std::cerr << pro.name() << ": failed to load input geo-camera!\n";
     return false;
@@ -91,7 +91,7 @@ bool sdet_fit_oriented_boxes_from_geotiff_process(bprb_func_process& pro)
     // construct convex hull
     std::vector<vgl_point_2d<float> > pts;
     for (unsigned idx = 0; idx < single_poly.num_vertices(); idx++)
-      pts.push_back(vgl_point_2d<float>(single_poly[0][idx].x(), single_poly[0][idx].y()));
+      pts.emplace_back(single_poly[0][idx].x(), single_poly[0][idx].y());
     vgl_convex_hull_2d<float> ch(pts);
     vgl_polygon<float> c_poly = ch.hull();
     single_poly.print(std::cerr);
@@ -208,9 +208,9 @@ bool sdet_fit_oriented_boxes_from_geotiff_process(bprb_func_process& pro)
     std::vector<vgl_point_2d<float> > corners = valid_polys[i][0];
     vgl_polygon<double> single_poly;
     single_poly.new_sheet();
-    for (std::vector<vgl_point_2d<float> >::iterator vit = corners.begin(); vit != corners.end(); ++vit) {
+    for (auto & corner : corners) {
       double lon, lat;
-      cam->img_to_global(vit->x(), vit->y(), lon, lat);
+      cam->img_to_global(corner.x(), corner.y(), lon, lat);
       single_poly.push_back(lon, lat);
     }
     geo_polys.push_back(single_poly);

@@ -7,7 +7,9 @@
 #include <vipl/filter/vipl_filter_abs.h> // for filter_abs::X_Axis()
 #include <vipl/section/vipl_section_iterator.hxx>
 #include <vipl/section/vipl_section_descriptor.hxx>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 // The pointer ``the'' is just assigned
 template < class DataType >
@@ -17,8 +19,8 @@ template < class DataType >
     hsimgstart (2,0),
     hssecsz (2,0),
     hsoverlap (2,0),
-    hsrawdata (VXL_NULLPTR),
-    hsimgptr (VXL_NULLPTR),
+    hsrawdata (nullptr),
+    hsimgptr (nullptr),
     refcount_ (1)
 {}
 
@@ -31,7 +33,7 @@ template < class DataType >
     hssecsz (2,0),
     hsoverlap (2,0),
     hsrawdata (0),
-    hsimgptr (VXL_NULLPTR),
+    hsimgptr (nullptr),
     refcount_ (1)
 {
   hsthe = pt->virtual_copy();
@@ -52,7 +54,7 @@ template < class DataType >
     hssecsz (2,0),
     hsoverlap (2,0),
     hsrawdata (0),
-    hsimgptr (VXL_NULLPTR),
+    hsimgptr (nullptr),
     refcount_ (1)
 // C++ auto-generated low-level constructor
 {}
@@ -81,7 +83,7 @@ template < class DataType >
 template < class DataType >
    vipl_section_iterator< DataType > vipl_section_container< DataType > ::begin()
 {
-  vipl_section_descriptor<DataType> *ptr = new vipl_section_descriptor<DataType>(VXL_NULLPTR, virtual_copy());
+  vipl_section_descriptor<DataType> *ptr = new vipl_section_descriptor<DataType>(nullptr, virtual_copy());
   ptr->put_real_descriptor(ptr);
   ptr->ref_i_curr_sec_start()[0] = 0;
   ptr->ref_i_curr_sec_start()[1] = 0;
@@ -101,7 +103,7 @@ template < class DataType >
    vipl_section_iterator< DataType > vipl_section_container< DataType > ::end()
 {
   // the "end" iterator has 0 as the real_descriptor
-  vipl_section_iterator<DataType> i(VXL_NULLPTR, virtual_copy());
+  vipl_section_iterator<DataType> i(nullptr, virtual_copy());
   return i;
 }
 
@@ -109,7 +111,7 @@ template < class DataType >
   const vipl_section_iterator< DataType > vipl_section_container< DataType > ::begin() const
 {
   vipl_section_descriptor<DataType> *ptr =
-    new vipl_section_descriptor<DataType>(VXL_NULLPTR, virtual_copy());
+    new vipl_section_descriptor<DataType>(nullptr, virtual_copy());
   ptr->put_real_descriptor(ptr);
   ptr->ref_i_curr_sec_start()[0] = 0;
   ptr->ref_i_curr_sec_start()[1] = 0;
@@ -127,7 +129,7 @@ template < class DataType >
   const vipl_section_iterator< DataType > vipl_section_container< DataType > ::end() const
 {
   // the "end" iterator has 0 as the real_descriptor
-  vipl_section_iterator<DataType> i(VXL_NULLPTR, virtual_copy());
+  vipl_section_iterator<DataType> i(nullptr, virtual_copy());
   return i;
 }
 
@@ -228,7 +230,7 @@ template < class DataType >
   // next-row if section is at the bottom edge call
   // bogus prototype alert! FIXME
   // This function should really be pure
-  bool incremented_Y=0, incremented_X=0;
+  bool incremented_Y=false, incremented_X=false;
 #if 0 // commented out
   int xi = image_size(vipl_filter_abs::X_Axis()) - in_out.curr_sec_end(vipl_filter_abs::X_Axis());
   int yi = image_size(vipl_filter_abs::Y_Axis()) - in_out.curr_sec_end(vipl_filter_abs::Y_Axis());
@@ -270,7 +272,7 @@ template < class DataType >
   // scalar_image_2d_of<FOO>
   // first increment X if possible
   if (xi > 0) {
-    incremented_X = 1;
+    incremented_X = true;
     // if start != 0 we just increment it by size, else we add overlap
     if (in_out.ref_i_curr_sec_start()[vipl_filter_abs::X_Axis()] > 0){
       in_out.ref_i_curr_sec_start()[vipl_filter_abs::X_Axis()]
@@ -297,7 +299,7 @@ template < class DataType >
       - in_out.i_curr_sec_start()[vipl_filter_abs::X_Axis()];
   }
   else if (yi > 0) {
-    incremented_Y = 1;
+    incremented_Y = true;
     // typewriter "spring"
     in_out.ref_i_curr_sec_start()[vipl_filter_abs::X_Axis()] = 0;
       in_out.ref_i_curr_sec_end()[vipl_filter_abs::X_Axis()]
@@ -398,7 +400,7 @@ template < class DataType >
 template < class DataType >
    vipl_section_container< DataType >* vipl_section_container< DataType > ::virtual_copy() const
 {
-  vipl_section_container< DataType >*rtn = new vipl_section_container<DataType> (VXL_NULLPTR);
+  vipl_section_container< DataType >*rtn = new vipl_section_container<DataType> (nullptr);
   rtn->put_the(rtn);
   rtn->put_imgsz(imgsz());
   rtn->put_secsz(secsz());

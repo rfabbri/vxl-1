@@ -1,28 +1,26 @@
 // This is core/vil1/vil1_block_cache_image_impl.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
 
 #include <cstring>
 #include "vil1_block_cache_image_impl.h"
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 // Constructors/Destructors--------------------------------------------------
 
 //---------------------------------------------------------------------------
 // Default constructor
 //---------------------------------------------------------------------------
-vil1_block_cache_image_impl::vil1_block_cache_image_impl(vil1_image i_, unsigned bx, unsigned by)
+vil1_block_cache_image_impl::vil1_block_cache_image_impl(const vil1_image& i_, unsigned bx, unsigned by)
   : base(i_),block_size_x(bx),block_size_y(by)
 {
 }
 
-vil1_block_cache_image_impl::~vil1_block_cache_image_impl() {
-}
+vil1_block_cache_image_impl::~vil1_block_cache_image_impl() = default;
 
 vil1_image vil1_block_cache_image_impl::get_plane(unsigned int p) const {
   assert((int)p < base.planes());

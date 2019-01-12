@@ -1,12 +1,11 @@
 // This is oxl/osl/osl_fit_circle.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 
 #include <iostream>
 #include <cmath>
 #include "osl_fit_circle.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_double_2.h>
 #include <vnl/algo/vnl_svd.h>
 
@@ -26,8 +25,8 @@ osl_fit_circle::osl_fit_circle(const osl_edgel_chain &chain)
 
     for (unsigned int i = 0; i < chain.size(); i++)
     {
-        points.push_back(vgl_point_2d<double>(
-            chain.GetX(i), chain.GetY(i)));
+        points.emplace_back(
+            chain.GetX(i), chain.GetY(i));
     }
 
     calculate(points);
@@ -51,7 +50,7 @@ void osl_fit_circle::calculate(const std::list<vgl_point_2d<double> > &points)
     vnl_vector<double> col3(rows);
     vnl_vector<double> col4(rows);
 
-    std::list<vgl_point_2d<double> >::const_iterator it = points.begin();
+    auto it = points.begin();
     for (int i = 0; it != points.end(); ++it, ++i)
     {
         col2.put(i, (*it).y());

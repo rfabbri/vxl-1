@@ -11,7 +11,9 @@
 #include <mbl/mbl_exception.h>
 #include <mbl/mbl_parse_colon_pairs_list.h>
 #include <vul/vul_arg.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_quick_file.h>
 #include <vul/vul_file.h>
 #include <msm/msm_shape_model.h>
@@ -135,6 +137,7 @@ void load_shapes(const std::string& points_dir,
 int main(int argc, char** argv)
 {
   vul_arg<std::string> param_path("-p","Parameter filename");
+  vul_arg<std::string> shape_model_path("-s","Shape model path (over-riding param file)");
   vul_arg<std::string> out_path("-o","Output path (over-riding param file)");
   vul_arg<bool> no_pose("-no_pose","Don't display pose",false);
   vul_arg<bool> rel_params("-rel_p","Record params[i]/sd[i]",false);
@@ -161,6 +164,7 @@ int main(int argc, char** argv)
   }
 
   if (out_path()!="") params.output_path = out_path();
+  if (shape_model_path()!="") params.shape_model_path = shape_model_path();
 
   msm_shape_model shape_model;
 
@@ -192,7 +196,7 @@ int main(int argc, char** argv)
     std::cout << "Write best fit points to " << params.out_points_dir << std::endl;
 
   vnl_vector<double> sd = shape_model.mode_var();
-  for (unsigned i=0;i<sd.size();++i) sd[i]=std::sqrt(sd[i]);
+  for (double & i : sd) i=std::sqrt(i);
   mbl_stats_1d mahal_stats;
 
   for (unsigned i=0;i<shapes.size();++i)
@@ -205,8 +209,8 @@ int main(int argc, char** argv)
     if (!no_pose())
     {
       // Write pose parameters
-      for (unsigned j=0;j<sm_instance.pose().size();++j)
-        ofs<<sm_instance.pose()[j]<<' ';
+      for (double j : sm_instance.pose())
+        ofs<<j<<' ';
     }
 
     // Write shape parameters

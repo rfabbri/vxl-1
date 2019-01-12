@@ -11,12 +11,14 @@
 #include <bprb/bprb_func_process.h>
 #include <boxm2/boxm2_scene.h>
 #include <vpgl/file_formats/vpgl_geo_camera.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 namespace boxm2_ortho_geo_cam_from_scene_process_globals
 {
-  const unsigned n_inputs_ = 1;
-  const unsigned n_outputs_ = 3;
+  constexpr unsigned n_inputs_ = 1;
+  constexpr unsigned n_outputs_ = 3;
 }
 
 bool boxm2_ortho_geo_cam_from_scene_process_cons(bprb_func_process& pro)
@@ -54,10 +56,10 @@ bool boxm2_ortho_geo_cam_from_scene_process(bprb_func_process& pro)
   // note that the sub block size is truncated to integer here
   std::map<boxm2_block_id, boxm2_block_metadata> blks = scene->blocks();
   double res_x = 1E5, res_y = 1E5;
-  for (std::map<boxm2_block_id, boxm2_block_metadata>::iterator iter = blks.begin(); iter != blks.end(); iter++)
+  for (auto & blk : blks)
   {
-    double voxel_size_x = (iter->second.sub_block_dim_.x()) / (1 << (iter->second.max_level_ - iter->second.init_level_));
-    double voxel_size_y = (iter->second.sub_block_dim_.y()) / (1 << (iter->second.max_level_ - iter->second.init_level_));
+    double voxel_size_x = (blk.second.sub_block_dim_.x()) / (1 << (blk.second.max_level_ - blk.second.init_level_));
+    double voxel_size_y = (blk.second.sub_block_dim_.y()) / (1 << (blk.second.max_level_ - blk.second.init_level_));
     if (res_x > voxel_size_x) res_x = voxel_size_x;
     if (res_y > voxel_size_y) res_y = voxel_size_y;
   }
@@ -101,5 +103,3 @@ bool boxm2_ortho_geo_cam_from_scene_process(bprb_func_process& pro)
   pro.set_output_val<unsigned>(2, nj);
   return true;
 }
-
-

@@ -8,6 +8,7 @@
 // it will resample the mapped points to integer location and also discretize
 // the shift vector to integer location.
 
+#include <utility>
 #include <rgrl/rgrl_matcher.h>
 #include <rgrl/rgrl_feature_set.h>
 #include <rgrl/rgrl_view.h>
@@ -20,6 +21,9 @@
 #include <vil3d/vil3d_image_view.h>
 #include <vnl/vnl_double_3.h>
 #include <vnl/vnl_int_3.h>
+
+
+
 #include "rgrl_evaluator_sptr.h"
 
 #if 0 // ITK-specific
@@ -50,7 +54,7 @@ class rgrl_matcher_pseudo_int_3d
                               vnl_vector< double > const& from_spacing_ratio,
                               vnl_vector< double > const& to_spacing_ratio,
                               rgrl_evaluator_sptr evaluator,
-                              rgrl_mask_sptr mask = VXL_NULLPTR );
+                              rgrl_mask_sptr mask = nullptr );
 
   //:  Match the features in the "from" image to the intensity in the "to" image.
   //
@@ -60,7 +64,7 @@ class rgrl_matcher_pseudo_int_3d
                    rgrl_view const&            current_view,
                    rgrl_transformation const&  current_xform,
                    rgrl_scale const&           current_scale ,
-                   rgrl_match_set_sptr const& old_matches = VXL_NULLPTR);
+                   rgrl_match_set_sptr const& old_matches = nullptr) override;
 
   // Defines type-related functions
   rgrl_type_macro( rgrl_matcher_pseudo_int_3d, rgrl_matcher);
@@ -81,8 +85,8 @@ class rgrl_matcher_pseudo_int_3d
 
     discrete_shift_node(): shift_(), step_(0.0) {}
 
-    discrete_shift_node(const vnl_int_3& shift, const double& step)
-      : shift_(shift), step_(step) {}
+    discrete_shift_node(vnl_int_3  shift, const double& step)
+      : shift_(std::move(shift)), step_(step) {}
 
     discrete_shift_node operator-() const {
       discrete_shift_node that;

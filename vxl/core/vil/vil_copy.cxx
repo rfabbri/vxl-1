@@ -6,7 +6,9 @@
 // \author Ian Scott, ISBE, Manchester
 // \date   21 Aug 2003
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_property.h>
 #include <vil/vil_image_resource.h>
 #include <vil/vil_blocked_image_resource.h>
@@ -86,13 +88,12 @@ bool vil_copy_deep(const vil_image_resource_sptr &src, vil_image_resource_sptr &
 
 vil_image_resource_sptr vil_copy_deep( const vil_image_resource_sptr &src )
 {
-  if(src == VXL_NULLPTR) return VXL_NULLPTR;
+  if(src == nullptr) return nullptr;
   vil_image_resource_sptr result = vil_new_image_resource(src->ni(), src->nj(), src);
   bool copy_r = vil_copy_deep(src, result);
   if(!copy_r)
   {
-    return VXL_NULLPTR;
+    return nullptr;
   }
   return result;
 }
-

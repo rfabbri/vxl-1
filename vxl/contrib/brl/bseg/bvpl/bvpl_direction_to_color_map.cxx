@@ -10,29 +10,31 @@
 #include <vgl/vgl_distance.h>
 #include <vgl/vgl_closest_point.h>
 #include <vil/algo/vil_colour_space.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: project a unit radius sphere onto the cube circumscribing it using gnomonic projection
 void bvpl_direction_to_color_map::project_sphereical_samples_to_cubes(std::vector<vgl_point_3d<double> > & proj_on_cube)
 {
   std::vector<vgl_vector_3d<double> > normals;
-  normals.push_back(vgl_vector_3d<double>(1,0,0));  // X high
-  normals.push_back(vgl_vector_3d<double>(0,1,0));  // Y high
-  normals.push_back(vgl_vector_3d<double>(0,0,1));  // Z high
-  normals.push_back(vgl_vector_3d<double>(-1,0,0)); // X low
-  normals.push_back(vgl_vector_3d<double>(0,-1,0)); // Y low
-  normals.push_back(vgl_vector_3d<double>(0,0,-1)); // Z low
+  normals.emplace_back(1,0,0);  // X high
+  normals.emplace_back(0,1,0);  // Y high
+  normals.emplace_back(0,0,1);  // Z high
+  normals.emplace_back(-1,0,0); // X low
+  normals.emplace_back(0,-1,0); // Y low
+  normals.emplace_back(0,0,-1); // Z low
 
   // iterate over all the spherical samples
-  for (unsigned i=0;i<samples_.size();++i)
+  for (auto & sample : samples_)
   {
     //find the face which has a normal closest to the sample direction.
     double tmax=-10.0;int jmax=-1;
     for (unsigned j=0;j<normals.size();++j)
     {
-      double t=samples_[i].x()*normals[j].x()+
-               samples_[i].y()*normals[j].y()+
-               samples_[i].z()*normals[j].z();
+      double t=sample.x()*normals[j].x()+
+               sample.y()*normals[j].y()+
+               sample.z()*normals[j].z();
       if (t>tmax || j==0)
       {
         tmax=t; jmax=j;
@@ -41,28 +43,22 @@ void bvpl_direction_to_color_map::project_sphereical_samples_to_cubes(std::vecto
     // find intersection with appropriate plane
     switch (jmax) {
       case 0:
-        proj_on_cube.push_back(vgl_point_3d<double>
-                               (1.0,samples_[i].y()/samples_[i].x(),samples_[i].z()/samples_[i].x()));
+        proj_on_cube.emplace_back(1.0,sample.y()/sample.x(),sample.z()/sample.x());
         break;
       case 1:
-        proj_on_cube.push_back(vgl_point_3d<double>
-                               (samples_[i].x()/samples_[i].y(),1.0,samples_[i].z()/samples_[i].y()));
+        proj_on_cube.emplace_back(sample.x()/sample.y(),1.0,sample.z()/sample.y());
         break;
       case 2:
-        proj_on_cube.push_back(vgl_point_3d<double>
-                               (samples_[i].x()/samples_[i].z(),samples_[i].y()/samples_[i].z(),1.0));
+        proj_on_cube.emplace_back(sample.x()/sample.z(),sample.y()/sample.z(),1.0);
         break;
       case 3:
-        proj_on_cube.push_back(vgl_point_3d<double>
-                               (-1.0,-samples_[i].y()/samples_[i].x(),-samples_[i].z()/samples_[i].x()));
+        proj_on_cube.emplace_back(-1.0,-sample.y()/sample.x(),-sample.z()/sample.x());
         break;
       case 4:
-        proj_on_cube.push_back(vgl_point_3d<double>
-                               (-samples_[i].x()/samples_[i].y(),-1.0,-samples_[i].z()/samples_[i].y()));
+        proj_on_cube.emplace_back(-sample.x()/sample.y(),-1.0,-sample.z()/sample.y());
         break;
       case 5:
-        proj_on_cube.push_back(vgl_point_3d<double>
-                               (-samples_[i].x()/samples_[i].z(),-samples_[i].y()/samples_[i].z(),-1.0));
+        proj_on_cube.emplace_back(-sample.x()/sample.z(),-sample.y()/sample.z(),-1.0);
         break;
     }
   }
@@ -138,28 +134,28 @@ bvpl_direction_to_color_map::find_closest_points_from_cube_to_peano_curve(std::v
     }
   }
 
-  for (unsigned j=0;j<indices_of_cube_projs.size();++j)
+  for (float & indices_of_cube_proj : indices_of_cube_projs)
   {
-      std::cout<<indices_of_cube_projs[j]<<' ';
-      indices_of_cube_projs[j]/=index_to_length[index_to_length.size()-1];
+      std::cout<<indices_of_cube_proj<<' ';
+      indices_of_cube_proj/=index_to_length[index_to_length.size()-1];
   }
 
   return indices_of_cube_projs;
 }
 
 
-void bvpl_direction_to_color_map::make_svg_color_map(std::string outfile)
+void bvpl_direction_to_color_map::make_svg_color_map(const std::string& outfile)
 {
   bsvg_document doc(400, 400);
 
-  std::map<vgl_point_3d<double>,float,point_3d_cmp>::iterator iter=colors_.begin();
+  auto iter=colors_.begin();
   std::map<float,vgl_point_3d<double> > colors_ordered_by_index;
   for (;iter!=colors_.end();iter++)
   {
     colors_ordered_by_index[iter->second]=iter->first;
   }
   int i=0;  float r,g,b;
-  std::map<float,vgl_point_3d<double> >::iterator iter1=colors_ordered_by_index.begin();
+  auto iter1=colors_ordered_by_index.begin();
   for (;iter1!=colors_ordered_by_index.end();iter1++,i++)
   {
     float col=iter1->first*360;
@@ -177,7 +173,7 @@ void bvpl_direction_to_color_map::make_svg_color_map(std::string outfile)
     t->set_font_size(15);
     t->set_location(10.0f, 15.0f*float(i+1));
 
-    bsvg_ellipse* e1 = new bsvg_ellipse(25, 7);
+    auto* e1 = new bsvg_ellipse(25, 7);
     e1->set_location(250.0f, 15.0f*float(i+1));
     e1->set_fill_color(os.str());
     doc.add_element(e1);
@@ -188,7 +184,7 @@ void bvpl_direction_to_color_map::make_svg_color_map(std::string outfile)
 }
 
 
-bvpl_direction_to_color_map::bvpl_direction_to_color_map(std::vector<vgl_point_3d<double> > samples, std::string type)
+bvpl_direction_to_color_map::bvpl_direction_to_color_map(std::vector<vgl_point_3d<double> > samples, const std::string& type)
 {
   samples_=samples;
   std::vector<float> oneparam;
@@ -213,12 +209,12 @@ bvpl_direction_to_color_map::bvpl_direction_to_color_map(std::vector<vgl_point_3
 }
 
 
-void bvpl_generate_direction_samples_from_kernels(bvpl_kernel_vector_sptr kernel_vector,
+void bvpl_generate_direction_samples_from_kernels(const bvpl_kernel_vector_sptr& kernel_vector,
                                                   std::vector<vgl_point_3d<double> > & samples)
 {
   std::vector< bvpl_kernel_sptr >::iterator iter;
   for (iter=kernel_vector->begin();iter!=kernel_vector->end();++iter)
-    samples.push_back(vgl_point_3d<double>((*iter)->axis()[0], (*iter)->axis()[1], (*iter)->axis()[2]));
+    samples.emplace_back((*iter)->axis()[0], (*iter)->axis()[1], (*iter)->axis()[2]);
 }
 
 
@@ -375,11 +371,11 @@ void bvpl_convert_id_grid_to_hsv_grid(bvxm_voxel_grid<int> *id_grid,
 }
 
 
-void bvpl_write_colors_to_svg(bvpl_kernel_vector_sptr kernel_vector, std::vector<float> hue_vector, std::string outfile)
+void bvpl_write_colors_to_svg(const bvpl_kernel_vector_sptr& kernel_vector, std::vector<float> hue_vector, const std::string& outfile)
 {
   bsvg_document doc(600.f, float(hue_vector.size())*20.f);
 
-  std::vector<float>::iterator iter = hue_vector.begin();
+  auto iter = hue_vector.begin();
 
   int i=0;  float r,g,b;
   for (;iter!=hue_vector.end();iter++,i++)
@@ -399,7 +395,7 @@ void bvpl_write_colors_to_svg(bvpl_kernel_vector_sptr kernel_vector, std::vector
     t->set_font_size(15);
     t->set_location(10.0f, 15.0f*float(i+1));
 
-    bsvg_ellipse* e1 = new bsvg_ellipse(25, 7);
+    auto* e1 = new bsvg_ellipse(25, 7);
     e1->set_location(400.0f, 15.0f*float(i+1));
     e1->set_fill_color(os.str());
     doc.add_element(e1);

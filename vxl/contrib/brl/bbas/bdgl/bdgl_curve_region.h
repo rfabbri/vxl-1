@@ -24,11 +24,11 @@ class bdgl_curve_region
   vgl_point_2d<double> center_;
   double               radius_;
 
-  bdgl_curve_region(){}
+  bdgl_curve_region()= default;
   bdgl_curve_region(vdgl_edgel_chain_sptr curve){ init(curve); }
-  ~bdgl_curve_region(){}
+  ~bdgl_curve_region()= default;
 
-  void init(vdgl_edgel_chain_sptr curve);
+  void init(const vdgl_edgel_chain_sptr& curve);
 
   vgl_point_2d<double> get_center() const { return center_ ;}
   double get_radius() const { return radius_ ;}

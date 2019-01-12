@@ -6,7 +6,9 @@
 #include <iostream>
 #include <cstddef>
 #include <iomanip>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_vector_io.h>
 #include <vsl/vsl_string_io.h>
 #include <mbl/mbl_log.h>
@@ -22,20 +24,20 @@ namespace
    public:
     std::vector<std::string> messages;
     test_streambuf(): messages(1) {}
-    virtual int sync ()
+    int sync () override
     {
       int n = static_cast<int>(pptr() - pbase()); // Can't be larger than int. See pbump in c++ standard
 
       if (n)
         messages.back().append(pbase(), n);
       if (!messages.back().empty()) // Ignore flushes on empty messages
-        messages.push_back(std::string());
+        messages.emplace_back();
 
       pbump(-n);  // Reset pptr().
       return 0;
     }
 
-    virtual int overflow (int ch)
+    int overflow (int ch) override
     {
       int n = static_cast<int>(pptr() - pbase()); // Can't be larger than int. See pbump in c++ standard
 
@@ -51,7 +53,7 @@ namespace
       return ch;
     }
 
-    virtual std::streamsize xsputn(const char *ptr, std::streamsize nchar)
+    std::streamsize xsputn(const char *ptr, std::streamsize nchar) override
     {
       // Output anything already in buffer
       int n = static_cast<int>(pptr() - pbase()); // Can't be larger than int. See pbump in c++ standard

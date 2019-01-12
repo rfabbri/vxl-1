@@ -15,7 +15,9 @@
 
 #include <vnl/vnl_math.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 bool test_edge2d()
 {
@@ -162,9 +164,9 @@ void print_gauss_x_kernels()
 
 //: Prints to file the directions of the kernels
 //  The file can be read in MATLAB for visualization
-void print_directions( bvpl_kernel_vector_sptr kernel_vector)
+void print_directions( const bvpl_kernel_vector_sptr& kernel_vector)
 {
-  bvpl_kernel_vector::iterator vit = kernel_vector->kernels_.begin();
+  auto vit = kernel_vector->kernels_.begin();
 
   std::cout <<"Writing to file axes in vector:" << std::endl;
 

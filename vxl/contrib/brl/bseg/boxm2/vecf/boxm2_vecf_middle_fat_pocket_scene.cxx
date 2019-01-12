@@ -1,3 +1,5 @@
+#include <algorithm>
+#include <limits>
 #include "boxm2_vecf_middle_fat_pocket_scene.h"
 #include <vnl/vnl_vector_fixed.h>
 #include <vgl/vgl_distance.h>
@@ -7,8 +9,6 @@
 #include <vgl/vgl_closest_point.h>
 #include <boxm2/boxm2_util.h>
 #include <boxm2/io/boxm2_lru_cache.h>
-#include <algorithm>
-#include <limits>
 #include <vul/vul_timer.h>
 #include <boxm2/cpp/algo/boxm2_surface_distance_refine.h>
 #include <boxm2/cpp/algo/boxm2_refine_block_multi_data.h>
@@ -26,11 +26,10 @@ void boxm2_vecf_middle_fat_pocket_scene::create_anatomy_labels(){
   if(!blk_) return;
   vgl_box_3d<double> source_box = blk_->bounding_box_global();
   std::vector<cell_info> source_cell_centers = blk_->cells_in_box(source_box);
-  for(std::vector<cell_info>::iterator cit = source_cell_centers.begin();
-      cit != source_cell_centers.end(); ++cit){
-    int depth = cit->depth_;
-    unsigned data_index = cit->data_index_;
-    float alpha = static_cast<float>(alpha_data_[data_index]);
+  for(auto & source_cell_center : source_cell_centers){
+    int depth = source_cell_center.depth_;
+    unsigned data_index = source_cell_center.data_index_;
+    auto alpha = static_cast<float>(alpha_data_[data_index]);
     if(alpha>alpha_init_){
       middle_fat_pocket_data_[data_index] = static_cast<boxm2_data_traits<BOXM2_PIXEL>::datatype>(true);
     }
@@ -44,14 +43,13 @@ void boxm2_vecf_middle_fat_pocket_scene::create_anatomy_labels(){
 //retrieve cells with middle_fat_pocket anatomy label
 void boxm2_vecf_middle_fat_pocket_scene::cache_cell_centers_from_anatomy_labels(){
   std::vector<cell_info> source_cell_centers = blk_->cells_in_box(source_bb_);
-  for(std::vector<cell_info>::iterator cit = source_cell_centers.begin();
-      cit != source_cell_centers.end(); ++cit){
-    unsigned dindx = cit->data_index_;
+  for(auto & source_cell_center : source_cell_centers){
+    unsigned dindx = source_cell_center.data_index_;
     float alpha = alpha_data_[dindx];
     bool middle_fat_pocket = middle_fat_pocket_data_[dindx]   > pixtype(0);
     if(middle_fat_pocket||alpha>alpha_init_){
-      unsigned middle_fat_pocket_index  = static_cast<unsigned>(middle_fat_pocket_cell_centers_.size());
-      const vgl_point_3d<double>& p = cit->cell_center_;
+      auto middle_fat_pocket_index  = static_cast<unsigned>(middle_fat_pocket_cell_centers_.size());
+      const vgl_point_3d<double>& p = source_cell_center.cell_center_;
       middle_fat_pocket_cell_centers_.push_back(p);
       middle_fat_pocket_cell_data_index_.push_back(dindx);
       data_index_to_cell_index_[dindx] = middle_fat_pocket_index;
@@ -77,10 +75,10 @@ boxm2_vecf_middle_fat_pocket_scene::boxm2_vecf_middle_fat_pocket_scene(std::stri
   if(initialize){
     this->build_middle_fat_pocket();
     std::vector<std::string> prefixes;
-    prefixes.push_back("alpha");
-    prefixes.push_back("boxm2_mog3_grey");
-    prefixes.push_back("boxm2_num_obs");
-    prefixes.push_back("boxm2_pixel_middle_fat_pocket");
+    prefixes.emplace_back("alpha");
+    prefixes.emplace_back("boxm2_mog3_grey");
+    prefixes.emplace_back("boxm2_num_obs");
+    prefixes.emplace_back("boxm2_pixel_middle_fat_pocket");
     double nrad = params_.neighbor_radius();
     boxm2_surface_distance_refine<boxm2_vecf_middle_fat_pocket>(middle_fat_pocket_geo_, base_model_, prefixes, nrad);
     boxm2_surface_distance_refine<boxm2_vecf_middle_fat_pocket>(middle_fat_pocket_geo_, base_model_, prefixes, nrad);
@@ -105,12 +103,11 @@ void boxm2_vecf_middle_fat_pocket_scene::build_middle_fat_pocket(){
   vgl_box_3d<double> bb = middle_fat_pocket_geo_.bounding_box();
    // cell in a box centers are in global coordinates
   std::vector<cell_info> ccs = blk_->cells_in_box(bb);
-  for(std::vector<cell_info>::iterator cit = ccs.begin();
-      cit != ccs.end(); ++cit){
-    const vgl_point_3d<double>& cell_center = cit->cell_center_;
-    unsigned indx = cit->data_index_;
+  for(auto & cc : ccs){
+    const vgl_point_3d<double>& cell_center = cc.cell_center_;
+    unsigned indx = cc.data_index_;
    double d = middle_fat_pocket_geo_.distance(cell_center);
-   double d_thresh = len_coef*cit->side_length_;
+   double d_thresh = len_coef*cc.side_length_;
     if(d < d_thresh){
       if(!is_type_global(cell_center, MIDDLE_FAT_POCKET)){
         middle_fat_pocket_cell_centers_.push_back(cell_center);
@@ -134,12 +131,11 @@ void boxm2_vecf_middle_fat_pocket_scene::find_cell_neigborhoods(){
       vgl_point_3d<double>& p = middle_fat_pocket_cell_centers_[i];
       unsigned indx_i = middle_fat_pocket_cell_data_index_[i];
       std::vector<vgl_point_3d<double> > nbrs = blk_->sub_block_neighbors(p, distance);
-      for(unsigned j =0; j<nbrs.size(); ++j){
-        vgl_point_3d<double>& q = nbrs[j];
+      for(auto & q : nbrs){
         unsigned indx_n;
         if(!blk_->data_index(q, indx_n))
           continue;
-        std::map<unsigned, unsigned >::iterator iit= data_index_to_cell_index_.find(indx_n);
+        auto iit= data_index_to_cell_index_.find(indx_n);
         if(iit == data_index_to_cell_index_.end())
           continue;
         if(iit->second==i)
@@ -156,7 +152,7 @@ void boxm2_vecf_middle_fat_pocket_scene::paint_middle_fat_pocket(){
   params_.app_[0]=params_.middle_fat_pocket_intensity_;
   boxm2_data_traits<BOXM2_NUM_OBS>::datatype nobs;
   nobs.fill(0);
-  unsigned ns = static_cast<unsigned>(middle_fat_pocket_cell_centers_.size());
+  auto ns = static_cast<unsigned>(middle_fat_pocket_cell_centers_.size());
   for(unsigned i = 0; i<ns; ++i){
     unsigned indx = middle_fat_pocket_cell_data_index_[i];
     if(indx%3 == 0)
@@ -171,7 +167,7 @@ void boxm2_vecf_middle_fat_pocket_scene::paint_middle_fat_pocket(){
 bool boxm2_vecf_middle_fat_pocket_scene::is_type_data_index(unsigned data_index, boxm2_vecf_middle_fat_pocket_scene::anat_type type) const{
 
    if(type == MIDDLE_FAT_POCKET){
-     unsigned char middle_fat_pocket = static_cast<unsigned char>(middle_fat_pocket_data_[data_index]);
+     auto middle_fat_pocket = static_cast<unsigned char>(middle_fat_pocket_data_[data_index]);
      return middle_fat_pocket > static_cast<unsigned char>(0);
    }
    return false;
@@ -215,7 +211,7 @@ bool boxm2_vecf_middle_fat_pocket_scene::inverse_vector_field(vgl_point_3d<doubl
 void boxm2_vecf_middle_fat_pocket_scene::inverse_vector_field(std::vector<vgl_vector_3d<double> >& vf,
                                                       std::vector<bool>& valid) const{
   vul_timer t;
-  unsigned nt = static_cast<unsigned>(box_cell_centers_.size());
+  auto nt = static_cast<unsigned>(box_cell_centers_.size());
   vf.resize(nt);// initialized to 0
   valid.resize(nt, false);
   unsigned cnt = 0;
@@ -274,7 +270,7 @@ void boxm2_vecf_middle_fat_pocket_scene::interpolate_vector_field(vgl_point_3d<d
   sumalpha /= sumw;
   sumcolor/=sumw;
   color_app[0] = (unsigned char) (sumcolor[0] * 255); color_app[2] = (unsigned char)(sumcolor[2]*255); color_app[4]= (unsigned char) (sumcolor[4] * 255);
-  boxm2_data_traits<BOXM2_ALPHA>::datatype alpha = static_cast<boxm2_data_traits<BOXM2_ALPHA>::datatype>(sumalpha);
+  auto alpha = static_cast<boxm2_data_traits<BOXM2_ALPHA>::datatype>(sumalpha);
   target_app_data_[tindx] = app;
   target_alpha_data_[tindx] = alpha;
 }
@@ -301,7 +297,7 @@ bool boxm2_vecf_middle_fat_pocket_scene::apply_vector_field(cell_info const& tar
 
 void boxm2_vecf_middle_fat_pocket_scene::apply_vector_field_to_target(std::vector<vgl_vector_3d<double> > const& vf,
                                                               std::vector<bool> const& valid){
-  unsigned n = static_cast<unsigned>(box_cell_centers_.size());
+  auto n = static_cast<unsigned>(box_cell_centers_.size());
   //clear target
   int valid_count = 0;
   if(n==0)
@@ -347,11 +343,10 @@ int boxm2_vecf_middle_fat_pocket_scene::prerefine_target_sub_block(vgl_point_3d<
   std::vector<vgl_point_3d<int> > int_sblks = blk_->sub_blocks_intersect_box(target_box_in_source);
   // iterate through each intersecting source tree and find the maximum tree depth
   int max_depth = 0;
-  for(std::vector<vgl_point_3d<int> >::iterator bit = int_sblks.begin();
-      bit != int_sblks.end(); ++bit){
-    const uchar16& tree_bits = trees_(bit->x(), bit->y(), bit->z());
+  for(auto & int_sblk : int_sblks){
+    const uchar16& tree_bits = trees_(int_sblk.x(), int_sblk.y(), int_sblk.z());
     //safely cast since bit_tree is just temporary
-    uchar16& uctree_bits = const_cast<uchar16&>(tree_bits);
+    auto& uctree_bits = const_cast<uchar16&>(tree_bits);
     boct_bit_tree bit_tree(uctree_bits.data_block(), max_level);
     int dpth = bit_tree.depth();
     if(dpth>max_depth){
@@ -363,7 +358,7 @@ int boxm2_vecf_middle_fat_pocket_scene::prerefine_target_sub_block(vgl_point_3d<
 
 // == the full inverse vector field  p_source = p_target + vf ===
 void boxm2_vecf_middle_fat_pocket_scene::inverse_vector_field_unrefined(std::vector<vgl_point_3d<double> > const& unrefined_target_pts){
-  unsigned n = static_cast<unsigned>(unrefined_target_pts.size());
+  auto n = static_cast<unsigned>(unrefined_target_pts.size());
   vfield_unrefined_.resize(n, vgl_vector_3d<double>(0.0, 0.0, 0.0));
   valid_unrefined_.resize(n, false);
   for(unsigned vf_index = 0; vf_index<n; ++vf_index){
@@ -389,9 +384,8 @@ void boxm2_vecf_middle_fat_pocket_scene::map_to_target(boxm2_scene_sptr target_s
     this->extract_target_block_data(target_scene);
   this->extract_unrefined_cell_info();//on articulated_scene
   std::vector<vgl_point_3d<double> > tgt_pts;
-  for(std::vector<unrefined_cell_info>::iterator cit = unrefined_cell_info_.begin();
-      cit != unrefined_cell_info_.end(); ++cit)
-    tgt_pts.push_back(cit->pt_);
+  for(auto & cit : unrefined_cell_info_)
+    tgt_pts.push_back(cit.pt_);
   // compute inverse vector field for prerefining the target
   this->inverse_vector_field_unrefined(tgt_pts);
   // refine the target to match the source tree refinement
@@ -411,7 +405,7 @@ void boxm2_vecf_middle_fat_pocket_scene::map_to_target(boxm2_scene_sptr target_s
 
 bool boxm2_vecf_middle_fat_pocket_scene::set_params(boxm2_vecf_articulated_params const& params){
   try{
-    boxm2_vecf_middle_fat_pocket_params const& params_ref = dynamic_cast<boxm2_vecf_middle_fat_pocket_params const &>(params);
+    auto const& params_ref = dynamic_cast<boxm2_vecf_middle_fat_pocket_params const &>(params);
     params_ = boxm2_vecf_middle_fat_pocket_params(params_ref);
     middle_fat_pocket_geo_.set_params(params_);
     return true;

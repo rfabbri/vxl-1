@@ -1,13 +1,16 @@
 // This is core/vcsl/vcsl_rotation.cxx
 #include "vcsl_rotation.h"
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //---------------------------------------------------------------------------
 // Are `new_axis' a list of unit axes ?
 //---------------------------------------------------------------------------
 bool vcsl_rotation::are_unit_axes(list_of_vectors const& new_axis) const
 {
-  const double epsilon=0.001;
+  constexpr double epsilon = 0.001;
 
   list_of_vectors::const_iterator i;
 

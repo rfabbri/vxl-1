@@ -6,7 +6,9 @@
 // Approved for public Release, distribution unlimited
 // DISTAR Case 14074
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 // By definition, each level is a factor of 2 reduced in scale
 static float scale_at_level(unsigned level)
@@ -147,4 +149,3 @@ vil_j2k_nitf2_pyramid_image_resource::get_resource(const unsigned level) const
 void vil_j2k_nitf2_pyramid_image_resource::print(const unsigned level)
 {
 }
-

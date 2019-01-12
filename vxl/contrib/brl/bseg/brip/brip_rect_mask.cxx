@@ -1,7 +1,9 @@
 #include <iostream>
 #include "brip_rect_mask.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 std::map<brip_rect_mask::ang_id, std::string > brip_rect_mask::names_=std::map<brip_rect_mask::ang_id, std::string >();
 std::map<brip_rect_mask::ang_id, float > brip_rect_mask::angles_=std::map<brip_rect_mask::ang_id, float >();
@@ -1039,7 +1041,7 @@ find_ait(ang_id aid,
 
 brip_rect_mask::ang_id brip_rect_mask::angle_id(unsigned angle_index) const
 {
-  std::map<ang_id, vnl_matrix<int> >::const_iterator ait = masks_.begin();
+  auto ait = masks_.begin();
   for (unsigned i = 0; i<angle_index; ++i)
     ++ait;
   return (*ait).first;
@@ -1106,9 +1108,8 @@ unsigned brip_rect_mask::nplus() const
 {
   unsigned np = 0;
   vnl_matrix<int> const& weights = current_mask_;
-  for (vnl_matrix<int>::const_iterator wit = weights.begin();
-       wit != weights.end(); ++wit)
-    if ((*wit)>0) ++np;
+  for (int weight : weights)
+    if (weight>0) ++np;
   return np;
 }
 
@@ -1116,9 +1117,8 @@ unsigned brip_rect_mask::nminus() const
 {
   unsigned np = 0;
   vnl_matrix<int> const& weights = current_mask_;
-  for (vnl_matrix<int>::const_iterator wit = weights.begin();
-       wit != weights.end(); ++wit)
-    if ((*wit)<0) ++np;
+  for (int weight : weights)
+    if (weight<0) ++np;
   return np;
 }
 
@@ -1203,7 +1203,7 @@ void brip_rect_mask::print(ang_id aid)
 std::ostream& operator<<(std::ostream& s, brip_rect_mask const& msk)
 {
   s << "masks\n";
-  brip_rect_mask& msk_nc = const_cast<brip_rect_mask&>(msk);
+  auto& msk_nc = const_cast<brip_rect_mask&>(msk);
   unsigned nangles = msk.n_angles();
   for (unsigned a = 0; a<nangles; ++a) {
     brip_rect_mask::ang_id aid = msk.angle_id(a);

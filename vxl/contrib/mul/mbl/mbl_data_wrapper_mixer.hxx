@@ -8,8 +8,10 @@
 #include <cstdlib>
 #include "mbl_data_wrapper_mixer.h"
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 //: Default constructor
 template<class T>
@@ -62,9 +64,7 @@ void mbl_data_wrapper_mixer<T>::set(mbl_data_wrapper<T> **wrapper, unsigned long
 
 //: Default destructor
 template<class T>
-mbl_data_wrapper_mixer<T>::~mbl_data_wrapper_mixer()
-{
-}
+mbl_data_wrapper_mixer<T>::~mbl_data_wrapper_mixer() = default;
 
 //: Number of objects available
 template<class T>

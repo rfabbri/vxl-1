@@ -3,7 +3,9 @@
 
 #include <iostream>
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_ref_count.h>
 #include <vbl/vbl_smart_ptr.h>
 #include <boxm2/boxm2_scene.h>
@@ -20,19 +22,19 @@ class boxm2_vecf_vector_field : public boxm2_vecf_vector_field_base
   public:
 
     //: destructor
-    ~boxm2_vecf_vector_field(){};
+    ~boxm2_vecf_vector_field() override= default;;
 
     //: write the locations of the cooresponding target points to source's BOXM2_POINT data
     bool compute_forward_transform(boxm2_scene_sptr source,
                                    boxm2_block_id const& blk_id,
                                    const boxm2_data_traits<BOXM2_POINT>::datatype *source_pts,
-                                   boxm2_data_traits<BOXM2_POINT>::datatype *target_pts);
+                                   boxm2_data_traits<BOXM2_POINT>::datatype *target_pts) override;
 
     //: write the locations of the cooresponding source points to target's BOXM2_POINT data
     bool compute_inverse_transform(boxm2_scene_sptr target,
                                    boxm2_block_id const& blk_id,
                                    const boxm2_data_traits<BOXM2_POINT>::datatype *target_pts,
-                                   boxm2_data_traits<BOXM2_POINT>::datatype *source_pts);
+                                   boxm2_data_traits<BOXM2_POINT>::datatype *source_pts) override;
   private:
 
     //: Create a function object that maps source pts to target pts. Must be implemented by derived classes.

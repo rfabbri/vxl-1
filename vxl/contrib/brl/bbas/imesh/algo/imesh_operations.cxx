@@ -12,9 +12,11 @@
 #include <vnl/vnl_matrix.h>
 #include <vnl/vnl_double_3.h>
 #include <vnl/algo/vnl_svd.h>
-#include <vcl_cassert.h>
+#include <cassert>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 //: Compute the dual mesh using vertex normals to compute dual vertices
@@ -24,13 +26,13 @@ imesh_mesh dual_mesh_with_normals(const imesh_mesh& mesh,
 {
   assert(mesh.has_half_edges());
   const imesh_half_edge_set& half_edges = mesh.half_edges();
-  const imesh_vertex_array<3>& init_verts =
+  const auto& init_verts =
       static_cast<const imesh_vertex_array<3>&>(old_verts);
   const unsigned int num_verts = mesh.num_verts();
   const unsigned int num_faces = mesh.num_faces();
 
-  vcl_unique_ptr<imesh_face_array> new_faces(new imesh_face_array);
-  vcl_unique_ptr<imesh_vertex_array<3> > new_verts(new imesh_vertex_array<3>);
+  std::unique_ptr<imesh_face_array> new_faces(new imesh_face_array);
+  std::unique_ptr<imesh_vertex_array<3> > new_verts(new imesh_vertex_array<3>);
 
   for (unsigned int i=0; i<num_verts; ++i)
   {
@@ -73,9 +75,9 @@ imesh_mesh dual_mesh_with_normals(const imesh_mesh& mesh,
     new_verts->push_back(p1);
   }
 
-  vcl_unique_ptr<imesh_face_array_base> nf(vcl_move(new_faces));
-  vcl_unique_ptr<imesh_vertex_array_base > nv(vcl_move(new_verts));
-  return imesh_mesh(vcl_move(nv),vcl_move(nf));
+  std::unique_ptr<imesh_face_array_base> nf(std::move(new_faces));
+  std::unique_ptr<imesh_vertex_array_base > nv(std::move(new_verts));
+  return imesh_mesh(std::move(nv),std::move(nf));
 }
 
 
@@ -96,20 +98,19 @@ void imesh_triangulate_face(const std::vector<vgl_point_2d<double> >& face_v,
     remain.push_back(i3);
   }
 
-  typedef std::list<unsigned int>::iterator ritr;
   unsigned int remain_size = 0;
   while (remain.size() > 2 && remain_size != remain.size()) {
     remain_size = remain.size();
-    ritr curr = remain.end(), prev = --curr;
+    auto curr = remain.end(), prev = --curr;
     --prev;
-    for (ritr next=remain.begin(); next!=remain.end(); prev=curr, curr=next++)
+    for (auto next=remain.begin(); next!=remain.end(); prev=curr, curr=next++)
     {
       if (concave_vert[*curr])
         continue;
 
       // test for an ear (a triangle completely contained in the polygon)
       bool inside = false;
-      for (ritr itr=remain.begin(); itr!=remain.end(); ++itr)
+      for (auto itr=remain.begin(); itr!=remain.end(); ++itr)
       {
         if (!concave_vert[*itr] || itr==curr || itr==prev || itr==next)
           continue;
@@ -130,11 +131,11 @@ void imesh_triangulate_face(const std::vector<vgl_point_2d<double> >& face_v,
         break;
 
       // get the indices before previous and after next
-      ritr pprev = prev;
+      auto pprev = prev;
       if (pprev == remain.begin())
         pprev = remain.end();
       --pprev;
-      ritr nnext = next;
+      auto nnext = next;
       ++nnext;
       if (nnext == remain.end())
         nnext = remain.begin();
@@ -164,8 +165,8 @@ imesh_triangulate_nonconvex(imesh_mesh& mesh)
   assert(mesh.vertices().dim() == 3);
   const imesh_vertex_array<3>& verts = mesh.vertices<3>();
 
-  vcl_unique_ptr<imesh_face_array_base> tris_base(new imesh_regular_face_array<3>);
-  imesh_regular_face_array<3>* tris =
+  std::unique_ptr<imesh_face_array_base> tris_base(new imesh_regular_face_array<3>);
+  auto* tris =
       static_cast<imesh_regular_face_array<3>*> (tris_base.get());
   int group = -1;
   if (faces.has_groups())
@@ -206,7 +207,7 @@ imesh_triangulate_nonconvex(imesh_mesh& mesh)
       const imesh_vertex<3>& v = verts[faces(f,i)];
       vnl_vector<double> p3 = vnl_double_3(v[0],v[1],v[2])-mean;
       vnl_vector<double> p2 = P*p3;
-      face_v.push_back(vgl_point_2d<double>(p2[0],p2[1]));
+      face_v.emplace_back(p2[0],p2[1]);
       face_i.push_back(faces(f,i));
     }
     imesh_triangulate_face(face_v, face_i, *tris);
@@ -215,5 +216,5 @@ imesh_triangulate_nonconvex(imesh_mesh& mesh)
     }
   }
 
-  mesh.set_faces(vcl_move(tris_base));
+  mesh.set_faces(std::move(tris_base));
 }

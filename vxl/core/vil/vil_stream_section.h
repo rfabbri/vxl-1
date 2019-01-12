@@ -1,9 +1,6 @@
 // This is core/vil/vil_stream_section.h
 #ifndef vil_stream_section_h_
 #define vil_stream_section_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief make a section of a vil_stream behave like a vil_stream
@@ -31,16 +28,16 @@ struct vil_stream_section : public vil_stream
   vil_stream_section(vil_stream *underlying, int begin, int end);
 
   // implement virtual vil_stream interface:
-  bool ok() const { return underlying_->ok(); }
-  vil_streampos write(void const* buf, vil_streampos n);
-  vil_streampos read(void* buf, vil_streampos n);
-  vil_streampos tell() const { return current_; } // regardless of what the underlying stream is doing.
-  void seek(vil_streampos position);
+  bool ok() const override { return underlying_->ok(); }
+  vil_streampos write(void const* buf, vil_streampos n) override;
+  vil_streampos read(void* buf, vil_streampos n) override;
+  vil_streampos tell() const override { return current_; } // regardless of what the underlying stream is doing.
+  void seek(vil_streampos position) override;
 
-  vil_streampos file_size() const;
+  vil_streampos file_size() const override;
 
  protected:
-  ~vil_stream_section();
+  ~vil_stream_section() override;
 
  private:
   vil_stream *underlying_;

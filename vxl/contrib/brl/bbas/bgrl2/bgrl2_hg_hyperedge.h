@@ -13,8 +13,10 @@
 
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 class bgrl2_hg_vertex;
 class bgrl2_hg_edge;
@@ -86,12 +88,10 @@ class bgrl2_hg_hyperedge
 
   //: ====== Constructor/Destructor and other functions ======
   bgrl2_hg_hyperedge ()
-  {
-  }
+  = default;
 
   ~bgrl2_hg_hyperedge ()
-  {
-  }
+  = default;
 };
 
 #endif // bgrl2_hg_hyperedge_h_

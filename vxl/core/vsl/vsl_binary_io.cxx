@@ -8,8 +8,10 @@
 // \brief Functions to perform consistent binary IO within vsl
 // \author Tim Cootes and Ian Scott
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_binary_explicit_io.h>
 
 template <typename TYPE>
@@ -17,7 +19,7 @@ void  local_vsl_b_write(vsl_b_ostream& os, const TYPE n)
 {
   const size_t MAX_INT_BUFFER_LENGTH = VSL_MAX_ARBITRARY_INT_BUFFER_LENGTH(sizeof(TYPE));
   unsigned char buf[ MAX_INT_BUFFER_LENGTH ] = {0};
-  const std::size_t nbytes = (std::size_t)vsl_convert_to_arbitrary_length(&n, buf);
+  const auto nbytes = (std::size_t)vsl_convert_to_arbitrary_length(&n, buf);
   os.os().write((char*)buf, nbytes );
 }
 
@@ -63,7 +65,7 @@ MACRO_MAKE_INTEGER_READ_WRITE(short);
 MACRO_MAKE_INTEGER_READ_WRITE(unsigned short);
 MACRO_MAKE_INTEGER_READ_WRITE(long);
 MACRO_MAKE_INTEGER_READ_WRITE(unsigned long);
-#if VXL_HAS_INT_64 && !VXL_INT_64_IS_LONG
+#if VXL_INT_64_IS_LONGLONG
 MACRO_MAKE_INTEGER_READ_WRITE(vxl_int_64);
 MACRO_MAKE_INTEGER_READ_WRITE(vxl_uint_64);
 #endif
@@ -195,8 +197,6 @@ void vsl_b_read(vsl_b_istream &is,double& n )
 }
 
 
-const unsigned short vsl_b_ostream::version_no_ = 1;
-const std::streamoff vsl_b_ostream::header_length = 6;
 static const unsigned short vsl_magic_number_part_1=0x2c4e;
 static const unsigned short vsl_magic_number_part_2=0x472b;
 
@@ -207,7 +207,7 @@ static const unsigned short vsl_magic_number_part_2=0x472b;
 // User is responsible for deleting os after deleting the adaptor
 vsl_b_ostream::vsl_b_ostream(std::ostream *o_s): os_(o_s)
 {
-  assert(os_ != VXL_NULLPTR);
+  assert(os_ != nullptr);
   vsl_b_write_uint_16(*this, version_no_);
   vsl_b_write_uint_16(*this, vsl_magic_number_part_1);
   vsl_b_write_uint_16(*this, vsl_magic_number_part_2);
@@ -216,7 +216,7 @@ vsl_b_ostream::vsl_b_ostream(std::ostream *o_s): os_(o_s)
 //: A reference to the adaptor's stream
 std::ostream& vsl_b_ostream::os() const
 {
-  assert(os_ != VXL_NULLPTR);
+  assert(os_ != nullptr);
   return *os_;
 }
 
@@ -247,7 +247,7 @@ void vsl_b_ostream::clear_serialisation_records()
 unsigned long vsl_b_ostream::add_serialisation_record
                     (void *pointer, int other_data /*= 0*/)
 {
-  assert(pointer != VXL_NULLPTR);
+  assert(pointer != nullptr);
   assert(serialisation_records_.find(pointer) == serialisation_records_.end());
   unsigned long id = (unsigned long)serialisation_records_.size() + 1;
   serialisation_records_[pointer] = std::make_pair(id, other_data);
@@ -259,7 +259,7 @@ unsigned long vsl_b_ostream::add_serialisation_record
 // Returns 0 if there is no record of the object.
 unsigned long vsl_b_ostream::get_serial_number(void *pointer) const
 {
-  serialisation_records_type::const_iterator entry =
+  auto entry =
     serialisation_records_.find(pointer);
   if (entry == serialisation_records_.end())
   {
@@ -277,7 +277,7 @@ unsigned long vsl_b_ostream::get_serial_number(void *pointer) const
 // unrecorded.
 int vsl_b_ostream::get_serialisation_other_data(void *pointer) const
 {
-  serialisation_records_type::const_iterator entry =
+  auto entry =
     serialisation_records_.find(pointer);
   if (entry == serialisation_records_.end())
   {
@@ -294,7 +294,7 @@ int vsl_b_ostream::get_serialisation_other_data(void *pointer) const
 int vsl_b_ostream::set_serialisation_other_data
     (void *pointer, int /*other_data*/)
 {
-  serialisation_records_type::iterator entry =
+  auto entry =
     serialisation_records_.find(pointer);
   if (entry == serialisation_records_.end())
   {
@@ -316,7 +316,7 @@ vsl_b_ofstream::~vsl_b_ofstream()
 //: Close the stream
 void vsl_b_ofstream::close()
 {
-  assert(os_ != VXL_NULLPTR);
+  assert(os_ != nullptr);
   ((std::ofstream *)os_)->close();
   clear_serialisation_records();
 }
@@ -327,7 +327,7 @@ void vsl_b_ofstream::close()
 // User is responsible for deleting is after deleting the adaptor
 vsl_b_istream::vsl_b_istream(std::istream *i_s): is_(i_s)
 {
-  assert(is_ != VXL_NULLPTR);
+  assert(is_ != nullptr);
   if (!(*is_)) return;
   unsigned long v=0, m1=0, m2=0;
   vsl_b_read_uint_16(*this, v);
@@ -357,7 +357,7 @@ vsl_b_istream::vsl_b_istream(std::istream *i_s): is_(i_s)
 //: A reference to the adaptor's stream
 std::istream & vsl_b_istream::is() const
 {
-  assert(is_ != VXL_NULLPTR);
+  assert(is_ != nullptr);
   return *is_;
 }
 
@@ -394,7 +394,7 @@ void vsl_b_istream::clear_serialisation_records()
 void vsl_b_istream::add_serialisation_record(unsigned long serial_number,
                                              void *pointer, int other_data /*= 0*/)
 {
-  assert(pointer != VXL_NULLPTR);
+  assert(pointer != nullptr);
   assert(serialisation_records_.find(serial_number) == serialisation_records_.end());
   serialisation_records_[serial_number] = std::make_pair(pointer, other_data);
 }
@@ -403,11 +403,11 @@ void vsl_b_istream::add_serialisation_record(unsigned long serial_number,
 // Returns 0 if no record has been added.
 void* vsl_b_istream::get_serialisation_pointer(unsigned long serial_number) const
 {
-  serialisation_records_type::const_iterator entry =
+  auto entry =
         serialisation_records_.find(serial_number);
   if (entry == serialisation_records_.end())
   {
-    return VXL_NULLPTR;
+    return nullptr;
   }
   else
   {
@@ -420,7 +420,7 @@ void* vsl_b_istream::get_serialisation_pointer(unsigned long serial_number) cons
 int vsl_b_istream::get_serialisation_other_data
     (unsigned long serial_number) const
 {
-  serialisation_records_type::const_iterator entry =
+  auto entry =
     serialisation_records_.find(serial_number);
   if (entry == serialisation_records_.end())
   {
@@ -458,7 +458,7 @@ vsl_b_ifstream::~vsl_b_ifstream()
 //: Close the stream
 void vsl_b_ifstream::close()
 {
-  assert(is_ != VXL_NULLPTR);
+  assert(is_ != nullptr);
   ((std::ifstream *)is_)->close();
   clear_serialisation_records();
 }

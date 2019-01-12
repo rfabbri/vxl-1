@@ -1,9 +1,6 @@
 // This is core/vgui/internals/vgui_file_field.h
 #ifndef vgui_file_field_h_
 #define vgui_file_field_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author  K.Y.McGaul, VGG, Oxford University
@@ -15,7 +12,9 @@
 // \endverbatim
 
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include "vgui_dialog_field.h"
 
 //: File browser in a dialog.

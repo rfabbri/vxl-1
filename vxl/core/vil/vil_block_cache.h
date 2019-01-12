@@ -1,9 +1,6 @@
 // This is core/vil/vil_block_cache.h
 #ifndef vil_block_cache_h_
 #define vil_block_cache_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief A block cache with block population prioritized by age
@@ -12,7 +9,9 @@
 #include <iostream>
 #include <queue>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_image_view_base.h>
 
 // \verbatim
@@ -49,7 +48,7 @@ struct bcell
 class bcell_less
 {
  public:
-  bcell_less(){}
+  bcell_less()= default;
   //the predicate function
   bool operator()(bcell* const& ba, bcell* const& bb) const
   {

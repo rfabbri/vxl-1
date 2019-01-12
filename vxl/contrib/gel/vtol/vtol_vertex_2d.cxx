@@ -6,7 +6,10 @@
 #include <vsol/vsol_point_2d.h>
 #include <vtol/vtol_edge_2d.h>
 #include <vtol/vtol_edge.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //***************************************************************************
 // Initialization
@@ -168,7 +171,7 @@ vtol_edge_sptr vtol_vertex_2d::new_edge(vtol_vertex_2d_sptr const& other)
 #endif // 0
 
   // awf: load vrml speed up by factor of 2 using this loop.
-  vtol_edge_sptr result = VXL_NULLPTR;
+  vtol_edge_sptr result = nullptr;
 
   // Scan Zero Chains
   bool found = false;

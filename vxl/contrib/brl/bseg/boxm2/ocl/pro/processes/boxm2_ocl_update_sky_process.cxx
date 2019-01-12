@@ -10,7 +10,9 @@
 // \author Vishal Jain
 // \date Mar 25, 2011
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/ocl/boxm2_opencl_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -36,8 +38,8 @@
 
 namespace boxm2_ocl_update_sky_process_globals
 {
-    const unsigned int n_inputs_  = 5;
-    const unsigned int n_outputs_ = 0;
+    constexpr unsigned int n_inputs_ = 5;
+    constexpr unsigned int n_outputs_ = 0;
 }
 
 bool boxm2_ocl_update_sky_process_cons(bprb_func_process& pro)
@@ -87,8 +89,8 @@ bool boxm2_ocl_update_sky_process(bprb_func_process& pro)
 
 namespace boxm2_ocl_update_sky2_process_globals
 {
-    const unsigned int n_inputs_  = 6;
-    const unsigned int n_outputs_ = 0;
+    constexpr unsigned int n_inputs_ = 6;
+    constexpr unsigned int n_outputs_ = 0;
 }
 
 bool boxm2_ocl_update_sky2_process_cons(bprb_func_process& pro)

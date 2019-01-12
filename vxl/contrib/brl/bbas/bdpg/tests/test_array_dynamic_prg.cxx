@@ -3,7 +3,9 @@
 #include <iostream>
 #include <cmath>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h> //for vnl_math::pi
 #include <bdpg/bdpg_node.h>
 #include <bdpg/bdpg_array_dynamic_prg.h>
@@ -56,7 +58,7 @@ void test_array_dynamic_prg()
   std::vector<unsigned> assign = dp.assignment();
   unsigned i = 0;
   bool good_assign = true;
-  for (std::vector<unsigned>::iterator ait = assign.begin();
+  for (auto ait = assign.begin();
        ait !=assign.end(); ++ait, ++i)
   {
     std::cout << " c["<< i << "]=" << *ait;

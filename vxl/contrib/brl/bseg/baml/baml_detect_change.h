@@ -3,9 +3,9 @@
 #define baml_detect_change_h_
 
 #include <string>
+#include <utility>
 #include <vector>
 #include <set>
-#include <utility>
 
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_matrix_fixed.h>
@@ -125,8 +125,8 @@ class baml_change_detection {
 public:
 
   baml_change_detection(
-    const baml_change_detection_params& params ) :
-      params_( params ){}
+    baml_change_detection_params  params ) :
+      params_(std::move( params )){}
 
   //: Single reference image change detection
   bool detect(
@@ -272,7 +272,7 @@ protected:
     std::vector <float>& hist);
 
   // Disable default/copy constructors
-  baml_change_detection(){}
+  baml_change_detection()= default;
   baml_change_detection( baml_change_detection& ){}
 };
 

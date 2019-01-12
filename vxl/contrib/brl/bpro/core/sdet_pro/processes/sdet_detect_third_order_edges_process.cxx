@@ -23,15 +23,15 @@ bool sdet_detect_third_order_edges_process_cons(bprb_func_process& pro)
   //inputs
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("vil_image_view_base_sptr");
-  input_types.push_back("vcl_string");  // path to write output edge map, extention: .edg
+  input_types.emplace_back("vil_image_view_base_sptr");
+  input_types.emplace_back("vcl_string");  // path to write output edge map, extention: .edg
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   //output: [0] output edge image
   std::vector<std::string> output_types;
-  output_types.push_back("vil_image_view_base_sptr");
-  output_types.push_back("vil_image_view_base_sptr");
+  output_types.emplace_back("vil_image_view_base_sptr");
+  output_types.emplace_back("vil_image_view_base_sptr");
   ok = pro.set_output_types(output_types);
   return ok;
 }
@@ -88,14 +88,12 @@ bool sdet_detect_third_order_edges_process(bprb_func_process& pro)
   vil_image_view<vxl_byte> edge_img_byte(input_image.ni(),input_image.nj());
   edge_img_byte.fill(0);
 
-  for (unsigned k = 0; k < edgels.size(); k++) {
-    vdgl_edgel edgel = edgels[k];
-
+  for (auto edgel : edgels) {
     double x = edgel.x();
     double y = edgel.y();
 
-    unsigned ix = (unsigned)x;
-    unsigned iy = (unsigned)y;
+    auto ix = (unsigned)x;
+    auto iy = (unsigned)y;
     double idir = vnl_math::angle_0_to_2pi(edgel.get_theta());
 
     edge_img(ix, iy, 0) = static_cast<float>(x);
@@ -129,15 +127,15 @@ bool sdet_detect_third_order_edges_dt_process_cons(bprb_func_process& pro)
   //inputs
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("vil_image_view_base_sptr");
-  input_types.push_back("int");  // max distance threshold
+  input_types.emplace_back("vil_image_view_base_sptr");
+  input_types.emplace_back("int");  // max distance threshold
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   //output: [0] Distance transform (DT) of output edge image as a byte image
   std::vector<std::string> output_types;
-  output_types.push_back("vil_image_view_base_sptr");
-  output_types.push_back("vil_image_view_base_sptr");
+  output_types.emplace_back("vil_image_view_base_sptr");
+  output_types.emplace_back("vil_image_view_base_sptr");
   ok = pro.set_output_types(output_types);
   return ok;
 }
@@ -194,8 +192,8 @@ bool sdet_detect_third_order_edges_dt_process(bprb_func_process& pro)
     double x = edgel.x();
     double y = edgel.y();
 
-    unsigned ix = (unsigned)x;
-    unsigned iy = (unsigned)y;
+    auto ix = (unsigned)x;
+    auto iy = (unsigned)y;
 
     vtol_edge_2d_sptr vtol_edg = new vtol_edge_2d(*(line_segs[k]->cast_to_curve()));
     vtol_edges[ix][iy] = vtol_edg;
@@ -228,4 +226,3 @@ bool sdet_detect_third_order_edges_dt_process(bprb_func_process& pro)
   pro.set_output_val<vil_image_view_base_sptr>(1,new vil_image_view<float>(out_imgf));
   return true;
 }
-

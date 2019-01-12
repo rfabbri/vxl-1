@@ -4,7 +4,9 @@
 #include <testlib/testlib_test.h>
 #include <bvgl/bvgl_cross_section.h>
 #include <bvgl/bvgl_grid_index_3d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_pointset_3d.h>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_vector_3d.h>
@@ -23,11 +25,9 @@ static void test_grid_index_3d()
   ptset.add_point_with_normal(p5, n);  ptset.add_point_with_normal(p6, n); ptset.add_point_with_normal(p7, n);
   bvgl_grid_index_3d<double> gi(3,3,3,ptset);
   vgl_point_3d<double> p(0.4, 0.7, 0.6), pc;
-  bool good = gi.closest_point(p, pc);
+  gi.closest_point(p, pc);
   TEST_NEAR("grid closest point", (p-pc).length(), 0.0, 0.05);
 #endif
 }
 
 TESTMAIN( test_grid_index_3d );
-
-

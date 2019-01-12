@@ -1,7 +1,4 @@
 // This is core/vgui/vgui_function_tableau.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Philip C. Pritchett, RRG, University of Oxford
@@ -15,12 +12,12 @@
 //: Constructor - don't use this, use vgui_function_tableau_new.
 //  Creates a default vgui_function_tableau.
 vgui_function_tableau::vgui_function_tableau()
-  : draw_(VXL_NULLPTR)
-  , mouse_up_(VXL_NULLPTR)
-  , mouse_down_(VXL_NULLPTR)
-  , motion_(VXL_NULLPTR)
-  , key_press_(VXL_NULLPTR)
-  , help_(VXL_NULLPTR)
+  : draw_(nullptr)
+  , mouse_up_(nullptr)
+  , mouse_down_(nullptr)
+  , motion_(nullptr)
+  , key_press_(nullptr)
+  , help_(nullptr)
 {
 }
 

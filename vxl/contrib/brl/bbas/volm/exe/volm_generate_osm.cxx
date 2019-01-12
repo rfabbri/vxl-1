@@ -21,10 +21,12 @@
 #include <vgl/vgl_intersection.h>
 #include <bkml/bkml_parser.h>
 
-void error_report(std::string error_file, std::string error_msg)
+#include <utility>
+
+void error_report(std::string error_file, const std::string& error_msg)
 {
   std::cerr << error_msg;
-  volm_io::write_post_processing_log(error_file, error_msg);
+  volm_io::write_post_processing_log(std::move(error_file), error_msg);
 }
 
 int main(int argc, char** argv)
@@ -63,11 +65,11 @@ int main(int argc, char** argv)
     // load the content for valid leaves
     std::stringstream file_name_pre;
     file_name_pre << out_pre() << "/geo_index2_wr" << world_id() << "_tile_" << tile_id();
-    for (unsigned l_idx = 0; l_idx < leaves.size(); l_idx++) {
-      std::string bin_file = leaves[l_idx]->get_label_name(file_name_pre.str(), "osm");
+    for (auto & leave : leaves) {
+      std::string bin_file = leave->get_label_name(file_name_pre.str(), "osm");
       if (!vul_file::exists(bin_file))
         continue;
-      volm_geo_index2_node<volm_osm_object_ids_sptr>* ptr = dynamic_cast<volm_geo_index2_node<volm_osm_object_ids_sptr>* >(leaves[l_idx].ptr());
+      auto* ptr = dynamic_cast<volm_geo_index2_node<volm_osm_object_ids_sptr>* >(leave.ptr());
       ptr->contents_ = new volm_osm_object_ids(bin_file);
     }
 
@@ -89,7 +91,7 @@ int main(int argc, char** argv)
     // start
     for (unsigned l_idx = 0; l_idx < leaves.size(); l_idx++)
     {
-      volm_geo_index2_node<volm_osm_object_ids_sptr>* leaf_ptr = dynamic_cast<volm_geo_index2_node<volm_osm_object_ids_sptr>* >(leaves[l_idx].ptr());
+      auto* leaf_ptr = dynamic_cast<volm_geo_index2_node<volm_osm_object_ids_sptr>* >(leaves[l_idx].ptr());
       if (leaf_ptr->contents_->is_empty())
         continue;
 #if 1
@@ -185,7 +187,7 @@ int main(int argc, char** argv)
     volm_geo_index2::get_leaf(root, leaf, loc_pt);
     if (!leaf)
       continue;
-    volm_geo_index2_node<volm_osm_object_ids_sptr>* leaf_ptr = dynamic_cast<volm_geo_index2_node<volm_osm_object_ids_sptr>* >(leaf.ptr());
+    auto* leaf_ptr = dynamic_cast<volm_geo_index2_node<volm_osm_object_ids_sptr>* >(leaf.ptr());
     if (!leaf_ptr->contents_)
       leaf_ptr->contents_ = new volm_osm_object_ids();
     leaf_ptr->contents_->add_pt(p_idx);
@@ -198,8 +200,8 @@ int main(int argc, char** argv)
     volm_geo_index2::get_leaves(root, leaves, loc_lines[line_idx]->line());
     if (leaves.empty())
       continue;
-    for (unsigned l_idx = 0; l_idx < leaves.size(); l_idx++) {
-      volm_geo_index2_node<volm_osm_object_ids_sptr>* leaf_ptr = dynamic_cast<volm_geo_index2_node<volm_osm_object_ids_sptr>* >(leaves[l_idx].ptr());
+    for (auto & leave : leaves) {
+      auto* leaf_ptr = dynamic_cast<volm_geo_index2_node<volm_osm_object_ids_sptr>* >(leave.ptr());
       if (!leaf_ptr->contents_)
         leaf_ptr->contents_ = new volm_osm_object_ids();
       leaf_ptr->contents_->add_line(line_idx);
@@ -222,8 +224,8 @@ int main(int argc, char** argv)
     volm_geo_index2::get_leaves(root, leaves, loc_regions[region_idx]->poly()[0]);
     if (leaves.empty())
       continue;
-    for (unsigned l_idx = 0; l_idx < leaves.size(); l_idx++) {
-      volm_geo_index2_node<volm_osm_object_ids_sptr>* leaf_ptr = dynamic_cast<volm_geo_index2_node<volm_osm_object_ids_sptr>* >(leaves[l_idx].ptr());
+    for (auto & leave : leaves) {
+      auto* leaf_ptr = dynamic_cast<volm_geo_index2_node<volm_osm_object_ids_sptr>* >(leave.ptr());
       if (!leaf_ptr->contents_)
         leaf_ptr->contents_ = new volm_osm_object_ids();
       leaf_ptr->contents_->add_region(region_idx);
@@ -237,7 +239,7 @@ int main(int argc, char** argv)
   std::vector<volm_geo_index2_node_sptr> leaves;
   volm_geo_index2::get_leaves(root, leaves);
   for (unsigned l_idx = 0; l_idx < leaves.size(); l_idx++) {
-    volm_geo_index2_node<volm_osm_object_ids_sptr>* leaf_ptr = dynamic_cast<volm_geo_index2_node<volm_osm_object_ids_sptr>* >(leaves[l_idx].ptr());
+    auto* leaf_ptr = dynamic_cast<volm_geo_index2_node<volm_osm_object_ids_sptr>* >(leaves[l_idx].ptr());
     if (leaf_ptr->contents_->is_empty())
       continue;
 #if 1

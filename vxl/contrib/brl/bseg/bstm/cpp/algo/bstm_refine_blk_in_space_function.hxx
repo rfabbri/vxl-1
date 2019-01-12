@@ -5,7 +5,9 @@
 #include <algorithm>
 #include "bstm_refine_blk_in_space_function.h"
 #include <bstm/io/bstm_lru_cache.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 template <bstm_data_type APM_DATA_TYPE, bstm_data_type NOBS_DATA_TYPE >
 bstm_refine_blk_in_space_function<APM_DATA_TYPE, NOBS_DATA_TYPE>::bstm_refine_blk_in_space_function(bstm_time_block* t_blk, bstm_block* blk, std::vector<bstm_data_base*> & datas, float change_prob_t)
@@ -219,11 +221,11 @@ void bstm_refine_blk_in_space_function<APM_DATA_TYPE, NOBS_DATA_TYPE>::move_data
 {
   std::vector<int> new_leaves = time_tree.get_leaf_bits();
 
-  for (std::vector<int>::iterator iter = new_leaves.begin(); iter != new_leaves.end(); iter++)
+  for (int & new_leave : new_leaves)
   {
     //get new data ptr
-    int newDataPtr = time_tree.get_data_index(*iter);
-    int oldDataPtr = old_time_tree.get_data_index(*iter);
+    int newDataPtr = time_tree.get_data_index(new_leave);
+    int oldDataPtr = old_time_tree.get_data_index(new_leave);
 
     //copy data
     alpha_cpy[newDataPtr]= alpha_[oldDataPtr];

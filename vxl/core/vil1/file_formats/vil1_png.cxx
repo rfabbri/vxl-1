@@ -1,7 +1,4 @@
 // This is core/vil1/file_formats/vil1_png.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // http://www.mirror.ac.uk/sites/ftp.cdrom.com/pub/png/libpng.html
@@ -11,7 +8,7 @@
 #include <cstdlib>
 #include "vil1_png.h"
 
-#include <vcl_cassert.h>
+#include <cassert>
 
 #include <vil1/vil1_stream.h>
 #include <vil1/vil1_image_impl.h>
@@ -22,7 +19,9 @@
 #if (PNG_LIBPNG_VER_MAJOR == 0)
 extern "You need a later libpng. You should rerun CMake, after setting VXL_FORCE_V3P_PNG to ON."
 #endif
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vxl_config.h>
 
@@ -44,11 +43,11 @@ vil1_image_impl* vil1_png_file_format::make_input_image(vil1_stream* is)
   png_byte sig_buf [SIG_CHECK_SIZE];
   if (is->read(sig_buf, SIG_CHECK_SIZE) != SIG_CHECK_SIZE) {
     problem("Initial header fread");
-    return VXL_NULLPTR;
+    return nullptr;
   }
 
   if (png_sig_cmp (sig_buf, (png_size_t) 0, (png_size_t) SIG_CHECK_SIZE) != 0)
-    return VXL_NULLPTR;
+    return nullptr;
 
   return new vil1_png_generic_image(is);
 }
@@ -72,13 +71,13 @@ char const* vil1_png_file_format::tag() const
 
 static void user_read_data(png_structp png_ptr, png_bytep data, png_size_t length)
 {
-  vil1_stream* f = (vil1_stream*)png_get_io_ptr(png_ptr);
+  auto* f = (vil1_stream*)png_get_io_ptr(png_ptr);
   f->read(data, (vil1_streampos)length);
 }
 
 static void user_write_data(png_structp png_ptr, png_bytep data, png_size_t length)
 {
-  vil1_stream* f = (vil1_stream*)png_get_io_ptr(png_ptr);
+  auto* f = (vil1_stream*)png_get_io_ptr(png_ptr);
   f->write(data, (vil1_streampos)length);
 }
 
@@ -130,8 +129,8 @@ static void pngtopnm_error_handler (png_structp png_ptr, png_const_charp msg)
     return;
   }
 
-  vil1_jmpbuf_wrapper  *jmpbuf_ptr = (vil1_jmpbuf_wrapper*) png_get_error_ptr(png_ptr);
-  if (jmpbuf_ptr == VXL_NULLPTR) {         // we are completely hosed now
+  auto  *jmpbuf_ptr = (vil1_jmpbuf_wrapper*) png_get_error_ptr(png_ptr);
+  if (jmpbuf_ptr == nullptr) {         // we are completely hosed now
     std::cerr << "pnmtopng:  EXTREMELY fatal error: jmpbuf unrecoverable; terminating.\n";
     std::exit(99);
   }
@@ -151,18 +150,18 @@ struct vil1_png_structures
   vil1_png_structures(bool reading)
   {
     reading_ = reading;
-    png_ptr = VXL_NULLPTR;
-    info_ptr = VXL_NULLPTR;
-    rows = VXL_NULLPTR;
+    png_ptr = nullptr;
+    info_ptr = nullptr;
+    rows = nullptr;
     channels = 0;
     ok = false;
 
     png_setjmp_on(return);
 
     if (reading)
-      png_ptr = png_create_read_struct (PNG_LIBPNG_VER_STRING, &pngtopnm_jmpbuf_struct, pngtopnm_error_handler, VXL_NULLPTR);
+      png_ptr = png_create_read_struct (PNG_LIBPNG_VER_STRING, &pngtopnm_jmpbuf_struct, pngtopnm_error_handler, nullptr);
     else
-      png_ptr = png_create_write_struct (PNG_LIBPNG_VER_STRING, &pngtopnm_jmpbuf_struct, pngtopnm_error_handler, VXL_NULLPTR);
+      png_ptr = png_create_write_struct (PNG_LIBPNG_VER_STRING, &pngtopnm_jmpbuf_struct, pngtopnm_error_handler, nullptr);
 
     if (!png_ptr) {
       problem("cannot allocate LIBPNG structure");
@@ -184,7 +183,7 @@ struct vil1_png_structures
   bool alloc_image()
   {
     rows = new png_byte* [png_get_image_height(png_ptr, info_ptr)];
-    if (rows == VXL_NULLPTR)
+    if (rows == nullptr)
       return ok = problem("couldn't allocate space for image");
 
     unsigned long linesize;
@@ -220,7 +219,7 @@ struct vil1_png_structures
     if (reading_) {
       if (!rows) {
         if (alloc_image()) {
-          png_setjmp_on(return VXL_NULLPTR);
+          png_setjmp_on(return nullptr);
           png_read_image (png_ptr, rows);
           png_read_end (png_ptr, info_ptr);
           png_setjmp_off();
@@ -228,7 +227,7 @@ struct vil1_png_structures
       }
     }
     else {
-      assert(rows != VXL_NULLPTR);
+      assert(rows != nullptr);
     }
 
     return rows;
@@ -239,7 +238,7 @@ struct vil1_png_structures
     png_setjmp_on(goto del);
     if (reading_) {
       // Reading - just delete
-      png_destroy_read_struct (&png_ptr, &info_ptr, (png_infopp)VXL_NULLPTR);
+      png_destroy_read_struct (&png_ptr, &info_ptr, (png_infopp)nullptr);
     }
     else {
       // Writing - save the rows
@@ -404,7 +403,7 @@ bool vil1_png_generic_image::get_section(void* buf, int x0, int y0, int xs, int 
 
   // PNG lib wants everything in memory - the first get_rows reads the whole image.
   png_byte** rows = p->get_rows();
-  if (!rows) return 0;
+  if (!rows) return false;
 
   int bytes_per_pixel = png_get_bit_depth(p->png_ptr,p->info_ptr) * p->channels / 8;
   int bytes_per_row_dst = xs*bytes_per_pixel;
@@ -413,7 +412,7 @@ bool vil1_png_generic_image::get_section(void* buf, int x0, int y0, int xs, int 
     std::memcpy(buf, rows[y0], ys * bytes_per_row_dst);
   }
   else {
-    png_byte* dst = (png_byte*)buf;
+    auto* dst = (png_byte*)buf;
     for (int y = 0; y < ys; ++y, dst += bytes_per_row_dst)
       std::memcpy(dst, &rows[y0+y][x0*bytes_per_pixel], xs*bytes_per_pixel);
   }
@@ -438,7 +437,7 @@ bool vil1_png_generic_image::put_section(void const* buf, int x0, int y0, int xs
     std::memcpy(rows[y0], buf, ys * bytes_per_row_dst);
   }
   else {
-    const png_byte* dst = (const png_byte*)buf;
+    const auto* dst = (const png_byte*)buf;
     for (int y = 0; y < ys; ++y, dst += bytes_per_row_dst)
       std::memcpy(&rows[y0+y][x0*bytes_per_pixel], dst, xs*bytes_per_pixel);
   }

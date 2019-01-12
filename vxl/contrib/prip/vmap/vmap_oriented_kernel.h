@@ -15,7 +15,9 @@
 #include <iostream>
 #include <vector>
 #include "vmap_types.h" // for vmap_dart_index
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Wrapper to avoid having non rooted hierarchies while constructing a kernel.
 template <class TKernel>
@@ -39,7 +41,7 @@ class vmap_oriented_kernel : public TKernel
   vmap_oriented_kernel(map_type & arg) : Base_(arg) {}
 
   //:
-  ~vmap_oriented_kernel() {}
+  ~vmap_oriented_kernel() = default;
 
   //: Before any addition/test
   void initialise() ;

@@ -13,7 +13,9 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <brdb/brdb_value.h>
 #include <bprb/bprb_parameters.h>
@@ -29,8 +31,8 @@
 
 namespace boxm_opt2_update_process_globals
 {
-  const unsigned int n_inputs_ = 2;
-  const unsigned int n_outputs_ = 0;
+  constexpr unsigned int n_inputs_ = 2;
+  constexpr unsigned int n_outputs_ = 0;
   //Define parameters here
 }
 
@@ -102,7 +104,7 @@ bool boxm_opt2_update_process(bprb_func_process& pro)
    case BOXM_APM_SIMPLE_GREY:
     {
       typedef boct_tree<short,boxm_sample<BOXM_APM_SIMPLE_GREY> > tree_type;
-      boxm_scene<tree_type> *scene = dynamic_cast<boxm_scene<tree_type>*>(scene_base.ptr());
+      auto *scene = dynamic_cast<boxm_scene<tree_type>*>(scene_base.ptr());
       if (!scene) {
         std::cerr << "error casting scene_base to scene\n";
         return false;
@@ -115,7 +117,7 @@ bool boxm_opt2_update_process(bprb_func_process& pro)
    case BOXM_APM_MOG_GREY:
     {
       typedef boct_tree<short,boxm_sample<BOXM_APM_MOG_GREY> > tree_type;
-      boxm_scene<tree_type> *scene = dynamic_cast<boxm_scene<tree_type>*>(scene_base.ptr());
+      auto *scene = dynamic_cast<boxm_scene<tree_type>*>(scene_base.ptr());
       if (!scene) {
         std::cerr << "error casting scene_base to scene\n";
         return false;

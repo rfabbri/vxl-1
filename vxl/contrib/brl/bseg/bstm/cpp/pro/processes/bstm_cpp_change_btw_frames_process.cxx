@@ -9,7 +9,9 @@
 // \author Ali Osman Ulusoy
 // \date Mar 18, 2013
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bstm/io/bstm_cache.h>
 #include <bstm/io/bstm_lru_cache.h>
 #include <bstm/bstm_scene.h>
@@ -26,8 +28,8 @@
 
 namespace bstm_cpp_change_btw_frames_process_globals
 {
-  const unsigned n_inputs_ =  4;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 4;
+  constexpr unsigned n_outputs_ = 0;
 
   typedef unsigned char uchar;
   typedef unsigned short ushort;
@@ -71,8 +73,8 @@ bool bstm_cpp_change_btw_frames_process(bprb_func_process& pro)
   unsigned i = 0;
   bstm_scene_sptr scene =pro.get_input<bstm_scene_sptr>(i++);
   bstm_cache_sptr cache= pro.get_input<bstm_cache_sptr>(i++);
-  float time_0 = pro.get_input<float>(i++);
-  float time_1 = pro.get_input<float>(i++);
+  auto time_0 = pro.get_input<float>(i++);
+  auto time_1 = pro.get_input<float>(i++);
 
 
 
@@ -91,12 +93,12 @@ bool bstm_cpp_change_btw_frames_process(bprb_func_process& pro)
 
       bstm_block* blk = cache->get_block(bstm_metadata.id_);
       bstm_time_block* blk_t = cache->get_time_block(bstm_metadata.id_);
-      bstm_data_base * alph    = cache->get_data_base(bstm_metadata.id_, bstm_data_traits<BSTM_ALPHA>::prefix());
-      bstm_data_traits<BSTM_ALPHA>::datatype * alpha_data = (bstm_data_traits<BSTM_ALPHA>::datatype*) alph->data_buffer();
-      bstm_data_base *change_buffer   =   cache->get_data_base_new(bstm_metadata.id_,
+      bstm_data_base * alph = cache->get_data_base(bstm_metadata.id_, bstm_data_traits<BSTM_ALPHA>::prefix());
+      auto * alpha_data = (bstm_data_traits<BSTM_ALPHA>::datatype*) alph->data_buffer();
+      bstm_data_base *change_buffer = cache->get_data_base_new(bstm_metadata.id_,
                                                         bstm_data_traits<BSTM_CHANGE>::prefix(),
                                                         blk_t->tree_buff_length() * bstm_data_traits<BSTM_CHANGE>::datasize()  );
-      bstm_data_traits<BSTM_CHANGE>::datatype* change_array = (bstm_data_traits<BSTM_CHANGE>::datatype*) change_buffer->data_buffer();
+      auto* change_array = (bstm_data_traits<BSTM_CHANGE>::datatype*) change_buffer->data_buffer();
 
       //iterate through each tree
       boxm2_array_3d<uchar16>&  trees = blk->trees();

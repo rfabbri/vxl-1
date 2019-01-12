@@ -11,7 +11,9 @@
 //
 #include <iostream>
 #include <volm/volm_tile.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <volm/volm_osm_objects.h>
 #include <volm/volm_geo_index2.h>
 #include <volm/volm_io.h>
@@ -59,8 +61,8 @@ int main(int argc, char** argv)
 
   // find the bbox of ROI from its polygon
   vgl_box_2d<double> bbox_rect;
-  for (unsigned i = 0; i < poly[0].size(); i++) {
-    bbox_rect.add(poly[0][i]);
+  for (auto i : poly[0]) {
+    bbox_rect.add(i);
   }
   double square_size = (bbox_rect.width() >= bbox_rect.height()) ? bbox_rect.width() : bbox_rect.height();
   vgl_box_2d<double> bbox(bbox_rect.min_point(), square_size, square_size, vgl_box_2d<double>::min_pos);
@@ -145,9 +147,9 @@ int main(int argc, char** argv)
     vgl_point_3d<float> corner(0.0f, 0.0f, 0.0f);
     double lx, ly, lz;
     lvcs->global_to_local(upper_right.x(), upper_right.y(), height()+max, vpgl_lvcs::wgs84, lx, ly, lz);
-    unsigned dim_x = (unsigned)std::ceil(lx/voxel_size());
-    unsigned dim_y = (unsigned)std::ceil(ly/voxel_size());
-    unsigned dim_z = (unsigned)std::ceil(height()+dif);
+    auto dim_x = (unsigned)std::ceil(lx/voxel_size());
+    auto dim_y = (unsigned)std::ceil(ly/voxel_size());
+    auto dim_z = (unsigned)std::ceil(height()+dif);
     vgl_vector_3d<unsigned> num_voxels(dim_x, dim_y, dim_z);
     bvxm_world_params params;
     std::stringstream world_dir;

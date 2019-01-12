@@ -15,8 +15,10 @@
 
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vbl/vbl_ref_count.h>
 #include <brdb/brdb_value.h>
 #include <brdb/brdb_tuple_sptr.h>
@@ -28,7 +30,7 @@ class brdb_tuple : public vbl_ref_count
   //======================= Constructors / Destructors ========================
  public:
   //: Default Constructor (0-tuple)
-  brdb_tuple() {}
+  brdb_tuple() = default;
 
   //: Constructor for a 1-tuple
   template< class T1 >
@@ -103,7 +105,7 @@ class brdb_tuple : public vbl_ref_count
   brdb_tuple(const brdb_tuple& other);
 
   //: Destructor
-  virtual ~brdb_tuple();
+  ~brdb_tuple() override;
 
   //========================= Accessors / Modifiers ==========================
 
@@ -221,10 +223,10 @@ class brdb_tuple_order
   virtual bool operator() (const brdb_tuple_sptr& lhs,
                            const brdb_tuple_sptr& rhs) const = 0;
 
-  virtual ~brdb_tuple_order(){}
+  virtual ~brdb_tuple_order()= default;
 
  protected:
-  brdb_tuple_order() {}
+  brdb_tuple_order() = default;
 };
 
 
@@ -236,7 +238,7 @@ class brdb_tuple_less : public brdb_tuple_order
   brdb_tuple_less(unsigned int index): index_(index) {}
   //: Main function
   bool operator() (const brdb_tuple_sptr& lhs,
-                   const brdb_tuple_sptr& rhs) const
+                   const brdb_tuple_sptr& rhs) const override
   {
     return (*lhs)[index_] < (*rhs)[index_];
   }
@@ -255,7 +257,7 @@ class brdb_tuple_greater : public brdb_tuple_order
   brdb_tuple_greater(unsigned int index): index_(index) {}
   //: Main function
   bool operator() (const brdb_tuple_sptr& lhs,
-                   const brdb_tuple_sptr& rhs) const
+                   const brdb_tuple_sptr& rhs) const override
   {
     return (*lhs)[index_] > (*rhs)[index_];
   }

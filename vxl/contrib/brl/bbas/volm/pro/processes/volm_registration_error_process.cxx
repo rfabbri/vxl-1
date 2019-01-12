@@ -14,7 +14,9 @@
 // \endverbatim
 //
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_file.h>
 #include <vsl/vsl_binary_io.h>
 #include <vsl/vsl_vector_io.h>
@@ -33,8 +35,8 @@
 //: Take pre-created projection geometry (vsol binary file) to compute the deviation from ground truth
 namespace volm_registration_error_process_globals
 {
-  const unsigned n_inputs_  = 6;
-  const unsigned n_outputs_ = 4;
+  constexpr unsigned n_inputs_ = 6;
+  constexpr unsigned n_outputs_ = 4;
 
   //: return the closest, along with the normal components, from a point to a line segment
   double closest_distance(vsol_point_2d_sptr const& p, std::vector<vsol_point_2d_sptr> const& point_set,
@@ -78,7 +80,7 @@ bool volm_registration_error_process(bprb_func_process& pro)
   std::string gt_file = pro.get_input<std::string>(in_i++);
   std::string cor_file = pro.get_input<std::string>(in_i++);
   std::string ori_file = pro.get_input<std::string>(in_i++);
-  double res = pro.get_input<double>(in_i++);
+  auto res = pro.get_input<double>(in_i++);
   std::string cor_out_file = pro.get_input<std::string>(in_i++);
   std::string ori_out_file = pro.get_input<std::string>(in_i++);
 
@@ -126,11 +128,11 @@ bool volm_registration_error_process(bprb_func_process& pro)
   std::vector<vsol_polyline_2d_sptr> ori_lines;
   std::vector<vsol_spatial_object_2d_sptr>::iterator vit;
   for (vit = gt_sos_in.begin(); vit != gt_sos_in.end(); ++vit)
-    gt_lines.push_back((*vit)->cast_to_curve()->cast_to_polyline());
+    gt_lines.emplace_back((*vit)->cast_to_curve()->cast_to_polyline());
   for (vit = cor_sos_in.begin(); vit != cor_sos_in.end(); ++vit)
-    cor_lines.push_back((*vit)->cast_to_curve()->cast_to_polyline());
+    cor_lines.emplace_back((*vit)->cast_to_curve()->cast_to_polyline());
   for (vit = ori_sos_in.begin(); vit != ori_sos_in.end(); ++vit)
-    ori_lines.push_back((*vit)->cast_to_curve()->cast_to_polyline());
+    ori_lines.emplace_back((*vit)->cast_to_curve()->cast_to_polyline());
 
   // calculate the distance for each line
   unsigned n_lines = gt_lines.size();
@@ -318,7 +320,7 @@ double volm_registration_error_process_globals::closest_distance(std::vector<vso
   if (p_set1.size() != p_set2.size()) {
     return average_dist;
   }
-  unsigned n_pts = (unsigned)p_set1.size();
+  auto n_pts = (unsigned)p_set1.size();
   for (unsigned i = 0; i < n_pts; i++) {
     double dx = p_set1[i]->x() - p_set2[i]->x();
     double dy = p_set1[i]->y() - p_set2[i]->y();

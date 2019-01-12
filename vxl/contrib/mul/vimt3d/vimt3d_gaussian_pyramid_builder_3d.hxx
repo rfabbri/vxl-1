@@ -20,15 +20,17 @@
 #include <vimt/vimt_image_pyramid.h>
 #include <vimt3d/vimt3d_save.h>
 #include <vil3d/algo/vil3d_gauss_reduce.h>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <mbl/mbl_log.h>
 
 
 //=======================================================================
 
 
-static mbl_logger& images_logger()
+static inline mbl_logger& images_logger()
 {
     static mbl_logger l("mul.vimt3d.gaussian_pyramid_builder_3d");
     return l;
@@ -45,9 +47,7 @@ vimt3d_gaussian_pyramid_builder_3d<T>::vimt3d_gaussian_pyramid_builder_3d()
 //=======================================================================
 
 template<class T>
-vimt3d_gaussian_pyramid_builder_3d<T>::~vimt3d_gaussian_pyramid_builder_3d()
-{
-}
+vimt3d_gaussian_pyramid_builder_3d<T>::~vimt3d_gaussian_pyramid_builder_3d() = default;
 
 //=======================================================================
 //: Define maximum number of levels to build

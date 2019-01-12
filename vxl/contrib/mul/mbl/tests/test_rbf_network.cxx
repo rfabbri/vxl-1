@@ -2,8 +2,10 @@
 #include <iostream>
 #include <cmath>
 #include <vector>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <vnl/vnl_random.h>
 #include <mbl/mbl_rbf_network.h>
@@ -21,9 +23,9 @@ void test_rbf_network()
   rng.reseed(123456);
 
 //const unsigned nCentres = 64;
-  const unsigned nSamples = 100;
-  const unsigned nDims = 3;
-  const unsigned nTests = 3;
+  constexpr unsigned nSamples = 100;
+  constexpr unsigned nDims = 3;
+  constexpr unsigned nTests = 3;
 
 
   std::vector<vnl_vector<double> >

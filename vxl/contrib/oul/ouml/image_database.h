@@ -27,7 +27,9 @@
 #include <map>
 #include <utility>
 #include <vcl_sys/types.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil1/vil1_memory_image.h>
 
 class ImageDatabase
@@ -49,7 +51,7 @@ class ImageDatabase
   typedef std::multimap<const char*, vil1_memory_image *, ltstr>::const_iterator const_iterator;
   typedef std::pair<const char *, vil1_memory_image *> value_type;
 
-  ImageDatabase(){}
+  ImageDatabase()= default;
   ~ImageDatabase();
   inline iterator insert(const char *label, vil1_memory_image *image)
     {char *new_label=new char[200]; std::strcpy(new_label, label);

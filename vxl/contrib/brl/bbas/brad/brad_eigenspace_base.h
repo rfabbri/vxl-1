@@ -12,9 +12,10 @@
 
 #include <iostream>
 #include <string>
-#include <vcl_compiler.h>
 #include <vbl/vbl_ref_count.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_binary_io.h>
 #include <brad/brad_eigenspace_sptr.h>
 #include <brad/brad_hist_prob_feature_vector.h>
@@ -24,9 +25,9 @@ class brad_eigenspace_base : public vbl_ref_count
 {
  public:
   //: Default constructor
-  brad_eigenspace_base() {}
+  brad_eigenspace_base() = default;
 
-  virtual ~brad_eigenspace_base() {}
+  ~brad_eigenspace_base() override = default;
 
   virtual std::string feature_vector_type() {return "unknown\n";}
 };

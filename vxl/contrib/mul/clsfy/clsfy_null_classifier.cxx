@@ -1,7 +1,4 @@
 // This is mul/clsfy/clsfy_null_classifier.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 // Copyright (c) 2009: Imorphics plc
 
 //:
@@ -15,7 +12,9 @@
 #include <algorithm>
 #include "clsfy_null_classifier.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h>
 
 
@@ -50,7 +49,7 @@ void clsfy_null_classifier::print_summary(std::ostream& os) const
 //=======================================================================
 void clsfy_null_classifier::b_write(vsl_b_ostream& bfs) const
 {
-  const short version_no = 1;
+  constexpr short version_no = 1;
   vsl_b_write(bfs, version_no);
   vsl_b_write(bfs, n_dims_);
   vsl_b_write(bfs, default_class_);
@@ -90,7 +89,7 @@ unsigned clsfy_null_classifier::n_classes() const
 
 //: Return the probability the input being in each class.
 // output(i) i<nClasses, contains the probability that the input is in class i
-void clsfy_null_classifier::class_probabilities(std::vector<double> &outputs, const vnl_vector<double> &input) const
+void clsfy_null_classifier::class_probabilities(std::vector<double> &outputs, const vnl_vector<double> & /*input*/) const
 {
   unsigned n=n_classes();
   outputs.resize(n);
@@ -103,7 +102,7 @@ void clsfy_null_classifier::class_probabilities(std::vector<double> &outputs, co
 //: Log likelihood of being in class (binary classifiers only)
 // class probability = 1 / (1+exp(-log_l))
 // Operation of this method is undefined for multiclass classifiers.
-double clsfy_null_classifier::log_l(const vnl_vector<double> &input) const
+double clsfy_null_classifier::log_l(const vnl_vector<double> & /*input*/) const
 {
   return default_class_?1.0:-1.0 * vnl_huge_val(double());
 }

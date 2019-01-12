@@ -7,7 +7,9 @@
 // \brief Converts floating point image (0,1.0) to byte image (0,255) for compression/saveability reasons
 
 #include <bprb/bprb_parameters.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_image_view_base.h>
 #include <vil/vil_math.h>
 #include <vil/vil_convert.h>
@@ -17,13 +19,13 @@ bool vil_convert_pixel_type_process_cons(bprb_func_process& pro)
 {
   //this process takes two inputs:
   std::vector<std::string> input_types;
-  input_types.push_back("vil_image_view_base_sptr");
-  input_types.push_back("vcl_string");
+  input_types.emplace_back("vil_image_view_base_sptr");
+  input_types.emplace_back("vcl_string");
 
   //this process has 1 output
   // output(0): the output image with the specified number of planes
   std::vector<std::string> output_types;
-  output_types.push_back("vil_image_view_base_sptr");  // label image
+  output_types.emplace_back("vil_image_view_base_sptr");  // label image
 
   return pro.set_input_types(input_types)
       && pro.set_output_types(output_types);
@@ -72,36 +74,36 @@ bool vil_convert_pixel_type_process(bprb_func_process& pro)
   //return image of same type (convert back)
   ////////////////////////////////////////////////////////////////////
   if (out_type=="float") {
-    vil_image_view<float>* bimage = new vil_image_view<float>(ni, nj, nplanes);
+    auto* bimage = new vil_image_view<float>(ni, nj, nplanes);
     vil_convert_cast(fimage, *bimage);
     pro.set_output_val<vil_image_view_base_sptr>(0, bimage);
     return true;
   }
   else if (out_type=="byte") {
     vil_math_scale_values( fimage, 255.0 );
-    vil_image_view<vxl_byte>* bimage = new vil_image_view<vxl_byte>(ni, nj, nplanes);
+    auto* bimage = new vil_image_view<vxl_byte>(ni, nj, nplanes);
     vil_convert_cast(fimage, *bimage);
     pro.set_output_val<vil_image_view_base_sptr>(0, bimage);
     return true;
   }
   else if (out_type=="uint16") {
     vil_math_scale_values( fimage, 65535.0 );
-    vil_image_view<vxl_uint_16>* bimage = new vil_image_view<vxl_uint_16>(ni, nj, nplanes);
+    auto* bimage = new vil_image_view<vxl_uint_16>(ni, nj, nplanes);
     vil_convert_cast(fimage, *bimage);
     pro.set_output_val<vil_image_view_base_sptr>(0, bimage);
     return true;
   }
   else if (out_type=="rgba")    {
     vil_math_scale_values( fimage, 255.0);
-    vil_image_view<vxl_byte>* bimage = new vil_image_view<vxl_byte>(ni, nj, nplanes);
+    auto* bimage = new vil_image_view<vxl_byte>(ni, nj, nplanes);
     vil_convert_cast(fimage, *bimage);
     pro.set_output_val<vil_image_view_base_sptr>(0, vil_convert_to_component_order(bimage));
     return true;
   }
   else if (out_type=="grey")   {
-    vil_image_view<float>* floatimg = new vil_image_view<float>(img->ni(), img->nj());
+    auto* floatimg = new vil_image_view<float>(img->ni(), img->nj());
     if (img->nplanes() == 3 || img->nplanes() == 4) {
-      vil_image_view<vxl_byte>* inImg = dynamic_cast<vil_image_view<vxl_byte>* >(img.ptr());
+      auto* inImg = dynamic_cast<vil_image_view<vxl_byte>* >(img.ptr());
       vil_image_view<float>     greyImg(img->ni(), img->nj());
       vil_convert_planes_to_grey<vxl_byte, float>(*inImg, greyImg);
 
@@ -114,4 +116,3 @@ bool vil_convert_pixel_type_process(bprb_func_process& pro)
   else
     return false;
 }
-

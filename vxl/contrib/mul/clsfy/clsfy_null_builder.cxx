@@ -1,7 +1,4 @@
 // This is mul/clsfy/clsfy_null_builder.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \brief Implement a null classifier builder
@@ -14,7 +11,9 @@
 #include <algorithm>
 #include "clsfy_null_builder.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_binary_loader.h>
 #include <vul/vul_string.h>
 #include <mbl/mbl_parse_block.h>
@@ -54,7 +53,7 @@ void clsfy_null_builder::print_summary(std::ostream& os) const
 
 void clsfy_null_builder::b_write(vsl_b_ostream& bfs) const
 {
-  const short version_no = 1;
+  constexpr short version_no = 1;
   vsl_b_write(bfs, version_no);
   vsl_b_write(bfs, default_class_);
 }
@@ -86,11 +85,11 @@ void clsfy_null_builder::b_read(vsl_b_istream& bfs)
 // For many classifiers, you may use nClasses==1 to
 // indicate a binary classifier
 double clsfy_null_builder::build(clsfy_classifier_base& model,
-                                 mbl_data_wrapper<vnl_vector<double> >& inputs,
+                                 mbl_data_wrapper<vnl_vector<double> >&  /*inputs*/,
                                  unsigned /* nClasses */,
                                  const std::vector<unsigned> &outputs) const
 {
-  clsfy_null_classifier &classifier = dynamic_cast<clsfy_null_classifier&>(model);
+  auto &classifier = dynamic_cast<clsfy_null_classifier&>(model);
 
   classifier.set_default_class(default_class_);
 

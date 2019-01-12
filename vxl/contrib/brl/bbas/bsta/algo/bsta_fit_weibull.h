@@ -15,7 +15,10 @@
 #include <bsta/bsta_weibull.h>
 #include <vnl/vnl_cost_function.h>
 #include <vnl/algo/vnl_brent_minimizer.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class bsta_weibull_cost_function : public vnl_cost_function
 {
@@ -28,13 +31,13 @@ class bsta_weibull_cost_function : public vnl_cost_function
   bsta_weibull_cost_function(double mean, double std_dev):
     vnl_cost_function(1), mean_(mean), std_dev_(std_dev){}
 
-  virtual ~bsta_weibull_cost_function() {}
+  ~bsta_weibull_cost_function() override = default;
 
   //:  The main function.  Given the parameter vector x, compute the value of f(x).
-  virtual double f(vnl_vector<double> const& x);
+  double f(vnl_vector<double> const& x) override;
 
   //:  Calculate the gradient of f at parameter vector x.
-  virtual void gradf(vnl_vector<double> const& x, vnl_vector<double>& gradient);
+  void gradf(vnl_vector<double> const& x, vnl_vector<double>& gradient) override;
   //: sample mean
   double mean() const {return mean_;}
 
@@ -53,7 +56,7 @@ template <class T>
 class bsta_fit_weibull
 {
  public:
-  bsta_fit_weibull() : wcf_(VXL_NULLPTR), residual_(T(0)){}
+  bsta_fit_weibull() : wcf_(nullptr), residual_(T(0)){}
   bsta_fit_weibull(bsta_weibull_cost_function* wcf) : wcf_(wcf), residual_(T(0)){}
 
   void set_cost_function(bsta_weibull_cost_function* wcf)

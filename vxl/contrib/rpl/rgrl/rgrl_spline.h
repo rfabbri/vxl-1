@@ -11,7 +11,9 @@
 #include "rgrl_spline_sptr.h"
 #include "rgrl_object.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_matrix.h>
 #include <vnl/vnl_vector.h>
 
@@ -69,7 +71,7 @@ class rgrl_spline
 //                    vnl_vector<double> const& p0 );
 
   //: Destructor.
-  ~rgrl_spline(){}
+  ~rgrl_spline() override = default;
 
   //: Set controls points
   void set_control_points( vnl_vector<double> const& c ) ;

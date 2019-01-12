@@ -17,7 +17,9 @@
 #include <map>
 #include <vgl/vgl_polygon.h>
 #include <vil/algo/vil_find_4con_boundary.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <volm/volm_io.h>
 #include <volm/volm_tile.h>
 #include <volm/volm_camera_space.h>
@@ -31,12 +33,12 @@ class volm_candidate_list
 {
   public:
     //: default constructor
-    volm_candidate_list() {}
+    volm_candidate_list() = default;
     //: constructor
     volm_candidate_list(vil_image_view<vxl_byte> const& image,
                         unsigned threshold);
     //: destructor
-    ~volm_candidate_list() {}
+    ~volm_candidate_list() = default;
 
     //: access
     vgl_polygon<int> cand_poly() { return poly_; }

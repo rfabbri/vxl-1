@@ -16,7 +16,9 @@
 #include <vxl_config.h>  // For vxl_byte
 
 #include <vsl/vsl_binary_io.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class vimt_image_pyramid;
 
@@ -100,7 +102,7 @@ class mfpf_point_finder
   // Returns a quality of fit measure at the point (the smaller the better).
   virtual double evaluate(const vimt_image_2d_of<float>& image,
                           const vgl_point_2d<double>& p,
-                          const vgl_vector_2d<double>& u)=0;
+                          const vgl_vector_2d<double>& u) = 0;
 
   //: Evaluate match at in a region around p
   // Returns a quality of fit at a set of positions.

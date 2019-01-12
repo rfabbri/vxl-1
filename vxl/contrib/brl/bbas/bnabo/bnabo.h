@@ -42,12 +42,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //        #include "Eigen/Array"
 //#endif
 
-#include <vnl/vnl_vector.h>
-#include <vnl/vnl_matrix.h>
-
 #include <vector>
 #include <map>
 #include <limits>
+#include <vnl/vnl_vector.h>
+#include <vnl/vnl_matrix.h>
+
 
  //remove dependency on boost - JLM
  //#include <boost/any.hpp>
@@ -160,7 +160,7 @@ namespace Nabo
   struct Parameters: public std::map<std::string, T>
     {
       //! Create an empty parameter vector
-      Parameters(){}
+      Parameters()= default;
       //! Create a parameter vector with a single entry
       /** \param key entry key
        * \param value entry value
@@ -351,7 +351,7 @@ namespace Nabo
       }
 
       //! virtual destructor
-      virtual ~NearestNeighbourSearch() {}
+      virtual ~NearestNeighbourSearch() = default;
 
     protected:
       //! constructor
@@ -364,7 +364,7 @@ namespace Nabo
        *        \param dists2 squared distances to nearest neighbours, must be of size k x query.cols()
        *        \param optionFlags the options passed to knn()
        \param maxRadii if non 0, maximum radii, must be of size k */
-      void checkSizesKnn(const Matrix& query, const IndexMatrix& indices, const Matrix& dists2, const Index k, const unsigned optionFlags, const Vector* maxRadii = VXL_NULLPTR) const;
+      void checkSizesKnn(const Matrix& query, const IndexMatrix& indices, const Matrix& dists2, const Index k, const unsigned optionFlags, const Vector* maxRadii = nullptr) const;
  };
 
   // Convenience typedefs

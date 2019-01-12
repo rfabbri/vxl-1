@@ -1,7 +1,4 @@
 // This is gel/vdgl/vdgl_interpolator_linear.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 
@@ -11,21 +8,21 @@
 #include <vdgl/vdgl_edgel_chain.h>
 #include <vsol/vsol_point_2d.h>
 #include <vgl/vgl_point_2d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_numeric_traits.h>
 #include <vnl/vnl_math.h>
-#include <vcl_cassert.h>
+#include <cassert>
 
 
-vdgl_interpolator_linear::vdgl_interpolator_linear( vdgl_edgel_chain_sptr chain)
+vdgl_interpolator_linear::vdgl_interpolator_linear( const vdgl_edgel_chain_sptr& chain)
   : vdgl_interpolator( chain)
 {
   recompute_all();
 }
 
-vdgl_interpolator_linear::~vdgl_interpolator_linear()
-{
-}
+vdgl_interpolator_linear::~vdgl_interpolator_linear() = default;
 
 vsol_point_2d_sptr vdgl_interpolator_linear::closest_point_on_curve ( vsol_point_2d_sptr p )
 {
@@ -42,7 +39,7 @@ vsol_point_2d_sptr vdgl_interpolator_linear::closest_point_on_curve ( vsol_point
     }
   }
   if ( index == -1 )
-    return VXL_NULLPTR;
+    return nullptr;
   else
     return new vsol_point_2d ( chain_->edgel(index).get_pt() );
 }

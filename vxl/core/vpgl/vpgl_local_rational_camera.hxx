@@ -6,7 +6,9 @@
 #include <vector>
 #include <fstream>
 #include "vpgl_local_rational_camera.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_point_3d.h>
 //--------------------------------------
@@ -183,7 +185,7 @@ vpgl_local_rational_camera<T>* read_local_rational_camera(std::string cam_path)
   file_inp.open(cam_path.c_str());
   if (!file_inp.good()) {
     std::cout << "error: bad filename: " << cam_path << std::endl;
-    return VXL_NULLPTR;
+    return nullptr;
   }
   return read_local_rational_camera<T>(file_inp);
 }
@@ -193,7 +195,7 @@ vpgl_local_rational_camera<T>* read_local_rational_camera(std::istream& istr)
 {
   vpgl_rational_camera<T>* rcam = read_rational_camera<T>(istr);
   if (!rcam)
-    return VXL_NULLPTR;
+    return nullptr;
   std::string input;
   bool good = false;
   vpgl_lvcs lvcs;
@@ -211,7 +213,7 @@ vpgl_local_rational_camera<T>* read_local_rational_camera(std::istream& istr)
   if  (!good)
   {
     //std::cout << "error: not a composite rational camera file\n";
-    return VXL_NULLPTR;
+    return nullptr;
   }
   return new vpgl_local_rational_camera<T>(lvcs, *rcam);
 }
@@ -222,13 +224,13 @@ vpgl_local_rational_camera<T>* read_local_rational_camera_from_txt(std::string c
 
   if(! rcam){
     std::cout << "Failed to read rational camera part of " << cam_path << '\n';
-    return VXL_NULLPTR;
+    return nullptr;
   }
   std::ifstream file_inp;
   file_inp.open(cam_path.c_str());
   if (!file_inp.good()) {
     std::cout << "error: bad filename: " << cam_path << std::endl;
-    return VXL_NULLPTR;
+    return nullptr;
   }
   bool good = false;
   vpgl_lvcs lvcs;
@@ -247,7 +249,7 @@ vpgl_local_rational_camera<T>* read_local_rational_camera_from_txt(std::string c
   if  (!good)
   {
     //std::cout << "error: not a composite rational camera file\n";
-    return VXL_NULLPTR;
+    return nullptr;
   }
   return new vpgl_local_rational_camera<T>(lvcs, *rcam);
 }

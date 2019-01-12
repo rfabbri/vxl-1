@@ -16,14 +16,14 @@ float render_expected_image(  bstm_scene_sptr & scene,
                                 bocl_mem_sptr & exp_image,
                                 bocl_mem_sptr & vis_image,
                                 bocl_mem_sptr & exp_img_dim,
-                                std::string data_type,
+                                const std::string& data_type,
                                 bocl_kernel* kernel,
                                 std::size_t * lthreads,
                                 unsigned cl_ni,
                                 unsigned cl_nj,
                                 int apptypesize,
                                 float time,
-                                std::string label_data_type,
+                                const std::string& label_data_type,
                                 int label_apptypesize,
                                 bool render_label)
   {
@@ -38,15 +38,15 @@ float render_expected_image(  bstm_scene_sptr & scene,
 
     std::cout << "TIME: " << time << std::endl;
     // create all buffers
-    cl_float* ray_origins = new cl_float[4*cl_ni*cl_nj];
-    cl_float* ray_directions = new cl_float[4*cl_ni*cl_nj];
+    auto* ray_origins = new cl_float[4*cl_ni*cl_nj];
+    auto* ray_directions = new cl_float[4*cl_ni*cl_nj];
     bocl_mem_sptr ray_o_buff = opencl_cache->alloc_mem(cl_ni*cl_nj*sizeof(cl_float4), ray_origins, "ray_origins buffer");
     bocl_mem_sptr ray_d_buff = opencl_cache->alloc_mem(cl_ni*cl_nj*sizeof(cl_float4), ray_directions, "ray_directions buffer");
     boxm2_ocl_camera_converter::compute_ray_image( device, queue, cam, cl_ni, cl_nj, ray_o_buff, ray_d_buff);
 
     // Output Array
     float output_arr[100];
-    for (int i=0; i<100; ++i) output_arr[i] = 0.0f;
+    for (float & i : output_arr) i = 0.0f;
     bocl_mem_sptr  cl_output=new bocl_mem(device->context(), output_arr, sizeof(float)*100, "output buffer");
     cl_output->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
 
@@ -152,4 +152,3 @@ float render_expected_image(  bstm_scene_sptr & scene,
     std::cout<<"Gpu time "<<gpu_time<<" transfer time "<<transfer_time<<std::endl;
     return gpu_time + transfer_time;
 }
-

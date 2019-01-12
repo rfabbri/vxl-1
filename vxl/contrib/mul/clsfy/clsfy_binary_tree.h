@@ -5,11 +5,14 @@
 // \file
 // \brief Binary tree classifier
 // \author Martin Roberts
-#include <iostream>
 #include <iosfwd>
-#include <clsfy/clsfy_classifier_base.h>
+#include <iostream>
+#include <utility>
 #include <clsfy/clsfy_binary_threshold_1d.h>
-#include <vcl_compiler.h>
+#include <clsfy/clsfy_classifier_base.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 //: One node of a binary tree classifier - wrapper round clsfy_binary_threshold_1d
@@ -27,7 +30,7 @@ class clsfy_binary_tree_op
 
  public:
 
-  clsfy_binary_tree_op() : data_index_(-1), data_ptr_(VXL_NULLPTR) {}
+  clsfy_binary_tree_op() : data_index_(-1), data_ptr_(nullptr) {}
   clsfy_binary_tree_op(const vnl_vector<double>* data_ptr,
                        int data_index=-1)
     : data_index_(data_index), data_ptr_(data_ptr) {}
@@ -70,8 +73,8 @@ class clsfy_binary_tree_node
  public:
 
   clsfy_binary_tree_node(clsfy_binary_tree_node* parent,
-                         const clsfy_binary_tree_op& op)
-  : nodeId_(-1),parent_(parent),left_child_(VXL_NULLPTR),right_child_(VXL_NULLPTR),op_(op),prob_(0.5) {}
+                         clsfy_binary_tree_op  op)
+  : nodeId_(-1),parent_(parent),left_child_(nullptr),right_child_(nullptr),op_(std::move(op)),prob_(0.5) {}
 
   virtual clsfy_binary_tree_node* create_child(const clsfy_binary_tree_op& op);
   void add_child(const clsfy_binary_tree_op& op,bool bLeft)
@@ -85,7 +88,7 @@ class clsfy_binary_tree_node
 
   //Note the owning classifier removes the tree - beware as once deleted its children
   //may be inaccessible for deletion
-  virtual ~clsfy_binary_tree_node() {}
+  virtual ~clsfy_binary_tree_node() = default;
 
   friend class clsfy_binary_tree;
   friend class clsfy_binary_tree_builder;
@@ -110,9 +113,9 @@ class clsfy_binary_tree : public clsfy_classifier_base
   };
 
   //: Constructor
-  clsfy_binary_tree(): root_(VXL_NULLPTR),cache_node_(VXL_NULLPTR) {}
+  clsfy_binary_tree(): root_(nullptr),cache_node_(nullptr) {}
 
-  virtual ~clsfy_binary_tree();
+  ~clsfy_binary_tree() override;
 
   clsfy_binary_tree(const clsfy_binary_tree& srcTree);
 
@@ -120,42 +123,42 @@ class clsfy_binary_tree : public clsfy_classifier_base
 
   static void remove_tree(clsfy_binary_tree_node* root);
   //: Return the classification of the given probe vector.
-  virtual unsigned classify(const vnl_vector<double> &input) const;
+  unsigned classify(const vnl_vector<double> &input) const override;
 
   //: Provides a probability-like value that the input being in each class.
   // output(i) i<nClasses, contains the probability that the input is in class i
-  virtual void class_probabilities(std::vector<double> &outputs, const vnl_vector<double> &input) const;
+  void class_probabilities(std::vector<double> &outputs, const vnl_vector<double> &input) const override;
 
   //: This value has properties of a Log likelihood of being in class (binary classifiers only)
   // class probability = exp(logL) / (1+exp(logL))
-  virtual double log_l(const vnl_vector<double> &input) const;
+  double log_l(const vnl_vector<double> &input) const override;
 
   //: The number of possible output classes.
-  virtual unsigned n_classes() const {return 1;}
+  unsigned n_classes() const override {return 1;}
 
   //: The dimensionality of input vectors.
-  virtual unsigned n_dims() const;
+  unsigned n_dims() const override;
 
   //: Storage version number
   virtual short version_no() const;
 
   //: Name of the class
-  virtual std::string is_a() const;
+  std::string is_a() const override;
 
   //: Name of the class
-  virtual bool is_class(std::string const& s) const;
+  bool is_class(std::string const& s) const override;
 
   //: Create a copy on the heap and return base class pointer
-  virtual clsfy_classifier_base* clone() const;
+  clsfy_classifier_base* clone() const override;
 
   //: Print class to os
-  virtual void print_summary(std::ostream& os) const;
+  void print_summary(std::ostream& os) const override;
 
   //: Save class to binary file stream
-  virtual void b_write(vsl_b_ostream& bfs) const;
+  void b_write(vsl_b_ostream& bfs) const override;
 
   //: Load class from binary file stream
-  virtual void b_read(vsl_b_istream& bfs);
+  void b_read(vsl_b_istream& bfs) override;
 
   //: Normally only the builder uses this
   void set_root(  clsfy_binary_tree_node* root);

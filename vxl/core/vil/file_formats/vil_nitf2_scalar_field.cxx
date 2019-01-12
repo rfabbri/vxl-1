@@ -9,7 +9,9 @@
 #include "vil_nitf2_field_definition.h"
 #include "vil_nitf2_field_formatter.h"
 #include <vil/vil_stream_core.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 vil_nitf2_scalar_field*
 vil_nitf2_scalar_field::read(vil_nitf2_istream& input,
@@ -19,7 +21,7 @@ vil_nitf2_scalar_field::read(vil_nitf2_istream& input,
   if (error) (*error) = false;
   if (!definition || !definition->formatter) {
     std::cerr << "vil_nitf2_field::read(): Incomplete field definition!\n";
-    return VXL_NULLPTR;
+    return nullptr;
   }
   vil_nitf2_field_formatter* formatter = definition->formatter;
   // variable_width, if positive, overrides formatter field_width
@@ -33,7 +35,7 @@ vil_nitf2_scalar_field::read(vil_nitf2_istream& input,
   //   value if computed
   //   warning if required field missing (scalar field or std::vector element)
   //   failed message if neither of the above apply
-  if (result!=VXL_NULLPTR) {
+  if (result!=nullptr) {
     result->m_definition = definition;
     VIL_NITF2_LOG(log_debug) << *result;
   } else if (is_blank && !definition->blanks_ok) {
@@ -53,7 +55,7 @@ bool vil_nitf2_scalar_field::write(vil_nitf2_ostream& output, int variable_width
 {
   if (!m_definition || !m_definition->formatter) {
     std::cerr << "vil_nitf2_scalar_field::write(): Incomplete field definition!\n";
-    return 0;
+    return false;
   }
   VIL_NITF2_LOG(log_debug) << "Writing tag " << m_definition->tag << ':';
   vil_nitf2_field_formatter* formatter = m_definition->formatter;
@@ -69,7 +71,7 @@ vil_nitf2_field::field_tree* vil_nitf2_scalar_field::get_tree() const
   //put the normal stuff in there
   field_tree* tr = vil_nitf2_field::get_tree();
   //now grab my value and put that in there
-  vil_stream_core* str = new vil_stream_core;
+  auto* str = new vil_stream_core;
   write( *str );
   vil_streampos num_to_read = str->tell();
   str->seek( 0 );
@@ -77,7 +79,7 @@ vil_nitf2_field::field_tree* vil_nitf2_scalar_field::get_tree() const
   buffer = (char*)std::malloc( (std::size_t) num_to_read+1 );
   str->read( (void*)buffer, num_to_read );
   buffer[(std::size_t) num_to_read] = 0;
-  tr->columns.push_back( std::string( buffer ) );
+  tr->columns.emplace_back( buffer );
   free( buffer );
   return tr;
 }

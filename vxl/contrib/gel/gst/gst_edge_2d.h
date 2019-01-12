@@ -1,16 +1,15 @@
 // This is gel/gst/gst_edge_2d.h
 #ifndef gst_edge_2d_h_
 #define gst_edge_2d_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author crossge@crd.ge.com
 
 #include <iostream>
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_ref_count.h>
 
 #include "gst_vertex_2d_sptr.h"

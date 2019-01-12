@@ -12,8 +12,10 @@
 #include <rgrl/rgrl_view.h>
 #include <rgrl/rgrl_match_set.h>
 // not used? #include <vector>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 //-----------------------------------------------
 //: a struct for fast look up of the from feature
@@ -23,8 +25,7 @@ struct feature_sptr_iterator_pair {
   rgrl_feature_sptr                   feature_;
   from_feature_iterator               fea_iterator_;
 
-  feature_sptr_iterator_pair()
-  { }
+  feature_sptr_iterator_pair() = default;
 
   feature_sptr_iterator_pair( rgrl_feature_sptr const& fea, from_feature_iterator const& it )
   : feature_( fea), fea_iterator_( it )

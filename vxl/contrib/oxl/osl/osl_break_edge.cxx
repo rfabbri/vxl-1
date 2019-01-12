@@ -1,14 +1,14 @@
 // This is oxl/osl/osl_break_edge.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
 
 #include "osl_break_edge.h"
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <osl/osl_edge.h>
 #include <osl/osl_ortho_regress.h>
 
@@ -33,7 +33,7 @@ void osl_break_edge(osl_edge const *in,
 
   // make new edges and push them onto the given list.
   for (unsigned int i=0; i+1<where.size(); ++i) {
-    osl_edge *fragment = new osl_edge(where[i+1]-where[i] + 1, verts[i], verts[i+1]);
+    auto *fragment = new osl_edge(where[i+1]-where[i] + 1, verts[i], verts[i+1]);
     for (unsigned int j=0; j<fragment->size(); ++j) {
       fragment->SetX(x[j + where[i]], j);
       fragment->SetY(y[j + where[i]], j);
@@ -47,7 +47,7 @@ void osl_break_edge(osl_edge const *in,
                     double threshold,
                     unsigned nbhd_size)
 {
-  assert(in!=VXL_NULLPTR);
+  assert(in!=nullptr);
 
   float const *x = in->GetX();
   float const *y = in->GetY();

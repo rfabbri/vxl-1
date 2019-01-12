@@ -11,7 +11,9 @@
 #include <vil1/vil1_memory_image_of.h>
 #include <vil1/vil1_save.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 vmal_dense_matching::vmal_dense_matching(const vnl_double_3x3 & H0,
                                          const vnl_double_3x3 & H1)
@@ -20,9 +22,7 @@ vmal_dense_matching::vmal_dense_matching(const vnl_double_3x3 & H0,
   H1_=H1;
 }
 
-vmal_dense_matching::~vmal_dense_matching()
-{
-}
+vmal_dense_matching::~vmal_dense_matching() = default;
 
 void vmal_dense_matching::set_fmatrix(const vnl_double_3x3 & F)
 {
@@ -38,8 +38,8 @@ void vmal_dense_matching::set_hmatrix(const vnl_double_3x3 & H)
 
 // Between two set of lines in 2 images that are matched, it compute the best lines
 // using the fundamental constraint.
-void vmal_dense_matching::refine_lines_using_F(vmal_multi_view_data_edge_sptr mvd_edge,
-                                               vmal_multi_view_data_edge_sptr res)
+void vmal_dense_matching::refine_lines_using_F(const vmal_multi_view_data_edge_sptr& mvd_edge,
+                                               const vmal_multi_view_data_edge_sptr& res)
 {
   // We assume that the lines have been sorted. It means that, for example, the
   // first end-point of the first segment correspond to the first end-point of
@@ -128,8 +128,8 @@ void vmal_dense_matching::refine_lines_using_F(vmal_multi_view_data_edge_sptr mv
 
 // Between two set of lines in 2 images that are matched, it compute the best lines
 // using the homography
-void vmal_dense_matching::refine_lines_using_H(vmal_multi_view_data_edge_sptr mvd_edge,
-                                               vmal_multi_view_data_edge_sptr res)
+void vmal_dense_matching::refine_lines_using_H(const vmal_multi_view_data_edge_sptr& mvd_edge,
+                                               const vmal_multi_view_data_edge_sptr& res)
 {
   //the second segment.
   if (type_==2)
@@ -211,7 +211,7 @@ void vmal_dense_matching::refine_lines_using_H(vmal_multi_view_data_edge_sptr mv
 }
 
 
-void vmal_dense_matching::disparity_map(vmal_multi_view_data_edge_sptr mvd_edge,
+void vmal_dense_matching::disparity_map(const vmal_multi_view_data_edge_sptr& mvd_edge,
                                         int h,int w)
 {
   vnl_double_3* lines0_p;
@@ -229,8 +229,6 @@ void vmal_dense_matching::disparity_map(vmal_multi_view_data_edge_sptr mvd_edge,
 
   convert_lines_double_3(tmp_lines0, lines0_p, lines0_q);
   convert_lines_double_3(tmp_lines1, lines1_p, lines1_q);
-
-  vnl_double_3x3 IH0=vnl_inverse(H0_);
 
   vnl_double_3 int_line0p;
   vnl_double_3 int_line0q;
@@ -333,7 +331,7 @@ void vmal_dense_matching::disparity_map(vmal_multi_view_data_edge_sptr mvd_edge,
 
   //Save the matrix in a pgn image
   max_disparity-=min_disparity;
-  unsigned char* buf=new unsigned char[w*h];
+  auto* buf=new unsigned char[w*h];
   for (int i=0; i<h; i++)
   {
     for (int j=0; j<w; j++)

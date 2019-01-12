@@ -5,7 +5,9 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Default constructor
 vifa_int_face_attr_common_params::

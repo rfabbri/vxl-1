@@ -1,9 +1,6 @@
 // This is core/vbl/vbl_array_3d.h
 #ifndef vbl_array_3dh
 #define vbl_array_3dh
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Contains class for templated 3d array
@@ -23,19 +20,21 @@
 
 #include <cstddef>
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #ifdef __OPTIMIZE__
 # define RANGECHECK(i,j,k) ((void)0)
 #else
-# include <vcl_cassert.h>
+#include <cassert>
 # define RANGECHECK(i,j,k) assert(((size_type)(i) < row1_count_) && \
                    ((size_type)(j) < row2_count_) && ((size_type)(k) < row3_count_))
 #endif
 
 //: Templated 3-dimensional array
 
-VCL_TEMPLATE_EXPORT template <class T>
+template <class T>
 class vbl_array_3d
 {
  public:
@@ -56,7 +55,7 @@ class vbl_array_3d
   typedef T const &const_reference;
  public:
 
-  vbl_array_3d(): element_(VXL_NULLPTR), row1_count_(0), row2_count_(0), row3_count_(0)
+  vbl_array_3d(): element_(nullptr), row1_count_(0), row2_count_(0), row3_count_(0)
   {}
 
   vbl_array_3d(size_type n1, size_type n2, size_type n3)
@@ -73,7 +72,7 @@ class vbl_array_3d
   }
 
   vbl_array_3d(vbl_array_3d<T> const& that)
-  : element_(VXL_NULLPTR), row1_count_(0), row2_count_(0), row3_count_(0)
+  : element_(nullptr), row1_count_(0), row2_count_(0), row3_count_(0)
   {
     if (that.element_) {
       construct(that.row1_count_,that.row2_count_,that.row3_count_);
@@ -157,11 +156,10 @@ class vbl_array_3d
 //
 // formatted I/O
 //
-#include <vcl_compiler.h>
-VCL_TEMPLATE_EXPORT template <class T> std::ostream& operator<<(std::ostream&,
+template <class T> std::ostream& operator<<(std::ostream&,
                                                   vbl_array_3d<T >const&);
 
-VCL_TEMPLATE_EXPORT template <class T> std::istream& operator>>(std::istream&,
+template <class T> std::istream& operator>>(std::istream&,
                                                   vbl_array_3d<T >&);
 
 #define VBL_ARRAY_3D_INSTANTIATE \

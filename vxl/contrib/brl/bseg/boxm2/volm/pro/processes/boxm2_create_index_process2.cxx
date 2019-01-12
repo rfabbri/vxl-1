@@ -23,7 +23,9 @@
 #include <vil/vil_save.h>
 #include <bkml/bkml_write.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/ocl/boxm2_opencl_cache.h>
 #include <boxm2/boxm2_block.h>
 #include <boxm2/boxm2_data_base.h>
@@ -36,10 +38,10 @@
 
 namespace boxm2_create_index_process2_globals
 {
-  const unsigned n_inputs_ = 14;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 14;
+  constexpr unsigned n_outputs_ = 0;
 
-  void compile_kernel(bocl_device_sptr device,std::vector<bocl_kernel*> & vec_kernels)
+  void compile_kernel(const bocl_device_sptr& device,std::vector<bocl_kernel*> & vec_kernels)
   {
     //gather all render sources... seems like a lot for rendering...
     std::vector<std::string> src_paths;
@@ -59,13 +61,13 @@ namespace boxm2_create_index_process2_globals
     std::string options = " -D COMPINDEX -D DETERMINISTIC";
     options += " -D RENDER_VISIBILITY ";
     options += " -D STEP_CELL=step_cell_compute_index(tblock,linfo->block_len,aux_args.alpha,data_ptr,d*linfo->block_len,aux_args.vis,aux_args.expdepth,aux_args.expdepthsqr,aux_args.probsum,aux_args.t)";
-    bocl_kernel* compute_index = new bocl_kernel();
+    auto* compute_index = new bocl_kernel();
 
     compute_index->create_kernel(&device->context(),device->device_id(), src_paths, "compute_loc_index", options, "compute_loc_index");
     vec_kernels.push_back(compute_index);
 
     //create normalize image kernel
-    bocl_kernel * norm_kernel=new bocl_kernel();
+    auto * norm_kernel=new bocl_kernel();
     if (!norm_kernel) {
       std::cout << " cannot allocate kernel object!\n" << std::endl; std::cout.flush(); }
     else
@@ -81,7 +83,7 @@ namespace boxm2_create_index_process2_globals
   static std::map<std::string,std::vector<bocl_kernel*> > kernels;
 
   // function to construct 2d_geo_index quad-tree for scene blocks
-  bvgl_2d_geo_index_node_sptr construct_2d_geo_index_for_blks(boxm2_scene_sptr scene)
+  bvgl_2d_geo_index_node_sptr construct_2d_geo_index_for_blks(const boxm2_scene_sptr& scene)
   {
     vgl_box_3d<double> scene_bbox = scene->bounding_box();
     // set the leaf size 4 times larger than the block size
@@ -147,18 +149,18 @@ bool boxm2_create_index_process2(bprb_func_process& pro)
   vpgl_lvcs lvcs = scene->lvcs();
   boxm2_opencl_cache_sptr  opencl_cache = pro.get_input<boxm2_opencl_cache_sptr>(i++);
   std::string geo_index_folder = pro.get_input<std::string>(i++);
-  unsigned tile_id = pro.get_input<unsigned>(i++);
+  auto tile_id = pro.get_input<unsigned>(i++);
   boxm2_volm_wr3db_index_params params;
   params.start = 0;
   params.skip = 1;
-  float elev_dif = pro.get_input<float>(i++);
+  auto elev_dif = pro.get_input<float>(i++);
   params.vmin = pro.get_input<float>(i++);
   params.dmax = pro.get_input<float>(i++);
   params.solid_angle = pro.get_input<float>(i++);
   std::string ray_file = pro.get_input<std::string>(i++);
   std::string out_index_folder = pro.get_input<std::string>(i++);
-  float vis_thres = pro.get_input<float>(i++);
-  float buffer_capacity = pro.get_input<float>(i++);
+  auto vis_thres = pro.get_input<float>(i++);
+  auto buffer_capacity = pro.get_input<float>(i++);
   int leaf_id = pro.get_input<int>(i++);
 
   volm_spherical_container_sptr sph2 = new volm_spherical_container(params.solid_angle,params.vmin,params.dmax);
@@ -245,7 +247,7 @@ bool boxm2_create_index_process2(bprb_func_process& pro)
   lookup->create_buffer(CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR);
 
   // create directions buffer
-  cl_float* ray_dirs = new cl_float[4*layer_size];
+  auto* ray_dirs = new cl_float[4*layer_size];
   std::vector<vgl_point_3d<double> > cart_points = sph_shell->cart_points();
   for (int i = 0; i < layer_size; ++i) {
     ray_dirs[4*i  ] = (cl_float)cart_points[i].x();
@@ -269,7 +271,7 @@ bool boxm2_create_index_process2(bprb_func_process& pro)
   std::cout.flush();
   // get subblk dimension
   boxm2_block_metadata mdata = scene->get_block_metadata(blocks.begin()->first);
-  float subblk_dim = (float)mdata.sub_block_dim_.x();
+  auto subblk_dim = (float)mdata.sub_block_dim_.x();
   std::cout << "subblk_dim: " << subblk_dim << std::endl;
   bocl_mem*  subblk_dim_mem=new bocl_mem(device->context(), &(subblk_dim), sizeof(float), "sub block dim buffer");
   subblk_dim_mem->create_buffer(CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR );
@@ -285,21 +287,21 @@ bool boxm2_create_index_process2(bprb_func_process& pro)
   std::vector<bvgl_2d_geo_index_node_sptr> blk_leaves_all;
   bvgl_2d_geo_index::get_leaves(blk_2d_tree, blk_leaves_all);
   for (unsigned l_idx = 0; l_idx < blk_leaves_all.size(); l_idx++) {
-    bvgl_2d_geo_index_node<std::vector<boxm2_block_id> >* leaf_ptr =
+    auto* leaf_ptr =
       dynamic_cast<bvgl_2d_geo_index_node<std::vector<boxm2_block_id> >* >(blk_leaves_all[i].ptr());
     leaf_ptr->contents_.clear();
   }
   std::map<boxm2_block_id, boxm2_block_metadata> blks = scene->blocks();
-  for (std::map<boxm2_block_id, boxm2_block_metadata>::iterator mit = blks.begin(); mit != blks.end(); ++mit) {
-    boxm2_block_id curr_blk_id = mit->first;
-    vgl_box_2d<double> curr_blk_bbox_2d(mit->second.bbox().min_x(), mit->second.bbox().max_x(), mit->second.bbox().min_y(), mit->second.bbox().max_y());
+  for (auto & blk : blks) {
+    boxm2_block_id curr_blk_id = blk.first;
+    vgl_box_2d<double> curr_blk_bbox_2d(blk.second.bbox().min_x(), blk.second.bbox().max_x(), blk.second.bbox().min_y(), blk.second.bbox().max_y());
     std::vector<bvgl_2d_geo_index_node_sptr> leaves;
     bvgl_2d_geo_index::get_leaves(blk_2d_tree, leaves, curr_blk_bbox_2d);
     if (leaves.empty())
       continue;
-    for (unsigned l_idx = 0; l_idx < leaves.size(); l_idx++) {
-      bvgl_2d_geo_index_node<std::vector<boxm2_block_id> >* leaf_ptr =
-        dynamic_cast<bvgl_2d_geo_index_node<std::vector<boxm2_block_id> >* >(leaves[l_idx].ptr());
+    for (auto & leave : leaves) {
+      auto* leaf_ptr =
+        dynamic_cast<bvgl_2d_geo_index_node<std::vector<boxm2_block_id> >* >(leave.ptr());
       leaf_ptr->contents_.push_back(curr_blk_id);
     }
   }
@@ -309,14 +311,14 @@ bool boxm2_create_index_process2(bprb_func_process& pro)
   if (leaf_id < 0) leaves2 = leaves;
   else leaves2.push_back(leaves[leaf_id]);
   std::cout << " will index " << leaves2.size() << " leaves!\n"; std::cout.flush();
-  for (unsigned li = 0; li < leaves2.size(); li++) {
-    if (!leaves2[li]->hyps_)
+  for (auto & li : leaves2) {
+    if (!li->hyps_)
       continue;
-    std::cout << " will index " << volm_geo_index::hypo_size(leaves2[li]) << " indices in leaf: " << leaves2[li]->get_hyp_name("") << std::endl; std::cout.flush();
+    std::cout << " will index " << volm_geo_index::hypo_size(li) << " indices in leaf: " << li->get_hyp_name("") << std::endl; std::cout.flush();
 
     // create a binary index file for each hypo set in a leaf
     boxm2_volm_wr3db_index_sptr ind = new boxm2_volm_wr3db_index(layer_size, buffer_capacity);
-    std::string index_file = leaves2[li]->get_index_name(out_file_name_pre.str());
+    std::string index_file = li->get_index_name(out_file_name_pre.str());
     if (!ind->initialize_write(index_file)) {
       std::cerr << "Cannot initialize " << index_file << " for write!\n";
       return false;
@@ -324,7 +326,7 @@ bool boxm2_create_index_process2(bprb_func_process& pro)
 
     vgl_point_3d<double> h_pt;
     unsigned indexed_cnt = 0;
-    while (leaves2[li]->hyps_->get_next(0, 1, h_pt))
+    while (li->hyps_->get_next(0, 1, h_pt))
     {
       //std::cout << "Processing hypothesis lon: " << h_pt.x() << " lat: " << h_pt.y() << " z: " << h_pt.z() << std::endl;
       if (indexed_cnt%1000 == 0) std::cout << indexed_cnt << "." << std::flush;
@@ -342,13 +344,13 @@ bool boxm2_create_index_process2(bprb_func_process& pro)
       hypo_location->create_buffer(CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR);
 
       // Output Arrays
-      float* buff = new float[layer_size];
+      auto* buff = new float[layer_size];
       for (int i=0;i<layer_size;++i) buff[i]=0.0f;
-      float* vis_buff = new float[layer_size];
+      auto* vis_buff = new float[layer_size];
       for (int i=0;i<layer_size;++i) vis_buff[i]=1.0f;
-      float* prob_buff = new float[layer_size];
+      auto* prob_buff = new float[layer_size];
       for (int i=0;i<layer_size;++i) prob_buff[i]=0.0f;
-      float* t_infinity_buff = new float[layer_size];
+      auto* t_infinity_buff = new float[layer_size];
       for (int i=0;i<layer_size;++i) t_infinity_buff[i]=0.0f;
 
       bocl_mem* exp_depth=new bocl_mem(device->context(),buff,layer_size*sizeof(float),"exp depth buffer");
@@ -364,16 +366,16 @@ bool boxm2_create_index_process2(bprb_func_process& pro)
       t_infinity->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
 
       // find its block for local_h_pt
-      bvgl_2d_geo_index_node_sptr curr_leaf = VXL_NULLPTR;
+      bvgl_2d_geo_index_node_sptr curr_leaf = nullptr;
       bvgl_2d_geo_index::get_leaf(blk_2d_tree, curr_leaf, vgl_point_2d<double>(local_h_pt_d.x(), local_h_pt_d.y()));
       if (curr_leaf) {
-        bvgl_2d_geo_index_node<std::vector<boxm2_block_id> >* curr_leaf_ptr =
+        auto* curr_leaf_ptr =
           dynamic_cast<bvgl_2d_geo_index_node<std::vector<boxm2_block_id> >* >(curr_leaf.ptr());
         bool found_blk = false;
-        for (std::vector<boxm2_block_id>::iterator vit = curr_leaf_ptr->contents_.begin(); vit != curr_leaf_ptr->contents_.end(); ++vit) {
-          vgl_box_3d<double> curr_blk_bbox = scene->blocks()[*vit].bbox();
+        for (auto & content : curr_leaf_ptr->contents_) {
+          vgl_box_3d<double> curr_blk_bbox = scene->blocks()[content].bbox();
           if (curr_blk_bbox.contains(local_h_pt_d)) {
-            curr_block = *vit;
+            curr_block = content;
             found_blk = true;
           }
         }
@@ -450,11 +452,11 @@ bool boxm2_create_index_process2(bprb_func_process& pro)
       }
 #endif
 
-      std::map<boxm2_block_id, std::vector<boxm2_block_id> >::iterator ord_iter = order_cache.find(curr_block);
+      auto ord_iter = order_cache.find(curr_block);
       if (!(ord_iter != order_cache.end())) {
         order_cache[curr_block] =  boxm2_util::order_about_a_block(scene, curr_block, dmax);
         if (order_cache.size() > 100) {// kick the first one
-          std::map<boxm2_block_id, std::vector<boxm2_block_id> >::iterator to_kick = order_cache.begin();
+          auto to_kick = order_cache.begin();
           if (to_kick->first != curr_block)
             order_cache.erase(to_kick);
           else { ++to_kick; order_cache.erase(to_kick); }
@@ -472,8 +474,8 @@ bool boxm2_create_index_process2(bprb_func_process& pro)
 
         vul_timer transfer;
 
-        bocl_mem* blk       = opencl_cache->get_block(scene, id_inner);
-        bocl_mem* blk_info  = opencl_cache->loaded_block_info();
+        bocl_mem* blk = opencl_cache->get_block(scene, id_inner);
+        bocl_mem* blk_info = opencl_cache->loaded_block_info();
         bocl_mem* alpha = opencl_cache->get_data<BOXM2_ALPHA>(scene, id_inner);
 
         transfer_time += (float) transfer.all();

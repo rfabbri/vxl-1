@@ -9,7 +9,9 @@
 #include <vgl/algo/vgl_norm_trans_3d.h>
 #include <vnl/algo/vnl_svd.h>
 #include <vnl/vnl_matrix.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_distance.h>
 #include <vnl/algo/vnl_levenberg_marquardt.h>
 #include <vnl/vnl_least_squares_function.h>
@@ -22,7 +24,7 @@ class sphere_residual_function : public vnl_least_squares_function{
   // f = [(r0-r), (r1-r), ... , (ri-r), ... , (rn-1-r)]^t
   // where ri = sqrt( (xi-x0)^2 + (yi-y0)^2 + (zi-z0)^2 )
   //
-  virtual void f(vnl_vector<double> const& x, vnl_vector<double>& fx){
+  void f(vnl_vector<double> const& x, vnl_vector<double>& fx) override{
   double x0 = x[0], y0 = x[1], z0 = x[2], r = x[3];
   unsigned n = get_number_of_residuals();
   for(unsigned i = 0; i<n; ++i){
@@ -38,7 +40,7 @@ class sphere_residual_function : public vnl_least_squares_function{
 // ri = sqrt( (xi-x0)^2 + (yi-y0)^2 + (zi-z0)^2 )
 // J[i] = [-(xi-x0)/ri, -(yi-y0)/ri, -(zi-z0)/ri, -1]
 //
-  virtual void gradf(vnl_vector<double> const& x, vnl_matrix<double>& J){
+  void gradf(vnl_vector<double> const& x, vnl_matrix<double>& J) override{
   double x0 = x[0], y0 = x[1], z0 = x[2];
   unsigned n = get_number_of_residuals();
   for (unsigned i = 0; i<n; ++i)

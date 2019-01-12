@@ -7,7 +7,9 @@
 #include <bsta/bsta_gaussian_sphere.h>
 #include <bsta/algo/bsta_fit_gaussian.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vnl/vnl_random.h>
 
@@ -26,7 +28,7 @@ MAIN( test_fit_gaussian)
     float var = 0.2f;
     float sigma = std::sqrt(var);
 
-    const unsigned int n_samples = 500;
+    constexpr unsigned int n_samples = 500;
 
     bsta_gaussian_sphere<float,1> gauss_est;
 
@@ -35,7 +37,7 @@ MAIN( test_fit_gaussian)
     std::vector<float> weights;
     for (unsigned int n=0; n<n_samples; ++n) {
       float sample = mean + sigma*(float)rand_gen.normal();
-      float weight = (float)rand_gen.drand32(0.0, 1.0);
+      auto weight = (float)rand_gen.drand32(0.0, 1.0);
       weights.push_back(weight);
       samples.push_back(sample);
     }
@@ -53,7 +55,7 @@ MAIN( test_fit_gaussian)
 
     float sigma = std::sqrt(var);
 
-    const unsigned int n_samples = 500;
+    constexpr unsigned int n_samples = 500;
 
     bsta_gaussian_sphere<float,3> gauss_est;
 
@@ -65,7 +67,7 @@ MAIN( test_fit_gaussian)
       for (unsigned int d=0; d<3; ++d) {
         sample[d] = mean[d] + sigma*(float)rand_gen.normal();
       }
-      float weight = (float)rand_gen.drand32(0.0, 1.0);
+      auto weight = (float)rand_gen.drand32(0.0, 1.0);
       weights.push_back(weight);
       samples.push_back(sample);
     }
@@ -86,7 +88,7 @@ MAIN( test_fit_gaussian)
 
     vnl_vector_fixed<float,3> sigmas(std::sqrt(covar_diag[0]),std::sqrt(covar_diag[1]),std::sqrt(covar_diag[2]));
 
-    const unsigned int n_samples = 1000;
+    constexpr unsigned int n_samples = 1000;
 
     bsta_gaussian_indep<float,3> gauss_est;
     // generate samples
@@ -97,7 +99,7 @@ MAIN( test_fit_gaussian)
       for (unsigned int d=0; d<3; ++d) {
         sample[d] = mean[d] + sigmas[d]*(float)rand_gen.normal();
       }
-      float weight = (float)rand_gen.drand32(0.0, 1.0);
+      auto weight = (float)rand_gen.drand32(0.0, 1.0);
       weights.push_back(weight);
       samples.push_back(sample);
     }
@@ -118,7 +120,7 @@ MAIN( test_fit_gaussian)
     A(0,0) = 1.5f; A(1,0) = 0.05f; A(1,1) = 1.1f; A(2,0) = 0.08f; A(2,1) = -0.10f; A(2,2) = 0.7f;
     vnl_matrix_fixed<float,3,3> covar = A * A.transpose();
 
-    const unsigned int n_samples = 4000;
+    constexpr unsigned int n_samples = 4000;
 
     bsta_gaussian_full<float,3> gauss_est;
     // generate samples
@@ -131,7 +133,7 @@ MAIN( test_fit_gaussian)
         unit_rand[d] = (float)rand_gen.normal();
       }
       sample = mean + A * unit_rand;
-      float weight = (float)rand_gen.drand32(0.0, 1.0);
+      auto weight = (float)rand_gen.drand32(0.0, 1.0);
       weights.push_back(weight);
       samples.push_back(sample);
     }

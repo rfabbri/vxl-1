@@ -5,11 +5,13 @@
 #include <boct/boct_bit_tree.h>
 #include <vcl_where_root_dir.h>
 #include <vnl/vnl_random.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 boxm2_ocl_hierarchical_reg::boxm2_ocl_hierarchical_reg( boxm2_opencl_cache_sptr  & cache,
                                                    boxm2_scene_sptr sceneA,
                                                    boxm2_scene_sptr sceneB,
-                                                    bocl_device_sptr device,
+                                                    const bocl_device_sptr& device,
                                                     int nbins, bool do_vary_scale):  boxm2_ocl_reg_mutual_info(cache,sceneA,sceneB,device,nbins, do_vary_scale), do_vary_scale_(do_vary_scale)
 {
 
@@ -41,7 +43,7 @@ bool boxm2_ocl_hierarchical_reg::exhaustive()
         std::cout<<"Level #"<<level<<std::endl;
         mis.clear();
         samples_.clear();
-        std::map<double,vnl_vector<double> >::reverse_iterator iter = samples_sorted.rbegin();
+        auto iter = samples_sorted.rbegin();
         for(unsigned int j = 0 ; j < numbestparticales[level] && iter!=samples_sorted.rend(); j++,iter++)
         {
             std::cout.flush();

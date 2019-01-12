@@ -10,8 +10,10 @@
 #include <mfpf/mfpf_region_pdf.h>
 #include <vsl/vsl_binary_loader.h>
 #include <vul/vul_string.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <mbl/mbl_parse_block.h>
 #include <mbl/mbl_read_props.h>
@@ -58,9 +60,7 @@ void mfpf_region_pdf_builder::set_defaults()
 // Destructor
 //=======================================================================
 
-mfpf_region_pdf_builder::~mfpf_region_pdf_builder()
-{
-}
+mfpf_region_pdf_builder::~mfpf_region_pdf_builder() = default;
 
 //: Create new mfpf_region_pdf on heap
 mfpf_point_finder* mfpf_region_pdf_builder::new_finder() const
@@ -163,7 +163,7 @@ void mfpf_region_pdf_builder::set_as_ellipse(double ri, double rj)
   {
     // Find start and end of line of pixels inside disk
     int x = int(ri*std::sqrt(1.0-j*j/(rj*rj)));
-    roi_.push_back(mbl_chord(ni-x,ni+x,nj+j));
+    roi_.emplace_back(ni-x,ni+x,nj+j);
     n_pixels_+=2*x+1;
   }
 
@@ -175,7 +175,7 @@ void mfpf_region_pdf_builder::set_as_ellipse(double ri, double rj)
 
 //: Initialise building
 // Must be called before any calls to add_example(...)
-void mfpf_region_pdf_builder::clear(unsigned n_egs)
+void mfpf_region_pdf_builder::clear(unsigned  /*n_egs*/)
 {
   data_.resize(0);
 }
@@ -236,7 +236,7 @@ void mfpf_region_pdf_builder::add_example(const vimt_image_2d_of<float>& image,
 void mfpf_region_pdf_builder::build(mfpf_point_finder& pf)
 {
   assert(pf.is_a()=="mfpf_region_pdf");
-  mfpf_region_pdf& rp = static_cast<mfpf_region_pdf&>(pf);
+  auto& rp = static_cast<mfpf_region_pdf&>(pf);
 
   vpdfl_pdf_base *pdf = pdf_builder().new_model();
 
@@ -397,7 +397,7 @@ bool mfpf_region_pdf_builder::set_from_stream(std::istream &is)
   if (props.find("pdf_builder")!=props.end())
   {
     std::istringstream b_ss(props["pdf_builder"]);
-    vcl_unique_ptr<vpdfl_builder_base> bb =
+    std::unique_ptr<vpdfl_builder_base> bb =
          vpdfl_builder_base::new_pdf_builder_from_stream(b_ss);
     pdf_builder_ = bb->clone();
     props.erase("pdf_builder");
@@ -437,7 +437,7 @@ void mfpf_region_pdf_builder::print_summary(std::ostream& os) const
   if (norm_method_==0) os<<vsl_indent()<<"norm: none"<<'\n';
   else                 os<<vsl_indent()<<"norm: linear"<<'\n';
   os <<vsl_indent()<< "pdf_builder: ";
-  if (pdf_builder_.ptr()==VXL_NULLPTR) os << '-'<<'\n';
+  if (pdf_builder_.ptr()==nullptr) os << '-'<<'\n';
   else                       os << pdf_builder_<<'\n';
   os <<vsl_indent()<< "nA: " << nA_ << " dA: " << dA_ << ' '<<'\n'
      <<vsl_indent();
@@ -451,9 +451,9 @@ void mfpf_region_pdf_builder::print_shape(std::ostream& os) const
 {
   vil_image_view<vxl_byte> im(roi_ni_,roi_nj_);
   im.fill(0);
-  for (unsigned k=0;k<roi_.size();++k)
-    for (int i=roi_[k].start_x();i<=roi_[k].end_x();++i)
-      im(i,roi_[k].y())=1;
+  for (auto k : roi_)
+    for (int i=k.start_x();i<=k.end_x();++i)
+      im(i,k.y())=1;
   for (unsigned j=0;j<im.nj();++j)
   {
     for (unsigned i=0;i<im.ni();++i)

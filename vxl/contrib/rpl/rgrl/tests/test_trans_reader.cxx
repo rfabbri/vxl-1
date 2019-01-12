@@ -6,7 +6,9 @@
 #include <rgrl/rgrl_trans_reader.h>
 #include <rgrl/rgrl_trans_affine.h>
 #include <rgrl/rgrl_cast.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 static void test_trans_reader(int argc, char* argv[])
 {
@@ -31,7 +33,7 @@ static void test_trans_reader(int argc, char* argv[])
     TEST("Affine type", trans_sptr->is_type( rgrl_trans_affine::type_id() ), true );
 
     rgrl_trans_affine* affine = rgrl_cast<rgrl_trans_affine*>(trans_sptr);
-    TEST("Convert to affine type", affine!=VXL_NULLPTR, true );
+    TEST("Convert to affine type", affine!=nullptr, true );
 
     vnl_vector<double> t = affine->t();
     vnl_vector<double> true_t(2);

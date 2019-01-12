@@ -16,7 +16,10 @@
 #include <vil/vil_stream_fstream.h>
 #include <vil/vil_stream_section.h>
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //-------------------------------------------------------------------------
 // Helper functions.

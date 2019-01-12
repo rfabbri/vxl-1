@@ -17,8 +17,10 @@
 #include <limits>
 #include "imesh_kd_tree.h"
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 
 //: returns the index of the closest leaf node
@@ -28,9 +30,9 @@
 template <class F>
 unsigned int
 imesh_closest_index(const vgl_point_3d<double>& query,
-                    const vcl_unique_ptr<imesh_kd_tree_node>& kd_root,
+                    const std::unique_ptr<imesh_kd_tree_node>& kd_root,
                     F dist,
-                    std::vector<imesh_kd_tree_queue_entry>* dists = VXL_NULLPTR)
+                    std::vector<imesh_kd_tree_queue_entry>* dists = nullptr)
 {
   // find the root leaves containing the query point
   std::vector<imesh_kd_tree_queue_entry> leaf_queue, internal_queue;
@@ -100,8 +102,8 @@ imesh_closest_index(const vgl_point_3d<double>& query,
     {
       double left_dist2 = imesh_min_sq_dist(query,current->left_->inner_box_);
       if (left_dist2 < closest_dist2) {
-        internal_queue.push_back(imesh_kd_tree_queue_entry(left_dist2,
-                                                           current->left_.get()));
+        internal_queue.emplace_back(left_dist2,
+                                                           current->left_.get());
         std::push_heap(internal_queue.begin(), internal_queue.end());
       }
       else if (dists)
@@ -109,8 +111,8 @@ imesh_closest_index(const vgl_point_3d<double>& query,
 
       double right_dist2 = imesh_min_sq_dist(query,current->right_->inner_box_);
       if (right_dist2 < closest_dist2) {
-        internal_queue.push_back(imesh_kd_tree_queue_entry(right_dist2,
-                                                           current->right_.get()));
+        internal_queue.emplace_back(right_dist2,
+                                                           current->right_.get());
         std::push_heap(internal_queue.begin(), internal_queue.end());
       }
       else if (dists)

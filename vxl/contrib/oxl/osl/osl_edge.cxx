@@ -1,7 +1,4 @@
 // This is oxl/osl/osl_edge.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
@@ -44,8 +41,8 @@ osl_edge::~osl_edge() {
   v1->unref();
   v2->unref();
 #endif
-  v1 = VXL_NULLPTR;
-  v2 = VXL_NULLPTR;
+  v1 = nullptr;
+  v2 = nullptr;
 }
 
 void osl_edge::set_v1(osl_vertex *newv) {
@@ -85,6 +82,8 @@ void osl_edge::SetEndY(float v) { v2->y = v; }
 
 //--------------------------------------------------------------------------------
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 OSL_TOPOLOGY_REF_UNREF_INSTANTIATE(std::list<osl_edge*>);
 OSL_TOPOLOGY_REF_UNREF_INSTANTIATE(std::vector<osl_edge*>);

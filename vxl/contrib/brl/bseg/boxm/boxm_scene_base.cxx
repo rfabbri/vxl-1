@@ -2,16 +2,18 @@
 #include <cstdio>
 #include "boxm_scene_base.h"
 #include "boxm_scene_parser.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
-bool boxm_scene_base::load_scene(std::string filename, boxm_scene_parser& parser)
+bool boxm_scene_base::load_scene(const std::string& filename, boxm_scene_parser& parser)
 {
 
   if (filename.size() > 0) {
     std::FILE* xmlFile = std::fopen(filename.c_str(), "r");
     if (!xmlFile){
     std::cerr << filename.c_str() << " error on opening" << std::endl;
-    return 0;
+    return false;
     }
     if (!parser.parseFile(xmlFile)) {
       std::cerr << XML_ErrorString(parser.XML_GetErrorCode()) << " at line "

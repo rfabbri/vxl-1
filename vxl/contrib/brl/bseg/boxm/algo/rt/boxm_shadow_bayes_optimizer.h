@@ -4,7 +4,9 @@
 #include <vector>
 #include <iostream>
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_point_3d.h>
 #include <boxm/boxm_aux_traits.h>
 #include <boxm/boxm_apm_traits.h>
@@ -18,7 +20,7 @@ class boxm_shadow_bayes_optimizer
 public:
 
   boxm_shadow_bayes_optimizer(boxm_scene<boct_tree<T_loc, boxm_sample<APM> > > &scene,
-                              std::vector<std::string> const& image_ids,
+                              std::vector<std::string>  image_ids,
                               float min_app_sigma,
                               float shadow_prior,
                               float shadow_mean, float shadow_sigma,
@@ -27,7 +29,7 @@ public:
                               vgl_point_3d<double>(0,0,0)
                               );
 
-  ~boxm_shadow_bayes_optimizer(){}
+  ~boxm_shadow_bayes_optimizer()= default;
 
   bool optimize_cells(double damping_factor);
 

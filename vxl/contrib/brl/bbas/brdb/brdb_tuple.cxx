@@ -8,8 +8,10 @@
 // Apr 4th, 2007
 // make it work with the database initially
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 
 //======================= Constructors / Destructors ========================
@@ -17,7 +19,7 @@
 
 //: Constructor using a vector of db value references
 brdb_tuple::brdb_tuple(const std::vector<brdb_value*>& values)
-: values_(values.size(),VXL_NULLPTR)
+: values_(values.size(),nullptr)
 {
   for (unsigned int i=0; i<values.size(); ++i){
     values_[i] = values[i]->clone();
@@ -32,14 +34,14 @@ brdb_tuple::make_prototype(const std::vector<std::string>& types)
   typedef std::map<std::string, const brdb_value*> reg_t;
   const reg_t& reg =  brdb_value::registry();
 
-  std::vector<brdb_value* > values(types.size(),VXL_NULLPTR);
+  std::vector<brdb_value* > values(types.size(),nullptr);
   for (unsigned int i=0; i<types.size(); ++i){
-    reg_t::const_iterator f = reg.find(types[i]);
+    auto f = reg.find(types[i]);
     if (f != reg.end())
       values[i] = f->second->clone();
     else{
       std::cerr << "brdb_tuple: can not create instance of unknown type: "<< types[i] << std::endl;
-      return VXL_NULLPTR;
+      return nullptr;
     }
   }
 
@@ -49,7 +51,7 @@ brdb_tuple::make_prototype(const std::vector<std::string>& types)
 
 //: Copy Constructor
 brdb_tuple::brdb_tuple(const brdb_tuple& other)
-: vbl_ref_count(), values_(other.values_.size(),VXL_NULLPTR)
+: vbl_ref_count(), values_(other.values_.size(),nullptr)
 {
   for (unsigned int i=0; i<other.values_.size(); ++i){
     if (other.values_[i])
@@ -95,7 +97,7 @@ brdb_tuple::set_value(unsigned int index, const brdb_value& value)
   // check for whether this value exists
   if (!values_[index]){
     values_[index] = value.clone();
-    return values_[index] != VXL_NULLPTR;
+    return values_[index] != nullptr;
   }
   // check the type of the existing value
   assert(value.is_a() == values_[index]->is_a());
@@ -103,7 +105,7 @@ brdb_tuple::set_value(unsigned int index, const brdb_value& value)
   // remove the old value;
 //  delete values_[index];
   values_[index] = value.clone();
-  return values_[index] != VXL_NULLPTR;
+  return values_[index] != nullptr;
 }
 
 //: Get a value by index
@@ -142,7 +144,7 @@ bool
 brdb_tuple::add_value(const brdb_value& value)
 {
   // add it into the tuple
-  values_.push_back(value.clone());
+  values_.emplace_back(value.clone());
   return true;
 }
 
@@ -153,7 +155,7 @@ brdb_tuple::add_value(brdb_value_sptr const& value)
   if (!value)
     return false;
   // add it into the tuple
-  values_.push_back(value->clone());
+  values_.emplace_back(value->clone());
   return true;
 }
 
@@ -174,9 +176,8 @@ brdb_tuple::print() const
 void
 brdb_tuple::b_read_values(vsl_b_istream &is)
 {
-  for (std::vector<brdb_value_sptr>::iterator i=values_.begin();
-       i!=values_.end(); ++i)
-    (*i)->b_read_value(is);
+  for (auto & value : values_)
+    value->b_read_value(is);
 }
 
 
@@ -185,8 +186,6 @@ brdb_tuple::b_read_values(vsl_b_istream &is)
 void
 brdb_tuple::b_write_values(vsl_b_ostream &os) const
 {
-  for (std::vector<brdb_value_sptr>::const_iterator i=values_.begin();
-       i!=values_.end(); ++i)
-    (*i)->b_write_value(os);
+  for (const auto & value : values_)
+    value->b_write_value(os);
 }
-

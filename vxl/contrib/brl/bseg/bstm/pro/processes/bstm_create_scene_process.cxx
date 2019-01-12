@@ -7,14 +7,16 @@
 // \brief  A process for creating a scene
 //
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_file.h>
 #include <bstm/bstm_scene.h>
 
 namespace bstm_create_scene_process_globals
 {
-  const unsigned n_inputs_ = 6;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 6;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 bool bstm_create_scene_process_cons(bprb_func_process& pro)
@@ -50,11 +52,11 @@ bool bstm_create_scene_process(bprb_func_process& pro)
   std::vector<std::string> appearance(1,"");
   unsigned i = 0;
   std::string datapath = pro.get_input<std::string>(i++);
-  appearance[0]       = pro.get_input<std::string>(i++); //Appearance Model String
-  std::string opt_app  = pro.get_input<std::string>(i++); //Occupancy Model String
-  float origin_x      = pro.get_input<float>(i++);
-  float origin_y      = pro.get_input<float>(i++);
-  float origin_z      = pro.get_input<float>(i++);
+  appearance[0] = pro.get_input<std::string>(i++); //Appearance Model String
+  std::string opt_app = pro.get_input<std::string>(i++); //Occupancy Model String
+  auto origin_x = pro.get_input<float>(i++);
+  auto origin_y = pro.get_input<float>(i++);
+  auto origin_z = pro.get_input<float>(i++);
 
   if (!vul_file::make_directory_path(datapath.c_str()))
     return false;
@@ -73,8 +75,8 @@ bool bstm_create_scene_process(bprb_func_process& pro)
 
 namespace bstm_write_scene_xml_process_globals
 {
-  const unsigned n_inputs_  =2;
-  const unsigned n_outputs_ =0;
+  constexpr unsigned n_inputs_ = 2;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool bstm_write_scene_xml_process_cons(bprb_func_process& pro)
@@ -119,4 +121,3 @@ bool bstm_write_scene_xml_process(bprb_func_process& pro)
   x_write(ofile,(*scene.ptr()), "scene");
   return true;
 }
-

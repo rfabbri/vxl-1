@@ -10,7 +10,9 @@
 // \author Jim Green
 // \date Dec 2006
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_load.h>
 // for calls to get nitf_rational parameters from vil
 #include <vil/file_formats/vil_nitf2_image.h>
@@ -106,7 +108,7 @@ static int geostr_to_double(const char* in_string, double* val, vpgl_nitf_ration
 
     ++in_string;
 
-    return in_string-orig;
+    return static_cast<int>(in_string - orig);
   }
   else //DDDdMM'SS"[d]  where [d]=nNsSeEwW
   if (*in_string == 'd')
@@ -165,7 +167,7 @@ static int geostr_to_double(const char* in_string, double* val, vpgl_nitf_ration
 
     ++in_string;
 
-    return in_string-orig;
+    return static_cast<int>(in_string - orig);
   }
   else //DDD.DDDD
   if (*in_string == ' ' || *in_string == '-' || *in_string == '+'
@@ -194,7 +196,7 @@ static int geostr_to_double(const char* in_string, double* val, vpgl_nitf_ration
 
     ++in_string;
 
-    return in_string-orig;
+    return static_cast<int>(in_string - orig);
   }
   else
     return 0;
@@ -246,7 +248,7 @@ init(vil_nitf2_image* nitf_image, bool verbose)
 
   double tre_data[90];
   // initialize the array
-  for (int i=0; i<90; i++) tre_data[i] = 0;
+  for (double & i : tre_data) i = 0;
 
 
   bool success =
@@ -329,8 +331,7 @@ init(vil_nitf2_image* nitf_image, bool verbose)
   return true;
 }
 
-vpgl_nitf_rational_camera::vpgl_nitf_rational_camera() {
-}
+vpgl_nitf_rational_camera::vpgl_nitf_rational_camera() = default;
 
 
 vpgl_nitf_rational_camera::
@@ -353,7 +354,7 @@ vpgl_nitf_rational_camera(std::string const& nitf_image_path,
     return;
   }
   //cast to an nitf2_image
-  vil_nitf2_image* nitf_image = (vil_nitf2_image*)image.ptr();
+  auto* nitf_image = (vil_nitf2_image*)image.ptr();
   //Get and set the information
   if (!this->init(nitf_image, verbose))
     return;
@@ -405,5 +406,3 @@ vpgl_nitf_rational_camera(vil_nitf2_image* nitf_image, bool verbose)
     std::cout << "Lower right image corner(" << lr_u << ' ' << lr_v << ")\n";
   }
 }
-
-

@@ -68,7 +68,7 @@ vgl_h_matrix_2d<double> bpgl_camera_homographies::
 homography_to_camera(vpgl_perspective_camera<double> const& cam,
                      vgl_plane_3d<double> const& plane)
 {
-  vpgl_proj_camera<double> const& pcam =
+  auto const& pcam =
     static_cast<vpgl_proj_camera<double> const&>(cam);
   return bpgl_camera_homographies::homography_to_camera(pcam, plane);
 }
@@ -127,10 +127,9 @@ transform_points_to_plane(vgl_plane_3d<double> const& plane,
 {
   std::vector<vgl_point_3d<double> > tr_pts;
   vgl_h_matrix_3d<double> Tr = plane_trans(plane, ref_point);
-  for (std::vector<vgl_point_3d<double> >::const_iterator pit = pts.begin();
-       pit != pts.end(); ++pit)
+  for (const auto & pt : pts)
   {
-    vgl_homg_point_3d<double> hp(*pit);
+    vgl_homg_point_3d<double> hp(pt);
     vgl_homg_point_3d<double> tr_hp = Tr(hp);
     vgl_point_3d<double> trp(tr_hp);
     tr_pts.push_back(trp);

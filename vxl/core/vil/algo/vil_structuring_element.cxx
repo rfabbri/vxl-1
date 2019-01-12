@@ -6,8 +6,10 @@
 // \brief Structuring element for morphology represented as a list of non-zero pixels
 // \author Tim Cootes
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Define elements { (p_i[k],p_j[k]) }
 void vil_structuring_element::set(const std::vector<int>& v_p_i,const std::vector<int>& v_p_j)
@@ -91,4 +93,3 @@ void vil_compute_offsets(std::vector<std::ptrdiff_t>& offset, const vil_structur
   for (unsigned int k=0;k<n;++k)
     offset[k] = static_cast<std::ptrdiff_t>(element.p_i()[k]*istep +  element.p_j()[k]*jstep);
 }
-

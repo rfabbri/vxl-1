@@ -1,9 +1,6 @@
 // This is core/vgui/vgui_section_render.h
 #ifndef vgui_section_render_h_
 #define vgui_section_render_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author fsm
@@ -30,11 +27,11 @@ bool vgui_section_render(void const *pixels,
                          GLenum format,
                          GLenum type ,
                          bool hardware_map = false,
-                         vbl_array_1d<float>* fLmap=VXL_NULLPTR,
-                         vbl_array_1d<float>* fRmap=VXL_NULLPTR,
-                         vbl_array_1d<float>* fGmap=VXL_NULLPTR,
-                         vbl_array_1d<float>* fBmap=VXL_NULLPTR,
-                         vbl_array_1d<float>* fAmap=VXL_NULLPTR);
+                         vbl_array_1d<float>* fLmap=nullptr,
+                         vbl_array_1d<float>* fRmap=nullptr,
+                         vbl_array_1d<float>* fGmap=nullptr,
+                         vbl_array_1d<float>* fBmap=nullptr,
+                         vbl_array_1d<float>* fAmap=nullptr);
 
 
 bool vgui_view_render(void const *pixels,
@@ -43,11 +40,11 @@ bool vgui_view_render(void const *pixels,
                       GLenum format,
                       GLenum type ,
                       bool hardware_map = false,
-                      vbl_array_1d<float>* fLmap=VXL_NULLPTR,
-                      vbl_array_1d<float>* fRmap=VXL_NULLPTR,
-                      vbl_array_1d<float>* fGmap=VXL_NULLPTR,
-                      vbl_array_1d<float>* fBmap=VXL_NULLPTR,
-                      vbl_array_1d<float>* fAmap=VXL_NULLPTR);
+                      vbl_array_1d<float>* fLmap=nullptr,
+                      vbl_array_1d<float>* fRmap=nullptr,
+                      vbl_array_1d<float>* fGmap=nullptr,
+                      vbl_array_1d<float>* fBmap=nullptr,
+                      vbl_array_1d<float>* fAmap=nullptr);
 
 
 

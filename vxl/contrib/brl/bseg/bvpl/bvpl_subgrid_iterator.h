@@ -13,7 +13,9 @@
 
 #include <iostream>
 #include <iterator>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_ref_count.h>
 
 #include <vgl/vgl_vector_3d.h>
@@ -25,7 +27,7 @@
 class bvpl_subgrid_iterator_base : public vbl_ref_count
 {
  public:
-  bvpl_subgrid_iterator_base() {}
+  bvpl_subgrid_iterator_base() = default;
 
   bvpl_subgrid_iterator_base(vgl_point_3d<int> min,  vgl_point_3d<int> max)
   {
@@ -44,7 +46,7 @@ class bvpl_subgrid_iterator_base : public vbl_ref_count
 
     offset_ = vgl_point_3d<int>(x,y,z);
   }
-  ~bvpl_subgrid_iterator_base() {}
+  ~bvpl_subgrid_iterator_base() override = default;
 
  protected:
   vgl_vector_3d<int> dim_;
@@ -63,7 +65,7 @@ class bvpl_subgrid_iterator : public bvpl_subgrid_iterator_base,
 
   bvpl_subgrid_iterator(bvxm_voxel_grid<T>* grid, vgl_point_3d<int> min_point,  vgl_point_3d<int> max_point);
 
-  ~bvpl_subgrid_iterator() {}
+  ~bvpl_subgrid_iterator() override = default;
 
   bvpl_subgrid_iterator<T>& operator++();
 

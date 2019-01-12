@@ -1,7 +1,4 @@
 // This is gel/gst/gst_polygon_2d.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author crossge@crd.ge.com
@@ -9,7 +6,9 @@
 #include <iostream>
 #include "gst_polygon_2d.h"
 #include "gst_vertex_2d_sptr.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 bool gst_polygon_2d::check_validity() const
 {
@@ -53,8 +52,8 @@ double gst_polygon_2d::get_centroid_x() const
 {
   double xsum= 0;
 
-  for (unsigned int i=0; i< edges_.size(); ++i)
-    xsum+= edges_[i]->get_start()->get_x();
+  for (const auto & edge : edges_)
+    xsum+= edge->get_start()->get_x();
 
   return xsum/edges_.size();
 }
@@ -63,8 +62,8 @@ double gst_polygon_2d::get_centroid_y() const
 {
   double ysum= 0;
 
-  for (unsigned int i=0; i< edges_.size(); ++i)
-    ysum+= edges_[i]->get_start()->get_y();
+  for (const auto & edge : edges_)
+    ysum+= edge->get_start()->get_y();
 
   return ysum/edges_.size();
 }
@@ -117,7 +116,7 @@ bool gst_polygon_2d::inside( const double x, const double y) const
   return c;
 }
 
-bool gst_polygon_2d::inside( const gst_vertex_2d_sptr v) const
+bool gst_polygon_2d::inside( const gst_vertex_2d_sptr& v) const
 {
   return inside( v->get_x(), v->get_y());
 }
@@ -125,8 +124,8 @@ bool gst_polygon_2d::inside( const gst_vertex_2d_sptr v) const
 
 std::ostream &operator<<( std::ostream &os, gst_polygon_2d &p)
 {
-  for (unsigned int i=0; i< p.edges_.size(); i++)
-    os << (*p.edges_[i]) << ' ';
+  for (auto & edge : p.edges_)
+    os << (*edge) << ' ';
 
   return os << std::endl;
 }

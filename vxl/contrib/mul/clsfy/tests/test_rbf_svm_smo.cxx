@@ -12,7 +12,9 @@
 // \author Ian Scott
 // Test construction, IO etc.
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <clsfy/clsfy_rbf_svm.h>
 #include <clsfy/clsfy_rbf_svm_smo_1_builder.h>
 #include <clsfy/clsfy_k_nearest_neighbour.h>
@@ -39,7 +41,7 @@ void test_rbf_svm_smo()
   std::cout<<"======== TESTING BUILDING ===========\n";
 
   std::vector<vpdfl_axis_gaussian_sampler *> generator(4);//
-  const unsigned nDims = 2;
+  constexpr unsigned nDims = 2;
   vnl_vector<double> mean0(nDims), var0(nDims), mean1(nDims), var1(nDims), mean2(nDims), var2(nDims), mean3(nDims), var3(nDims);
   vpdfl_axis_gaussian PDF0, PDF1, PDF2, PDF3;
 
@@ -48,7 +50,7 @@ void test_rbf_svm_smo()
   mean2.fill(0.0); mean2(1) = 1.5;
   mean3.fill(0.0); mean3(1) = -1.5;
 
-  const double trainPrincipleVariance = 0.5;
+  constexpr double trainPrincipleVariance = 0.5;
   var0.fill(trainPrincipleVariance/10.0); var0(0) = trainPrincipleVariance;
   var1.fill(trainPrincipleVariance/10.0); var1(0) = trainPrincipleVariance;
   var2.fill(trainPrincipleVariance/10.0); var2(1) = trainPrincipleVariance;
@@ -65,7 +67,7 @@ void test_rbf_svm_smo()
   generator[3] = (vpdfl_axis_gaussian_sampler *)PDF3.new_sampler();
   vnl_random rng;
   rng.reseed(333248);
-  const unsigned nSamples = 200;
+  constexpr unsigned nSamples = 200;
   std::vector<unsigned> labels(nSamples);
   std::vector<vnl_vector<double> > data(nSamples);
   vnl_vector<double> s;
@@ -80,7 +82,7 @@ void test_rbf_svm_smo()
     data[i] = s;
   }
 
-  const unsigned nTestSamples = 1000;
+  constexpr unsigned nTestSamples = 1000;
   std::vector<unsigned> testLabels(nTestSamples);
   std::vector<vnl_vector<double> > testingVectors(nTestSamples);
   for (unsigned int i=0; i<nTestSamples; i++)
@@ -227,7 +229,7 @@ void test_rbf_svm_smo()
   bfs_out.close();
 
   clsfy_rbf_svm svmi;
-  clsfy_classifier_base *pClassifier2=VXL_NULLPTR;
+  clsfy_classifier_base *pClassifier2=nullptr;
 
   vsl_b_ifstream bfs_in(test_path);
   TEST(("Opened " + test_path + " for reading").c_str(), (!bfs_in ), false);

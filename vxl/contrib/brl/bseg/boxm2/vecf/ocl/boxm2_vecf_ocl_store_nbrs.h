@@ -13,7 +13,6 @@
 #include <vil/vil_image_view.h>
 #include <bocl/bocl_device.h>
 #include <boxm2/ocl/boxm2_opencl_cache.h>
-#include <boxm2/ocl/boxm2_opencl_cache.h>
 #include <vgl/algo/vgl_rotation_3d.h>
 #include <boxm2/ocl/algo/boxm2_ocl_camera_converter.h>
 //
@@ -31,9 +30,9 @@ class boxm2_vecf_ocl_store_nbrs : public vbl_ref_count
  public:
   //: Constructor.
   boxm2_vecf_ocl_store_nbrs(boxm2_scene_sptr& source_scene,
-                            boxm2_opencl_cache_sptr ocl_cache);
+                            const boxm2_opencl_cache_sptr& ocl_cache);
 
-  ~boxm2_vecf_ocl_store_nbrs();
+  ~boxm2_vecf_ocl_store_nbrs() override;
 
   unsigned ni() const{return  cl_ni;}
   unsigned nj() const{return  cl_nj;}
@@ -44,7 +43,7 @@ class boxm2_vecf_ocl_store_nbrs : public vbl_ref_count
  protected:
   bool compile_kernel();
   bool init_ocl_store();
-  bool get_scene_appearance(boxm2_scene_sptr scene,
+  bool get_scene_appearance(const boxm2_scene_sptr& scene,
                             std::string&      options);
 
   boxm2_opencl_cache_sptr  opencl_cache_;
@@ -76,5 +75,3 @@ class boxm2_vecf_ocl_store_nbrs : public vbl_ref_count
 };
 
 #endif
-
-

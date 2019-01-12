@@ -1,7 +1,4 @@
 // This is gel/geml/geml_matcher_correlation.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 #include <iostream>
 #include "geml_matcher_correlation.h"
 //:
@@ -13,7 +10,9 @@
 // \endverbatim
 //-----------------------------------------------------------------------------
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_matrix.h>
 
@@ -26,8 +25,8 @@
 #define SEARCH_WINDOW_Y 50
 #define NO_SCORE -2
 
-geml_matcher_correlation::geml_matcher_correlation( const vil1_memory_image_of<vxl_byte> image1,
-                                                    const vil1_memory_image_of<vxl_byte> image2,
+geml_matcher_correlation::geml_matcher_correlation( const vil1_memory_image_of<vxl_byte>& image1,
+                                                    const vil1_memory_image_of<vxl_byte>& image2,
                                                     const std::vector< std::pair<float,float> > &corners1,
                                                     const std::vector< std::pair<float,float> > &corners2)
   : geml_matcher( image1, image2, corners1, corners2)
@@ -135,7 +134,7 @@ std::vector< std::pair<int,int> > geml_matcher_correlation::get_matches()
       std::cerr << i << ' ' << a << '\n';
       std::cout << corners1_[i].first << ' ' << corners1_[i].second << ' '
                << corners2_[a].first << ' ' << corners2_[a].second << std::endl;
-      l.push_back( std::pair<int,int>(i,a) );
+      l.emplace_back(i,a );
     }
   }
 

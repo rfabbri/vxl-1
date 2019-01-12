@@ -4,7 +4,9 @@
 #include <iostream>
 #include <vil1/vil1_resample.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vil1/vil1_load.h>
 #include <vil1/vil1_save.h>
@@ -15,7 +17,7 @@ static char default_filename[] = "square.pgm";
 template <class T> inline
 T get_pixel(vil1_image const& i, int x, int y, T* /*dummy*/) { T t; i.get_section(&t,x,y,1,1); return t; }
 
-static unsigned char* t = (unsigned char*)VXL_NULLPTR;
+static unsigned char* t = (unsigned char*)nullptr;
 
 static void test_resample(int argc, char* argv[])
 {

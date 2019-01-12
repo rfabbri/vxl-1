@@ -5,7 +5,9 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_matrix.h>
 #include <vdgl/vdgl_digital_region.h>
 #include <vsol/vsol_curve_2d.h>
@@ -105,9 +107,9 @@ double vtol_intensity_face::perimeter()
   edge_list edges; this->edges(edges);
   double  p = 0.0;
 
-  for (edge_list::iterator eit = edges.begin(); eit != edges.end(); eit++)
+  for (auto & edge : edges)
   {
-    vsol_curve_2d_sptr  c = (*eit)->cast_to_edge_2d()->curve();
+    vsol_curve_2d_sptr  c = edge->cast_to_edge_2d()->curve();
     if (c)
       p += c->length();
   }

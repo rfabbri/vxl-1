@@ -1,7 +1,4 @@
 // This is mul/vimt/vimt_transform_2d.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 //  \file
 
@@ -9,8 +6,10 @@
 #include <cmath>
 #include <cstdlib>
 #include "vimt_transform_2d.h"
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vsl/vsl_indent.h>
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_matrix.h>
@@ -450,11 +449,11 @@ vgl_point_2d<double>  vimt_transform_2d::operator()(double x, double y) const
     switch (form_)
     {
         case Identity :
-            return vgl_point_2d<double> (x,y);
+            return {x,y};
         case Translation :
-            return vgl_point_2d<double> (x+xt_,y+yt_);
+            return {x+xt_,y+yt_};
         case ZoomOnly :
-            return vgl_point_2d<double> (x*xx_+xt_,y*yy_+yt_);
+            return {x*xx_+xt_,y*yy_+yt_};
         case RigidBody :
         case Similarity :
         case Reflection :
@@ -469,7 +468,7 @@ vgl_point_2d<double>  vimt_transform_2d::operator()(double x, double y) const
             std::abort();
     }
 
-    return vgl_point_2d<double> (); // To keep over-zealous compilers happy
+    return {}; // To keep over-zealous compilers happy
 }
 
 vgl_vector_2d<double>  vimt_transform_2d::delta(const vgl_point_2d<double>& p, const vgl_vector_2d<double>& dp) const
@@ -480,12 +479,12 @@ vgl_vector_2d<double>  vimt_transform_2d::delta(const vgl_point_2d<double>& p, c
         case Translation:
             return dp;
         case ZoomOnly :
-            return vgl_vector_2d<double> (dp.x()*xx_,dp.y()*yy_);
+            return {dp.x()*xx_,dp.y()*yy_};
         case RigidBody :
         case Similarity :
         case Reflection :
         case Affine :
-            return vgl_vector_2d<double> (dp.x()*xx_+dp.y()*xy_,dp.x()*yx_+dp.y()*yy_);
+            return {dp.x()*xx_+dp.y()*xy_,dp.x()*yx_+dp.y()*yy_};
         case Projective :
             return operator()(p+dp)-operator()(p);
         default:
@@ -493,7 +492,7 @@ vgl_vector_2d<double>  vimt_transform_2d::delta(const vgl_point_2d<double>& p, c
             std::abort();
     }
 
-    return vgl_vector_2d<double> (); // To keep over-zealous compilers happy
+    return {}; // To keep over-zealous compilers happy
 }
 
 
@@ -512,7 +511,7 @@ vimt_transform_2d vimt_transform_2d::inverse() const
     inv.tx2_ = tx_; inv.ty2_ = ty_; inv.tt2_ = tt_;
 
     inv.form_ = form_;
-    inv.inv_uptodate_ = 1;
+    inv.inv_uptodate_ = true;
 
     return inv;
 }

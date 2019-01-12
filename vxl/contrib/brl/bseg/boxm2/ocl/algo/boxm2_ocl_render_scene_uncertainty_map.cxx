@@ -1,8 +1,9 @@
 // This is brl/bseg/boxm2/ocl/algo/boxm2_ocl_render_scene_uncertainty_map.cxx
+#include "boxm2_ocl_render_scene_uncertainty_map.h"
+#include <algorithm>
 #include <fstream>
 #include <iostream>
-#include <algorithm>
-#include "boxm2_ocl_render_scene_uncertainty_map.h"
+#include <utility>
 //:
 // \file
 // \brief  A class for rendering scene on a sphaerical map.
@@ -10,7 +11,9 @@
 // \author Vishal Jain
 // \date Mar 25, 2011
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/ocl/boxm2_opencl_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -39,7 +42,7 @@ boxm2_ocl_render_scene_uncertainty_map::render_scene_uncertainty_map( boxm2_scen
                                                                       boxm2_opencl_cache_sptr & opencl_cache,
                                                                       unsigned ni,
                                                                       unsigned nj,
-                                                                      std::string ident,
+                                                                      const std::string& ident,
                                                                       vil_image_view<float>* exp_image,
                                                                       vil_image_view<unsigned char>* radial_image,
                                                                       std::string cam_dir_1,
@@ -59,24 +62,24 @@ boxm2_ocl_render_scene_uncertainty_map::render_scene_uncertainty_map( boxm2_scen
     std::vector<std::string> apps = scene->appearances();
 
     int apptypesize = 0;
-    for (unsigned int i=0; i<apps.size(); ++i) {
-        if ( apps[i] == boxm2_data_traits<BOXM2_MOG3_GREY>::prefix() )
+    for (const auto & app : apps) {
+        if ( app == boxm2_data_traits<BOXM2_MOG3_GREY>::prefix() )
         {
-            data_type = apps[i];
+            data_type = app;
             foundDataType = true;
             options=" -D MOG_TYPE_8 ";
             apptypesize = boxm2_data_traits<BOXM2_MOG3_GREY>::datasize();
         }
-        else if ( apps[i] == boxm2_data_traits<BOXM2_MOG3_GREY_16>::prefix() )
+        else if ( app == boxm2_data_traits<BOXM2_MOG3_GREY_16>::prefix() )
         {
-            data_type = apps[i];
+            data_type = app;
             foundDataType = true;
             options=" -D MOG_TYPE_16 ";
             apptypesize = boxm2_data_traits<BOXM2_MOG3_GREY_16>::datasize();
         }
-        else if ( apps[i] == boxm2_data_traits<BOXM2_FLOAT8>::prefix() )
+        else if ( app == boxm2_data_traits<BOXM2_FLOAT8>::prefix() )
         {
-            data_type = apps[i];
+            data_type = app;
             foundDataType = true;
             options=" -D FLOAT8 ";
             apptypesize = boxm2_data_traits<BOXM2_FLOAT8>::datasize();
@@ -105,25 +108,25 @@ boxm2_ocl_render_scene_uncertainty_map::render_scene_uncertainty_map( boxm2_scen
     // create alpha_integral_buff
 
     // Expected image buff
-    float* buff = new float[cl_ni*cl_nj];
+    auto* buff = new float[cl_ni*cl_nj];
     std::fill(buff, buff + cl_ni*cl_nj, 0.0f);
     bocl_mem_sptr exp=opencl_cache->alloc_mem(cl_ni*cl_nj*sizeof(float), buff,"exp image buffer");
     exp->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
 
     // Vis Image
-    float* vis_buff = new float[cl_ni*cl_nj];
+    auto* vis_buff = new float[cl_ni*cl_nj];
     std::fill(vis_buff, vis_buff + cl_ni*cl_nj, 1.0f);
     bocl_mem_sptr vis=opencl_cache->alloc_mem(cl_ni*cl_nj*sizeof(float), vis_buff,"vis image");
     vis->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
 
     // Alpha Integral Image
-    float* alpha_integral_buff = new float[cl_ni*cl_nj];
+    auto* alpha_integral_buff = new float[cl_ni*cl_nj];
     std::fill(alpha_integral_buff, alpha_integral_buff + cl_ni*cl_nj, 0.0f);
     bocl_mem_sptr alpha_integral_image = opencl_cache->alloc_mem(cl_ni*cl_nj*sizeof(float), alpha_integral_buff,"alpha integral buffer");
     alpha_integral_image->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
 
     // Alpha Integral Image
-    float* cum_alpha_integral_buff = new float[cl_ni*cl_nj];
+    auto* cum_alpha_integral_buff = new float[cl_ni*cl_nj];
     std::fill(cum_alpha_integral_buff, cum_alpha_integral_buff + cl_ni*cl_nj, 0.0f);
     bocl_mem_sptr cum_alpha_integral_image = opencl_cache->alloc_mem(cl_ni*cl_nj*sizeof(float), cum_alpha_integral_buff," cumulative alpha integral buffer");
     cum_alpha_integral_image->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
@@ -145,8 +148,8 @@ boxm2_ocl_render_scene_uncertainty_map::render_scene_uncertainty_map( boxm2_scen
     float phi_inc = 0.0;
     float theta_inc = 0.0;
     // create all buffers
-    cl_float* ray_origins = new cl_float[4*cl_ni*cl_nj];
-    cl_float* ray_directions = new cl_float[4*cl_ni*cl_nj];
+    auto* ray_origins = new cl_float[4*cl_ni*cl_nj];
+    auto* ray_directions = new cl_float[4*cl_ni*cl_nj];
     vgl_box_3d<double> scene_bbox = scene->bounding_box();
     vgl_point_3d<double> center(scene_bbox.centroid_x(),scene_bbox.centroid_y(),-0.5);
 
@@ -187,7 +190,7 @@ boxm2_ocl_render_scene_uncertainty_map::render_scene_uncertainty_map( boxm2_scen
 
     // Output Array
     float output_arr[100];
-    for (int i=0; i<100; ++i) output_arr[i] = 0.0f;
+    for (float & i : output_arr) i = 0.0f;
     bocl_mem_sptr  cl_output=new bocl_mem(device->context(), output_arr, sizeof(float)*100, "output buffer");
     cl_output->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
 
@@ -310,8 +313,8 @@ boxm2_ocl_render_scene_uncertainty_map::render_scene_uncertainty_map( boxm2_scen
         }
 
 
-    std::vector<std::string> cams_used = boxm2_util::camfiles_from_directory( cam_dir_1 );
-    std::vector<std::string> cams_unused = boxm2_util::camfiles_from_directory( cam_dir_2 );
+    std::vector<std::string> cams_used = boxm2_util::camfiles_from_directory( std::move(cam_dir_1) );
+    std::vector<std::string> cams_unused = boxm2_util::camfiles_from_directory( std::move(cam_dir_2) );
 
     std::map<float,std::string>  view_uncertainty_map;
 #if 0
@@ -353,10 +356,10 @@ boxm2_ocl_render_scene_uncertainty_map::render_scene_uncertainty_map( boxm2_scen
     for (iter = view_uncertainty_map.begin(); iter != view_uncertainty_map.end(); iter++)
         std::cout<<iter->second<<' '<<iter->first<<std::endl;
 #endif // 0
-    for (unsigned i = 0 ; i<cams_used.size();i++)
+    for (const auto & i : cams_used)
     {
-        vpgl_camera_double_sptr  incam = boxm2_util::camera_from_file( cams_used[i] );
-        vpgl_perspective_camera<double>* pcam = dynamic_cast<vpgl_perspective_camera<double>* > (incam.ptr());
+        vpgl_camera_double_sptr  incam = boxm2_util::camera_from_file( i );
+        auto* pcam = dynamic_cast<vpgl_perspective_camera<double>* > (incam.ptr());
         vgl_point_3d<double> cc= pcam->get_camera_center();
         vgl_vector_3d<double> ray = cc - center;
 
@@ -458,7 +461,7 @@ vnl_float_4 boxm2_ocl_render_scene_uncertainty_map::compute_cubic_trajectory(flo
 }
 
 //Returns vector of color update kernels (and caches them per device
-std::vector<bocl_kernel*>& boxm2_ocl_render_scene_uncertainty_map::get_kernels(bocl_device_sptr device, std::string opts)
+std::vector<bocl_kernel*>& boxm2_ocl_render_scene_uncertainty_map::get_kernels(const bocl_device_sptr& device, const std::string& opts)
 {
     // compile kernels if not already compiled
     std::string identifier = device->device_identifier() + opts;
@@ -482,11 +485,11 @@ std::vector<bocl_kernel*>& boxm2_ocl_render_scene_uncertainty_map::get_kernels(b
     src_paths.push_back(source_dir + "bit/cast_ray_bit.cl");
 
     //set kernel options
-    std::string options = opts ;
+    const std::string& options = opts ;
 
     std::vector<bocl_kernel*> vec_kernels;
     //have kernel construct itself using the context and device
-    bocl_kernel * alpha_integral_kernel=new bocl_kernel();
+    auto * alpha_integral_kernel=new bocl_kernel();
     std::string alpha_integral_options =options  + "-D RENDER_ALPHA_INTEGRAL -D STEP_CELL=step_cell_alpha_integral(aux_args.alpha,data_ptr,d*linfo->block_len,aux_args.alpha_int)";
 
     alpha_integral_kernel->create_kernel( &device->context(),
@@ -497,7 +500,7 @@ std::vector<bocl_kernel*>& boxm2_ocl_render_scene_uncertainty_map::get_kernels(b
                                           "boxm2 opencl compute Alpha Integrals along the ray"); //kernel identifier (for error checking)
     vec_kernels.push_back(alpha_integral_kernel);
 
-    bocl_kernel * render_kernel=new bocl_kernel();
+    auto * render_kernel=new bocl_kernel();
     std::string render_options =options  + "-D RENDER_USING_ALPHA_INTEGRAL -D STEP_CELL=step_cell_render_using_alpha_intergal(aux_args.mog,aux_args.alpha,data_ptr,d*linfo->block_len,aux_args.alpha_int,aux_args.alpha_int_cum,aux_args.expint)";
     render_kernel->create_kernel( &device->context(),
                                   device->device_id(),
@@ -510,7 +513,7 @@ std::vector<bocl_kernel*>& boxm2_ocl_render_scene_uncertainty_map::get_kernels(b
     std::vector<std::string> norm_src_paths;
     norm_src_paths.push_back(source_dir + "pixel_conversion.cl");
     norm_src_paths.push_back(source_dir + "bit/normalize_kernels.cl");
-    bocl_kernel * normalize_render_kernel=new bocl_kernel();
+    auto * normalize_render_kernel=new bocl_kernel();
 
     normalize_render_kernel->create_kernel( &device->context(),
                                             device->device_id(),

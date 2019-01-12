@@ -11,12 +11,13 @@
 #include <sdet/sdet_texture_classifier_params.h>
 #include <vil/vil_image_view.h>
 #include <vnl/vnl_random.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_blocked_image_resource.h>
 #include <vil/vil_blocked_image_resource_sptr.h>
 #include <vil/vil_load.h>
 #include <vil/vil_save.h>
-#include <vil/vil_image_view.h>
 #include <vil/file_formats/vil_nitf2_image.h>
 #include <vil/vil_convert.h>
 #include <vil/vil_crop.h>
@@ -32,25 +33,25 @@ bool sdet_texture_classify_satellite_clouds_process_cons(bprb_func_process& pro)
 {
   // process takes 11 inputs:
   std::vector<std::string> input_types;
-  input_types.push_back("sdet_texture_classifier_sptr"); //texton classifier
-  input_types.push_back("vcl_string"); // path to dictionary
-  input_types.push_back("vil_image_resource_sptr"); //input image resouce
-  input_types.push_back("unsigned");   // i
-  input_types.push_back("unsigned");   // j (i,j) is the upper left pixel coordinate for ROI in the image resource
-  input_types.push_back("unsigned");   // ni
-  input_types.push_back("unsigned");   // nj (ni, nj) is the size of the ROI in terms of pixels
-  input_types.push_back("unsigned");   //texture block size
-  input_types.push_back("vcl_string");  // a simple text file with the list of ids&colors for each category, if passed as "" just use 0, 1, 2, .. etc.
-  input_types.push_back("vcl_string");  // the category whose percentage of pixels among all classified pixel will be returned
-  input_types.push_back("float"); // scale_factor  (pixel_graylevel*scale_factor should be on the range [0,1])
+  input_types.emplace_back("sdet_texture_classifier_sptr"); //texton classifier
+  input_types.emplace_back("vcl_string"); // path to dictionary
+  input_types.emplace_back("vil_image_resource_sptr"); //input image resouce
+  input_types.emplace_back("unsigned");   // i
+  input_types.emplace_back("unsigned");   // j (i,j) is the upper left pixel coordinate for ROI in the image resource
+  input_types.emplace_back("unsigned");   // ni
+  input_types.emplace_back("unsigned");   // nj (ni, nj) is the size of the ROI in terms of pixels
+  input_types.emplace_back("unsigned");   //texture block size
+  input_types.emplace_back("vcl_string");  // a simple text file with the list of ids&colors for each category, if passed as "" just use 0, 1, 2, .. etc.
+  input_types.emplace_back("vcl_string");  // the category whose percentage of pixels among all classified pixel will be returned
+  input_types.emplace_back("float"); // scale_factor  (pixel_graylevel*scale_factor should be on the range [0,1])
   if (!pro.set_input_types(input_types))
     return false;
 
   std::vector<std::string> output_types;
-  output_types.push_back("vil_image_view_base_sptr");  // output cropped image - scaled to [0,1]
-  output_types.push_back("vil_image_view_base_sptr");  // output id image  - a byte image
-  output_types.push_back("vil_image_view_base_sptr");  // output rgb image - a rgb image associated with class id image
-  output_types.push_back("float");  // percentage of pixels among the classified pixels for the category that is listed "first" in the text file
+  output_types.emplace_back("vil_image_view_base_sptr");  // output cropped image - scaled to [0,1]
+  output_types.emplace_back("vil_image_view_base_sptr");  // output id image  - a byte image
+  output_types.emplace_back("vil_image_view_base_sptr");  // output rgb image - a rgb image associated with class id image
+  output_types.emplace_back("float");  // percentage of pixels among the classified pixels for the category that is listed "first" in the text file
   return pro.set_output_types(output_types);
 }
 
@@ -64,7 +65,7 @@ bool sdet_texture_classify_satellite_clouds_process(bprb_func_process& pro)
   }
   // get inputs
   sdet_texture_classifier_sptr tcptr = pro.get_input<sdet_texture_classifier_sptr>(0);
-  sdet_texture_classifier_params* tcp = static_cast<sdet_texture_classifier_params*>(tcptr.ptr());
+  auto* tcp = static_cast<sdet_texture_classifier_params*>(tcptr.ptr());
   sdet_atmospheric_image_classifier tc(*tcp);
   std::string texton_dict_path = pro.get_input<std::string>(1);
   tc.load_dictionary(texton_dict_path);
@@ -80,17 +81,17 @@ bool sdet_texture_classify_satellite_clouds_process(bprb_func_process& pro)
 
   //std::string img_name = pro.get_input<std::string>(2);
   vil_image_resource_sptr image = pro.get_input<vil_image_resource_sptr>(2);
-  unsigned i = pro.get_input<unsigned>(3);
-  unsigned j = pro.get_input<unsigned>(4);
-  unsigned ni = pro.get_input<unsigned>(5);
-  unsigned nj = pro.get_input<unsigned>(6);
+  auto i = pro.get_input<unsigned>(3);
+  auto j = pro.get_input<unsigned>(4);
+  auto ni = pro.get_input<unsigned>(5);
+  auto nj = pro.get_input<unsigned>(6);
 
   tc.block_size_ = pro.get_input<unsigned>(7);
   std::string cat_ids_file = pro.get_input<std::string>(8);
   std::string first_category = pro.get_input<std::string>(9);
 
   // input maximum graylevel
-  float scale_factor  = pro.get_input<float>(10);
+  auto scale_factor  = pro.get_input<float>(10);
   std::cout << "Scale Factor = " << scale_factor << std::endl;
 
   int invalid = tc.max_filter_radius();
@@ -125,9 +126,9 @@ bool sdet_texture_classify_satellite_clouds_process(bprb_func_process& pro)
 
   std::vector<std::string> cats2;
   std::cout << " output id image will use the following ids for the categories:\n";
-  for (std::map<std::string, unsigned char>::iterator iter = cat_id_map.begin(); iter != cat_id_map.end(); iter++) {
-    std::cout << iter->first << " " << (int)iter->second << std::endl;
-    cats2.push_back(iter->first);
+  for (auto & iter : cat_id_map) {
+    std::cout << iter.first << " " << (int)iter.second << std::endl;
+    cats2.push_back(iter.first);
   }
   tc.set_atmospheric_categories(cats2);
 
@@ -215,24 +216,24 @@ bool sdet_texture_classify_satellite_clouds_process2_cons(bprb_func_process& pro
 {
   // process takes 5 inputs
   std::vector<std::string> input_types;
-  input_types.push_back("sdet_texture_classifier_sptr"); //texton classifier
-  input_types.push_back("vcl_string"); // path to dictionary
-  input_types.push_back("vil_image_resource_sptr"); //input image resouce
-  input_types.push_back("unsigned");   // i
-  input_types.push_back("unsigned");   // j (i,j) is the upper left pixel coordinate for ROI in the image resource
-  input_types.push_back("unsigned");   // width
-  input_types.push_back("unsigned");   // height (widht, height) is the size of the ROI in terms of pixels
-  input_types.push_back("unsigned");   //texture block size
-  input_types.push_back("vcl_string");  // a simple text file with the list of ids&colors for each category, if passed as "" just use 0, 1, 2, .. etc.
-  input_types.push_back("vcl_string");  // the category whose percentage of pixels among all classified pixel will be returned
+  input_types.emplace_back("sdet_texture_classifier_sptr"); //texton classifier
+  input_types.emplace_back("vcl_string"); // path to dictionary
+  input_types.emplace_back("vil_image_resource_sptr"); //input image resouce
+  input_types.emplace_back("unsigned");   // i
+  input_types.emplace_back("unsigned");   // j (i,j) is the upper left pixel coordinate for ROI in the image resource
+  input_types.emplace_back("unsigned");   // width
+  input_types.emplace_back("unsigned");   // height (widht, height) is the size of the ROI in terms of pixels
+  input_types.emplace_back("unsigned");   //texture block size
+  input_types.emplace_back("vcl_string");  // a simple text file with the list of ids&colors for each category, if passed as "" just use 0, 1, 2, .. etc.
+  input_types.emplace_back("vcl_string");  // the category whose percentage of pixels among all classified pixel will be returned
   if (!pro.set_input_types(input_types))
     return false;
 
   std::vector<std::string> output_types;
-  output_types.push_back("vil_image_view_base_sptr");  // output cropped image - scaled to [0,1]
-  output_types.push_back("vil_image_view_base_sptr");  // output id image  - a byte image
-  output_types.push_back("vil_image_view_base_sptr");  // output rgb image - a rgb image associated with class id image
-  output_types.push_back("float");  // percentage of pixels among the classified pixels for the category that is listed "first" in the text file
+  output_types.emplace_back("vil_image_view_base_sptr");  // output cropped image - scaled to [0,1]
+  output_types.emplace_back("vil_image_view_base_sptr");  // output id image  - a byte image
+  output_types.emplace_back("vil_image_view_base_sptr");  // output rgb image - a rgb image associated with class id image
+  output_types.emplace_back("float");  // percentage of pixels among the classified pixels for the category that is listed "first" in the text file
   return pro.set_output_types(output_types);
 }
 
@@ -246,7 +247,7 @@ bool sdet_texture_classify_satellite_clouds_process2(bprb_func_process& pro)
   }
   // get inputs
   sdet_texture_classifier_sptr tcptr = pro.get_input<sdet_texture_classifier_sptr>(0);
-  sdet_texture_classifier_params* tcp = static_cast<sdet_texture_classifier_params*>(tcptr.ptr());
+  auto* tcp = static_cast<sdet_texture_classifier_params*>(tcptr.ptr());
   sdet_atmospheric_image_classifier tc(*tcp);
   std::string texton_dict_path = pro.get_input<std::string>(1);
   tc.load_dictionary(texton_dict_path);
@@ -261,10 +262,10 @@ bool sdet_texture_classify_satellite_clouds_process2(bprb_func_process& pro)
   }
 
   vil_image_resource_sptr image = pro.get_input<vil_image_resource_sptr>(2);
-  unsigned i = pro.get_input<unsigned>(3);
-  unsigned j = pro.get_input<unsigned>(4);
-  unsigned width = pro.get_input<unsigned>(5);
-  unsigned height = pro.get_input<unsigned>(6);
+  auto i = pro.get_input<unsigned>(3);
+  auto j = pro.get_input<unsigned>(4);
+  auto width = pro.get_input<unsigned>(5);
+  auto height = pro.get_input<unsigned>(6);
   tc.block_size_ = pro.get_input<unsigned>(7);
   std::string cat_ids_file = pro.get_input<std::string>(8);
   std::string first_category = pro.get_input<std::string>(9);
@@ -305,13 +306,13 @@ bool sdet_texture_classify_satellite_clouds_process2(bprb_func_process& pro)
 
   std::vector<std::string> cats2;
   std::cout << " output id image will use the following ids for the categories:\n";
-  for (std::map<std::string, unsigned char>::iterator mit = cat_id_map.begin(); mit != cat_id_map.end(); ++mit) {
-    std::cout << mit->first << " " << (int)mit->second << std::endl;
-    cats2.push_back(mit->first);
+  for (auto & mit : cat_id_map) {
+    std::cout << mit.first << " " << (int)mit.second << std::endl;
+    cats2.push_back(mit.first);
   }
   tc.set_atmospheric_categories(cats2);
 
-  vil_nitf2_image *nitf_image = static_cast<vil_nitf2_image*>(image.ptr());
+  auto *nitf_image = static_cast<vil_nitf2_image*>(image.ptr());
   std::cout << " image size: ni: " << image->ni() << ", nj: " << image->nj() << std::endl;
 
   std::vector<vil_nitf2_image_subheader* > headers = nitf_image->get_image_headers();

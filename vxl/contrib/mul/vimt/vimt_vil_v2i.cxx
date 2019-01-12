@@ -7,8 +7,10 @@
 #include <fstream>
 #include "vimt_vil_v2i.h"
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vxl_config.h> // for VXL_BIG_ENDIAN and vxl_byte
 
@@ -49,10 +51,10 @@ vil_image_resource_sptr vimt_vil_v2i_format::make_input_image(vil_stream* vs)
     std::cerr << "vimt_vil_v2i_format::make_input_image() WARNING\n"
              << "  Unable to deal with stream type\n";
 
-    return VXL_NULLPTR;
+    return nullptr;
   }
   vsl_b_istream vslstream( &reinterpret_cast<vimt_vil_fstream *>(vs)->underlying_stream() );
-  if (!vslstream) return VXL_NULLPTR; // Not even a vsl file.
+  if (!vslstream) return nullptr; // Not even a vsl file.
   unsigned magic;
   vil_streampos start = vs->tell();
   vsl_b_read(vslstream, magic);
@@ -66,29 +68,29 @@ vil_image_resource_sptr vimt_vil_v2i_format::make_input_image(vil_stream* vs)
   bool v_b;
   vsl_b_read(vslstream, v_i);  // vimt_image_2d_of.version
   vsl_b_read(vslstream, v_i);  // vil_image_view.version
-  if (v_i != 1) return VXL_NULLPTR; // can only handle version 1.
+  if (v_i != 1) return nullptr; // can only handle version 1.
   vsl_b_read(vslstream, v_i);  // vil_image_view.ni
-  if (v_i == 0) return VXL_NULLPTR; // can't handle empty images.
+  if (v_i == 0) return nullptr; // can't handle empty images.
   vsl_b_read(vslstream, v_i);  // vil_image_view.nj
-  if (v_i == 0) return VXL_NULLPTR; // can't handle empty images.
+  if (v_i == 0) return nullptr; // can't handle empty images.
   vsl_b_read(vslstream, v_i);  // vil_image_view.nplanes
-  if (v_i == 0) return VXL_NULLPTR; // can't handle empty images.
+  if (v_i == 0) return nullptr; // can't handle empty images.
   vsl_b_read(vslstream, v_i);  // vil_image_view.istep
   vsl_b_read(vslstream, v_i);  // vil_image_view.jstep
   vsl_b_read(vslstream, v_i);  // vil_image_view.planestep
   vsl_b_read(vslstream, v_i);  // vil_smart_ptr.version
-  if (v_i != 2) return VXL_NULLPTR; // can only handle version 2.
+  if (v_i != 2) return nullptr; // can only handle version 2.
   vsl_b_read(vslstream, v_b);  // vil_smart_ptr.firsttime
-  if (!v_b) return VXL_NULLPTR; // can't handle multiple images.
+  if (!v_b) return nullptr; // can't handle multiple images.
   vsl_b_read(vslstream, v_i);  // vil_smart_ptr.id
-  if (v_i != 1) return VXL_NULLPTR; // can't handle multiple images.
+  if (v_i != 1) return nullptr; // can't handle multiple images.
   vsl_b_read(vslstream, v_b);  // vil_memory_chunk*.nonnull
-  if (!v_b) return VXL_NULLPTR; // can't handle empty images.
+  if (!v_b) return nullptr; // can't handle empty images.
   vsl_b_read(vslstream, v_i);  // vil_memory_chunk.version
-  if (v_i != 2 && v_i != 3) return VXL_NULLPTR; // can only handle version 2.
+  if (v_i != 2 && v_i != 3) return nullptr; // can only handle version 2.
   vsl_b_read(vslstream, v_i);  //  chunk.pixel_format
 
-  vil_pixel_format f = static_cast<vil_pixel_format>(v_i);
+  auto f = static_cast<vil_pixel_format>(v_i);
   vs->seek(start);
   switch (f)
   {
@@ -107,7 +109,7 @@ macro(VIL_PIXEL_FORMAT_BOOL , bool )
 macro(VIL_PIXEL_FORMAT_FLOAT , float )
 macro(VIL_PIXEL_FORMAT_DOUBLE , double )
 #undef macro
-    default: return VXL_NULLPTR; // Unknown pixel type - or more likely not a v2i image.
+    default: return nullptr; // Unknown pixel type - or more likely not a v2i image.
   }
   vs->seek(start);
   return new vimt_vil_v2i_image(vs, f);
@@ -126,7 +128,7 @@ vil_image_resource_sptr vimt_vil_v2i_format::make_output_image(vil_stream* vs,
     std::cerr << "vimt_vil_v2i_format::make_output_image() WARNING\n"
              << "  Unable to deal with stream type\n";
 
-    return VXL_NULLPTR;
+    return nullptr;
   }
   if ( format != VIL_PIXEL_FORMAT_BYTE && format != VIL_PIXEL_FORMAT_SBYTE &&
        format != VIL_PIXEL_FORMAT_UINT_32 && format != VIL_PIXEL_FORMAT_INT_32 &&
@@ -136,7 +138,7 @@ vil_image_resource_sptr vimt_vil_v2i_format::make_output_image(vil_stream* vs,
   {
     std::cerr << "vimt_vil_v2i_format::make_output_image() WARNING\n"
              << "  Unable to deal with file format : " << format << std::endl;
-    return VXL_NULLPTR;
+    return nullptr;
   }
   return new vimt_vil_v2i_image(vs, ni, nj, nplanes, format);
 }
@@ -145,7 +147,7 @@ vil_image_resource_sptr vimt_vil_v2i_format::make_output_image(vil_stream* vs,
 /////////////////////////////////////////////////////////////////////////////
 
 vimt_vil_v2i_image::vimt_vil_v2i_image(vil_stream* vs):
-  vs_(vs), im_(VXL_NULLPTR), dirty_(false)
+  vs_(vs), im_(nullptr), dirty_(false)
 {
   vs_->ref();
   vs_->seek(0L);
@@ -161,13 +163,13 @@ vimt_vil_v2i_image::vimt_vil_v2i_image(vil_stream* vs):
   switch (version)
   {
    case 1: {
-    vimt_image *p_im=VXL_NULLPTR;
+    vimt_image *p_im=nullptr;
     vsl_b_read(vslstream, p_im);
     if (!vslstream)
     {
       delete p_im;
       vil_exception_warning(vil_exception_corrupt_image_file("Constructor", "v2i", "", "Failed to read file correctly"));
-      im_=VXL_NULLPTR;
+      im_=nullptr;
       return;
     }
 
@@ -184,7 +186,7 @@ vimt_vil_v2i_image::vimt_vil_v2i_image(vil_stream* vs):
 
 //: Constructor to deal with directly created v2i files.
 vimt_vil_v2i_image::vimt_vil_v2i_image(vil_stream* vs, vil_pixel_format f):
-  vs_(vs), im_(VXL_NULLPTR), dirty_(false)
+  vs_(vs), im_(nullptr), dirty_(false)
 {
   vs_->ref();
   vs_->seek(0L);
@@ -229,7 +231,7 @@ bool vimt_vil_v2i_image::get_property(char const * key, void * value) const
     vgl_vector_2d<double> p11 = tr.inverse()(1.0, 1.0) - tr.inverse().origin();
     //Assume no rotation or shearing.
 
-    float* array =  static_cast<float*>(value);
+    auto* array =  static_cast<float*>(value);
     array[0] = (float) p11.x();
     array[1] = (float) p11.y();
     return true;
@@ -238,7 +240,7 @@ bool vimt_vil_v2i_image::get_property(char const * key, void * value) const
   if (std::strcmp(vil_property_offset, key)==0)
   {
     vgl_point_2d<double> origin = tr.origin();
-    float* array =  static_cast<float*>(value);
+    auto* array =  static_cast<float*>(value);
     array[0] = (float)(origin.x());
     array[1] = (float)(origin.y());
     return true;
@@ -249,7 +251,7 @@ bool vimt_vil_v2i_image::get_property(char const * key, void * value) const
 
 vimt_vil_v2i_image::vimt_vil_v2i_image(vil_stream* vs, unsigned ni, unsigned nj,
                                        unsigned nplanes, vil_pixel_format format):
-  vs_(vs), im_(VXL_NULLPTR), dirty_(true)
+  vs_(vs), im_(nullptr), dirty_(true)
 {
   vs_->ref();
   switch (format)
@@ -286,7 +288,7 @@ vimt_vil_v2i_image::~vimt_vil_v2i_image()
 
     vsl_b_write(vslstream, V2I_MAGIC);
 
-    const short version = 1;
+    constexpr short version = 1;
     vsl_b_write(vslstream, version);
 
 
@@ -360,7 +362,7 @@ vil_image_view_base_sptr vimt_vil_v2i_image::get_copy_view(unsigned i0, unsigned
 {
   const vil_image_view_base &view = im_->image_base();
 
-  if (i0 + ni > view.ni() || j0 + nj > view.nj() ) return VXL_NULLPTR;
+  if (i0 + ni > view.ni() || j0 + nj > view.nj() ) return nullptr;
 
   switch (view.pixel_format())
   {
@@ -384,7 +386,7 @@ macro(VIL_PIXEL_FORMAT_FLOAT , float )
 macro(VIL_PIXEL_FORMAT_DOUBLE , double )
 #undef macro
    default:
-    return VXL_NULLPTR;
+    return nullptr;
   }
 }
 
@@ -396,7 +398,7 @@ vil_image_view_base_sptr vimt_vil_v2i_image::get_view(unsigned i0, unsigned ni,
   const vil_image_view_base &view = im_->image_base();
 
 
-  if (i0 + ni > view.ni() || j0 + nj > view.nj()) return VXL_NULLPTR;
+  if (i0 + ni > view.ni() || j0 + nj > view.nj()) return nullptr;
 
   switch (view.pixel_format())
   {
@@ -419,7 +421,7 @@ macro(VIL_PIXEL_FORMAT_FLOAT , float )
 //macro(VIL_PIXEL_FORMAT_DOUBLE , double )
 #undef macro
    default:
-    return VXL_NULLPTR;
+    return nullptr;
   }
 }
 

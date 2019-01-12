@@ -6,8 +6,10 @@
 // \file
 
 #include <boxm/boxm_scene.h>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h> // for vnl_math::sqr()
 
 #include <boxm/sample/algo/boxm_mog_grey_processor.h>
@@ -235,4 +237,3 @@ bool compute_expected_color(boxm_scene<boct_tree<short, boxm_sample<BOXM_APM_MOG
 }
 
 #endif
-

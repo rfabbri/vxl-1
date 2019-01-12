@@ -11,7 +11,9 @@
 // gives the largest mean overlap.
 
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_vector.h>
 #include <pdf1d/pdf1d_compare_to_pdf_bhat.h>
 #include <pdf1d/pdf1d_sampler.h>
@@ -93,7 +95,7 @@ void select_form(int n_samples, int n_trials, int max_comp,
   std::vector<pdf1d_builder*> builder(max_comp);
   for (int i=0;i<max_comp;++i)
   {
-    pdf1d_mixture_builder *b = new pdf1d_mixture_builder;
+    auto *b = new pdf1d_mixture_builder;
     b->init(gauss_builder,i+1);
     builder[i] = b;
   }

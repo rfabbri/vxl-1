@@ -7,7 +7,9 @@
 // \author fsm
 
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #define vul_whereami (std::cerr << __FILE__ ", line " << __LINE__ << " : ")
 

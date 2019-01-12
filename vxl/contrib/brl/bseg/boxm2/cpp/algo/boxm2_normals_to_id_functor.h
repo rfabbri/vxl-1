@@ -4,7 +4,9 @@
 // \file
 
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class boxm2_normals_to_id_functor
 {
@@ -16,7 +18,7 @@ class boxm2_normals_to_id_functor
   typedef boxm2_data_traits<BOXM2_ALPHA>::datatype alpha_datatype;
 
   //: "default" constructor
-  boxm2_normals_to_id_functor() {}
+  boxm2_normals_to_id_functor() = default;
 
   bool init_data(std::vector<boxm2_data_base *> & datas, float nmag_t, float vis_t)
   {

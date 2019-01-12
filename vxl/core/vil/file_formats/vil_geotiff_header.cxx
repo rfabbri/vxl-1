@@ -3,8 +3,10 @@
 #include "vil_geotiff_header.h"
 //:
 // \file
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <geo_tiffp.h>
 #include <geotiffio.h>
 #include <geovalues.h>
@@ -14,7 +16,7 @@ vil_geotiff_header::vil_geotiff_header(TIFF* tif) : tif_(tif)
   if (tif) {
     gtif_ = GTIFNew(tif);
     if (gtif_) {
-      GTIFPrint(gtif_, VXL_NULLPTR, VXL_NULLPTR);
+      GTIFPrint(gtif_, nullptr, nullptr);
 
       // read the header of the GeoDirectoryKey Tag
       int version[3];
@@ -28,7 +30,7 @@ vil_geotiff_header::vil_geotiff_header(TIFF* tif) : tif_(tif)
 
 bool vil_geotiff_header::gtif_tiepoints(std::vector<std::vector<double> > &tiepoints)
 {
-  double* points=VXL_NULLPTR;
+  double* points=nullptr;
   short count;
   if (TIFFGetField(tif_, GTIFF_TIEPOINTS, &count, &points) < 0)
     return false;
@@ -140,7 +142,7 @@ bool vil_geotiff_header::PCS_WGS84_UTM_zone(int &zone, GTIF_HEMISPH &hemisph) //
       return false;
     }
 
-    short *val = static_cast<short*> (value);
+    auto *val = static_cast<short*> (value);
     if ((*val < PCS_WGS84_UTM_zone_1N ) || ((*val > PCS_WGS84_UTM_zone_60S ))) {
       return false;
     }
@@ -181,7 +183,7 @@ bool vil_geotiff_header::GCS_WGS84_MET_DEG()
       std::cerr << "Expected a single value with type int16 (short)!\n";
       return false;
     }
-    short *val = static_cast<short*> (value);
+    auto *val = static_cast<short*> (value);
 
     if (*val != Linear_Meter) {
       std::cerr << "Linear units are not in Meters!\n";
@@ -229,7 +231,7 @@ bool vil_geotiff_header::PCS_NAD83_UTM_zone(int &zone, GTIF_HEMISPH &hemisph)
       return false;
     }
 
-    short *val = static_cast<short*> (value);
+    auto *val = static_cast<short*> (value);
     if ((*val < PCS_NAD83_UTM_zone_3N ) || ((*val > PCS_NAD83_Missouri_West ))) {
       std::cerr << "NOT in RANGE PCS_NAD83_UTM_zone_3N and PCS_NAD83_Missouri_West!\n";
       return false;

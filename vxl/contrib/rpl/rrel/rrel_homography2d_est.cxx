@@ -1,6 +1,7 @@
 // This is rpl/rrel/rrel_homography2d_est.cxx
-#include <iostream>
 #include <cmath>
+#include <iostream>
+#include <utility>
 #include "rrel_homography2d_est.h"
 
 #include <vgl/vgl_homg_point_2d.h>
@@ -8,8 +9,10 @@
 #include <vnl/vnl_math.h>
 #include <vnl/algo/vnl_svd.h>
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 rrel_homography2d_est :: rrel_homography2d_est( const std::vector< vgl_homg_point_2d<double> > & from_pts,
                                                 const std::vector< vgl_homg_point_2d<double> > & to_pts,
@@ -38,11 +41,11 @@ rrel_homography2d_est :: rrel_homography2d_est( const std::vector< vgl_homg_poin
   min_num_pts_ = homog_dof_ / 2;
 }
 
-rrel_homography2d_est :: rrel_homography2d_est( const std::vector< vnl_vector<double> > & from_pts,
-                                                const std::vector< vnl_vector<double> > & to_pts,
+rrel_homography2d_est :: rrel_homography2d_est( std::vector< vnl_vector<double> >  from_pts,
+                                                std::vector< vnl_vector<double> >  to_pts,
                                                 unsigned int homog_dof )
   : rrel_estimation_problem( homog_dof /*dof*/, ( homog_dof / 2 ) /*points to instantiate*/ ),
-    from_pts_( from_pts ), to_pts_( to_pts )
+    from_pts_(std::move( from_pts )), to_pts_(std::move( to_pts ))
 {
   assert( homog_dof%2 == 0 ); // Make sure DOF is even
   assert( from_pts_.size() == to_pts_.size() );
@@ -55,9 +58,7 @@ rrel_homography2d_est :: rrel_homography2d_est( const std::vector< vnl_vector<do
   min_num_pts_ = homog_dof_ / 2;
 }
 
-rrel_homography2d_est::~rrel_homography2d_est()
-{
-}
+rrel_homography2d_est::~rrel_homography2d_est() = default;
 
 
 unsigned int
@@ -200,7 +201,7 @@ rrel_homography2d_est :: weighted_least_squares_fit( vnl_vector<double>& params,
   }
   else
   {
-    vcl_cerr << "A.is_finite() FAILED." << vcl_endl;
+    std::cerr << "A.is_finite() FAILED." << std::endl;
   }
 
   if ( !weights )

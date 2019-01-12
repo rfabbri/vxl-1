@@ -1,7 +1,4 @@
 // This is core/vgui/vgui_viewer3D_tableau.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \brief  See vgui_viewer3D_tableau.h for a description of this file
@@ -17,7 +14,9 @@
 #include <iostream>
 #include "vgui_viewer3D_tableau.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_bool_ostream.h>
 
 #include <vgui/vgui_gl.h>
@@ -53,7 +52,7 @@ vgui_viewer3D_tableau::vgui_viewer3D_tableau(vgui_tableau_sptr const& s) :
   c_restore_home(vgui_key('<'), vgui_MODIFIER_NULL),
   lock_dolly(false),
   lock_zoom(true),
-  spin_data(VXL_NULLPTR)
+  spin_data(nullptr)
 {
   spinning = false;
   allow_spinning = true;

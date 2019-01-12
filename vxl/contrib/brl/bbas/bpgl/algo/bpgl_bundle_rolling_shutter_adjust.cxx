@@ -13,8 +13,10 @@
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_point_3d.h>
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vnl/vnl_double_4.h>
 
 vnl_double_4x4
@@ -74,8 +76,8 @@ bpgl_bundle_rolling_shutter_adj_lsqr::
    iteration_count_(0),
    rolling_rate_(rolling_rate)
 {
-  for (unsigned int i=0; i<K_.size(); ++i)
-    Km_.push_back(K_[i].get_matrix());
+  for (auto & i : K_)
+    Km_.push_back(i.get_matrix());
 }
 
 
@@ -96,14 +98,13 @@ bpgl_bundle_rolling_shutter_adj_lsqr(const std::vector<vpgl_calibration_matrix<d
    weights_(image_points.size(),1.0),
    iteration_count_(0)
 {
-  for (unsigned int i=0; i<K_.size(); ++i)
-    Km_.push_back(K_[i].get_matrix());
+  for (auto & i : K_)
+    Km_.push_back(i.get_matrix());
 
   assert(image_points.size() == inv_covars.size());
   vnl_matrix<double> U(2,2,0.0);
-  for (unsigned i=0; i<inv_covars.size(); ++i)
+  for (const auto & S : inv_covars)
   {
-    const vnl_matrix<double>& S = inv_covars[i];
     if (S(0,0) > 0.0) {
       U(0,0) = std::sqrt(S(0,0));
       U(0,1) = S(0,1)/U(0,0);
@@ -137,17 +138,16 @@ bpgl_bundle_rolling_shutter_adj_lsqr::f(vnl_vector<double> const& a,
                                         vnl_vector<double> const& b,
                                         vnl_vector<double>& e)
 {
-  typedef vnl_crs_index::sparse_vector::iterator sv_itr;
   for (unsigned int i=0; i<number_of_a(); ++i)
   {
     // Construct the ith camera
     vnl_double_3x4 Pi = param_to_cam_matrix(i,a);
 
     vnl_crs_index::sparse_vector row = residual_indices_.sparse_row(i);
-    for (sv_itr r_itr=row.begin(); r_itr!=row.end(); ++r_itr)
+    for (auto & r_itr : row)
     {
-      unsigned int j = r_itr->second;
-      unsigned int k = r_itr->first;
+      unsigned int j = r_itr.second;
+      unsigned int k = r_itr.first;
 
       // Construct the jth point
       const double * bj = b.data_block()+index_b(j);
@@ -256,7 +256,6 @@ bpgl_bundle_rolling_shutter_adj_lsqr::jac_blocks(vnl_vector<double> const& a, vn
                                                  std::vector<vnl_matrix<double> >& A,
                                                  std::vector<vnl_matrix<double> >& B)
 {
-  typedef vnl_crs_index::sparse_vector::iterator sv_itr;
   for (unsigned int i=0; i<number_of_a(); ++i)
   {
     // Construct the ith camera
@@ -267,10 +266,10 @@ bpgl_bundle_rolling_shutter_adj_lsqr::jac_blocks(vnl_vector<double> const& a, vn
                                     const_cast<double*>(a.data_block())+index_a(i));
 
     vnl_crs_index::sparse_vector row = residual_indices_.sparse_row(i);
-    for (sv_itr r_itr=row.begin(); r_itr!=row.end(); ++r_itr)
+    for (auto & r_itr : row)
     {
-      unsigned int j = r_itr->second;
-      unsigned int k = r_itr->first;
+      unsigned int j = r_itr.second;
+      unsigned int k = r_itr.first;
       // This is semi const incorrect - there is no vnl_vector_ref_const
       const vnl_vector_ref<double> bj(number_of_params_b(j),
                                       const_cast<double*>(b.data_block())+index_b(j));
@@ -719,7 +718,7 @@ bpgl_bundle_rolling_shutter_adj_lsqr::create_param_vector(const std::vector<vgl_
 
 
 bpgl_bundle_rolling_shutter_adjust::bpgl_bundle_rolling_shutter_adjust()
-  : ba_func_(VXL_NULLPTR),
+  : ba_func_(nullptr),
     use_weights_(false),
     use_gradient_(true),
     start_error_(0.0),
@@ -745,8 +744,9 @@ bpgl_bundle_rolling_shutter_adjust::optimize(std::vector<vpgl_perspective_camera
   std::vector<vpgl_calibration_matrix<double> > K;
   a_ = bpgl_bundle_rolling_shutter_adj_lsqr::create_param_vector(cameras,motion);
   b_ = bpgl_bundle_rolling_shutter_adj_lsqr::create_param_vector(world_points);
-  for (unsigned int i=0; i<cameras.size(); ++i) {
-    K.push_back(cameras[i].get_calibration());
+  K.reserve(cameras.size());
+for (auto & camera : cameras) {
+    K.push_back(camera.get_calibration());
   }
 
   // do the bundle adjustment
@@ -806,13 +806,12 @@ bpgl_bundle_rolling_shutter_adjust::write_vrml(const std::string& filename,
      << "      color Color { color [1 0 0] }\n      coord Coordinate{\n"
      << "       point[\n";
 
-  for (unsigned int j=0; j<world_points.size(); ++j) {
-    os  << world_points[j].x() << ' '
-        << world_points[j].y() << ' '
-        << world_points[j].z() << '\n';
+  for (auto & world_point : world_points) {
+    os  << world_point.x() << ' '
+        << world_point.y() << ' '
+        << world_point.z() << '\n';
   }
   os << "   ]\n  }\n }\n}\n";
 
   os.close();
 }
-

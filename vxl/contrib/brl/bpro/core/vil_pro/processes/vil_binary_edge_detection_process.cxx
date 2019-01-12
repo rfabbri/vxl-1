@@ -11,7 +11,9 @@
 #include <vil/algo/vil_blob.h>
 #include <vil/algo/vil_binary_closing.h>
 #include <vil/vil_save.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 namespace vil_binary_edge_detection_process_globals
 {
@@ -45,16 +47,16 @@ bool vil_binary_edge_detection_process(bprb_func_process& pro)
   // get input
   unsigned in_i = 0;
   vil_image_view_base_sptr img_ptr = pro.get_input<vil_image_view_base_sptr>(in_i++);
-  unsigned max_size = pro.get_input<unsigned>(in_i++);
-  unsigned min_size = pro.get_input<unsigned>(in_i++);
-  unsigned threshold = pro.get_input<unsigned>(in_i++);
-  unsigned char thres_id = (unsigned char)threshold;
+  auto max_size = pro.get_input<unsigned>(in_i++);
+  auto min_size = pro.get_input<unsigned>(in_i++);
+  auto threshold = pro.get_input<unsigned>(in_i++);
+  auto thres_id = (unsigned char)threshold;
 
-  vil_image_view<bool>* view = dynamic_cast<vil_image_view<bool>*>(img_ptr.ptr());
+  auto* view = dynamic_cast<vil_image_view<bool>*>(img_ptr.ptr());
   if (!view) {
     vil_image_view<bool> temp(img_ptr->ni(), img_ptr->nj(), img_ptr->nplanes());
     temp.fill(false);
-    vil_image_view<vxl_byte>* view_temp = dynamic_cast<vil_image_view<vxl_byte>*>(img_ptr.ptr());
+    auto* view_temp = dynamic_cast<vil_image_view<vxl_byte>*>(img_ptr.ptr());
     if (!view_temp) {
       std::cerr << pro.name() << " input image pixel " << img_ptr->pixel_format() << " is not supported!\n";
       return false;
@@ -84,10 +86,10 @@ bool vil_binary_edge_detection_process(bprb_func_process& pro)
 
   // remove the edges that do not satisfy the desired size
   std::vector<unsigned> valid_edge_labels;
-  for (std::vector<vil_blob_pixel_list>::iterator vit = edge_pixel_list.begin(); vit != edge_pixel_list.end(); ++vit) {
-    if ( (*vit).size() > max_size || (*vit).size() < min_size )
+  for (auto & vit : edge_pixel_list) {
+    if ( vit.size() > max_size || vit.size() < min_size )
       continue;
-    unsigned label = edge_labels((*vit).begin()->first, (*vit).begin()->second);
+    unsigned label = edge_labels(vit.begin()->first, vit.begin()->second);
     valid_edge_labels.push_back(label);
   }
 

@@ -1,7 +1,4 @@
 // This is core/vil1/file_formats/vil1_ras.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 
@@ -9,8 +6,10 @@
 #include <cstring>
 #include "vil1_ras.h"
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vil1/vil1_stream.h>
 #include <vil1/vil1_image_impl.h>
@@ -25,7 +24,7 @@ namespace {
 #if VXL_LITTLE_ENDIAN
   inline void swap_endian( vxl_uint_32& word )
   {
-    vxl_uint_8* bytes = (vxl_uint_8*)&word;
+    auto* bytes = (vxl_uint_8*)&word;
     vxl_uint_8 t = bytes[0];
     bytes[0] = bytes[3];
     bytes[3] = t;
@@ -66,12 +65,12 @@ namespace {
   // From http://gmt.soest.hawaii.edu/gmt/doc/html/GMT_Docs/node111.html
   // and other documents on the web.
   const vxl_uint_8 RAS_MAGIC[] = { 0x59, 0xA6, 0x6A, 0x95 };
-  const vxl_uint_32 RT_OLD = 0;          // Raw pixrect image in MSB-first order
-  const vxl_uint_32 RT_STANDARD = 1;     // Raw pixrect image in MSB-first order
-  const vxl_uint_32 RT_BYTE_ENCODED = 2; // (Run-length compression of bytes)
-  const vxl_uint_32 RT_FORMAT_RGB = 3;   // ([X]RGB instead of [X]BGR)
-  const vxl_uint_32 RMT_NONE = 0;        // No colourmap (ras_maplength is expected to be 0)
-  const vxl_uint_32 RMT_EQUAL_RGB = 1;   // (red[ras_maplength/3],green[],blue[])
+  constexpr vxl_uint_32 RT_OLD = 0;          // Raw pixrect image in MSB-first order
+  constexpr vxl_uint_32 RT_STANDARD = 1;     // Raw pixrect image in MSB-first order
+  constexpr vxl_uint_32 RT_BYTE_ENCODED = 2; // (Run-length compression of bytes)
+  constexpr vxl_uint_32 RT_FORMAT_RGB = 3;   // ([X]RGB instead of [X]BGR)
+  constexpr vxl_uint_32 RMT_NONE = 0;        // No colourmap (ras_maplength is expected to be 0)
+  constexpr vxl_uint_32 RMT_EQUAL_RGB = 1;   // (red[ras_maplength/3],green[],blue[])
 }
 
 
@@ -82,7 +81,7 @@ vil1_image_impl* vil1_ras_file_format::make_input_image(vil1_stream* vs)
   vs->read(buf, 4);
   if ( ! ( buf[0] == RAS_MAGIC[0] && buf[1] == RAS_MAGIC[1] &&
            buf[2] == RAS_MAGIC[2] && buf[3] == RAS_MAGIC[3]  ) )
-    return VXL_NULLPTR;
+    return nullptr;
 
   return new vil1_ras_generic_image(vs);
 }
@@ -172,7 +171,7 @@ vil1_ras_generic_image::vil1_ras_generic_image(vil1_stream* vs, int planes,
   map_type_ = RMT_NONE;
   map_length_ = 0;
   length_ = compute_length( width_, height_, depth_ );
-  col_map_ = VXL_NULLPTR;
+  col_map_ = nullptr;
 
   write_header();
 }
@@ -246,7 +245,7 @@ bool vil1_ras_generic_image::read_header()
     col_map_ = new vxl_uint_8[ map_length_ ];
     vs_->read( col_map_, (vil1_streampos)map_length_ );
   } else {
-    col_map_ = VXL_NULLPTR;
+    col_map_ = nullptr;
   }
 
   start_of_data_ = vs_->tell();
@@ -296,7 +295,7 @@ bool vil1_ras_generic_image::get_section(void* buf, int x0, int y0, int xs, int 
   int file_byte_start = start_of_data_ + y0 * file_byte_width + x0 * file_bytes_per_pixel;
   int buff_byte_width = xs * buff_bytes_per_pixel;
 
-  vxl_uint_8* ib = (vxl_uint_8*) buf;
+  auto* ib = (vxl_uint_8*) buf;
 
   if ( !col_map_ ) {
     // No colourmap, so just read in the bytes. This could be RGB or
@@ -310,7 +309,7 @@ bool vil1_ras_generic_image::get_section(void* buf, int x0, int y0, int xs, int 
     assert( file_bytes_per_pixel == 1 && buff_bytes_per_pixel == 3 );
     int col_len = map_length_ / 3;
     // Read a line, and map every index into an RGB triple
-    vxl_uint_8* line = new vxl_uint_8[ xs ];
+    auto* line = new vxl_uint_8[ xs ];
     for (int y = 0; y < ys; ++y) {
       vs_->seek( file_byte_start + y * file_byte_width );
       vs_->read( line, xs );
@@ -362,7 +361,7 @@ bool vil1_ras_generic_image::put_section(void const* buf, int x0, int y0, int xs
   bool need_pad = ( file_byte_width == buff_byte_width+1 );
   vxl_uint_8 zero = 0;
 
-  vxl_uint_8 const* ob = (vxl_uint_8 const*) buf;
+  auto const* ob = (vxl_uint_8 const*) buf;
 
   for (int y = 0; y < ys; ++y) {
     vs_->seek( file_byte_start + y * file_byte_width );

@@ -1,6 +1,9 @@
 #include "bugl_curve_3d.h"
 #include <bugl/bugl_normal_point_3d_sptr.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 bugl_normal_point_3d_sptr bugl_curve_3d::get_point(unsigned int index) const
 {
@@ -33,7 +36,7 @@ void bugl_curve_3d::add_curve(std::vector<bugl_normal_point_3d_sptr > & pts)
     for (unsigned int j=1; j<=num_neighbors_; j++){
       // assign the left neighbors
       if (j > i)
-        seg[num_neighbors_-j] = VXL_NULLPTR;
+        seg[num_neighbors_-j] = nullptr;
       else
         seg[num_neighbors_-j] = pts[i-j];
 
@@ -41,7 +44,7 @@ void bugl_curve_3d::add_curve(std::vector<bugl_normal_point_3d_sptr > & pts)
       if (i+j < size)
         seg[num_neighbors_ + j] = pts[i+j];
       else
-        seg[num_neighbors_ + j] = VXL_NULLPTR;
+        seg[num_neighbors_ + j] = nullptr;
     }//end neighbors
 
     data_.push_back(seg);

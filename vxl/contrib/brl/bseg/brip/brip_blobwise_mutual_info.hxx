@@ -16,8 +16,10 @@
 #include <vil/algo/vil_binary_dilate.h>
 #include <vil/algo/vil_binary_erode.h>
 #include <vil/vil_math.h>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Calculate the Mutual Information between the images.
 template<class T>
@@ -29,7 +31,7 @@ void brip_blobwise_mutual_info (const vil_image_view<T>& img1,
 {
 #if 0
   //pixel gradient weight must be higher than this
-  const T minWeight = .1;
+  constexpr T minWeight = .1;
 #endif
   //blob region is just a vector of vil_chords (rows in image)
   bil_blob_finder finder(mask);

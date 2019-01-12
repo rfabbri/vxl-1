@@ -1,9 +1,6 @@
 // This is core/vil1/vil1_stream_fstream.h
 #ifndef vil1_stream_fstream_h_
 #define vil1_stream_fstream_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief A vil1_stream implementation using std::fstream
@@ -11,7 +8,9 @@
 // \date 16 Feb 00
 
 #include <fstream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil1/vil1_stream.h>
 
 //: A vil1_stream implementation using std::fstream
@@ -21,14 +20,14 @@ class vil1_stream_fstream : public vil1_stream
   vil1_stream_fstream(char const* filename, char const* mode);
 
   // implement virtual vil1_stream interface:
-  bool ok() const { return f_.good(); }
-  vil1_streampos write(void const* buf, vil1_streampos n);
-  vil1_streampos read(void* buf, vil1_streampos n);
-  vil1_streampos tell() const;
-  void seek(vil1_streampos position);
+  bool ok() const override { return f_.good(); }
+  vil1_streampos write(void const* buf, vil1_streampos n) override;
+  vil1_streampos read(void* buf, vil1_streampos n) override;
+  vil1_streampos tell() const override;
+  void seek(vil1_streampos position) override;
 
  protected:
-  ~vil1_stream_fstream();
+  ~vil1_stream_fstream() override;
 
  private:
   std::ios::openmode flags_;

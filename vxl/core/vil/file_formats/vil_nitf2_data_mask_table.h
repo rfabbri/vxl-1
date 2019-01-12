@@ -10,7 +10,9 @@
 #include <vector>
 #include <string>
 #include <vxl_config.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_pixel_format.h>
 
 class vil_stream;
@@ -23,7 +25,7 @@ class vil_nitf2_data_mask_table
 {
  public:
   vil_nitf2_data_mask_table( unsigned int numBlocksX, unsigned int numBlocksY,
-                             unsigned int numBands, const std::string imode );
+                             unsigned int numBands, const std::string& imode );
   bool parse( vil_stream* stream );
 
   //: If this function returns true, then you may call \sa block_band_offset()

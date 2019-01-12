@@ -15,7 +15,9 @@
 #include <iostream>
 #include <utility>
 #include <vxl_config.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vdtop/vdtop_export.h>
 
 //: Freeman code class.
@@ -27,7 +29,7 @@ class vdtop_freeman_code
     code_ = arg ;
   }
 
-  vdtop_freeman_code (const vdtop_freeman_code & arg) : code_(arg.code_) {}
+  vdtop_freeman_code (const vdtop_freeman_code & arg)  = default;
 
   vdtop_freeman_code & operator= (vdtop_freeman_code arg)
   {

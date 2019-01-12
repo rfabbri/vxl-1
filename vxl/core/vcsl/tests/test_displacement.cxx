@@ -13,7 +13,9 @@
 
 #include <iostream>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vcsl/vcsl_cartesian_3d.h>
 #include <vcsl/vcsl_displacement.h>
 #include <vcsl/vcsl_graph.h>
@@ -69,7 +71,7 @@ static void test_displacement()
   dis->set_angle(angles);
 
   std::vector<vcsl_spatial_transformation_sptr> motion;
-  motion.push_back(dis.ptr());
+  motion.emplace_back(dis.ptr());
   cs0->set_motion(motion);
 
   vnl_vector<double> p(3);

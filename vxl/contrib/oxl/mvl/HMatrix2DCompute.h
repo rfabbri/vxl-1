@@ -22,12 +22,14 @@ class PairMatchSetCorner;
 #include <vector>
 #include <mvl/HomgPoint2D.h>
 #include <mvl/HomgLine2D.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class HMatrix2DCompute {
 public:
   HMatrix2DCompute() : verbose_(false) { }
-  virtual ~HMatrix2DCompute() { }
+  virtual ~HMatrix2DCompute() = default;
 
   // set this to true for verbose run-time information
   void verbose(bool v) { verbose_ = v; }

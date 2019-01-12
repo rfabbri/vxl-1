@@ -6,8 +6,10 @@
 // \author Gehua Yang
 // \date Feb 2005
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <rgrl/rgrl_trans_reader.h>
 #include <rgrl/rgrl_util.h>
@@ -21,9 +23,7 @@ rgrl_trans_couple::
 }
 
 rgrl_trans_couple::
-~rgrl_trans_couple()
-{
-}
+~rgrl_trans_couple() = default;
 
 void
 rgrl_trans_couple::
@@ -176,7 +176,7 @@ inverse_transform() const
   if ( backward_xform_ )
     return new rgrl_trans_couple( backward_xform_, forward_xform_ );
   else
-    return VXL_NULLPTR;
+    return nullptr;
 }
 
 //: make a clone copy

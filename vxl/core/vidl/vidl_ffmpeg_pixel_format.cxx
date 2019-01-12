@@ -1,7 +1,4 @@
 // This is core/vidl/vidl_ffmpeg_pixel_format.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Matt Leotta
@@ -14,7 +11,9 @@
 #include <cstring>
 #include <iostream>
 #include "vidl_ffmpeg_pixel_format.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 #ifdef LIBAVFORMAT_BUILD

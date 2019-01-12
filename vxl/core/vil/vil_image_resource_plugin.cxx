@@ -1,7 +1,4 @@
 // This is core/vil/vil_image_resource_plugin.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \brief Interface for loading new image formats
@@ -11,12 +8,14 @@
 
 #include <vector>
 #include "vil_image_resource_plugin.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //=======================================================================
 
 static std::vector<vil_image_resource_plugin*>
-    *vil_image_resource_plugins_list_ = VXL_NULLPTR;
+    *vil_image_resource_plugins_list_ = nullptr;
 
 //=======================================================================
 
@@ -25,7 +24,7 @@ bool vil_image_resource_plugin::load_the_image (
     const std::string & path, const std::string & filetype,
     const std::string & colour)
 {
-  if (vil_image_resource_plugins_list_==VXL_NULLPTR ||
+  if (vil_image_resource_plugins_list_==nullptr ||
       is_a()!=std::string("vil_image_resource_plugin"))
   {
     return false;
@@ -48,12 +47,12 @@ bool vil_image_resource_plugin::load_the_image (
 void vil_image_resource_plugin::register_plugin(
     vil_image_resource_plugin* plugin)
 {
-  if (plugin==VXL_NULLPTR || plugin->is_a()==std::string("vil_image_resource_plugin"))
+  if (plugin==nullptr || plugin->is_a()==std::string("vil_image_resource_plugin"))
   {
     return;
   }
 
-  if (vil_image_resource_plugins_list_==VXL_NULLPTR)
+  if (vil_image_resource_plugins_list_==nullptr)
   {
     vil_image_resource_plugins_list_ =
       new std::vector<vil_image_resource_plugin*>();
@@ -66,22 +65,22 @@ void vil_image_resource_plugin::register_plugin(
 
 void vil_image_resource_plugin::delete_all_plugins()
 {
-  if (vil_image_resource_plugins_list_==VXL_NULLPTR) return;
-  unsigned int n = (unsigned int)(vil_image_resource_plugins_list_->size());
+  if (vil_image_resource_plugins_list_==nullptr) return;
+  auto n = (unsigned int)(vil_image_resource_plugins_list_->size());
   for (unsigned int i=0;i<n;++i)
     delete vil_image_resource_plugins_list_->operator[](i);
   vil_image_resource_plugins_list_->resize(0);
 
   // Clean up the list itself
   delete vil_image_resource_plugins_list_;
-  vil_image_resource_plugins_list_=VXL_NULLPTR;
+  vil_image_resource_plugins_list_=nullptr;
 }
 
 //=======================================================================
 
 bool vil_image_resource_plugin::can_be_loaded(const std::string& filename)
 {
-  if (vil_image_resource_plugins_list_==VXL_NULLPTR ||
+  if (vil_image_resource_plugins_list_==nullptr ||
       is_a()!=std::string("vil_image_resource_plugin"))
   {
     return false;

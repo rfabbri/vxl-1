@@ -13,14 +13,16 @@ class HMatrix1D;
 #include <iostream>
 #include <vector>
 #include <vgl/vgl_homg_point_1d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class HMatrix1DCompute
 {
  public:
   //
   HMatrix1DCompute() : verbose_(false) { }
-  virtual ~HMatrix1DCompute() { }
+  virtual ~HMatrix1DCompute() = default;
 
   //
   void verbose(bool); // set this to true for verbose run-time information

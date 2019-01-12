@@ -12,23 +12,21 @@
 #include <mbl/mbl_parse_block.h>
 #include <mbl/mbl_read_props.h>
 #include <mbl/mbl_cloneables_factory.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //=======================================================================
 // Dflt ctor
 //=======================================================================
 
-mfpf_region_definer::mfpf_region_definer()
-{
-}
+mfpf_region_definer::mfpf_region_definer() = default;
 
 //=======================================================================
 // Destructor
 //=======================================================================
 
-mfpf_region_definer::~mfpf_region_definer()
-{
-}
+mfpf_region_definer::~mfpf_region_definer() = default;
 
 //: Initialise from a string stream
 bool mfpf_region_definer::set_from_stream(std::istream &is)
@@ -48,12 +46,12 @@ bool mfpf_region_definer::set_from_stream(std::istream &is)
 }
 
 //: Create a concrete object, from a text specification.
-vcl_unique_ptr<mfpf_region_definer> mfpf_region_definer::
+std::unique_ptr<mfpf_region_definer> mfpf_region_definer::
   create_from_stream(std::istream &is)
 {
   std::string name;
   is >> name;
-  vcl_unique_ptr<mfpf_region_definer> vcb;
+  std::unique_ptr<mfpf_region_definer> vcb;
   try {
     vcb = mbl_cloneables_factory<mfpf_region_definer>::get_clone(name);
   }
@@ -186,11 +184,11 @@ bool mfpf_renumber_to_self(
     }
   }
 
-  for (unsigned i=0;i<definer.size();++i)
+  for (auto & i : definer)
   {
-    if (!definer[i]->replace_index(new_index))
+    if (!i->replace_index(new_index))
     {
-      std::cerr<<"Failed to update indices in "<<definer[i]<<std::endl;
+      std::cerr<<"Failed to update indices in "<<i<<std::endl;
       return false;
     }
   }

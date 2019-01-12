@@ -9,7 +9,9 @@
 #include <vector>
 #include <iostream>
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <rgrl/rgrl_initializer.h>
 #include <rgrl/rgrl_scale_sptr.h>
@@ -26,8 +28,8 @@ class rgrl_initializer_reader
   rgrl_initializer_reader( std::istream& istr,
                            rgrl_mask_sptr             const& from_image_roi,
                            rgrl_mask_sptr             const& to_image_roi,
-                           rgrl_scale_sptr            const& prior_scale=VXL_NULLPTR,
-                           rgrl_estimator_sptr        const& estimator = VXL_NULLPTR,
+                           rgrl_scale_sptr            const& prior_scale=nullptr,
+                           rgrl_estimator_sptr        const& estimator = nullptr,
                            unsigned int                      resolution = 0 );
 
   //: Add more potential prior transformations
@@ -35,7 +37,7 @@ class rgrl_initializer_reader
 
   //: Get next initial estimate when first called, but return false thereafter.
   bool next_initial( rgrl_view_sptr           & view,
-                     rgrl_scale_sptr          & prior_scale );
+                     rgrl_scale_sptr          & prior_scale ) override;
 
   //: Set index pointing to vector of initializations to zero.
   void reset_xform_index( ) { xform_index_ = 0; }
@@ -45,7 +47,7 @@ class rgrl_initializer_reader
 
   //: Return number of initializations
   //  -1 stands for unknown
-  virtual int size() const;
+  int size() const override;
 
   //: Defines type-related functions
   rgrl_type_macro( rgrl_initializer_reader, rgrl_initializer );

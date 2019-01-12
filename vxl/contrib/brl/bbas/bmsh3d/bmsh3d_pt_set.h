@@ -19,7 +19,9 @@
 #include <iostream>
 #include <map>
 #include <utility>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_fwd.h>
 
 #include "bmsh3d_vertex.h"
@@ -78,7 +80,7 @@ class bmsh3d_pt_set
   bmsh3d_vertex* vertexmap (const int i) {
     std::map<int, bmsh3d_vertex*>::iterator it = vertexmap_.find (i);
     if (it == vertexmap_.end())
-      return VXL_NULLPTR;
+      return nullptr;
     return (*it).second;
   }
 
@@ -182,4 +184,3 @@ void shift_points_to_first_octant (bmsh3d_pt_set* pt_set);
 void subsample_points (bmsh3d_pt_set* pt_set, const unsigned int subsam_pts);
 
 #endif
-

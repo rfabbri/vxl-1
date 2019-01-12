@@ -42,7 +42,9 @@
 
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <sdet/sdet_denoise_mrf_bp_params.h>
 #include <sdet/sdet_mrf_bp.h>
 #include <vil/vil_image_resource.h>
@@ -53,7 +55,7 @@ class sdet_denoise_mrf_bp : public sdet_denoise_mrf_bp_params
  public:
   //:Constructors/destructor
   sdet_denoise_mrf_bp(sdet_denoise_mrf_bp_params& imp);
-  ~sdet_denoise_mrf_bp();
+  ~sdet_denoise_mrf_bp() override;
   //: Process methods
 
   void set_image(vil_image_resource_sptr const& resource);

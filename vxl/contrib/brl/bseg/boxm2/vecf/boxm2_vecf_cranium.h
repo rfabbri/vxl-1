@@ -9,7 +9,10 @@
 //
 #include <iostream>
 #include <string>
-#include <vcl_compiler.h>
+#include <utility>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_vector_3d.h>
 #include <vgl/vgl_pointset_3d.h>
@@ -24,7 +27,7 @@ class boxm2_vecf_cranium : public boxm2_vecf_geometry_base{
   }
   boxm2_vecf_cranium(std::string const& geometry_file, unsigned nbins = 25);
 
- boxm2_vecf_cranium(vgl_pointset_3d<double> const& ptset,unsigned nbins = 25): ptset_(ptset), nbins_(nbins){}
+ boxm2_vecf_cranium(vgl_pointset_3d<double>  ptset,unsigned nbins = 25): ptset_(std::move(ptset)), nbins_(nbins){}
 
  void read_cranium(std::istream& istr);
 
@@ -32,8 +35,8 @@ class boxm2_vecf_cranium : public boxm2_vecf_geometry_base{
  double distance(vgl_point_3d<double> const& p) const {return index_.distance(p);}
  //: the functor operator for surface distance. dist_thresh is the distance a closest point on the normal plane
  // can be away from the closest point in the cross-section pointset.
- virtual double operator() (vgl_point_3d<double> const& p) const{ return index_.distance(p);}
- virtual bool inverse_vector_field(vgl_point_3d<double> const& p, vgl_vector_3d<double>& inv_vf) const;
+ double operator() (vgl_point_3d<double> const& p) const override{ return index_.distance(p);}
+ bool inverse_vector_field(vgl_point_3d<double> const& p, vgl_vector_3d<double>& inv_vf) const override;
 
  //: accessors
  void set_params(boxm2_vecf_cranium_params const& params){params_ = params;}

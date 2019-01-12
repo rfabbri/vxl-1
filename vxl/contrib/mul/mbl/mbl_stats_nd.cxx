@@ -7,8 +7,10 @@
 // \brief Simple statistics (mean, variance) on vectors.
 // \author Tim Cootes
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vnl/io/vnl_io_vector.h>
 
 mbl_stats_nd::mbl_stats_nd()

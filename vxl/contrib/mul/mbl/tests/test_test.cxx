@@ -4,7 +4,9 @@
 #include <cstdlib>
 #include <cstring>
 #include <algorithm>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_file.h>
 #include <vpl/vpl.h>
 #include <vsl/vsl_binary_io.h>
@@ -80,9 +82,9 @@ void test_test()
   TEST("Simple case +ve", mbl_test_summaries_are_equal(A + "D 1", B + "D 2"), false);
 
   TEST("Simple case +ve", mbl_test_summaries_are_equal(A, B), true);
-  const char * ignore1[]={"D", VXL_NULLPTR };
+  const char * ignore1[]={"D", nullptr };
   TEST("Exclusions case +ve", mbl_test_summaries_are_equal(A + "D 1", B + "D 2", ignore1), true);
-  const char * ignore2[]={"^ *D", VXL_NULLPTR };
+  const char * ignore2[]={"^ *D", nullptr };
   TEST("RE Exclusions case +ve", mbl_test_summaries_are_equal(A + "D 1", B + "D 2", ignore2), true);
   TEST("RE Exclusions case -ne", mbl_test_summaries_are_equal(A + "AD 1", B + "AD 2", ignore2), false);
 

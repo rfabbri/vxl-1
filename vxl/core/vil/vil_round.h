@@ -1,9 +1,6 @@
 // This is core/vil/vil_round.h
 #ifndef vil_round_h_
 #define vil_round_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Namespace with standard rounding functions.
@@ -32,7 +29,7 @@
 # define GCC_USE_FAST_IMPL 0
 #endif
 // Turn on fast impl when using msvc on 32 bits windows
-#if defined(VCL_VC) && !defined(_WIN64)
+#if defined(_MSC_VER) && !defined(_WIN64)
 # define VC_USE_FAST_IMPL 1
 #else
 # define VC_USE_FAST_IMPL 0

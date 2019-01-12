@@ -9,7 +9,9 @@
 // \author Tim Cootes
 // \brief Cost function to promote sparse basis vectors
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vsl/vsl_binary_io.h>
 #include <mbl/mbl_parse_block.h>
@@ -20,17 +22,13 @@
 // Constructors
 //=======================================================================
 
-mcal_var_basis_cost::mcal_var_basis_cost()
-{
-}
+mcal_var_basis_cost::mcal_var_basis_cost() = default;
 
 //=======================================================================
 // Destructor
 //=======================================================================
 
-mcal_var_basis_cost::~mcal_var_basis_cost()
-{
-}
+mcal_var_basis_cost::~mcal_var_basis_cost() = default;
 
 //: Returns true since cost can be computed from the variance.
 bool mcal_var_basis_cost::can_use_variance() const
@@ -50,7 +48,7 @@ double mcal_var_basis_cost::cost(const vnl_vector<double>& unit_basis,
 
   //: Compute component of the cost function from given basis vector
   // Cost is log(variance)
-double mcal_var_basis_cost::cost_from_variance(const vnl_vector<double>& unit_basis,
+double mcal_var_basis_cost::cost_from_variance(const vnl_vector<double>&  /*unit_basis*/,
                                                double variance)
 {
   return std::log(1e-8+variance);

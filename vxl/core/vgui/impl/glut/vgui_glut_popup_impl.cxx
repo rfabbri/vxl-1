@@ -1,7 +1,4 @@
 // This is core/vgui/impl/glut/vgui_glut_popup_impl.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
@@ -9,7 +6,9 @@
 #include <iostream>
 #include "vgui_glut_popup_impl.h"
 #include "vgui_glut_adaptor.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgui/vgui_macro.h>
 #include <vgui/vgui_command.h>
 #include <vgui/vgui_glut.h>

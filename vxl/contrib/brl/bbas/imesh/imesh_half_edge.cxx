@@ -6,8 +6,10 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 
 //: Construct from a face index list
@@ -43,13 +45,13 @@ imesh_half_edge_set::build_from_ifs(const std::vector<std::vector<unsigned int> 
 
       vert_pair vp(v,nv);
       if (v > nv) vp = vert_pair(nv,v);
-      std::map<vert_pair, unsigned int>::iterator m = edge_map.find(vp);
+      auto m = edge_map.find(vp);
       unsigned int curr_e;
       if (m == edge_map.end()) {
         curr_e = half_edges_.size();
         edge_map.insert(std::pair<vert_pair,unsigned int>(vp,curr_e));
-        half_edges_.push_back(imesh_half_edge(curr_e,imesh_invalid_idx,v,f));
-        half_edges_.push_back(imesh_half_edge(curr_e+1,imesh_invalid_idx,nv,imesh_invalid_idx));
+        half_edges_.emplace_back(curr_e,imesh_invalid_idx,v,f);
+        half_edges_.emplace_back(curr_e+1,imesh_invalid_idx,nv,imesh_invalid_idx);
       }
       else {
         curr_e = m->second+1;
@@ -95,8 +97,8 @@ unsigned int
 imesh_half_edge_set::num_verts() const
 {
   unsigned int count = 0;
-  for (unsigned int i=0; i<vert_to_he_.size(); ++i)
-    if (vert_to_he_[i] != imesh_invalid_idx)
+  for (unsigned int i : vert_to_he_)
+    if (i != imesh_invalid_idx)
       ++count;
   return count;
 }
@@ -107,8 +109,8 @@ unsigned int
 imesh_half_edge_set::num_faces() const
 {
   unsigned int count = 0;
-  for (unsigned int i=0; i<face_to_he_.size(); ++i)
-    if (face_to_he_[i] != imesh_invalid_idx)
+  for (unsigned int i : face_to_he_)
+    if (i != imesh_invalid_idx)
       ++count;
   return count;
 }

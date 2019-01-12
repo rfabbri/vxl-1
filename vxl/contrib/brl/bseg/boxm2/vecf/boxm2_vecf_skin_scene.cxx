@@ -1,3 +1,4 @@
+#include <cmath>
 #include "boxm2_vecf_skin_scene.h"
 #include <vnl/vnl_vector_fixed.h>
 #include <vgl/vgl_distance.h>
@@ -10,7 +11,6 @@
 #include <vul/vul_timer.h>
 #include <boxm2/cpp/algo/boxm2_surface_distance_refine.h>
 #include <boxm2/cpp/algo/boxm2_refine_block_multi_data.h>
-#include <cmath>
 typedef vnl_vector_fixed<unsigned char, 16> uchar16;
 typedef boxm2_data_traits<BOXM2_PIXEL>::datatype pixtype;
 
@@ -25,11 +25,10 @@ void boxm2_vecf_skin_scene::create_anatomy_labels(){
   if(!blk_) return;
   vgl_box_3d<double> source_box = blk_->bounding_box_global();
   std::vector<cell_info> source_cell_centers = blk_->cells_in_box(source_box);
-  for(std::vector<cell_info>::iterator cit = source_cell_centers.begin();
-      cit != source_cell_centers.end(); ++cit){
-    int depth = cit->depth_;
-    unsigned data_index = cit->data_index_;
-    float alpha = static_cast<float>(alpha_data_[data_index]);
+  for(auto & source_cell_center : source_cell_centers){
+    int depth = source_cell_center.depth_;
+    unsigned data_index = source_cell_center.data_index_;
+    auto alpha = static_cast<float>(alpha_data_[data_index]);
     if(alpha>alpha_init_){
       skin_data_[data_index] = static_cast<boxm2_data_traits<BOXM2_PIXEL>::datatype>(true);
     }
@@ -44,14 +43,13 @@ void boxm2_vecf_skin_scene::create_anatomy_labels(){
 void boxm2_vecf_skin_scene::cache_cell_centers_from_anatomy_labels(){
   std::vector<cell_info> source_cell_centers = blk_->cells_in_box(source_bb_);
 
-  for(std::vector<cell_info>::iterator cit = source_cell_centers.begin();
-      cit != source_cell_centers.end(); ++cit){
-    unsigned dindx = cit->data_index_;
+  for(auto & source_cell_center : source_cell_centers){
+    unsigned dindx = source_cell_center.data_index_;
     float alpha = alpha_data_[dindx];
     bool skin = skin_data_[dindx]   > pixtype(0);
     if(skin||alpha>alpha_init_){
-      unsigned skin_index  = static_cast<unsigned>(skin_cell_centers_.size());
-      const vgl_point_3d<double>& p = cit->cell_center_;
+      auto skin_index  = static_cast<unsigned>(skin_cell_centers_.size());
+      const vgl_point_3d<double>& p = source_cell_center.cell_center_;
       skin_cell_centers_.push_back(p);
       skin_cell_data_index_.push_back(dindx);
       data_index_to_cell_index_[dindx] = skin_index;
@@ -93,10 +91,10 @@ boxm2_vecf_skin_scene::boxm2_vecf_skin_scene(std::string const& scene_file, std:
   if(!skin_geo_.has_appearance())
     this->paint_skin();
   std::vector<std::string> prefixes;
-  prefixes.push_back("alpha");
-  prefixes.push_back("boxm2_mog3_grey");
-  prefixes.push_back("boxm2_num_obs");
-  prefixes.push_back("boxm2_pixel_skin");
+  prefixes.emplace_back("alpha");
+  prefixes.emplace_back("boxm2_mog3_grey");
+  prefixes.emplace_back("boxm2_num_obs");
+  prefixes.emplace_back("boxm2_pixel_skin");
   double nrad = params_.neighbor_radius();
   boxm2_surface_distance_refine<boxm2_vecf_skin>(skin_geo_, base_model_, prefixes, nrad);
   boxm2_surface_distance_refine<boxm2_vecf_skin>(skin_geo_, base_model_, prefixes, nrad);
@@ -123,14 +121,13 @@ void boxm2_vecf_skin_scene::build_skin(){
   vgl_box_3d<double> bb = skin_geo_.bounding_box();
    // cell in a box centers are in global coordinates
   std::vector<cell_info> ccs = blk_->cells_in_box(bb);
-  for(std::vector<cell_info>::iterator cit = ccs.begin();
-      cit != ccs.end(); ++cit){
-    const vgl_point_3d<double>& cell_center = cit->cell_center_;
-    unsigned indx = cit->data_index_;
+  for(auto & cc : ccs){
+    const vgl_point_3d<double>& cell_center = cc.cell_center_;
+    unsigned indx = cc.data_index_;
     double a = 0.0;
     double d = skin_geo_.distance(cell_center, a);
-    unsigned char apc = static_cast<unsigned char>(a);
-    double d_thresh = len_coef*cit->side_length_;
+    auto apc = static_cast<unsigned char>(a);
+    double d_thresh = len_coef*cc.side_length_;
     if(d < d_thresh){
       if(!is_type_global(cell_center, SKIN)){
         skin_cell_centers_.push_back(cell_center);
@@ -158,12 +155,11 @@ void boxm2_vecf_skin_scene::find_cell_neigborhoods(){
       vgl_point_3d<double>& p = skin_cell_centers_[i];
       unsigned indx_i = skin_cell_data_index_[i];
       std::vector<vgl_point_3d<double> > nbrs = blk_->sub_block_neighbors(p, distance);
-      for(unsigned j =0; j<nbrs.size(); ++j){
-        vgl_point_3d<double>& q = nbrs[j];
+      for(auto & q : nbrs){
         unsigned indx_n;
         if(!blk_->data_index(q, indx_n))
           continue;
-        std::map<unsigned, unsigned >::iterator iit= data_index_to_cell_index_.find(indx_n);
+        auto iit= data_index_to_cell_index_.find(indx_n);
         if(iit == data_index_to_cell_index_.end())
           continue;
         if(iit->second==i)
@@ -180,7 +176,7 @@ void boxm2_vecf_skin_scene::paint_skin(){
   params_.app_[0]=params_.skin_intensity_;
   boxm2_data_traits<BOXM2_NUM_OBS>::datatype nobs;
   nobs.fill(0);
-  unsigned ns = static_cast<unsigned>(skin_cell_centers_.size());
+  auto ns = static_cast<unsigned>(skin_cell_centers_.size());
   for(unsigned i = 0; i<ns; ++i){
     unsigned indx = skin_cell_data_index_[i];
     app_data_[indx] = params_.app_;
@@ -188,14 +184,14 @@ void boxm2_vecf_skin_scene::paint_skin(){
   }
 }
 void boxm2_vecf_skin_scene::repaint_skin(){
-  unsigned ns = static_cast<unsigned>(skin_cell_centers_.size());
+  auto ns = static_cast<unsigned>(skin_cell_centers_.size());
   double len_coef = params_.neighbor_radius();
   for(unsigned i = 0; i<ns; ++i){
     unsigned indx = skin_cell_data_index_[i];
     const vgl_point_3d<double>& p = skin_cell_centers_[i];
     double a = 0.0;
     double d = skin_geo_.distance(p, a);
-    unsigned char apc = static_cast<unsigned char>(a);
+    auto apc = static_cast<unsigned char>(a);
     double d_thresh = len_coef*8.0;
     if(d < d_thresh){
       params_.app_[0]=apc;
@@ -206,7 +202,7 @@ void boxm2_vecf_skin_scene::repaint_skin(){
 bool boxm2_vecf_skin_scene::is_type_data_index(unsigned data_index, boxm2_vecf_skin_scene::anat_type type) const{
 
    if(type == SKIN){
-     unsigned char skin = static_cast<unsigned char>(skin_data_[data_index]);
+     auto skin = static_cast<unsigned char>(skin_data_[data_index]);
      return skin > static_cast<unsigned char>(0);
    }
    return false;
@@ -249,7 +245,7 @@ bool boxm2_vecf_skin_scene::inverse_vector_field(vgl_point_3d<double> const& tar
 void boxm2_vecf_skin_scene::inverse_vector_field(std::vector<vgl_vector_3d<double> >& vf,
                                                       std::vector<bool>& valid) const{
   vul_timer t;
-  unsigned nt = static_cast<unsigned>(box_cell_centers_.size());
+  auto nt = static_cast<unsigned>(box_cell_centers_.size());
   vf.resize(nt);// initialized to 0
   valid.resize(nt, false);
   unsigned cnt = 0;
@@ -305,7 +301,7 @@ void boxm2_vecf_skin_scene::interpolate_vector_field(vgl_point_3d<double> const&
   sumalpha /= sumw;
   sumcolor/=sumw;
   color_app[0] = (unsigned char) (sumcolor[0] * 255); color_app[2] = (unsigned char)(sumcolor[2]*255); color_app[4]= (unsigned char) (sumcolor[4] * 255);
-  boxm2_data_traits<BOXM2_ALPHA>::datatype alpha = static_cast<boxm2_data_traits<BOXM2_ALPHA>::datatype>(sumalpha);
+  auto alpha = static_cast<boxm2_data_traits<BOXM2_ALPHA>::datatype>(sumalpha);
   target_app_data_[tindx] = app;
   target_alpha_data_[tindx] = alpha;
 }
@@ -335,7 +331,7 @@ bool boxm2_vecf_skin_scene::apply_vector_field(cell_info const& target_cell, vgl
 
 void boxm2_vecf_skin_scene::apply_vector_field_to_target(std::vector<vgl_vector_3d<double> > const& vf,
                                                               std::vector<bool> const& valid){
-  unsigned n = static_cast<unsigned>(box_cell_centers_.size());
+  auto n = static_cast<unsigned>(box_cell_centers_.size());
   int valid_count = 0;
   if(n==0)
     return;//shouldn't happen
@@ -383,11 +379,10 @@ int boxm2_vecf_skin_scene::prerefine_target_sub_block(vgl_point_3d<double> const
 
   // iterate through each intersecting source tree and find the maximum tree depth
   int max_depth = 0;
-  for(std::vector<vgl_point_3d<int> >::iterator bit = int_sblks.begin();
-      bit != int_sblks.end(); ++bit){
-    const uchar16& tree_bits = trees_(bit->x(), bit->y(), bit->z());
+  for(auto & int_sblk : int_sblks){
+    const uchar16& tree_bits = trees_(int_sblk.x(), int_sblk.y(), int_sblk.z());
     //safely cast since bit_tree is just temporary
-    uchar16& uctree_bits = const_cast<uchar16&>(tree_bits);
+    auto& uctree_bits = const_cast<uchar16&>(tree_bits);
     boct_bit_tree bit_tree(uctree_bits.data_block(), max_level);
     int dpth = bit_tree.depth();
     if(dpth>max_depth){
@@ -399,7 +394,7 @@ int boxm2_vecf_skin_scene::prerefine_target_sub_block(vgl_point_3d<double> const
 
 // == the full inverse vector field  p_source = p_target + vf ===
 void boxm2_vecf_skin_scene::inverse_vector_field_unrefined(std::vector<vgl_point_3d<double> > const& unrefined_target_pts){
-  unsigned n = static_cast<unsigned>(unrefined_target_pts.size());
+  auto n = static_cast<unsigned>(unrefined_target_pts.size());
   vfield_unrefined_.resize(n, vgl_vector_3d<double>(0.0, 0.0, 0.0));
   valid_unrefined_.resize(n, false);
   for(unsigned vf_index = 0; vf_index<n; ++vf_index){
@@ -421,9 +416,8 @@ void boxm2_vecf_skin_scene::inverse_vector_field_unrefined(std::vector<vgl_point
     this->extract_target_block_data(target_scene);
   this->extract_unrefined_cell_info();//on articulated_scene
   std::vector<vgl_point_3d<double> > tgt_pts;
-  for(std::vector<unrefined_cell_info>::iterator cit = unrefined_cell_info_.begin();
-      cit != unrefined_cell_info_.end(); ++cit)
-    tgt_pts.push_back(cit->pt_);
+  for(auto & cit : unrefined_cell_info_)
+    tgt_pts.push_back(cit.pt_);
   // compute inverse vector field for prerefining the target
   this->inverse_vector_field_unrefined(tgt_pts);
   // refine the target to match the source tree refinement
@@ -443,7 +437,7 @@ void boxm2_vecf_skin_scene::inverse_vector_field_unrefined(std::vector<vgl_point
 
 bool boxm2_vecf_skin_scene::set_params(boxm2_vecf_articulated_params const& params){
   try{
-    boxm2_vecf_skin_params const& params_ref = dynamic_cast<boxm2_vecf_skin_params const &>(params);
+    auto const& params_ref = dynamic_cast<boxm2_vecf_skin_params const &>(params);
     params_ = boxm2_vecf_skin_params(params_ref);
    return true;
   }catch(std::exception e){
@@ -471,7 +465,7 @@ void boxm2_vecf_skin_scene::determine_target_box_cell_centers(){
 
 void boxm2_vecf_skin_scene::export_point_cloud(std::ostream& ostr) const{
   vgl_pointset_3d<double> ptset;
-  unsigned n = static_cast<unsigned>(skin_cell_centers_.size());
+  auto n = static_cast<unsigned>(skin_cell_centers_.size());
   for(unsigned i = 0; i<n; ++i)
     ptset.add_point(skin_cell_centers_[i]);
   ostr << ptset;
@@ -479,11 +473,11 @@ void boxm2_vecf_skin_scene::export_point_cloud(std::ostream& ostr) const{
 
 void boxm2_vecf_skin_scene::export_point_cloud_with_appearance(std::ostream& ostr) const{
   boxm2_data_traits<BOXM2_MOG3_GREY>::datatype app;
-  unsigned n = static_cast<unsigned>(skin_cell_centers_.size());
+  auto n = static_cast<unsigned>(skin_cell_centers_.size());
   for(unsigned i = 0; i<n; ++i){
     const vgl_point_3d<double>& p = skin_cell_centers_[i];
     unsigned dindx = skin_cell_data_index_[i];
-    double a = static_cast<double>(app_data_[dindx][0]);
+    auto a = static_cast<double>(app_data_[dindx][0]);
     ostr << p.x() << ',' << p.y() << ',' << p.z() << ',' << a << '\n';
   }
 }

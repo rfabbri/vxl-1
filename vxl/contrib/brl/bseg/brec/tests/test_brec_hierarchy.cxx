@@ -15,7 +15,9 @@
 #include <brec/brec_part_gaussian.h>
 #include <bsta/algo/bsta_gaussian_updater.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 static void test_brec_hierarchy()
 {
@@ -163,4 +165,3 @@ static void test_brec_hierarchy()
 }
 
 TESTMAIN( test_brec_hierarchy );
-

@@ -4,7 +4,10 @@
 // \file
 #include<pop/pop_point_2d.h>
 #include<pop/pop_point_3d.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 //: constructor
@@ -73,4 +76,3 @@ void pop_projective::update()
   trans_(1,2) = params_[4]->value_; // the v offset
   trans_(2,2) = 1.0;
 }
-

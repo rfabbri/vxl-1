@@ -1,8 +1,10 @@
 // This is core/vil/algo/tests/test_algo_cartesian_differential_invariants.cxx
 #include <iostream>
 #include <cmath>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_image_view.h>
 #include <vil/vil_print.h>
 #include <vil/algo/vil_cartesian_differential_invariants.h>
@@ -14,7 +16,7 @@ static void test_algo_cartesian_differential_invariants()
            << " Testing test_algo_cartesian_differential_invariants\n"
            << "*****************************************************\n";
 
-  const unsigned n = 11;
+  constexpr unsigned n = 11;
 
   vil_image_view<float> src(n,n);
   vil_image_view<float> dest, dest2;

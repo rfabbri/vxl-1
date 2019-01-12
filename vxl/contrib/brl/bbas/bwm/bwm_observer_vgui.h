@@ -26,7 +26,9 @@
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_vector_3d.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class bwm_observer_vgui : public bwm_observer_img, public bwm_observer
 {
@@ -50,7 +52,7 @@ class bwm_observer_vgui : public bwm_observer_img, public bwm_observer
 
   void update_all();
 
-  void translate(vgl_vector_3d<double> T, bwm_observable_sptr object=VXL_NULLPTR);
+  void translate(vgl_vector_3d<double> T, bwm_observable_sptr object=nullptr);
 
   void delete_object();
 

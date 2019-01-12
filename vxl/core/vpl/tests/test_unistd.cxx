@@ -8,7 +8,9 @@
 #include <iostream>
 #include <cerrno>
 #include <algorithm>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <testlib/testlib_test.h>
 
@@ -16,12 +18,12 @@
 #include <vpl/vpl.h>
 #include <vpl/vpl_fileno.h>
 #include <vpl/vpl_fdopen.h>
-#if defined(VCL_VC)
+#if defined(_MSC_VER)
   #include <winsock2.h>
 #endif
 
 
-#ifdef VCL_WIN32
+#ifdef _WIN32
 #define ROOT_PATH "C:/"
 #else
 #define ROOT_PATH "/tmp"
@@ -47,7 +49,7 @@ static void test_unistd(int argc, char *argv[])
     if (retval != 0)
     {
       std::cerr << "errno: " << errno
-#if defined(VCL_VC)
+#if defined(_MSC_VER)
                << "WSAErr: " << WSAGetLastError()
 #endif
                << std::endl;
@@ -88,7 +90,7 @@ static void test_unistd(int argc, char *argv[])
     // write data to a file
 
     std::FILE * fp = std::fopen ("file", "w");
-    TEST("fopen non-NULL FILE", fp != VXL_NULLPTR, true);
+    TEST("fopen non-NULL FILE", fp != nullptr, true);
     int data[1] = { 99 };
     std::size_t n = std::fwrite (data, sizeof(data[0]), 1, fp);
     std::cout << "fwrite return value: " << n << std::endl;
@@ -99,12 +101,12 @@ static void test_unistd(int argc, char *argv[])
     // read data from file after FILE -> fd -> FILE conversion
 
     std::FILE * fp1 = std::fopen ("file", "r");
-    TEST("fopen non-NULL FILE", fp1 != VXL_NULLPTR, true);
+    TEST("fopen non-NULL FILE", fp1 != nullptr, true);
     int fd = vpl_fileno (fp1);
     TEST("fileno positive", fd >= 0, true);
     std::cout << "file number: " << fd << std::endl;
     std::FILE * fp2 = vpl_fdopen (fd, "r");
-    TEST("fdopen non-NULL FILE", fp2 != VXL_NULLPTR, true);
+    TEST("fdopen non-NULL FILE", fp2 != nullptr, true);
     int data[1] = { 0 };
     std::size_t n = std::fread (data, sizeof(data[0]), 1, fp2);
     TEST("fread return value", n, 1);

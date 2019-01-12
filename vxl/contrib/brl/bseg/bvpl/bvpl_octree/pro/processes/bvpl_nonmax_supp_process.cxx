@@ -14,7 +14,9 @@
 //
 // \endverbatim
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <brdb/brdb_value.h>
 #include <bprb/bprb_parameters.h>
@@ -33,8 +35,8 @@
 
 namespace bvpl_nonmax_supp_process_globals
 {
-  const unsigned int n_inputs_ = 4;
-  const unsigned int n_outputs_ = 1;
+  constexpr unsigned int n_inputs_ = 4;
+  constexpr unsigned int n_outputs_ = 1;
   //Define parameters here
 }
 
@@ -93,13 +95,13 @@ bool bvpl_nonmax_supp_process(bprb_func_process& pro)
   if (scene_base->appearence_model() == BOXM_EDGE_LINE) {
     typedef boct_tree<short,boxm_inf_line_sample<float> > tree_type;
     typedef boct_tree_cell<short,boxm_inf_line_sample<float> > cell_type;
-    boxm_scene<tree_type> *scene=dynamic_cast<boxm_scene<tree_type>*>(scene_base.ptr());
+    auto *scene=dynamic_cast<boxm_scene<tree_type>*>(scene_base.ptr());
     if (!scene) {
        std::cerr << "error casting scene_base to scene\n";
        return false;
     }
 
-    boxm_scene<tree_type> *output_scene=new boxm_scene<tree_type>(*scene);
+    auto *output_scene=new boxm_scene<tree_type>(*scene);
     output_scene->set_paths(scene_path, block_prefix);
     output_scene_sptr = output_scene;
 

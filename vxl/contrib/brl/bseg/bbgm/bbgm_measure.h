@@ -12,7 +12,10 @@
 //   <none yet>
 // \endverbatim
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_image_view.h>
 #include <vbl/vbl_array_2d.h>
 #include "bbgm_image_of.h"
@@ -205,7 +208,6 @@ void measure(bbgm_image_of<dist_>& dimg,
              typename dist_::vector_type min_value,
              typename dist_::vector_type max_value)
 {
-  typedef typename dist_::vector_type vector_;
   typedef typename dist_::math_type T;
 
   const unsigned ni = dimg.ni();

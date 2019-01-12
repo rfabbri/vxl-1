@@ -1,18 +1,16 @@
 // This is core/vul/vul_expand_path.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
 
-#include <vector>
+#include "vul_expand_path.h"
+#include <cstdlib>
 #include <functional>
 #include <map>
-#include <cstdlib>
-#include "vul_expand_path.h"
+#include <utility>
+#include <vector>
 
-#if defined(VCL_WIN32)
+#if defined(_WIN32)
 
 //:
 // \note This Windows version only performs some of the operations done by the Unix version.
@@ -182,9 +180,11 @@ std::wstring vul_expand_path(std::wstring path)
 
 #endif  //VXL_USE_WIN_WCHAR_T
 
-#else // #if defined(VCL_WIN32)
+#else // #if defined(_WIN32)
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <dirent.h>
@@ -214,7 +214,7 @@ std::string vul_expand_path_internal(std::string path)
   // expand ./ or just .
   if ((path.size()>=2 && path[0] == '.' && path[1] == '/') || path == ".") {
     char cwd[4096];
-    if( getcwd(cwd, sizeof cwd) == VXL_NULLPTR ) {
+    if( getcwd(cwd, sizeof cwd) == nullptr ) {
       path = "<error: current working directory path > 4096 characters>";
     } else {
       path = std::string(cwd) + path.substr(1);
@@ -228,14 +228,14 @@ std::string vul_expand_path_internal(std::string path)
     // sequence of non-slash characters.
     for (unsigned int i=0; i<path.size(); ) {
       if (path[i] == '/') {
-        bits.push_back("/");
+        bits.emplace_back("/");
         ++i;
       }
       else {
         unsigned int j=i;
         while (j<path.size() && path[j]!='/')
           ++j;
-        bits.push_back(std::string(path.c_str()+i, path.c_str()+j));
+        bits.emplace_back(path.c_str()+i, path.c_str()+j);
         i = j;
       }
     }
@@ -278,8 +278,8 @@ std::string vul_expand_path_internal(std::string path)
 
     // recompose the path from its bits
     path = "";
-    for (unsigned int i=0; i<bits.size(); ++i)
-      path += bits[i];
+    for (const auto & bit : bits)
+      path += bit;
 #ifdef DEBUG
     std::cerr << "recomposed : " << path << '\n';
 #endif
@@ -346,7 +346,7 @@ std::string vul_expand_path(std::string path)
   static map_t the_map;
 
   // look for the given path in the map.
-  map_t::iterator i = the_map.find(path);
+  auto i = the_map.find(path);
 
   if (i == the_map.end()) {
     // not in the map, so compute it :
@@ -361,7 +361,7 @@ std::string vul_expand_path(std::string path)
 
 std::string vul_expand_path_uncached(std::string path)
 {
-  return vul_expand_path_internal(path);
+  return vul_expand_path_internal(std::move(path));
 }
 
-#endif // VCL_WIN32
+#endif // _WIN32

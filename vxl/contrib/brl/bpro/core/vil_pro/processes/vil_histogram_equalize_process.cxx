@@ -19,7 +19,7 @@ bool vil_histogram_equalize_process_cons(bprb_func_process& pro)
 
   //output
   std::vector<std::string> output_types;
-  output_types.push_back("vil_image_view_base_sptr");
+  output_types.emplace_back("vil_image_view_base_sptr");
   ok = pro.set_output_types(output_types);
   if (!ok) return ok;
   return true;
@@ -38,7 +38,7 @@ bool vil_histogram_equalize_process(bprb_func_process& pro)
 
   vil_image_view<vxl_byte> img(image);
   vil_image_view_base_sptr out_img = new vil_image_view<vxl_byte> (img.ni(), img.nj(), img.nplanes());
-  vil_image_view<vxl_byte>& out_img_ref = static_cast<vil_image_view<vxl_byte> &>(*out_img);
+  auto& out_img_ref = static_cast<vil_image_view<vxl_byte> &>(*out_img);
 
   out_img_ref.deep_copy(img);
   vil_histogram_equalise(out_img_ref);

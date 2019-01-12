@@ -1,22 +1,21 @@
 // This is core/vul/vul_temp_filename.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 
 #include <string>
 #include <ctime>
 #include <cstdlib>
+#include <cstdio>
 #include "vul_temp_filename.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
-#if defined (VCL_VC) || defined(__MINGW32__)
-# include <vcl_cstdio.h>
+#if defined (_MSC_VER) || defined(__MINGW32__)
+
 # include <Windows.h>
 #else
 #if defined(unix) || defined(__unix) || defined(__unix__) || defined(__APPLE__)
   // Helper functions for Unix
 
-  #include <cstdio>  // for P_tmpdir
   #include <unistd.h> // for unlink
   #include <fcntl.h>  // for O_CREATE,...
 
@@ -42,7 +41,7 @@
     // randomness is that crucial.
     int init_randomizer()
     {
-      std::srand( std::time( VXL_NULLPTR ) );
+      std::srand( std::time( nullptr ) );
       return 0;
     }
     static int random_seed_trigger = init_randomizer();
@@ -69,7 +68,7 @@
 std::string
 vul_temp_filename( )
 {
-#if defined(VCL_VC) || defined(__MINGW32__)
+#if defined(_MSC_VER) || defined(__MINGW32__)
   char path[ _MAX_PATH ];
   char* file;
   if ( GetTempPath( _MAX_PATH, path ) == 0 )

@@ -1,9 +1,6 @@
 // This is mul/clsfy/clsfy_adaboost_trainer.h
 #ifndef clsfy_adaboost_trainer_h_
 #define clsfy_adaboost_trainer_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Functions to train classifiers using AdaBoost algorithm
@@ -23,7 +20,9 @@
 #include <clsfy/clsfy_simple_adaboost.h>
 #include <clsfy/clsfy_builder_1d.h>
 #include <mbl/mbl_data_wrapper.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //=======================================================================
 

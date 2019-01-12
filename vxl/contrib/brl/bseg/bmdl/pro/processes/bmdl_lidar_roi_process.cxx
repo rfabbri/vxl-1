@@ -1,6 +1,8 @@
 #include <iostream>
 #include <cstring>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vgl/vgl_box_2d.h>
 #include <vgl/vgl_box_3d.h>
@@ -39,16 +41,16 @@ std::vector<vgl_point_3d<T> > corners_of_box_3d(vgl_box_3d<T> box)
   return corners;
 }
 
-bool compute_ground(vil_image_resource_sptr ground,
-                    vil_image_view_base_sptr first_roi,
-                    vil_image_view_base_sptr last_roi,
+bool compute_ground(const vil_image_resource_sptr& ground,
+                    const vil_image_view_base_sptr& first_roi,
+                    const vil_image_view_base_sptr& last_roi,
                     vil_image_view_base_sptr& ground_roi)
 {
-  if (ground == VXL_NULLPTR)
+  if (ground == nullptr)
   {
     if ((first_roi->pixel_format() == VIL_PIXEL_FORMAT_FLOAT) &&
         (last_roi->pixel_format() == VIL_PIXEL_FORMAT_FLOAT)) {
-      vil_image_view<float>* ground_view = new vil_image_view<float>();
+      auto* ground_view = new vil_image_view<float>();
       vil_image_view<float> first_view(first_roi);
       vil_image_view<float> last_view(last_roi);
       bmdl_classify<float> classifier;
@@ -59,7 +61,7 @@ bool compute_ground(vil_image_resource_sptr ground,
     }
     else if ((first_roi->pixel_format() == VIL_PIXEL_FORMAT_DOUBLE) &&
              (last_roi->pixel_format() == VIL_PIXEL_FORMAT_DOUBLE)) {
-      vil_image_view<double>* ground_view = new vil_image_view<double>();
+      auto* ground_view = new vil_image_view<double>();
       vil_image_view<double> first_view(first_roi);
       vil_image_view<double> last_view(last_roi);
       bmdl_classify<double> classifier;
@@ -78,9 +80,9 @@ bool compute_ground(vil_image_resource_sptr ground,
 
 
 bool lidar_roi(unsigned type,  //0 for geo coordinates, 1 for image coord
-               vil_image_resource_sptr lidar_first,
-               vil_image_resource_sptr lidar_last,
-               vil_image_resource_sptr ground,
+               const vil_image_resource_sptr& lidar_first,
+               const vil_image_resource_sptr& lidar_last,
+               const vil_image_resource_sptr& ground,
                float min_lat, float min_lon,
                float max_lat, float max_lon,
                vil_image_view_base_sptr& first_roi,
@@ -96,10 +98,10 @@ bool lidar_roi(unsigned type,  //0 for geo coordinates, 1 for image coord
   }
 
 #if HAS_GEOTIFF
-  vil_tiff_image* tiff_first = static_cast<vil_tiff_image*> (lidar_first.ptr());
-  vil_tiff_image* tiff_last  = static_cast<vil_tiff_image*> (lidar_last.ptr());
+  auto* tiff_first = static_cast<vil_tiff_image*> (lidar_first.ptr());
+  auto* tiff_last  = static_cast<vil_tiff_image*> (lidar_last.ptr());
 
-  if (vpgl_geo_camera::init_geo_camera(tiff_first, VXL_NULLPTR, camera))
+  if (vpgl_geo_camera::init_geo_camera(tiff_first, nullptr, camera))
   {
     vgl_box_2d<double> roi_box;
 
@@ -110,10 +112,10 @@ bool lidar_roi(unsigned type,  //0 for geo coordinates, 1 for image coord
       vgl_point_3d<double> max_pos(max_lon, max_lat, 30);
       vgl_box_3d<double> world(min_pos, max_pos);
       std::vector<vgl_point_3d<double> > corners = corners_of_box_3d<double>(world);
-      for (unsigned i=0; i<corners.size(); i++) {
-        double x = corners[i].x();
-        double y = corners[i].y();
-        double z = corners[i].z();
+      for (auto & corner : corners) {
+        double x = corner.x();
+        double y = corner.y();
+        double z = corner.z();
         double lx, ly, lz;
         camera->lvcs()->global_to_local(x, y, z,vpgl_lvcs::wgs84, lx, ly, lz);
         double u,v;
@@ -146,7 +148,7 @@ bool lidar_roi(unsigned type,  //0 for geo coordinates, 1 for image coord
                                         (unsigned int)bb->height());
 
     // if no ground input, create an estimated one
-    if (ground == VXL_NULLPTR) {
+    if (ground == nullptr) {
       compute_ground(ground, first_roi, last_roi, ground_roi);
     }
     else {   // crop the given one
@@ -200,11 +202,11 @@ bool bmdl_lidar_roi_process(bprb_func_process& pro)
   std::string first = pro.get_input<std::string>(i++);
   std::string last = pro.get_input<std::string>(i++);
   std::string ground = pro.get_input<std::string>(i++);
-  float min_lat = pro.get_input<float>(i++);
-  float min_lon = pro.get_input<float>(i++);
-  float max_lat = pro.get_input<float>(i++);
-  float max_lon = pro.get_input<float>(i++);
-  unsigned type = pro.get_input<unsigned>(i++);
+  auto min_lat = pro.get_input<float>(i++);
+  auto min_lon = pro.get_input<float>(i++);
+  auto max_lat = pro.get_input<float>(i++);
+  auto max_lon = pro.get_input<float>(i++);
+  auto type = pro.get_input<unsigned>(i++);
 
   // check first return's validity
   vil_image_resource_sptr first_ret = vil_load_image_resource(first.c_str());
@@ -221,13 +223,13 @@ bool bmdl_lidar_roi_process(bprb_func_process& pro)
   }
 
   // Ground image path can be invalid or empty, in that case an estimated ground will be computed
-  vil_image_resource_sptr ground_img =VXL_NULLPTR;
+  vil_image_resource_sptr ground_img =nullptr;
   if (ground.size() > 0) {
     ground_img = vil_load_image_resource(ground.c_str());
   }
 
-  vil_image_view_base_sptr first_roi=VXL_NULLPTR, last_roi=VXL_NULLPTR, ground_roi;
-  vpgl_geo_camera* lidar_cam =VXL_NULLPTR;
+  vil_image_view_base_sptr first_roi=nullptr, last_roi=nullptr, ground_roi;
+  vpgl_geo_camera* lidar_cam =nullptr;
   if (!lidar_roi(type, first_ret, last_ret, ground_img,
     min_lat, min_lon, max_lat, max_lon, first_roi, last_roi, ground_roi, lidar_cam)) {
     std::cout << "bmdl_lidar_roi_process -- The process has failed!\n";
@@ -254,22 +256,22 @@ bool bmdl_lidar_roi_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("vcl_string");
-  input_types.push_back("vcl_string");
-  input_types.push_back("vcl_string");
-  input_types.push_back("float");
-  input_types.push_back("float");
-  input_types.push_back("float");
-  input_types.push_back("float");
-  input_types.push_back("unsigned");
+  input_types.emplace_back("vcl_string");
+  input_types.emplace_back("vcl_string");
+  input_types.emplace_back("vcl_string");
+  input_types.emplace_back("float");
+  input_types.emplace_back("float");
+  input_types.emplace_back("float");
+  input_types.emplace_back("float");
+  input_types.emplace_back("unsigned");
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   std::vector<std::string> output_types;
-  output_types.push_back("vil_image_view_base_sptr"); // label image
-  output_types.push_back("vil_image_view_base_sptr"); // height image
-  output_types.push_back("vil_image_view_base_sptr"); // ground roi
-  output_types.push_back("vpgl_camera_double_sptr");  // lvcs
+  output_types.emplace_back("vil_image_view_base_sptr"); // label image
+  output_types.emplace_back("vil_image_view_base_sptr"); // height image
+  output_types.emplace_back("vil_image_view_base_sptr"); // ground roi
+  output_types.emplace_back("vpgl_camera_double_sptr");  // lvcs
   ok = pro.set_output_types(output_types);
   if (!ok) return ok;
 

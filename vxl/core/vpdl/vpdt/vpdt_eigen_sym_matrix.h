@@ -17,8 +17,10 @@
 #include <vpdl/vpdt/vpdt_field_traits.h>
 #include <vpdl/vpdt/vpdt_field_default.h>
 #include <vpdl/vpdt/vpdt_access.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 
 //: wrapper for the vnl eigensystem function for fixed size data

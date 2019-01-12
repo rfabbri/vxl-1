@@ -1,10 +1,6 @@
 // This is rpl/rrel/rrel_cauchy_obj.cxx
 #include "rrel_cauchy_obj.h"
 
-namespace {
-  inline double sqr( double x ) { return x*x; }
-}
-
 
 rrel_cauchy_obj::rrel_cauchy_obj( double C )
   : C_( C )
@@ -12,9 +8,7 @@ rrel_cauchy_obj::rrel_cauchy_obj( double C )
 }
 
 
-rrel_cauchy_obj::~rrel_cauchy_obj()
-{
-}
+rrel_cauchy_obj::~rrel_cauchy_obj() = default;
 
 
 double

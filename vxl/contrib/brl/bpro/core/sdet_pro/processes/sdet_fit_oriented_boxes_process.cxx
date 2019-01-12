@@ -5,7 +5,9 @@
 // \file   given a blob image with each image having a unique different color, fit an oriented box to each blob and return 4 corners of it
 
 #include <vil/vil_image_view.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bbas_pro/bbas_1d_array_float.h>
 #include <sdet/sdet_region.h>
 
@@ -34,12 +36,12 @@ bool sdet_fit_oriented_boxes_process_cons(bprb_func_process& pro)
 {
   //this process takes 3 inputs
   std::vector<std::string> input_types;
-  input_types.push_back("vil_image_view_base_sptr");  // randomly colored blob image
+  input_types.emplace_back("vil_image_view_base_sptr");  // randomly colored blob image
 
   std::vector<std::string> output_types;
-  output_types.push_back("unsigned");  // return the number of blobs, N
-  output_types.push_back("bbas_1d_array_float_sptr");  // an array of size N*8, four points with (u,v) image coordinates for each corner of each oriented box
-  output_types.push_back("bbas_1d_array_float_sptr");  // an array of size N*2, which output the length and width of the fitting oriented box
+  output_types.emplace_back("unsigned");  // return the number of blobs, N
+  output_types.emplace_back("bbas_1d_array_float_sptr");  // an array of size N*8, four points with (u,v) image coordinates for each corner of each oriented box
+  output_types.emplace_back("bbas_1d_array_float_sptr");  // an array of size N*2, which output the length and width of the fitting oriented box
   return pro.set_input_types(input_types)
       && pro.set_output_types(output_types);
 }
@@ -69,31 +71,31 @@ bool sdet_fit_oriented_boxes_process(bprb_func_process& pro)
       vil_rgb<vxl_byte> current = color_img(i,j);
       if (current == bg_color)
         continue;
-      std::map<vil_rgb<vxl_byte>, std::vector<vgl_point_2d<float> > >::iterator iter = color_map.find(current);
+      auto iter = color_map.find(current);
       if (iter != color_map.end()) {
-        (iter->second).push_back(vgl_point_2d<float>(i,j));
+        (iter->second).emplace_back(i,j);
       } else {
         std::vector<vgl_point_2d<float> > tmp;
-        tmp.push_back(vgl_point_2d<float>(i,j));
+        tmp.emplace_back(i,j);
         color_map[current] = tmp;
       }
     }
 
-  std::map<vil_rgb<vxl_byte>, std::vector<vgl_point_2d<float> > >::iterator iter = color_map.begin();
+  auto iter = color_map.begin();
   int cnt = 0;
   for ( ; iter != color_map.end(); iter++)
     cnt++;
 
   std::cout << "Found " << cnt << " blobs!" << std::endl;
-  bbas_1d_array_float * corners = new bbas_1d_array_float(cnt*8);
-  bbas_1d_array_float * box_dim = new bbas_1d_array_float(cnt*2);
+  auto * corners = new bbas_1d_array_float(cnt*8);
+  auto * box_dim = new bbas_1d_array_float(cnt*2);
   iter = color_map.begin();
   cnt = 0;
   for ( ; iter != color_map.end(); iter++) {
     std::vector<vgl_point_2d<float> > v = iter->second;
-    float* xp = new float[v.size()];
-    float* yp = new float[v.size()];
-    unsigned short* Ip = new unsigned short[v.size()];  // supposed to be grey values for the blob but here we don't care so just fill with same color
+    auto* xp = new float[v.size()];
+    auto* yp = new float[v.size()];
+    auto* Ip = new unsigned short[v.size()];  // supposed to be grey values for the blob but here we don't care so just fill with same color
 
     for (unsigned i = 0; i < v.size(); i++) {
       xp[i] = v[i].x();

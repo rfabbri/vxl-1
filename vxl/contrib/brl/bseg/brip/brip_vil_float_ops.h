@@ -25,8 +25,10 @@
 #include <vector>
 #include <iostream>
 #include <complex>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vnl/vnl_matrix.h>
 #include <vbl/vbl_array_2d.h>
 #include <vgl/vgl_box_2d.h>
@@ -43,7 +45,7 @@
 class brip_vil_float_ops
 {
  public:
-  ~brip_vil_float_ops() {}
+  ~brip_vil_float_ops() = default;
 
   //: convolves with the specified kernel
   static vil_image_view<float>
@@ -311,7 +313,7 @@ class brip_vil_float_ops
 
   //:
   // Returns the image with max scale values
-  static vil_image_view<float> max_scale_trace(vil_image_view<float> input,
+  static vil_image_view<float> max_scale_trace(const vil_image_view<float>& input,
                                                float min_scale,
                                                float max_scale,
                                                float scale_inc);
@@ -319,7 +321,7 @@ class brip_vil_float_ops
   //:
   // Exactly same as max_scale_trace,
   // only return the image with actual trace values at max scales instead of the image with max scale values
-  static vil_image_view<float> max_scale_trace_value(vil_image_view<float> input,
+  static vil_image_view<float> max_scale_trace_value(const vil_image_view<float>& input,
                                                      float min_scale,
                                                      float max_scale,
                                                      float scale_inc);
@@ -596,8 +598,8 @@ class brip_vil_float_ops
                               vgl_box_2d<double> const& box);
 
   //: scan a polygon and return the pixel values as well as max min
-  static std::vector<float> scan_region(vil_image_resource_sptr img,
-                                       vgl_polygon<double> poly,
+  static std::vector<float> scan_region(const vil_image_resource_sptr& img,
+                                       const vgl_polygon<double>& poly,
                                        float& min,
                                        float& max);
   //: cross-correlate two images at a given sub-pixel location
@@ -781,7 +783,7 @@ class brip_vil_float_ops
   static float elv(float phi, float lamda0, float lambda1, float theta);
 
   //: Default constructor is private
-  brip_vil_float_ops() {}
+  brip_vil_float_ops() = default;
 };
 
 template <class T_inp,class T_out>

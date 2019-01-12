@@ -1,9 +1,6 @@
 // This is core/vgui/vgui_range_map_params.h
 #ifndef vgui_range_map_params_h_
 #define vgui_range_map_params_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author J. L. Mundy
@@ -27,7 +24,9 @@
 #include <vector>
 #include <string>
 #include <vbl/vbl_ref_count.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class vgui_range_map_params : public vbl_ref_count
 {

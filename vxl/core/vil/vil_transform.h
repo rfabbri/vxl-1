@@ -1,15 +1,15 @@
 // This is core/vil/vil_transform.h
 #ifndef vil_transform_h_
 #define vil_transform_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief STL algorithm like methods.
 // \author Ian Scott.
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_image_view.h>
 
 //: Apply a unary operation to each pixel in image.

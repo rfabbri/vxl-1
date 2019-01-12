@@ -9,7 +9,9 @@
 #include <cstdlib>
 #include "mbl_file_data_wrapper.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 // constructor
 template<class T>
@@ -70,9 +72,7 @@ void mbl_file_data_wrapper<T>::calc_data_size()
 
 //: Default destructor
 template<class T>
-mbl_file_data_wrapper<T>::~mbl_file_data_wrapper()
-{
-}
+mbl_file_data_wrapper<T>::~mbl_file_data_wrapper() = default;
 
 //: return number of items in file
 template<class T>

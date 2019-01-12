@@ -6,7 +6,9 @@
 // \author Ozge C. Ozcanli (Brown)
 // \date   April 21, 2009
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 bsvg_document::bsvg_document(float w, float h) : w_(w), h_(h)
 {
@@ -80,4 +82,3 @@ bool bsvg_document::add_element(const bxml_data_sptr& element)
 
   return true;
 }
-

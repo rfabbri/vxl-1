@@ -1,7 +1,4 @@
 // This is oxl/mvl/FMatrixComputeLinear.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 
 //-----------------------------------------------------------------------------
 //
@@ -15,7 +12,9 @@
 #include <iostream>
 #include "FMatrixComputeLinear.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vnl/algo/vnl_svd.h>
 #include <vgl/vgl_homg_point_2d.h>

@@ -6,13 +6,15 @@
 #include <iostream>
 #include <boxm2/boxm2_data_traits.h>
 #include <boxm2/cpp/algo/boxm2_mog3_grey_processor.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class boxm2_ray_probe_functor
 {
  public:
   //: "default" constructor
-  boxm2_ray_probe_functor() {}
+  boxm2_ray_probe_functor() = default;
 
   bool init_data(std::vector<boxm2_data_base*> & datas,
                  std::vector<float> & seg_len,
@@ -238,7 +240,7 @@ class boxm2_ray_app_density_functor
 {
  public:
   //: "default" constructor
-  boxm2_ray_app_density_functor() {}
+  boxm2_ray_app_density_functor() = default;
 
   bool init_data(std::vector<boxm2_data_base*> & datas,
                  std::vector<float> & app_density,

@@ -6,8 +6,11 @@
 
 #include <iostream>
 #include <string>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <utility>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include "msdi_reflected_marked_images.h"
 #include <vimt/vimt_image_2d_of.h>
@@ -17,10 +20,10 @@
 //: Construct with external vectors of images and points
 msdi_reflected_marked_images::msdi_reflected_marked_images(
                         msdi_marked_images& raw_data,
-                        const std::vector<unsigned>& sym_pts,
+                        std::vector<unsigned>  sym_pts,
                         bool only_reflect)
   : marked_images_(raw_data),
-    sym_pts_(sym_pts),
+    sym_pts_(std::move(sym_pts)),
     only_reflect_(only_reflect)
 {
   pyr_builder_.set_min_size(24,24);
@@ -31,9 +34,7 @@ msdi_reflected_marked_images::msdi_reflected_marked_images(
 // Destructor
 //=======================================================================
 
-msdi_reflected_marked_images::~msdi_reflected_marked_images()
-{
-}
+msdi_reflected_marked_images::~msdi_reflected_marked_images() = default;
 
 unsigned msdi_reflected_marked_images::size() const
 {
@@ -107,7 +108,7 @@ bool msdi_reflected_marked_images::next()
 void msdi_reflected_marked_images::get_image()
 {
   assert(marked_images_.image().is_a()=="vimt_image_2d_of<vxl_byte>");
-  const vimt_image_2d_of<vxl_byte>& b_im
+  const auto& b_im
     = static_cast<const vimt_image_2d_of<vxl_byte>&>(marked_images_.image());
 
   if (!first_pass_)
@@ -160,6 +161,3 @@ std::string msdi_reflected_marked_images::points_name() const
 
   return "ref_"+marked_images_.points_name();
 }
-
-
-

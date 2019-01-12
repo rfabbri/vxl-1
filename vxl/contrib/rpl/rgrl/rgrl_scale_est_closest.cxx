@@ -12,23 +12,23 @@
 #include "rgrl_match_set.h"
 #include "rgrl_util.h"
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 rgrl_scale_est_closest::
-rgrl_scale_est_closest( vcl_unique_ptr<rrel_objective>  obj,
+rgrl_scale_est_closest( std::unique_ptr<rrel_objective>  obj,
                         bool                          do_signature_scale )
   : do_signature_scale_( do_signature_scale ),
-    obj_( vcl_move(obj) )
+    obj_( std::move(obj) )
 {
   assert( obj_->can_estimate_scale() );
 }
 
 
 rgrl_scale_est_closest::
-~rgrl_scale_est_closest()
-{
-}
+~rgrl_scale_est_closest() = default;
 
 
 rgrl_scale_sptr
@@ -82,7 +82,7 @@ compute_geometric_scale( double& return_scale,
     else {
       to_iter titr = fitr.begin();
 
-      rgrl_feature_sptr mapped_from = fitr.mapped_from_feature();
+      const rgrl_feature_sptr& mapped_from = fitr.mapped_from_feature();
       double min_distance = titr.to_feature()->geometric_error( *mapped_from );
 
       for ( ++titr; titr != fitr.end(); ++titr ) {
@@ -156,7 +156,7 @@ compute_signature_inv_covar( vnl_matrix<double>& inv_covar, rgrl_match_set const
       to_iter titr = fitr.begin();
       to_iter best_titr = titr;
 
-      rgrl_feature_sptr mapped_from = fitr.mapped_from_feature();
+      const rgrl_feature_sptr& mapped_from = fitr.mapped_from_feature();
       double min_distance = titr.to_feature()->geometric_error( *mapped_from );
 
       for ( ++titr; titr != fitr.end(); ++titr ) {

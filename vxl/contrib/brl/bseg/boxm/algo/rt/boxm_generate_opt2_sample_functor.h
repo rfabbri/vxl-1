@@ -12,7 +12,9 @@
 #include <boxm/sample/algo/boxm_simple_grey_processor.h>
 #include <vil/vil_image_view.h>
 #include <vil/vil_math.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 template <boxm_apm_type APM, class T_aux>
@@ -158,8 +160,8 @@ void boxm_generate_opt2_samples(boxm_scene<boct_tree<T_loc, T_data > > &scene,
 
   // compute model prior
   float model_prior = 1.0f;
-  for (unsigned int a=0; a<alt_appearance_priors.size(); ++a) {
-    model_prior -= alt_appearance_priors[a];
+  for (float alt_appearance_prior : alt_appearance_priors) {
+    model_prior -= alt_appearance_prior;
   }
   // sanity check
   if (model_prior <= 0.0f) {

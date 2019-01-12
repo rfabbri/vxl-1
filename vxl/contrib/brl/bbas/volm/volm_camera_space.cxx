@@ -1,10 +1,13 @@
 #include <iostream>
 #include <algorithm>
 #include <limits>
+#include <utility>
 #include <volm/volm_camera_space.h>
 //:
 // \file
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bpgl/bpgl_camera_utils.h>
 #include <vsl/vsl_vector_io.h>
 #include <vsph/vsph_utils.h>
@@ -16,7 +19,7 @@
   // always use floor in case inc does not evenly divide
 void volm_camera_space::adjust_limits()
 {
-  unsigned n_inc = static_cast<unsigned>(head_radius_/head_inc_);
+  auto n_inc = static_cast<unsigned>(head_radius_/head_inc_);
   head_radius_ = n_inc * head_inc_;
   n_head_ = 2*n_inc +1;
 
@@ -36,7 +39,7 @@ void volm_camera_space::adjust_limits()
 }
 
 volm_camera_space::
-volm_camera_space(std::vector<double> const& top_fovs,double altitude,
+volm_camera_space(std::vector<double>  top_fovs,double altitude,
                   unsigned ni, unsigned nj,
                   double head_mid,  double head_radius, double head_inc,
                   double tilt_mid, double tilt_radius,  double tilt_inc,
@@ -45,7 +48,7 @@ volm_camera_space(std::vector<double> const& top_fovs,double altitude,
   head_mid_(head_mid), head_radius_(head_radius), head_inc_(head_inc),
   tilt_mid_(tilt_mid), tilt_radius_(tilt_radius),tilt_inc_(tilt_inc),
   roll_mid_(roll_mid),roll_radius_(roll_radius),roll_inc_(roll_inc),
-  top_fovs_(top_fovs), freeze_roll_(false),
+  top_fovs_(std::move(top_fovs)), freeze_roll_(false),
   heading_(0.0), tilt_(0.0), roll_(0.0), fov_index_(0)
 {
   this->adjust_limits();
@@ -105,7 +108,7 @@ cam_angles volm_camera_space::camera_angles(unsigned cam_index) const
   double top_fov = top_fovs_[fov_index];
   double heading = head_mid_ - head_radius_ + (head_index*head_inc_);
   double tilt = tilt_mid_ - tilt_radius_ + (tilt_index*tilt_inc_);
-  return cam_angles(roll, top_fov, heading, tilt);
+  return {roll, top_fov, heading, tilt};
 }
 
 double cam_angles::dif(cam_angles& b)
@@ -161,7 +164,7 @@ unsigned volm_camera_space::cam_index() const
 
 cam_angles volm_camera_space::camera_angles() const
 {
-  return cam_angles(roll_, top_fovs_[fov_index_], heading_, tilt_);
+  return {roll_, top_fovs_[fov_index_], heading_, tilt_};
 }
 
 //: the iterator at the start of camera space
@@ -266,13 +269,13 @@ vpgl_perspective_camera<double> volm_camera_space::camera(unsigned cam_index) co
 
 void vsl_b_write(vsl_b_ostream& os, const volm_camera_space* csp_ptr)
 {
-  if (csp_ptr ==VXL_NULLPTR) {
+  if (csp_ptr ==nullptr) {
     vsl_b_write(os, false);
     return;
   }
   else
     vsl_b_write(os, true);
-  volm_camera_space* dm_non_const = const_cast<volm_camera_space*>(csp_ptr);
+  auto* dm_non_const = const_cast<volm_camera_space*>(csp_ptr);
   dm_non_const->b_write(os);
 }
 
@@ -285,7 +288,7 @@ void vsl_b_read(vsl_b_istream &is, volm_camera_space*& csp_ptr)
     csp_ptr->b_read(is);
     return;
   }
-  csp_ptr = VXL_NULLPTR;
+  csp_ptr = nullptr;
 }
 
 void vsl_b_write(vsl_b_ostream& os, const volm_camera_space_sptr& csp_ptr)
@@ -296,7 +299,7 @@ void vsl_b_write(vsl_b_ostream& os, const volm_camera_space_sptr& csp_ptr)
 
 void vsl_b_read(vsl_b_istream &is, volm_camera_space_sptr& csp_ptr)
 {
-  volm_camera_space* dm=VXL_NULLPTR;
+  volm_camera_space* dm=nullptr;
   vsl_b_read(is, dm);
   csp_ptr = dm;
 }

@@ -4,8 +4,10 @@
 //:
 // \file
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_binary_io.h>
 #include <vsl/vsl_binary_loader.h>
 #include <vsl/vsl_binary_loader.hxx>
@@ -16,7 +18,7 @@ class test_base_class
 {
  public:
   //: Destructor
-  virtual ~test_base_class() {}
+  virtual ~test_base_class() = default;
 
   virtual int data() const { return 0; }
 
@@ -27,7 +29,7 @@ class test_base_class
   virtual void b_read(vsl_b_istream & /*is*/) { assert(false); } //= 0;
 
   //: Clone this
-  virtual test_base_class* clone() const { assert(false); return VXL_NULLPTR; } //= 0;
+  virtual test_base_class* clone() const { assert(false); return nullptr; } //= 0;
 
   //: Return a platform independent string identifying the class
   virtual std::string is_a() const
@@ -63,7 +65,7 @@ inline void vsl_b_write(vsl_b_ostream &os, const test_base_class & v)
 //: Binary save to stream.
 inline void vsl_b_write(vsl_b_ostream &os, const test_base_class* v)
 {
-  if (v!=VXL_NULLPTR)
+  if (v!=nullptr)
   {
     vsl_b_write(os,v->is_a());
     v->b_write(os);
@@ -88,25 +90,25 @@ class test_derived_class : public test_base_class
 
   void set_data(int d) { data_=d; }
 
-  virtual int data() const { return data_; }
+  int data() const override { return data_; }
 
   //: Binary save self to stream.
-  virtual void b_write(vsl_b_ostream &os) const;
+  void b_write(vsl_b_ostream &os) const override;
 
   //: Binary load self from stream.
-  virtual void b_read(vsl_b_istream &is);
+  void b_read(vsl_b_istream &is) override;
 
   //: Clone this
-  virtual test_base_class* clone() const;
+  test_base_class* clone() const override;
 
   //: Print summary
-  virtual void print_summary(std::ostream& os) const;
+  void print_summary(std::ostream& os) const override;
 
   //: Return a platform independent string identifying the class
-  virtual std::string is_a() const;
+  std::string is_a() const override;
 
   //: Return true if the argument matches this class' or the parent's identifier
-  virtual bool is_class(std::string const& s) const;
+  bool is_class(std::string const& s) const override;
 };
 
 //: Binary save self to stream.
@@ -156,7 +158,7 @@ void test_polymorphic_io()
 
   test_derived_class d1_out(1234);
   test_base_class *b1_out = &d1_out;
-  test_base_class *b2_out = VXL_NULLPTR;
+  test_base_class *b2_out = nullptr;
 
   vsl_b_ofstream bfs_out("vsl_polymorphic_io_test.bvl.tmp");
   TEST("Opened vsl_polymorphic_io_test.bvl.tmp for writing", (!bfs_out), false);
@@ -166,7 +168,7 @@ void test_polymorphic_io()
   bfs_out.close();
 
   test_derived_class d1_in(0);
-  test_base_class *b1_in = VXL_NULLPTR;
+  test_base_class *b1_in = nullptr;
   test_base_class *b2_in = new test_derived_class(7);
 
   vsl_b_ifstream bfs_in("vsl_polymorphic_io_test.bvl.tmp");

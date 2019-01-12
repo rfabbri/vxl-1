@@ -3,8 +3,10 @@
 #include <algorithm>
 #include "rgrl_initializer_inv_indexing.h"
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <rsdl/rsdl_kd_tree.h>
 
@@ -15,7 +17,7 @@
 #include "rgrl_est_translation.h"
 
 rgrl_initializer_inv_indexing::
-rgrl_initializer_inv_indexing( rgrl_view_sptr prior_view,
+rgrl_initializer_inv_indexing( const rgrl_view_sptr& prior_view,
                                bool should_estimate_global_region,
                                int max_num_matches_tried )
   : view_ (prior_view),
@@ -47,7 +49,7 @@ rgrl_initializer_inv_indexing( rgrl_mask_sptr const&     from_image_roi,
   rgrl_mask_box global_region( from_image_roi->bounding_box() );
   view_ = new rgrl_view( from_image_roi, to_image_roi,
                          global_region, global_region,
-                         xform_estimator, VXL_NULLPTR,
+                         xform_estimator, nullptr,
                          initial_resolution );
 }
 
@@ -117,8 +119,8 @@ add_multiple_data( std::vector<rgrl_invariant_sptr> const& fixed_set,
 
       // Create matches from the nearest neighbors and push them onto
       // the current vector
-      for (unsigned int nn_ind = 0; nn_ind<near_neighbor_indices.size(); ++nn_ind) {
-        matches_[m_ind].push_back( new rgrl_invariant_match(moving_sets[m_ind][pt], fixed_set[near_neighbor_indices[nn_ind]]) );
+      for (int near_neighbor_indice : near_neighbor_indices) {
+        matches_[m_ind].push_back( new rgrl_invariant_match(moving_sets[m_ind][pt], fixed_set[near_neighbor_indice]) );
       }
     }
     std::sort(matches_[m_ind].begin(), matches_[m_ind].end(), dist_greater);

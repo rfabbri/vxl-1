@@ -6,7 +6,9 @@
 
 #include <iostream>
 #include <fstream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <gmvl/gmvl_database.h>
 #include <gmvl/gmvl_image_node.h>
@@ -128,8 +130,8 @@ int main( int /* argc */, char ** /* argv */)
 
   std::cerr << std::endl << std::endl;
 
-  for ( unsigned int i=0; i< nn.size(); i++)
-    std::cerr << *nn[i] << std::endl;
+  for (auto & i : nn)
+    std::cerr << *i << std::endl;
 
   return 0;
 }

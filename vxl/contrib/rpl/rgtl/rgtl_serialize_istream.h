@@ -16,14 +16,15 @@
 #include <cstddef>
 #include "rgtl_serialize_direction.h"
 
-#include <vcl_compiler.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Serialization load object that reads from a stream.
 //  See rgtl_serialize.txt for serialization interface details.
 class rgtl_serialize_istream
 {
-  VCL_SAFE_BOOL_DEFINE;
+
  public:
   //: Mark this class as a serialization load direction.
   typedef rgtl_serialize_direction_load serialize_direction;
@@ -32,8 +33,8 @@ class rgtl_serialize_istream
   rgtl_serialize_istream(std::istream& is);
 
   //: Safe conversion to a boolean type.
-  operator safe_bool() const
-  { return this->okay()? VCL_SAFE_BOOL_TRUE : 0; }
+  explicit operator bool() const
+  { return this->okay()? true : false; }
 
   //: Read data from the input stream.
   rgtl_serialize_istream& read(void* data, std::size_t length);

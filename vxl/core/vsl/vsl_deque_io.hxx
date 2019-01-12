@@ -10,7 +10,9 @@
 
 #include <iostream>
 #include "vsl_deque_io.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_binary_io.h>
 #include <vsl/vsl_indent.h>
 
@@ -19,7 +21,7 @@
 template <class T>
 void vsl_b_write(vsl_b_ostream& s, const std::deque<T>& v)
 {
-  const short version_no = 1;
+  constexpr short version_no = 1;
   vsl_b_write(s, version_no);
   vsl_b_write(s, v.size());
   for (unsigned i=0; i<v.size(); i++)

@@ -15,8 +15,10 @@
 #include <vnl/algo/vnl_symmetric_eigensystem.h>
 #include <vgl/vgl_vector_3d.h>
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Reconstruct structure from set of 2d pts
 // Formulates measurement matrix P2D then calls reconstruct function above
@@ -529,4 +531,3 @@ void m23d_ortho_rigid_builder::get_shape_3d_pts( std::vector< vgl_point_3d<doubl
     pts[p]= pts[p] + tran_vec;
   }
 }
-

@@ -1,9 +1,6 @@
 // This is gel/geml/geml_matcher_correlation.h
 #ifndef geml_matcher_correlation_h_
 #define geml_matcher_correlation_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author Geoffrey Cross, CRD, ${DATE}
@@ -17,14 +14,14 @@ class geml_matcher_correlation : public geml_matcher
  public:
   // Constructors/Destructors--------------------------------------------------
 
-  geml_matcher_correlation( const vil1_memory_image_of<vxl_byte> image1,
-                            const vil1_memory_image_of<vxl_byte> image2,
+  geml_matcher_correlation( const vil1_memory_image_of<vxl_byte>& image1,
+                            const vil1_memory_image_of<vxl_byte>& image2,
                             const std::vector< std::pair<float,float> > &corners1,
                             const std::vector< std::pair<float,float> > &corners2);
 
   // Operations----------------------------------------------------------------
 
-  std::vector< std::pair<int,int> > get_matches();
+  std::vector< std::pair<int,int> > get_matches() override;
 
  protected:
   // Data Members--------------------------------------------------------------

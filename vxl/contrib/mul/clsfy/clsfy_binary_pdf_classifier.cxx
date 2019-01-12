@@ -8,17 +8,19 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/io/vnl_io_vector.h>
 #include <vsl/vsl_binary_loader.h>
-#include <vcl_cassert.h>
+#include <cassert>
 
 //=======================================================================
 
 void clsfy_binary_pdf_classifier::deleteStuff()
 {
   delete pdf_;
-  pdf_ = VXL_NULLPTR;
+  pdf_ = nullptr;
 }
 
 //=======================================================================
@@ -27,7 +29,7 @@ void clsfy_binary_pdf_classifier::deleteStuff()
 // Returns either class1 (Inside PDF mode) or class 0 (Outside PDF mode).
 unsigned clsfy_binary_pdf_classifier::classify(const vnl_vector<double> &input) const
 {
-  assert(pdf_!=VXL_NULLPTR);
+  assert(pdf_!=nullptr);
 
   if (pdf_->log_p(input) >= log_prob_limit_)
     return 1;
@@ -60,7 +62,7 @@ void clsfy_binary_pdf_classifier::class_probabilities(
 // greater than 1.0 or less than 0.0, (or indeed between 0.0 and 1.0).
 double clsfy_binary_pdf_classifier::log_l(const vnl_vector<double> &input) const
 {
-  assert(pdf_!=VXL_NULLPTR);
+  assert(pdf_!=nullptr);
 
   // likelihood = P(input|InClass) / prob_limit_
   return pdf_->log_p(input) - log_prob_limit_;

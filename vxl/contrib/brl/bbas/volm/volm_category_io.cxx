@@ -8,16 +8,16 @@
 vil_rgb<vxl_byte> color(unsigned char id)
 {
   if (id == (unsigned char)34)  // tall building as blue
-    return vil_rgb<vxl_byte>(0,0,255);
+    return {0,0,255};
   else if (id == (unsigned char)29)
-    return vil_rgb<vxl_byte>(255, 0, 0);
+    return {255, 0, 0};
   else
     return vil_rgb<vxl_byte>(bvrml_color::heatmap_classic[id][0],
                              bvrml_color::heatmap_classic[id][1],
                              bvrml_color::heatmap_classic[id][2]);
 }
 
-bool volm_land_layer::contains(std::string name)
+bool volm_land_layer::contains(const std::string& name)
 {
   return name_.find(name) != std::string::npos ||
          name.find(name_) != std::string::npos;
@@ -201,19 +201,17 @@ std::map<unsigned, volm_land_layer> create_volm_land_table()
   std::string osm_to_volm_txt = volm_utils::volm_src_root() + "osm_to_volm_labels.txt";
   volm_osm_category_io::load_category_table(osm_to_volm_txt, osm_land_table);
 
-  for (std::map<int, volm_land_layer>::iterator mit = nlcd_table.begin(); mit != nlcd_table.end(); ++mit)
-    m.insert(std::pair<unsigned, volm_land_layer>(mit->second.id_, mit->second));
+  for (auto & mit : nlcd_table)
+    m.insert(std::pair<unsigned, volm_land_layer>(mit.second.id_, mit.second));
 
-  for (std::map<int, volm_land_layer>::iterator mit = geo_table.begin(); mit != geo_table.end(); mit++)
-    m.insert(std::pair<unsigned, volm_land_layer>(mit->second.id_, mit->second));
+  for (auto & mit : geo_table)
+    m.insert(std::pair<unsigned, volm_land_layer>(mit.second.id_, mit.second));
 
-  for (std::map<std::pair<std::string, std::string>, volm_land_layer>::iterator mit = osm_land_table.begin();
-       mit != osm_land_table.end(); ++mit)
-    m.insert(std::pair<unsigned, volm_land_layer>(mit->second.id_, mit->second));
+  for (auto & mit : osm_land_table)
+    m.insert(std::pair<unsigned, volm_land_layer>(mit.second.id_, mit.second));
 
-  for (std::map<std::pair<int, int>, volm_land_layer>::iterator mit = road_junction_table.begin();
-       mit != road_junction_table.end(); ++mit)
-    m.insert(std::pair<unsigned, volm_land_layer>(mit->second.id_, mit->second));
+  for (auto & mit : road_junction_table)
+    m.insert(std::pair<unsigned, volm_land_layer>(mit.second.id_, mit.second));
   return m;
 }
 
@@ -221,7 +219,7 @@ std::map<std::string, volm_land_layer> create_volm_land_table_name()
 {
   std::map<std::string, volm_land_layer> m;
   std::map<unsigned, volm_land_layer> id_table = create_volm_land_table();
-  std::map<unsigned, volm_land_layer>::iterator mit = id_table.begin();
+  auto mit = id_table.begin();
   for (; mit != id_table.end(); ++mit)
     m.insert(std::pair<std::string, volm_land_layer>(mit->second.name_, mit->second));
   return m;
@@ -232,8 +230,9 @@ std::vector<std::string> create_volm_land_layer_name_table()
 {
   std::vector<std::string> out;
   std::map<unsigned, volm_land_layer> m = create_volm_land_table();
-  for (std::map<unsigned, volm_land_layer>::iterator mit = m.begin(); mit != m.end(); ++mit)
-    out.push_back(mit->second.name_);
+  out.reserve(m.size());
+for (auto & mit : m)
+    out.push_back(mit.second.name_);
   return out;
 }
 

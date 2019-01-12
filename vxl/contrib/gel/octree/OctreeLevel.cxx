@@ -1,7 +1,4 @@
 // This is gel/octree/OctreeLevel.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author
@@ -14,15 +11,17 @@
 
 #include <iostream>
 #include "OctreeLevel.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 // Default ctor
 OctreeLevel::OctreeLevel( const int d) :
   depth( d),
   size( d<0 ? 0 : (1<<d)),
   color( size, size, size),
-  next( VXL_NULLPTR),
-  prev( VXL_NULLPTR)
+  next( nullptr),
+  prev( nullptr)
 {
   std::cout << "Size = " << size << std::endl;
 }
@@ -32,7 +31,7 @@ OctreeLevel::OctreeLevel( OctreeLevel *p) :
   depth( p->GetDepth()+1),
   size( 1<<depth),
   color( size, size, size),
-  next( VXL_NULLPTR),
+  next( nullptr),
   prev( p)
 {
   prev->SetNext( this);
@@ -50,4 +49,3 @@ void OctreeLevel::InheritFromAbove()
       // TODO
     }
 }
-

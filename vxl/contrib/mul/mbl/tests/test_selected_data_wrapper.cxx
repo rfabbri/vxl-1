@@ -4,7 +4,9 @@
 // \brief test vpdfl_pc_gaussian, building, sampling, saving etc.
 
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <mbl/mbl_data_array_wrapper.h>
 #include <mbl/mbl_selected_data_wrapper.h>
 #include <testlib/testlib_test.h>
@@ -19,7 +21,7 @@ void test_selected_data_wrapper()
            <<    "***********************************\n";
 
 
-  const unsigned n = 10;
+  constexpr unsigned n = 10;
   std::vector<double> data(n);
 
   for (unsigned i = 0; i < n; i++)

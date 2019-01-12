@@ -3,7 +3,10 @@
 // \author Tim Cootes
 // \brief Example program using F&H method to locate matches on a pair of images
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_arg.h>
 #include <vimt/vimt_image_2d_of.h>
 #include <vimt/vimt_gaussian_pyramid_builder_2d.h>
@@ -42,16 +45,16 @@ void draw_tree(vil_image_view<vxl_byte>& image,
                const std::vector<std::pair<int,int> >& pairs)
 {
   // Draw tree into image for display purposes
-  for (unsigned i=0;i<pairs.size();++i)
+  for (const auto & pair : pairs)
     mbl_draw_line(image,
-                  pts[pairs[i].first],
-                  pts[pairs[i].second],vxl_byte(255));
+                  pts[pair.first],
+                  pts[pair.second],vxl_byte(255));
 
   // Write position of selected points into the original image
   // for display purposes.
-  for (unsigned i=0;i<pts.size();++i)
+  for (auto pt : pts)
   {
-    vil_fill_disk(image,pts[i].x(),pts[i].y(),4,vxl_byte(255));
+    vil_fill_disk(image,pt.x(),pt.y(),4,vxl_byte(255));
   }
 }
 
@@ -100,8 +103,8 @@ int main( int argc, char* argv[] )
   pyr_builder.build(image_pyr1,image1);
   pyr_builder.build(image_pyr2,image2);
 
-  const vimt_image_2d_of<vxl_byte>& image1_L = static_cast<const vimt_image_2d_of<vxl_byte>&>(image_pyr1(level()));
-  const vimt_image_2d_of<vxl_byte>& image2_L = static_cast<const vimt_image_2d_of<vxl_byte>&>(image_pyr2(level()));
+  const auto& image1_L = static_cast<const vimt_image_2d_of<vxl_byte>&>(image_pyr1(level()));
+  const auto& image2_L = static_cast<const vimt_image_2d_of<vxl_byte>&>(image_pyr2(level()));
 
   // ====================================================
   // Apply corner operator to image1_L and select corners

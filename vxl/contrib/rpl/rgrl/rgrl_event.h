@@ -9,7 +9,9 @@
 #include <iostream>
 #include <string>
 #include <vbl/vbl_ref_count.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include "rgrl_event_sptr.h"
 
 //: Event class provides a standard coding for sending and receiving messages.
@@ -26,13 +28,13 @@ class rgrl_event: public vbl_ref_count
 {
  public:
   //:
-  rgrl_event() {}
+  rgrl_event() = default;
 
   // copy constructor - compiler-provided one sets ref_count to nonzero which is wrong -PVr
   rgrl_event(rgrl_event const&) : vbl_ref_count() {}
 
   //:
-  virtual ~rgrl_event() {}
+  ~rgrl_event() override = default;
 
   //: Return the string name associated with the event
   virtual std::string name(void) const = 0;

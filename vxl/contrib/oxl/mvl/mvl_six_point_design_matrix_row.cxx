@@ -1,7 +1,4 @@
 // This is oxl/mvl/mvl_six_point_design_matrix_row.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
@@ -10,7 +7,9 @@
 #include <cmath>
 #include "mvl_six_point_design_matrix_row.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 void mvl_six_point_design_matrix_row(vnl_matrix<double> const &A,
                                      vnl_matrix<double> const &B,

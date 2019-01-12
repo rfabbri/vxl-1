@@ -1,13 +1,8 @@
 // This is core/vil1/vil1_file_format.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 
 #include "vil1_file_format.h"
 
-vil1_file_format::~vil1_file_format()
-{
-}
+vil1_file_format::~vil1_file_format() = default;
 
 #define HAS_PNM  1
 #define HAS_VIFF 1
@@ -62,10 +57,10 @@ vil1_file_format::~vil1_file_format()
 #endif
 
 
-static vil1_file_format** storage = VXL_NULLPTR;
+static vil1_file_format** storage = nullptr;
 vil1_file_format** vil1_file_format::all()
 {
-  if (storage == VXL_NULLPTR)
+  if (storage == nullptr)
   {
     storage = new vil1_file_format*[256];
     int c = 0;
@@ -101,7 +96,7 @@ vil1_file_format** vil1_file_format::all()
     storage[c++] = new vil1_gen_file_format;
 #endif
 
-    storage[c] = VXL_NULLPTR;
+    storage[c] = nullptr;
   }
   return storage;
 }
@@ -111,7 +106,7 @@ class vil1_file_format_list_destroyer
  public:
   ~vil1_file_format_list_destroyer()
   {
-    if (storage==VXL_NULLPTR) return;
+    if (storage==nullptr) return;
     unsigned i=0;
     while (storage[i])
       delete storage[i++];

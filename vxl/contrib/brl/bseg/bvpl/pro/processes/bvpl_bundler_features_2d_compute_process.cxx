@@ -25,8 +25,10 @@
 #include <bwm/video/bwm_video_corr_sptr.h>
 #include <bwm/video/bwm_video_corr.h>
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include<vgl/vgl_point_2d.h>
 #include<vgl/vgl_point_3d.h>
@@ -46,8 +48,8 @@
 class coord_compare_2d
 {
  public:
-  coord_compare_2d(){}
-  ~coord_compare_2d(){}
+  coord_compare_2d()= default;
+  ~coord_compare_2d()= default;
 
   bool operator() ( vgl_point_2d<double> const& pa, vgl_point_2d<double> const& pb ) const
   {
@@ -68,8 +70,8 @@ struct kernel
 
 namespace bvpl_bundler_features_2d_compute_globals
 {
-  const unsigned n_inputs_ = 4;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 4;
+  constexpr unsigned n_outputs_ = 1;
 }//end bvpl_bundler_features_2d_compute_process_globals
 
 bool bvpl_bundler_features_2d_compute_process_cons( bprb_func_process& pro )
@@ -122,10 +124,10 @@ bool bvpl_bundler_features_2d_compute_process( bprb_func_process& pro )
 
   //get inputs
   unsigned i = 0;
-  std::string bundlerfile    = pro.get_input<std::string>(i++);
-  std::string img_glob    = pro.get_input<std::string>(i++);
-  std::string bad_cam_file   = pro.get_input<std::string>(i++);
-  std::string kernel_dir    = pro.get_input<std::string>(i++);
+  std::string bundlerfile = pro.get_input<std::string>(i++);
+  std::string img_glob = pro.get_input<std::string>(i++);
+  std::string bad_cam_file = pro.get_input<std::string>(i++);
+  std::string kernel_dir = pro.get_input<std::string>(i++);
 
   //------ PARSE BAD CAMERAS --------
   std::ifstream bcfile( bad_cam_file.c_str() );
@@ -160,12 +162,12 @@ bool bvpl_bundler_features_2d_compute_process( bprb_func_process& pro )
   }
 
   std::vector<std::string> filenames;
-  filenames.push_back("I0");
-  filenames.push_back("Ix");
-  filenames.push_back("Iy");
-  filenames.push_back("Ixx");
-  filenames.push_back("Iyy");
-  filenames.push_back("Ixy");
+  filenames.emplace_back("I0");
+  filenames.emplace_back("Ix");
+  filenames.emplace_back("Iy");
+  filenames.emplace_back("Ixx");
+  filenames.emplace_back("Iyy");
+  filenames.emplace_back("Ixy");
 
   std::map<std::string, kernel > kernel_map;
 
@@ -192,8 +194,8 @@ bool bvpl_bundler_features_2d_compute_process( bprb_func_process& pro )
     kernel_file >> min_pt;
     kernel_file >> max_pt;
 
-    unsigned int nx = (unsigned int)(max_pt.x() - min_pt.y() + 1);
-    unsigned int ny = (unsigned int)(max_pt.y() - min_pt.y() + 1);
+    auto nx = (unsigned int)(max_pt.x() - min_pt.y() + 1);
+    auto ny = (unsigned int)(max_pt.y() - min_pt.y() + 1);
 
     vnl_vector<double> w(nx*ny);
 

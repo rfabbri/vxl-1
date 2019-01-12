@@ -19,8 +19,10 @@
 #include <vnl/algo/vnl_levenberg_marquardt.h>
 #include <vgl/vgl_vector_3d.h>
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 
 //: Reconstruct structure of 3D points given multiple 2D views
@@ -662,4 +664,3 @@ void m23d_ortho_flexible_builder::mat_to_3d_pts(std::vector< vgl_point_3d<double
     pt_vec[i].set( M(0,i), M(1,i), M(2,i) );
   }
 }
-

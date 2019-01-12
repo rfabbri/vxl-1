@@ -6,7 +6,9 @@
 // \author Ian Scott
 // \brief test pdf1d_gaussian_kernel_pdf, building, sampling, saving etc.
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpl/vpl.h> // vpl_unlink()
 #include <vsl/vsl_binary_loader.h>
 #include <mbl/mbl_data_array_wrapper.h>
@@ -24,7 +26,7 @@
 // Fiddle things to force use of sampling version of pdf1d_pdf::inverse_cdf()
 class pdf1d_test_gaussian_kernel_pdf_test_sample_inverse_cdf : public pdf1d_gaussian_kernel_pdf
 {
-  virtual bool cdf_is_analytic() const {return false;}
+  bool cdf_is_analytic() const override {return false;}
 };
 
 
@@ -84,8 +86,8 @@ void test_gaussian_kernel_pdf()
   bfs_out.close();
 
   pdf1d_gaussian_kernel_pdf_builder  builder_in;
-  pdf1d_pdf*         p_pdf_in = VXL_NULLPTR;
-  pdf1d_builder*     p_builder_in = VXL_NULLPTR;
+  pdf1d_pdf*         p_pdf_in = nullptr;
+  pdf1d_builder*     p_builder_in = nullptr;
 
   vsl_b_ifstream bfs_in("test_gaussian_kernel_pdf.bvl.tmp");
   TEST("Opened test_gaussian_kernel_pdf.bvl.tmp for reading", (!bfs_in), false);

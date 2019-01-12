@@ -1,9 +1,12 @@
 #include <iostream>
 #include <cstdlib>
 #include <vxl_config.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_timer.h>
 #include <mvl/mvl_multi_view_matches.h>
+#include <vnl/vnl_sample.h>
 
 static const int W = -1;
 
@@ -30,8 +33,8 @@ int main ()
   // Test the insert and consistency check operations
   {
     std::vector<int> view_indices;
-    for (int i=0; i < 10; ++i)
-      view_indices.push_back(my_views[i]);
+    for (int my_view : my_views)
+      view_indices.push_back(my_view);
 
     mvl_multi_view_matches mvm(view_indices);
 
@@ -74,26 +77,10 @@ int main ()
     int i1[50000];
     int i2[50000];
 
-#if !VXL_STDLIB_HAS_DRAND48
-    int mvl_sample_seed = 12345;
-#endif
-
     for (int i=0; i < 50000; ++i) {
-#if VXL_STDLIB_HAS_DRAND48
-      f[i] = (int)(498*drand48());
-      i1[i] = (int)(299*drand48());
-      i2[i] = (int)(299*drand48());
-#else
-      mvl_sample_seed = (mvl_sample_seed*16807)%2147483647L;
-      double u = double(mvl_sample_seed)/2147483711UL;
-      f[i] = (int)(498*u);
-      mvl_sample_seed = (mvl_sample_seed*16807)%2147483647L;
-      u = double(mvl_sample_seed)/2147483711UL;
-      i1[i] = (int)(299*u);
-      mvl_sample_seed = (mvl_sample_seed*16807)%2147483647L;
-      u = double(mvl_sample_seed)/2147483711UL;
-      i2[i] = (int)(299*u);
-#endif
+      f[i] = (int)(498*vnl_sample_uniform01());
+      i1[i] = (int)(299*vnl_sample_uniform01());
+      i2[i] = (int)(299*vnl_sample_uniform01());
     }
     vul_timer timer;
     for (int i=0; i < 50000; ++i) {

@@ -13,8 +13,8 @@
 
 namespace vil_shadow_detection_process_globals
 {
-  const unsigned n_inputs_ = 2;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 2;
+  constexpr unsigned n_outputs_ = 1;
 }
 //: Init function
 bool vil_shadow_detection_process_cons(bprb_func_process& pro)
@@ -46,16 +46,16 @@ bool vil_shadow_detection_process(bprb_func_process& pro)
   // get the inputs
   unsigned i=0;
   vil_image_view_base_sptr in_img = pro.get_input<vil_image_view_base_sptr>(i++);
-  float threshold = pro.get_input<float>(i++);
+  auto threshold = pro.get_input<float>(i++);
 
   if (in_img->nplanes() != 3)
   {
     std::cout<<"Input needs to be a color image" << std::endl;
     return false;
   }
-  vil_image_view<bool> * out_img = new vil_image_view<bool>(in_img->ni(),in_img->nj());
-  vil_image_view<float> * I = new vil_image_view<float>(in_img->ni(),in_img->nj());
-  if (vil_image_view<vxl_byte> * byte_image = dynamic_cast<vil_image_view<vxl_byte>* > (in_img.ptr()))
+  auto * out_img = new vil_image_view<bool>(in_img->ni(),in_img->nj());
+  auto * I = new vil_image_view<float>(in_img->ni(),in_img->nj());
+  if (auto * byte_image = dynamic_cast<vil_image_view<vxl_byte>* > (in_img.ptr()))
   {
     vil_image_view<float> H,S;
     brip_vil_float_ops::convert_to_IHS(*byte_image,*I,H,S);
@@ -64,11 +64,10 @@ bool vil_shadow_detection_process(bprb_func_process& pro)
       for (unsigned j = 0 ; j < I->nj(); j++)
       {
         if ( (1+H(i,j))/(1+(*I)(i,j)) > threshold )
-          (*out_img)(i,j) = 1;
+          (*out_img)(i,j) = true;
       }
     }
   }
   pro.set_output_val<vil_image_view_base_sptr>(0, out_img);
   return true;
 }
-

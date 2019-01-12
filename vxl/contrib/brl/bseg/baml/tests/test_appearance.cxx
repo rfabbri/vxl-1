@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <limits>
+#include <sstream>
 #include <imesh/imesh_fileio.h>
 #include <imesh/imesh_mesh.h>
 #include <vnl/vnl_math.h>
@@ -9,9 +10,10 @@
 #include <vgl/vgl_box_2d.h>
 #include <vgl/vgl_polygon.h>
 #include <vgl/algo/vgl_h_matrix_2d_compute_4point.h>
-#include <sstream>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_image_view.h>
 #include <vil/vil_image_resource.h>
 #include <vil/vil_load.h>
@@ -74,10 +76,9 @@ static void update_hist(vil_image_view<float> const& view01, vil_image_view<floa
 }
 static void read_meshes( std::vector<std::string> const& mesh_paths,
                          std::vector<std::vector<vgl_point_3d<double> > >& region_verts){
-  for(std::vector<std::string>::const_iterator mit = mesh_paths.begin();
-      mit != mesh_paths.end(); ++mit){
+  for(const auto & mesh_path : mesh_paths){
     imesh_mesh mesh;
-    bool good = imesh_read_ply(*mit, mesh);
+    bool good = imesh_read_ply(mesh_path, mesh);
     imesh_vertex_array_base& verts = mesh.vertices();
     size_t nverts = verts.size();
     std::vector<vgl_point_3d<double> > temp;
@@ -88,15 +89,13 @@ static void read_meshes( std::vector<std::string> const& mesh_paths,
     region_verts.push_back(temp);
   }
 }
-static void update_hist_multi_regions(vil_image_resource_sptr img0, vpgl_camera<double>* cam0,
-                                      vil_image_resource_sptr img1, vpgl_camera<double>* cam1,
+static void update_hist_multi_regions(const vil_image_resource_sptr& img0, vpgl_camera<double>* cam0,
+                                      const vil_image_resource_sptr& img1, vpgl_camera<double>* cam1,
                                       std::vector<std::vector<vgl_point_3d<double> > > const& region_verts,
                                       bsta_joint_histogram<float>& h){
     if(!img0||!img1||!cam0||!cam1)
       return;
-    for(std::vector<std::vector<vgl_point_3d<double> > >::const_iterator rit = region_verts.begin();
-        rit != region_verts.end(); ++rit){
-      const std::vector<vgl_point_3d<double> >& verts = *rit;
+    for(const auto & verts : region_verts){
       std::vector<vgl_point_2d<double> > verts_2d_0, verts_2d_1;
       std::vector<vgl_homg_point_2d<double> > hverts_2d_0, hverts_2d_1;
       vgl_box_2d<double> bb0, bb1;
@@ -106,11 +105,11 @@ static void update_hist_multi_regions(vil_image_resource_sptr img0, vpgl_camera<
         cam0->project(verts[i].x(),verts[i].y(),verts[i].z(), u0, v0);
         vgl_point_2d<double> p2d0(u0, v0);
         verts_2d_0.push_back(p2d0); bb0.add(p2d0);
-        hverts_2d_0.push_back(vgl_homg_point_2d<double>(p2d0));
+        hverts_2d_0.emplace_back(p2d0);
          cam1->project(verts[i].x(),verts[i].y(),verts[i].z(), u1, v1);
          vgl_point_2d<double> p2d1(u1, v1);
         verts_2d_1.push_back(p2d1); bb1.add(p2d1);
-        hverts_2d_1.push_back(vgl_homg_point_2d<double>(p2d1));
+        hverts_2d_1.emplace_back(p2d1);
       }
       vgl_polygon<double> poly0(verts_2d_0), poly1(verts_2d_1);
       size_t ni0 = vnl_math::rnd(bb0.width()), nj0 = vnl_math::rnd(bb0.height());
@@ -175,11 +174,11 @@ static void test_appearance()
     cam0->project(verts(i, 0), verts(i, 1), verts(i, 2), u0, v0);
     vgl_point_2d<double> p2d0(u0, v0);
     verts_2d_0.push_back(p2d0); bb0.add(p2d0);
-    hverts_2d_0.push_back(vgl_homg_point_2d<double>(p2d0));
+    hverts_2d_0.emplace_back(p2d0);
     cam1->project(verts(i, 0), verts(i, 1), verts(i, 2), u1, v1);
     vgl_point_2d<double> p2d1(u1, v1);
     verts_2d_1.push_back(p2d1); bb1.add(p2d1);
-    hverts_2d_1.push_back(vgl_homg_point_2d<double>(p2d1));
+    hverts_2d_1.emplace_back(p2d1);
   }
   vgl_polygon<double> poly0(verts_2d_0), poly1(verts_2d_1);
   size_t ni0 = vnl_math::rnd(bb0.width()), nj0 = vnl_math::rnd(bb0.height());

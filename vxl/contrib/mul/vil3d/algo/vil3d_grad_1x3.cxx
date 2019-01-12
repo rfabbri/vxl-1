@@ -5,7 +5,10 @@
 
 #include "vil3d_grad_1x3.h"
 #include <vil3d/vil3d_slice.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Fill 1 pixel border in image with zeros
 void vil3d_zero_border_1plane(vil3d_image_view<float>& image)
@@ -381,4 +384,3 @@ void vil3d_grad_1x3_mag_sq_1plane(const vil3d_image_view<vxl_int_32>& src_im,
 
   vil3d_zero_border_1plane(grad_mag2);
 }
-

@@ -28,7 +28,7 @@
 #include <vipl/filter/vipl_filter_2d.h> // parent class
 
 //: Convolve image with vertical [-1 1] filter
-template <class ImgIn,class ImgOut,class DataIn,class DataOut, VCL_DFL_TYPE_PARAM_STLDECL(PixelItr, vipl_trivial_pixeliter) >
+template <class ImgIn,class ImgOut,class DataIn,class DataOut, class PixelItr = vipl_trivial_pixeliter >
 class vipl_y_gradient : public vipl_filter_2d<ImgIn,ImgOut,DataIn,DataOut,PixelItr>
 {
   // -+-+- data members: -+-+-
@@ -47,10 +47,10 @@ class vipl_y_gradient : public vipl_filter_2d<ImgIn,ImgOut,DataIn,DataOut,PixelI
   inline vipl_y_gradient(vipl_y_gradient const& A)
            : vipl_filter_2d<ImgIn,ImgOut,DataIn,DataOut,PixelItr>(A),
              shift_(A.shift()), scale_(A.scale()) {}
-  inline ~vipl_y_gradient() {}
+  inline ~vipl_y_gradient() override = default;
 
   // -+-+- required method for filters: -+-+-
-  bool section_applyop();
+  bool section_applyop() override;
 };
 
 #ifdef INSTANTIATE_TEMPLATES

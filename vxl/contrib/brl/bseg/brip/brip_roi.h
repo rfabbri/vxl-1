@@ -24,7 +24,9 @@
 #include <iosfwd>
 #include <vsol/vsol_box_2d_sptr.h>
 #include <vbl/vbl_ref_count.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class brip_roi : public vbl_ref_count
 {
@@ -38,7 +40,7 @@ class brip_roi : public vbl_ref_count
   //: expand (or contract) each region of the roi by delta, creating a new roi
   brip_roi(brip_roi const& roi, const float delta);
 
-  ~brip_roi() {}
+  ~brip_roi() override = default;
   //: replace existing image bounds
   void set_image_bounds(const int n_image_cols,
                         const int n_image_rows);
@@ -51,7 +53,7 @@ class brip_roi : public vbl_ref_count
   void add_region(vsol_box_2d_sptr const & box);
 
   //: useful for inserting a new region, doesn't affect existing image bounds
-  vsol_box_2d_sptr clip_to_image_bounds(vsol_box_2d_sptr box);
+  vsol_box_2d_sptr clip_to_image_bounds(const vsol_box_2d_sptr& box);
   //: clips all existing regions, doesn't affect existing image bounds
   void clip_to_image_bounds();
   bool empty() const;

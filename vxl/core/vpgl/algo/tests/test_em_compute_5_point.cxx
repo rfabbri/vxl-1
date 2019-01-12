@@ -2,7 +2,9 @@
 #include <string>
 #include <testlib/testlib_test.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vgl/vgl_point_2d.h>
 
@@ -22,17 +24,16 @@ static void normalize(
 {
     vnl_matrix_fixed<double, 3, 3> k_inv = vnl_inverse(k.get_matrix());
 
-    for (unsigned int i = 0; i < points.size(); ++i)
+    for (auto point : points)
     {
         vnl_matrix_fixed<double, 3, 1> vec;
-        vec.put(0, 0, points[i].x());
-        vec.put(1, 0, points[i].y());
+        vec.put(0, 0, point.x());
+        vec.put(1, 0, point.y());
         vec.put(2, 0, 1);
 
         vnl_matrix_fixed<double,3,1> normed = k_inv*vec;
 
-        normed_points.push_back(
-            vgl_point_2d<double>(normed.get(0,0), normed.get(1,0)));
+        normed_points.emplace_back(normed.get(0,0), normed.get(1,0));
     }
 }
 
@@ -40,7 +41,7 @@ static void eval_e_mats(
     const std::vector<vpgl_essential_matrix<double> > &ems,
     const std::vector<vgl_point_2d<double> > &corres1,
     const std::vector<vgl_point_2d<double> > &corres2,
-    std::string test_name)
+    const std::string& test_name)
 {
     //Check each essential matrix.
     std::vector<vpgl_essential_matrix<double> >::const_iterator i;

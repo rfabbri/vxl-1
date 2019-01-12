@@ -5,7 +5,9 @@
 //
 #include <vil/vil_save.h>
 #include <vul/vul_file.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 template<>
 bool bvxm_grid_to_image_stack::write_grid_to_image_stack(bvxm_voxel_grid<vnl_float_3> *grid, std::string directory)
@@ -64,4 +66,3 @@ std::string bvxm_extension<float>() { return ".tiff"; }
 
 template<>
 std::string bvxm_extension<unsigned char>() { return ".tiff"; }
-

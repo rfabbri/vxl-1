@@ -1,9 +1,6 @@
 // This is core/vul/vul_expand_path.h
 #ifndef vul_expand_path_h_
 #define vul_expand_path_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Contains two functions to compute expanded form of a given path.
@@ -28,7 +25,9 @@
 // \endverbatim
 
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vxl_config.h>
 
 //: Expand given path.
@@ -37,7 +36,7 @@ std::string vul_expand_path/*cached*/(std::string path);
 //: Expand given path.
 std::string vul_expand_path_uncached (std::string path);
 
-#if defined(VCL_WIN32) && VXL_USE_WIN_WCHAR_T
+#if defined(_WIN32) && VXL_USE_WIN_WCHAR_T
 
 //: Expand given path.
 std::wstring vul_expand_path/*cached*/(std::wstring path);

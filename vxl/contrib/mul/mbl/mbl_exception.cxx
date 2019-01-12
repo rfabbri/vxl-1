@@ -8,9 +8,11 @@
 // \brief Exceptions thrown by mbl, and a mechanism for turning them off.
 // \author Ian Scott.
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
-#if 0 // should be #ifdef VCL_VC, but it doesn't work yet - I can't get it to link
+#if 0 // should be #ifdef _MSC_VER, but it doesn't work yet - I can't get it to link
 #pragma comment(lib, "user32")
 #pragma comment (lib, "dbghelp")
 #include <vxl_config.h>
@@ -56,38 +58,23 @@ static std::string LotsOfInfo()
   return text;
 }
 
-#else // 0, should be VCL_VC
+#else // 0, should be _MSC_VER
 
 static std::string LotsOfInfo()
 {
   return "";
 }
 
-#endif // 0, should be VCL_VC
-
-#if !VCL_HAS_EXCEPTIONS
-
-mbl_exception_abort::mbl_exception_abort(const std::string& comment):
-  msg_(comment + LotsOfInfo()) {}
-
-#else
+#endif // 0, should be _MSC_VER
 
 mbl_exception_abort::mbl_exception_abort(const std::string& comment):
   std::logic_error(comment + LotsOfInfo()) {}
 
-#endif
-
 mbl_exception_os_error::mbl_exception_os_error(int errnum, const std::string &file_name,
                                                const std::string &comment/*=""*/):
-#if !VCL_HAS_EXCEPTIONS
-  msg_(file_name + " " + std::strerror(errnum) + "\n" + comment),
-    errno(errnum), error_message(std::strerror(errnum)), filename(file_name),
-    additional_comment(comment) {}
-#else
   std::runtime_error(std::string("\"") + file_name + "\" " + std::strerror(errnum) + "\n" + comment),
     err_no(errnum), error_message(std::strerror(errnum)), filename(file_name),
     additional_comment(comment) {}
-#endif
 
 void mbl_exception_throw_os_error(const std::string& filename,
                                   const std::string& additional_comment /*=""*/)
@@ -120,4 +107,3 @@ void mbl_exception_throw_os_error(const std::string& filename,
     break;
   }
 }
-

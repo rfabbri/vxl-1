@@ -35,11 +35,11 @@ void fill_sample_octree(boct_tree<short,float>* tree)
     tree->init_cells(0.1f);
     leaves[1]->set_data(0.5);
     if (debug)
-      for (unsigned i=0; i<leaves.size(); i++) {
-        std::cout<< leaves[i]->get_code().x_loc_ << ','
-                << leaves[i]->get_code().y_loc_ << ','
-                << leaves[i]->get_code().z_loc_ << ','
-                << leaves[i]->data() << std::endl;
+      for (auto & leave : leaves) {
+        std::cout<< leave->get_code().x_loc_ << ','
+                << leave->get_code().y_loc_ << ','
+                << leave->get_code().z_loc_ << ','
+                << leave->data() << std::endl;
       }
 
     leaves[1]->split();
@@ -99,7 +99,7 @@ void octree_kernel()
   bvpl_edge_geometric_mean_functor<float> functor;
 
   //Create the octree
-  boct_tree<short,float> *tree = new boct_tree<short,float>(3);
+  auto *tree = new boct_tree<short,float>(3);
   fill_sample_octree(tree);
 
   //operate kernel on octree
@@ -135,7 +135,7 @@ void scene_kernel_operator()
 
   //Create tree
   typedef boct_tree<short,float > tree_type;
-  boct_tree<short,float> *tree = new boct_tree<short,float>(3);
+  auto *tree = new boct_tree<short,float>(3);
 
   fill_sample_octree(tree);
 
@@ -224,7 +224,7 @@ void octree_vector_operator()
   bvpl_edge_geometric_mean_functor<float> functor;
 
   //Create tree. this tree is initialized with 4 leves as a regular grid
-  boct_tree<short,float> *tree = new boct_tree<short,float>(4);
+  auto *tree = new boct_tree<short,float>(4);
 
   fill_edge3d_tree(tree);
 
@@ -265,7 +265,7 @@ void scene_vector_operator()
   /***********Part1 operate on tree*******************/
 
   //Create tree. this tree is initialized with 4 leves as a regular grid
-  boct_tree<short,float> *tree = new boct_tree<short,float>(4);
+  auto *tree = new boct_tree<short,float>(4);
   fill_edge3d_tree(tree);
 
   //Create output trees

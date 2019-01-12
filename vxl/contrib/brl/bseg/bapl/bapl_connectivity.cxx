@@ -10,8 +10,10 @@
 #include <bapl/bapl_keypoint.h>
 #include <bapl/bapl_lowe_keypoint_sptr.h>
 #include <bapl/bapl_lowe_keypoint.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 //: For sorting keypoint_match_sets
 bool second_less( const bapl_keypoint_match_set_sptr& left_set, const bapl_keypoint_match_set_sptr& right_set)
@@ -21,21 +23,21 @@ bool second_less( const bapl_keypoint_match_set_sptr& left_set, const bapl_keypo
 
 
 //: add this match set symmetrically, i.e. into the list of img id 1 as well img id 2, while adding for img id 2, reverse the keypoint pairs
-bool bapl_conn_table::add_sym(bapl_keypoint_match_set_sptr set)
+bool bapl_conn_table::add_sym(const bapl_keypoint_match_set_sptr& set)
 {
   // first add match set directly for id1, id2:
   if (this->contains(set->id_left_, set->id_right_) || this->contains(set->id_right_, set->id_left_))
     return false;
 
   bapl_conn& conn = conns_[set->id_left_];
-  bapl_conn::iterator p = lower_bound(conn.begin(), conn.end(), set, second_less);
+  auto p = lower_bound(conn.begin(), conn.end(), set, second_less);
   conn.insert(p, set);
 
   //: reverse the match set
   std::vector<bapl_key_match>& matches = set->matches_;
   std::vector<bapl_key_match> reversed_matches;
-  for (unsigned i = 0; i < matches.size(); i++) {
-    bapl_key_match key(matches[i].second, matches[i].first);
+  for (auto & matche : matches) {
+    bapl_key_match key(matche.second, matche.first);
     reversed_matches.push_back(key);
   }
   bapl_keypoint_match_set_sptr e = new bapl_keypoint_match_set(set->id_right_, set->id_left_, reversed_matches);
@@ -46,14 +48,14 @@ bool bapl_conn_table::add_sym(bapl_keypoint_match_set_sptr set)
 }
 
 //: add this match set
-bool bapl_conn_table::add(bapl_keypoint_match_set_sptr set)
+bool bapl_conn_table::add(const bapl_keypoint_match_set_sptr& set)
 {
   // first add match set directly for id1, id2:
   if (this->contains(set->id_left_, set->id_right_))
     return false;
 
   bapl_conn& conn = conns_[set->id_left_];
-  bapl_conn::iterator p = lower_bound(conn.begin(), conn.end(), set, second_less);
+  auto p = lower_bound(conn.begin(), conn.end(), set, second_less);
   conn.insert(p, set);
   return true;
 }
@@ -61,15 +63,13 @@ bool bapl_conn_table::add(bapl_keypoint_match_set_sptr set)
 //: make the table symmetric, only necessary if add() method is used as opposed to add_sym()
 void bapl_conn_table::make_symmetric()
 {
-  for (unsigned i = 0; i < conns_.size(); i++) {
-    bapl_conn& conn = conns_[i];
-    for (unsigned j = 0; j < conn.size(); j++) {
-      bapl_keypoint_match_set_sptr ms = conn[j];
+  for (auto & conn : conns_) {
+    for (const auto& ms : conn) {
       //: reverse the match set
       std::vector<bapl_key_match>& matches = ms->matches_;
       std::vector<bapl_key_match> reversed_matches;
-      for (unsigned i = 0; i < matches.size(); i++) {
-        bapl_key_match key(matches[i].second, matches[i].first);
+      for (auto & matche : matches) {
+        bapl_key_match key(matche.second, matche.first);
         reversed_matches.push_back(key);
       }
       bapl_keypoint_match_set_sptr e = new bapl_keypoint_match_set(ms->id_right_, ms->id_left_, reversed_matches);
@@ -92,16 +92,15 @@ bool bapl_conn_table::contains(int id1, int id2)
 
 void bapl_conn_table::print_table()
 {
-  for (unsigned i = 0; i < conns_.size(); i++) {
-    std::vector<bapl_keypoint_match_set_sptr> conn = conns_[i];
+  for (const auto& conn : conns_) {
     int crnt_id = 0;
-    for (unsigned j = 0; j < conn.size(); j++) {
-      int id2 = conn[j]->id_right_;
+    for (auto & j : conn) {
+      int id2 = j->id_right_;
       while (id2 > crnt_id) {
         std::cout << "0 ";
         crnt_id++;
       }
-      std::cout << conn[j]->matches_.size() << ' ';
+      std::cout << j->matches_.size() << ' ';
       crnt_id++;
     }
     std::cout << std::endl;
@@ -110,13 +109,12 @@ void bapl_conn_table::print_table()
 
 void bapl_conn_table::print_table_with_matches()
 {
-  for (unsigned i = 0; i < conns_.size(); i++) {
-    std::vector<bapl_keypoint_match_set_sptr> conn = conns_[i];
-    for (unsigned j = 0; j < conn.size(); j++) {
-      std::cout << conn[j]->id_left_ << ' ' << conn[j]->id_right_ << '\n'
-               << conn[j]->matches_.size() << '\n';
-      for (unsigned k = 0; k < conn[j]->matches_.size(); k++) {
-        std::cout << conn[j]->matches_[k].first->id() << ' ' << conn[j]->matches_[k].second->id() << '\n';
+  for (const auto& conn : conns_) {
+    for (auto & j : conn) {
+      std::cout << j->id_left_ << ' ' << j->id_right_ << '\n'
+               << j->matches_.size() << '\n';
+      for (unsigned k = 0; k < j->matches_.size(); k++) {
+        std::cout << j->matches_[k].first->id() << ' ' << j->matches_[k].second->id() << '\n';
       }
       std::cout << '\n';
     }
@@ -136,7 +134,7 @@ bool compare_first(const bapl_key_match &k1, const bapl_key_match &k2)
 
 //: compute a set of tracks, each corresponding to a separate 3d point.
 //  assumes a symmetric connectivity table
-bool bapl_conn_table::compute_tracks(std::vector<bapl_track_data>& tracks, int new_image_start)
+bool bapl_conn_table::compute_tracks(std::vector<bapl_track_data>& tracks, int  /*new_image_start*/)
 {
   unsigned num_images = conns_.size();
   //: check if image data is set for each image
@@ -164,8 +162,8 @@ bool bapl_conn_table::compute_tracks(std::vector<bapl_track_data>& tracks, int n
   // sort all match lists
   for (unsigned i = 0; i < num_images; i++) {
     bapl_conn& conn = conns_[i];
-    for (unsigned j = 0; j < conn.size(); j++) {
-      std::vector<bapl_key_match>& matches = conn[j]->matches_;
+    for (auto & j : conn) {
+      std::vector<bapl_key_match>& matches = j->matches_;
       std::sort(matches.begin(), matches.end(), compare_first);
     }
   }
@@ -251,7 +249,7 @@ bool bapl_conn_table::compute_tracks(std::vector<bapl_track_data>& tracks, int n
       }
 
       if (features.size() >= 2) {
-        tracks.push_back(bapl_track_data(features));
+        tracks.emplace_back(features);
         pt_idx++;
       }
     }
@@ -271,11 +269,11 @@ void print_tracks(std::ostream& os, std::vector<bapl_track_data>& tracks, int im
      << "<cameraPath path=\"\">\n</cameraPath>\n"
      << "<videoSiteDir path=\"\">\n</videoSiteDir>\n"
      << "<Correspondences>\n";
-  for (unsigned i = 0; i < tracks.size(); i++) {
+  for (auto & track : tracks) {
     os << "<Correspondence>\n";
-    for (unsigned j = 0; j < tracks[i].views_.size(); j++) {
+    for (unsigned j = 0; j < track.views_.size(); j++) {
       bapl_lowe_keypoint_sptr kp;
-      kp.vertical_cast(tracks[i].views_[j].second);
+      kp.vertical_cast(track.views_[j].second);
       double x = kp->location_j();
       double y = kp->location_i();
       if (img_height > 0 && img_width > 0) {
@@ -283,7 +281,7 @@ void print_tracks(std::ostream& os, std::vector<bapl_track_data>& tracks, int im
         y += 0.5 * img_height;
         y = img_height - y - 1.0;
       }
-      os << "<CE fr=\"" << tracks[i].views_[j].first << "\" u=\"" << y << "\" v=\"" << x << "\">\n</CE>\n";
+      os << "<CE fr=\"" << track.views_[j].first << "\" u=\"" << y << "\" v=\"" << x << "\">\n</CE>\n";
     }
     os << "</Correspondence>\n";
   }
@@ -326,12 +324,12 @@ void vsl_b_read(vsl_b_istream& is, bapl_conn_table* ph)
     vsl_b_read(is, *ph);
   }
   else
-    ph = VXL_NULLPTR;
+    ph = nullptr;
 }
 
 void vsl_b_write(vsl_b_ostream& os, const bapl_conn_table* &ph)
 {
-  if (ph==VXL_NULLPTR)
+  if (ph==nullptr)
   {
     vsl_b_write(os, false); // Indicate null pointer stored
   }
@@ -341,4 +339,3 @@ void vsl_b_write(vsl_b_ostream& os, const bapl_conn_table* &ph)
     vsl_b_write(os,*ph);
   }
 }
-

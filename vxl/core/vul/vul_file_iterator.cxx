@@ -1,12 +1,11 @@
 // This is core/vul/vul_file_iterator.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 
 #include <string>
 #include "vul_file_iterator.h"
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <vul/vul_file.h>
 #include <vul/vul_reg_exp.h>
@@ -18,7 +17,7 @@
 // \endverbatim
 
 //: Declare pimpl, reset, and iteration routines for each OS
-#if defined(VCL_WIN32) && !defined(__CYGWIN__)
+#if defined(_WIN32) && !defined(__CYGWIN__)
 
 #include <io.h>
 
@@ -143,7 +142,7 @@ vul_file_iterator_data::vul_file_iterator_data(char const* glob)
   }
 }
 
-#else // !defined(VCL_WIN32) || defined(__CYGWIN__)
+#else // !defined(_WIN32) || defined(__CYGWIN__)
 
 #include <dirent.h>
 
@@ -168,15 +167,15 @@ struct vul_file_iterator_data
   void next() {
     // if dir_handle_ is NULL, then the directory probably doesn't
     // exist.
-    if(dir_handle_ == VXL_NULLPTR) {
+    if(dir_handle_ == nullptr) {
       return;
     }
     do
     {
       de_ = readdir(dir_handle_);
-      if (de_==VXL_NULLPTR) {
+      if (de_==nullptr) {
         closedir(dir_handle_);
-        dir_handle_ = VXL_NULLPTR;
+        dir_handle_ = nullptr;
         return;
       }
     } while ( ! reg_exp_.find(de_->d_name) );
@@ -185,13 +184,13 @@ struct vul_file_iterator_data
 
   // should be constish, and ret 0 when nuffink
   char const* value() {
-    if (!dir_handle_) return VXL_NULLPTR;
+    if (!dir_handle_) return nullptr;
     return name_;
   }
 
   // Return non-dir part of fn
   char const* value_filename() {
-    if (!dir_handle_) return VXL_NULLPTR;
+    if (!dir_handle_) return nullptr;
     return de_->d_name;
   }
 
@@ -249,19 +248,19 @@ vul_file_iterator_data::vul_file_iterator_data(char const* glob)
   next();
 }
 
-#endif // !defined(VCL_WIN32) || defined(__CYGWIN__)
+#endif // !defined(_WIN32) || defined(__CYGWIN__)
 
 // -----------------------------------------------------------------------------
 
 vul_file_iterator::vul_file_iterator(char const* glob)
 {
-  p = VXL_NULLPTR;
+  p = nullptr;
   reset(glob);
 }
 
 vul_file_iterator::vul_file_iterator(std::string const& glob)
 {
-  p = VXL_NULLPTR;
+  p = nullptr;
   reset(glob.c_str());
 }
 
@@ -286,14 +285,14 @@ char const* vul_file_iterator::filename()
   return p->value_filename();
 }
 
-vul_file_iterator::operator vul_file_iterator::safe_bool() const
+vul_file_iterator::operator bool() const
 {
-  return (p->value() != VXL_NULLPTR)? VCL_SAFE_BOOL_TRUE : VXL_NULLPTR;
+  return (p->value() != nullptr)? true : false;
 }
 
 bool vul_file_iterator::operator!() const
 {
-  return (p->value() != VXL_NULLPTR)? false : true;
+  return (p->value() != nullptr)? false : true;
 }
 
 vul_file_iterator& vul_file_iterator::operator++()

@@ -12,7 +12,9 @@
 
 #include <vil/vil_image_view.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //:sets input and output types
 bool bvxm_create_synth_lidar_data_process_cons(bprb_func_process& pro)
@@ -40,8 +42,7 @@ bool gen_lidar_view(int x, int y, int z,
   lv.fill(0);
 
   // Place the heights of boxes on lidar
-  for (unsigned int b=0; b<boxes.size(); b++) {
-    vgl_box_3d<double> box = boxes[b];
+  for (auto box : boxes) {
     double maxz = box.max_z(); // top face of the box
     if (maxz > z) maxz = z;
     for (int i=0; i<x; i++)
@@ -59,7 +60,7 @@ bool gen_lidar_view(int x, int y, int z,
 
   // generate the camera, which is a one to one mapping between
   // lidar image and voxel slabs
-  vpgl_geo_camera* geo_cam = new vpgl_geo_camera();
+  auto* geo_cam = new vpgl_geo_camera();
   geo_cam->set_lvcs(lvcs);
   cam = geo_cam;
   return true;
@@ -120,5 +121,3 @@ bool bvxm_create_synth_lidar_data_process(bprb_func_process& pro)
 
   return true;
 }
-
-

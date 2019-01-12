@@ -5,8 +5,10 @@
 #include <algorithm>
 #include "rrel_muset_obj.h"
 //
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vnl/vnl_math.h>
 #include <rrel/rrel_muse_table.h>
 
@@ -94,7 +96,7 @@ rrel_muset_obj::internal_fcn( vect_const_iter begin, vect_const_iter end,
   double best_objective = 0;
 
   best_k = 0;
-  const double min_exp_kth_to_stddev_ratio = 3.0;
+  constexpr double min_exp_kth_to_stddev_ratio = 3.0;
   static bool notwarned = true;
 
   switch ( muse_type_ )

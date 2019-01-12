@@ -5,7 +5,9 @@
 #include <boxm/boxm_scene.h>
 #include <boxm/util/boxm_utils.h>
 #include <vpgl/vpgl_perspective_camera.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 template <class T_loc, class T_data>
 float boxm_compute_point_visibility(vgl_point_3d<double> point,
@@ -79,7 +81,7 @@ float boxm_compute_point_visibility(vgl_point_3d<double> point,
             vgl_vector_3d<double> len(exit_point-entry_point);
             T_data data=curr_cell->data();
             alpha_int-=data.alpha*len.length();
-            curr_cell=VXL_NULLPTR;
+            curr_cell=nullptr;
 #if 0
             std::cout<<"Lambda= "<<lambda<<" lambda0= "<<lambda0
                     <<" exit_point="<<exit_point<<"# of neighbors"<< neighbors.size()<<std::endl;

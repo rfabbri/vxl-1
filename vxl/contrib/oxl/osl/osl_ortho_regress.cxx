@@ -1,7 +1,4 @@
 // This is oxl/osl/osl_ortho_regress.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
@@ -9,8 +6,10 @@
 #include <iostream>
 #include <cmath>
 #include "osl_ortho_regress.h"
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 // convenience methods
 
@@ -85,8 +84,8 @@ bool osl_ortho_regress::fit(double &a, double &b, double &c) const {
   double ybar = Sy/S1;
 
   if (!symmetric_2x2_eigen_system(Sxx-Sx*Sx/S1, Sxy-Sx*Sy/S1, Syy-Sy*Sy/S1,
-                                  &a, &b, VXL_NULLPTR,
-                                  VXL_NULLPTR, VXL_NULLPTR, VXL_NULLPTR))
+                                  &a, &b, nullptr,
+                                  nullptr, nullptr, nullptr))
     return false;
 
   c = -(a*xbar+b*ybar);
@@ -112,8 +111,8 @@ bool osl_ortho_regress::fit_constrained(double x, double y,
   assert(S1 >= 1);
 
   if (!symmetric_2x2_eigen_system(Sxx-2*Sx*x+S1*x*x, Sxy-Sx*y-x*Sy+S1*x*y, Syy-2*Sy*y+S1*y*y,
-                                  &a, &b, VXL_NULLPTR,
-                                  VXL_NULLPTR, VXL_NULLPTR, VXL_NULLPTR))
+                                  &a, &b, nullptr,
+                                  nullptr, nullptr, nullptr))
     return false;
 
   c = -(a*x + b*y);

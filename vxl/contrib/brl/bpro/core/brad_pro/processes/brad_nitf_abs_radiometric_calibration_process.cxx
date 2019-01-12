@@ -16,7 +16,9 @@
 #include <cmath>
 #include <vector>
 #include <fstream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bprb/bprb_func_process.h>
 #include <vnl/vnl_math.h>
 
@@ -28,13 +30,13 @@
 bool brad_nitf_abs_radiometric_calibration_process_cons(bprb_func_process& pro)
 {
   std::vector<std::string> input_types;
-  input_types.push_back("vil_image_view_base_sptr"); // cropped satellite image,
-  input_types.push_back("brad_image_metadata_sptr");
+  input_types.emplace_back("vil_image_view_base_sptr"); // cropped satellite image,
+  input_types.emplace_back("brad_image_metadata_sptr");
   if (!pro.set_input_types(input_types))
     return false;
 
   std::vector<std::string> output_types;
-  output_types.push_back("vil_image_view_base_sptr"); // bits/pixel
+  output_types.emplace_back("vil_image_view_base_sptr"); // bits/pixel
   return pro.set_output_types(output_types);
 }
 
@@ -122,4 +124,3 @@ bool brad_nitf_abs_radiometric_calibration_process(bprb_func_process& pro)
   pro.set_output_val<vil_image_view_base_sptr>(0, new vil_image_view<float>(img));
   return true;
 }
-

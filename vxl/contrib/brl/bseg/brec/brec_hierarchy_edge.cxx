@@ -11,7 +11,9 @@
 #include <vnl/vnl_quaternion.h>
 
 #include <bxml/bxml_find.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vnl/vnl_cross_product_matrix.h>
 #include <vnl/vnl_double_3.h>
@@ -72,12 +74,12 @@ brec_hierarchy_edge::update_angle_model(const float angle)
 {
   to_central_ = false;
   //float min_stad_dev = float(vnl_math::pi_over_180)*10.0f;  // min stad_dev = 10 degrees
-  float min_stad_dev = float(vnl_math::pi_over_180*min_stad_dev_angle_);  // min stad_dev = 10 degrees
+  auto min_stad_dev = float(vnl_math::pi_over_180*min_stad_dev_angle_);  // min stad_dev = 10 degrees
   bsta_update_gaussian(angle_model_, 1.0f, angle, min_stad_dev*min_stad_dev);
 }
 
 void
-brec_hierarchy_edge::calculate_dist_angle(brec_part_instance_sptr pi, vnl_vector_fixed<float,2>& dif_to_center, float& dist, float& angle)
+brec_hierarchy_edge::calculate_dist_angle(const brec_part_instance_sptr& pi, vnl_vector_fixed<float,2>& dif_to_center, float& dist, float& angle)
 {
   // if pi is a composed part we need to get its central part
   brec_part_instance_sptr pp = pi;
@@ -109,7 +111,7 @@ brec_hierarchy_edge::calculate_dist_angle(brec_part_instance_sptr pi, vnl_vector
 }
 
 vgl_box_2d<float>
-brec_hierarchy_edge::get_probe_box(brec_part_instance_sptr central_p)
+brec_hierarchy_edge::get_probe_box(const brec_part_instance_sptr& central_p)
 {
   float cx = central_p->x_; float cy = central_p->y_;
 
@@ -132,7 +134,7 @@ brec_hierarchy_edge::get_probe_box(brec_part_instance_sptr central_p)
 
   float mx = cx + out_dist[0];
   float my = cy + out_dist[1];
-  float rad = (float)std::ceil(std::sqrt(var_dist())+3);
+  auto rad = (float)std::ceil(std::sqrt(var_dist())+3);
   float si = mx - rad;
   float upper_i = mx + rad;
   float sj = my - rad;
@@ -160,7 +162,7 @@ brec_hierarchy_edge::get_probe_box(brec_part_instance_sptr central_p)
 }
 
 //: samples the position of the part linked with this edge wrt to the position (x,y)
-vnl_vector_fixed<float,2> brec_hierarchy_edge::sample_position(brec_part_instance_sptr central_p, float x, float y, vnl_random& rng)
+vnl_vector_fixed<float,2> brec_hierarchy_edge::sample_position(const brec_part_instance_sptr& central_p, float x, float y, vnl_random& rng)
 {
   // if central_p is a composed part we need to get its central part
   brec_part_instance_sptr pp = central_p;
@@ -182,7 +184,7 @@ vnl_vector_fixed<float,2> brec_hierarchy_edge::sample_position(brec_part_instanc
   return out_v;
 }
 
-vnl_vector_fixed<float,2> brec_hierarchy_edge::mean_position(brec_part_instance_sptr central_p, float x, float y)
+vnl_vector_fixed<float,2> brec_hierarchy_edge::mean_position(const brec_part_instance_sptr& central_p, float x, float y)
 {
   // if central_p is a composed part we need to get its central part
   brec_part_instance_sptr pp = central_p;
@@ -262,4 +264,3 @@ bool brec_hierarchy_edge::xml_parse_element(bxml_data_sptr data)
   else
     return false;
 }
-

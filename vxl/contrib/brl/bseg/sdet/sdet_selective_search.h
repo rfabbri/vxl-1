@@ -24,7 +24,9 @@
 #include <map>
 #include <queue>
 #include <set>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_image_view.h>
 #include "sdet_region.h"
 #include "sdet_selective_search_params.h"
@@ -40,7 +42,7 @@ class sdet_selective_search : public sdet_selective_search_params
   //:specify different parameters
  sdet_selective_search(sdet_selective_search_params& rpp):sdet_selective_search_params(rpp),  initial_regions_valid_(false), image_area_(0),diverse_max_label_(0){}
 
-  ~sdet_selective_search(){};
+  ~sdet_selective_search() override= default;;
   //Accessors
   void set_byte_image_view(vil_image_view<vxl_byte> const& view){
     byte_view_ = view;
@@ -99,7 +101,7 @@ class sdet_selective_search : public sdet_selective_search_params
  //: IO functions
   void save_bboxes(std::ostream& ostr);
  private:
-  void insert_similarities(sdet_region_sptr r,  std::set<unsigned>& removed_labels);
+  void insert_similarities(const sdet_region_sptr& r,  std::set<unsigned>& removed_labels);
   bool initial_regions_valid_;
   float image_area_;
   unsigned max_label_;

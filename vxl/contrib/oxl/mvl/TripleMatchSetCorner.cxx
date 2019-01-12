@@ -1,7 +1,4 @@
 // This is oxl/mvl/TripleMatchSetCorner.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 //  \file
 
@@ -9,8 +6,10 @@
 #include <vector>
 #include "TripleMatchSetCorner.h"
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <mvl/HomgInterestPointSet.h>
 #include <mvl/PairMatchSetCorner.h>
 
@@ -21,7 +20,7 @@ static void set_size(std::vector<HomgPoint2D>& v, unsigned n)
 
 
 TripleMatchSetCorner::TripleMatchSetCorner():
-  TripleMatchSet(VXL_NULLPTR,VXL_NULLPTR)
+  TripleMatchSet(nullptr,nullptr)
 {
 }
 

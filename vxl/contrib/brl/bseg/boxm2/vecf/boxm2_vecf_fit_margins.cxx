@@ -6,7 +6,9 @@
 #include <vgl/algo/vgl_norm_trans_3d.h>
 #include <vnl/algo/vnl_svd.h>
 #include <vnl/vnl_matrix.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_distance.h>
 #include <vgl/vgl_closest_point.h>
 #include <vnl/algo/vnl_levenberg_marquardt.h>
@@ -26,7 +28,7 @@ margin_residual_function(std::vector<vgl_point_2d<double> >  const& inf_pts,
                              vnl_least_squares_function::no_gradient), inf_pts_(inf_pts),
   sup_pts_(sup_pts),  crease_pts_(crease_pts), lat_canth_(lat_canth), med_canth_(med_canth),opr_(opr), is_right_(is_right),estimate_t_(estimate_t){}
 
-  virtual void f(vnl_vector<double> const& x, vnl_vector<double>& fx){
+  void f(vnl_vector<double> const& x, vnl_vector<double>& fx) override{
     // extract parameters from x
     opr_.trans_x_ =                     x[0];
     opr_.trans_y_ =                     x[1];
@@ -49,11 +51,11 @@ margin_residual_function(std::vector<vgl_point_2d<double> >  const& inf_pts,
     boxm2_vecf_eyelid_crease lid_cre(opr_);
     vgl_vector_2d<double> v(opr_.x_trans(), opr_.y_trans());
     vgl_vector_3d<double> v3(opr_.x_trans(), opr_.y_trans(), opr_.z_trans());
-    unsigned ninf = static_cast<unsigned>(inf_pts_.size()), nsup = static_cast<unsigned>(sup_pts_.size());
-        unsigned ncre = static_cast<unsigned>(crease_pts_.size());
+    auto ninf = static_cast<unsigned>(inf_pts_.size()), nsup = static_cast<unsigned>(sup_pts_.size());
+        auto ncre = static_cast<unsigned>(crease_pts_.size());
     unsigned ncanth = (ninf + nsup)/2;
     // penalize large angles
-    double ang_weight = static_cast<double>(ninf + nsup);
+    auto ang_weight = static_cast<double>(ninf + nsup);
     for(unsigned i = 0; i<ninf; ++i){
       vgl_point_2d<double> p = inf_pts_[i]-v;
       double yinf = 0.0;
@@ -186,8 +188,8 @@ bool boxm2_vecf_fit_margins::plot_orbit(std::ostream& ostr) const{
   boxm2_vecf_eyelid_crease lid_cre(opr_);
   vgl_vector_2d<double> v(opr_.x_trans(), opr_.y_trans());
   double tinf = opr_.lower_eyelid_tmin_, tsup = opr_.eyelid_tmin_, ct = opr_.eyelid_crease_ct_;
-  unsigned ninf = static_cast<unsigned>(inferior_margin_pts_.size()), nsup = static_cast<unsigned>(superior_margin_pts_.size());
-  unsigned ncre = static_cast<unsigned>(superior_crease_pts_.size());
+  auto ninf = static_cast<unsigned>(inferior_margin_pts_.size()), nsup = static_cast<unsigned>(superior_margin_pts_.size());
+  auto ncre = static_cast<unsigned>(superior_crease_pts_.size());
     for(unsigned i = 0; i<ninf; ++i){
       vgl_point_2d<double> p = inferior_margin_pts_[i]-v;
       double yinf = 0.0;

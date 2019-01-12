@@ -9,7 +9,9 @@
 
 #include <map>
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include "vil_nitf2_array_field.h"
 #include "vil_nitf2.h"
@@ -36,14 +38,14 @@ class vil_nitf2_typed_array_field : public vil_nitf2_array_field
   // false if the value is undefined at the specified index.
   // (This is a partial override of overloaded method
   // vil_nitf2_array_field::value() for my specific type.)
-  bool value(const vil_nitf2_index_vector& indexes, T& out_value) const;
+  bool value(const vil_nitf2_index_vector& indexes, T& out_value) const override ;
 
   //: Reads from input stream the scalar value at specified index.
   // check_index(indexes) must be true, or this will emit an error.
   // Returns success.
   bool read_vector_element(vil_nitf2_istream& input,
                            const vil_nitf2_index_vector& indexes,
-                           int variable_width);
+                           int variable_width) override;
 
   //: Writes to output stream the scalar value at specified index.
   // check_index(indexes) must be true, of this will emit an error.
@@ -51,14 +53,14 @@ class vil_nitf2_typed_array_field : public vil_nitf2_array_field
   // formatter's field_width.
   bool write_vector_element(vil_nitf2_ostream& output,
                             const vil_nitf2_index_vector& indexes,
-                            int variable_width) const;
+                            int variable_width) const override;
 
   //: Output in human-readable form.
   // Implementation provides an example of how to iterate over all elements.
-  virtual std::ostream& output(std::ostream& os) const;
+  std::ostream& output(std::ostream& os) const override;
 
   //: Destructor (overridden below for instantiations where T is a pointer)
-  ~vil_nitf2_typed_array_field() {}
+  ~vil_nitf2_typed_array_field() override;
 
  protected:
   // Helper method for output() method above. Iterates over one
@@ -217,11 +219,10 @@ std::ostream& operator << (std::ostream& os, const vil_nitf2_typed_array_field<T
 template<>
 inline vil_nitf2_typed_array_field<void*>::~vil_nitf2_typed_array_field()
 {
-  for (std::map<vil_nitf2_index_vector, void*>::iterator it = m_value_map.begin();
-       it != m_value_map.end(); ++it)
+  for (auto & it : m_value_map)
   {
     // vector delete corresponds to new char[] for binary data
-    delete[] (char*) it->second;
+    delete[] (char*) it.second;
   }
   m_value_map.clear();
 }
@@ -229,12 +230,17 @@ inline vil_nitf2_typed_array_field<void*>::~vil_nitf2_typed_array_field()
 template<>
 inline vil_nitf2_typed_array_field<vil_nitf2_location*>::~vil_nitf2_typed_array_field()
 {
-  for (std::map<vil_nitf2_index_vector, vil_nitf2_location*>::iterator it = m_value_map.begin();
-       it != m_value_map.end(); ++it)
+  for (auto & it : m_value_map)
   {
-    delete it->second;
+    delete it.second;
   }
   m_value_map.clear();
+}
+
+template<typename T>
+inline vil_nitf2_typed_array_field<T>::~vil_nitf2_typed_array_field()
+{
+  // Nothing to do for POD types
 }
 
 #endif // VIL_NITF2_TYPED_ARRAY_FIELD_H

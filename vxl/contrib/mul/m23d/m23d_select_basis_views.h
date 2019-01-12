@@ -9,7 +9,9 @@
 #include <iostream>
 #include <vector>
 #include <vnl/vnl_matrix.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Select a subset most suitable for use as a basis set
 //  Data matrix is 2ns x np (ns= number of samples, np = number of points)
@@ -32,4 +34,3 @@ double m23d_evaluate_basis(const vnl_matrix<double>& P2D,
                            const std::vector<unsigned>& selected);
 
 #endif // m23d_select_basis_views_h_
-

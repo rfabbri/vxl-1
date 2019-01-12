@@ -1,7 +1,9 @@
 #include <iostream>
 #include <limits>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <depth_map/depth_map_scene.h>
 #include <depth_map/depth_map_region.h>
@@ -22,7 +24,7 @@ static void test_depth_map()
   // construct the camera looking along Y with 1.6m height off the ground
   // focal length = 1126.
   unsigned ni = 1280, nj = 720;
-  double nid = static_cast<double>(ni), njd = static_cast<double>(nj);
+  auto nid = static_cast<double>(ni), njd = static_cast<double>(nj);
   double right_fov = 29.605;
   double top_fov = 17.725;
   double altitude = 1.6;
@@ -86,7 +88,7 @@ static void test_depth_map()
   double depth = 10000;
   std::string name =  "vert_perp";
   std::string image_path = "dummy_path";
-  depth_map_scene dms(ni, nj, image_path, cam, gpr, VXL_NULLPTR, std::vector<depth_map_region_sptr>());
+  depth_map_scene dms(ni, nj, image_path, cam, gpr, nullptr, std::vector<depth_map_region_sptr>());
   dms.add_ortho_perp_region(vp, min_depth, max_depth, name);
   /* bool success = */ dms.set_depth(depth, name);
 

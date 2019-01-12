@@ -1,9 +1,6 @@
 // This is core/vul/vul_arg.h
 #ifndef vul_arg_h_
 #define vul_arg_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Command-line arguments
@@ -16,13 +13,16 @@
 //   Feb.2002 - Peter Vanroose - brief doxygen comment placed on single line
 // \endverbatim
 
-#include <vector>
-#include <string>
-#include <list>
 #include <iosfwd>
-#include <vcl_compiler.h>
-#include <vxl_config.h>
+#include <list>
+#include <string>
+#include <utility>
+#include <vector>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_export.h>
+#include <vxl_config.h>
 
 //: forward declare all classes and their helper functions.
 class vul_arg_info_list;
@@ -48,8 +48,8 @@ class vul_arg_base
   static void set_help_option( char const*str);
   static void set_help_description( char const*str);
   static void set_help_precis( char const*str);
-  static void display_usage(char const* msg = VXL_NULLPTR);
-  static void display_usage_and_exit(char const* msg = VXL_NULLPTR);
+  static void display_usage(char const* msg = nullptr);
+  static void display_usage_and_exit(char const* msg = nullptr);
 
   friend class vul_arg_info_list;
 
@@ -79,7 +79,7 @@ class vul_arg_base
   vul_arg_base(vul_arg_info_list& l, char const* option_string,
                char const*helpstring, bool required= false);
   vul_arg_base(char const* option_string, char const*helpstring, bool required= false);
-  virtual ~vul_arg_base() {}
+  virtual ~vul_arg_base() = default;
 
   virtual int parse(char ** argv) = 0;
 };
@@ -124,7 +124,7 @@ void vul_arg_parse(int& argc, char **& argv,
 void vul_arg_include(vul_arg_info_list& l);
 
 //: Print all args, and usage messages.
-void vul_arg_display_usage_and_exit(char const* msg = VXL_NULLPTR);
+void vul_arg_display_usage_and_exit(char const* msg = nullptr);
 
 //: parse command-line arguments
 template <class T>
@@ -145,20 +145,20 @@ class vul_arg : public vul_arg_base
   // first plain word in the command line (warning: this causes problems for
   // T=char *, but that just means that you have to have a help string if you
   // want a default... good)
-  vul_arg(char const* option_string = VXL_NULLPTR,
-          char const* helpstring = VXL_NULLPTR,
+  vul_arg(char const* option_string = nullptr,
+          char const* helpstring = nullptr,
           T default_value = T()
          )
     : vul_arg_base(option_string,helpstring, false),
-      value_(default_value) { settype(); }
+      value_(std::move(default_value)) { settype(); }
 
   //: As above, but add the arg to the list \a l, on which \c parse() can be called later.
   vul_arg(vul_arg_info_list & l,
-          char const * option_string = VXL_NULLPTR,
-          char const * helpstring = VXL_NULLPTR,
+          char const * option_string = nullptr,
+          char const * helpstring = nullptr,
           T default_value = T() )
     : vul_arg_base(l, option_string, helpstring, false),
-      value_(default_value) { settype(); }
+      value_(std::move(default_value)) { settype(); }
 
   //: Dummy parameter to be passed during construction. It sets a flag as required.
 
@@ -193,10 +193,10 @@ class vul_arg : public vul_arg_base
   //operator T& () { return value_; }
 
   //: returns number of args chomped, or -1 on failure.
-  int parse(char ** argv) { return ::parse(this, argv); }
+  int parse(char ** argv) override { return ::parse(this, argv); }
 
   //: print
-  std::ostream& print_value(std::ostream &s) {
+  std::ostream& print_value(std::ostream &s) override {
     ::print_value(s, *this);
     return s; // << flush
   }
@@ -217,7 +217,7 @@ class vul_arg_info_list
     : help_("-?"), // default help operator!
       verbose_(false), autonomy_(autonomy__) {}
 
-  ~vul_arg_info_list() {}
+  ~vul_arg_info_list() = default;
 
   void add(vul_arg_base* arg);
   void parse(int& argc, char **& argv, bool warn_about_unrecognized_arguments);
@@ -241,7 +241,7 @@ class vul_arg_info_list
   bool verbose_;
   autonomy autonomy_;
 
-  void display_help( char const* progname= VXL_NULLPTR);
+  void display_help( char const* progname= nullptr);
 
  private:
   // Disallow assigning to objects of this class:

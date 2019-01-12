@@ -5,12 +5,14 @@
 #include <vnl/vnl_matrix.h>
 #include <vnl/vnl_matrix_fixed.h>
 #include <vnl/vnl_inverse.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 vgl_point_2d<double> icam_transform_2d::origin() const
 {
-  return vgl_point_2d<double>(t12_matrix_[0][2]/t12_matrix_[2][2],
-                              t12_matrix_[1][2]/t12_matrix_[2][2]);
+  return {t12_matrix_[0][2]/t12_matrix_[2][2],
+                              t12_matrix_[1][2]/t12_matrix_[2][2]};
 }
 
 void icam_transform_2d::set_origin(vgl_point_2d<double> const& p)
@@ -144,13 +146,13 @@ icam_transform_2d::delta(vgl_point_2d<double> const& p, vgl_vector_2d<double> co
     return dp;
    case RigidBody :
    case Affine :
-    return vgl_vector_2d<double>(dp.x()*t12_matrix_[0][0]+dp.y()*t12_matrix_[0][1],
-                                 dp.x()*t12_matrix_[1][0]+dp.y()*t12_matrix_[1][1]);
+    return {dp.x()*t12_matrix_[0][0]+dp.y()*t12_matrix_[0][1],
+                                 dp.x()*t12_matrix_[1][0]+dp.y()*t12_matrix_[1][1]};
    case Projective :
     return operator()(p+dp)-operator()(p);
    default:
     std::cerr<<"icam_transform_2d::delta() : Unrecognised form: "<<int(form_)<<'\n';
-    return vgl_vector_2d<double>();
+    return {};
   }
 }
 
@@ -164,9 +166,9 @@ vgl_point_2d<double> icam_transform_2d::operator()(double x, double y) const
   switch (form_)
   {
    case Identity :
-    return vgl_point_2d<double>(x,y);
+    return {x,y};
    case Translation :
-    return vgl_point_2d<double>(x+t12_matrix_[0][2],y+t12_matrix_[1][2]);
+    return {x+t12_matrix_[0][2],y+t12_matrix_[1][2]};
    case RigidBody :
    case Affine :
     return vgl_point_2d<double>(x*t12_matrix_[0][0]+y*t12_matrix_[0][1]+t12_matrix_[0][2],

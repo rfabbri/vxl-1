@@ -14,7 +14,7 @@
 class boxm2_vecf_similarity_transform_mapper
 {
   public:
-  boxm2_vecf_similarity_transform_mapper(vgl_rotation_3d<double> const& rot,
+  boxm2_vecf_similarity_transform_mapper(vgl_rotation_3d<double>  rot,
                                          vgl_vector_3d<double> const& trans,
                                          vgl_vector_3d<double> const& scale);
 
@@ -29,7 +29,7 @@ class boxm2_vecf_similarity_transform_mapper
 class boxm2_vecf_similarity_transform : public boxm2_vecf_vector_field<boxm2_vecf_similarity_transform_mapper>
 {
   public:
-    boxm2_vecf_similarity_transform(vgl_rotation_3d<double> const& rot,
+    boxm2_vecf_similarity_transform(vgl_rotation_3d<double>  rot,
                                     vgl_vector_3d<double> const& trans,
                                     vgl_vector_3d<double> const& scale);
 
@@ -37,9 +37,9 @@ class boxm2_vecf_similarity_transform : public boxm2_vecf_vector_field<boxm2_vec
     typedef boxm2_vecf_similarity_transform_mapper MAPPER_T;
 
     //: Create a function object that maps source pts to target pts.
-    virtual MAPPER_T make_forward_mapper(boxm2_scene_sptr source, boxm2_block_id const& blk_id);
+    MAPPER_T make_forward_mapper(boxm2_scene_sptr source, boxm2_block_id const& blk_id) override;
     //: Create a function object that maps target pts to source pts.
-    virtual MAPPER_T make_inverse_mapper(boxm2_scene_sptr target, boxm2_block_id const& blk_id);
+    MAPPER_T make_inverse_mapper(boxm2_scene_sptr target, boxm2_block_id const& blk_id) override;
 
     //: data
     const vgl_rotation_3d<double> rot_;

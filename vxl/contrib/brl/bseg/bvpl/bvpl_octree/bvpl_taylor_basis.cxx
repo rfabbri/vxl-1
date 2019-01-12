@@ -8,10 +8,10 @@
 
 #include <boxm/boxm_scene.h>
 
-bool bvpl_taylor_basis::compute_approximation_error(boxm_scene_base_sptr data_scene_base,
-                                                    boxm_scene_base_sptr basis_scene_base,
-                                                    boxm_scene_base_sptr error_scene_base,
-                                                    bvpl_taylor_basis_loader loader,
+bool bvpl_taylor_basis::compute_approximation_error(const boxm_scene_base_sptr& data_scene_base,
+                                                    const boxm_scene_base_sptr& basis_scene_base,
+                                                    const boxm_scene_base_sptr& error_scene_base,
+                                                    const bvpl_taylor_basis_loader& loader,
                                                     int block_i, int block_j, int block_k, double cell_length)
 {
   typedef boct_tree<short,float> float_tree_type;
@@ -19,9 +19,9 @@ bool bvpl_taylor_basis::compute_approximation_error(boxm_scene_base_sptr data_sc
   typedef boct_tree<short, bvpl_taylor_basis2_sample > taylor_tree_type;
   typedef boct_tree_cell<short, bvpl_taylor_basis2_sample > taylor_cell_type;
   //cast the scenes
-  boxm_scene<float_tree_type>* data_scene = dynamic_cast<boxm_scene<float_tree_type>* > (data_scene_base.as_pointer());
-  boxm_scene<taylor_tree_type>* basis_scene = dynamic_cast<boxm_scene<taylor_tree_type>* > (basis_scene_base.as_pointer());
-  boxm_scene<float_tree_type> * error_scene = dynamic_cast<boxm_scene<float_tree_type>* > (error_scene_base.as_pointer());
+  auto* data_scene = dynamic_cast<boxm_scene<float_tree_type>* > (data_scene_base.as_pointer());
+  auto* basis_scene = dynamic_cast<boxm_scene<taylor_tree_type>* > (basis_scene_base.as_pointer());
+  auto * error_scene = dynamic_cast<boxm_scene<float_tree_type>* > (error_scene_base.as_pointer());
 
   if (!(data_scene && basis_scene &&error_scene)){
     std::cerr << "Error in compute_approximation_error: Faild to cast scene\n";
@@ -109,12 +109,12 @@ bool bvpl_taylor_basis::compute_approximation_error(boxm_scene_base_sptr data_sc
 }
 
 
-double bvpl_taylor_basis::sum_errors(boxm_scene_base_sptr error_scene_base,
+double bvpl_taylor_basis::sum_errors(const boxm_scene_base_sptr& error_scene_base,
                                      int block_i, int block_j, int block_k, unsigned long tree_nsamples)
 {
   typedef boct_tree<short,float> float_tree_type;
   typedef boct_tree_cell<short,float> float_cell_type;
-  boxm_scene<float_tree_type> * error_scene = dynamic_cast<boxm_scene<float_tree_type>* > (error_scene_base.as_pointer());
+  auto * error_scene = dynamic_cast<boxm_scene<float_tree_type>* > (error_scene_base.as_pointer());
 
   error_scene->load_block(block_i, block_j, block_k);
 
@@ -148,7 +148,7 @@ double bvpl_taylor_basis::sum_errors(boxm_scene_base_sptr error_scene_base,
 }
 
 //: Reads the values of basis responses and assembles them into matrices and vectors
-bool bvpl_taylor_basis::assemble_basis(bvpl_taylor_scenes_map_sptr taylor_scenes,int block_i, int block_j, int block_k)
+bool bvpl_taylor_basis::assemble_basis(const bvpl_taylor_scenes_map_sptr& taylor_scenes,int block_i, int block_j, int block_k)
 {
   typedef boct_tree<short,float> float_tree_type;
   typedef boct_tree<short, bvpl_taylor_basis2_sample > taylor_tree_type;
@@ -218,7 +218,7 @@ bool bvpl_taylor_basis::assemble_basis(bvpl_taylor_scenes_map_sptr taylor_scenes
   //iterate gathering and assembling the data
   for (unsigned i=0; i<leaves_basis.size(); i++)
   {
-    double I0 = (double)leaves_I0[i]->data();
+    auto I0 = (double)leaves_I0[i]->data();
     vnl_double_3 G((double)leaves_Ix[i]->data(),(double)leaves_Iy[i]->data(),(double)leaves_Iz[i]->data());
 
     vnl_double_3x3 H;
@@ -256,4 +256,3 @@ bool bvpl_taylor_basis::assemble_basis(bvpl_taylor_scenes_map_sptr taylor_scenes
 
   return true;
 }
-

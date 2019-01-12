@@ -1,7 +1,4 @@
 // This is mul/vpdfl/vpdfl_kernel_pdf.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \brief Multi-variate kernel PDF
@@ -10,8 +7,10 @@
 #include <iostream>
 #include <string>
 #include "vpdfl_kernel_pdf.h"
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vsl/vsl_indent.h>
 #include <vsl/vsl_vector_io.h>
 
@@ -19,17 +18,13 @@
 // Dflt ctor
 //=======================================================================
 
-vpdfl_kernel_pdf::vpdfl_kernel_pdf()
-{
-}
+vpdfl_kernel_pdf::vpdfl_kernel_pdf() = default;
 
 //=======================================================================
 // Destructor
 //=======================================================================
 
-vpdfl_kernel_pdf::~vpdfl_kernel_pdf()
-{
-}
+vpdfl_kernel_pdf::~vpdfl_kernel_pdf() = default;
 
 //: Compute mean/variance given current centres and widths
 void vpdfl_kernel_pdf::calc_mean_var()

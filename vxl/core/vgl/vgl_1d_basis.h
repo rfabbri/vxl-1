@@ -1,9 +1,6 @@
 // This is core/vgl/vgl_1d_basis.h
 #ifndef vgl_1d_basis_h_
 #define vgl_1d_basis_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief storage for 3 collinear points to serve as 1-D projective basis
@@ -54,8 +51,10 @@
 #include <iosfwd>
 #include <vgl/vgl_fwd.h>
 #include <vgl/vgl_homg_point_1d.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 //----------------------------------------------------------------------
 
@@ -98,7 +97,7 @@ class vgl_1d_basis
   T inf_pt_;    //!< The point to be mapped to homogeneous (1,0)
   bool affine_; //!< normally false; if true, inf_pt_ is not used: affine basis
   // No usable default constructor:
-  inline vgl_1d_basis() {}
+  inline vgl_1d_basis() = default;
 
  public:
   inline T origin() const { return origin_; }

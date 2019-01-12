@@ -1,7 +1,4 @@
 // This is core/vidl/vidl_convert.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Matt Leotta
@@ -15,7 +12,11 @@
 //-----------------------------------------------------------------------------
 
 #include <cstring>
-#include <vcl_memory.h>
+#include <iostream>
+#include <memory>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include "vidl_convert.h"
 #include "vidl_frame.h"
 #include "vidl_pixel_format.h"
@@ -30,9 +31,7 @@
 #include <vil/vil_convert.h>
 #include <vil/vil_new.h>
 #include <vil/vil_memory_chunk.h>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
-#include <vcl_memory.h>
+#include <cassert>
 
 //--------------------------------------------------------------------------------
 
@@ -83,10 +82,10 @@ bool convert_generic(vidl_frame const& in_frame,
                      vidl_frame& out_frame)
 {
   // create pixel iterators for each frame
-  vcl_unique_ptr<vidl_pixel_iterator> in_pitr(vidl_make_pixel_iterator(in_frame));
+  std::unique_ptr<vidl_pixel_iterator> in_pitr(vidl_make_pixel_iterator(in_frame));
   if (!in_pitr.get())
     return false;
-  vcl_unique_ptr<vidl_pixel_iterator> out_pitr(vidl_make_pixel_iterator(out_frame));
+  std::unique_ptr<vidl_pixel_iterator> out_pitr(vidl_make_pixel_iterator(out_frame));
   if (!out_pitr.get())
     return false;
 
@@ -129,8 +128,8 @@ struct convert<VIDL_PIXEL_FORMAT_RGB_24, VIDL_PIXEL_FORMAT_UYVY_422>
   {
     assert(in_frame.pixel_format()==VIDL_PIXEL_FORMAT_RGB_24);
     assert(out_frame.pixel_format()==VIDL_PIXEL_FORMAT_UYVY_422);
-    const vxl_byte* rgb = reinterpret_cast<const vxl_byte*>(in_frame.data());
-    vxl_byte* uyvy = reinterpret_cast<vxl_byte*>(out_frame.data());
+    const auto* rgb = reinterpret_cast<const vxl_byte*>(in_frame.data());
+    auto* uyvy = reinterpret_cast<vxl_byte*>(out_frame.data());
     unsigned int num_half_pix = (in_frame.ni() * in_frame.nj() + 1)/2;
     for (unsigned int c=0; c<num_half_pix; ++c) {
       const vxl_byte& r1 = *(rgb++);
@@ -162,8 +161,8 @@ struct convert<VIDL_PIXEL_FORMAT_UYVY_422, VIDL_PIXEL_FORMAT_RGB_24>
   {
     assert(in_frame.pixel_format()==VIDL_PIXEL_FORMAT_UYVY_422);
     assert(out_frame.pixel_format()==VIDL_PIXEL_FORMAT_RGB_24);
-    const vxl_byte* uyvy = reinterpret_cast<const vxl_byte*>(in_frame.data());
-    vxl_byte* rgb = reinterpret_cast<vxl_byte*>(out_frame.data());
+    const auto* uyvy = reinterpret_cast<const vxl_byte*>(in_frame.data());
+    auto* rgb = reinterpret_cast<vxl_byte*>(out_frame.data());
     unsigned int num_half_pix = (in_frame.ni() * in_frame.nj() + 1)/2;
     for (unsigned int c=0; c<num_half_pix; ++c) {
       const vxl_byte& u1 = *(uyvy++);
@@ -195,8 +194,8 @@ struct convert<VIDL_PIXEL_FORMAT_UYVY_422, VIDL_PIXEL_FORMAT_MONO_8>
   {
     assert(in_frame.pixel_format()==VIDL_PIXEL_FORMAT_UYVY_422);
     assert(out_frame.pixel_format()==VIDL_PIXEL_FORMAT_MONO_8);
-    const vxl_byte* uyvy = reinterpret_cast<const vxl_byte*>(in_frame.data());
-    vxl_byte* mono = reinterpret_cast<vxl_byte*>(out_frame.data());
+    const auto* uyvy = reinterpret_cast<const vxl_byte*>(in_frame.data());
+    auto* mono = reinterpret_cast<vxl_byte*>(out_frame.data());
     unsigned int num_half_pix = (in_frame.ni() * in_frame.nj() + 1)/2;
     for (unsigned int c=0; c<num_half_pix; ++c) {
       ++uyvy;
@@ -221,8 +220,8 @@ struct convert<VIDL_PIXEL_FORMAT_RGB_24, VIDL_PIXEL_FORMAT_YUYV_422>
   {
     assert(in_frame.pixel_format()==VIDL_PIXEL_FORMAT_RGB_24);
     assert(out_frame.pixel_format()==VIDL_PIXEL_FORMAT_YUYV_422);
-    const vxl_byte* rgb = reinterpret_cast<const vxl_byte*>(in_frame.data());
-    vxl_byte* yuyv = reinterpret_cast<vxl_byte*>(out_frame.data());
+    const auto* rgb = reinterpret_cast<const vxl_byte*>(in_frame.data());
+    auto* yuyv = reinterpret_cast<vxl_byte*>(out_frame.data());
     unsigned int num_half_pix = (in_frame.ni() * in_frame.nj() + 1)/2;
     for (unsigned int c=0; c<num_half_pix; ++c) {
       const vxl_byte& r1 = *(rgb++);
@@ -254,8 +253,8 @@ struct convert<VIDL_PIXEL_FORMAT_YUYV_422, VIDL_PIXEL_FORMAT_RGB_24>
   {
     assert(in_frame.pixel_format()==VIDL_PIXEL_FORMAT_YUYV_422);
     assert(out_frame.pixel_format()==VIDL_PIXEL_FORMAT_RGB_24);
-    const vxl_byte* yuyv = reinterpret_cast<const vxl_byte*>(in_frame.data());
-    vxl_byte* rgb = reinterpret_cast<vxl_byte*>(out_frame.data());
+    const auto* yuyv = reinterpret_cast<const vxl_byte*>(in_frame.data());
+    auto* rgb = reinterpret_cast<vxl_byte*>(out_frame.data());
     unsigned int num_half_pix = (in_frame.ni() * in_frame.nj() + 1)/2;
     for (unsigned int c=0; c<num_half_pix; ++c) {
       const vxl_byte& y1 = *(yuyv++);
@@ -287,10 +286,10 @@ struct convert<VIDL_PIXEL_FORMAT_RGB_24P, VIDL_PIXEL_FORMAT_YUYV_422>
   {
     assert(in_frame.pixel_format()==VIDL_PIXEL_FORMAT_RGB_24P);
     assert(out_frame.pixel_format()==VIDL_PIXEL_FORMAT_YUYV_422);
-    const vxl_byte* red = reinterpret_cast<const vxl_byte*>(in_frame.data());
+    const auto* red = reinterpret_cast<const vxl_byte*>(in_frame.data());
     const vxl_byte* green= red+in_frame.ni() * in_frame.nj();
     const vxl_byte* blue= green+in_frame.ni() * in_frame.nj();
-    vxl_byte* yuyv = reinterpret_cast<vxl_byte*>(out_frame.data());
+    auto* yuyv = reinterpret_cast<vxl_byte*>(out_frame.data());
     unsigned int num_half_pix = (in_frame.ni() * in_frame.nj() + 1)/2;
     for (unsigned int c=0; c<num_half_pix; ++c) {
       const vxl_byte& r1 = *(red++);
@@ -321,8 +320,8 @@ struct convert<VIDL_PIXEL_FORMAT_YUYV_422, VIDL_PIXEL_FORMAT_RGB_24P>
   {
     assert(in_frame.pixel_format()==VIDL_PIXEL_FORMAT_YUYV_422);
     assert(out_frame.pixel_format()==VIDL_PIXEL_FORMAT_RGB_24P);
-    const vxl_byte* yuyv = reinterpret_cast<const vxl_byte*>(in_frame.data());
-    vxl_byte* red = reinterpret_cast<vxl_byte*>(out_frame.data());
+    const auto* yuyv = reinterpret_cast<const vxl_byte*>(in_frame.data());
+    auto* red = reinterpret_cast<vxl_byte*>(out_frame.data());
     vxl_byte* green = red+out_frame.ni()*out_frame.nj();
     vxl_byte* blue = green+out_frame.ni()*out_frame.nj();
     unsigned int num_half_pix = (in_frame.ni() * in_frame.nj() + 1)/2;
@@ -355,8 +354,8 @@ struct convert<VIDL_PIXEL_FORMAT_YUYV_422, VIDL_PIXEL_FORMAT_MONO_8>
   {
     assert(in_frame.pixel_format()==VIDL_PIXEL_FORMAT_YUYV_422);
     assert(out_frame.pixel_format()==VIDL_PIXEL_FORMAT_MONO_8);
-    const vxl_byte* yuyv = reinterpret_cast<const vxl_byte*>(in_frame.data());
-    vxl_byte* mono = reinterpret_cast<vxl_byte*>(out_frame.data());
+    const auto* yuyv = reinterpret_cast<const vxl_byte*>(in_frame.data());
+    auto* mono = reinterpret_cast<vxl_byte*>(out_frame.data());
     unsigned int num_half_pix = (in_frame.ni() * in_frame.nj() + 1)/2;
     for (unsigned int c=0; c<num_half_pix; ++c) {
       const vxl_byte& y1 = *(yuyv++);
@@ -402,8 +401,8 @@ struct table_init
 {
   static inline void populate(converter_func table[VIDL_PIXEL_FORMAT_ENUM_END][VIDL_PIXEL_FORMAT_ENUM_END])
   {
-    const vidl_pixel_format in_fmt = vidl_pixel_format(Fmt_Code/VIDL_PIXEL_FORMAT_ENUM_END);
-    const vidl_pixel_format out_fmt = vidl_pixel_format(Fmt_Code%VIDL_PIXEL_FORMAT_ENUM_END);
+    const auto in_fmt = vidl_pixel_format(Fmt_Code/VIDL_PIXEL_FORMAT_ENUM_END);
+    const auto out_fmt = vidl_pixel_format(Fmt_Code%VIDL_PIXEL_FORMAT_ENUM_END);
     table_entry_init<in_fmt,out_fmt>::set_entry(table[in_fmt][out_fmt]);
     table_init<Fmt_Code-1>::populate(table);
   }
@@ -416,8 +415,8 @@ struct table_init<0>
 {
   static inline void populate(converter_func table[VIDL_PIXEL_FORMAT_ENUM_END][VIDL_PIXEL_FORMAT_ENUM_END])
   {
-    const vidl_pixel_format in_fmt = vidl_pixel_format(0);
-    const vidl_pixel_format out_fmt = vidl_pixel_format(0);
+    const auto in_fmt = vidl_pixel_format(0);
+    const auto out_fmt = vidl_pixel_format(0);
     table_entry_init<in_fmt,out_fmt>::set_entry(table[in_fmt][out_fmt]);
   }
 };
@@ -515,7 +514,7 @@ vidl_frame_sptr vidl_convert_frame(const vidl_frame_sptr& in_frame,
                                    vidl_pixel_format format)
 {
   if (format == VIDL_PIXEL_FORMAT_UNKNOWN)
-    return VXL_NULLPTR;
+    return nullptr;
 
   unsigned ni = in_frame->ni();
   unsigned nj = in_frame->nj();
@@ -526,7 +525,7 @@ vidl_frame_sptr vidl_convert_frame(const vidl_frame_sptr& in_frame,
   if (vidl_convert_frame(*in_frame, *out_frame))
     return out_frame;
 
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 
@@ -536,7 +535,7 @@ vidl_frame_sptr vidl_convert_frame(const vidl_frame_sptr& in_frame,
 vidl_frame_sptr vidl_convert_to_frame(const vil_image_view_base_sptr& image)
 {
   if (!image)
-    return VXL_NULLPTR;
+    return nullptr;
   return vidl_convert_to_frame(*image);
 }
 
@@ -598,7 +597,7 @@ vidl_frame_sptr vidl_convert_to_frame(const vil_image_view_base& image)
   else if (num_channels == 4)
     format = VIDL_PIXEL_FORMAT_RGBA_32P;
   else
-    return VXL_NULLPTR;
+    return nullptr;
 
   vil_image_view<vxl_byte> img;
   if (image.pixel_format() == VIL_PIXEL_FORMAT_BYTE)
@@ -608,7 +607,7 @@ vidl_frame_sptr vidl_convert_to_frame(const vil_image_view_base& image)
     vil_image_resource_sptr resrc = vil_new_image_resource_of_view(image);
     vil_image_view_base_sptr bimage = vil_convert_cast(vxl_byte(),resrc->get_view());
     if (!bimage)
-      return VXL_NULLPTR;
+      return nullptr;
     img = *bimage;
   }
   return new vidl_memory_chunk_frame(ni, nj, format,
@@ -624,7 +623,7 @@ bool vidl_convert_to_view(vidl_frame const& frame,
                           vidl_pixel_color require_color)
 {
   if (frame.pixel_format() == VIDL_PIXEL_FORMAT_UNKNOWN ||
-      frame.data() == VXL_NULLPTR)
+      frame.data() == nullptr)
     return false;
 
   vidl_pixel_color in_color = vidl_pixel_format_color(frame.pixel_format());
@@ -642,7 +641,7 @@ bool vidl_convert_to_view(vidl_frame const& frame,
     vil_image_view<vxl_uint_16> wrapper(static_cast<const vxl_uint_16*>(frame.data()),
                                         ni,nj,1,1,ni,ni*nj);
     if (image.pixel_format() == VIL_PIXEL_FORMAT_UINT_16) {
-      vil_image_view<vxl_uint_16>& img = static_cast<vil_image_view<vxl_uint_16>&>(image);
+      auto& img = static_cast<vil_image_view<vxl_uint_16>&>(image);
       img.deep_copy(vil_image_view<vxl_uint_16>(wrapper));
       return true;
     }
@@ -677,7 +676,7 @@ bool vidl_convert_to_view(vidl_frame const& frame,
   vidl_pixel_format default_format = VIDL_PIXEL_FORMAT_UNKNOWN;
   if (image.pixel_format() == VIL_PIXEL_FORMAT_BYTE)
   {
-    vil_image_view<vxl_byte>& img = static_cast<vil_image_view<vxl_byte>&>(image);
+    auto& img = static_cast<vil_image_view<vxl_byte>&>(image);
     bool interleaved = (img.planestep() == 1);
 
     switch (require_color) {
@@ -761,7 +760,7 @@ vidl_convert_wrap_in_view(vidl_frame const& frame)
   vidl_pixel_traits pt =  vidl_pixel_format_traits(format);
   if ( pt.chroma_shift_x != 0 || pt.chroma_shift_y != 0 ||
        pt.bits_per_pixel % pt.num_channels != 0)
-    return VXL_NULLPTR;
+    return nullptr;
 
   unsigned ni = frame.ni(), nj = frame.nj();
   unsigned np = pt.num_channels;
@@ -779,7 +778,7 @@ vidl_convert_wrap_in_view(vidl_frame const& frame)
       break;
     default:
       // Cannot wrap other pixel arrangements
-      return VXL_NULLPTR;
+      return nullptr;
   }
   std::ptrdiff_t top_left_offset = 0;
 
@@ -789,10 +788,10 @@ vidl_convert_wrap_in_view(vidl_frame const& frame)
   }
 
   // Create a view of a memory chunk frame
-  if ( const vidl_memory_chunk_frame* cf =
+  if ( const auto* cf =
        dynamic_cast<const vidl_memory_chunk_frame*>(&frame) )
   {
-    vil_memory_chunk_sptr chunk = cf->memory_chunk();
+    const vil_memory_chunk_sptr& chunk = cf->memory_chunk();
     if (format == VIDL_PIXEL_FORMAT_MONO_16) {
       const vxl_uint_16* top_left = static_cast<const vxl_uint_16*>(cf->data()) + top_left_offset;
       return new vil_image_view<vxl_uint_16>(chunk,top_left, ni,nj,np, i_step,j_step,p_step);

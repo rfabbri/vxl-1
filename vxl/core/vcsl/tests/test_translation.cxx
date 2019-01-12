@@ -13,7 +13,9 @@
 
 #include <iostream>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vcsl/vcsl_cartesian_3d.h>
 #include <vcsl/vcsl_translation.h>
 #include <vcsl/vcsl_graph.h>
@@ -53,7 +55,7 @@ static void test_translation()
   vectors.push_back(v1);
   vectors.push_back(v2);
   tr->set_vector(vectors);
-  motion.push_back(tr.ptr());
+  motion.emplace_back(tr.ptr());
 
   cs0->set_motion(motion);
 

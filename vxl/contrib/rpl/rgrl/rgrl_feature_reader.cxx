@@ -13,8 +13,9 @@
 #include <rgrl/rgrl_feature_trace_pt.h>
 
 #include <rgrl/rgrl_util.h>
-#include <vcl_compiler.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 // initialize the static variables
 std::vector< rgrl_feature_sptr >  rgrl_feature_reader::feature_candidates_;
@@ -28,7 +29,7 @@ std::vector< rgrl_feature_sptr >  rgrl_feature_reader::feature_candidates_;
     return fea_ptr; \
   }
 
-void rgrl_feature_reader::add_feature( rgrl_feature_sptr feat )
+void rgrl_feature_reader::add_feature( const rgrl_feature_sptr& feat )
 {
   feature_candidates_.push_back(feat);
 }
@@ -80,7 +81,7 @@ read( std::istream& is )
       << "       " << "Tag " << tag_str
       << " cannot match with any existing features.\n"
       << "         Try to open istream in BINARY mode!" << std::endl;
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 //: Read a feature from input stream
@@ -100,4 +101,3 @@ operator>> (std::istream& is, rgrl_feature_sptr& fea_sptr)
   fea_sptr = rgrl_feature_reader( is );
   return is;
 }
-

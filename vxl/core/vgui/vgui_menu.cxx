@@ -6,14 +6,16 @@
 // \author fsm
 // \brief  See vgui_menu.h for a description of this file.
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgui/vgui_command.h>
 
 //--------------------------------------------------------------------------------
 
 vgui_menu_item::vgui_menu_item()
   : name("[]")
-  , menu(VXL_NULLPTR)
+  , menu(nullptr)
 {
   short_cut.mod = vgui_MODIFIER_NULL;
   short_cut.key = vgui_KEY_NULL;
@@ -33,7 +35,7 @@ vgui_menu_item::~vgui_menu_item()
 {
   if (menu)
     delete menu;
-  menu = VXL_NULLPTR;
+  menu = nullptr;
 }
 
 bool vgui_menu_item::is_toggle_button() const
@@ -46,7 +48,7 @@ bool vgui_menu_item::is_toggle_button() const
   // all kinds of things. Let's just use the compiler generated
   // version until we run into a real problem.
   //
-  return name!="" &&  (bool)cmnd && (menu == VXL_NULLPTR) &&  dynamic_cast<vgui_command_toggle*>(cmnd.ptr()) != VXL_NULLPTR;
+  return name!="" &&  (bool)cmnd && (menu == nullptr) &&  dynamic_cast<vgui_command_toggle*>(cmnd.ptr()) != nullptr;
 }
 
 //--------------------------------------------------------------------------------

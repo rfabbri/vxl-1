@@ -3,7 +3,9 @@
 #include "vgui_qt_menu.h"
 
 #include <vgui/vgui_popup_params.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <QMenu>
 
@@ -15,7 +17,7 @@ vgui_qt_adaptor::vgui_qt_adaptor(QWidget* parent)
    : QGLWidget(QGLFormat(DoubleBuffer|DepthBuffer|Rgba|AlphaChannel|
                          AccumBuffer|StencilBuffer|NoStereoBuffers|
                          DirectRendering), parent),
-     ovl_helper(VXL_NULLPTR),
+     ovl_helper(nullptr),
      use_overlay_helper(true),
      idle_request_posted_(false)
 {
@@ -49,7 +51,7 @@ vgui_qt_adaptor::~vgui_qt_adaptor()
 {
    if (ovl_helper)
      delete ovl_helper;
-   ovl_helper = VXL_NULLPTR;
+   ovl_helper = nullptr;
    dispatch_to_tableau(vgui_DESTROY);
 
    for(std::map<int, vgui_qt_internal_timer*>::iterator it = timers_.begin();

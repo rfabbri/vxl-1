@@ -1,7 +1,4 @@
 // This is core/vgui/vgui_easy2D_tableau.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \brief  See vgui_easy2D_tableau.h for a description of this file.
@@ -17,8 +14,10 @@
 #include <cstdlib>
 #include "vgui_easy2D_tableau.h"
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vxl_config.h> // for vxl_byte
 
@@ -370,12 +369,12 @@ void vgui_easy2D_tableau::print_psfile(std::string filename, int reduction_facto
     std::cerr << "vgui_easy2D_tableau: Printing geometric objects\n";
 
   std::vector<vgui_soview*> all_objs = get_all();
-  vgui_style_sptr style = VXL_NULLPTR;
+  vgui_style_sptr style = nullptr;
   float style_point_size = 0;
   for (std::vector<vgui_soview*>::iterator i = all_objs.begin(); i != all_objs.end(); ++i)
   {
     vgui_soview* sv = *i;
-    if (sv == VXL_NULLPTR) {
+    if (sv == nullptr) {
        vgui_macro_warning << "An object in soview list is null\n";
        continue;
     }

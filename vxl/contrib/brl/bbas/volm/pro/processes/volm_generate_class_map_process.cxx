@@ -15,9 +15,9 @@
 bool volm_generate_class_map_process_cons(bprb_func_process& pro)
 {
   std::vector<std::string> input_types;
-  input_types.push_back("vil_image_view_base_sptr");  // classification image
+  input_types.emplace_back("vil_image_view_base_sptr");  // classification image
   std::vector<std::string> output_types;
-  output_types.push_back("vil_image_view_base_sptr"); // output unsigned short image with volm_land_type ids
+  output_types.emplace_back("vil_image_view_base_sptr"); // output unsigned short image with volm_land_type ids
   return pro.set_input_types(input_types)
       && pro.set_output_types(output_types);
 }
@@ -49,7 +49,7 @@ bool volm_generate_class_map_process(bprb_func_process& pro)
   for (unsigned i = 0; i < img.ni(); i++)
     for (unsigned j = 0; j < img.nj(); j++) {
       std::pair<vxl_byte, std::pair<vxl_byte, vxl_byte> > pp(img(i,j).r, std::pair<vxl_byte, vxl_byte>(img(i,j).g, img(i,j).b));
-      std::map<std::pair<vxl_byte, std::pair<vxl_byte, vxl_byte> >, unsigned short>::iterator iter = sdet_color_map.find(pp);
+      auto iter = sdet_color_map.find(pp);
       if (iter != sdet_color_map.end())
         out_img(i, j) = iter->second;
       else
@@ -68,10 +68,10 @@ bool volm_generate_class_map_process(bprb_func_process& pro)
 bool volm_generate_color_class_map_process_cons(bprb_func_process& pro)
 {
   std::vector<std::string> input_types;
-  input_types.push_back("vil_image_view_base_sptr");  // classification image
-  input_types.push_back("vcl_string");                // id to color txt
+  input_types.emplace_back("vil_image_view_base_sptr");  // classification image
+  input_types.emplace_back("vcl_string");                // id to color txt
   std::vector<std::string> output_types;
-  output_types.push_back("vil_image_view_base_sptr"); // output unsigned short image with volm_land_type ids
+  output_types.emplace_back("vil_image_view_base_sptr"); // output unsigned short image with volm_land_type ids
   return pro.set_input_types(input_types)
       && pro.set_output_types(output_types);
 }
@@ -92,8 +92,8 @@ bool volm_generate_color_class_map_process(bprb_func_process& pro)
 
   std::map<unsigned char, vil_rgb<vxl_byte> > sdet_color_map;
   if (!vul_file::exists(id_to_color_txt)) {
-    for (std::map<unsigned int, volm_land_layer>::iterator mit = volm_osm_category_io::volm_land_table.begin(); mit != volm_osm_category_io::volm_land_table.end();  ++mit)
-      sdet_color_map.insert(std::pair<unsigned char, vil_rgb<vxl_byte> >(mit->second.id_, mit->second.color_));
+    for (auto & mit : volm_osm_category_io::volm_land_table)
+      sdet_color_map.insert(std::pair<unsigned char, vil_rgb<vxl_byte> >(mit.second.id_, mit.second.color_));
   }
   else {
     std::ifstream ifs(id_to_color_txt.c_str());
@@ -109,7 +109,7 @@ bool volm_generate_color_class_map_process(bprb_func_process& pro)
 
   for (unsigned i = 0; i < img.ni(); i++)
     for (unsigned j = 0; j < img.nj(); j++) {
-      std::map<unsigned char, vil_rgb<vxl_byte> >::iterator mit = sdet_color_map.find(img(i,j));
+      auto mit = sdet_color_map.find(img(i,j));
       if (mit != sdet_color_map.end())
         out_img(i,j) = mit->second;
     }
@@ -125,8 +125,8 @@ bool volm_generate_color_class_map_process(bprb_func_process& pro)
 bool volm_update_class_map_process_cons(bprb_func_process& pro)
 {
   std::vector<std::string> input_types_;
-  input_types_.push_back("vil_image_view_base_sptr");  // current classification map
-  input_types_.push_back("vil_image_view_base_sptr");  // source classification map used to update the class map
+  input_types_.emplace_back("vil_image_view_base_sptr");  // current classification map
+  input_types_.emplace_back("vil_image_view_base_sptr");  // source classification map used to update the class map
   std::vector<std::string>  output_types_;
   return pro.set_input_types(input_types_) && pro.set_output_types(output_types_);
 }
@@ -142,8 +142,8 @@ bool volm_update_class_map_process(bprb_func_process& pro)
   vil_image_view_base_sptr curr_img_sptr = pro.get_input<vil_image_view_base_sptr>(0);
   vil_image_view_base_sptr srce_img_sptr = pro.get_input<vil_image_view_base_sptr>(1);
 
-  vil_image_view<unsigned char>* curr_img = dynamic_cast<vil_image_view<unsigned char>* >(curr_img_sptr.ptr());
-  vil_image_view<unsigned char>* srce_img = dynamic_cast<vil_image_view<unsigned char>* >(srce_img_sptr.ptr());
+  auto* curr_img = dynamic_cast<vil_image_view<unsigned char>* >(curr_img_sptr.ptr());
+  auto* srce_img = dynamic_cast<vil_image_view<unsigned char>* >(srce_img_sptr.ptr());
   unsigned ni = curr_img->ni();
   unsigned nj = curr_img->nj();
   if (srce_img->ni() != ni || srce_img->nj() != nj) {
@@ -160,4 +160,3 @@ bool volm_update_class_map_process(bprb_func_process& pro)
   }
   return true;
 }
-

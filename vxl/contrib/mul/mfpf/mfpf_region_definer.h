@@ -6,15 +6,16 @@
 // \author Tim Cootes
 
 #include <string>
-#include <vcl_memory.h>
 #include <iostream>
+#include <memory>
 #include <iosfwd>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <mfpf/mfpf_region_form.h>
 #include <vsl/vsl_binary_io.h>
 
-#include <vcl_compiler.h>
-
-const unsigned mfpf_invalid_index=99999;
+constexpr unsigned mfpf_invalid_index = 99999;
 
 //: Base for objects which generate regions from sets of points
 //  Given a set of points, derived classes can generate a region.
@@ -97,7 +98,7 @@ class mfpf_region_definer
   virtual void b_read(vsl_b_istream& bfs) =0;
 
   //: Create a concrete object, from a text specification.
-  static vcl_unique_ptr<mfpf_region_definer> create_from_stream(std::istream &is);
+  static std::unique_ptr<mfpf_region_definer> create_from_stream(std::istream &is);
 };
 
 //: Allows derived class to be loaded by base-class pointer

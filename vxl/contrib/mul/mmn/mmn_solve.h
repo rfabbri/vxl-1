@@ -10,7 +10,9 @@
 #include <vnl/vnl_vector.h>
 #include <mmn/mmn_arc.h>
 #include <mmn/mmn_dependancy.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 double mmn_solve(const std::vector<vnl_vector<double> >& node_cost,
                  const std::vector<vnl_matrix<double> >& pair_cost,

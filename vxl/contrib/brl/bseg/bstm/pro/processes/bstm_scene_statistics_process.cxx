@@ -10,7 +10,9 @@
 #include <fstream>
 #include <bprb/bprb_func_process.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bstm/bstm_scene.h>
 #include <bstm/io/bstm_cache.h>
 #include <bstm/bstm_block.h>
@@ -21,8 +23,8 @@
 #include <vgl/vgl_intersection.h>
 namespace bstm_scene_statistics_process_globals
 {
-  const unsigned n_inputs_ = 8;
-  const unsigned n_outputs_ = 3;
+  constexpr unsigned n_inputs_ = 8;
+  constexpr unsigned n_outputs_ = 3;
 }
 
 #define MAX_CELLS_ 585
@@ -48,12 +50,12 @@ bool bstm_scene_statistics_process_cons(bprb_func_process& pro)
   output_types[2] = "unsigned";
 
   //default values for the box is empty
-  brdb_value_sptr def_center_x    = new brdb_value_t<float>(-1.0f);
-  brdb_value_sptr def_center_y    = new brdb_value_t<float>(-1.0f);
-  brdb_value_sptr def_center_z    = new brdb_value_t<float>(-1.0f);
-  brdb_value_sptr def_len_x    = new brdb_value_t<float>(-1.0f);
-  brdb_value_sptr def_len_y    = new brdb_value_t<float>(-1.0f);
-  brdb_value_sptr def_len_z    = new brdb_value_t<float>(-1.0f);
+  brdb_value_sptr def_center_x = new brdb_value_t<float>(-1.0f);
+  brdb_value_sptr def_center_y = new brdb_value_t<float>(-1.0f);
+  brdb_value_sptr def_center_z = new brdb_value_t<float>(-1.0f);
+  brdb_value_sptr def_len_x = new brdb_value_t<float>(-1.0f);
+  brdb_value_sptr def_len_y = new brdb_value_t<float>(-1.0f);
+  brdb_value_sptr def_len_z = new brdb_value_t<float>(-1.0f);
   pro.set_input(2, def_center_x);
   pro.set_input(3, def_center_y);
   pro.set_input(4, def_center_z);
@@ -71,7 +73,6 @@ bool bstm_scene_statistics_process(bprb_func_process& pro)
   typedef unsigned char uchar;
   typedef unsigned short ushort;
   typedef vnl_vector_fixed<uchar, 16> uchar16;
-  typedef vnl_vector_fixed<uchar, 8> uchar8;
   typedef vnl_vector_fixed<ushort, 4> ushort4;
 
   if ( pro.n_inputs() < n_inputs_ ){
@@ -82,12 +83,12 @@ bool bstm_scene_statistics_process(bprb_func_process& pro)
   unsigned i = 0;
   bstm_scene_sptr scene = pro.get_input<bstm_scene_sptr>(i++);
   bstm_cache_sptr cache = pro.get_input<bstm_cache_sptr>(i++);
-  float center_x = pro.get_input<float>(i++);
-  float center_y = pro.get_input<float>(i++);
-  float center_z = pro.get_input<float>(i++);
-  float len_x = pro.get_input<float>(i++);
-  float len_y = pro.get_input<float>(i++);
-  float len_z = pro.get_input<float>(i++);
+  auto center_x = pro.get_input<float>(i++);
+  auto center_y = pro.get_input<float>(i++);
+  auto center_z = pro.get_input<float>(i++);
+  auto len_x = pro.get_input<float>(i++);
+  auto len_y = pro.get_input<float>(i++);
+  auto len_z = pro.get_input<float>(i++);
 
   //create vgl box
   const vgl_point_3d<double> center(center_x,center_y,center_z);
@@ -154,9 +155,9 @@ bool bstm_scene_statistics_process(bprb_func_process& pro)
                  //finally found the cell!
                  int data_offset = bit_tree.get_data_index(currBitIndex); //mdata index
                  boxm2_array_1d<vnl_vector_fixed<unsigned char, 8> >time_treebits = blk_t->get_cell_all_tt(data_offset);
-                 for(vnl_vector_fixed<unsigned char, 8>* time_tree_iter = time_treebits.begin(); time_tree_iter != time_treebits.end(); time_tree_iter++ )
+                 for(auto & time_treebit : time_treebits)
                  {
-                   bstm_time_tree time_tree( time_tree_iter->data_block(),bstm_metadata.max_level_t_);
+                   bstm_time_tree time_tree( time_treebit.data_block(),bstm_metadata.max_level_t_);
                    total_num_time_tree_leaf_cells += time_tree.num_leaves();
                    total_time_tree_dephts += time_tree.max_depth(0);
                    num_time_trees++;

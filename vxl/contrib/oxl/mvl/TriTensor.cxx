@@ -1,7 +1,4 @@
 // This is oxl/mvl/TriTensor.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 
@@ -10,8 +7,10 @@
 #include <vector>
 #include "TriTensor.h"
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <vul/vul_printf.h>
 
@@ -58,7 +57,7 @@ static bool tt_verbose = false;
 
 //: Default constructor.
 TriTensor::TriTensor()
-  : T(3, 3, 3), e12_(VXL_NULLPTR), e13_(VXL_NULLPTR), fmp12_(VXL_NULLPTR), fmp13_(VXL_NULLPTR), fmp23_(VXL_NULLPTR)
+  : T(3, 3, 3), e12_(nullptr), e13_(nullptr), fmp12_(nullptr), fmp13_(nullptr), fmp23_(nullptr)
 {
 }
 
@@ -67,13 +66,13 @@ TriTensor::TriTensor()
 // The doubles are stored in ``matrix'' order, with the last index
 // increasing fastest.
 TriTensor::TriTensor(const double *tritensor_array)
-  : T(3, 3, 3, tritensor_array), e12_(VXL_NULLPTR), e13_(VXL_NULLPTR), fmp12_(VXL_NULLPTR), fmp13_(VXL_NULLPTR), fmp23_(VXL_NULLPTR)
+  : T(3, 3, 3, tritensor_array), e12_(nullptr), e13_(nullptr), fmp12_(nullptr), fmp13_(nullptr), fmp23_(nullptr)
 {
 }
 
 //: Copy constructor.
 TriTensor::TriTensor(const TriTensor& that)
-  : T(that.T), e12_(VXL_NULLPTR), e13_(VXL_NULLPTR), fmp12_(VXL_NULLPTR), fmp13_(VXL_NULLPTR), fmp23_(VXL_NULLPTR)
+  : T(that.T), e12_(nullptr), e13_(nullptr), fmp12_(nullptr), fmp13_(nullptr), fmp23_(nullptr)
 {
 }
 
@@ -81,7 +80,7 @@ TriTensor::TriTensor(const TriTensor& that)
 TriTensor::TriTensor(PMatrix const& P1,
                      PMatrix const& P2,
                      PMatrix const& P3)
-  : T(3, 3, 3), e12_(VXL_NULLPTR), e13_(VXL_NULLPTR), fmp12_(VXL_NULLPTR), fmp13_(VXL_NULLPTR), fmp23_(VXL_NULLPTR)
+  : T(3, 3, 3), e12_(nullptr), e13_(nullptr), fmp12_(nullptr), fmp13_(nullptr), fmp23_(nullptr)
 {
   set(P1, P2, P3);
 }
@@ -89,7 +88,7 @@ TriTensor::TriTensor(PMatrix const& P1,
 //: Construct from 2 projection matrices, as described in set.
 TriTensor::TriTensor(PMatrix const& P2,
                      PMatrix const& P3)
-  : T(3, 3, 3), e12_(VXL_NULLPTR), e13_(VXL_NULLPTR), fmp12_(VXL_NULLPTR), fmp13_(VXL_NULLPTR), fmp23_(VXL_NULLPTR)
+  : T(3, 3, 3), e12_(nullptr), e13_(nullptr), fmp12_(nullptr), fmp13_(nullptr), fmp23_(nullptr)
 {
   set(P2, P3);
 }
@@ -98,7 +97,7 @@ TriTensor::TriTensor(PMatrix const& P2,
 TriTensor::TriTensor(vnl_matrix<double> const& T1,
                      vnl_matrix<double> const& T2,
                      vnl_matrix<double> const& T3)
-  : T(3, 3, 3), e12_(VXL_NULLPTR), e13_(VXL_NULLPTR), fmp12_(VXL_NULLPTR), fmp13_(VXL_NULLPTR), fmp23_(VXL_NULLPTR)
+  : T(3, 3, 3), e12_(nullptr), e13_(nullptr), fmp12_(nullptr), fmp13_(nullptr), fmp23_(nullptr)
 {
   set(T1, T2, T3);
 }
@@ -121,11 +120,11 @@ TriTensor::~TriTensor()
 // - Delete and zero epipole and manifold projector classes.
 void TriTensor::delete_caches() const
 {
-  delete e12_; e12_ = VXL_NULLPTR;
-  delete e13_; e13_ = VXL_NULLPTR;
-  delete fmp12_; fmp12_ = VXL_NULLPTR;
-  delete fmp13_; fmp13_ = VXL_NULLPTR;
-  delete fmp23_; fmp23_ = VXL_NULLPTR;
+  delete e12_; e12_ = nullptr;
+  delete e13_; e13_ = nullptr;
+  delete fmp12_; fmp12_ = nullptr;
+  delete fmp13_; fmp13_ = nullptr;
+  delete fmp23_; fmp23_ = nullptr;
 }
 
 //: Convert T to 27x1 matrix. Out is assumed to have been appropriately resized.
@@ -376,7 +375,7 @@ TriTensor::image1_transfer(vgl_homg_line_2d<double> const& line2,
       for (int k = 0; k < 3; k++)
         l1 [i] +=  T(i,j,k) * l2 [j] * l3 [k];
 
-  return vgl_homg_line_2d<double>(l1[0],l1[1],l1[2]);
+  return {l1[0],l1[1],l1[2]};
 }
 
 HomgLine2D
@@ -407,7 +406,7 @@ TriTensor::image2_transfer(vgl_homg_line_2d<double> const& line1,
   vnl_double_3 l1(line1.a(),line1.b(),line1.c());
   vnl_double_3 l3(line3.a(),line3.b(),line3.c());
   vnl_double_3 l = vnl_inverse(dot3(l3)) * l1;
-  return vgl_homg_line_2d<double>(l[0],l[1],l[2]);
+  return {l[0],l[1],l[2]};
 }
 
 HomgLine2D
@@ -429,7 +428,7 @@ TriTensor::image3_transfer(vgl_homg_line_2d<double> const& line1,
   vnl_double_3 l1(line1.a(),line1.b(),line1.c());
   vnl_double_3 l2(line2.a(),line2.b(),line2.c());
   vnl_double_3 l = vnl_inverse(dot2(l2)) * l1;
-  return vgl_homg_line_2d<double>(l[0],l[1],l[2]);
+  return {l[0],l[1],l[2]};
 }
 
 HomgLine2D
@@ -718,7 +717,7 @@ void TriTensor::get_constraint_lines_image3(vgl_homg_point_2d<double> const& p1,
       z1 * x2 * T(2,1,0) - z1 * y2 * T(2,0,0);
 
     double lz = 0;
-    lines.push_back(vgl_homg_line_2d<double>(lx, ly, lz));
+    lines.emplace_back(lx, ly, lz);
   }
 
   /* 1 */
@@ -735,7 +734,7 @@ void TriTensor::get_constraint_lines_image3(vgl_homg_point_2d<double> const& p1,
     + y1 * x2 * T(1,1,0) - y1 * y2 * T(1,0,0)
     + z1 * x2 * T(2,1,0) - z1 * y2 * T(2,0,0);
 
-    lines.push_back(vgl_homg_line_2d<double>(lx, ly, lz));
+    lines.emplace_back(lx, ly, lz);
   }
 
   /* 2 */
@@ -753,7 +752,7 @@ void TriTensor::get_constraint_lines_image3(vgl_homg_point_2d<double> const& p1,
       + y1 * x2 * T(1,1,1) - y1 * y2 * T(1,0,1)
       + z1 * x2 * T(2,1,1) - z1 * y2 * T(2,0,1);
 
-    lines.push_back(vgl_homg_line_2d<double>(lx, ly, lz));
+    lines.emplace_back(lx, ly, lz);
   }
 
   /* 3 */
@@ -769,7 +768,7 @@ void TriTensor::get_constraint_lines_image3(vgl_homg_point_2d<double> const& p1,
       + z1 * x2 * T(2,2,0) - z1 * z2 * T(2,0,0);
 
     double lz = 0;
-    lines.push_back(vgl_homg_line_2d<double>(lx, ly, lz));
+    lines.emplace_back(lx, ly, lz);
   }
 
   /* 4 */
@@ -785,7 +784,7 @@ void TriTensor::get_constraint_lines_image3(vgl_homg_point_2d<double> const& p1,
       x1 * x2 * T(0,2,0) - x1 * z2 * T(0,0,0) +
       y1 * x2 * T(1,2,0) - y1 * z2 * T(1,0,0) +
       z1 * x2 * T(2,2,0) - z1 * z2 * T(2,0,0);
-    lines.push_back(vgl_homg_line_2d<double>(lx, ly, lz));
+    lines.emplace_back(lx, ly, lz);
   }
 
   /* 5 */
@@ -801,7 +800,7 @@ void TriTensor::get_constraint_lines_image3(vgl_homg_point_2d<double> const& p1,
         = x1 * x2 * T(0,2,1) - x1 * z2 * T(0,0,1)
         + y1 * x2 * T(1,2,1) - y1 * z2 * T(1,0,1)
         + z1 * x2 * T(2,2,1) - z1 * z2 * T(2,0,1);
-    lines.push_back(vgl_homg_line_2d<double>(lx, ly, lz));
+    lines.emplace_back(lx, ly, lz);
   }
 
   /* 6 */
@@ -817,7 +816,7 @@ void TriTensor::get_constraint_lines_image3(vgl_homg_point_2d<double> const& p1,
         + z1 * y2 * T(2,2,0) - z1 * z2 * T(2,1,0);
 
     double lz = 0;
-    lines.push_back(vgl_homg_line_2d<double>(lx, ly, lz));
+    lines.emplace_back(lx, ly, lz);
   }
 
   /* 7 */
@@ -834,7 +833,7 @@ void TriTensor::get_constraint_lines_image3(vgl_homg_point_2d<double> const& p1,
         + y1 * y2 * T(1,2,0) - y1 * z2 * T(1,1,0)
         + z1 * y2 * T(2,2,0) - z1 * z2 * T(2,1,0);
 
-    lines.push_back(vgl_homg_line_2d<double>(lx, ly, lz));
+    lines.emplace_back(lx, ly, lz);
   }
 
   /* 8 */
@@ -851,7 +850,7 @@ void TriTensor::get_constraint_lines_image3(vgl_homg_point_2d<double> const& p1,
         + y1 * y2 * T(1,2,1) - y1 * z2 * T(1,1,1)
         + z1 * y2 * T(2,2,1) - z1 * z2 * T(2,1,1);
 
-    lines.push_back(vgl_homg_line_2d<double>(lx, ly, lz));
+    lines.emplace_back(lx, ly, lz);
   }
 
   assert(lines.size() == 9);
@@ -1086,7 +1085,7 @@ void TriTensor::get_constraint_lines_image2(vgl_homg_point_2d<double> const& p1,
 
     double lz = 0;
 
-    lines.push_back(vgl_homg_line_2d<double>(lx, ly, lz));
+    lines.emplace_back(lx, ly, lz);
   }
 
   /* 1 */
@@ -1103,7 +1102,7 @@ void TriTensor::get_constraint_lines_image2(vgl_homg_point_2d<double> const& p1,
 
     double lz = 0;
 
-    lines.push_back(vgl_homg_line_2d<double>(lx, ly, lz));
+    lines.emplace_back(lx, ly, lz);
   }
 
   /* 2 */
@@ -1120,7 +1119,7 @@ void TriTensor::get_constraint_lines_image2(vgl_homg_point_2d<double> const& p1,
 
     double lz = 0;
 
-    lines.push_back(vgl_homg_line_2d<double>(lx, ly, lz));
+    lines.emplace_back(lx, ly, lz);
   }
 
   /* 3 */
@@ -1137,7 +1136,7 @@ void TriTensor::get_constraint_lines_image2(vgl_homg_point_2d<double> const& p1,
         - y1 * y3 * T(1,0,0) + y1 * x3 * T(1,0,1)
         - z1 * y3 * T(2,0,0) + z1 * x3 * T(2,0,1);
 
-    lines.push_back(vgl_homg_line_2d<double>(lx, ly, lz));
+    lines.emplace_back(lx, ly, lz);
   }
 
   /* 4 */
@@ -1154,7 +1153,7 @@ void TriTensor::get_constraint_lines_image2(vgl_homg_point_2d<double> const& p1,
         - y1 * z3 * T(1,0,0) + y1 * x3 * T(1,0,2)
         - z1 * z3 * T(2,0,0) + z1 * x3 * T(2,0,2);
 
-    lines.push_back(vgl_homg_line_2d<double>(lx, ly, lz));
+    lines.emplace_back(lx, ly, lz);
   }
 
   /* 5 */
@@ -1171,7 +1170,7 @@ void TriTensor::get_constraint_lines_image2(vgl_homg_point_2d<double> const& p1,
         - y1 * z3 * T(1,0,1) + y1 * y3 * T(1,0,2)
         - z1 * z3 * T(2,0,1) + z1 * y3 * T(2,0,2);
 
-    lines.push_back(vgl_homg_line_2d<double>(lx, ly, lz));
+    lines.emplace_back(lx, ly, lz);
   }
 
   /* 6 */
@@ -1188,7 +1187,7 @@ void TriTensor::get_constraint_lines_image2(vgl_homg_point_2d<double> const& p1,
         - y1 * y3 * T(1,1,0) + y1 * x3 * T(1,1,1)
         - z1 * y3 * T(2,1,0) + z1 * x3 * T(2,1,1);
 
-    lines.push_back(vgl_homg_line_2d<double>(lx, ly, lz));
+    lines.emplace_back(lx, ly, lz);
   }
 
   /* 7 */
@@ -1205,7 +1204,7 @@ void TriTensor::get_constraint_lines_image2(vgl_homg_point_2d<double> const& p1,
         - y1 * z3 * T(1,1,0) + y1 * x3 * T(1,1,2)
         - z1 * z3 * T(2,1,0) + z1 * x3 * T(2,1,2);
 
-    lines.push_back(vgl_homg_line_2d<double>(lx, ly, lz));
+    lines.emplace_back(lx, ly, lz);
   }
 
   /* 8 */
@@ -1222,7 +1221,7 @@ void TriTensor::get_constraint_lines_image2(vgl_homg_point_2d<double> const& p1,
         - y1 * z3 * T(1,1,1) + y1 * y3 * T(1,1,2)
         - z1 * z3 * T(2,1,1) + z1 * y3 * T(2,1,2);
 
-    lines.push_back(vgl_homg_line_2d<double>(lx, ly, lz));
+    lines.emplace_back(lx, ly, lz);
   }
 }
 
@@ -1433,7 +1432,7 @@ void TriTensor::get_constraint_lines_image1(vgl_homg_point_2d<double> const& p2,
       - x2 * x3 * T(2,1,1)
       + y2 * x3 * T(2,0,1);
 
-    lines.push_back(vgl_homg_line_2d<double>(lx, ly, lz));
+    lines.emplace_back(lx, ly, lz);
   }
 
   /* 1 */
@@ -1456,7 +1455,7 @@ void TriTensor::get_constraint_lines_image1(vgl_homg_point_2d<double> const& p2,
       - x2 * x3 * T(2,1,2)
       + y2 * x3 * T(2,0,2);
 
-    lines.push_back(vgl_homg_line_2d<double>(lx, ly, lz));
+    lines.emplace_back(lx, ly, lz);
   }
 
   /* 2 */
@@ -1479,7 +1478,7 @@ void TriTensor::get_constraint_lines_image1(vgl_homg_point_2d<double> const& p2,
       - x2 * y3 * T(2,1,2)
       + y2 * y3 * T(2,0,2);
 
-    lines.push_back(vgl_homg_line_2d<double>(lx, ly, lz));
+    lines.emplace_back(lx, ly, lz);
   }
 
   /* 3 */
@@ -1502,7 +1501,7 @@ void TriTensor::get_constraint_lines_image1(vgl_homg_point_2d<double> const& p2,
       - x2 * x3 * T(2,2,1)
       + z2 * x3 * T(2,0,1);
 
-    lines.push_back(vgl_homg_line_2d<double>(lx, ly, lz));
+    lines.emplace_back(lx, ly, lz);
   }
 
   /* 4 */
@@ -1525,7 +1524,7 @@ void TriTensor::get_constraint_lines_image1(vgl_homg_point_2d<double> const& p2,
       - x2 * x3 * T(2,2,2)
       + z2 * x3 * T(2,0,2);
 
-    lines.push_back(vgl_homg_line_2d<double>(lx, ly, lz));
+    lines.emplace_back(lx, ly, lz);
   }
 
   /* 5 */
@@ -1548,7 +1547,7 @@ void TriTensor::get_constraint_lines_image1(vgl_homg_point_2d<double> const& p2,
       - x2 * y3 * T(2,2,2)
       + z2 * y3 * T(2,0,2);
 
-    lines.push_back(vgl_homg_line_2d<double>(lx, ly, lz));
+    lines.emplace_back(lx, ly, lz);
   }
 
   /* 6 */
@@ -1571,7 +1570,7 @@ void TriTensor::get_constraint_lines_image1(vgl_homg_point_2d<double> const& p2,
       - y2 * x3 * T(2,2,1)
       + z2 * x3 * T(2,1,1);
 
-    lines.push_back(vgl_homg_line_2d<double>(lx, ly, lz));
+    lines.emplace_back(lx, ly, lz);
   }
 
   /* 7 */
@@ -1594,7 +1593,7 @@ void TriTensor::get_constraint_lines_image1(vgl_homg_point_2d<double> const& p2,
       - y2 * x3 * T(2,2,2)
       + z2 * x3 * T(2,1,2);
 
-    lines.push_back(vgl_homg_line_2d<double>(lx, ly, lz));
+    lines.emplace_back(lx, ly, lz);
   }
 
   /* 8 */
@@ -1617,7 +1616,7 @@ void TriTensor::get_constraint_lines_image1(vgl_homg_point_2d<double> const& p2,
       - y2 * y3 * T(2,2,2)
       + z2 * y3 * T(2,1,2);
 
-    lines.push_back(vgl_homg_line_2d<double>(lx, ly, lz));
+    lines.emplace_back(lx, ly, lz);
   }
 }
 
@@ -1928,7 +1927,7 @@ bool TriTensor::compute_epipoles() const
   delete e13_;
   e13_ = new HomgPoint2D(svdu.left_nullvector());
 
-  return e12_!=VXL_NULLPTR && e13_!=VXL_NULLPTR;
+  return e12_!=nullptr && e13_!=nullptr;
 }
 
 //: Return epipoles e2 and e3, from image 1 into images 2 and 3 respectively.
@@ -1959,28 +1958,28 @@ bool TriTensor::get_epipoles(HomgPoint2D* e2,
 //: Return epipole12.
 HomgPoint2D TriTensor::get_epipole_12() const
 {
-  get_epipoles(VXL_NULLPTR,VXL_NULLPTR);
+  get_epipoles(nullptr,nullptr);
   return *e12_;
 }
 
 //: Return epipole13.
 HomgPoint2D TriTensor::get_epipole_13() const
 {
-  get_epipoles(VXL_NULLPTR,VXL_NULLPTR);
+  get_epipoles(nullptr,nullptr);
   return *e13_;
 }
 
 //: Return F12, the fundamental matrix between images 1 and 2
 FMatrix TriTensor::get_fmatrix_12() const
 {
-  get_epipoles(VXL_NULLPTR,VXL_NULLPTR);
+  get_epipoles(nullptr,nullptr);
   return FMatrix(vnl_cross_product_matrix(e12_->get_vector()) * dot3(e13_->get_vector().as_ref()).transpose().as_ref());
 }
 
 //: Return F13, the fundamental matrix between images 1 and 3
 FMatrix TriTensor::get_fmatrix_13() const
 {
-  get_epipoles(VXL_NULLPTR,VXL_NULLPTR);
+  get_epipoles(nullptr,nullptr);
   return FMatrix(vnl_cross_product_matrix(e13_->get_vector()) * dot2(e12_->get_vector().as_ref()).transpose().as_ref());
 }
 

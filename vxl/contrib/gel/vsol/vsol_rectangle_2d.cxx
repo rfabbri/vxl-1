@@ -4,9 +4,11 @@
 #include "vsol_rectangle_2d.h"
 //:
 // \file
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vnl/vnl_math.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_vector_2d.h>
 #include <vsol/vsol_point_2d.h>
 #include <vbl/io/vbl_io_smart_ptr.h>
@@ -103,17 +105,12 @@ vsol_rectangle_2d::vsol_rectangle_2d(const vsol_point_2d_sptr &center,
 //---------------------------------------------------------------------------
 // Copy constructor
 //---------------------------------------------------------------------------
-vsol_rectangle_2d::vsol_rectangle_2d(const vsol_rectangle_2d &other)
-  : vsol_polygon_2d(other)
-{
-}
+vsol_rectangle_2d::vsol_rectangle_2d(const vsol_rectangle_2d &other) = default;
 
 //---------------------------------------------------------------------------
 // Destructor
 //---------------------------------------------------------------------------
-vsol_rectangle_2d::~vsol_rectangle_2d()
-{
-}
+vsol_rectangle_2d::~vsol_rectangle_2d() = default;
 
 //---------------------------------------------------------------------------
 //: Clone `this': creation of a new object and initialization
@@ -305,7 +302,7 @@ vsl_b_read(vsl_b_istream &is, vsol_rectangle_2d* &r)
     r->b_read(is);
   }
   else
-    r = VXL_NULLPTR;
+    r = nullptr;
 }
 
 inline void vsol_rectangle_2d::describe(std::ostream &strm, int blanking) const

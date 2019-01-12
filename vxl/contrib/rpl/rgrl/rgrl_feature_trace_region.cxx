@@ -9,7 +9,7 @@
 #include <rgrl/rgrl_cast.h>
 #include <vnl/algo/vnl_svd.h>
 
-#include <vcl_cassert.h>
+#include <cassert>
 // not used? #include <vcl_compiler.h>
 
 rgrl_feature_trace_region::
@@ -50,7 +50,7 @@ rgrl_feature_sptr
 rgrl_feature_trace_region::
 transform( rgrl_transformation const& xform ) const
 {
-  rgrl_feature_trace_region* result = new rgrl_feature_trace_region();
+  auto* result = new rgrl_feature_trace_region();
 
   // capture the allocation into a smart pointer for exception safety.
   rgrl_feature_sptr result_sptr = result;

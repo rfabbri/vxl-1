@@ -9,7 +9,9 @@
 #include <boxm/boxm_block.h>
 #include <boxm/boxm_scene.h>
 #include <vpgl/vpgl_camera_double_sptr.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 template <class T>
 class boxm_block_vis_graph_iterator
@@ -18,7 +20,7 @@ class boxm_block_vis_graph_iterator
   boxm_block_vis_graph_iterator(vpgl_camera_double_sptr cam, boxm_scene<T>* scene,
                                 unsigned img_ni, unsigned img_nj, bool rev_iter=false);
 
-  ~boxm_block_vis_graph_iterator(){}
+  ~boxm_block_vis_graph_iterator()= default;
 
   bool next();
 

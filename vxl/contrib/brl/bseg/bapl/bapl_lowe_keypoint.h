@@ -18,7 +18,9 @@
 #include <bapl/bapl_lowe_keypoint_sptr.h>
 #include <bapl/bapl_lowe_pyramid_set_sptr.h>
 #include <vnl/vnl_vector_fixed.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class bapl_lowe_keypoint : public bapl_keypoint
 {
@@ -26,18 +28,18 @@ class bapl_lowe_keypoint : public bapl_keypoint
   //: Constructor
   bapl_lowe_keypoint();
   //: Constructor
-  bapl_lowe_keypoint( bapl_lowe_pyramid_set_sptr pyramid_set,
+  bapl_lowe_keypoint( const bapl_lowe_pyramid_set_sptr& pyramid_set,
                       double i, double j, double s=1, double o=0 );
 
   //: Constructor - do not extract descriptor from the pyramid but use the one that is passed, assumes the passed descriptor is normalized
-  bapl_lowe_keypoint( bapl_lowe_pyramid_set_sptr pyramid_set,
+  bapl_lowe_keypoint( const bapl_lowe_pyramid_set_sptr& pyramid_set,
                       double i , double j, double s, double o, vnl_vector_fixed<double, 128>& desc);
 
   //: Destructor
-  ~bapl_lowe_keypoint();
+  ~bapl_lowe_keypoint() override;
 
   //: Accessor for the descriptor vector
-  virtual const vnl_vector_fixed<double,128>& descriptor() const;
+  const vnl_vector_fixed<double,128>& descriptor() const override;
 
   //: Accessor for the i location
   double location_i() const {return location_i_; }
@@ -61,7 +63,7 @@ class bapl_lowe_keypoint : public bapl_keypoint
   void set_descriptor(const vnl_vector_fixed<double,128>& descriptor);
 
   //: Print a summary of the keypoint data to a stream
-  virtual void print_summary(std::ostream& os) const;
+  void print_summary(std::ostream& os) const override;
 
  protected:
   //: Normalize, threshold, and renormalize

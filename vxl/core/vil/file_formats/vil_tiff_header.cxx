@@ -2,7 +2,9 @@
 #include <cstdio>
 #include <ctime>
 #include "vil_tiff_header.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #if HAS_GEOTIFF
 #include <vil/file_formats/vil_geotiff_header.h>
@@ -12,7 +14,7 @@ static std::string date_and_time()
 {
   std::time_t clock;
   struct std::tm *t_m;
-  clock = std::time(VXL_NULLPTR);
+  clock = std::time(nullptr);
   t_m = std::localtime(&clock);
   char tmp[20];
   char datetime[20];
@@ -24,7 +26,7 @@ static std::string date_and_time()
 
 static void read_string(TIFF* tif, ttag_t tag, std::string& stag, std::string const& deflt = "not_defined")
 {
-  char* adr = VXL_NULLPTR;
+  char* adr = nullptr;
   TIFFGetField(tif, tag, &adr);
   if (adr)
     stag = std::string(adr);
@@ -148,7 +150,7 @@ bool vil_tiff_header::read_header()
 
   // EXTRASAMPLES tag requires two input arguments, which is different
   // from other 16bit values.
-  vxl_uint_16* sample_info=VXL_NULLPTR;
+  vxl_uint_16* sample_info=nullptr;
   extra_samples.val=0;
   extra_samples.valid = false;
   int const ret_extrasamples = TIFFGetField(tif_, TIFFTAG_EXTRASAMPLES, &extra_samples.val, &sample_info);
@@ -156,7 +158,7 @@ bool vil_tiff_header::read_header()
     extra_samples.valid = true;
 
   read_short_tag(tif_,TIFFTAG_FILLORDER, fill_order);
-  vxl_uint_16* gc=VXL_NULLPTR;
+  vxl_uint_16* gc=nullptr;
   TIFFGetField(tif_,TIFFTAG_GRAYRESPONSECURVE, &gc);
   read_short_tag(tif_,TIFFTAG_GRAYRESPONSEUNIT, gray_response_unit);
   read_string(tif_,TIFFTAG_HOSTCOMPUTER, host_computer);
@@ -624,7 +626,7 @@ bool vil_tiff_header::compute_pixel_format()
               default:
                 pix_fmt = VIL_PIXEL_FORMAT_UNKNOWN;
                 return false;
-            }		
+            }
 		}
 	}
   //Separate TIFF transparency mask - not handled
@@ -734,7 +736,7 @@ bool vil_tiff_header::set_header(unsigned ni, unsigned nj, unsigned nplns,
   planar_config.val = 1; planar_config.valid = true;
   // The sensible way ..
   orientation.val = ORIENTATION_TOPLEFT; orientation.valid = true;
-  software = "http://vxl.sourceforge.net/  vil image library";
+  software = "https://vxl.github.io/  vil image library";
   return true;
 }
 

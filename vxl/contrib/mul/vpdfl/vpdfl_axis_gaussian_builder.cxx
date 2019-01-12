@@ -1,7 +1,4 @@
 // This is mul/vpdfl/vpdfl_axis_gaussian_builder.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 //  \file
 
@@ -11,8 +8,10 @@
 #include <cstdlib>
 #include "vpdfl_axis_gaussian_builder.h"
 //
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <mbl/mbl_data_wrapper.h>
 #include <vpdfl/vpdfl_axis_gaussian.h>
@@ -35,9 +34,7 @@ vpdfl_axis_gaussian_builder::vpdfl_axis_gaussian_builder()
 // Destructor
 //=======================================================================
 
-vpdfl_axis_gaussian_builder::~vpdfl_axis_gaussian_builder()
-{
-}
+vpdfl_axis_gaussian_builder::~vpdfl_axis_gaussian_builder() = default;
 
 //=======================================================================
 
@@ -317,4 +314,3 @@ void vpdfl_axis_gaussian_builder::config_from_stream(std::istream & is)
     throw mbl_exception_parse_error(e.what());
   }
 }
-

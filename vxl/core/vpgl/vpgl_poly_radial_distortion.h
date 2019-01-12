@@ -15,8 +15,10 @@
 #include <vector>
 #include "vpgl_radial_distortion.h"
 #include <vgl/vgl_point_2d.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 //: A class for nth order polynomial radial lens distortion
 template <class T, int n>
@@ -66,7 +68,7 @@ class vpgl_poly_radial_distortion : public vpgl_radial_distortion<T>
 
   void set_coefficients(const T* k)
   {
-    if ( k == VXL_NULLPTR ) return;
+    if ( k == nullptr ) return;
     const T* kptr = k;
     T* coptr = coefficients_;
     for (unsigned int i=0; i<n; ++i, ++kptr, ++coptr)
@@ -88,10 +90,10 @@ class vpgl_poly_radial_distortion : public vpgl_radial_distortion<T>
   }
 
   //: Distort a radial length
-  virtual T distort_radius( T radius ) const;
+  T distort_radius( T radius ) const override;
 
   //: Compute the derivative of the distort_radius function
-  virtual T distort_radius_deriv( T radius ) const;
+  T distort_radius_deriv( T radius ) const override;
 
  protected:
   //: The coefficients of the nth-order polynomial

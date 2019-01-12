@@ -7,7 +7,10 @@
 #include <vbl/vbl_array_2d.h>
 #include <vnl/vnl_math.h>
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //********************* NOTE *************************
 // The map constructed is only valid 1 pixel inside it.
@@ -359,7 +362,7 @@ rsdl_borgefors<T>::backward_chamfer()
   // the first column is not filled in yet
   for (int i=size_y_-2; i>=0; i--)
   {
-    const int j = 0;
+    constexpr int j = 0;
 
     const int val = minimum4(distance_map_[i][j],distance_map_[i][j+1]+3,
                              distance_map_[i+1][j]+3,

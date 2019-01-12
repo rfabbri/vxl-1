@@ -5,7 +5,9 @@
 // \file
 #include <vnl/vnl_matrix.h>
 #include <vnl/vnl_vector.h> // for vnl_matrix<double>::get_row()
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Select the smallest pair s.t. first is in \param a, second in \param b
 static std::pair<unsigned,unsigned> mbl_mst_next_pair(
@@ -15,15 +17,15 @@ static std::pair<unsigned,unsigned> mbl_mst_next_pair(
 {
   std::pair<unsigned,unsigned> p;
   double min_sim = 9.9e9;
-  for (unsigned i=0; i<a.size(); ++i)
-    for (unsigned j=0; j<b.size(); ++j)
+  for (unsigned int i : a)
+    for (unsigned int j : b)
     {
-      double s = D(a[i],b[j]);
+      double s = D(i,j);
       if (s<min_sim)
       {
         min_sim=s;
-        p.first=a[i];
-        p.second=b[j];
+        p.first=i;
+        p.second=j;
       }
     }
   return p;
@@ -54,7 +56,7 @@ void mbl_minimum_spanning_tree(const vnl_matrix<double>& D,
   for (unsigned i=1;i<n;++i)
   {
     std::pair<unsigned,unsigned> p = mbl_mst_next_pair(D,a,b);
-    pairs.push_back(p);
+    pairs.emplace_back(p);
     b.erase(std::find(b.begin(),b.end(),p.second));
     a.push_back(p.second);
   }

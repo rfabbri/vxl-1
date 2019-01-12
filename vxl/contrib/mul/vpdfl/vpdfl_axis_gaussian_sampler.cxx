@@ -1,7 +1,4 @@
 // This is mul/vpdfl/vpdfl_axis_gaussian_sampler.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Ian Scott
@@ -10,7 +7,10 @@
 
 #include "vpdfl_axis_gaussian_sampler.h"
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpdfl/vpdfl_axis_gaussian.h>
 
 //=======================================================================
@@ -26,9 +26,7 @@ vpdfl_axis_gaussian_sampler::vpdfl_axis_gaussian_sampler():
 // Destructor
 //=======================================================================
 
-vpdfl_axis_gaussian_sampler::~vpdfl_axis_gaussian_sampler()
-{
-}
+vpdfl_axis_gaussian_sampler::~vpdfl_axis_gaussian_sampler() = default;
 
 
 //=======================================================================
@@ -79,7 +77,7 @@ void vpdfl_axis_gaussian_sampler::set_model(const vpdfl_pdf_base& model)
 
 void vpdfl_axis_gaussian_sampler::sample(vnl_vector<double>& x)
 {
-  const vpdfl_axis_gaussian & gauss = static_cast<const vpdfl_axis_gaussian &>( model());
+  const auto & gauss = static_cast<const vpdfl_axis_gaussian &>( model());
   const double *s = gauss.sd().data_block();
   const double *m = gauss.mean().data_block();
   int n = gauss.n_dims();
@@ -100,4 +98,3 @@ const vpdfl_axis_gaussian& vpdfl_axis_gaussian_sampler::axis_gaussian() const
 {
   return static_cast<const vpdfl_axis_gaussian&>(model());
 }
-

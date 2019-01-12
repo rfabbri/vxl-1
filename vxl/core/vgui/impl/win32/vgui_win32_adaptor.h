@@ -19,7 +19,9 @@
 #include <vgui/vgui_adaptor.h>
 #include <vgui/internals/vgui_adaptor_mixin.h>
 #include <vgui/impl/win32/vgui_win32_cmdtarget.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class vgui_win32_window;
 class vgui_win32_internal_timer;

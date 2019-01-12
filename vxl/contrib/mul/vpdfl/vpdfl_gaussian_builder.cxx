@@ -1,7 +1,4 @@
 // This is mul/vpdfl/vpdfl_gaussian_builder.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \brief Multi-variate gaussian PDF with arbitrary axes.
@@ -19,8 +16,10 @@
 #include <cstdlib>
 #include "vpdfl_gaussian_builder.h"
 //
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <mbl/mbl_data_wrapper.h>
 #include <vpdfl/vpdfl_gaussian.h>
 #include <vnl/algo/vnl_symmetric_eigensystem.h>
@@ -46,9 +45,7 @@ vpdfl_gaussian_builder::vpdfl_gaussian_builder()
 // Destructor
 //=======================================================================
 
-vpdfl_gaussian_builder::~vpdfl_gaussian_builder()
-{
-}
+vpdfl_gaussian_builder::~vpdfl_gaussian_builder() = default;
 
 //=======================================================================
 

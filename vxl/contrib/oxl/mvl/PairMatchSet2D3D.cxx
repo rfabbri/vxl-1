@@ -1,20 +1,19 @@
 // This is oxl/mvl/PairMatchSet2D3D.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 
 #include <iostream>
 #include "PairMatchSet2D3D.h"
 #include <mvl/HomgInterestPointSet.h>
 #include <mvl/PairMatchSetCorner.h>
 #include <mvl/ProjStructure.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 // Default ctor
 PairMatchSet2D3D::PairMatchSet2D3D()
 {
-  corners_ = VXL_NULLPTR;
-  structure_ = VXL_NULLPTR;
+  corners_ = nullptr;
+  structure_ = nullptr;
 }
 
 // Copy ctor
@@ -38,9 +37,7 @@ PairMatchSet2D3D& PairMatchSet2D3D::operator=(const PairMatchSet2D3D& )
 }
 
 // Destructor
-PairMatchSet2D3D::~PairMatchSet2D3D()
-{
-}
+PairMatchSet2D3D::~PairMatchSet2D3D() = default;
 
 void PairMatchSet2D3D::set(const HomgInterestPointSet* corners, std::vector<HomgPoint3D>* structure)
 {
@@ -51,7 +48,7 @@ void PairMatchSet2D3D::set(const HomgInterestPointSet* corners, std::vector<Homg
 
 void PairMatchSet2D3D::set(int num_corners, std::vector<HomgPoint3D>* structure)
 {
-  corners_ = VXL_NULLPTR;
+  corners_ = nullptr;
   structure_ = structure;
   set_size(num_corners);
 }
@@ -75,7 +72,7 @@ HomgMetric PairMatchSet2D3D::get_conditioner() const
 {
   if (!corners_) {
     std::cerr << "PairMatchSet2D3D::get_conditioner() WARNING corners_ not set!\n";
-    return VXL_NULLPTR;
+    return nullptr;
   }
   return corners_->get_conditioner();
 }
@@ -99,7 +96,7 @@ const HomgInterestPointSet* PairMatchSet2D3D::get_corners() const
 {
   if (!corners_) {
     std::cerr << "PairMatchSet2D3D::get_point_2d() WARNING corners_ not set!\n";
-    return VXL_NULLPTR;
+    return nullptr;
   }
   return corners_;
 }

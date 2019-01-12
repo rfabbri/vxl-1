@@ -24,8 +24,10 @@
 #include <vbl/vbl_array_3d.h>
 #include <vpgl/vpgl_lvcs.h>
 #include <boct/boct_tree.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 class boxm_scene_parser;
 template <class T> class boxm_block_iterator;
@@ -76,7 +78,7 @@ class boxm_scene :public boxm_scene_base
   boxm_scene_base(scene_base),active_block_(vgl_point_3d<int>(-1,-1,-1)), save_internal_nodes_(false), save_platform_independent_(true) {}
 
   //: Destructor
-  ~boxm_scene();
+  ~boxm_scene() override;
 
   bool discover_block(vgl_point_3d<unsigned> index) { return discover_block(index.x(),index.y(),index.z()); }
 
@@ -145,11 +147,11 @@ class boxm_scene :public boxm_scene_base
     z=(int) blocks_.get_row3_count();
   }
 
-  virtual vgl_vector_3d<unsigned> world_dim() const {
+  vgl_vector_3d<unsigned> world_dim() const override {
     unsigned x=(unsigned) blocks_.get_row1_count();
     unsigned y=(unsigned) blocks_.get_row2_count();
     unsigned z=(unsigned) blocks_.get_row3_count();
-    return vgl_vector_3d<unsigned>(x,y,z);
+    return {x,y,z};
   }
 
   std::string path() const { return scene_path_; }
@@ -240,7 +242,7 @@ class boxm_scene :public boxm_scene_base
     return cell_iter;
   }
 
-  virtual vgl_box_3d<double> get_world_bbox() const;
+  vgl_box_3d<double> get_world_bbox() const override;
 
   //: Return the dimensions of the scene along each axis - this are equivalent to bbox width, length and depth
   void axes_length(double &x_length,double &y_length, double &z_length) const;
@@ -433,7 +435,7 @@ class boxm_block_iterator
   //: Copy constructor
   boxm_block_iterator(boxm_block_iterator<T> const& other): i_(other.i_), j_(other.j_), k_(other.k_), scene_(other.scene_) {}
 
-  ~boxm_block_iterator() {}
+  ~boxm_block_iterator() = default;
 
   boxm_block_iterator<T>& begin();
 
@@ -490,7 +492,7 @@ class boxm_cell_iterator
     : block_iterator_(iter), block_loading_func_(block_loading_func), read_only_(read_only), use_internal_cells_(use_internal_cells) { assert(read_only); }
 
   //: Destructor
-  ~boxm_cell_iterator() {}
+  ~boxm_cell_iterator() = default;
 
   //: Iterator begin
   boxm_cell_iterator<T>& begin(bool use_internal_cells=false);

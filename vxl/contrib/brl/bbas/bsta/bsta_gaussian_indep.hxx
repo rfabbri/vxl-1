@@ -7,7 +7,9 @@
 #include <iostream>
 #include <limits>
 #include "bsta_gaussian_indep.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_erf.h>
 
 namespace

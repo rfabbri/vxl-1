@@ -1,7 +1,4 @@
 // This is core/vgui/vgui_event_server.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Philip C. Pritchett, RRG, University of Oxford
@@ -22,7 +19,7 @@ class vgui_event_server_interpose_tableau : public vgui_wrapper_tableau
   vgui_event_server* the_server_;
 
   vgui_event_server_interpose_tableau(vgui_event_server* s)
-    : vgui_wrapper_tableau(VXL_NULLPTR), // child to be added later
+    : vgui_wrapper_tableau(nullptr), // child to be added later
       the_server_(s) {}
 
   bool handle(const vgui_event& event);
@@ -48,7 +45,7 @@ bool vgui_event_server_interpose_tableau::handle(const vgui_event& event)
 
 //: Construct a vgui_event_server, which grabs all events intended for tableau t
 vgui_event_server::vgui_event_server(vgui_tableau_sptr const& t)
-  : grabber_(VXL_NULLPTR)
+  : grabber_(nullptr)
 {
   use_event_ = false;
   grabber_ = new vgui_event_server_interpose_tableau(this);

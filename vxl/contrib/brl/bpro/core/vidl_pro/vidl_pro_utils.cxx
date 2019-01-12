@@ -3,7 +3,9 @@
 #include <sstream>
 #include <string>
 #include "vidl_pro_utils.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_file.h>
 
 bool vidl_pro_utils::create_directory(std::string const& dir, bool force)
@@ -41,5 +43,3 @@ std::string vidl_pro_utils::image_sequence_path(std::string const& dir_path,
   std::string save_path = path + '.' + format;
   return save_path;
 }
-
-

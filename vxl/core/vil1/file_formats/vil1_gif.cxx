@@ -1,7 +1,4 @@
 // This is core/vil1/file_formats/vil1_gif.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
@@ -12,8 +9,10 @@
 #include <cctype>
 #include "vil1_gif.h"
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vil1/vil1_stream.h>
 #include <vil1/vil1_16bit.h>
@@ -50,7 +49,7 @@ char const *vil1_gif_file_format::tag() const { return "gif"; }
 vil1_image_impl *vil1_gif_file_format::make_input_image(vil1_stream *s)
 {
   if (! vil1_gif_probe(s))
-    return VXL_NULLPTR;
+    return nullptr;
   else
     return new vil1_gif_loader_saver(s);
 }
@@ -58,7 +57,7 @@ vil1_image_impl *vil1_gif_file_format::make_input_image(vil1_stream *s)
 vil1_image_impl *vil1_gif_file_format::make_output_image(vil1_stream*, int, int, int, int, int, vil1_component_format)
 {
   std::cerr << "GIF writer not yet implemented\n";
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 bool vil1_gif_loader_saver::get_property(char const *tag, void *prop) const
@@ -198,7 +197,7 @@ vil1_gif_loader_saver::vil1_gif_loader_saver(vil1_stream *s_)
       assert(!"expected GIF separator here");
     }
 
-    vil1_gif_image_record *ir = new vil1_gif_image_record;
+    auto *ir = new vil1_gif_image_record;
     ir->offset = offset;
 
     ir->x0 = vil1_16bit_read_little_endian(s);
@@ -231,7 +230,7 @@ vil1_gif_loader_saver::vil1_gif_loader_saver(vil1_stream *s_)
 #if VERBOSE
       std::cerr << "no local colour map\n";
 #endif
-      ir->color_map = VXL_NULLPTR;
+      ir->color_map = nullptr;
     }
 #if VERBOSE
     std::cerr << "position is 0x" << std::hex << s->tell() << std::dec << std::endl;
@@ -290,11 +289,11 @@ vil1_gif_loader_saver::~vil1_gif_loader_saver()
 
   if (global_color_map) {
     delete global_color_map;
-    global_color_map = VXL_NULLPTR;
+    global_color_map = nullptr;
   }
 
-  for (unsigned int i=0; i<images.size(); ++i) {
-    vil1_gif_image_record *ir = static_cast<vil1_gif_image_record*>(images[i]);
+  for (auto & image : images) {
+    auto *ir = static_cast<vil1_gif_image_record*>(image);
     if (ir->color_map)
       delete ir->color_map;
     delete ir;
@@ -309,7 +308,7 @@ vil1_image vil1_gif_loader_saver::get_plane(unsigned int p) const
   if (p<images.size())
     return new vil1_gif_loader_saver_proxy(p, const_cast<vil1_gif_loader_saver*>(this));
   else
-    return VXL_NULLPTR;
+    return nullptr;
 }
 
 bool vil1_gif_loader_saver::get_section(void *buf, int x0, int y0, int w, int h) const

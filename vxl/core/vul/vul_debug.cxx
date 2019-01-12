@@ -10,8 +10,9 @@
 //  \author Ian Scott
 
 #include <vxl_config.h>
-#include <vcl_compiler.h>
-#include <vcl_cstdio.h> // for vcl_snprintf()
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #ifdef _WIN32
 
@@ -43,7 +44,7 @@ static bool vul_debug_core_dump_in_windows_seh(const char * filename,
 {
   static char buffer[2048];
   static int count = 0;
-  vcl_snprintf(buffer, sizeof(buffer), filename, count++);
+  std::snprintf(buffer, sizeof(buffer), filename, count++);
   buffer[sizeof(buffer)-1]=0; // Just in case it is too long
 
   HANDLE hFile = CreateFile( buffer, GENERIC_READ | GENERIC_WRITE,
@@ -93,7 +94,6 @@ bool vul_debug_core_dump(const char * filename)
   return true;
 }
 
-#if VCL_HAS_EXCEPTIONS
 //: Windows structured exception code.
 unsigned vul_debug_windows_structured_exception::code() const
 {
@@ -112,7 +112,6 @@ const char *vul_debug_windows_structured_exception::what() const throw()
   std::sprintf(buf, "Caught Windows Structured Exception. Code %lx. Address %lx", code(), address());
   return buf;
 }
-#endif
 
 static const char* se_coredump_filename = 0;
 
@@ -120,12 +119,7 @@ void vul_debug_set_coredump_and_throw_on_windows_se_handler(
   unsigned code, EXCEPTION_POINTERS * ex_ptr)
 {
   vul_debug_core_dump_in_windows_seh(se_coredump_filename, ex_ptr);
-#if VCL_HAS_EXCEPTIONS
   throw vul_debug_windows_structured_exception(ex_ptr);
-#else
-  std::cerr << static_cast<char*>(ex_ptr) << '\n';
-  std::abort();
-#endif
 }
 
 
@@ -216,7 +210,7 @@ void vul_debug_set_coredump_and_throw_on_windows_se(const char * /*filename*/)
 #endif // _WIN32
 
 
-static const char* out_of_memory_coredump_filename = VXL_NULLPTR;
+static const char* out_of_memory_coredump_filename = nullptr;
 
 void
 #ifdef _WIN32
@@ -225,12 +219,7 @@ void
   vul_debug_set_coredump_and_throw_on_out_of_memory_handler()
 {
   vul_debug_core_dump(out_of_memory_coredump_filename);
-#if VCL_HAS_EXCEPTIONS
   throw std::bad_alloc();
-#else
-  std::cerr << "Out of Memory.\n";
-  std::abort();
-#endif
 }
 
 //: Setup the system to core dump and throw a C++ exception on detection of out of memory.

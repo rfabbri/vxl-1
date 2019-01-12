@@ -8,7 +8,9 @@
 #include "boxm2_scene.h"
 //:
 // \file
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 /* xml includes */
 #include <vsl/vsl_basic_xml_element.h>
 #include <vgl/xio/vgl_xio_point_3d.h>
@@ -45,7 +47,7 @@ boxm2_scene::boxm2_scene(std::string const& data_path, vgl_point_3d<double> cons
 //create a scene with one block
 boxm2_scene::boxm2_scene(std::string const& scene_dir, std::string const& scene_name, std::string const& data_path, std::vector<std::string> const& prefixes,
             vgl_box_3d<double> const& scene_box, double sub_block_len, int init_level,
-                         int max_level, double max_mb, double p_init, int n_illum_bins, int version){
+                         int max_level, double  /*max_mb*/, double  /*p_init*/, int n_illum_bins, int version){
   num_illumination_bins_ = n_illum_bins;
   version_ = version;
   id_ = boxm2_scene::get_count();
@@ -54,9 +56,9 @@ boxm2_scene::boxm2_scene(std::string const& scene_dir, std::string const& scene_
   boxm2_block_metadata md;
   md.id_ = bid;
   vgl_point_3d<double> origin = scene_box.min_point();
-  unsigned dim_x = static_cast<unsigned>(std::ceil(scene_box.width()/sub_block_len));
-  unsigned dim_y = static_cast<unsigned>(std::ceil(scene_box.height()/sub_block_len));
-  unsigned dim_z = static_cast<unsigned>(std::ceil(scene_box.depth()/sub_block_len));
+  auto dim_x = static_cast<unsigned>(std::ceil(scene_box.width()/sub_block_len));
+  auto dim_y = static_cast<unsigned>(std::ceil(scene_box.height()/sub_block_len));
+  auto dim_z = static_cast<unsigned>(std::ceil(scene_box.depth()/sub_block_len));
   md.local_origin_ = origin;
   md.sub_block_dim_ = vgl_vector_3d<double>(sub_block_len, sub_block_len, sub_block_len);
   md.sub_block_num_ = vgl_vector_3d<unsigned>(dim_x, dim_y, dim_z);
@@ -157,7 +159,7 @@ boxm2_scene::boxm2_scene(boxm2_scene const& other_scene){
   rpc_origin_ = other_scene.rpc_origin();
   data_path_ = other_scene.data_path();
   xml_path_ = other_scene.xml_path();
-  boxm2_scene& non_const_scene = const_cast<boxm2_scene&>(other_scene);
+  auto& non_const_scene = const_cast<boxm2_scene&>(other_scene);
   blocks_ = non_const_scene.blocks();
   appearances_ = other_scene.appearances();
   num_illumination_bins_ = other_scene.num_illumination_bins();
@@ -167,7 +169,7 @@ boxm2_scene::boxm2_scene(boxm2_scene const& other_scene){
 }
 
 boxm2_scene_sptr boxm2_scene::clone_no_disk(){
-  boxm2_scene* clone = new boxm2_scene();
+  auto* clone = new boxm2_scene();
   clone->set_lvcs(this->lvcs_);
   clone->set_local_origin(this->local_origin_);
   clone->set_rpc_origin(this->rpc_origin_);
@@ -212,7 +214,7 @@ get_block_metadata_const(boxm2_block_id const& id) const
 
 #include <boxm2/boxm2_blocks_vis_graph.h>
 
-std::vector<boxm2_block_id> boxm2_scene::get_vis_blocks(vpgl_generic_camera<double>* cam, double dist)
+std::vector<boxm2_block_id> boxm2_scene::get_vis_blocks(vpgl_generic_camera<double>* cam, double  /*dist*/)
 {
   boxm2_block_vis_graph g(blocks_,*cam);
   std::vector<boxm2_block_id> vis_order = g.get_ordered_ids();
@@ -230,9 +232,8 @@ std::vector<boxm2_block_id> boxm2_scene::get_vis_blocks(vpgl_affine_camera<doubl
   vgl_vector_3d<double> ray_dir(cam_center_ideal.x(), cam_center_ideal.y(), cam_center_ideal.z());
 
   vgl_box_3d<int> idx_bbox;
-  for (std::map<boxm2_block_id, boxm2_block_metadata>::iterator iter = blocks_.begin();
-       iter != blocks_.end(); ++iter) {
-    boxm2_block_id const& id = iter->first;
+  for (auto & block : blocks_) {
+    boxm2_block_id const& id = block.first;
     idx_bbox.add(vgl_point_3d<int>(id.i_, id.j_, id.k_));
   }
   int closest_i = ray_dir.x() > 0? idx_bbox.min_x() : idx_bbox.max_x();
@@ -241,18 +242,17 @@ std::vector<boxm2_block_id> boxm2_scene::get_vis_blocks(vpgl_affine_camera<doubl
 
   // visibility ordering is based on manhattan distance of block index from that of closest block.
   std::vector<boxm2_dist_id_pair> manhattan_distances;
-  for (std::map<boxm2_block_id, boxm2_block_metadata>::iterator iter = blocks_.begin();
-       iter != blocks_.end(); ++iter)
+  for (auto & block : blocks_)
   {
     // dec: we would perform a visibility test here if we had ni,nj.
     //if(!this->is_block_visible(iter->second,*cam,ni,nj))
     //  continue;
 
-    int manhattan_distance = std::abs(iter->first.i_ - closest_i) +
-                             std::abs(iter->first.j_ - closest_j) +
-                             std::abs(iter->first.k_ - closest_k);
+    int manhattan_distance = std::abs(block.first.i_ - closest_i) +
+                             std::abs(block.first.j_ - closest_j) +
+                             std::abs(block.first.k_ - closest_k);
 
-    manhattan_distances.push_back( boxm2_dist_id_pair(manhattan_distance, iter->first) );
+    manhattan_distances.emplace_back(manhattan_distance, block.first );
   }
 
     //sort distances
@@ -322,7 +322,7 @@ std::vector<boxm2_block_id> boxm2_scene::get_vis_blocks_opt(vpgl_perspective_cam
         vgl_point_3d<double> blk_center = blk_o + length/2.0;
 
         double dist = vgl_distance( blk_center, cam_center);
-        distances.push_back( boxm2_dist_id_pair(dist, iter->first) );
+        distances.emplace_back(dist, iter->first );
 
     }
 
@@ -364,9 +364,9 @@ boxm2_scene::get_vis_order_from_pt(vgl_point_3d<double> const& pt,
       double dist = vgl_distance( blk_center, pt);
 
       if (distance > 0 && dist < distance)
-        distances.push_back( boxm2_dist_id_pair(dist, iter->first) );
+        distances.emplace_back(dist, iter->first );
       else
-        distances.push_back( boxm2_dist_id_pair(dist, iter->first) );
+        distances.emplace_back(dist, iter->first );
 
   }
 
@@ -429,9 +429,9 @@ boxm2_scene::get_vis_order_from_ray(vgl_point_3d<double> const& origin, vgl_vect
     if (cos > 0) { // an angle in (-pi/2,pi/2)
       double dist = vgl_distance( blk_center, origin);
       if (distance > 0 && dist < distance)
-        distances.push_back( boxm2_dist_id_pair(dist, iter->first) );
+        distances.emplace_back(dist, iter->first );
       else
-        distances.push_back( boxm2_dist_id_pair(dist, iter->first) );
+        distances.emplace_back(dist, iter->first );
     }
   }
 
@@ -477,11 +477,10 @@ bool boxm2_scene::contains(vgl_point_3d<double> const& p, boxm2_block_id& bid,
                            vgl_point_3d<double>& local_coords) const
 {
   std::vector<boxm2_block_id> block_ids = this->get_block_ids();
-  for (std::vector<boxm2_block_id>::iterator id = block_ids.begin();
-       id != block_ids.end(); ++id)
+  for (auto & block_id : block_ids)
   {
-    if (this->block_contains(p, *id, local_coords)) {
-      bid = (*id);
+    if (this->block_contains(p, block_id, local_coords)) {
+      bid = block_id;
       return true;
     }
   }
@@ -503,11 +502,11 @@ boxm2_scene_info* boxm2_scene::get_blk_metadata(boxm2_block_id const& id)
   if ( blocks_.find(id) == blocks_.end() )
   {
     std::cerr<<"\nboxm2_scene::get_blk_metadata: Block doesn't exist: "<<id<<"\n\n";
-    return VXL_NULLPTR;
+    return nullptr;
   }
 
   boxm2_block_metadata data = blocks_[id];
-  boxm2_scene_info* info = new boxm2_scene_info();
+  auto* info = new boxm2_scene_info();
 
   info->scene_origin[0] = (float) data.local_origin_.x();
   info->scene_origin[1] = (float) data.local_origin_.y();
@@ -563,8 +562,8 @@ vgl_box_3d<double> boxm2_scene::bounding_box() const
   //  The \a x range is given by the 1st and 4th coordinates,
   //  the \a y range is given by the 2nd and 5th coordinates,
   //  the \a z range is given by the 3rd and 6th coordinates.
-  return vgl_box_3d<double>(xmin, ymin, zmin,
-                            xmax, ymax, zmax);
+  return {xmin, ymin, zmin,
+                            xmax, ymax, zmax};
 }
 
 vgl_box_3d<int> boxm2_scene::bounding_box_blk_ids() const
@@ -583,36 +582,36 @@ vgl_vector_3d<unsigned int>  boxm2_scene::scene_dimensions() const
   std::vector<boxm2_block_id> ids = this->get_block_ids();
 
   if (ids.empty())
-    return vgl_vector_3d<unsigned int>(0,0,0);
+    return {0,0,0};
 
   int max_i=ids[0].i(),max_j=ids[0].j(),max_k=ids[0].k();
   int min_i=ids[0].i(),min_j=ids[0].j(),min_k=ids[0].k();
 
-  for (unsigned n=0; n<ids.size(); n++) {
-    if (ids[n].i() > max_i)
-      max_i=ids[n].i();
-    if (ids[n].j() > max_j)
-      max_j=ids[n].j();
-    if (ids[n].k() > max_k)
-      max_k=ids[n].k();
+  for (auto & id : ids) {
+    if (id.i() > max_i)
+      max_i=id.i();
+    if (id.j() > max_j)
+      max_j=id.j();
+    if (id.k() > max_k)
+      max_k=id.k();
 
-    if (ids[n].i() < min_i)
-      min_i=ids[n].i();
-    if (ids[n].j() < min_j)
-      min_j=ids[n].j();
-    if (ids[n].k() < min_k)
-      min_k=ids[n].k();
+    if (id.i() < min_i)
+      min_i=id.i();
+    if (id.j() < min_j)
+      min_j=id.j();
+    if (id.k() < min_k)
+      min_k=id.k();
   }
   max_i++; max_j++; max_k++;
 
-  return vgl_vector_3d<unsigned int>((max_i-min_i),(max_j - min_j),(max_k-min_k));
+  return {static_cast<unsigned int>((max_i-min_i)),static_cast<unsigned int>((max_j - min_j)),static_cast<unsigned int>((max_k-min_k))};
 }
 
 //: gets the smallest block index
 void boxm2_scene::min_block_index (vgl_point_3d<int> &idx,
                                    vgl_point_3d<double> &local_origin) const
 {
-  std::map<boxm2_block_id, boxm2_block_metadata>::const_iterator iter= blocks_.begin();
+  auto iter= blocks_.begin();
 
   boxm2_block_id id = iter->first;
   boxm2_block_metadata data = iter->second;
@@ -655,7 +654,7 @@ float boxm2_scene::finest_resolution()
 void boxm2_scene::max_block_index (vgl_point_3d<int> &idx,
                                    vgl_point_3d<double> &local_origin) const
 {
-  std::map<boxm2_block_id, boxm2_block_metadata>::const_iterator iter= blocks_.begin();
+  auto iter= blocks_.begin();
 
   boxm2_block_id id = iter->first;
   boxm2_block_metadata data = iter->second;
@@ -694,8 +693,8 @@ unsigned& boxm2_scene::get_count()
 //: returns true if the scene has specified data type (simple linear search)
 bool boxm2_scene::has_data_type(std::string const& data_type)
 {
-  for (unsigned int i=0; i<appearances_.size(); ++i)
-    if ( appearances_[i] == data_type )
+  for (const auto & appearance : appearances_)
+    if ( appearance == data_type )
       return true;
   return false;
 }
@@ -705,10 +704,10 @@ bool boxm2_scene::is_block_visible(boxm2_block_metadata & data, vpgl_camera<doub
     vgl_box_3d<double> bbox = data.bbox();
     std::vector<vgl_point_3d<double> > vertices =  bbox.vertices() ;
     vgl_box_2d<double> projectionbox;
-    for(unsigned int i = 0 ; i < vertices.size(); i++)
+    for(auto & vertice : vertices)
     {
         double u,v;
-        cam.project(vertices[i].x(),vertices[i].y(),vertices[i].z(),u,v);
+        cam.project(vertice.x(),vertice.y(),vertice.z(),u,v);
         projectionbox.add(vgl_point_2d<double>(u,v) );
     }
     vgl_box_2d<double> imagebbox(0,ni,0,nj);
@@ -743,10 +742,10 @@ void x_write(std::ostream &os, boxm2_scene& scene, std::string const& name)
   //write list of appearance models
 
   std::vector<std::string> apps = scene.appearances();
-  for (unsigned int i=0; i<apps.size(); ++i)
+  for (const auto & app : apps)
   {
     vsl_basic_xml_element apms(APM_TAG);
-    apms.add_attribute("apm", apps[i]);
+    apms.add_attribute("apm", app);
     apms.x_write(os);
   }
   if (scene.num_illumination_bins() > 0) {
@@ -818,8 +817,8 @@ std::ostream& operator <<(std::ostream &s, boxm2_scene& scene)
 
   //list appearance models for this scene
   std::vector<std::string> apps = scene.appearances();
-  for (unsigned int i=0; i<apps.size(); ++i)
-    s << "    " << apps[i] << ", ";
+  for (const auto & app : apps)
+    s << "    " << app << ", ";
   s << '\n';
   vpgl_lvcs lvcs = scene.lvcs();
   s << lvcs << '\n';
@@ -835,14 +834,13 @@ std::ostream& operator <<(std::ostream &s, boxm2_scene& scene)
   s << "block array dims(" << dims.x() << ' ' << dims.y() << ' ' << dims.z() << ")\n";
   std::map<boxm2_block_id, boxm2_block_metadata>& blk = scene.blocks();
   s << " blocks:==>\n";
-  for (std::map<boxm2_block_id, boxm2_block_metadata>::iterator bit=blk.begin();
-       bit != blk.end(); ++bit) {
-    s << (*bit).second.id_ << ' ';
-    vgl_point_3d<double> org = (*bit).second.local_origin_;
+  for (auto & bit : blk) {
+    s << bit.second.id_ << ' ';
+    vgl_point_3d<double> org = bit.second.local_origin_;
     s << ", org( " << org.x() << ' ' << org.y() << ' ' << org.z() << ") ";
-    vgl_vector_3d<double> dim = (*bit).second.sub_block_dim_;
+    vgl_vector_3d<double> dim = bit.second.sub_block_dim_;
     s << ", dim( " << dim.x() << ' ' << dim.y() << ' ' << dim.z() << ") ";
-    vgl_vector_3d<unsigned> num = (*bit).second.sub_block_num_;
+    vgl_vector_3d<unsigned> num = bit.second.sub_block_num_;
     s << ", num( " << num.x() << ' ' << num.y() << ' ' << num.z() << ")\n";
   }
   s << "<=====:end blocks\n";
@@ -884,4 +882,3 @@ void vsl_b_read(vsl_b_istream& /*is*/, boxm2_scene_info_wrapper*) {}
 void vsl_b_read(vsl_b_istream& /*is*/, boxm2_scene_info_wrapper_sptr&) {}
 //: Binary load boxm2_scene_info_wrapper smart pointer from stream.
 void vsl_b_read(vsl_b_istream& /*is*/, boxm2_scene_info_wrapper_sptr const&) {}
-

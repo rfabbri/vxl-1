@@ -1,7 +1,4 @@
 // This is core/vgui/vgui_macro.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
@@ -11,7 +8,9 @@
 #include <iostream>
 #include "vgui_macro.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vgui/vgui_gl.h>
 #include <vgui/vgui_glu.h>
@@ -20,7 +19,7 @@ extern bool vgui_glerrors_are_bad;
 
 void vgui_macro_error_reporter(char const *FILE, int LINE)
 {
-  static char const *last_file = VXL_NULLPTR;
+  static char const *last_file = nullptr;
   static int last_line = 0;
   static int numerrors = 0;
 

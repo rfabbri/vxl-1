@@ -10,7 +10,10 @@
 #include <rgrl/rgrl_transformation.h>
 #include <rgrl/rgrl_util.h>
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #if 0 // unused static function
 static
@@ -94,7 +97,7 @@ rgrl_feature_sptr
 rgrl_feature_point::
 transform( rgrl_transformation const& xform ) const
 {
-  rgrl_feature_point* result = new rgrl_feature_point( location_.size() );
+  auto* result = new rgrl_feature_point( location_.size() );
 
   // capture the allocation into a smart pointer for exception safety.
   rgrl_feature_sptr result_sptr = result;

@@ -8,7 +8,9 @@
 #include <cstdio>
 #include "boxm2_bounding_box_parser.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 // --------------
 // --- PARSER ---
@@ -91,4 +93,3 @@ boxm2_bounding_box_parser::startElement(const char* name, const char** atts)
     verts_[entity_id_][volume_id_].push_back(temp);
   }
 }
-

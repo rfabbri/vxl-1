@@ -13,8 +13,10 @@
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_vector_3d.h>
 #include <vgl/vgl_closest_point.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 // Define a file-scope vgl_nan constant
 static const double vgl_nan = std::sqrt(-1.0);
@@ -29,7 +31,7 @@ namespace
                                                           const vgl_point_3d<double>& p3)
   {
     vgl_plane_3d<double> plane;
-    double *a = reinterpret_cast<double *>(&plane);
+    auto *a = reinterpret_cast<double *>(&plane);
 
     a[0] = p2.y()*p3.z() - p2.z()*p3.y()
          + p3.y()*p1.z() - p3.z()*p1.y()
@@ -94,7 +96,7 @@ std::vector<std::pair<unsigned,unsigned> > vgl_triangle_3d_coincident_edges(
           (std::fabs(e2_len - a1_dist) < sqrteps &&
            std::fabs(e2_len - a2_dist) < sqrteps))
       {
-        coinc_edges.push_back(std::make_pair(j,i));
+        coinc_edges.emplace_back(j,i);
         break;
       }
     }
@@ -1565,4 +1567,3 @@ double vgl_triangle_3d_aspect_ratio(
 {
   return vgl_triangle_3d_longest_side( p0, p1, p2 ) / vgl_triangle_3d_shortest_side( p0, p1, p2 );
 }
-

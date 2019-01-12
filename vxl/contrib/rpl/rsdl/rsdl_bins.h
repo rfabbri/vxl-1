@@ -11,7 +11,9 @@
 #include <iostream>
 #include <cstddef>
 #include <vnl/vnl_vector_fixed.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 // these two classes are helper classes for rsdl_bins, and should ideally
 // be declared in rsdl_bins and defined only in the .hxx, but MSVC6 and 7

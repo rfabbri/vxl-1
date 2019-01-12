@@ -1,8 +1,10 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <vcl_compiler.h>
-#include<vcl_cstdio.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cstdio>
 #include <vul/vul_sprintf.h>
 #include <vul/vul_file.h>
 #include <vul/vul_file_iterator.h>

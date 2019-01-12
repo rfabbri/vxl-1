@@ -1,6 +1,9 @@
 // This is core/vcsl/vcsl_perspective.cxx
 #include "vcsl_perspective.h"
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //---------------------------------------------------------------------------
 // Is `this' invertible at time `time'? Never !

@@ -7,7 +7,9 @@
 
 #include <iostream>
 #include "boxm2_array_3d.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //--------------------------------------------------------------
 //
@@ -28,7 +30,7 @@ void boxm2_array_3d<T>::construct(size_type n1, size_type n2, size_type n3, T* b
 
   // If any of the dimensions are 0, don't allocate memory, just return.
   if ((n1 * n2 * n3)==0) {
-    element_ = VXL_NULLPTR;
+    element_ = nullptr;
     return;
   }
 

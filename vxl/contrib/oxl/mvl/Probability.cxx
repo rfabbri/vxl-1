@@ -6,8 +6,10 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <vnl/vnl_matrix.h>
 #include <vnl/vnl_diag_matrix.h>
@@ -80,7 +82,7 @@ std::vector<int> Monte_Carlo(std::vector<HomgPoint2D> points, std::vector<int> i
     vnl_double_2 v = points[i].get_double2(); // non-homogeneous representation
     double x = -1.0 + ( v[0] - min_x ) / center_x;
     double y = -1.0 + ( v[1] - min_y ) / center_y;
-    points_rescale.push_back( vnl_double_2( x, y ) );
+    points_rescale.emplace_back( x, y );
   }
 
   // ********************* //
@@ -213,8 +215,8 @@ double Sampsons_MLE(HomgPoint2D x1, HomgPoint2D x2, FMatrix *F)
   GRADr = vnl_math::sqr(rX*rX + rY*rY + rX_dash*rX_dash + rY_dash*rY_dash);
   std::cerr << "1 :  " << GRADr << '\n';
   // This is an annoying interface
-  HomgPoint2D *x1p = new HomgPoint2D(x1.x(), x1.y(), 1.0);
-  HomgPoint2D *x2p = new HomgPoint2D(x2.x(), x2.y(), 1.0);
+  auto *x1p = new HomgPoint2D(x1.x(), x1.y(), 1.0);
+  auto *x2p = new HomgPoint2D(x2.x(), x2.y(), 1.0);
   std::cerr << "2\n";
   r = F->image1_epipolar_distance_squared(x1p, x2p);
   std::cerr << "r " << r << '\n';

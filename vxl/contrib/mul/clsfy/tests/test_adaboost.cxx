@@ -9,7 +9,9 @@
 // \author dac
 // Test construction, IO etc.
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpl/vpl.h> // vpl_unlink()
 #include <clsfy/clsfy_simple_adaboost.h>
 #include <clsfy/clsfy_binary_threshold_1d_builder.h>
@@ -128,7 +130,7 @@ void test_adaboost()
 
   // build clsfy_simple_adaboost
   std::cout<<"*************normal classifier************\n";
-  clsfy_simple_adaboost *pClassifier = new clsfy_simple_adaboost;
+  auto *pClassifier = new clsfy_simple_adaboost;
   clsfy_binary_threshold_1d_builder b_thresh_builder;
   clsfy_adaboost_trainer adab_trainer;
   int n_rounds=100; // was 5; increased to 100 to better see the timing (since std::clock() is rather inaccurate...) - PVr
@@ -138,7 +140,7 @@ void test_adaboost()
 
   // build clsfy_simple_adaboost using sorted method 3
   std::cout<<"*************sorted classifier4************\n";
-  clsfy_simple_adaboost *pClassifier4 = new clsfy_simple_adaboost;
+  auto *pClassifier4 = new clsfy_simple_adaboost;
   clsfy_binary_threshold_1d_builder b_thresh_sorted_builder4;
   clsfy_adaboost_sorted_builder adab_sorted_builder;
   adab_sorted_builder.set_batch_size( 20 );

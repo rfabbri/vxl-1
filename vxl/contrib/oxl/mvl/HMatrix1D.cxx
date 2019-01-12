@@ -1,7 +1,4 @@
 // This is oxl/mvl/HMatrix1D.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 #include <iostream>
@@ -9,23 +6,19 @@
 #include "HMatrix1D.h"
 
 #include <vgl/vgl_homg_point_1d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_double_2.h>
 #include <vnl/vnl_inverse.h>
 
 //--------------------------------------------------------------
 //
 //: Default constructor
-HMatrix1D::HMatrix1D()
-{
-}
+HMatrix1D::HMatrix1D() = default;
 
 //: Copy constructor
-HMatrix1D::HMatrix1D(const HMatrix1D& M)
-  : t12_matrix_(M.t12_matrix_)
-  , t21_matrix_(M.t21_matrix_)
-{
-}
+HMatrix1D::HMatrix1D(const HMatrix1D& M) = default;
 
 //--------------------------------------------------------------
 //
@@ -60,16 +53,14 @@ HMatrix1D::HMatrix1D (std::istream &is)
 }
 
 //: Destructor
-HMatrix1D::~HMatrix1D()
-{
-}
+HMatrix1D::~HMatrix1D() = default;
 
 // == OPERATIONS ==
 
 vgl_homg_point_1d<double> HMatrix1D::operator()(const vgl_homg_point_1d<double>& x1) const
 {
   vnl_double_2 v = t12_matrix_ * vnl_double_2(x1.x(),x1.w());
-  return vgl_homg_point_1d<double>(v[0], v[1]);
+  return {v[0], v[1]};
 }
 
 //
@@ -77,7 +68,7 @@ vgl_homg_point_1d<double> HMatrix1D::operator()(const vgl_homg_point_1d<double>&
 vgl_homg_point_1d<double> HMatrix1D::preimage(const vgl_homg_point_1d<double>& x2) const
 {
   vnl_double_2 v = t21_matrix_ * vnl_double_2(x2.x(),x2.w());
-  return vgl_homg_point_1d<double>(v[0], v[1]);
+  return {v[0], v[1]};
 }
 
 //-----------------------------------------------------------------------------

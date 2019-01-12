@@ -1,6 +1,7 @@
-#include <iostream>
 #include <cstdio>
 #include <fstream>
+#include <iostream>
+#include <utility>
 #include "rgrl_debug_util.h"
 //:
 // \file
@@ -17,14 +18,16 @@
 #include <rgrl/rgrl_transformation.h>
 #include <rgrl/rgrl_match_set.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: observer to view transformations at each iteration of feature-based registration engine
 void
 rgrl_debug_feature_iteration_print::
 execute(const rgrl_object* caller, const rgrl_event & event )
 {
-  const rgrl_feature_based_registration* reg_engine =
+  const auto* reg_engine =
     dynamic_cast<const rgrl_feature_based_registration*>(caller);
   if ( !reg_engine ) {
     std::cerr << "WARNING: " << __FILE__ << "(line " << __LINE__ << ")\n"
@@ -52,10 +55,10 @@ execute(const rgrl_object* caller, const rgrl_event & event )
 
 //: constructor
 rgrl_debug_feature_iteration_save_matches::
-rgrl_debug_feature_iteration_save_matches( const std::string& path,
-                                           const std::string& prefix,
+rgrl_debug_feature_iteration_save_matches( std::string  path,
+                                           std::string  prefix,
                                            const rgrl_mask_sptr& from_roi )
-  : path_(path), file_prefix_(prefix), from_roi_sptr_(from_roi)
+  : path_(std::move(path)), file_prefix_(std::move(prefix)), from_roi_sptr_(from_roi)
 {
 }
 
@@ -65,7 +68,7 @@ rgrl_debug_feature_iteration_save_matches::
 execute(const rgrl_object* caller, const rgrl_event & event )
 {
   static char stage_buffer[31], iter_buffer[31];
-  const rgrl_feature_based_registration* reg_engine =
+  const auto* reg_engine =
     dynamic_cast<const rgrl_feature_based_registration*>(caller);
   if ( !reg_engine ) {
     std::cerr << "WARNING: " << __FILE__ << "(line " << __LINE__ << ")\n"

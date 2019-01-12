@@ -20,7 +20,9 @@
 #include <vbl/vbl_ref_count.h>
 #include <vbl/vbl_smart_ptr.h>
 #include <vsl/vsl_binary_io.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class volm_desc;
 typedef vbl_smart_ptr<volm_desc> volm_desc_sptr;
@@ -29,7 +31,7 @@ class volm_desc : public vbl_ref_count
 {
 public:
   // Default constructor
-  volm_desc() {}
+  volm_desc() = default;
 
   //: construct the histogram from a vector
   volm_desc(std::vector<unsigned char> values)
@@ -37,7 +39,7 @@ public:
   { name_ = "descriptor";  nbins_ = (unsigned)values.size(); }
 
   // Destructor
-  virtual ~volm_desc() {};
+  ~volm_desc() override = default;;
 
   //: return the name of the descriptor
   virtual std::string name() { return "volm_desc base"; }
@@ -55,7 +57,7 @@ public:
   virtual float similarity(volm_desc_sptr other);
 
   //: visualization using bsvg
-  void visualize(std::string outfile, unsigned char const& y_max = 10) const;
+  void visualize(const std::string& outfile, unsigned char const& y_max = 10) const;
 
   //: return the value of bin
   unsigned char count(unsigned const& i) const { return h_[i]; }

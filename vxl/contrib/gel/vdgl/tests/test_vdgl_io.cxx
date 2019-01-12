@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpl/vpl.h>
 #include <vsl/vsl_binary_io.h>
 #include <vbl/io/vbl_io_smart_ptr.h>
@@ -82,7 +84,7 @@ static void test_vdgl_io()
 
   bool good = true;
   int k = 0;
-  for (std::vector<vdgl_digital_curve_sptr>::iterator dcit = dcrvs_in.begin();
+  for (auto dcit = dcrvs_in.begin();
        dcit != dcrvs_in.end(); dcit++, k++)
   {
     if (!(*dcit))

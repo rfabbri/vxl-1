@@ -13,7 +13,10 @@
  */
 //----------------------------------------------------------------------
 #include "image_ops.h"
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //----------------------------------------------------------------------
 /** -= operator for images

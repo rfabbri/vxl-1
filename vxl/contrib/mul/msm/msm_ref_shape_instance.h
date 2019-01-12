@@ -11,7 +11,9 @@
 #include <msm/msm_wt_mat_2d.h>
 #include <msm/msm_param_limiter.h>
 #include <mbl/mbl_cloneable_ptr.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class msm_ref_shape_model;
 
@@ -88,7 +90,7 @@ class msm_ref_shape_instance
 
   //: Reference to current model
   const msm_ref_shape_model& model() const
-  { assert(model_!=VXL_NULLPTR); return *model_; }
+  { assert(model_!=nullptr); return *model_; }
 
   //: Current shape parameters
   const vnl_vector<double>& params() const { return b_; }

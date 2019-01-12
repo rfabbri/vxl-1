@@ -3,8 +3,9 @@
 #include <testlib/testlib_test.h>
 #include "../bmdl_processes.h"
 
-#include <vcl_compiler.h>
-#include <vcl_string.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <brdb/brdb_value.h>
 #include <brdb/brdb_selection.h>
@@ -23,7 +24,7 @@
 static void test_bmdl_generate_mesh_process(int argc, char* argv[])
 {
   REG_PROCESS_FUNC(bprb_func_process, bprb_batch_process_manager, bmdl_generate_mesh_process, "bmdlGenerateMeshProcess");
-  REGISTER_DATATYPE(vcl_string);
+  REGISTER_DATATYPE_LONG_FORM(std::string,vcl_string);
   REGISTER_DATATYPE(vil_image_view_base_sptr);
 
   std::string image_base;

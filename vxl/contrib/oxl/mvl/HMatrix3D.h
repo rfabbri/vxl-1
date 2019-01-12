@@ -1,9 +1,6 @@
 // This is oxl/mvl/HMatrix3D.h
 #ifndef HMatrix3D_h_
 #define HMatrix3D_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 //
@@ -25,7 +22,9 @@
 #include <mvl/HomgPoint3D.h>
 #include <mvl/HomgLine3D.h>
 #include <mvl/HomgLineSeg3D.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class PMatrix;
 

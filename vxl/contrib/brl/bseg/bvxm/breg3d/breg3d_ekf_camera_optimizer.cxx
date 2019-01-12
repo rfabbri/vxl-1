@@ -78,10 +78,10 @@ breg3d_ekf_camera_optimizer_state breg3d_ekf_camera_optimizer::optimize(bvxm_vox
                                                                         vil_image_view_base_sptr &prev_img,
                                                                         bvxm_image_metadata &curr_img,
                                                                         breg3d_ekf_camera_optimizer_state &prev_state,
-                                                                        std::string apm_type, unsigned bin_idx)
+                                                                        const std::string& apm_type, unsigned bin_idx)
 {
   breg3d_ekf_camera_optimizer_state state_og = prev_state;
-  vpgl_perspective_camera<double>* cam_est =
+  auto* cam_est =
     dynamic_cast<vpgl_perspective_camera<double>*>(curr_img.camera.ptr());
 
   if (!cam_est) {
@@ -99,8 +99,8 @@ breg3d_ekf_camera_optimizer_state breg3d_ekf_camera_optimizer::optimize(bvxm_vox
 
   // debug
   std::vector<vpgl_perspective_camera<double> > step_vec;
-  step_vec.push_back(vpgl_perspective_camera<double>(cam_est->get_calibration(),state_og.get_point(),state_og.get_rotation()));
-  step_vec.push_back(vpgl_perspective_camera<double>(cam_est->get_calibration(),step_state.get_point(),step_state.get_rotation()));
+  step_vec.emplace_back(cam_est->get_calibration(),state_og.get_point(),state_og.get_rotation());
+  step_vec.emplace_back(cam_est->get_calibration(),step_state.get_point(),step_state.get_rotation());
 
   std::cout << "Pk =\n" << step_state.get_error_covariance() << std::endl;
 
@@ -120,7 +120,7 @@ breg3d_ekf_camera_optimizer_state breg3d_ekf_camera_optimizer::optimize(bvxm_vox
       vpgl_camera_double_sptr step_cam =
         new vpgl_perspective_camera<double>(cam_est->get_calibration(),substep_state.get_point(),substep_state.get_rotation());
       // fill in metadata
-      bvxm_image_metadata step_meta(vil_image_view_base_sptr(VXL_NULLPTR),step_cam);
+      bvxm_image_metadata step_meta(vil_image_view_base_sptr(nullptr),step_cam);
       // allocate expected images
       vil_image_view_base_sptr step_expected =
         new vil_image_view<unsigned char>(curr_img.img->ni(),curr_img.img->nj(),curr_img.img->nplanes());
@@ -141,7 +141,7 @@ breg3d_ekf_camera_optimizer_state breg3d_ekf_camera_optimizer::optimize(bvxm_vox
       vil_save(step_mask,"C:/research/registration/output/step_expected_mask.tiff");
       substep_state = substep_optimizer.optimize_once(vox_world,step_expected,step_mask,curr_img,substep_state,false);
 
-      step_vec.push_back(vpgl_perspective_camera<double>(cam_est->get_calibration(),substep_state.get_point(),substep_state.get_rotation()));
+      step_vec.emplace_back(cam_est->get_calibration(),substep_state.get_point(),substep_state.get_rotation());
 
       double step_length = substep_state.get_state().magnitude();
       std::cout << " step length = " << step_length << '\n'
@@ -340,12 +340,12 @@ vnl_vector<double> breg3d_ekf_camera_optimizer::img_homography(vil_image_view_ba
   switch (base_img_viewb->pixel_format())
   {
    case VIL_PIXEL_FORMAT_RGB_BYTE: {
-    vil_image_view<vil_rgb<vxl_byte> > *img_rgb_byte = dynamic_cast<vil_image_view<vil_rgb<vxl_byte> >*>(base_img_viewb.ptr());
+    auto *img_rgb_byte = dynamic_cast<vil_image_view<vil_rgb<vxl_byte> >*>(base_img_viewb.ptr());
     vil_convert_rgb_to_grey(*img_rgb_byte,base_img_view);
     break;
    }
    case VIL_PIXEL_FORMAT_BYTE: {
-    vil_image_view<vxl_byte> *img_byte = dynamic_cast<vil_image_view<vxl_byte>*>(base_img_viewb.ptr());
+    auto *img_byte = dynamic_cast<vil_image_view<vxl_byte>*>(base_img_viewb.ptr());
     vil_convert_stretch_range_limited(*img_byte,base_img_view,(vxl_byte)0,(vxl_byte)255,0.0f,1.0f);
     break;
    }
@@ -356,12 +356,12 @@ vnl_vector<double> breg3d_ekf_camera_optimizer::img_homography(vil_image_view_ba
   switch (img_viewb->pixel_format())
   {
    case VIL_PIXEL_FORMAT_RGB_BYTE: {
-    vil_image_view<vil_rgb<vxl_byte> > *img_rgb_byte = dynamic_cast<vil_image_view<vil_rgb<vxl_byte> >*>(img_viewb.ptr());
+    auto *img_rgb_byte = dynamic_cast<vil_image_view<vil_rgb<vxl_byte> >*>(img_viewb.ptr());
     vil_convert_rgb_to_grey(*img_rgb_byte,base_img_view);
     break;
    }
    case VIL_PIXEL_FORMAT_BYTE: {
-    vil_image_view<vxl_byte> *img_byte = dynamic_cast<vil_image_view<vxl_byte>*>(img_viewb.ptr());
+    auto *img_byte = dynamic_cast<vil_image_view<vxl_byte>*>(img_viewb.ptr());
     vil_convert_stretch_range_limited(*img_byte,img_view,(vxl_byte)0,(vxl_byte)255,0.0f,1.0f);
     break;
    }

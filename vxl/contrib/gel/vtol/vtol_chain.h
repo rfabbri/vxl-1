@@ -20,7 +20,9 @@
 #include <vector>
 #include <vtol/vtol_chain_sptr.h>
 #include <vtol/vtol_topology_object.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Base class of vtol_two_chain and vtol_one_chain (representation of holes)
 //
@@ -64,7 +66,7 @@ class vtol_chain : public vtol_topology_object
   //---------------------------------------------------------------------------
   //: Destructor
   //---------------------------------------------------------------------------
-  virtual ~vtol_chain();
+  ~vtol_chain() override;
 
   //***************************************************************************
   // Access
@@ -88,12 +90,12 @@ class vtol_chain : public vtol_topology_object
   //---------------------------------------------------------------------------
   //: Return `this' if `this' is a chain, 0 otherwise
   //---------------------------------------------------------------------------
-  virtual const vtol_chain *cast_to_chain() const { return this; }
+  const vtol_chain *cast_to_chain() const override { return this; }
 
   //---------------------------------------------------------------------------
   //: Return `this' if `this' is a chain, 0 otherwise
   //---------------------------------------------------------------------------
-  virtual vtol_chain *cast_to_chain() { return this; }
+  vtol_chain *cast_to_chain() override { return this; }
 
    //***************************************************************************
    // --- Status report ---
@@ -143,14 +145,14 @@ class vtol_chain : public vtol_topology_object
   //  REQUIRE: valid_chain_type(chain_inferior)
   //           and !is_chain_inferior(chain_inferior)
   //---------------------------------------------------------------------------
-  void link_chain_inferior(vtol_chain_sptr chain_inferior);
+  void link_chain_inferior(const vtol_chain_sptr& chain_inferior);
 
   //---------------------------------------------------------------------------
   //: Unlink `this' with the chain_inferior `chain_inferior'
   //  REQUIRE: valid_chain_type(chain_inferior)
   //           and is_chain_inferior(chain_inferior)
   //---------------------------------------------------------------------------
-  void unlink_chain_inferior(vtol_chain_sptr chain_inferior);
+  void unlink_chain_inferior(const vtol_chain_sptr& chain_inferior);
 
   //---------------------------------------------------------------------------
   //: Unlink `this' with all its chain inferiors
@@ -193,7 +195,7 @@ class vtol_chain : public vtol_topology_object
   virtual void clear();
 
   //: Return a platform independent string identifying the class
-  virtual std::string is_a() const { return std::string("vtol_chain"); }
+  std::string is_a() const override { return std::string("vtol_chain"); }
 
   //: Return true if the argument matches the string identifying the class or any parent class
   virtual bool is_class(const std::string& cls) const { return cls==is_a(); }

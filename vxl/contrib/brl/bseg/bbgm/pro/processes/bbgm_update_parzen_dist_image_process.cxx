@@ -4,7 +4,9 @@
 
 #include <iostream>
 #include <bprb/bprb_func_process.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bbgm/bbgm_image_of.h>
 #include <bbgm/bbgm_image_sptr.h>
 #include <bbgm/bbgm_update.h>
@@ -38,7 +40,7 @@ bool bbgm_update_parzen_dist_image_process_cons(bprb_func_process& pro)
 
 bool bbgm_update_parzen_dist_image_process_init(bprb_func_process& pro)
 {
-  pro.set_input(0, new brdb_value_t<bbgm_image_sptr>(VXL_NULLPTR));
+  pro.set_input(0, new brdb_value_t<bbgm_image_sptr>(nullptr));
   return true;
 }
 
@@ -67,12 +69,12 @@ bool bbgm_update_parzen_dist_image_process(bprb_func_process& pro)
   unsigned np = img.nplanes();
 
   //Retrieve bandwidth
-  float bandwidth = pro.get_input<float>(2);
+  auto bandwidth = pro.get_input<float>(2);
 
   //Retrieve maximum number of samples
-  unsigned max_samples = pro.get_input<unsigned>(3);
+  auto max_samples = pro.get_input<unsigned>(3);
 
-  float tol = pro.get_input<float>(4);
+  auto tol = pro.get_input<float>(4);
 
   if(np!=3)
     {
@@ -90,7 +92,7 @@ bool bbgm_update_parzen_dist_image_process(bprb_func_process& pro)
     model_sptr = new bbgm_image_of<parzen_f3_t>(ni,nj,par);
   }
   else model_sptr = bgm;
-  bbgm_image_of<parzen_f3_t> *model =
+  auto *model =
     static_cast<bbgm_image_of<parzen_f3_t>*>(model_sptr.ptr());
 
   float frac_back = 0.5f;
@@ -103,4 +105,3 @@ bool bbgm_update_parzen_dist_image_process(bprb_func_process& pro)
   pro.set_output(0, output);
   return true;
 }
-

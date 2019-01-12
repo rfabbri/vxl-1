@@ -12,7 +12,9 @@
 
 #include <iostream>
 #include <cmath>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vdgl/vdgl_ortho_regress.h>
 
 class vdgl_OrthogRegress : public vdgl_ortho_regress
@@ -21,7 +23,7 @@ class vdgl_OrthogRegress : public vdgl_ortho_regress
   double est_;
  public:
   typedef vdgl_ortho_regress base;
-  vdgl_OrthogRegress() { }
+  vdgl_OrthogRegress() = default;
   vdgl_OrthogRegress(double, double, double) { } // FIXME
   void IncrByXY(double x, double y) { base::add_point(x, y); }
   void DecrByXY(double x, double y) { base::remove_point(x, y); }

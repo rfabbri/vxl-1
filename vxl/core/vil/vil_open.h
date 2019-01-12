@@ -1,9 +1,6 @@
 // This is core/vil/vil_open.h
 #ifndef vil_open_h_
 #define vil_open_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief make a vil_stream from a filename, an URL, etc.
@@ -18,10 +15,10 @@
 vil_stream *vil_open(char const* what, char const* how = "r");
 
 
-#if defined(VCL_WIN32) && VXL_USE_WIN_WCHAR_T
+#if defined(_WIN32) && VXL_USE_WIN_WCHAR_T
 //: make a vil_stream from a filename, an URL, etc.
 // \relatesalso vil_stream
 vil_stream *vil_open(wchar_t const* what, char const* how = "r");
-#endif //defined(VCL_WIN32) && VXL_USE_WIN_WCHAR_T
+#endif //defined(_WIN32) && VXL_USE_WIN_WCHAR_T
 
 #endif // vil_open_h_

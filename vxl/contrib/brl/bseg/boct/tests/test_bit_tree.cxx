@@ -2,7 +2,9 @@
 #include <testlib/testlib_test.h>
 
 #include <boct/boct_bit_tree.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 void test_print_centers()
 {
@@ -126,8 +128,8 @@ static void test_bit_tree()
     {
       {
         // both non-owning
-        unsigned char *bits1 = new unsigned char[16]();
-        unsigned char *bits2 = new unsigned char[16]();
+        auto *bits1 = new unsigned char[16]();
+        auto *bits2 = new unsigned char[16]();
         boct_bit_tree t1(bits1, false, 4);
         boct_bit_tree t2(bits2, false, 4);
         t1.set_bit_at(4, true);
@@ -149,8 +151,8 @@ static void test_bit_tree()
       }
       {
         // both owning
-        unsigned char *bits1 = new unsigned char[16]();
-        unsigned char *bits2 = new unsigned char[16]();
+        auto *bits1 = new unsigned char[16]();
+        auto *bits2 = new unsigned char[16]();
         boct_bit_tree t1(bits1, true, 4);
         boct_bit_tree t2(bits2, true, 4);
         t1.set_bit_at(4, true);
@@ -168,8 +170,8 @@ static void test_bit_tree()
 
       {
         // only t1 is owning
-        unsigned char *bits1 = new unsigned char[16]();
-        unsigned char *bits2 = new unsigned char[16]();
+        auto *bits1 = new unsigned char[16]();
+        auto *bits2 = new unsigned char[16]();
         boct_bit_tree t1(bits1, true, 4);
         boct_bit_tree t2(bits2, false, 4);
         t1.set_bit_at(4, true);
@@ -192,8 +194,8 @@ static void test_bit_tree()
 
       {
         // only t2 is owning
-        unsigned char *bits1 = new unsigned char[16]();
-        unsigned char *bits2 = new unsigned char[16]();
+        auto *bits1 = new unsigned char[16]();
+        auto *bits2 = new unsigned char[16]();
         boct_bit_tree t1(bits1, false, 4);
         boct_bit_tree t2(bits2, true, 4);
         t1.set_bit_at(4, true);
@@ -211,7 +213,7 @@ static void test_bit_tree()
       }
       {
         // self assignment, owning
-        unsigned char *bits1 = new unsigned char[16]();
+        auto *bits1 = new unsigned char[16]();
         boct_bit_tree t1(bits1, true, 4);
         boct_bit_tree t2(bits1, false, 4);
         t1.set_bit_at(4, true);
@@ -308,15 +310,15 @@ static void test_bit_tree()
     // Test  to experiment with get_cell_bits and get_leaf_bits
     boct_bit_tree t1;
     t1.set_bit_and_parents_to_true(70);
-    vcl_cout << "PPP " << t1.get_data_ptr() << vcl_endl;
-    vcl_cout << "PPP " << t1.max_num_cells() << vcl_endl;
-    vcl_cout << "PPP " << t1.max_num_inner_cells() << vcl_endl;
-    vcl_vector<int> cells = t1.get_leaf_bits();
-    vcl_cout << "num_cells() " << t1.num_leaves()
-             << " get_leaf_bits(): " << t1.get_leaf_bits().size() << vcl_endl;
+    std::cout << "PPP " << t1.get_data_ptr() << std::endl;
+    std::cout << "PPP " << t1.max_num_cells() << std::endl;
+    std::cout << "PPP " << t1.max_num_inner_cells() << std::endl;
+    std::vector<int> cells = t1.get_leaf_bits();
+    std::cout << "num_cells() " << t1.num_leaves()
+             << " get_leaf_bits(): " << t1.get_leaf_bits().size() << std::endl;
     for (int i = 0; i < cells.size(); ++i) {
-      vcl_cout << "i: " << i << " cells[i]: " << cells[i]
-               << " data index: " << t1.get_data_index(cells[i]) << vcl_endl;
+      std::cout << "i: " << i << " cells[i]: " << cells[i]
+               << " data index: " << t1.get_data_index(cells[i]) << std::endl;
     }
   }
 }

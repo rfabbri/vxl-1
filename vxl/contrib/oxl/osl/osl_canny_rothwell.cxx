@@ -14,10 +14,12 @@
 #include <osl/osl_canny_gradient.h>
 #include <vnl/vnl_math.h>
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
-const float DUMMYTHETA = 10000.0;
+constexpr float DUMMYTHETA = 10000.0;
 
 //-----------------------------------------------------------------------------
 
@@ -74,7 +76,7 @@ osl_canny_rothwell::~osl_canny_rothwell()
 
 void osl_canny_rothwell::detect_edges(vil1_image const &image, std::list<osl_edge*> *edges, bool adaptive)
 {
-  assert(edges!=VXL_NULLPTR);
+  assert(edges!=nullptr);
 
   xsize_  = image.height();
   ysize_  = image.width();
@@ -91,17 +93,17 @@ void osl_canny_rothwell::detect_edges(vil1_image const &image, std::list<osl_edg
              << "Lower threshold = " << low_ << std::endl
              << "Smoothing range = " << range_ << std::endl << std::endl;
 
-  smooth_   = osl_canny_base_make_raw_image(xsize_, ysize_, (float*)VXL_NULLPTR);
-  dx_       = osl_canny_base_make_raw_image(xsize_, ysize_, (float*)VXL_NULLPTR);
-  dy_       = osl_canny_base_make_raw_image(xsize_, ysize_, (float*)VXL_NULLPTR);
-  grad_     = osl_canny_base_make_raw_image(xsize_, ysize_, (float*)VXL_NULLPTR);
-  thick_    = osl_canny_base_make_raw_image(xsize_, ysize_, (float*)VXL_NULLPTR);
-  thin_     = osl_canny_base_make_raw_image(xsize_, ysize_, (float*)VXL_NULLPTR);
-  theta_    = osl_canny_base_make_raw_image(xsize_, ysize_, (float*)VXL_NULLPTR);
-  dangling_ = osl_canny_base_make_raw_image(xsize_, ysize_, (int*)VXL_NULLPTR);
-  junction_ = osl_canny_base_make_raw_image(xsize_, ysize_, (int*)VXL_NULLPTR);
-  jx_       = osl_canny_base_make_raw_image(xsize_, ysize_, (int*)VXL_NULLPTR);
-  jy_       = osl_canny_base_make_raw_image(xsize_, ysize_, (int*)VXL_NULLPTR);
+  smooth_   = osl_canny_base_make_raw_image(xsize_, ysize_, (float*)nullptr);
+  dx_       = osl_canny_base_make_raw_image(xsize_, ysize_, (float*)nullptr);
+  dy_       = osl_canny_base_make_raw_image(xsize_, ysize_, (float*)nullptr);
+  grad_     = osl_canny_base_make_raw_image(xsize_, ysize_, (float*)nullptr);
+  thick_    = osl_canny_base_make_raw_image(xsize_, ysize_, (float*)nullptr);
+  thin_     = osl_canny_base_make_raw_image(xsize_, ysize_, (float*)nullptr);
+  theta_    = osl_canny_base_make_raw_image(xsize_, ysize_, (float*)nullptr);
+  dangling_ = osl_canny_base_make_raw_image(xsize_, ysize_, (int*)nullptr);
+  junction_ = osl_canny_base_make_raw_image(xsize_, ysize_, (int*)nullptr);
+  jx_       = osl_canny_base_make_raw_image(xsize_, ysize_, (int*)nullptr);
+  jy_       = osl_canny_base_make_raw_image(xsize_, ysize_, (int*)nullptr);
 
   osl_canny_base_fill_raw_image(theta_ ,xsize_, ysize_, DUMMYTHETA);
   osl_canny_base_fill_raw_image(smooth_,xsize_, ysize_, 0.0f);
@@ -126,8 +128,7 @@ void osl_canny_rothwell::detect_edges(vil1_image const &image, std::list<osl_edg
 
   // Thin the edge image, though keep the original thick one
   if (verbose) std::cerr << "thinning edges\n";
-  osl_canny_base_copy_raw_image(VCL_OVERLOAD_CAST(float const*const*, thick_),
-                                VCL_OVERLOAD_CAST(float *const*, thin_), xsize_, ysize_);
+  osl_canny_base_copy_raw_image( thick_, thin_, xsize_, ysize_);
   Thin_edges();
 
   if (verbose) std::cerr << "doing hysteresis\n";
@@ -198,7 +199,7 @@ void osl_canny_rothwell::detect_edges(vil1_image const &image, std::list<osl_edg
 void osl_canny_rothwell::Non_maximal_suppression()
 {
   float h1=0,h2=0;
-  float k = float(vnl_math::deg_per_rad);
+  auto k = float(vnl_math::deg_per_rad);
 
   // Add 1 to get rid of border effects
   for (unsigned int x=w0_; x+2+w0_<xsize_; ++x)  {
@@ -402,8 +403,8 @@ void osl_canny_rothwell::Final_hysteresis(std::list<osl_edge*> *edges)
 
       // count the number of non-dummy edgels
       int count=0;
-      for (std::list<float>::iterator i=grad.begin(); i!=grad.end(); ++i)
-        if ( (*i) != dummy_ )
+      for (const auto & i : grad)
+        if ( i != dummy_ )
           count++;
 
       // If the count is less than two we cannot accept
@@ -413,7 +414,7 @@ void osl_canny_rothwell::Final_hysteresis(std::list<osl_edge*> *edges)
         continue;
 
       // Create an osl_edgel_chain
-      osl_edgel_chain *dc = new osl_edgel_chain(count);
+      auto *dc = new osl_edgel_chain(count);
       px = dc->GetX();     py = dc->GetY();
       pg = dc->GetGrad();  pt = dc->GetTheta();
 
@@ -437,7 +438,7 @@ void osl_canny_rothwell::Final_hysteresis(std::list<osl_edge*> *edges)
             *(pg++) = 0.0f;   // Mark the gradient as zero at a junction
           }
           if (theta_[tmpx][tmpy] == DUMMYTHETA) {
-            const float k = float(vnl_math::deg_per_rad);
+            const auto k = float(vnl_math::deg_per_rad);
             float *dx = dx_[tmpx];
             float *dy = dy_[tmpx];
 
@@ -463,8 +464,8 @@ void osl_canny_rothwell::Final_hysteresis(std::list<osl_edge*> *edges)
       else if ( dc->size() > 1 ) {
         // Create an edge for the image topology
 
-        osl_Vertex *v1 = new osl_Vertex(dc->GetX(0), dc->GetY(0));
-        osl_Vertex *v2 = new osl_Vertex(dc->GetX(dc->size()-1), dc->GetY(dc->size()-1));
+        auto *v1 = new osl_Vertex(dc->GetX(0), dc->GetY(0));
+        auto *v2 = new osl_Vertex(dc->GetX(dc->size()-1), dc->GetY(dc->size()-1));
 
         // Check whether each vertex is a junction
         osl_Vertex *V1=osl_find(vlist_, *v1);
@@ -674,15 +675,14 @@ void osl_canny_rothwell::Adaptive_Canny(vil1_image const &image)
                         << "Kernel size     = " << k_size_ << std::endl;
 
   // Set up the new images
-  float **dx   = osl_canny_base_make_raw_image(image_size,image_size, (float*)VXL_NULLPTR);
-  float **dy   = osl_canny_base_make_raw_image(image_size,image_size, (float*)VXL_NULLPTR);
-  float **grad = osl_canny_base_make_raw_image(image_size,image_size, (float*)VXL_NULLPTR);
+  float **dx   = osl_canny_base_make_raw_image(image_size,image_size, (float*)nullptr);
+  float **dy   = osl_canny_base_make_raw_image(image_size,image_size, (float*)nullptr);
+  float **grad = osl_canny_base_make_raw_image(image_size,image_size, (float*)nullptr);
 
   // For each dangling-end (X,Y), search for more edges at the reduced scale
   int count=0;
   if (verbose) std::cerr << "percentage of endings examined =   0";
-  typedef std::list<int>::iterator it;
-  for (it i=xdang_->begin(), j=ydang_->begin(); i!=xdang_->end() && j!=ydang_->end(); ++i, ++j)
+  for (auto i=xdang_->begin(), j=ydang_->begin(); i!=xdang_->end() && j!=ydang_->end(); ++i, ++j)
   {
     //xdang_->reset(),ydang_->reset(); xdang_->next(),ydang_->next(); )  {
 
@@ -883,12 +883,12 @@ void osl_canny_rothwell::Find_junction_clusters()
 
   // Construct the list of junction cluster centres
   vlist_->clear();
-  for (std::list<int>::iterator i=xvertices.begin(), j=yvertices.begin();
+  for (auto i=xvertices.begin(), j=yvertices.begin();
        i!=xvertices.end() && j!=yvertices.end();
        ++i, ++j) {
     //for (xvertices.reset(),yvertices.reset(); xvertices.next(),yvertices.next(); )  {
 
-    osl_Vertex *v = new osl_Vertex( float((*i)/*xvertices.value()*/+xstart_),
+    auto *v = new osl_Vertex( float((*i)/*xvertices.value()*/+xstart_),
                                     float((*j)/*yvertices.value()*/+ystart_));
     vlist_->push_front(v);
     junction_[(*i)/*xvertices.value()*/][(*j)/*yvertices.value()*/] = 2;

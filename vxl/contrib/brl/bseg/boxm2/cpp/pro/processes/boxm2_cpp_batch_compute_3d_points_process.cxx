@@ -10,7 +10,9 @@
 // \author Ozge C. Ozcanli
 // \date April 04, 2012
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/io/boxm2_stream_cache.h>
 #include <boxm2/io/boxm2_cache.h>
 #include <boxm2/boxm2_scene.h>
@@ -26,8 +28,8 @@
 
 namespace boxm2_cpp_batch_compute_3d_points_process_globals
 {
-  const unsigned n_inputs_ = 3;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 3;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool boxm2_cpp_batch_compute_3d_points_process_cons(bprb_func_process& pro)
@@ -109,5 +111,3 @@ bool boxm2_cpp_batch_compute_3d_points_process(bprb_func_process& pro)
 
   return true;
 }
-
-

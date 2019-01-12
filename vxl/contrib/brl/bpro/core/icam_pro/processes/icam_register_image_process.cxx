@@ -20,7 +20,9 @@
 #include <brdb/brdb_value.h>
 
 #include <vpgl/vpgl_perspective_camera.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <icam/icam_view_sphere.h>
 #include <icam/icam_view_metadata.h>
@@ -33,8 +35,8 @@
 namespace icam_register_image_process_globals
 {
   // this process takes 4 inputs and 1 output
-  const unsigned n_inputs_ = 4;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 4;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 template <class T>

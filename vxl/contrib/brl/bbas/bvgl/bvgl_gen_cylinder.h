@@ -12,8 +12,10 @@
 #include <vector>
 #include <string>
 #include <map>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vgl/vgl_vector_3d.h>
 #include <vgl/vgl_cubic_spline_3d.h>
 #include <vgl/vgl_pointset_3d.h>
@@ -22,7 +24,7 @@
 class bvgl_gen_cylinder{
  public:
  bvgl_gen_cylinder(): cross_section_interval_(0.5){}
-  bvgl_gen_cylinder(vgl_cubic_spline_3d<double> const& axis, std::vector<bvgl_cross_section> const& cross_sects, double cross_section_interval=0.5);
+  bvgl_gen_cylinder(vgl_cubic_spline_3d<double>  axis, std::vector<bvgl_cross_section> const& cross_sects, double cross_section_interval=0.5);
 
   //:read the generalized cylinder axis
  void read_axis_spline(std::ifstream& istr){

@@ -9,7 +9,9 @@
 
 
 #include <vil/vil_load.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 static const char* IMG_PATH = "contrib/cul/bundler/test/test_data";
 
@@ -65,9 +67,9 @@ static void test_pipeline(int argc, char** argv)
 
     std::cout<<"\n\n\n------------------------\n";
 
-    for (unsigned int i = 0; i < cameras.size(); i++) {
+    for (const auto & camera : cameras) {
         std::cout<<"=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n"
-                << cameras[i]
+                << camera
                 <<"\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-"<<std::endl;
     }
 }

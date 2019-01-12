@@ -1,7 +1,4 @@
 // This is core/vgui/internals/vgui_accelerate_x11.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author David Capel
@@ -22,8 +19,10 @@
 //   XMesaGetCurrentBuffer (function)
 //   XMesaGetBackBuffer (function)
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>

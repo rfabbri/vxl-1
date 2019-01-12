@@ -20,7 +20,9 @@
 #include <volm/desc/volm_desc.h>
 #include <volm/desc/volm_desc_indexer.h>
 #include <vbl/vbl_smart_ptr.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <volm/volm_geo_index.h>
 #include <volm/volm_geo_index_sptr.h>
 #include <volm/volm_io.h>
@@ -36,10 +38,10 @@ class volm_desc_matcher : public vbl_ref_count
 {
 public:
   //: Default constructor
-  volm_desc_matcher() {}
+  volm_desc_matcher() = default;
 
   //: Destructor
-  virtual ~volm_desc_matcher() {}
+  ~volm_desc_matcher() override = default;
 
   //: Comparison method to calculate the similarity of descriptor a and b, return a score from 0 to 1
   virtual float score(volm_desc_sptr const& query, volm_desc_sptr const& index) {return 0;}

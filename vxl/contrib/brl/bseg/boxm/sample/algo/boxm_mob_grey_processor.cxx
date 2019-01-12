@@ -8,7 +8,10 @@
 #include <bsta/bsta_mixture_fixed.h>
 #include <bsta/bsta_beta_f1.h>
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Expected value
 boxm_apm_traits<BOXM_APM_MOB_GREY>::obs_datatype

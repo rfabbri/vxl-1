@@ -1,11 +1,11 @@
 // This is core/vgl/vgl_quadric_3d.hxx
 #ifndef vgl_quadric_3d_hxx_
 #define vgl_quadric_3d_hxx_
-#include "vgl_quadric_3d.h"
-#include "vgl_tolerance.h"
 #include <iostream>
 #include <algorithm>
 #include <functional>
+#include "vgl_quadric_3d.h"
+#include "vgl_tolerance.h"
 #define RANK_FACTOR 100000
 #define DET_FACTOR 100
 static const char* quadric_class_name[] =
@@ -137,7 +137,7 @@ void vgl_quadric_3d<T>::set(std::vector<std::vector<T> > const& Q){
 }
 template <class T>
 std::vector<std::vector<T> > vgl_quadric_3d<T>::coef_matrix() const{
-  vcl_vector<std::vector<T> > Q(4,vcl_vector<T>(4,T(0)));
+  std::vector<std::vector<T> > Q(4,std::vector<T>(4,T(0)));
   Q[0][0]=a_;Q[1][1]=b_; Q[2][2]=c_; Q[3][3]=j_;
   Q[0][1]= Q[1][0]=d_/T(2); Q[0][2]= Q[2][0]=e_/T(2);
   Q[0][3]= Q[3][0]=g_/T(2); Q[1][2]= Q[2][1]=f_/T(2);
@@ -222,9 +222,9 @@ std::vector<T> lv;
   //determine the rank of Q
   T rank_tol = T(RANK_FACTOR)*tol;
   std::vector<T> eig_vals;
-  for(size_t i =0; i<4; ++i){
-    eig_vals.push_back(fabs(l[i]));
-        lv.push_back(l[i]);
+  for(auto & i : l){
+    eig_vals.push_back(fabs(i));
+        lv.push_back(i);
 }
 
   std::sort(eig_vals.begin(), eig_vals.end(), std::greater<T>());
@@ -261,9 +261,9 @@ std::vector<T> lv;
   std::vector<T> lvu;
   eigen<T, 3>( mu, lu, vcu);
   std::vector<T> upper_eig_vals;
-  for(size_t i =0; i<3; ++i){
-   upper_eig_vals.push_back(fabs(lu[i]));
-   lvu.push_back(lu[i]);
+  for(auto & i : lu){
+   upper_eig_vals.push_back(fabs(i));
+   lvu.push_back(i);
  }
   std::sort(upper_eig_vals.begin(), upper_eig_vals.end(), std::greater<T>());
   largest_eig_val = upper_eig_vals[0];
@@ -386,8 +386,8 @@ void vgl_quadric_3d<T>::upper_3x3_eigensystem(std::vector<T>& eigenvalues, std::
       mu[r][c] = Q[r][c];
 
   eigen<T, 3>( mu, lu, vcu);
-  for(size_t i =0; i<3; ++i){
-    eigenvalues.push_back(lu[i]);
+  for(auto & i : lu){
+    eigenvalues.push_back(i);
   }
   eigenvectors.resize(3, std::vector<T>(3, T(0)));
   for(size_t r = 0; r<3; ++r)
@@ -622,7 +622,7 @@ void eigen(R m[n][n], R l[n], R vc[n][n]){
       }
     }
   }
-  while(1){
+  while(true){
     R mod = 0; int i=0, j=0;
     {int k=n; while(k--){
         int m=n;

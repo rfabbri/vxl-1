@@ -20,7 +20,9 @@
 #include <vbl/vbl_ref_count.h>
 #include <bgrl/bgrl_vertex_sptr.h>
 #include <vsl/vsl_binary_io.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Directed edge from one vertex to another
 class bgrl_edge : public vbl_ref_count
@@ -30,11 +32,11 @@ class bgrl_edge : public vbl_ref_count
   friend class bgrl_graph;
 
   // Constructor
-  bgrl_edge() : from_(VXL_NULLPTR), to_(VXL_NULLPTR) {}
+  bgrl_edge() : from_(nullptr), to_(nullptr) {}
   // Copy constructor
   bgrl_edge(bgrl_edge const& e) : vbl_ref_count(), from_(e.from_), to_(e.to_) {}
   // Destructor
-  virtual ~bgrl_edge() {}
+  ~bgrl_edge() override = default;
 
   //: Smart pointer to the vertex where this edge originates
   bgrl_vertex_sptr from() const { return bgrl_vertex_sptr(from_); }

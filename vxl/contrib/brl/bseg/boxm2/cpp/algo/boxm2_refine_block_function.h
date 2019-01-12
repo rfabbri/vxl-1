@@ -9,7 +9,9 @@
 #include <boxm2/cpp/algo/boxm2_mog3_grey_processor.h>
 #include <boct/boct_bit_tree.h>
 #include <vnl/vnl_vector_fixed.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/io/boxm2_cache.h>
 
 class boxm2_refine_block_function
@@ -22,10 +24,10 @@ class boxm2_refine_block_function
   typedef vnl_vector_fixed<ushort, 4> ushort4;
 
   //: "default" constructor
-  boxm2_refine_block_function() {}
+  boxm2_refine_block_function() = default;
 
   //: initialize generic data base pointers as their data type
-  bool init_data(boxm2_scene_sptr scene, boxm2_block* blk, std::vector<boxm2_data_base*> & datas, float prob_thresh);
+  bool init_data(const boxm2_scene_sptr& scene, boxm2_block* blk, std::vector<boxm2_data_base*> & datas, float prob_thresh);
 
   //: refine function;
   bool refine();
@@ -74,7 +76,7 @@ class boxm2_refine_block_function
 ////////////////////////////////////////////////////////////////////////////////
 //MAIN REFINE FUNCTION
 ////////////////////////////////////////////////////////////////////////////////
-void boxm2_refine_block( boxm2_scene_sptr scene,
+void boxm2_refine_block( const boxm2_scene_sptr& scene,
                          boxm2_block* blk,
                          std::vector<boxm2_data_base*> & datas,
                          float prob_thresh,

@@ -6,8 +6,10 @@
 #include <algorithm>
 #include "sdet_sel_base.h"
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 //#include <mbl/mbl_stats_1d.h>
 
 #include "sdet_edgemap.h"
@@ -32,7 +34,7 @@ static void calc_mean_var(double& mean, double& var,
 }
 //: Constructor
 sdet_sel_base
-::sdet_sel_base(sdet_edgemap_sptr edgemap,
+::sdet_sel_base(const sdet_edgemap_sptr& edgemap,
                 sdet_curvelet_map& cvlet_map,
                 sdet_edgel_link_graph& edge_link_graph,
                 sdet_curve_fragment_graph& curve_frag_graph,
@@ -71,8 +73,7 @@ sdet_sel_base
 //:destructor
 sdet_sel_base
 ::~sdet_sel_base()
-{
-}
+= default;
 
 //********************************************************************//
 // User Friendly functions
@@ -179,30 +180,26 @@ sdet_sel_base
 
   if (centered_) {
     if (bidir_) {
-      for (unsigned i=0; i<edgemap_->edgels.size(); i++) {
-        sdet_edgel* eA = edgemap_->edgels[i];
+      for (auto eA : edgemap_->edgels) {
         // centered_ && bidir_
         build_curvelets_greedy_for_edge(eA, max_size_to_group, use_flag, true, centered_, false); //first in the forward direction
         build_curvelets_greedy_for_edge(eA, max_size_to_group, use_flag, false, centered_, false); //then in the other direction
       }
     } else {
-      for (unsigned i=0; i<edgemap_->edgels.size(); i++) {
-        sdet_edgel* eA = edgemap_->edgels[i];
+      for (auto eA : edgemap_->edgels) {
         // centered_ && !bidir_
         build_curvelets_greedy_for_edge(eA, max_size_to_group, use_flag, true, centered_, false); //first in the forward direction
       }
     }
   } else {
     if (bidir_) {
-      for (unsigned i=0; i<edgemap_->edgels.size(); i++) {
-        sdet_edgel* eA = edgemap_->edgels[i];
+      for (auto eA : edgemap_->edgels) {
         build_curvelets_greedy_for_edge(eA, max_size_to_group, use_flag, true, centered_, true); //forward half
         build_curvelets_greedy_for_edge(eA, max_size_to_group, use_flag, false, centered_, true); //backward half
         // !centered_ && bidir_
       }
     } else {
-      for (unsigned i=0; i<edgemap_->edgels.size(); i++) {
-        sdet_edgel* eA = edgemap_->edgels[i];
+      for (auto eA : edgemap_->edgels) {
         build_curvelets_greedy_for_edge(eA, max_size_to_group, use_flag, true, centered_, true); //forward half
         build_curvelets_greedy_for_edge(eA, max_size_to_group, use_flag, true, centered_, false); //ENO style forward
         // !centered_ && !bidir_
@@ -227,7 +224,7 @@ sdet_sel_base
     sdet_edgel* eA = edgemap_->edgels[i];
 
     //add all the curvelets anchored at this edgel to all the other edgels in it
-    sdet_curvelet_list_iter cv_it = curvelet_map_.curvelets(i).begin();
+    auto cv_it = curvelet_map_.curvelets(i).begin();
     for ( ; cv_it!=curvelet_map_.curvelets(i).end(); cv_it++){
       sdet_curvelet* cvlet = (*cv_it);
 
@@ -243,7 +240,7 @@ sdet_sel_base
         bool cvlet_exists = false; //reset flag
 
         //go over all the curvelets (not just anchored) formed by the current edgel
-        sdet_curvelet_list_iter cv_it2 = curvelet_map_.curvelets(eB->id).begin();
+        auto cv_it2 = curvelet_map_.curvelets(eB->id).begin();
         for ( ; cv_it2!=curvelet_map_.curvelets(eB->id).end(); cv_it2++){
           sdet_curvelet* cvlet2 = (*cv_it2);
 
@@ -309,7 +306,7 @@ sdet_sel_base
 {
   for (unsigned i=0; i<edgemap_->edgels.size(); i++)
   {
-    sdet_curvelet_list_iter cv_it = curvelet_map_.curvelets(i).begin();
+    auto cv_it = curvelet_map_.curvelets(i).begin();
     for ( ; cv_it!=curvelet_map_.curvelets(i).end(); cv_it++)
       (*cv_it)->compute_properties(rad_, token_len_);
   }
@@ -330,7 +327,7 @@ sdet_sel_base
   std::vector<sdet_curvelet*> cvlets_to_del;
   for (unsigned i=0; i<edgemap_->edgels.size(); i++)
   {
-    sdet_curvelet_list_iter cv_it = curvelet_map_.curvelets(i).begin();
+    auto cv_it = curvelet_map_.curvelets(i).begin();
     for ( ; cv_it!=curvelet_map_.curvelets(i).end(); cv_it++){
       sdet_curvelet* cvlet = (*cv_it);
 
@@ -345,8 +342,8 @@ sdet_sel_base
   }
 
   //now actually delete them
-  for (unsigned i=0; i<cvlets_to_del.size(); i++)
-    curvelet_map_.remove_curvelet(cvlets_to_del[i]);
+  for (auto & i : cvlets_to_del)
+    curvelet_map_.remove_curvelet(i);
   cvlets_to_del.clear();
 }
 
@@ -365,7 +362,7 @@ sdet_sel_base
   std::vector<sdet_curvelet*> cvlets_to_del;
   for (unsigned i=0; i<edgemap_->edgels.size(); i++)
   {
-    sdet_curvelet_list_iter cv_it = curvelet_map_.curvelets(i).begin();
+    auto cv_it = curvelet_map_.curvelets(i).begin();
     for ( ; cv_it!=curvelet_map_.curvelets(i).end(); cv_it++){
       sdet_curvelet* cvlet = (*cv_it);
 
@@ -375,8 +372,8 @@ sdet_sel_base
   }
 
   //now actually delete them
-  for (unsigned i=0; i<cvlets_to_del.size(); i++)
-    curvelet_map_.remove_curvelet(cvlets_to_del[i]);
+  for (auto & i : cvlets_to_del)
+    curvelet_map_.remove_curvelet(i);
   cvlets_to_del.clear();
 }
 
@@ -395,7 +392,7 @@ sdet_sel_base
   std::vector<sdet_curvelet*> cvlets_to_del;
   for (unsigned i=0; i<edgemap_->edgels.size(); i++)
   {
-    sdet_curvelet_list_iter cv_it = curvelet_map_.curvelets(i).begin();
+    auto cv_it = curvelet_map_.curvelets(i).begin();
     for ( ; cv_it!=curvelet_map_.curvelets(i).end(); cv_it++){
       if ((*cv_it)->quality<quality_threshold)
         cvlets_to_del.push_back(*cv_it);
@@ -403,8 +400,8 @@ sdet_sel_base
   }
 
   //now actually delete them
-  for (unsigned i=0; i<cvlets_to_del.size(); i++)
-    curvelet_map_.remove_curvelet(cvlets_to_del[i]);
+  for (auto & i : cvlets_to_del)
+    curvelet_map_.remove_curvelet(i);
   cvlets_to_del.clear();
 }
 
@@ -428,7 +425,7 @@ sdet_sel_base
     sdet_edgel* eA = edgemap_->edgels[i];
 
     //for each cvlet before the edgel, see if a c1 cvlet can be found after it
-    sdet_curvelet_list_iter cv_it = curvelet_map_.curvelets(i).begin();
+    auto cv_it = curvelet_map_.curvelets(i).begin();
     for ( ; cv_it!=curvelet_map_.curvelets(i).end(); cv_it++)
     {
       sdet_curvelet* cvlet1 = (*cv_it);
@@ -437,7 +434,7 @@ sdet_sel_base
       bool cvlet2_found = false;
 
       //go over all the cvlet after
-      sdet_curvelet_list_iter cv_it2 = curvelet_map_.curvelets(i).begin();
+      auto cv_it2 = curvelet_map_.curvelets(i).begin();
       for ( ; cv_it2!=curvelet_map_.curvelets(i).end(); cv_it2++)
       {
         sdet_curvelet* cvlet2 = (*cv_it2);
@@ -456,8 +453,8 @@ sdet_sel_base
   }
 
   //now actually delete them
-  for (unsigned i=0; i<cvlets_to_del.size(); i++)
-    curvelet_map_.remove_curvelet(cvlets_to_del[i]);
+  for (auto & i : cvlets_to_del)
+    curvelet_map_.remove_curvelet(i);
   cvlets_to_del.clear();
 
 }
@@ -471,7 +468,7 @@ sdet_sel_base
   edge_link_graph_.clear();
   edge_link_graph_.resize(edgemap_->num_edgels());
 
-  unsigned R = (unsigned) std::ceil(proximity_threshold);
+  auto R = (unsigned) std::ceil(proximity_threshold);
 
   // 2a) go over all the curvelets and reset the used flags
   for (unsigned i=0; i<edgemap_->edgels.size(); i++)
@@ -490,8 +487,7 @@ sdet_sel_base
           continue;
 
         //for all the edgels in its neighborhood
-        for (unsigned k=0; k<edgemap_->cell(xx, yy).size(); k++){
-          sdet_edgel* eB = edgemap_->cell(xx, yy)[k];
+        for (auto eB : edgemap_->cell(xx, yy)){
           if (eB == eA) continue;
 
           //form a link between eA and eB (if affinity is high)
@@ -514,7 +510,7 @@ sdet_sel_base
 
           //threshold using a simple energy function
           if (E<affinity_threshold)
-            edge_link_graph_.link(eA, eB, VXL_NULLPTR);
+            edge_link_graph_.link(eA, eB, nullptr);
         }
       }
     }
@@ -545,7 +541,7 @@ sdet_sel_base
   for (unsigned i=0; i<edgemap_->edgels.size(); i++)
   {
     //for all curvelets that are larger than the group size threshold
-    sdet_curvelet_list_iter cv_it = curvelet_map_.curvelets(i).begin();
+    auto cv_it = curvelet_map_.curvelets(i).begin();
     for ( ; cv_it!=curvelet_map_.curvelets(i).end(); cv_it++)
       (*cv_it)->used = false; //reset this flag
   }
@@ -556,7 +552,7 @@ sdet_sel_base
     sdet_edgel* eA = edgemap_->edgels[i];
 
     //for all curvelets that are larger than the group size threshold
-    sdet_curvelet_list_iter cv_it = curvelet_map_.curvelets(i).begin();
+    auto cv_it = curvelet_map_.curvelets(i).begin();
     for ( ; cv_it!=curvelet_map_.curvelets(i).end(); cv_it++){
       sdet_curvelet* cvlet = (*cv_it);
       if (cvlet->order() < min_group_size) continue;
@@ -577,10 +573,10 @@ sdet_sel_base
   //}
 
   //4) after forming the link graph, determine the degree of overlap of the links in the graph
-  for (unsigned i=0; i<edge_link_graph_.cLinks.size(); i++){
+  for (auto & cLink : edge_link_graph_.cLinks){
     //all child links of each edgel covers all the links
-    sdet_link_list_iter l_it = edge_link_graph_.cLinks[i].begin();
-    for (; l_it != edge_link_graph_.cLinks[i].end(); l_it++){
+    auto l_it = cLink.begin();
+    for (; l_it != cLink.end(); l_it++){
       (*l_it)->deg_overlap = count_degree_overlap((*l_it));
     }
   }
@@ -595,9 +591,9 @@ sdet_sel_base
   int max_deg = 0;
 
   //go over all pairs of curvelets causing the link
-  sdet_curvelet_list_iter c_it = link->curvelets.begin();
+  auto c_it = link->curvelets.begin();
   for (; c_it != link->curvelets.end(); c_it++){
-    sdet_curvelet_list_iter c_it2 = c_it;
+    auto c_it2 = c_it;
     c_it2++;
     for (; c_it2 != link->curvelets.end(); c_it2++)
     {
@@ -728,7 +724,7 @@ void sdet_sel_base::form_links_from_a_curvelet(sdet_edgel* eA, sdet_curvelet* cv
     // (3)  -zAbc- + -zaBc- = A-B
 
     for (unsigned k=0; k<cvlet->edgel_chain.size(); k++){
-      sdet_edgel *eX=VXL_NULLPTR, *eY=VXL_NULLPTR;
+      sdet_edgel *eX=nullptr, *eY=nullptr;
       if (k>0 && cvlet->edgel_chain[k-1]==eA) //the link after it (eA --> edgel_chain[k])
       {
         if (k>1) eX = cvlet->edgel_chain[k-2];
@@ -766,7 +762,7 @@ void sdet_sel_base::form_links_from_a_curvelet(sdet_edgel* eA, sdet_curvelet* cv
 
     for (unsigned k=0; k<cvlet->edgel_chain.size(); k++)
     {
-      sdet_edgel *eX=VXL_NULLPTR, *eY=VXL_NULLPTR;
+      sdet_edgel *eX=nullptr, *eY=nullptr;
       if (k<cvlet->edgel_chain.size()-2 && cvlet->edgel_chain[k+1]==eA) //the link before it (edgel_chain[k] --> eA)
       {
         eX = cvlet->edgel_chain[k];
@@ -791,7 +787,7 @@ sdet_sel_base
   bool link_found = false;
 
   //for all curvelets of eA that are larger than the group size threshold
-  sdet_curvelet_list_iter cv_it = curvelet_map_.curvelets(eA->id).begin();
+  auto cv_it = curvelet_map_.curvelets(eA->id).begin();
   for ( ; cv_it!=curvelet_map_.curvelets(eA->id).end() && !link_found; cv_it++)
   {
     sdet_curvelet* cvlet = (*cv_it);
@@ -846,7 +842,7 @@ sdet_sel_base
   //we know eC-->eN, now look for eN-->eC link
 
   //for all curvelets that are larger than the group size threshold
-  sdet_curvelet_list_iter cv_it = curvelet_map_.curvelets(eN->id).begin();
+  auto cv_it = curvelet_map_.curvelets(eN->id).begin();
   for ( ; cv_it!=curvelet_map_.curvelets(eN->id).end(); cv_it++)
   {
     sdet_curvelet* cvlet = (*cv_it);
@@ -877,7 +873,7 @@ sdet_sel_base
   bool link_found = false;
 
   //go over all curvelets of eA and find the ones that contain eB
-  sdet_curvelet_list_iter cv_it = curvelet_map_.curvelets(eA->id).begin();
+  auto cv_it = curvelet_map_.curvelets(eA->id).begin();
   for ( ; cv_it!=curvelet_map_.curvelets(eA->id).end() && !link_found; cv_it++)
   {
     sdet_curvelet* cvlet = (*cv_it);
@@ -886,7 +882,7 @@ sdet_sel_base
       continue;
 
     for (unsigned k=0; k<cvlet->edgel_chain.size(); k++){
-      sdet_edgel *eX=VXL_NULLPTR, *eY=VXL_NULLPTR;
+      sdet_edgel *eX=nullptr, *eY=nullptr;
       if (k<cvlet->edgel_chain.size()-1 && cvlet->edgel_chain[k]==eA && cvlet->edgel_chain[k+1]==eB)
       {
         if (k>0) eX = cvlet->edgel_chain[k-1];
@@ -919,7 +915,7 @@ sdet_sel_base
   // they are supported by the same edgels (i.e., that eX-eC->eN-eY and eX-eC<-eN-eY both exist)
 
   //for all curvelets of eN that are larger than the group size threshold
-  sdet_curvelet_list_iter cv_it = curvelet_map_.curvelets(eN->id).begin();
+  auto cv_it = curvelet_map_.curvelets(eN->id).begin();
   for ( ; cv_it!=curvelet_map_.curvelets(eN->id).end(); cv_it++)
   {
     sdet_curvelet* cvlet = (*cv_it);
@@ -969,13 +965,13 @@ sdet_sel_base
                                           unsigned min_group_size)
 {
   //we know eX-->eA-->eY exists, we need to verify that -eX-eA-eY exists for eX and eY.
-  sdet_curvelet* cvlet1 = VXL_NULLPTR;
-  sdet_curvelet* cvlet2 = VXL_NULLPTR;
+  sdet_curvelet* cvlet1 = nullptr;
+  sdet_curvelet* cvlet2 = nullptr;
 
   bool cvlet_found = false;
 
   //for all curvelets of eX that are larger than the group size threshold
-  sdet_curvelet_list_iter cv_it = curvelet_map_.curvelets(eX->id).begin();
+  auto cv_it = curvelet_map_.curvelets(eX->id).begin();
   for ( ; cv_it!=curvelet_map_.curvelets(eX->id).end() && !cvlet_found; cv_it++)
   {
     cvlet1 = (*cv_it);
@@ -1030,10 +1026,10 @@ sdet_sel_base
 {
   //prune the link graph of spurious links (ie links that cannot be extended)
   std::vector<sdet_link*> links_to_del;
-  for (unsigned i=0; i<edge_link_graph_.cLinks.size(); i++)
+  for (auto & cLink : edge_link_graph_.cLinks)
   {
-    sdet_link_list_iter l_it = edge_link_graph_.cLinks[i].begin();
-    for (;l_it!=edge_link_graph_.cLinks[i].end(); l_it++)
+    auto l_it = cLink.begin();
+    for (;l_it!=cLink.end(); l_it++)
     {
       if (!link_valid(*l_it)) //invalid link
         links_to_del.push_back(*l_it);
@@ -1041,8 +1037,8 @@ sdet_sel_base
   }
 
   //now delete all these single links
-  for (unsigned i=0; i<links_to_del.size(); i++)
-    edge_link_graph_.remove_link(links_to_del[i]);
+  for (auto & i : links_to_del)
+    edge_link_graph_.remove_link(i);
 
   links_to_del.clear();
 }
@@ -1059,10 +1055,10 @@ sdet_sel_base
     std::vector<sdet_link*> links_to_del;
 
     // go over all the links of the link graph and determine if there is a counterpart to each of the links
-    for (unsigned i=0; i<edge_link_graph_.cLinks.size(); i++)
+    for (auto & cLink : edge_link_graph_.cLinks)
     {
-      sdet_link_list_iter l_it = edge_link_graph_.cLinks[i].begin();
-      for (;l_it!=edge_link_graph_.cLinks[i].end(); l_it++)
+      auto l_it = cLink.begin();
+      for (;l_it!=cLink.end(); l_it++)
       {
         if (!link_bidirectional(*l_it)) //invalid link
           links_to_del.push_back(*l_it);
@@ -1072,13 +1068,13 @@ sdet_sel_base
     LG_consistent = (links_to_del.size()==0);
 
     //delete the inconsistent links along with the curvelets causing them
-    for (unsigned j=0; j<links_to_del.size(); j++)
+    for (auto & j : links_to_del)
     {
       //Note: comment this part to visualize the links that are removed by this process
 
       //first remove the cvlets
-      sdet_curvelet_list_iter cv_it = links_to_del[j]->curvelets.begin();
-      for (; cv_it != links_to_del[j]->curvelets.end(); cv_it++)
+      auto cv_it = j->curvelets.begin();
+      for (; cv_it != j->curvelets.end(); cv_it++)
         curvelet_map_.remove_curvelet(*cv_it);
     }
 
@@ -1115,9 +1111,9 @@ sdet_sel_base
 
   //find the max deg of overlap for all the links
   unsigned max_overlap = 0;
-  for (unsigned i=0; i<edge_link_graph_.cLinks.size(); i++){
-    sdet_link_list_iter l_it = edge_link_graph_.cLinks[i].begin();
-    for (;l_it!=edge_link_graph_.cLinks[i].end(); l_it++){
+  for (auto & cLink : edge_link_graph_.cLinks){
+    auto l_it = cLink.begin();
+    for (;l_it!=cLink.end(); l_it++){
       if ((*l_it)->deg_overlap > (int)max_overlap)
         max_overlap = (*l_it)->deg_overlap;
     }
@@ -1141,7 +1137,7 @@ sdet_sel_base
     link_graph_temp.pLinks.resize(edgemap_->edgels.size());
 
     for (unsigned j=0; j<edge_link_graph_.cLinks.size(); j++){
-      sdet_link_list_iter l_it = edge_link_graph_.cLinks[j].begin();
+      auto l_it = edge_link_graph_.cLinks[j].begin();
       for (;l_it!=edge_link_graph_.cLinks[j].end(); l_it++){
         if ((*l_it)->deg_overlap >= (int)min_deg_to_link_)
           link_graph_temp.cLinks[j].push_back(*l_it);
@@ -1149,7 +1145,7 @@ sdet_sel_base
     }
 
     for (unsigned j=0; j<edge_link_graph_.pLinks.size(); j++){
-      sdet_link_list_iter l_it = edge_link_graph_.pLinks[j].begin();
+      auto l_it = edge_link_graph_.pLinks[j].begin();
       for (;l_it!=edge_link_graph_.pLinks[j].end(); l_it++){
         if ((*l_it)->deg_overlap >= (int)min_deg_to_link_)
           link_graph_temp.pLinks[j].push_back(*l_it);
@@ -1204,10 +1200,8 @@ sdet_sel_base
   //    (b) trace in both directions until an illegal edgel is reached
   //    (c) prune out short chains
 
-  for (unsigned i=0; i<edgemap_->edgels.size(); i++)
+  for (auto first_edgel : edgemap_->edgels)
   {
-    sdet_edgel* first_edgel = edgemap_->edgels[i];
-
     //if it's already linked, ignore
     if (ELG.linked[first_edgel->id])
       continue;
@@ -1216,7 +1210,7 @@ sdet_sel_base
     if (ELG.edgel_is_legal_first_edgel(first_edgel))
     {
       //start a chain from this edgel
-      sdet_edgel_chain* chain = new sdet_edgel_chain();
+      auto* chain = new sdet_edgel_chain();
 
       //add the first edgel to the chain
       chain->push_back(first_edgel);
@@ -1310,7 +1304,7 @@ sdet_sel_base
 
     //make sure that this link is locally supported by a curvelet, otherwise it's spurious
     //go over all the cvlets on this link and make sure that at least one of them is anchored on its parent
-    sdet_curvelet_list_iter cv_it = link->curvelets.begin();
+    auto cv_it = link->curvelets.begin();
     for (; cv_it != link->curvelets.end(); cv_it++)
     {
       sdet_curvelet* cvlet = (*cv_it);
@@ -1331,7 +1325,7 @@ sdet_sel_base
   unsigned tar_id = link->ce->id;
 
   //is there a link from the target to the source?
-  sdet_link_list_iter l_it = edge_link_graph_.cLinks[tar_id].begin();
+  auto l_it = edge_link_graph_.cLinks[tar_id].begin();
   for (;l_it!=edge_link_graph_.cLinks[tar_id].end(); l_it++)
   {
     if ((*l_it)->ce->id == (int)src_id)
@@ -1366,15 +1360,14 @@ sdet_sel_base
   //now go over the CFG and create the mapping
   int cnt=1;
 
-  sdet_edgel_chain_list_iter f_it = curve_frag_graph_.frags.begin();
+  auto f_it = curve_frag_graph_.frags.begin();
   for (; f_it != curve_frag_graph_.frags.end(); f_it++)
   {
     sdet_edgel_chain* chain = (*f_it);
 
     //go over the edgel chain and insert them into the mapping
-    for (unsigned i=0; i<chain->edgels.size(); i++)
+    for (auto e : chain->edgels)
     {
-      sdet_edgel* e = chain->edgels[i];
       cId_[e->id] = cnt;
     }
 
@@ -1397,7 +1390,7 @@ sdet_sel_base
     curvelet_map_.resize(edgemap_->num_edgels());
   }
 
-  sdet_edgel_chain_list_iter f_it = curve_frag_graph_.frags.begin();
+  auto f_it = curve_frag_graph_.frags.begin();
   for (; f_it != curve_frag_graph_.frags.end(); f_it++)
   {
     sdet_edgel_chain* chain = (*f_it);
@@ -1447,7 +1440,7 @@ sdet_sel_base
           std::reverse(cvlet_chain.begin(), cvlet_chain.end());
 
         //now form a curvelet from this subchain
-        sdet_curvelet* cvlet = VXL_NULLPTR;
+        sdet_curvelet* cvlet = nullptr;
         if (cvlet_chain.size()>3)
           cvlet = form_an_edgel_grouping(ref_e, cvlet_chain, true, centered_, false);
 
@@ -1477,7 +1470,7 @@ sdet_sel_base
           std::reverse(cvlet_chainb.begin(), cvlet_chainb.end());
 
         //now form a curvelet from this subchain
-        sdet_curvelet* cvletb = VXL_NULLPTR;
+        sdet_curvelet* cvletb = nullptr;
         if (cvlet_chainb.size()>3)
           cvletb = form_an_edgel_grouping(ref_e, cvlet_chainb);
 
@@ -1499,7 +1492,7 @@ sdet_sel_base
           std::reverse(cvlet_chaina.begin(), cvlet_chaina.end());
 
         //now form a curvelet from this subchain
-        sdet_curvelet* cvleta = VXL_NULLPTR;
+        sdet_curvelet* cvleta = nullptr;
         if (cvlet_chainb.size()>3)
           cvleta = form_an_edgel_grouping(ref_e, cvlet_chaina);
 
@@ -1519,9 +1512,9 @@ sdet_sel_base
   //form a new curvelet map
   curvelet_map_.resize(edgemap_->num_edgels());
 
-  unsigned half_size = (unsigned) std::floor((max_size_to_group-1)/2.0);
+  auto half_size = (unsigned) std::floor((max_size_to_group-1)/2.0);
 
-  sdet_edgel_chain_list_iter f_it = curve_frag_graph_.frags.begin();
+  auto f_it = curve_frag_graph_.frags.begin();
   for (; f_it != curve_frag_graph_.frags.end(); f_it++)
   {
     sdet_edgel_chain* chain = (*f_it);
@@ -1616,9 +1609,9 @@ sdet_sel_base
 
   //size of segment to ignore at the beginning and end of a contour
   unsigned max_size_to_group=7; //temp (should be passed in to this function)
-  unsigned half_size = (unsigned) std::floor((max_size_to_group-1)/2.0);
+  auto half_size = (unsigned) std::floor((max_size_to_group-1)/2.0);
 
-  sdet_edgel_chain_list_iter f_it = curve_frag_graph_.frags.begin();
+  auto f_it = curve_frag_graph_.frags.begin();
   for (; f_it != curve_frag_graph_.frags.end(); f_it++)
   {
     sdet_edgel_chain* chain = (*f_it);
@@ -1631,7 +1624,7 @@ sdet_sel_base
 
     //Now trace through the curve fragment and verify that each edgel has a legal curve bundle
     //if not form sub chains
-    sdet_edgel_chain* sub_chain = VXL_NULLPTR;
+    sdet_edgel_chain* sub_chain = nullptr;
     bool needs_to_be_deleted = false;
     //bool first_frag = true;
     bool break_found = false;
@@ -1679,14 +1672,14 @@ sdet_sel_base
   }
 
   //First, delete all the fragments marked for deletion
-  for (unsigned j=0; j<frags_to_del.size(); j++)
-    curve_frag_graph_.remove_fragment(frags_to_del[j]);
+  for (auto & j : frags_to_del)
+    curve_frag_graph_.remove_fragment(j);
 
   //Finally, add all the new fragments to curve fragment graph
-  for (unsigned j=0; j<new_frags.size(); j++)
+  for (auto & new_frag : new_frags)
   {
-    if (new_frags[j]->edgels.size()>2)
-      curve_frag_graph_.insert_fragment(new_frags[j]);
+    if (new_frag->edgels.size()>2)
+      curve_frag_graph_.insert_fragment(new_frag);
   }
 
   std::cout << "done." << std::endl;
@@ -1698,11 +1691,9 @@ sdet_sel_base
 ::evaluate_curvelet_quality(int method)
 {
   //for each edgel, for each curvelet, compute quality using the specified method
-  for (unsigned i=0; i<edgemap_->edgels.size(); i++)
+  for (auto eA : edgemap_->edgels)
   {
-    sdet_edgel* eA = edgemap_->edgels[i];
-
-    sdet_curvelet_list_iter it = curvelet_map_.curvelets(eA->id).begin();
+    auto it = curvelet_map_.curvelets(eA->id).begin();
     for (; it != curvelet_map_.curvelets(eA->id).end(); it++){
       sdet_curvelet* cvlet = (*it);
 
@@ -1770,7 +1761,7 @@ sdet_sel_base
   //for each edgel, for each curvelet, get accuracy measurements from the curve_model
   for (unsigned i=0; i<edgemap_->edgels.size(); i++)
   {
-    sdet_curvelet_list_iter it = curvelet_map_.curvelets(i).begin();
+    auto it = curvelet_map_.curvelets(i).begin();
     for (; it != curvelet_map_.curvelets(i).end(); it++){
       sdet_curvelet* cvlet = (*it);
 
@@ -1832,7 +1823,7 @@ sdet_sel_base
   unsigned max_size = 0;
   //find maximum size of curvelet
   for (unsigned i=0; i<edgemap_->edgels.size(); i++){
-    sdet_curvelet_list_iter it = curvelet_map_.curvelets(i).begin();
+    auto it = curvelet_map_.curvelets(i).begin();
     for (; it != curvelet_map_.curvelets(i).end(); it++){
       sdet_curvelet* cvlet = (*it);
 
@@ -1859,16 +1850,14 @@ sdet_sel_base
   //count the # of edgels that have consistent curvelets of a particular size or lower
   std::vector<int> min_consistent_cvlet_edgel_cnt(max_size+1, 0);
 
-  for (unsigned i=0; i<edgemap_->edgels.size(); i++)
+  for (auto eA : edgemap_->edgels)
   {
-    sdet_edgel* eA = edgemap_->edgels[i];
-
     //keep track of the various sized curvelets formed by this edgel
     std::vector<bool> size_exists(max_size+1, false);
     std::vector<bool> consistent_size_exists(max_size+1, false);
 
     //for each edgel go over all the curvelets it forms
-    sdet_curvelet_list_iter it = curvelet_map_.curvelets(eA->id).begin();
+    auto it = curvelet_map_.curvelets(eA->id).begin();
     for (; it != curvelet_map_.curvelets(eA->id).end(); it++)
     {
       sdet_curvelet* cvlet = (*it);
@@ -1962,7 +1951,7 @@ sdet_sel_base
   if (edge_link_graph_.cLinks.size()==0)
     {
     std::cout << "No Link Graph !" <<std::endl;
-    return VXL_NULLPTR;
+    return nullptr;
     }
 
 
@@ -1971,9 +1960,9 @@ sdet_sel_base
   std::queue<sdet_EHT_node*> BFS_queue;
 
   //forward HT
-  sdet_EHT* HTF = new sdet_EHT();
+  auto* HTF = new sdet_EHT();
 
-  sdet_EHT_node* root1 = new sdet_EHT_node(edge);
+  auto* root1 = new sdet_EHT_node(edge);
   HTF->root = root1;
   BFS_queue.push(root1);
 
@@ -1996,7 +1985,7 @@ sdet_sel_base
       continue;
 
     //propagate this node
-    sdet_link_list_iter lit = edge_link_graph_.cLinks[cur_node->e->id].begin();
+    auto lit = edge_link_graph_.cLinks[cur_node->e->id].begin();
     for (; lit != edge_link_graph_.cLinks[cur_node->e->id].end(); lit++)
     {
       if (edge_link_graph_.linked[(*lit)->ce->id]) //don't go tracing in linked contours
@@ -2015,7 +2004,7 @@ sdet_sel_base
       }
 
       //else extend the tree to this edgel
-      sdet_EHT_node* new_node = new sdet_EHT_node((*lit)->ce);
+      auto* new_node = new sdet_EHT_node((*lit)->ce);
 
       cur_node->add_child(new_node);
       BFS_queue.push(new_node);
@@ -2042,7 +2031,7 @@ sdet_sel_base
       }
 
       //else extend the tree to this edgel
-      sdet_EHT_node* new_node = new sdet_EHT_node((*lit)->pe);
+      auto* new_node = new sdet_EHT_node((*lit)->pe);
 
       cur_node->add_child(new_node);
       BFS_queue.push(new_node);
@@ -2107,7 +2096,7 @@ sdet_sel_base
         }
 
         //copy this chain
-        sdet_edgel_chain* new_chain = new sdet_edgel_chain();
+        auto* new_chain = new sdet_edgel_chain();
         new_chain->append(edgel_chain);
         new_chain->temp = true; //make sure that the new frags are initialized with temp flags
 
@@ -2163,7 +2152,7 @@ sdet_sel_base
 
 
   //is this at a start or an end of an unambiguous chain?
-  sdet_edgel_chain_list_iter pcit = curve_frag_graph_.pFrags[eS->id].begin();
+  auto pcit = curve_frag_graph_.pFrags[eS->id].begin();
   for ( ; pcit != curve_frag_graph_.pFrags[eS->id].end(); pcit++)
   {
     sdet_edgel* pe = (*pcit)->edgels[(*pcit)->edgels.size()-2];
@@ -2175,7 +2164,7 @@ sdet_sel_base
 
     cons = cons || ((dx1*dx2 + dy1*dy2)/std::sqrt(dx1*dx1+dy1*dy1)/std::sqrt(dx2*dx2+dy2*dy2))>0;
   }
-  sdet_edgel_chain_list_iter ccit = curve_frag_graph_.cFrags[eS->id].begin();
+  auto ccit = curve_frag_graph_.cFrags[eS->id].begin();
   for ( ; ccit != curve_frag_graph_.cFrags[eS->id].end(); ccit++)
   {
     sdet_edgel* ce = (*ccit)->edgels[1];
@@ -2224,14 +2213,12 @@ sdet_sel_base
   if (!cons) return false; //no good at the end point
 
   //2) By Yuliang, use the two lists, check if it is a path between which unambiguous contours linked
-  for (unsigned int i =0; i<S_link_end_nodes.size(); ++i)
+  for (auto S_l_e : S_link_end_nodes)
     {
-    sdet_edgel* S_l_e = S_link_end_nodes[i];
     if(S_l_e == eE)
       return false;
-    for (unsigned int j=0; j<E_link_end_nodes.size(); ++j)
+    for (auto E_l_e : E_link_end_nodes)
       {
-      sdet_edgel* E_l_e = E_link_end_nodes[j];
       if(E_l_e == eS)
         return false;
       // the case two connected contours filling the path
@@ -2257,14 +2244,14 @@ sdet_sel_base
   //construct an edgel chain out of all three chains
   std::vector<sdet_edgel*> chain;
   if (Pchain.size())
-    for (unsigned i=0; i<Pchain.size(); i++) chain.push_back(Pchain[i]);
+    for (auto i : Pchain) chain.push_back(i);
   if (Tchain.size())
-    for (unsigned i=0; i<Tchain.size(); i++) chain.push_back(Tchain[i]);
+    for (auto i : Tchain) chain.push_back(i);
   if (Cchain.size())
-    for (unsigned i=0; i<Cchain.size(); i++) chain.push_back(Cchain[i]);
+    for (auto i : Cchain) chain.push_back(i);
 
   //now compute the metric
-  sdet_edgel *eA=VXL_NULLPTR, *eP=VXL_NULLPTR;
+  sdet_edgel *eA=nullptr, *eP=nullptr;
   double dsp = 0, thp = 0, total_ds =0.0, a=0.0,s1=0,s2=0,s=0,size=chain.size();
   for (unsigned i=1; i<chain.size(); i++)
   {
@@ -2309,7 +2296,7 @@ void sdet_sel_base::disambiguate_the_CFTG()
   //go over all the links of the CFTG
   std::vector<sdet_edgel*> dummy_chain;
 
-  sdet_CFTG_link_list_iter l_it = curve_frag_graph_.CFTG.Links.begin();
+  auto l_it = curve_frag_graph_.CFTG.Links.begin();
   for (; l_it != curve_frag_graph_.CFTG.Links.end(); l_it++)
   {
     sdet_CFTG_link* cur_Link = (*l_it);
@@ -2320,8 +2307,8 @@ void sdet_sel_base::disambiguate_the_CFTG()
     {
       //needs disambiguation
       double min_cost = 10000;
-      sdet_edgel_chain* best_chain = VXL_NULLPTR;
-    sdet_edgel_chain_list_iter f_it = cur_Link->cCFs.begin();
+      sdet_edgel_chain* best_chain = nullptr;
+    auto f_it = cur_Link->cCFs.begin();
     for(; f_it != cur_Link->cCFs.end(); f_it++)
       {
         sdet_edgel_chain* edgel_chain = (*f_it);
@@ -2337,7 +2324,7 @@ void sdet_sel_base::disambiguate_the_CFTG()
 
       //remove all except the best chain
       if (best_chain){
-        sdet_edgel_chain_list_iter f_it = cur_Link->cCFs.begin();
+        auto f_it = cur_Link->cCFs.begin();
         for(; f_it != cur_Link->cCFs.end(); f_it++)
           if ((*f_it) != best_chain)
             delete (*f_it);
@@ -2364,7 +2351,7 @@ void sdet_sel_base::disambiguate_the_CFTG()
       continue;
 
     //look for the link from the other direction
-    sdet_CFTG_link_list_iter l_it2 = curve_frag_graph_.CFTG.cLinks[cur_Link->eE->id].begin();
+    auto l_it2 = curve_frag_graph_.CFTG.cLinks[cur_Link->eE->id].begin();
     for (; l_it2 != curve_frag_graph_.CFTG.cLinks[cur_Link->eE->id].end(); l_it2++){
       if ((*l_it2)->eE == cur_Link->eS){
         //duplicate found
@@ -2450,9 +2437,9 @@ void sdet_sel_base::disambiguate_the_CFTG()
         links_to_del.push_back((*l_it));
     }
 
-    for (unsigned j=0; j<links_to_del.size(); j++){
-      GD_list.remove(links_to_del[j]);//also remove it from the GD list
-      curve_frag_graph_.CFTG.remove_link(links_to_del[j]);
+    for (auto & j : links_to_del){
+      GD_list.remove(j);//also remove it from the GD list
+      curve_frag_graph_.CFTG.remove_link(j);
     }
     links_to_del.clear();
 
@@ -2472,9 +2459,9 @@ void sdet_sel_base::disambiguate_the_CFTG()
         links_to_del.push_back((*l_it));
     }
 
-    for (unsigned j=0; j<links_to_del.size(); j++){
-      GD_list.remove(links_to_del[j]);//also remove it from the GD list
-      curve_frag_graph_.CFTG.remove_link(links_to_del[j]);
+    for (auto & j : links_to_del){
+      GD_list.remove(j);//also remove it from the GD list
+      curve_frag_graph_.CFTG.remove_link(j);
     }
     links_to_del.clear();
   }
@@ -2517,7 +2504,7 @@ void sdet_sel_base::correct_CFG_topology()
 
   for (unsigned int i=0; i<edgemap_->edgels.size(); ++i)
   {
-    sdet_edgel_chain *c1=VXL_NULLPTR, *c2=VXL_NULLPTR;
+    sdet_edgel_chain *c1=nullptr, *c2=nullptr;
 
     int deg = curve_frag_graph_.pFrags[i].size()+ curve_frag_graph_.cFrags[i].size();
     if (deg<2)
@@ -2529,7 +2516,7 @@ void sdet_sel_base::correct_CFG_topology()
 
       //segments need to meet continuity criteria (simple one for now)
       if (curve_frag_graph_.pFrags[i].size()>1){
-        sdet_edgel_chain_list_iter fit = curve_frag_graph_.pFrags[i].begin();
+        auto fit = curve_frag_graph_.pFrags[i].begin();
         c1 =  (*fit); fit++;
         c2 =  (*fit);
 
@@ -2549,7 +2536,7 @@ void sdet_sel_base::correct_CFG_topology()
         continue;
       }
       else {
-        sdet_edgel_chain_list_iter fit = curve_frag_graph_.cFrags[i].begin();
+        auto fit = curve_frag_graph_.cFrags[i].begin();
         c1 =  (*fit); fit++;
         c2 =  (*fit);
 
@@ -2581,7 +2568,7 @@ void sdet_sel_base::correct_CFG_topology()
 
   for (unsigned i=0; i<edgemap_->edgels.size(); i++)
   {
-    sdet_edgel_chain *c1=VXL_NULLPTR, *c2=VXL_NULLPTR;
+    sdet_edgel_chain *c1=nullptr, *c2=nullptr;
     sdet_edgel* eA = edgemap_->edgels[i];
 
     int deg = curve_frag_graph_.pFrags[i].size()+ curve_frag_graph_.cFrags[i].size();
@@ -2591,7 +2578,7 @@ void sdet_sel_base::correct_CFG_topology()
         //goal is to see if any two will produce smooth continuation
     sdet_edgel_chain_list node_frags;
         if(curve_frag_graph_.pFrags[i].size()!=0){
-        sdet_edgel_chain_list_iter p_fit = curve_frag_graph_.pFrags[i].begin();
+        auto p_fit = curve_frag_graph_.pFrags[i].begin();
             for(;p_fit!=curve_frag_graph_.pFrags[i].end();p_fit++)
         {
             node_frags.push_back(*p_fit);
@@ -2599,7 +2586,7 @@ void sdet_sel_base::correct_CFG_topology()
     }
 
         if(curve_frag_graph_.cFrags[i].size()!=0){
-        sdet_edgel_chain_list_iter c_fit = curve_frag_graph_.cFrags[i].begin();
+        auto c_fit = curve_frag_graph_.cFrags[i].begin();
             for(;c_fit!=curve_frag_graph_.cFrags[i].end();c_fit++)
         {
             node_frags.push_back(*c_fit);
@@ -2609,7 +2596,7 @@ void sdet_sel_base::correct_CFG_topology()
     node_frags.sort(is_longer); //sort all the pfrags and cfrags in length
 
         //compare each pair to decide merge or not
-        sdet_edgel_chain_list_iter fit_1=node_frags.begin();
+        auto fit_1=node_frags.begin();
     for (;fit_1!=--node_frags.end();){
         c1= *fit_1;
 
@@ -2619,7 +2606,7 @@ void sdet_sel_base::correct_CFG_topology()
             curve_frag_graph_.insert_fragment(c1);
         }
         fit_1++;
-        sdet_edgel_chain_list_iter fit_2 = fit_1, max_fit = fit_1;
+        auto fit_2 = fit_1, max_fit = fit_1;
         double max_SM = 0;
         for (;fit_2!=node_frags.end();fit_2++){
             c2=*fit_2;
@@ -2686,10 +2673,10 @@ static bool is_continue (const sdet_edgel_chain *c1, const sdet_edgel_chain *c2)
 static double get_continuity (const sdet_edgel_chain *c1, const sdet_edgel_chain *c2)
 {
         // using the median global continuity
-        sdet_edgel* e1=VXL_NULLPTR;
-        sdet_edgel* e2=VXL_NULLPTR;
-        sdet_edgel* e3=VXL_NULLPTR;
-        sdet_edgel* e4=VXL_NULLPTR;
+        sdet_edgel* e1=nullptr;
+        sdet_edgel* e2=nullptr;
+        sdet_edgel* e3=nullptr;
+        sdet_edgel* e4=nullptr;
         if(c1->edgels.size()>=5){
             e1 = c1->edgels[c1->edgels.size()-5];
             e2 = c1->edgels.back();
@@ -2726,7 +2713,7 @@ static bool share_same_ends(sdet_edgel_chain *c1, sdet_edgel_chain *c2)
 void sdet_sel_base::regular_contour_filter(){
 // first, deal with contours with length 3, which cause a lot of local problems
     sdet_edgel_chain_list Size_3_chain_list;
-    sdet_edgel_chain_list_iter fit = curve_frag_graph_.frags.begin();
+    auto fit = curve_frag_graph_.frags.begin();
     for(;fit!=curve_frag_graph_.frags.end();fit++)
     {
         sdet_edgel_chain *c1=*fit;
@@ -2742,7 +2729,7 @@ void sdet_sel_base::regular_contour_filter(){
     }
 
 
-    sdet_edgel_chain_list_iter fit_1 = Size_3_chain_list.begin();
+    auto fit_1 = Size_3_chain_list.begin();
     while(fit_1!=Size_3_chain_list.end())
     {
         // (b) change 3 edgels sharp path to be a direct line link
@@ -2757,12 +2744,12 @@ void sdet_sel_base::regular_contour_filter(){
         continue;
     if(SM<=0)
     {
-        sdet_edgel_list_iter eit = c1->edgels.begin();
+        auto eit = c1->edgels.begin();
         eit++;
         c1->edgels.erase(eit);
     }
     // (c) if two frags share same end nodes, change them into one direct line link
-    sdet_edgel_chain_list_iter fit_2 = ++fit_1;
+    auto fit_2 = ++fit_1;
     while(fit_2!=Size_3_chain_list.end())
     {
         sdet_edgel_chain *c2=*fit_2;
@@ -2771,7 +2758,7 @@ void sdet_sel_base::regular_contour_filter(){
             // check if c1 is modifid in (b), if no, change it to a direct line link
             if(c1->edgels.size()==3)
             {
-                sdet_edgel_list_iter eit = c1->edgels.begin();
+                auto eit = c1->edgels.begin();
                 eit++;
                 c1->edgels.erase(eit);
             }
@@ -2792,14 +2779,13 @@ void sdet_sel_base::Construct_Hypothesis_Tree()
   regular_contour_filter();
   int n1=0;
   std::vector<sdet_edgel*> new_chain0,new_chain2,new_chain3,new_chain6,new_chain33;
-  sdet_edgel_chain* new_chain1=new sdet_edgel_chain();
-  sdet_edgel_chain* new_chain4=new sdet_edgel_chain();
+  auto* new_chain1=new sdet_edgel_chain();
+  auto* new_chain4=new sdet_edgel_chain();
   double gap_thres=gap_;
   std::cout << "Construction of Hypothesis Tree is in Progress!! " << std::endl;
   // Calculating number of edges with degree as 1
-  for (unsigned int i=0; i<edgemap_->edgels.size(); ++i)
+  for (auto eA1 : edgemap_->edgels)
     {
-    sdet_edgel* eA1 = edgemap_->edgels[i];
     new_chain0.push_back(eA1);
     if ((curve_frag_graph_.pFrags[eA1->id].size() + curve_frag_graph_.cFrags[eA1->id].size()) ==1)
       new_chain1->edgels.push_back(eA1);
@@ -2807,21 +2793,21 @@ void sdet_sel_base::Construct_Hypothesis_Tree()
     }
 
     //Calculating number of edges which are part of the contours and which are unused
-    sdet_edgel_chain_list_iter fit = curve_frag_graph_.frags.begin();
+    auto fit = curve_frag_graph_.frags.begin();
     for (; fit!=curve_frag_graph_.frags.end(); ++fit)
       {
       sdet_edgel_chain *test1=*fit;
-      for (unsigned int d=0;d<test1->edgels.size();d++)
+      for (auto edgel : test1->edgels)
         {
-        new_chain3.push_back(test1->edgels[d]);new_chain33.push_back(test1->edgels[d]);
+        new_chain3.push_back(edgel);new_chain33.push_back(edgel);
         }
       }
 
-      for (unsigned int i=0; i<new_chain0.size(); ++i)
+      for (auto & i : new_chain0)
         {
-        for (unsigned int j=0; j<new_chain3.size(); ++j)
+        for (auto & j : new_chain3)
           {
-          if(new_chain0[i]!=new_chain3[j]) continue;
+          if(i!=j) continue;
           else
             {
             n1=5;
@@ -2830,7 +2816,7 @@ void sdet_sel_base::Construct_Hypothesis_Tree()
           }
           if (n1==0)
             {
-            new_chain4->edgels.push_back(new_chain0[i]);
+            new_chain4->edgels.push_back(i);
             }
           else
             {
@@ -2841,35 +2827,35 @@ void sdet_sel_base::Construct_Hypothesis_Tree()
         //Constucting the tree from end of an unambiguous chain and extending it till the end of edge chain
       double cost2=10.0, d1=0.0,dx=0.0,dy=0.0,cost=1000.0,costc=0.0;
       int m1=0,m2=0,m3=0,m4=0,m5=0,m7=0,m8=0,m9=0;
-      sdet_edgel* ce=VXL_NULLPTR;sdet_edgel* pe=VXL_NULLPTR;sdet_edgel* ed=VXL_NULLPTR;sdet_edgel* imp=VXL_NULLPTR;sdet_edgel* im=VXL_NULLPTR;
-      sdet_edgel_chain *c11=new sdet_edgel_chain();
-      sdet_edgel_chain* xx=new sdet_edgel_chain();
-      sdet_edgel_chain* end=new sdet_edgel_chain();
+      sdet_edgel* ce=nullptr;sdet_edgel* pe=nullptr;sdet_edgel* ed=nullptr;sdet_edgel* imp=nullptr;sdet_edgel* im=nullptr;
+      auto *c11=new sdet_edgel_chain();
+      auto* xx=new sdet_edgel_chain();
+      auto* end=new sdet_edgel_chain();
       while(new_chain1->edgels.size()>0)
         {
         a: ;
         if (0 == new_chain1->edgels.size()) break;
         ed=new_chain1->edgels[0];
         new_chain1->edgels.pop_front();
-        for (unsigned int z=0; z<end->edgels.size(); ++z)
+        for (auto & edgel : end->edgels)
           {
-          if (ed==end->edgels[z]) goto a;
+          if (ed==edgel) goto a;
           else continue;
           }
-          sdet_edgel_chain* new_chain5 = new sdet_edgel_chain();
+          auto* new_chain5 = new sdet_edgel_chain();
           new_chain5->edgels.push_back(ed);xx->edgels.push_back(ed);
           m4=0;m7=0;
           double dis=0, distance=0;
           //Forming the tree from the edge
-          while (1)
+          while (true)
             {
-            sdet_edgel_list_iter eit1=new_chain4->edgels.begin();
-            sdet_edgel_list_iter eit2=new_chain4->edgels.begin();
+            auto eit1=new_chain4->edgels.begin();
+            auto eit2=new_chain4->edgels.begin();
             if (m4==0)
               {
               if (1 == curve_frag_graph_.cFrags[ed->id].size())
                 {
-                sdet_edgel_chain_list_iter ccit = curve_frag_graph_.cFrags[ed->id].begin();
+                auto ccit = curve_frag_graph_.cFrags[ed->id].begin();
                 ce = (*ccit)->edgels[1];c11=*ccit;pe=ce;m7=1;
                 for (unsigned int j=1; j<c11->edgels.size(); ++j)
                   {
@@ -2883,7 +2869,7 @@ void sdet_sel_base::Construct_Hypothesis_Tree()
                 }
               else if (1 == curve_frag_graph_.pFrags[ed->id].size())
                 {
-                sdet_edgel_chain_list_iter pcit = curve_frag_graph_.pFrags[ed->id].begin();
+                auto pcit = curve_frag_graph_.pFrags[ed->id].begin();
                 ce = (*pcit)->edgels[(*pcit)->edgels.size()-2];
                 c11=*pcit;
                 pe=ce;
@@ -2917,28 +2903,28 @@ void sdet_sel_base::Construct_Hypothesis_Tree()
               // Finding the closest unused edge
               cost=10000.0;
               double cost1=gap_;
-              for (unsigned int j=0; j<new_chain4->edgels.size(); ++j)
+              for (auto & edgel : new_chain4->edgels)
                 {
-                d1= vgl_distance(ed->pt,new_chain4->edgels[j]->pt);
+                d1= vgl_distance(ed->pt,edgel->pt);
                 //Checking Localization, Orientation,etc..
                 if (d1<cost1)
                   {
                   std::vector<sdet_edgel*> dummy_chain;
-                  sdet_edgel_chain* edgel_chain = new sdet_edgel_chain();
-                  for (unsigned int i=0; i<new_chain5->edgels.size(); ++i)
-                    edgel_chain->edgels.push_back(new_chain5->edgels[i]);
-                  edgel_chain->edgels.push_back(new_chain4->edgels[j]);
+                  auto* edgel_chain = new sdet_edgel_chain();
+                  for (auto i : new_chain5->edgels)
+                    edgel_chain->edgels.push_back(i);
+                  edgel_chain->edgels.push_back(edgel);
                   std::vector<sdet_edgel*> chain(edgel_chain->edgels.begin(),edgel_chain->edgels.end());
                   costc = compute_path_metric2(dummy_chain, chain, dummy_chain);
                   if (costc<cost)
                     {
-                    double d8=vgl_distance(new_chain4->edgels[j]->pt,ce->pt);
-                    double d9=vgl_distance(new_chain4->edgels[j]->pt,ed->pt);
-                    double d0=vgl_distance(new_chain4->edgels[j]->pt,pe->pt);
+                    double d8=vgl_distance(edgel->pt,ce->pt);
+                    double d9=vgl_distance(edgel->pt,ed->pt);
+                    double d0=vgl_distance(edgel->pt,pe->pt);
                     double dx1 = ce->pt.x() - ed->pt.x();
                     double dy1 = ce->pt.y() - ed->pt.y();
-                    double dx2 = ed->pt.x() - new_chain4->edgels[j]->pt.x();
-                    double dy2 = ed->pt.y() - new_chain4->edgels[j]->pt.y();
+                    double dx2 = ed->pt.x() - edgel->pt.x();
+                    double dy2 = ed->pt.y() - edgel->pt.y();
                     double angle=((dx1*dx2 + dy1*dy2)/std::sqrt(dx1*dx1+dy1*dy1)/std::sqrt(dx2*dx2+dy2*dy2));
                     if (d0<d9)
                       {
@@ -2950,7 +2936,7 @@ void sdet_sel_base::Construct_Hypothesis_Tree()
                       ++eit1;
                       continue;
                       }
-                    imp=new_chain4->edgels[j];
+                    imp=edgel;
                     cost=costc;
                     m1=1;
                     eit2=eit1;
@@ -2966,25 +2952,25 @@ void sdet_sel_base::Construct_Hypothesis_Tree()
               m3=0;m5=0;
               double cost3=gap_;
               // Finding the closest edge which is part of a fragment
-              for (unsigned int t=0; t<new_chain3.size(); ++t)
+              for (auto & t : new_chain3)
                 {
-                if (new_chain3[t]==ed || new_chain3[t]==ce) continue;
-                d1 = vgl_distance(ed->pt,new_chain3[t]->pt);
+                if (t==ed || t==ce) continue;
+                d1 = vgl_distance(ed->pt,t->pt);
                 if (d1<=cost3)
                   {
                   //Dont consider the previous 5 edges present in parent/child fragment of the starting edge
                   for (int c=m8;c<m9;c++)
                     {
-                    if (new_chain3[t]==c11->edgels[c]) goto z;
+                    if (t==c11->edgels[c]) goto z;
                     else continue;
                     }
                   //Dont use the edge which is part of the same tree again
-                  for (unsigned int c=0; c<new_chain5->edgels.size(); ++c)
+                  for (auto & edgel : new_chain5->edgels)
                     {
-                    if (new_chain3[t]==new_chain5->edgels[c]) goto z;
+                    if (t==edgel) goto z;
                     else continue;
                     }
-                  im=new_chain3[t];
+                  im=t;
                   cost3=d1;m5=1;
                   dx=vgl_distance(im->pt,ce->pt);
                   dy=vgl_distance(im->pt,ed->pt);
@@ -3029,34 +3015,34 @@ void sdet_sel_base::Construct_Hypothesis_Tree()
           end->edgels.push_back(new_chain5->edgels.back());
 
         }
-        sdet_edgel* edge1=VXL_NULLPTR;
-        sdet_edgel* edge2=VXL_NULLPTR;
-        sdet_edgel_chain *chain1=new sdet_edgel_chain();
+        sdet_edgel* edge1=nullptr;
+        sdet_edgel* edge2=nullptr;
+        auto *chain1=new sdet_edgel_chain();
         std::list<sdet_CFTG_link*> GD_list;
         double p1=1.0;
         int p2=0,p3=0,p16=0;
-        sdet_CFTG_link_list_iter l_it = curve_frag_graph_.CFTG.Links.begin();
+        auto l_it = curve_frag_graph_.CFTG.Links.begin();
         for (; l_it != curve_frag_graph_.CFTG.Links.end(); ++l_it)
           GD_list.push_back(*l_it);
         while (GD_list.size()>0)
           {
           sdet_CFTG_link* cur_Link = GD_list.front();
           GD_list.pop_front();
-          sdet_edgel_chain_list_iter f_it = cur_Link->cCFs.begin();
+          auto f_it = cur_Link->cCFs.begin();
           sdet_edgel_chain* new_chain5=(*f_it);
           sdet_edgel* edge3=new_chain5->edgels.front();
           gap_=1;
           for (unsigned int i=0; i<new_chain5->edgels.size(); ++i)
             {
             p1=gap_;
-            sdet_edgel_list_iter eit5=new_chain4->edgels.begin();
-            sdet_edgel_list_iter eit6=new_chain4->edgels.begin();
-            for (unsigned int j=0; j<new_chain4->edgels.size(); ++j)
+            auto eit5=new_chain4->edgels.begin();
+            auto eit6=new_chain4->edgels.begin();
+            for (auto & edgel : new_chain4->edgels)
               {
-              double p4=vgl_distance(new_chain5->edgels[i]->pt,new_chain4->edgels[j]->pt);
+              double p4=vgl_distance(new_chain5->edgels[i]->pt,edgel->pt);
               if (p4<p1)
                 {
-                edge1=new_chain4->edgels[j];
+                edge1=edgel;
                 p1=p4;
                 p2=1;
                 eit6=eit5;
@@ -3071,29 +3057,29 @@ void sdet_sel_base::Construct_Hypothesis_Tree()
             if (p2==1)
               {
               new_chain4->edgels.erase(eit6);
-              sdet_edgel* edge4=VXL_NULLPTR;p2=0;double p5=gap_;
-              for (unsigned int b=0; b<new_chain5->edgels.size(); ++b)
+              sdet_edgel* edge4=nullptr;p2=0;double p5=gap_;
+              for (auto & edgel : new_chain5->edgels)
                 {
-                double p6=vgl_distance(edge1->pt,new_chain5->edgels[b]->pt);
+                double p6=vgl_distance(edge1->pt,edgel->pt);
                 if (p6<p5)
                   {
-                  edge2=new_chain5->edgels[b];
+                  edge2=edgel;
                   p5=p6;
                   }
                 else continue;
                 }
-                sdet_edgel_chain *new_chain6a = new sdet_edgel_chain();
+                auto *new_chain6a = new sdet_edgel_chain();
                 new_chain6a->edgels.push_back(edge2); new_chain6a->edgels.push_back(edge1);
                 int p7=0,p8=0,p9=0;
                 if (curve_frag_graph_.cFrags[edge3->id].size()>=1)
                   {
-                  sdet_edgel_chain_list_iter ccit = curve_frag_graph_.cFrags[edge3->id].begin();
+                  auto ccit = curve_frag_graph_.cFrags[edge3->id].begin();
                   chain1=(*ccit);
                   p7=1;
                   }
                 else if (curve_frag_graph_.pFrags[edge3->id].size()>=1)
                   {
-                  sdet_edgel_chain_list_iter pcit = curve_frag_graph_.pFrags[edge3->id].begin();
+                  auto pcit = curve_frag_graph_.pFrags[edge3->id].begin();
                   chain1=(*pcit);
                   p7=2;
                   }
@@ -3109,53 +3095,53 @@ void sdet_sel_base::Construct_Hypothesis_Tree()
                   p9=5;
                   if (p9>static_cast<int>(chain1->edgels.size())) p9=chain1->edgels.size();
                   }
-                while (1)
+                while (true)
                   {
                   double p10=gap_,p11=0.0;
-                  sdet_edgel_list_iter eit3=new_chain4->edgels.begin();sdet_edgel_list_iter eit4=new_chain4->edgels.begin();
-                  for (unsigned int a=0; a<new_chain4->edgels.size(); ++a)
+                  auto eit3=new_chain4->edgels.begin();auto eit4=new_chain4->edgels.begin();
+                  for (auto & edgel : new_chain4->edgels)
                     {
-                    p11= vgl_distance(edge1->pt,new_chain4->edgels[a]->pt);
+                    p11= vgl_distance(edge1->pt,edgel->pt);
                     if (p11<p10)
                       {
-                      double d8=vgl_distance(new_chain4->edgels[a]->pt,edge2->pt);
-                      double d9=vgl_distance(new_chain4->edgels[a]->pt,edge1->pt);
+                      double d8=vgl_distance(edgel->pt,edge2->pt);
+                      double d9=vgl_distance(edgel->pt,edge1->pt);
                       double dx1 = edge1->pt.x() - edge2->pt.x(), dy1 = edge1->pt.y() - edge2->pt.y();
-                      double dx2=new_chain4->edgels[a]->pt.x()-edge1->pt.x();
-                      double dy2=new_chain4->edgels[a]->pt.y()-edge1->pt.y();
+                      double dx2=edgel->pt.x()-edge1->pt.x();
+                      double dy2=edgel->pt.y()-edge1->pt.y();
                       if (d8<d9 || ((dx1*dx2 + dy1*dy2)/std::sqrt(dx1*dx1+dy1*dy1)/std::sqrt(dx2*dx2+dy2*dy2))<0.4)
                         {
                         ++eit3;
                         continue;
                         }
-                      p10=p11;edge4=new_chain4->edgels[a];eit4=eit3;p2=1;
+                      p10=p11;edge4=edgel;eit4=eit3;p2=1;
                       }
                     ++eit3;
                     }
-                    double p12=gap_,p13=0,p14=0.0,p15=0.0;p16=0;sdet_edgel* edge5=VXL_NULLPTR;
-                    for (unsigned int t=0; t<new_chain3.size(); ++t)
+                    double p12=gap_,p13=0,p14=0.0,p15=0.0;p16=0;sdet_edgel* edge5=nullptr;
+                    for (auto & t : new_chain3)
                       {
-                      if (new_chain3[t]==edge1) continue;
-                      p13= vgl_distance(edge1->pt,new_chain3[t]->pt);
+                      if (t==edge1) continue;
+                      p13= vgl_distance(edge1->pt,t->pt);
                       if (p13<=p12)
                         {
                         for (int c=p8; c<p9; ++c)
                           {
-                          if (new_chain3[t]==chain1->edgels[c])
+                          if (t==chain1->edgels[c])
                             goto jump;
                           else continue;
                           }
-                        for (unsigned int a=0; a<new_chain5->edgels.size(); ++a)
+                        for (auto & edgel : new_chain5->edgels)
                           {
-                          if (new_chain3[t]==new_chain5->edgels[a]) goto jump;
+                          if (t==edgel) goto jump;
                           else continue;
                           }
-                        for (unsigned int b=0; b<new_chain6a->edgels.size(); ++b)
+                        for (auto & edgel : new_chain6a->edgels)
                           {
-                          if (new_chain3[t]==new_chain6a->edgels[b]) goto jump;
+                          if (t==edgel) goto jump;
                           else continue;
                           }
-                        edge5=new_chain3[t];p12=p13;p14=vgl_distance(edge5->pt,edge2->pt);
+                        edge5=t;p12=p13;p14=vgl_distance(edge5->pt,edge2->pt);
                         p15=vgl_distance(edge5->pt,edge1->pt);
                         p16=1;
                         }
@@ -3184,9 +3170,9 @@ void sdet_sel_base::Construct_Hypothesis_Tree()
                 if (p3==1 && new_chain6a->edgels.size()>5)
                   {
                   sdet_edgel* edge6=new_chain6a->edgels[new_chain6a->edgels.size()/2];
-                  for (unsigned int i=0; i<new_chain33.size(); ++i)
+                  for (auto & i : new_chain33)
                     {
-                    p18=vgl_distance(edge6->pt,new_chain33[i]->pt);
+                    p18=vgl_distance(edge6->pt,i->pt);
                     if (p18<1) p21=10;
                     if (p21==10)
                       {
@@ -3212,7 +3198,7 @@ void sdet_sel_base::Construct_Hypothesis_Tree()
 void sdet_sel_base::Disambiguation()
 {
         std::cout << "Disambiguating the Hypothesis Tree!!" << std::endl;
-        sdet_CFTG_link_list_iter l_it = curve_frag_graph_.CFTG.Links.begin();
+        auto l_it = curve_frag_graph_.CFTG.Links.begin();
         for (; l_it != curve_frag_graph_.CFTG.Links.end(); l_it++)
         {
                 double cost=0.0;
@@ -3239,20 +3225,19 @@ void sdet_sel_base::Disambiguation()
 void sdet_sel_base::Post_Process()
 {
 
-        sdet_edgel_chain* new_chain= new sdet_edgel_chain();
-        for (unsigned int i=0; i<edgemap_->edgels.size(); ++i)
+        auto* new_chain= new sdet_edgel_chain();
+        for (auto eA1 : edgemap_->edgels)
             {
-                sdet_edgel* eA1 = edgemap_->edgels[i];
-                    if ((curve_frag_graph_.pFrags[eA1->id].size() + curve_frag_graph_.cFrags[eA1->id].size()) ==1) new_chain->edgels.push_back(eA1);
+                if ((curve_frag_graph_.pFrags[eA1->id].size() + curve_frag_graph_.cFrags[eA1->id].size()) ==1) new_chain->edgels.push_back(eA1);
             }
-            for (unsigned int j=0; j<new_chain->edgels.size(); ++j)
+            for (auto edge : new_chain->edgels)
               {
-              sdet_edgel* edge=new_chain->edgels[j]; sdet_edgel* edge2=VXL_NULLPTR;sdet_edgel_chain* chain= new sdet_edgel_chain();sdet_edgel* edge3=VXL_NULLPTR;
+              sdet_edgel* edge2=nullptr;auto* chain= new sdet_edgel_chain();sdet_edgel* edge3=nullptr;
               int n=0,number=0,diff=0;
               if (curve_frag_graph_.cFrags[edge->id].size()==1)
                 {
                 n=1;
-                sdet_edgel_chain_list_iter ccit = curve_frag_graph_.cFrags[edge->id].begin();
+                auto ccit = curve_frag_graph_.cFrags[edge->id].begin();
                 chain=*ccit;
                 edge2 = chain->edgels[1];
                 if (chain->edgels.size()>2)
@@ -3264,7 +3249,7 @@ void sdet_sel_base::Post_Process()
                 }
               else if(curve_frag_graph_.pFrags[edge->id].size()==1)
                 {
-                n=1;sdet_edgel_chain_list_iter pcit = curve_frag_graph_.pFrags[edge->id].begin();chain=*pcit;
+                n=1;auto pcit = curve_frag_graph_.pFrags[edge->id].begin();chain=*pcit;
                 edge2 = chain->edgels[chain->edgels.size()-2];
                 if (chain->edgels.size()>2)
                   {
@@ -3273,14 +3258,14 @@ void sdet_sel_base::Post_Process()
                   }
                 diff=2;
                 }
-                sdet_edgel_chain_list_iter fit = curve_frag_graph_.frags.begin();
+                auto fit = curve_frag_graph_.frags.begin();
                 for (;fit!=curve_frag_graph_.frags.end();++fit)
                   {
                   sdet_edgel_chain *test1=*fit;
                   if (test1==chain) continue;
-                  for (unsigned int d=0; d<test1->edgels.size(); ++d)
+                  for (auto & edgel : test1->edgels)
                     {
-                    if (edge==test1->edgels[d]) goto end;
+                    if (edge==edgel) goto end;
                     }
                   }
                 if (n==1 && chain->edgels.size()>1 && ((curve_frag_graph_.pFrags[edge2->id].size() + curve_frag_graph_.cFrags[edge2->id].size()) >=1))

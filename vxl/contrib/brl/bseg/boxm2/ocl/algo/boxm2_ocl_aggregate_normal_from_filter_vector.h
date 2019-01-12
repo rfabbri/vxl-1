@@ -2,7 +2,9 @@
 #define boxm2_ocl_aggregate_normal_from_filter_h_included_
 #include <iostream>
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <boxm2/boxm2_data_traits.h>
 #include <boxm2/ocl/boxm2_opencl_cache.h>
@@ -19,8 +21,8 @@ class boxm2_ocl_aggregate_normal_from_filter_vector
   public:
     typedef boxm2_data_traits<BOXM2_FLOAT> RESPONSE_DATATYPE;
 
-    boxm2_ocl_aggregate_normal_from_filter_vector(boxm2_scene_sptr scene, boxm2_opencl_cache_sptr ocl_cache,
-                                                  bocl_device_sptr device, bvpl_kernel_vector_sptr filter_vector,bool optimize_transfers = false);
+    boxm2_ocl_aggregate_normal_from_filter_vector(const boxm2_scene_sptr& scene, const boxm2_opencl_cache_sptr& ocl_cache,
+                                                  const bocl_device_sptr& device, const bvpl_kernel_vector_sptr& filter_vector,bool optimize_transfers = false);
 
     bool run(bool clear_cache=true);
     bool reset();

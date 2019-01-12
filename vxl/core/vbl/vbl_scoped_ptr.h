@@ -17,7 +17,9 @@
 //
 //  Modified from the original boost sources to fit the VXL restrictions.
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_checked_delete.h>
 
 //:
@@ -25,7 +27,7 @@
 //  deletion of the object pointed to, either on destruction of the
 //  vbl_scoped_ptr or via an explicit reset(). vbl_scoped_ptr is a
 //  simple solution for simple needs; use vbl_shared_ptr or
-//  vcl_unique_ptr if your needs are more complex.
+//  std::unique_ptr if your needs are more complex.
 //
 //  To use this to manage pointer member variables using forward
 //  declaration, explicitly define a destructor in your .cxx so that
@@ -54,18 +56,18 @@ class vbl_scoped_ptr
   T* ptr_;
 
   // not copyable, not assignable.
-  vbl_scoped_ptr( vbl_scoped_ptr const& );
-  vbl_scoped_ptr& operator=( vbl_scoped_ptr const& );
+  vbl_scoped_ptr( vbl_scoped_ptr const& ) = delete;
+  vbl_scoped_ptr& operator=( vbl_scoped_ptr const& ) = delete;
 
   typedef vbl_scoped_ptr<T> this_type;
 
-  VCL_SAFE_BOOL_DEFINE;
+
 
  public:
   typedef T element_type;
 
   //:
-  explicit vbl_scoped_ptr( T* p = VXL_NULLPTR )
+  explicit vbl_scoped_ptr( T* p = nullptr )
     : ptr_(p) // never throws
   {
   }
@@ -78,7 +80,7 @@ class vbl_scoped_ptr
   }
 
   //: Make this own \p p, releasing any existing pointer.
-  void reset( T* p = VXL_NULLPTR ) // never throws
+  void reset( T* p = nullptr ) // never throws
   {
     this_type(p).swap(*this);
   }
@@ -106,9 +108,9 @@ class vbl_scoped_ptr
   //: Safe implicit conversion to bool.
   //
   // This allows for if (sp) type of usage.
-  operator safe_bool () const
+  explicit operator bool () const
   {
-    return ptr_ ? VCL_SAFE_BOOL_TRUE : 0;
+    return ptr_ ? true : false;
   }
 
   //:

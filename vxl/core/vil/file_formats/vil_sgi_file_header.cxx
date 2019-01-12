@@ -1,7 +1,4 @@
 // This is core/vil/file_formats/vil_sgi_file_header.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author David Hughes
@@ -93,4 +90,3 @@ bool vil_sgi_file_header::signature_valid() const
     magic[0] == SGI_SIGNATURE_BYTE_0 &&
     magic[1] == SGI_SIGNATURE_BYTE_1;
 }
-

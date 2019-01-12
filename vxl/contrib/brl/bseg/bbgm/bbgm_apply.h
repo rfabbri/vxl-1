@@ -12,7 +12,10 @@
 //   Apr 21, 2009  MJL  Update to work with vpdt
 // \endverbatim
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_image_view.h>
 
 #include "bbgm_image_of.h"

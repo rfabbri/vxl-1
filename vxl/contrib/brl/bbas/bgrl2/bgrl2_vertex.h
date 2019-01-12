@@ -17,7 +17,9 @@
 
 #include <list>
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_ref_count.h>
 #include <vbl/vbl_smart_ptr.h>
 
@@ -35,7 +37,7 @@ class bgrl2_vertex : public vbl_ref_count
   bgrl2_vertex() : vbl_ref_count(), out_edges_(), in_edges_() {}
 
   //: Destructor
-  virtual ~bgrl2_vertex(){}
+  ~bgrl2_vertex() override= default;
 
   //:  returns all outgoing edges of this vertex
   const std::list<E_sptr>& out_edges() { return out_edges_; }

@@ -16,7 +16,9 @@
 // \endverbatim
 //
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vxl_config.h>
 
 #include <vul/vul_sprintf.h>
@@ -156,7 +158,7 @@ void xcv_display::toggle_magnify()
   {
     if (debug) std::cout << "removing magnify lens\n";
 
-    enhance->set_child(VXL_NULLPTR);
+    enhance->set_child(nullptr);
     vgui_parent_child_link::replace_child_everywhere(enhance, comp);
     enhance = vgui_enhance_tableau_sptr(); // 0;
     is_magnifying = false;
@@ -303,7 +305,7 @@ void xcv_display::show_line_slice()
   vgui_dialog profile_dialog("Image Line Profile");
   profile_dialog.inline_tableau(vgui_shell_tableau_new(viewer), 700, 500);
   profile_dialog.set_ok_button("close");
-  profile_dialog.set_cancel_button(VXL_NULLPTR);
+  profile_dialog.set_cancel_button(nullptr);
   profile_dialog.ask();
 
   delete [] x;

@@ -17,7 +17,9 @@
 #include <vpgl/vpgl_utm.h>
 #include <vil/vil_image_view.h>
 #include <vil/vil_load.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vsol/vsol_box_2d_sptr.h>
 #include <vsol/vsol_box_2d.h>
@@ -28,8 +30,8 @@
 
 namespace boxm2_lidar_to_xyz_process_globals
 {
-  const unsigned n_inputs_ = 2;
-  const unsigned n_outputs_ = 3;
+  constexpr unsigned n_inputs_ = 2;
+  constexpr unsigned n_outputs_ = 3;
 }
 
 bool boxm2_lidar_to_xyz_process_cons(bprb_func_process& pro)
@@ -190,10 +192,10 @@ bool boxm2_lidar_to_xyz_process(bprb_func_process& pro)
 
   // determine the lat, lon, hemisphere (North or South) and direction (East or West)
   char hemisphere, direction;
-  std::size_t n = n_coords.find("N");
+  std::size_t n = n_coords.find('N');
   if (n < n_coords.size())  hemisphere = 'N';
   else                      hemisphere = 'S';
-  n = n_coords.find("E");
+  n = n_coords.find('E');
   if (n < n_coords.size())  direction = 'E';
   else                      direction = 'W';
   float lon, lat, scale_i, scale_j;
@@ -236,13 +238,13 @@ bool boxm2_lidar_to_xyz_process(bprb_func_process& pro)
 
   // the image can be float or short
   unsigned nii, nji;
-  if (vil_image_view<float>* img = dynamic_cast<vil_image_view<float> * > (img_sptr.ptr())) {
+  if (auto* img = dynamic_cast<vil_image_view<float> * > (img_sptr.ptr())) {
     nii = img->ni();  nji = img->nj();
   }
-  else if (vil_image_view<short>* img = dynamic_cast<vil_image_view<short> * > (img_sptr.ptr())) {
+  else if (auto* img = dynamic_cast<vil_image_view<short> * > (img_sptr.ptr())) {
     nii = img->ni();  nji = img->nj();
   }
-  else if (vil_image_view<vxl_byte>* img = dynamic_cast<vil_image_view<vxl_byte> * >(img_sptr.ptr())) {
+  else if (auto* img = dynamic_cast<vil_image_view<vxl_byte> * >(img_sptr.ptr())) {
     nii = img->ni();  nji = img->nj();
   }
   std::cout << " image size: "<< nii << " x " << nji << std::endl;
@@ -257,8 +259,8 @@ bool boxm2_lidar_to_xyz_process(bprb_func_process& pro)
   std::vector<boxm2_block_id> blks = scene->get_block_ids();
   boxm2_scene_info* info = scene->get_blk_metadata(blks[0]);
   float vox_length = 1E6;
-  for (unsigned i = 0; i < blks.size(); i++) {
-    boxm2_scene_info* info = scene->get_blk_metadata(blks[i]);
+  for (const auto & blk : blks) {
+    boxm2_scene_info* info = scene->get_blk_metadata(blk);
     float sb_length = info->block_len;
     if (sb_length/8.0f < vox_length)  vox_length = sb_length/8.0f;
   }
@@ -272,9 +274,9 @@ bool boxm2_lidar_to_xyz_process(bprb_func_process& pro)
   std::cout <<"image size needs ni: " << ni << " nj: " << nj << " to support voxel res: " << vox_length << std::endl;
 
   // create x y z images
-  vil_image_view<float>* out_img_x = new vil_image_view<float>(ni, nj, 1);
-  vil_image_view<float>* out_img_y = new vil_image_view<float>(ni, nj, 1);
-  vil_image_view<float>* out_img_z = new vil_image_view<float>(ni, nj, 1);
+  auto* out_img_x = new vil_image_view<float>(ni, nj, 1);
+  auto* out_img_y = new vil_image_view<float>(ni, nj, 1);
+  auto* out_img_z = new vil_image_view<float>(ni, nj, 1);
   out_img_x->fill(0.0f); out_img_y->fill(0.0f);
   //out_img_z->fill((float)(scene_bbox.min_z()-10.0));  // local coord system min z
   out_img_z->fill((float)(-1.0));  // local coord system min z
@@ -282,8 +284,8 @@ bool boxm2_lidar_to_xyz_process(bprb_func_process& pro)
   // iterate over the image and for each pixel, calculate, xyz in the local coordinate system
   for (int i = 0; i < ni; i++)
     for (int j = 0; j < nj; j++) {
-      float local_x = (float)(i*vox_length+scene_bbox.min_x()+vox_length/2.0);
-      float local_y = (float)(scene_bbox.max_y()-j*vox_length+vox_length/2.0);
+      auto local_x = (float)(i*vox_length+scene_bbox.min_x()+vox_length/2.0);
+      auto local_y = (float)(scene_bbox.max_y()-j*vox_length+vox_length/2.0);
       (*out_img_x)(i,j) = local_x;
       (*out_img_y)(i,j) = local_y;
 
@@ -296,16 +298,16 @@ bool boxm2_lidar_to_xyz_process(bprb_func_process& pro)
       if (lon < 0)  lon = -lon;
       if (lat < 0)  lat = -lat;
       cam->global_to_img(lon, lat, gz, u, v);
-      unsigned uu = (unsigned)std::floor(u + 0.5);
-      unsigned vv = (unsigned)std::floor(v + 0.5);
+      auto uu = (unsigned)std::floor(u + 0.5);
+      auto vv = (unsigned)std::floor(v + 0.5);
       if (uu > 0 && vv > 0 && uu < nii && vv < nji)
       {
         // dynamically cast the image and obtain the pixel value
-        if (vil_image_view<float>* img = dynamic_cast<vil_image_view<float> * > (img_sptr.ptr()))
+        if (auto* img = dynamic_cast<vil_image_view<float> * > (img_sptr.ptr()))
           (*out_img_z)(i,j) = (*img)(uu,vv)-(float)orig_elev;
-        else if (vil_image_view<short>* img = dynamic_cast<vil_image_view<short> * > (img_sptr.ptr()))
+        else if (auto* img = dynamic_cast<vil_image_view<short> * > (img_sptr.ptr()))
           (*out_img_z)(i,j) = (*img)(uu,vv)-(float)orig_elev;
-        else if (vil_image_view<vxl_byte>* img = dynamic_cast<vil_image_view<vxl_byte> * > (img_sptr.ptr()))
+        else if (auto* img = dynamic_cast<vil_image_view<vxl_byte> * > (img_sptr.ptr()))
           (*out_img_z)(i,j) = (*img)(uu,vv)-(float)orig_elev;
       }
     }
@@ -323,8 +325,8 @@ bool boxm2_lidar_to_xyz_process(bprb_func_process& pro)
 // turn an ortho image of unsigned int to xyz and a label (e.g. each pixel has an id of some class) image ready to be ingested
 namespace boxm2_label_to_xyz_process_globals
 {
-  const unsigned n_inputs_ = 3;
-  const unsigned n_outputs_ = 4;
+  constexpr unsigned n_inputs_ = 3;
+  constexpr unsigned n_outputs_ = 4;
 }
 
 bool boxm2_label_to_xyz_process_cons(bprb_func_process& pro)
@@ -363,7 +365,7 @@ bool boxm2_label_to_xyz_process(bprb_func_process& pro)
   vpgl_camera_double_sptr cam = pro.get_input<vpgl_camera_double_sptr>(2);
 
   // check camera for the label image
-  vpgl_geo_camera* geocam = VXL_NULLPTR;
+  vpgl_geo_camera* geocam = nullptr;
   if (cam) {
     std::cout << "Using the loaded camera!\n";
     geocam = dynamic_cast<vpgl_geo_camera*>(cam.ptr());
@@ -406,8 +408,8 @@ bool boxm2_label_to_xyz_process(bprb_func_process& pro)
   // get the resolution for scene
   float vox_length = 1E6;
   std::vector<boxm2_block_id> blks = scene->get_block_ids();
-  for (unsigned i = 0; i < blks.size(); i++) {
-    boxm2_scene_info* info = scene->get_blk_metadata(blks[i]);
+  for (const auto & blk : blks) {
+    boxm2_scene_info* info = scene->get_blk_metadata(blk);
     float sb_length = info->block_len;
     if (sb_length/8.0f < vox_length)  vox_length = sb_length/8.0f;
   }
@@ -417,10 +419,10 @@ bool boxm2_label_to_xyz_process(bprb_func_process& pro)
   int nj = (int)std::ceil((scene_bbox.max_y()-scene_bbox.min_y())/vox_length);
 
   // create x y z image
-  vil_image_view<float>* out_img_x = new vil_image_view<float>(ni, nj, 1);
-  vil_image_view<float>* out_img_y = new vil_image_view<float>(ni, nj, 1);
-  vil_image_view<float>* out_img_z = new vil_image_view<float>(ni, nj, 1);
-  vil_image_view<vxl_byte>* out_img_label = new vil_image_view<vxl_byte>(ni, nj, 1);
+  auto* out_img_x = new vil_image_view<float>(ni, nj, 1);
+  auto* out_img_y = new vil_image_view<float>(ni, nj, 1);
+  auto* out_img_z = new vil_image_view<float>(ni, nj, 1);
+  auto* out_img_label = new vil_image_view<vxl_byte>(ni, nj, 1);
   out_img_x->fill(0.0f); out_img_y->fill(0.0f);
   out_img_z->fill((float)(scene_bbox.max_z()+100.0));  // local coord system min z, initialize to constant
   out_img_label->fill((vxl_byte)0);
@@ -428,8 +430,8 @@ bool boxm2_label_to_xyz_process(bprb_func_process& pro)
   // iterate over the image and for each pixel, calculate, xyz in the local coordinate system
   for (int i = 0; i < ni; i++)
     for (int j = 0; j < nj; j++) {
-      float local_x = (float)(i*vox_length+scene_bbox.min_x()+vox_length/2.0);
-      float local_y = (float)(scene_bbox.max_y()-j*vox_length+vox_length/2.0);
+      auto local_x = (float)(i*vox_length+scene_bbox.min_x()+vox_length/2.0);
+      auto local_y = (float)(scene_bbox.max_y()-j*vox_length+vox_length/2.0);
       (*out_img_x)(i,j) = local_x;
       (*out_img_y)(i,j) = local_y;
 
@@ -438,8 +440,8 @@ bool boxm2_label_to_xyz_process(bprb_func_process& pro)
       // find pixel in image
       double u, v;
       geocam->global_to_img(lon, lat, gz, u, v);
-      unsigned uu = (unsigned)std::floor(u+0.5);
-      unsigned vv = (unsigned)std::floor(v+0.5);
+      auto uu = (unsigned)std::floor(u+0.5);
+      auto vv = (unsigned)std::floor(v+0.5);
       if (uu < img.ni() && vv < img.nj())
         (*out_img_label)(i,j) = img(uu, vv);
     }
@@ -542,8 +544,8 @@ bool boxm2_label_to_xyz_process(bprb_func_process& pro)
 // Note in this case the ortho image size can be smaller than scene bounding box and the output xyz image has input image resolution
 namespace boxm2_label_to_xyz_process2_globals
 {
-  const unsigned n_inputs_  = 3;
-  const unsigned n_outputs_ = 4;
+  constexpr unsigned n_inputs_ = 3;
+  constexpr unsigned n_outputs_ = 4;
 }
 
 bool boxm2_label_to_xyz_process2_cons(bprb_func_process& pro)
@@ -578,7 +580,7 @@ bool boxm2_label_to_xyz_process2(bprb_func_process& pro)
   vpgl_camera_double_sptr cam = pro.get_input<vpgl_camera_double_sptr>(2);
 
   // check camera for the label image
-  vpgl_geo_camera* geocam = VXL_NULLPTR;
+  vpgl_geo_camera* geocam = nullptr;
   if (cam) {
     std::cout << "Using the loaded camera!\n";
     geocam = dynamic_cast<vpgl_geo_camera*>(cam.ptr());
@@ -647,10 +649,10 @@ bool boxm2_label_to_xyz_process2(bprb_func_process& pro)
            <<"ni: " << ni << " nj: " << nj << std::endl;
 
   // create x y z images
-  vil_image_view<float>* out_img_x = new vil_image_view<float>(ni, nj, 1);
-  vil_image_view<float>* out_img_y = new vil_image_view<float>(ni, nj, 1);
-  vil_image_view<float>* out_img_z = new vil_image_view<float>(ni, nj, 1);
-  vil_image_view<vxl_byte>* out_img_label = new vil_image_view<vxl_byte>(ni, nj, 1);
+  auto* out_img_x = new vil_image_view<float>(ni, nj, 1);
+  auto* out_img_y = new vil_image_view<float>(ni, nj, 1);
+  auto* out_img_z = new vil_image_view<float>(ni, nj, 1);
+  auto* out_img_label = new vil_image_view<vxl_byte>(ni, nj, 1);
   out_img_x->fill(0.0f); out_img_y->fill(0.0f);
   out_img_z->fill((float)(scene_bbox.max_z()+100.0));  // local coordinate system min z, initialize to constant
   out_img_label->fill((vxl_byte)0);

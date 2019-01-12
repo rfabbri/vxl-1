@@ -7,13 +7,15 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
+#include <vcl_compiler_detection.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_pixel_format.h>
 #include <vil/vil_image_view.h>
 #include <vil/vil_math.h>
 
-#include <vcl_compiler.h>
-#if defined(VCL_VC) || defined(VCL_GCC) || defined(__INTEL_COMPILER)
+#if defined(_MSC_VER) || defined(__GNUC__) || defined(__INTEL_COMPILER)
 #define iostream_char char
 #else
 #define iostream_char unsigned char
@@ -119,7 +121,7 @@ gevd_bufferxy::gevd_bufferxy(vil_image_resource_sptr const& image_s) :
                                                          0, n_rows);
     unsigned short imin=0, imax=0;
     vil_math_value_range<unsigned short>(view, imin, imax);
-    float fmin = static_cast<float>(imin), fmax = static_cast<float>(imax);
+    auto fmin = static_cast<float>(imin), fmax = static_cast<float>(imax);
     float scale = fmax-fmin;
     if (scale != 0.f)
       scale = 255.f/scale;
@@ -160,13 +162,13 @@ void gevd_bufferxy::dump(const char* filename)
 #else
     << " LITTLEENDIAN DATA\n";
 #endif
-  iostream_char const* buf = (iostream_char const*)GetBuffer();
+  auto const* buf = (iostream_char const*)GetBuffer();
   f.write(buf, gevd_memory_mixin::GetSize());
 }
 
 static int read_from_file(const char* filename)
 {
-  std::ifstream f(filename,std::ios::in|std::ios::binary); // ios::nocreate is on by default for VCL_WIN32
+  std::ifstream f(filename,std::ios::in|std::ios::binary); // ios::nocreate is on by default for _WIN32
   if (!f) { std::cerr <<"Cannot open "<< filename <<" for reading\n"; return -1; }
   char l[1024];
   f.get(l, 1024); // read single line
@@ -185,17 +187,17 @@ static int read_from_file(const char* filename)
 
 //: Read from file.  Note that this can be OS-specific!
 gevd_bufferxy::gevd_bufferxy(const char* filename) : gevd_memory_mixin(read_from_file(filename)),
-  yra(VXL_NULLPTR), xra(VXL_NULLPTR)
+  yra(nullptr), xra(nullptr)
 {
   if (gevd_memory_mixin::GetSize() > 0) {
-    std::ifstream f(filename,std::ios::in|std::ios::binary); // ios::nocreate is on by default for VCL_WIN32
+    std::ifstream f(filename,std::ios::in|std::ios::binary); // ios::nocreate is on by default for _WIN32
     char l[1024];
     f.get(l, 1024); // read single line
     int x=-1, y=-1, b=-1;
     std::sscanf(l, "BUFFERXYDUMP %d %d %d", &x, &y, &b);
     f.get(l[0]); // read end-of-line
     Init(x, y, b);
-    iostream_char* buf = (iostream_char*)GetBuffer();
+    auto* buf = (iostream_char*)GetBuffer();
     f.read(buf, gevd_memory_mixin::GetSize());
   }
   else

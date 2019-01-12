@@ -5,8 +5,10 @@
 //:
 // \file
 #include <vsl/vsl_vector_io.h>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsol/vsol_polygon_2d.h>
 
 //***************************************************************************
@@ -40,8 +42,8 @@ vsol_poly_set_2d::vsol_poly_set_2d(const vsol_poly_set_2d &other)
 //---------------------------------------------------------------------------
 vsol_poly_set_2d::~vsol_poly_set_2d()
 {
-  for (unsigned i = 0; i < storage_->size(); i++)
-   (*storage_)[i] = VXL_NULLPTR;
+  for (auto & i : *storage_)
+   i = nullptr;
   delete storage_;
 }
 
@@ -193,9 +195,9 @@ double vsol_poly_set_2d::area(void) const
 vsol_point_2d_sptr vsol_poly_set_2d::centroid(void) const
 {
   std::vector<vsol_point_2d_sptr> p;
-  for (unsigned int i=0; i<storage_->size(); ++i)
+  for (auto & i : *storage_)
   {
-    vsol_point_2d_sptr c = (*storage_)[i]->centroid();
+    vsol_point_2d_sptr c = i->centroid();
     p.push_back(c);
   }
   vsol_polygon_2d poly(p);
@@ -217,9 +219,9 @@ bool vsol_poly_set_2d::is_convex(void) const
   // the same direction.  An earlier implementation allowed for turning
   // in the other direction after a cross-product=0.
 
-  for (unsigned int i=0; i<storage_->size(); ++i)
+  for (auto & i : *storage_)
   {
-    if ((*storage_)[i]->is_convex())
+    if (i->is_convex())
       return true;
   }
   return false;
@@ -295,7 +297,7 @@ vsol_poly_set_2d::vsol_poly_set_2d(void)
 void
 vsl_b_write(vsl_b_ostream &os, const vsol_poly_set_2d* p)
 {
-  if (p==VXL_NULLPTR) {
+  if (p==nullptr) {
     vsl_b_write(os, false); // Indicate null pointer stored
   }
   else{
@@ -317,7 +319,7 @@ vsl_b_read(vsl_b_istream &is, vsol_poly_set_2d* &p)
     p->b_read(is);
   }
   else
-    p = VXL_NULLPTR;
+    p = nullptr;
 }
 
 

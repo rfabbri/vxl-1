@@ -13,7 +13,6 @@
 #include <vil/vil_image_view.h>
 #include <bocl/bocl_device.h>
 #include <boxm2/ocl/boxm2_opencl_cache.h>
-#include <boxm2/ocl/boxm2_opencl_cache.h>
 #include <vgl/algo/vgl_rotation_3d.h>
 #include <boxm2/ocl/algo/boxm2_ocl_camera_converter.h>
 #include <boxm2/vecf/ocl/boxm2_vecf_ocl_vector_field.h>
@@ -30,27 +29,27 @@ class boxm2_vecf_ocl_transform_scene : public vbl_ref_count
 {
  public:
   //: Constructor.
-  boxm2_vecf_ocl_transform_scene(boxm2_scene_sptr source_scene,
-                                 boxm2_scene_sptr target_scene,
-                                 boxm2_opencl_cache_sptr ocl_cache,
+  boxm2_vecf_ocl_transform_scene(const boxm2_scene_sptr& source_scene,
+                                 const boxm2_scene_sptr& target_scene,
+                                 const boxm2_opencl_cache_sptr& ocl_cache,
                                  std::string gray_app_id="",
                                  std::string color_app_id="",
                                  bool do_alpha = true,
                                  bool do_interp = true);
 
   //constructor if target scene is not known at the time of creation
-  boxm2_vecf_ocl_transform_scene(boxm2_scene_sptr source_scene,
-                                 boxm2_opencl_cache_sptr ocl_cache,
+  boxm2_vecf_ocl_transform_scene(const boxm2_scene_sptr& source_scene,
+                                 const boxm2_opencl_cache_sptr& ocl_cache,
                                  std::string gray_app_id="",
                                  std::string color_app_id="",
                                  bool do_alpha = true,
                                  bool do_interp = true);
 
-  ~boxm2_vecf_ocl_transform_scene();
+  ~boxm2_vecf_ocl_transform_scene() override;
 
   //: transform a scene of arbitray size, block by block
   // no interpolation
-  bool transform(vgl_rotation_3d<double>  rot,
+  bool transform(const vgl_rotation_3d<double>&  rot,
                  vgl_vector_3d<double> trans,
                  vgl_vector_3d<double> scale);
 
@@ -60,21 +59,21 @@ class boxm2_vecf_ocl_transform_scene : public vbl_ref_count
   //  and kernel args are released after target
   //  is transformed. The target data is written to disk.
   //  no interpolation
-  bool transform_1_blk(vgl_rotation_3d<double>  rot,
+  bool transform_1_blk(const vgl_rotation_3d<double>&  rot,
                        vgl_vector_3d<double> trans,
                        vgl_vector_3d<double> scale,
                        bool finish = true);
   //: transform a scene with one block and interpolate appearance and alpha
   // leave GPU buffers in place unless finish == true
-  bool transform_1_blk_interp(vgl_rotation_3d<double>  rot,
+  bool transform_1_blk_interp(const vgl_rotation_3d<double>&  rot,
                               vgl_vector_3d<double> trans,
                               vgl_vector_3d<double> scale,
                               bool finish = true);
 
 
   //: warps using similarty transform
-  bool transform_1_blk_interp_trilin(boxm2_scene_sptr target_scene,
-                                     vgl_rotation_3d<double>  rot,
+  bool transform_1_blk_interp_trilin(const boxm2_scene_sptr& target_scene,
+                                     const vgl_rotation_3d<double>&  rot,
                                      vgl_vector_3d<double> trans,
                                      vgl_vector_3d<double> scale,
                                      bool finish = true);
@@ -84,7 +83,7 @@ class boxm2_vecf_ocl_transform_scene : public vbl_ref_count
   boxm2_scene_sptr target_scene(){return target_scene_;}
   boxm2_scene_sptr source_scene(){return source_scene_;}
   boxm2_opencl_cache_sptr opencl_cache(){return opencl_cache_;}
-  bool get_scene_appearance(boxm2_scene_sptr scene,
+  bool get_scene_appearance(const boxm2_scene_sptr& scene,
                             std::string&      options);
 
 private:

@@ -5,7 +5,9 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <brdb/brdb_tuple.h>
 #include <brdb/brdb_relation.h>
 #include <brdb/brdb_database.h>
@@ -100,10 +102,9 @@ brdb_database_sptr generate_sample_database()
   test_relations.push_back(r3);
 
   std::vector<std::string> relation_names;
-  relation_names.push_back("name_gender");
-  relation_names.push_back("age");
-  relation_names.push_back("department");
+  relation_names.emplace_back("name_gender");
+  relation_names.emplace_back("age");
+  relation_names.emplace_back("department");
 
   return new brdb_database(test_relations, relation_names);
 }
-

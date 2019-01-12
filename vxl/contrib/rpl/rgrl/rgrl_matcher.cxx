@@ -6,7 +6,9 @@
 #include <rgrl/rgrl_view.h>
 #include <rgrl/rgrl_feature.h>
 #include <rgrl/rgrl_match_set.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 // less than operator
 bool
@@ -17,9 +19,7 @@ operator<( flip_node const& other ) const
 }
 
 rgrl_matcher::
-~rgrl_matcher()
-{
-}
+~rgrl_matcher() = default;
 
 rgrl_match_set_sptr
 rgrl_matcher::
@@ -45,7 +45,7 @@ compute_matches( rgrl_feature_set const&    from_features,
 {
   rgrl_mask_sptr from_roi = new rgrl_mask_box( from_region.x0(), from_region.x1() );
   rgrl_mask_sptr to_roi = new rgrl_mask_box( to_region.x0(), to_region.x1() );
-  rgrl_view view( from_roi, to_roi, from_region, from_region, VXL_NULLPTR, VXL_NULLPTR, 0);
+  rgrl_view view( from_roi, to_roi, from_region, from_region, nullptr, nullptr, 0);
 
   return this->compute_matches(from_features,
                                to_features,
@@ -62,7 +62,7 @@ add_one_flipped_match( rgrl_match_set_sptr&      inv_set,
                        nodes_vec_iterator const& begin_iter,
                        nodes_vec_iterator const& end_iter )
 {
-  const unsigned int size = unsigned( end_iter - begin_iter );
+  const auto size = unsigned( end_iter - begin_iter );
   rgrl_transformation_sptr const& inverse_xform = current_view.inverse_xform_estimate();
 
   rgrl_feature_sptr from = begin_iter->to_;

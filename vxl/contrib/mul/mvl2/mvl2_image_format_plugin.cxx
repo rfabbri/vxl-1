@@ -1,6 +1,3 @@
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \brief Interface for loading avi frames as image formats
@@ -16,7 +13,9 @@
 #include <string>
 #include <cstdlib>
 #include "mvl2_image_format_plugin.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_file.h>
 #include <mvl2/mvl2_video_from_avi.h>
 #include <mvl2/mvl2_video_from_sequence.h>
@@ -171,4 +170,3 @@ bool mvl2_image_format_plugin::can_be_loaded(const std::string& filename)
 
   return get_frame_number_and_filename(real_filename,frame_number,filename);
 }
-

@@ -4,7 +4,9 @@
 #include <cmath>
 #include <fstream>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bsta/bsta_histogram.h>
 #include <bsta/bsta_joint_histogram.h>
 #include <bsta/bsta_joint_histogram_3d.h>
@@ -56,11 +58,11 @@ void test_bsta_histogram_io()
   vsl_b_write(sos, hptr);
   sos.close();
   vsl_b_ifstream sis("./sptr_temp.bin");
-  bsta_histogram_sptr hptr_in = VXL_NULLPTR;
+  bsta_histogram_sptr hptr_in = nullptr;
   vsl_b_read(sis, hptr_in);
-  TEST("histogram sptr read", hptr_in!=VXL_NULLPTR, true);
-  if (hptr_in!=VXL_NULLPTR) {
-    bsta_histogram<double>* hp =
+  TEST("histogram sptr read", hptr_in!=nullptr, true);
+  if (hptr_in!=nullptr) {
+    auto* hp =
       static_cast<bsta_histogram<double>*>(hptr_in.ptr());
     nbins_in = hp->nbins();
     max_in = hp->max();
@@ -105,13 +107,13 @@ void test_bsta_histogram_io()
   vsl_b_write(jsos, jhptr);
   jsos.close();
   vsl_b_ifstream jsis("./sptr_temp.bin");
-  bsta_joint_histogram_sptr jhptr_in = VXL_NULLPTR;
+  bsta_joint_histogram_sptr jhptr_in = nullptr;
   vsl_b_read(jsis, jhptr_in);
   jsis.close();
-  TEST("joint histogram sptr read", jhptr_in!=VXL_NULLPTR, true);
+  TEST("joint histogram sptr read", jhptr_in!=nullptr, true);
   if (jhptr_in) {
     if (jhptr_in->type_ == bsta_joint_histogram_base::HIST_TYPE_DOUBLE) {
-      bsta_joint_histogram<double>* hdbl =
+      auto* hdbl =
         dynamic_cast<bsta_joint_histogram<double>*>(jhptr_in.ptr());
       nbinsj_in = hdbl->nbins();
       rangej_in = hdbl->range();
@@ -173,13 +175,13 @@ void test_bsta_histogram_io()
   vsl_b_write(j3dsos, jh3dptr);
   j3dsos.close();
   vsl_b_ifstream j3dsis("./sptr_temp.bin");
-  bsta_joint_histogram_3d_sptr j3dhptr_in = VXL_NULLPTR;
+  bsta_joint_histogram_3d_sptr j3dhptr_in = nullptr;
   vsl_b_read(j3dsis, j3dhptr_in);
   j3dsis.close();
-  TEST("joint histogram sptr read", j3dhptr_in!=VXL_NULLPTR, true);
+  TEST("joint histogram sptr read", j3dhptr_in!=nullptr, true);
   if (j3dhptr_in) {
     if (j3dhptr_in->type_ == bsta_joint_histogram_3d_base::HIST_TYPE_FLOAT) {
-      bsta_joint_histogram_3d<float>* h3ddbl =
+      auto* h3ddbl =
         dynamic_cast<bsta_joint_histogram_3d<float>*>(j3dhptr_in.ptr());
       float p3dj_in = h3ddbl->p(0.5f,1.5f,2.5f);
       jerror = std::fabs(p3dj_in-pin);

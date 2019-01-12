@@ -5,8 +5,10 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vnl/vnl_inverse.h>
 #include <vnl/algo/vnl_levenberg_marquardt.h>
 #include <vgl/algo/vgl_norm_trans_2d.h>
@@ -118,20 +120,18 @@ optimize_l(std::vector<vgl_homg_line_2d<double> > const& lines1,
   if (!tr2.compute_from_lines(lines2))
     return false;
   std::vector<vgl_homg_point_2d<double> > tlines1, tlines2;
-  for (std::vector<vgl_homg_line_2d<double> >::const_iterator
-       lit = lines1.begin(); lit != lines1.end(); lit++)
+  for (const auto & lit : lines1)
   {
     // transform lines1 according to the normalizing transform
-    vgl_homg_line_2d<double> l = tr1(*lit);
+    vgl_homg_line_2d<double> l = tr1(lit);
     // convert the line to a point to use the same linear code
     vgl_homg_point_2d<double> p(l.a(), l.b(), l.c());
     tlines1.push_back(p);
   }
-  for (std::vector<vgl_homg_line_2d<double> >::const_iterator
-       lit = lines2.begin(); lit != lines2.end(); lit++)
+  for (const auto & lit : lines2)
   {
     // transform lines2 according to the normalizing transform
-    vgl_homg_line_2d<double> l = tr2(*lit);
+    vgl_homg_line_2d<double> l = tr2(lit);
     // convert the line to a point to use the same linear code
     vgl_homg_point_2d<double> p(l.a(), l.b(), l.c());
     tlines2.push_back(p);

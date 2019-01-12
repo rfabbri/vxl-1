@@ -17,7 +17,9 @@
 #include <bvpl/kernels/bvpl_create_directions.h>
 #include <bvpl/kernels/bvpl_kernel_iterator.h>
 #include <vgl/vgl_line_3d_2_points.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class bvpl_corner_search_functor
 {
@@ -29,7 +31,7 @@ class bvpl_corner_search_functor
   bvpl_corner_search_functor(int this_id, std::vector<vnl_float_3> axes, std::vector<float> angles );
 
   //: Destructor
-  ~bvpl_corner_search_functor() {}
+  ~bvpl_corner_search_functor() = default;
 
   //: Apply a given operation to value val, depending on the dispatch character
   void apply(int& id, bvpl_kernel_dispatch& d, vgl_point_3d<int> p1, vgl_point_3d<int> p2);
@@ -57,7 +59,7 @@ void bvpl_corner_search_functor::apply(int& id, bvpl_kernel_dispatch& /*d*/, vgl
 {
   if (axes_[id]==axes_[this_id_]) // same plane; now look for opposite diagonal corners
     if (std::abs(std::abs(angles_[id] - angles_[this_id_]) - vnl_math::pi_over_2) > 1e-7)
-      lines_.push_back(vgl_line_3d_2_points<int>(p1, p2));
+      lines_.emplace_back(p1, p2);
 }
 
 #endif // bvpl_corner_search_kernel_h

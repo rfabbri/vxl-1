@@ -1,9 +1,6 @@
 // This is oxl/mvl/TripleMatchSet.h
 #ifndef TripleMatchSet_h_
 #define TripleMatchSet_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Store integer triplets
@@ -35,7 +32,9 @@
 #include <iosfwd>
 #include <mvl/MatchSet.h>
 #include <mvl/PairMatchSet.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class TripleMatchSet : public MatchSet
 {
@@ -43,7 +42,7 @@ class TripleMatchSet : public MatchSet
   TripleMatchSet(PairMatchSet* match12, PairMatchSet* match23);
  public:
   TripleMatchSet(int i1_max, int i2_max, int i3_max);
-  ~TripleMatchSet();
+  ~TripleMatchSet() override;
 
   void clear_matches();
   void clear_nontriplets();

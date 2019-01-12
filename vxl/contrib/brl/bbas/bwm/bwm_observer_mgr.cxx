@@ -16,13 +16,15 @@
 #include <vsol/vsol_polygon_3d.h>
 #include <vgui/vgui_soview.h>
 #include <vgui/vgui_dialog.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
-bwm_observer_cam* bwm_observer_mgr::BWM_MASTER_OBSERVER = VXL_NULLPTR;
-bwm_observer_cam* bwm_observer_mgr::BWM_EO_OBSERVER = VXL_NULLPTR;
-bwm_observer_cam* bwm_observer_mgr::BWM_OTHER_MODE_OBSERVER = VXL_NULLPTR;
+bwm_observer_cam* bwm_observer_mgr::BWM_MASTER_OBSERVER = nullptr;
+bwm_observer_cam* bwm_observer_mgr::BWM_EO_OBSERVER = nullptr;
+bwm_observer_cam* bwm_observer_mgr::BWM_OTHER_MODE_OBSERVER = nullptr;
 
-bwm_observer_mgr* bwm_observer_mgr::instance_ = VXL_NULLPTR;
+bwm_observer_mgr* bwm_observer_mgr::instance_ = nullptr;
 
 bwm_observer_mgr* bwm_observer_mgr::instance()
 {

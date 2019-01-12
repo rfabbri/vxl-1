@@ -1,7 +1,4 @@
 // This is oxl/mvl/HMatrix2D.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 
@@ -10,14 +7,14 @@
 #include "HMatrix2D.h"
 #include <mvl/HomgOperator2D.h>
 #include <vnl/vnl_inverse.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //--------------------------------------------------------------
 //
 //: Default constructor
-HMatrix2D::HMatrix2D()
-{
-}
+HMatrix2D::HMatrix2D() = default;
 
 //: Copy constructor
 HMatrix2D::HMatrix2D(const HMatrix2D& M)
@@ -59,9 +56,7 @@ HMatrix2D::HMatrix2D (const double* H)
 }
 
 //: Destructor
-HMatrix2D::~HMatrix2D()
-{
-}
+HMatrix2D::~HMatrix2D() = default;
 
 // == OPERATIONS ==
 
@@ -192,7 +187,7 @@ HMatrix2D HMatrix2D::get_inverse() const
 vnl_double_4 HMatrix2D::transform_bounding_box(double /*x0*/, double /*y0*/, double /*x1*/, double /*y1*/)
 {
   std::cerr << "FIXME: HMatrix2D::transform_bounding_box() is not yet implemented\n";
-  return vnl_double_4();
+  return {};
 
 #if 0
   // Find bbox of transformed image
@@ -215,4 +210,3 @@ vnl_double_4 HMatrix2D::transform_bounding_box(double /*x0*/, double /*y0*/, dou
   return vnl_double_4(min[0], min[1], max[0], max[1]);
 #endif
 }
-

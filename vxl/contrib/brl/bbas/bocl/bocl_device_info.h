@@ -17,7 +17,9 @@
 #include <iosfwd>
 #include "bocl_cl.h"
 #include "bocl_utils.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //Just in case NVIDIA extensions are not defined
 #ifndef CL_DEVICE_COMPUTE_CAPABILITY_MAJOR_NV
@@ -38,7 +40,7 @@
 class bocl_device_info
 {
   public:
-    bocl_device_info() {}
+    bocl_device_info() = default;
     bocl_device_info(cl_device_id* device);
     ~bocl_device_info();
 

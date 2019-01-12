@@ -1,9 +1,6 @@
 // This is core/vbl/vbl_array_1d.h
 #ifndef vbl_array_1d_h_
 #define vbl_array_1d_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief A simple container.
@@ -18,8 +15,10 @@
 #include <new>
 #include <iosfwd>
 #include <cstddef>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 //: A simple container.
 // This container stores its elements in contiguous
@@ -43,7 +42,7 @@ class vbl_array_1d
   typedef T const &const_reference;
  public:
 
-  vbl_array_1d() : begin_(VXL_NULLPTR), end_(VXL_NULLPTR), alloc_(VXL_NULLPTR) { }
+  vbl_array_1d() : begin_(nullptr), end_(nullptr), alloc_(nullptr) { }
 
   vbl_array_1d(const_iterator b, const_iterator e) {
     std::ptrdiff_t n = e - b;
@@ -166,7 +165,7 @@ class vbl_array_1d
   }
 };
 
-VCL_TEMPLATE_EXPORT template <class T>
+template <class T>
 std::ostream& operator<<(std::ostream &, vbl_array_1d<T> const &);
 
 #endif // vbl_array_1d_h_

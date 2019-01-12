@@ -1,7 +1,9 @@
 // This is rpl/rrel/tests/test_ransac_obj.cxx
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <testlib/testlib_test.h>
 
 #include <rrel/rrel_ransac_obj.h>
@@ -10,7 +12,7 @@ inline double rho( rrel_objective* obj, double r )
 {
   std::vector<double> res;
   res.push_back( r );
-  return obj->fcn( res.begin(), res.end(), 1.0, VXL_NULLPTR );
+  return obj->fcn( res.begin(), res.end(), 1.0, nullptr );
 }
 
 static void test_ransac_obj()

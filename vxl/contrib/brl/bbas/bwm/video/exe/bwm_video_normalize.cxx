@@ -5,7 +5,9 @@
 #include <algorithm>
 #include <vector>
 #include <cmath>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_file.h>
 #include <vul/vul_file_iterator.h>
 #include <vul/vul_arg.h>
@@ -38,9 +40,9 @@ void compute_corr_intensities(std::vector<std::string> img_files,
     for (unsigned i=0;i<img_files.size();i++)
     {
         vil_image_view_base_sptr img_ptr=vil_load(img_files[i].c_str());
-        if (vil_image_view<vxl_byte> *img_byte = dynamic_cast<vil_image_view<vxl_byte>*>(img_ptr.ptr()))
+        if (auto *img_byte = dynamic_cast<vil_image_view<vxl_byte>*>(img_ptr.ptr()))
         {
-            vil_image_view<float>* floatimg = new vil_image_view<float>(img_byte->ni(), img_byte->nj(), 1);
+            auto* floatimg = new vil_image_view<float>(img_byte->ni(), img_byte->nj(), 1);
             vil_convert_stretch_range_limited(*img_byte, *floatimg, vxl_byte(0), vxl_byte(255), 0.0f, 1.0f);
 
             unsigned ni=img_ptr->ni();
@@ -102,9 +104,9 @@ int main(int argc, char** argv)
     {
         vil_image_view_base_sptr img_ptr=vil_load(img_files[i].c_str());
         std::string imgname=outdir()+"/"+vul_file::basename(img_files[i]);
-        if (vil_image_view<vxl_byte> *img_byte = dynamic_cast<vil_image_view<vxl_byte>*>(img_ptr.ptr()))
+        if (auto *img_byte = dynamic_cast<vil_image_view<vxl_byte>*>(img_ptr.ptr()))
         {
-            vil_image_view<float>* floatimg = new vil_image_view<float>(img_byte->ni(), img_byte->nj(), 1);
+            auto* floatimg = new vil_image_view<float>(img_byte->ni(), img_byte->nj(), 1);
             vil_convert_stretch_range_limited(*img_byte, *floatimg, vxl_byte(0), vxl_byte(255), 0.0f, 1.0f);
 
             unsigned ni=img_ptr->ni();

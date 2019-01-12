@@ -1,9 +1,6 @@
 // This is gel/pop/pop_manager.h
 #ifndef pop_manager_h_
 #define pop_manager_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief this class keeps track of all parameterized objects.
@@ -18,7 +15,9 @@
 #include <list>
 #include <pop/pop_parameter.h>
 #include <pop/pop_object.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <pop/pop_geometric_cost_function.h>
 
 //: A class for keeping track of parameterized objects

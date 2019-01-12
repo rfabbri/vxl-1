@@ -1,7 +1,4 @@
 // This is oxl/mvl/PairMatchSetLineSeg.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 //  \file
 
@@ -12,8 +9,8 @@
 
 PairMatchSetLineSeg::PairMatchSetLineSeg()
 {
-  linesegs1_ = VXL_NULLPTR;
-  linesegs2_ = VXL_NULLPTR;
+  linesegs1_ = nullptr;
+  linesegs2_ = nullptr;
 }
 
 PairMatchSetLineSeg::PairMatchSetLineSeg(LineSegSet& linesegs1, LineSegSet& linesegs2):
@@ -23,9 +20,7 @@ PairMatchSetLineSeg::PairMatchSetLineSeg(LineSegSet& linesegs1, LineSegSet& line
   linesegs2_ = &linesegs2;
 }
 
-PairMatchSetLineSeg::~PairMatchSetLineSeg()
-{
-}
+PairMatchSetLineSeg::~PairMatchSetLineSeg() = default;
 
 //: Extract the point vectors for only the valid matches.
 void PairMatchSetLineSeg::extract_matches(std::vector <HomgLineSeg2D>& linesegs1,

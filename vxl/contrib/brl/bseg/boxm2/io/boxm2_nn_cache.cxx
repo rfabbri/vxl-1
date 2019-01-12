@@ -2,7 +2,9 @@
 #include <sstream>
 #include "boxm2_nn_cache.h"
 #include <boxm2/boxm2_block_metadata.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 //:
 // \file
 
@@ -100,10 +102,8 @@ void boxm2_nn_cache::update_block_cache(boxm2_block* blk)
   std::map<boxm2_block_id, boxm2_block*> new_cache;
 
   // find neighbors in the cache already, store 'em
-  for (unsigned int i=0; i<neighbor_list.size(); ++i)
+  for (const auto& id : neighbor_list)
   {
-    boxm2_block_id id = neighbor_list[i];
-
     // if cached_blocks_ has this neighbor, add it to new cache (delete from old)
     if ( cached_blocks_.find(id) != cached_blocks_.end() )
     {
@@ -114,7 +114,7 @@ void boxm2_nn_cache::update_block_cache(boxm2_block* blk)
     {
       std::cout<<"boxm2_nn_cache::initializing empty block "<<id<<std::endl;
       boxm2_block_metadata data = scene_->get_block_metadata(id);
-      boxm2_block* loaded = new boxm2_block(data);
+      auto* loaded = new boxm2_block(data);
       new_cache[id] = loaded;
     }
     else { // send an async request for this block (if it's on disk)
@@ -147,7 +147,7 @@ void boxm2_nn_cache::update_block_cache(boxm2_block* blk)
 
 
 //: get data by type and id
-boxm2_data_base* boxm2_nn_cache::get_data_base(boxm2_block_id id, std::string type, std::size_t num_bytes, bool read_only)
+boxm2_data_base* boxm2_nn_cache::get_data_base(boxm2_block_id id, std::string type, std::size_t  /*num_bytes*/, bool read_only)
 {
   // first thing to do is to load all async requests into the cache
   this->finish_async_data(type);
@@ -184,25 +184,25 @@ boxm2_data_base* boxm2_nn_cache::get_data_base(boxm2_block_id id, std::string ty
 //: returns a data_base pointer which is initialized to the default value of the type.
 //  If a block for this type exists on the cache, it is removed and replaced with the new one.
 //  This method does not check whether a block of this type already exists on the disk nor writes it to the disk
-boxm2_data_base* boxm2_nn_cache::get_data_base_new(boxm2_block_id id, std::string type, std::size_t num_bytes, bool read_only)
+boxm2_data_base* boxm2_nn_cache::get_data_base_new(boxm2_block_id  /*id*/, std::string  /*type*/, std::size_t  /*num_bytes*/, bool  /*read_only*/)
 {
   std::cout<<"BOXM2_DUMB_CACHE::get_data_base_new not implemented"<<std::endl;
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
-void boxm2_nn_cache::remove_data_base(boxm2_block_id, std::string type)
+void boxm2_nn_cache::remove_data_base(boxm2_block_id, std::string  /*type*/)
 {
   std::cout<<"BOXM2_DUMB_CACHE::remove_data_base not implemented"<<std::endl;
 }
 
-void boxm2_nn_cache::replace_data_base(boxm2_block_id id, std::string type, boxm2_data_base* replacement)
+void boxm2_nn_cache::replace_data_base(boxm2_block_id  /*id*/, std::string  /*type*/, boxm2_data_base*  /*replacement*/)
 {
   std::cout<<"BOXM2_DUMB_CACHE::replace_data_base not implemented"<<std::endl;
 }
 
 
 //: update data cache by type
-void boxm2_nn_cache::update_data_base_cache(boxm2_data_base* dat, std::string data_type)
+void boxm2_nn_cache::update_data_base_cache(boxm2_data_base* dat, const std::string& data_type)
 {
   // grab a reference to the map of cached_data
   std::map<boxm2_block_id, boxm2_data_base*>& data_map =
@@ -219,10 +219,8 @@ void boxm2_nn_cache::update_data_base_cache(boxm2_data_base* dat, std::string da
   std::map<boxm2_block_id, boxm2_data_base*> new_cache;
 
   // find neighbors in the cache already, store 'em
-  for (unsigned int i=0; i<neighbor_list.size(); ++i)
+  for (const auto& id : neighbor_list)
   {
-    boxm2_block_id id = neighbor_list[i];
-
     // if cached_blocks_ has this neighbor, add it to new cache (delete from old)
     if ( data_map.find(id) != data_map.end() )
     {
@@ -282,7 +280,7 @@ void boxm2_nn_cache::finish_async_blocks()
 
 
 //: finish async data
-void boxm2_nn_cache::finish_async_data(std::string data_type)
+void boxm2_nn_cache::finish_async_data(const std::string& data_type)
 {
   // grab a reference to the map of cached_data_
   std::map<boxm2_block_id, boxm2_data_base*>& data_map =
@@ -304,7 +302,7 @@ void boxm2_nn_cache::finish_async_data(std::string data_type)
 }
 
 //: helper method returns a reference to correct data map (ensures one exists)
-std::map<boxm2_block_id, boxm2_data_base*>& boxm2_nn_cache::cached_data_map(std::string prefix)
+std::map<boxm2_block_id, boxm2_data_base*>& boxm2_nn_cache::cached_data_map(const std::string& prefix)
 {
   // if map for this particular data type doesn't exist, initialize it
   if ( cached_data_.find(prefix) == cached_data_.end() )
@@ -319,7 +317,7 @@ std::map<boxm2_block_id, boxm2_data_base*>& boxm2_nn_cache::cached_data_map(std:
 }
 
 //: returns a list of neighbors to center
-std::vector<boxm2_block_id> boxm2_nn_cache::get_neighbor_list(boxm2_block_id center)
+std::vector<boxm2_block_id> boxm2_nn_cache::get_neighbor_list(const boxm2_block_id& center)
 {
   std::vector<boxm2_block_id> neighbor_list;
   for (int i=-1; i<=1; ++i) {
@@ -334,7 +332,7 @@ std::vector<boxm2_block_id> boxm2_nn_cache::get_neighbor_list(boxm2_block_id cen
 }
 
 //: helper method says whether or not block id is valid
-bool boxm2_nn_cache::is_valid_id(boxm2_block_id id)
+bool boxm2_nn_cache::is_valid_id(const boxm2_block_id& id)
 {
   // use scene here to determine if this id is valid
   return scene_->block_exists(id);

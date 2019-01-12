@@ -6,8 +6,10 @@
 // \author Gehua Yang
 // \date   March 2006
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vnl/vnl_matrix.h>
 #include <rrel/rrel_m_est_obj.h>
 
@@ -16,18 +18,16 @@
 #include <rgrl/rgrl_transformation.h>
 
 rgrl_weighter_indiv_scale::
-rgrl_weighter_indiv_scale( vcl_unique_ptr<rrel_m_est_obj>  m_est,
+rgrl_weighter_indiv_scale( std::unique_ptr<rrel_m_est_obj>  m_est,
                      bool                          use_signature_error,
                      bool                          use_precomputed_signature_wgt )
- :rgrl_weighter_m_est( vcl_move(m_est), use_signature_error, use_precomputed_signature_wgt )
+ :rgrl_weighter_m_est( std::move(m_est), use_signature_error, use_precomputed_signature_wgt )
 {
 }
 
 
 rgrl_weighter_indiv_scale::
-~rgrl_weighter_indiv_scale()
-{
-}
+~rgrl_weighter_indiv_scale() = default;
 
 
 void

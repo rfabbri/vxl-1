@@ -8,7 +8,9 @@
 
 #include <bapl/bapl_affine_roi.h>
 #include <bapl/bapl_affine_transform.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <brip/brip_histogram.h>
 #include <brip/brip_mutual_info.h>
 #include <vnl/vnl_double_2.h>
@@ -17,8 +19,8 @@
 
 
 //: Constructor
-bapl_mi_matcher::bapl_mi_matcher(vil_image_view<vxl_byte> src_image,
-                                 vil_image_view<vxl_byte> target_patch,
+bapl_mi_matcher::bapl_mi_matcher(const vil_image_view<vxl_byte>& src_image,
+                                 const vil_image_view<vxl_byte>& target_patch,
                                  bapl_affine_transform init_xform,
                                  bapl_mi_matcher_params params)
   :  src_img_(src_image), tgt_img_(target_patch), tgt_entropy_(0.0),
@@ -32,7 +34,7 @@ bapl_mi_matcher::bapl_mi_matcher(vil_image_view<vxl_byte> src_image,
 
 
 //: Constructor
-bapl_mi_matcher::bapl_mi_matcher(vil_image_view<vxl_byte> src_image,
+bapl_mi_matcher::bapl_mi_matcher(const vil_image_view<vxl_byte>& src_image,
                                  bapl_affine_roi& roi,
                                  bapl_mi_matcher_params params)
   :  src_img_(src_image), tgt_img_(roi.rectified_image()), tgt_entropy_(0.0),
@@ -54,18 +56,17 @@ bapl_mi_matcher::generate()
   // if this is the first iteration, initialize with the initial transformation
   if (matches_.empty()) {
     mi = mutual_info(init_xform_);
-    matches_.push_back(bapl_mi_matcher::bapl_match(mi,init_xform_));
+    matches_.emplace_back(mi,init_xform_);
   }
 
-  for ( std::vector<bapl_match>::iterator m_itr = matches_.begin();
-        m_itr != matches_.end(); ++m_itr) {
+  for (auto & matche : matches_) {
     // hypothesize that the transformation remains unchanged
-    hypotheses.push_back(*m_itr);
+    hypotheses.push_back(matche);
     // make other random hypotheses
     for (unsigned i=0; i<params_.num_samples_; ++i) {
       bapl_affine_transform T = this->rand_transform();
       double mi = mutual_info(T);
-      hypotheses.push_back(bapl_mi_matcher::bapl_match(mi,T));
+      hypotheses.emplace_back(mi,T);
     }
   }
   // sort in order of decreasing mutual info
@@ -134,4 +135,3 @@ bapl_mi_matcher::mutual_info(const bapl_affine_transform& T)
 
   return tgt_entropy_ + match_entropy - joint_entropy;
 }
-

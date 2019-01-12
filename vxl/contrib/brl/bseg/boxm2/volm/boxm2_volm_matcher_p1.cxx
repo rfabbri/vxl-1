@@ -2,40 +2,43 @@
 #include <iostream>
 #include <algorithm>
 #include <iomanip>
+#include <utility>
 #include "boxm2_volm_matcher_p1.h"
 #include <vul/vul_timer.h>
 #include <vcl_where_root_dir.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #define GBYTE 1073741824
 
 boxm2_volm_matcher_p1::boxm2_volm_matcher_p1(volm_camera_space_sptr const& cam_space,
                                              volm_query_sptr const& query,
-                                             std::vector<volm_geo_index_node_sptr> const& leaves,
+                                             std::vector<volm_geo_index_node_sptr>  leaves,
                                              float const& buffer_capacity,
                                              std::string const& geo_index_folder,
                                              unsigned const& tile_id,
-                                             std::vector<float> const& depth_interval,
+                                             std::vector<float>  depth_interval,
                                              vgl_polygon<double> const& cand_poly,
-                                             bocl_device_sptr gpu,
+                                             const bocl_device_sptr& gpu,
                                              bool const& is_candidate,
                                              bool const& is_last_pass,
-                                             std::string const& out_folder,
+                                             std::string  out_folder,
                                              float const& threshold,
                                              unsigned const& max_cam_per_loc,
                                              std::vector<volm_weight> weights)
-: cam_space_(cam_space), query_(query), leaves_(leaves), ind_buffer_(buffer_capacity),
-  weights_(weights),
-  fallback_size_buff_(VXL_NULLPTR), layer_size_buff_(VXL_NULLPTR), is_candidate_(is_candidate), cand_poly_(cand_poly),
-  is_last_pass_(is_last_pass), out_folder_(out_folder), depth_interval_(depth_interval),
-  gpu_(gpu), is_grd_reg_(true), is_sky_reg_(true), is_obj_reg_(true), n_cam_(VXL_NULLPTR), n_obj_(VXL_NULLPTR),
-  grd_id_buff_(VXL_NULLPTR), grd_dist_buff_(VXL_NULLPTR), grd_land_buff_(VXL_NULLPTR), grd_land_wgt_buff_(VXL_NULLPTR),
-  grd_id_offset_buff_(VXL_NULLPTR), grd_weight_buff_(VXL_NULLPTR), grd_wgt_attri_buff_(VXL_NULLPTR),
-  sky_id_buff_(VXL_NULLPTR), sky_id_offset_buff_(VXL_NULLPTR), sky_weight_buff_(VXL_NULLPTR),
-  obj_id_buff_(VXL_NULLPTR), obj_id_offset_buff_(VXL_NULLPTR), obj_min_dist_buff_(VXL_NULLPTR), obj_order_buff_(VXL_NULLPTR),
-  obj_weight_buff_(VXL_NULLPTR), obj_wgt_attri_buff_(VXL_NULLPTR),
-  obj_orient_buff_(VXL_NULLPTR), obj_land_buff_(VXL_NULLPTR), obj_land_wgt_buff_(VXL_NULLPTR), depth_interval_buff_(VXL_NULLPTR),
-  depth_length_buff_(VXL_NULLPTR), threshold_(threshold), max_cam_per_loc_(max_cam_per_loc)
+: cam_space_(cam_space), query_(query), leaves_(std::move(leaves)), ind_buffer_(buffer_capacity),
+  weights_(std::move(weights)),
+  fallback_size_buff_(nullptr), layer_size_buff_(nullptr), is_candidate_(is_candidate), cand_poly_(cand_poly),
+  is_last_pass_(is_last_pass), out_folder_(std::move(out_folder)), depth_interval_(std::move(depth_interval)),
+  gpu_(gpu), is_grd_reg_(true), is_sky_reg_(true), is_obj_reg_(true), n_cam_(nullptr), n_obj_(nullptr),
+  grd_id_buff_(nullptr), grd_dist_buff_(nullptr), grd_land_buff_(nullptr), grd_land_wgt_buff_(nullptr),
+  grd_id_offset_buff_(nullptr), grd_weight_buff_(nullptr), grd_wgt_attri_buff_(nullptr),
+  sky_id_buff_(nullptr), sky_id_offset_buff_(nullptr), sky_weight_buff_(nullptr),
+  obj_id_buff_(nullptr), obj_id_offset_buff_(nullptr), obj_min_dist_buff_(nullptr), obj_order_buff_(nullptr),
+  obj_weight_buff_(nullptr), obj_wgt_attri_buff_(nullptr),
+  obj_orient_buff_(nullptr), obj_land_buff_(nullptr), obj_land_wgt_buff_(nullptr), depth_interval_buff_(nullptr),
+  depth_length_buff_(nullptr), threshold_(threshold), max_cam_per_loc_(max_cam_per_loc)
 {
   valid_cam_indices_ = cam_space_->valid_indices();
   layer_size_ = query_->get_query_size();
@@ -184,7 +187,7 @@ bool boxm2_volm_matcher_p1::volm_matcher_p1(int const& num_locs_to_kernel)
 
   // calculate available memory space for indices , not query_global_mem_ includes everything previously defined
   cl_ulong avail_global_mem = device_global_mem_ - query_global_mem_ ;
-  cl_ulong extra_global_mem = (cl_ulong)(1.5*GBYTE);  // leave extra 1.5 GB space for kernel to run
+  auto extra_global_mem = (cl_ulong)(1.5*GBYTE);  // leave extra 1.5 GB space for kernel to run
   if (avail_global_mem < extra_global_mem) {
     std::cerr << "\n ERROR: available memory is smaller than pre-defined extra memory, reduce the extra memory space (current value = "
              << extra_global_mem / GBYTE  << ")\n";
@@ -264,10 +267,10 @@ bool boxm2_volm_matcher_p1::volm_matcher_p1(int const& num_locs_to_kernel)
 
   while (leaf_id < leaves_.size())
   {
-    unsigned char* index_buff_ = new unsigned char[ni*layer_size_];
+    auto* index_buff_ = new unsigned char[ni*layer_size_];
     //unsigned char* index_combine_buff_ = new unsigned char[ni*layer_size_];
-    unsigned char* index_orient_buff_ = new unsigned char[ni*layer_size_];
-    unsigned char* index_land_buff_ = new unsigned char[ni*layer_size_];
+    auto* index_orient_buff_ = new unsigned char[ni*layer_size_];
+    auto* index_land_buff_ = new unsigned char[ni*layer_size_];
 
     // fill the index buffer
     std::vector<unsigned> l_id;  // leaf_id for indices filled into buffer
@@ -293,9 +296,9 @@ bool boxm2_volm_matcher_p1::volm_matcher_p1(int const& num_locs_to_kernel)
     }
 
     total_index_num += ni;
-    float* score_buff_ = new float[ni*nc];
-    float*    mu_buff_ = new float[ni*no*nc];
-    unsigned* n_ind_ = new unsigned;
+    auto* score_buff_ = new float[ni*nc];
+    auto*    mu_buff_ = new float[ni*no*nc];
+    auto* n_ind_ = new unsigned;
     *n_ind_ = ni;
     bocl_mem* n_ind_cl_mem_ = new bocl_mem(gpu_->context(), n_ind_, sizeof(unsigned), " n_ind ");
     if (!n_ind_cl_mem_->create_buffer( CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR )) {
@@ -312,8 +315,8 @@ bool boxm2_volm_matcher_p1::volm_matcher_p1(int const& num_locs_to_kernel)
     }
 
     // define work group size based on number of cameras, nc,  and number of indices, ni;
-    cl_ulong cl_ni = (cl_ulong)RoundUp(*n_ind_, (int)local_threads_[0]);   // row is index
-    cl_ulong cl_nj = (cl_ulong)RoundUp(*n_cam_, (int)local_threads_[1]);   // col is camera
+    auto cl_ni = (cl_ulong)RoundUp(*n_ind_, (int)local_threads_[0]);   // row is index
+    auto cl_nj = (cl_ulong)RoundUp(*n_cam_, (int)local_threads_[1]);   // col is camera
     global_threads_[0] = cl_ni;
     global_threads_[1] = cl_nj;
 
@@ -530,7 +533,7 @@ bool boxm2_volm_matcher_p1::volm_matcher_p1(int const& num_locs_to_kernel)
       }
       // put score date of location ind_id to score_all
       score_all_.push_back(new volm_score(l_id[ind_id], h_id[ind_id], max_score, max_cam_id, cam_ids));
-      score_cam_.push_back(boxm2_volm_score_out(l_id[ind_id], h_id[ind_id], cam_ids, cam_scores));
+      score_cam_.emplace_back(l_id[ind_id], h_id[ind_id], cam_ids, cam_scores);
     }
 
     // clean cl_mem before next round matcher
@@ -570,7 +573,7 @@ bool boxm2_volm_matcher_p1::volm_matcher_p1(int const& num_locs_to_kernel)
   } // end of loop over all leaves
 
   // time evaluation
-  float total_time = (float)total_matcher_time.all();
+  auto total_time = (float)total_matcher_time.all();
   std::cout << "\t\t total time for " << total_index_num << " indices and " << *n_cam_ << " cameras -------> " << total_time/1000.0 << " seconds (" << total_time << " ms)\n"
            << "\t\t GPU kernel execution ------------------> " << gpu_matcher_time/1000.0 << " seconds (" << gpu_matcher_time << " ms)\n"
            << "\t\t CPU host execution --------------------> " << (total_time - gpu_matcher_time)/1000.0 << " seconds (" << total_time - gpu_matcher_time << " ms)" << std::endl;
@@ -696,7 +699,7 @@ bool boxm2_volm_matcher_p1::is_leaf_finish(unsigned const& leaf_id)
 }
 
 // execute kernel with orientation considered
-bool boxm2_volm_matcher_p1::execute_matcher_kernel_orient(bocl_device_sptr                  device,
+bool boxm2_volm_matcher_p1::execute_matcher_kernel_orient(const bocl_device_sptr&                  device,
                                                           cl_command_queue&                  queue,
                                                           std::vector<bocl_kernel*>        kern_vec,
                                                           bocl_mem*                  n_ind_cl_mem_,
@@ -709,7 +712,7 @@ bool boxm2_volm_matcher_p1::execute_matcher_kernel_orient(bocl_device_sptr      
   // create a debug buffer
   cl_int status;
   unsigned debug_size = 100;
-  float* debug_buff_ = new float[debug_size];
+  auto* debug_buff_ = new float[debug_size];
   std::fill(debug_buff_, debug_buff_+debug_size, (float)12.31);
   bocl_mem* debug_cl_mem_ = new bocl_mem(gpu_->context(), debug_buff_, sizeof(float)*debug_size, " debug ");
   if (!debug_cl_mem_->create_buffer( CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR )) {
@@ -901,7 +904,7 @@ bool boxm2_volm_matcher_p1::compile_kernel(std::vector<bocl_kernel*>& vec_kernel
   src_paths.push_back(volm_cl_source_dir + "generalized_volm_obj_based_matching_no_grd_no_sky_with_orient.cl");
 
   // create the matching orientation kernel
-  bocl_kernel* kern_matcher_with_orient = new bocl_kernel();
+  auto* kern_matcher_with_orient = new bocl_kernel();
   if (!kern_matcher_with_orient->create_kernel(&gpu_->context(), gpu_->device_id(), src_paths,
                                                "generalized_volm_obj_based_matching_with_orient",
                                                "",
@@ -910,7 +913,7 @@ bool boxm2_volm_matcher_p1::compile_kernel(std::vector<bocl_kernel*>& vec_kernel
   vec_kernels.push_back(kern_matcher_with_orient);
 
   // create with_orientation kernel for queries without ground
-  bocl_kernel* kern_matcher_no_grd_with_orient = new bocl_kernel();
+  auto* kern_matcher_no_grd_with_orient = new bocl_kernel();
   if (!kern_matcher_no_grd_with_orient->create_kernel(&gpu_->context(), gpu_->device_id(), src_paths,
                                                       "generalized_volm_obj_based_matching_no_grd_with_orient",
                                                       "",
@@ -919,7 +922,7 @@ bool boxm2_volm_matcher_p1::compile_kernel(std::vector<bocl_kernel*>& vec_kernel
   vec_kernels.push_back(kern_matcher_no_grd_with_orient);
 
   // create with_orientation kernel for queries without sky
-  bocl_kernel* kern_matcher_no_sky_with_orient = new bocl_kernel();
+  auto* kern_matcher_no_sky_with_orient = new bocl_kernel();
   if (!kern_matcher_no_sky_with_orient->create_kernel(&gpu_->context(), gpu_->device_id(), src_paths,
                                                       "generalized_volm_obj_based_matching_no_sky_with_orient",
                                                       "",
@@ -928,7 +931,7 @@ bool boxm2_volm_matcher_p1::compile_kernel(std::vector<bocl_kernel*>& vec_kernel
   vec_kernels.push_back(kern_matcher_no_sky_with_orient);
 
   // create with_orientation kernel for queries without sky nor ground
-  bocl_kernel* kern_matcher_no_grd_no_sky_with_orient = new bocl_kernel();
+  auto* kern_matcher_no_grd_no_sky_with_orient = new bocl_kernel();
   if (!kern_matcher_no_grd_no_sky_with_orient->create_kernel(&gpu_->context(), gpu_->device_id(), src_paths,
                                                                 "generalized_volm_obj_based_matching_no_grd_no_sky_with_orient",
                                                                 "",
@@ -959,15 +962,15 @@ bool boxm2_volm_matcher_p1::write_matcher_result(std::string const& tile_fname_b
   if (vul_file::exists(tile_fname_txt))
     vul_file::delete_file_glob(tile_fname_txt);
 
-  unsigned all_loc = (unsigned)score_all_.size();
+  auto all_loc = (unsigned)score_all_.size();
   for (unsigned i = 0; i < all_loc; i++) {
     volm_score_sptr score = score_all_[i];
     std::vector<unsigned> cam_ids = score->cam_id_;
     // write the txt output
     std::ofstream txt_ofs(tile_fname_txt.c_str(), std::ios::app);
     txt_ofs << std::setprecision(6) << score->leaf_id_ << ' ' << score->hypo_id_ << ' ' << score->max_score_ << ' ' << score->max_cam_id_ << '\n';
-    for (unsigned jj = 0; jj < cam_ids.size(); jj++)
-      txt_ofs << ' ' << cam_ids[jj];
+    for (unsigned int cam_id : cam_ids)
+      txt_ofs << ' ' << cam_id;
     txt_ofs << '\n';
     txt_ofs.close();
   }
@@ -984,11 +987,11 @@ bool boxm2_volm_matcher_p1::write_matcher_result(std::string const& tile_fname_b
 bool boxm2_volm_matcher_p1::write_gt_cam_score(unsigned const& leaf_id, unsigned const& hypo_id, std::string const& out_fname)
 {
   std::ofstream ofs(out_fname.c_str());
-  for (unsigned i = 0; i < score_cam_.size(); i++) {
-    if (score_cam_[i].l_id_ == leaf_id && score_cam_[i].h_id_ == hypo_id) {
-      ofs << score_cam_[i].l_id_ << ' ' << score_cam_[i].h_id_ << '\n';
-      std::vector<unsigned> cam_ids = score_cam_[i].cam_id_;
-      std::vector<float> cam_scores = score_cam_[i].cam_score_;
+  for (auto & i : score_cam_) {
+    if (i.l_id_ == leaf_id && i.h_id_ == hypo_id) {
+      ofs << i.l_id_ << ' ' << i.h_id_ << '\n';
+      std::vector<unsigned> cam_ids = i.cam_id_;
+      std::vector<float> cam_scores = i.cam_score_;
       for (unsigned jj = 0; jj < cam_ids.size(); jj++) {
         ofs << std::setprecision(6) << cam_ids[jj] << ' ' << cam_scores[jj] << ' ' << query_->get_cam_string(cam_ids[jj]) << '\n';
       }
@@ -1484,13 +1487,13 @@ bool boxm2_volm_matcher_p1::transfer_weight()
   }
   else if (is_sky_reg_)
   {
-    for (std::vector<volm_weight>::iterator vit = this->weights_.begin(); vit != this->weights_.end(); ++vit)
-      std::cerr << ' ' << vit->w_typ_
-               << ' ' << vit->w_ori_
-               << ' ' << vit->w_lnd_
-               << ' ' << vit->w_dst_
-               << ' ' << vit->w_ord_
-               << ' ' << vit->w_obj_ << '\n';
+    for (auto & weight : this->weights_)
+      std::cerr << ' ' << weight.w_typ_
+               << ' ' << weight.w_ori_
+               << ' ' << weight.w_lnd_
+               << ' ' << weight.w_dst_
+               << ' ' << weight.w_ord_
+               << ' ' << weight.w_obj_ << '\n';
 
     if (this->weights_.size() != (1+(*n_obj_)) ) {
       std::cerr << "\n ERROR: inconsistency between volm_query and volm_weight\n";

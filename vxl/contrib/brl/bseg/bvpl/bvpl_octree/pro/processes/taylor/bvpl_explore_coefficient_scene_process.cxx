@@ -14,8 +14,8 @@
 //:global variables
 namespace bvpl_explore_coefficient_scene_process_globals
 {
-  const unsigned n_inputs_ = 3;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 3;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 
@@ -51,7 +51,7 @@ bool bvpl_explore_coefficient_scene_process(bprb_func_process& pro)
   bvpl_global_taylor<double, 10> taylor(taylor_dir, kernel_names);
 
   boxm_scene_base_sptr valid_scene_base = taylor.load_valid_scene(scene_id);
-  boxm_scene<boct_tree<short, bool> >* valid_scene = dynamic_cast<boxm_scene<boct_tree<short, bool> >*> (valid_scene_base.as_pointer());
+  auto* valid_scene = dynamic_cast<boxm_scene<boct_tree<short, bool> >*> (valid_scene_base.as_pointer());
   if (!valid_scene) {
     std::cerr << "Error in bvpl_explore_coefficient_scene_process: Could not cast valid scene\n";
     return false;

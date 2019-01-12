@@ -11,18 +11,18 @@
 #include <bsta/bsta_gauss_sf1.h>
 
 bool boxm2_update_cone_image(boxm2_scene_sptr & scene,
-                             std::string data_type,
-                             std::string num_obs_type,
-                             vpgl_camera_double_sptr cam ,
+                             const std::string& data_type,
+                             const std::string& num_obs_type,
+                             const vpgl_camera_double_sptr& cam ,
                              vil_image_view<float> * input_image,
-                             unsigned int roi_ni,
-                             unsigned int roi_nj,
-                             unsigned int roi_ni0,
-                             unsigned int roi_nj0)
+                             unsigned int  /*roi_ni*/,
+                             unsigned int  /*roi_nj*/,
+                             unsigned int  /*roi_ni0*/,
+                             unsigned int  /*roi_nj0*/)
 {
     boxm2_cache_sptr cache=boxm2_cache::instance();
     std::vector<boxm2_block_id> vis_order;
-    if (vpgl_perspective_camera<double>* pcam = // assignment, not comparison
+    if (auto* pcam = // assignment, not comparison
         dynamic_cast<vpgl_perspective_camera<double>* >(cam.ptr()))
     {
         vis_order=scene->get_vis_blocks(pcam);
@@ -75,7 +75,7 @@ bool boxm2_update_cone_image(boxm2_scene_sptr & scene,
             datas.push_back(alph);
             datas.push_back(mog);
             datas.push_back(nobs);
-            boxm2_scene_info_wrapper *scene_info_wrapper=new boxm2_scene_info_wrapper();
+            auto *scene_info_wrapper=new boxm2_scene_info_wrapper();
             scene_info_wrapper->info=scene->get_blk_metadata(*id);
 #if 0
             // pass 0
@@ -148,18 +148,18 @@ bool boxm2_update_cone_image(boxm2_scene_sptr & scene,
 }
 
 bool boxm2_update_image(boxm2_scene_sptr & scene,
-                        std::string data_type,int appTypeSize,
-                        std::string num_obs_type,
-                        vpgl_camera_double_sptr cam ,
+                        const std::string& data_type,int appTypeSize,
+                        const std::string& num_obs_type,
+                        const vpgl_camera_double_sptr& cam ,
                         vil_image_view<float> * input_image,
-                        unsigned int roi_ni,
-                        unsigned int roi_nj,
-                        unsigned int roi_ni0,
-                        unsigned int roi_nj0)
+                        unsigned int  /*roi_ni*/,
+                        unsigned int  /*roi_nj*/,
+                        unsigned int  /*roi_ni0*/,
+                        unsigned int  /*roi_nj0*/)
 {
     boxm2_cache_sptr cache=boxm2_cache::instance();
     std::vector<boxm2_block_id> vis_order;
-    if (vpgl_perspective_camera<double>* pcam = // assignment, not comparison
+    if (auto* pcam = // assignment, not comparison
         dynamic_cast<vpgl_perspective_camera<double>* >(cam.ptr()))
     {
         vis_order=scene->get_vis_blocks(pcam);
@@ -206,7 +206,7 @@ bool boxm2_update_image(boxm2_scene_sptr & scene,
             datas.push_back(alph);
             datas.push_back(mog);
             datas.push_back(nobs);
-            boxm2_scene_info_wrapper *scene_info_wrapper=new boxm2_scene_info_wrapper();
+            auto *scene_info_wrapper=new boxm2_scene_info_wrapper();
             scene_info_wrapper->info=scene->get_blk_metadata(*id);
             // pass 0
             if (pass_no==0)
@@ -306,16 +306,16 @@ bool boxm2_update_image(boxm2_scene_sptr & scene,
 
 
 bool boxm2_update_with_shadow(boxm2_scene_sptr & scene,
-                              std::string data_type,int appTypeSize,
-                              std::string num_obs_type,
-                              vpgl_camera_double_sptr cam ,
+                              const std::string& data_type,int appTypeSize,
+                              const std::string& num_obs_type,
+                              const vpgl_camera_double_sptr& cam ,
                               float shadow_prior,
                               float shadow_sigma,
                               vil_image_view<float>  * input_image,
-                              unsigned int roi_ni,
-                              unsigned int roi_nj,
-                              unsigned int roi_ni0,
-                              unsigned int roi_nj0)
+                              unsigned int  /*roi_ni*/,
+                              unsigned int  /*roi_nj*/,
+                              unsigned int  /*roi_ni0*/,
+                              unsigned int  /*roi_nj0*/)
 {
     boxm2_cache_sptr cache=boxm2_cache::instance();
     std::vector<boxm2_block_id> vis_order=scene->get_vis_blocks(reinterpret_cast<vpgl_generic_camera<double>*>(cam.ptr()));
@@ -372,7 +372,7 @@ bool boxm2_update_with_shadow(boxm2_scene_sptr & scene,
             datas.push_back(alph);
             datas.push_back(mog);
             datas.push_back(nobs);
-            boxm2_scene_info_wrapper *scene_info_wrapper=new boxm2_scene_info_wrapper();
+            auto *scene_info_wrapper=new boxm2_scene_info_wrapper();
             scene_info_wrapper->info=scene->get_blk_metadata(*id);
             // pass 0
             if (pass_no==0)
@@ -471,15 +471,15 @@ bool boxm2_update_with_shadow(boxm2_scene_sptr & scene,
 }
 
 bool boxm2_update_using_quality(boxm2_scene_sptr & scene,
-                                std::string data_type,int appTypeSize,
-                                std::string num_obs_type,
-                                vpgl_camera_double_sptr cam ,
+                                const std::string& data_type,int appTypeSize,
+                                const std::string& num_obs_type,
+                                const vpgl_camera_double_sptr& cam ,
                                 vil_image_view<float>  * input_image,
                                 vil_image_view<float>& quality_img,
-                                unsigned int roi_ni,
-                                unsigned int roi_nj,
-                                unsigned int roi_ni0,
-                                unsigned int roi_nj0)
+                                unsigned int  /*roi_ni*/,
+                                unsigned int  /*roi_nj*/,
+                                unsigned int  /*roi_ni0*/,
+                                unsigned int  /*roi_nj0*/)
 {
     boxm2_cache_sptr cache=boxm2_cache::instance();
     std::vector<boxm2_block_id> vis_order=scene->get_vis_blocks(reinterpret_cast<vpgl_generic_camera<double>*>(cam.ptr()));
@@ -520,7 +520,7 @@ bool boxm2_update_using_quality(boxm2_scene_sptr & scene,
             datas.push_back(alph);
             datas.push_back(mog);
             datas.push_back(nobs);
-            boxm2_scene_info_wrapper *scene_info_wrapper=new boxm2_scene_info_wrapper();
+            auto *scene_info_wrapper=new boxm2_scene_info_wrapper();
             scene_info_wrapper->info=scene->get_blk_metadata(*id);
             // pass 0
             if (pass_no==0)
@@ -615,4 +615,3 @@ bool boxm2_update_using_quality(boxm2_scene_sptr & scene,
     }
     return true;
 }
-

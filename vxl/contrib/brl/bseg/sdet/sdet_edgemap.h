@@ -14,7 +14,9 @@
 #include <vector>
 #include <iostream>
 #include <cmath>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vbl/vbl_ref_count.h>
 #include <vbl/vbl_array_2d.h>
@@ -33,7 +35,7 @@ public:
 
   sdet_edge(vgl_point_2d<double> new_pt, double tan, double edge_strength=10.0):
     pt(new_pt), tangent(tan), strength(edge_strength) {}
-  ~sdet_edge(){}
+  ~sdet_edge()= default;
 };
 
 typedef vbl_array_2d<std::vector<sdet_edgel*> >::iterator sdet_edgemap_iter;
@@ -64,18 +66,18 @@ public:
   sdet_edgemap(int width, int height, std::vector<sdet_edgel*>& edgels) : edgels(0)
   {
     edge_cells.resize(height, width);
-    for (unsigned i=0; i<edgels.size(); i++)
-      insert(edgels[i]);
+    for (auto & edgel : edgels)
+      insert(edgel);
   }
 
   //: destructor
-  ~sdet_edgemap()
+  ~sdet_edgemap() override
   {
     //go over each cell and delete the edgels
     sdet_edgemap_const_iter it = edge_cells.begin();
     for (; it!=edge_cells.end(); it++)
-      for (unsigned j=0; j<(*it).size(); j++)
-        delete (*it)[j];
+      for (auto j : (*it))
+        delete j;
 
     edge_cells.clear();
 

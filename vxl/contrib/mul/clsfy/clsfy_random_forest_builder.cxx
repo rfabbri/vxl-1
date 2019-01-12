@@ -1,7 +1,4 @@
 // This is mul/clsfy/clsfy_random_forest_builder.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \brief Implement a random_forest classifier builder
@@ -14,8 +11,10 @@
 #include <iterator>
 #include "clsfy_random_forest_builder.h"
 #include <vxl_config.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vsl/vsl_binary_loader.h>
 #include <mbl/mbl_stl.h>
 #include <mbl/mbl_data_array_wrapper.h>
@@ -27,7 +26,7 @@
 clsfy_random_forest_builder::clsfy_random_forest_builder()
   : ntrees_(100),
     max_depth_(-1), min_node_size_(-1),
-    poob_indices_(VXL_NULLPTR),
+    poob_indices_(nullptr),
     calc_test_error_(true)
 {
     unsigned long default_seed=123654987;
@@ -39,16 +38,14 @@ clsfy_random_forest_builder::clsfy_random_forest_builder(unsigned ntrees,
                                                          int min_node_size)
   : ntrees_(ntrees),
     max_depth_(max_depth), min_node_size_(min_node_size),
-    poob_indices_(VXL_NULLPTR),
+    poob_indices_(nullptr),
     calc_test_error_(true)
 {
     unsigned long default_seed=123654987;
     seed_sampler(default_seed);
 }
 
-clsfy_random_forest_builder::~clsfy_random_forest_builder()
-{
-}
+clsfy_random_forest_builder::~clsfy_random_forest_builder() = default;
 //=======================================================================
 
 short clsfy_random_forest_builder::version_no() const
@@ -135,7 +132,7 @@ double clsfy_random_forest_builder::build(clsfy_classifier_base& classifier,
     assert(nClasses=1);
 
 
-    clsfy_random_forest &random_forest = static_cast<clsfy_random_forest&>(classifier);
+    auto &random_forest = static_cast<clsfy_random_forest&>(classifier);
     unsigned npoints=inputs.size();
     std::vector<vnl_vector<double> > vin(npoints);
 
@@ -178,7 +175,7 @@ double clsfy_random_forest_builder::build(clsfy_classifier_base& classifier,
         builder.set_calc_test_error(false);
 
         clsfy_classifier_base* pBaseClassifier=builder.new_classifier();
-        clsfy_binary_tree* pTreeClassifier=dynamic_cast<clsfy_binary_tree*>(pBaseClassifier);
+        auto* pTreeClassifier=dynamic_cast<clsfy_binary_tree*>(pBaseClassifier);
         assert(pTreeClassifier);
         builder.set_nbranch_params(nbranch_params);
 
@@ -266,6 +263,6 @@ unsigned long clsfy_random_forest_builder::get_tree_builder_seed() const
         seedAsBytes[ib]=static_cast<vxl_byte>(random_sampler_(N));
     }
 
-    unsigned long* pSeed=reinterpret_cast<unsigned long*>(&seedAsBytes[0]);
+    auto* pSeed=reinterpret_cast<unsigned long*>(&seedAsBytes[0]);
     return *pSeed;
 }

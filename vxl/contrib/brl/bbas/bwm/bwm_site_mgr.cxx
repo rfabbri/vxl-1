@@ -26,7 +26,9 @@
 #include <vgl/algo/vgl_rotation_3d.h>
 #include <vnl/vnl_double_3.h>
 #include <vnl/vnl_quaternion.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vul/vul_file.h>
 #include <vul/vul_string.h>
@@ -37,7 +39,7 @@
 #endif
 #include <expatpp.h> // for accessing methods in parent class of bwm_io_config_parser
 
-bwm_site_mgr* bwm_site_mgr::instance_ = VXL_NULLPTR;
+bwm_site_mgr* bwm_site_mgr::instance_ = nullptr;
 
 bwm_site_mgr* bwm_site_mgr::instance()
 {
@@ -256,9 +258,9 @@ void bwm_site_mgr::create_site()
 //: create a dialog box to create site to add images, objects, etc..
 void bwm_site_mgr::edit_site()
 {
-  bwm_io_config_parser* parser = VXL_NULLPTR;
+  bwm_io_config_parser* parser = nullptr;
   parser = parse_config();
-  if (parser == VXL_NULLPTR) {
+  if (parser == nullptr) {
     std::cerr << "Site File is not a valid XML site!\n";
     return;
   }
@@ -476,7 +478,7 @@ void bwm_site_mgr::load_site()
     vsol_point_3d_sptr lvcs = site->lvcs_;
     // if LVCS is not set, do not use it
     if (!lvcs||*lvcs == vsol_point_3d(0, 0, 0))
-      lvcs = VXL_NULLPTR;
+      lvcs = nullptr;
     else {
       double lat = lvcs->x();
       double lon = lvcs->y();
@@ -774,7 +776,7 @@ void bwm_site_mgr::save_video_site()
   bool found = false;
   std::vector<bwm_observer_cam*> obsvs =
     bwm_observer_mgr::instance()->observers_cam();
-  bwm_observer_video* obv = VXL_NULLPTR;
+  bwm_observer_video* obv = nullptr;
 
   for (std::vector<bwm_observer_cam*>::iterator oit = obsvs.begin();
        oit != obsvs.end()&&!found; ++oit)
@@ -983,21 +985,21 @@ bwm_io_config_parser* bwm_site_mgr::parse_config()
   std::string fname = bwm_utils::select_file();
 
   if (fname.size() == 0)
-    return VXL_NULLPTR;
+    return nullptr;
 
   bwm_io_config_parser* parser = new bwm_io_config_parser();
   std::FILE* xmlFile = std::fopen(fname.c_str(), "r");
   if (!xmlFile) {
     std::cerr << fname.c_str() << " error on opening\n";
     delete parser;
-    return VXL_NULLPTR;
+    return nullptr;
   }
   if (!parser->parseFile(xmlFile)) {
     std::cerr << XML_ErrorString(parser->XML_GetErrorCode()) << " at line "
              << parser->XML_GetCurrentLineNumber() << '\n';
 
     delete parser;
-    return VXL_NULLPTR;
+    return nullptr;
   }
   std::cout << "finished!" << std::endl;
   return parser;
@@ -1139,7 +1141,7 @@ static void save_video_world_points_vrml_impl(std::ofstream& os)
   bool found = false;
   std::vector<bwm_observer_cam*> obsvs =
     bwm_observer_mgr::instance()->observers_cam();
-  bwm_observer_video* obv = VXL_NULLPTR;
+  bwm_observer_video* obv = nullptr;
 
   for (std::vector<bwm_observer_cam*>::iterator oit = obsvs.begin();
        oit != obsvs.end()&&!found; ++oit)
@@ -1175,7 +1177,7 @@ static void save_video_world_points_vrml_impl(std::ofstream& os, vgl_box_3d<doub
   bool found = false;
   std::vector<bwm_observer_cam*> obsvs =
     bwm_observer_mgr::instance()->observers_cam();
-  bwm_observer_video* obv = VXL_NULLPTR;
+  bwm_observer_video* obv = nullptr;
 
   for (std::vector<bwm_observer_cam*>::iterator oit = obsvs.begin();
        oit != obsvs.end()&&!found; ++oit)
@@ -1228,7 +1230,7 @@ static void save_video_cameras_vrml_impl(std::ofstream& os)
   bool found = false;
   std::vector<bwm_observer_cam*> obsvs =
     bwm_observer_mgr::instance()->observers_cam();
-  bwm_observer_video* obv = VXL_NULLPTR;
+  bwm_observer_video* obv = nullptr;
 
   for (std::vector<bwm_observer_cam*>::iterator oit = obsvs.begin();
        oit != obsvs.end()&&!found; ++oit)
@@ -1270,7 +1272,7 @@ static void save_video_cameras_vrml_impl(std::ofstream& os, vgl_box_3d<double> b
   bool found = false;
   std::vector<bwm_observer_cam*> obsvs =
     bwm_observer_mgr::instance()->observers_cam();
-  bwm_observer_video* obv = VXL_NULLPTR;
+  bwm_observer_video* obv = nullptr;
 
   for (std::vector<bwm_observer_cam*>::iterator oit = obsvs.begin();
        oit != obsvs.end()&&!found; ++oit)
@@ -1375,7 +1377,7 @@ void bwm_site_mgr::compute_3d_world_params()
   bool found = false;
   std::vector<bwm_observer_cam*> obsvs =
     bwm_observer_mgr::instance()->observers_cam();
-  bwm_observer_video* obv = VXL_NULLPTR;
+  bwm_observer_video* obv = nullptr;
 
   for (std::vector<bwm_observer_cam*>::iterator oit = obsvs.begin();
        oit != obsvs.end()&&!found; ++oit)

@@ -10,7 +10,9 @@
 #include <bvxm/bvxm_world_params.h>
 #include <bvxm/bvxm_voxel_world.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <brdb/brdb_value.h>
 #include <brdb/brdb_selection.h>
@@ -44,7 +46,7 @@ static void test_bvxm_create_voxel_world_process()
 
   // check if the results are in DB
   brdb_query_aptr Q = brdb_query_comp_new("id", brdb_query::EQ, id);
-  brdb_selection_sptr S = DATABASE->select("bvxm_voxel_world_sptr_data", vcl_move(Q));
+  brdb_selection_sptr S = DATABASE->select("bvxm_voxel_world_sptr_data", std::move(Q));
   if (S->size()!=1){
     std::cout << "in bprb_batch_process_manager::set_input_from_db(.) -"
              << " no selections\n";
@@ -55,10 +57,10 @@ static void test_bvxm_create_voxel_world_process()
     std::cout << "in bprb_batch_process_manager::set_input_from_db(.) -"
              << " didn't get value\n";
   }
-  bool non_null = (value != VXL_NULLPTR);
+  bool non_null = (value != nullptr);
   TEST("bvxm_voxel_world_sptr non-null", non_null ,true);
 
-  brdb_value_t<bvxm_voxel_world_sptr>* result =
+  auto* result =
     static_cast<brdb_value_t<bvxm_voxel_world_sptr>* >(value.ptr());
 
   // compare the values with the params given

@@ -2,7 +2,9 @@
 
 #include <iostream>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vimt/vimt_transform_2d.h>
 #include <vimt/vimt_image_2d_of.h>
 #include <vgl/vgl_point_2d.h>
@@ -16,9 +18,9 @@ static void test_world_bounding_box()
 
   // Image with identity transform
   {
-    const unsigned ni = 8;  // image width (pixels)
-    const unsigned nj = 9;  // image height (pixels)
-    const unsigned np = 1;
+    constexpr unsigned ni = 8;  // image width (pixels)
+    constexpr unsigned nj = 9;  // image height (pixels)
+    constexpr unsigned np = 1;
     const vgl_point_2d<double> pix(1.0, 1.0); // pixel dimensions (mm)
     vimt_transform_2d w2i;
     w2i.set_zoom_only(1.0/pix.x(), 1.0/pix.y(), 0, 0);
@@ -35,9 +37,9 @@ static void test_world_bounding_box()
 
   // Image with zoom transform (i.e. non-unity pixel size)
   {
-    const unsigned ni = 8;  // image width (pixels)
-    const unsigned nj = 9;  // image height (pixels)
-    const unsigned np = 1;
+    constexpr unsigned ni = 8;  // image width (pixels)
+    constexpr unsigned nj = 9;  // image height (pixels)
+    constexpr unsigned np = 1;
     const vgl_point_2d<double> pix(0.7, 1.2); // pixel dimensions (mm)
     vimt_transform_2d w2i;
     w2i.set_zoom_only(1.0/pix.x(), 1.0/pix.y(), 0, 0);
@@ -62,9 +64,9 @@ static void test_centre_image_at_origin()
 
   // Image with identity transform
   {
-    const unsigned ni = 8;  // image width (pixels)
-    const unsigned nj = 9;  // image height (pixels)
-    const unsigned np = 1;
+    constexpr unsigned ni = 8;  // image width (pixels)
+    constexpr unsigned nj = 9;  // image height (pixels)
+    constexpr unsigned np = 1;
     const vgl_point_2d<double> pix(1.0, 1.0); // pixel dimensions (mm)
     vimt_transform_2d w2i;
     w2i.set_zoom_only(1.0/pix.x(), 1.0/pix.y(), 0, 0);
@@ -94,9 +96,9 @@ static void test_centre_image_at_origin()
 
   // Image with zoom transform (i.e. non-unity pixel size)
   {
-    const unsigned ni = 8;  // image width (pixels)
-    const unsigned nj = 9;  // image height (pixels)
-    const unsigned np = 1;
+    constexpr unsigned ni = 8;  // image width (pixels)
+    constexpr unsigned nj = 9;  // image height (pixels)
+    constexpr unsigned np = 1;
     const vgl_point_2d<double> pix(0.7, 1.2); // pixel dimensions (mm)
     vimt_transform_2d w2i;
     w2i.set_zoom_only(1.0/pix.x(), 1.0/pix.y(), 0, 0);

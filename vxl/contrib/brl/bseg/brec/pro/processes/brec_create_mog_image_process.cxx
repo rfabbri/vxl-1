@@ -20,15 +20,15 @@
 #include <bbgm/bbgm_image_sptr.h>
 
 template <bvxm_voxel_type APM_T>
-bbgm_image_sptr create_bbgm_image(bvxm_voxel_slab_base_sptr mog_image_)
+bbgm_image_sptr create_bbgm_image(const bvxm_voxel_slab_base_sptr& mog_image_)
 {
   typedef typename bvxm_voxel_traits<APM_T>::voxel_datatype mog_type;
   bbgm_image_sptr out_model_img_ = new bbgm_image_of<mog_type>();
-  bbgm_image_of<mog_type>* out_model_img_ptr = dynamic_cast<bbgm_image_of<mog_type>* >(out_model_img_.ptr());
+  auto* out_model_img_ptr = dynamic_cast<bbgm_image_of<mog_type>* >(out_model_img_.ptr());
   out_model_img_ptr->set_size(mog_image_->nx(), mog_image_->ny());
   typename bbgm_image_of<mog_type>::iterator model_it = out_model_img_ptr->begin();
 
-  bvxm_voxel_slab<mog_type>* mog_image_ptr = dynamic_cast<bvxm_voxel_slab<mog_type>* >(mog_image_.ptr());
+  auto* mog_image_ptr = dynamic_cast<bvxm_voxel_slab<mog_type>* >(mog_image_.ptr());
   typename bvxm_voxel_slab<mog_type>::const_iterator iter = mog_image_ptr->begin();
 
   for ( ; iter != mog_image_ptr->end(); iter++, ++model_it)
@@ -43,14 +43,14 @@ bool brec_create_mog_image_process_cons(bprb_func_process& pro)
   //inputs
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("bvxm_voxel_slab_base_sptr");
-  input_types.push_back("vcl_string");
+  input_types.emplace_back("bvxm_voxel_slab_base_sptr");
+  input_types.emplace_back("vcl_string");
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   //output
   std::vector<std::string> output_types;
-  output_types.push_back("bbgm_image_sptr");  // output mog image as a bbgm distribution image
+  output_types.emplace_back("bbgm_image_sptr");  // output mog image as a bbgm distribution image
   ok = pro.set_output_types(output_types);
   return ok;
 }
@@ -91,4 +91,3 @@ bool brec_create_mog_image_process(bprb_func_process& pro)
 
   return true;
 }
-

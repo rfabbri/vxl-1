@@ -3,7 +3,9 @@
 #include <sstream>
 #include <string>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_random.h>
 #include <vul/vul_file.h>
 #include <vul/vul_arg.h>
@@ -112,17 +114,16 @@ static bool extract_snippets(std::string const& spatial_object_path,
       return false;
 
   unsigned ni = 0, nj = 0;
-  for (std::vector<vsol_spatial_object_2d_sptr>::iterator soit = sos.begin();
-    soit != sos.end(); ++soit)
+  for (auto & soit : sos)
   {
-    vsol_spatial_object_2d_sptr so = (*soit);
+    const vsol_spatial_object_2d_sptr& so = soit;
     if (!so)
       continue;
     vsol_box_2d_sptr bb = so->get_bounding_box();
     if (!bb)
       continue;
     double w = bb->width(), h = bb->height();
-    unsigned iw = static_cast<unsigned>(w), ih = static_cast<unsigned>(h);
+    auto iw = static_cast<unsigned>(w), ih = static_cast<unsigned>(h);
     if (iw>ni) ni = iw;
     if (ih>nj) nj = ih;
   }
@@ -133,7 +134,7 @@ static bool extract_snippets(std::string const& spatial_object_path,
   }
 
   unsigned index = 0;
-  for (std::vector<vsol_spatial_object_2d_sptr>::iterator soit = sos.begin();
+  for (auto soit = sos.begin();
     soit != sos.end(); ++soit, ++index)
   {
     vsol_spatial_object_2d_sptr so = (*soit);
@@ -145,8 +146,8 @@ static bool extract_snippets(std::string const& spatial_object_path,
     double xmin = bb->get_min_x(), xmax = bb->get_max_x();
     double ymin = bb->get_min_y(), ymax = bb->get_max_y();
     double cx = (xmax+xmin)/2, cy = (ymax+ymin)/2;
-    unsigned i0 = static_cast<unsigned>(cx-ni/2);
-    unsigned j0 = static_cast<unsigned>(cy-nj/2);
+    auto i0 = static_cast<unsigned>(cx-ni/2);
+    auto j0 = static_cast<unsigned>(cy-nj/2);
     vil_image_view_base_sptr view = image->get_view(i0, ni, j0, nj);
     // create the output snippet file path
     std::string path = image_sequence_path(snippet_output_dir,

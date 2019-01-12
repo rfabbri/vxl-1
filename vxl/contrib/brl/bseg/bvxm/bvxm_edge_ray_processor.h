@@ -17,7 +17,9 @@
 #include <bvxm/bvxm_voxel_world_sptr.h>
 #include <bvxm/bvxm_image_metadata.h>
 #include <bvxm/bvxm_von_mises_tangent_processor.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class  bvxm_edge_ray_processor
 {
@@ -27,7 +29,7 @@ class  bvxm_edge_ray_processor
   typedef bvxm_von_mises_tangent_processor<float>::pos_t pos_t;
   typedef bvxm_von_mises_tangent_processor<float>::dir_t dir_t;
 
-  bvxm_edge_ray_processor(): world_(VXL_NULLPTR) {}
+  bvxm_edge_ray_processor(): world_(nullptr) {}
   bvxm_edge_ray_processor(bvxm_voxel_world_sptr& world): world_(world) {}
 
   void set_voxel_world(bvxm_voxel_world_sptr& world) { world_ = world; }
@@ -49,10 +51,10 @@ class  bvxm_edge_ray_processor
   bool expected_edge_image_and_heights(bvxm_image_metadata const& camera,vil_image_view_base_sptr &expected, vil_image_view_base_sptr &height_img, float n_normal, unsigned scale_idx=0);
 
   //: save the edge probability grid in a ".raw" format readable by Drishti volume rendering software
-  bool save_edges_raw(std::string filename, float n_normal, unsigned scale_idx=0);
+  bool save_edges_raw(const std::string& filename, float n_normal, unsigned scale_idx=0);
 
   //: save the edge probability grid as a 3-d tiff image
-  bool save_edges_vff(std::string filename, unsigned scale_idx=0);
+  bool save_edges_vff(const std::string& filename, unsigned scale_idx=0);
 
   //: initialize a von_mises edge tangent world from two images
   bool init_von_mises_edge_tangents(bvxm_image_metadata const& metadata0,

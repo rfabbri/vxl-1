@@ -11,7 +11,9 @@
 #include <vil/vil_convert.h>
 
 #ifdef DEBUG
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #endif
 
 #include <brdb/brdb_value.h>
@@ -50,7 +52,7 @@ bool bbas_atmospheric_corr_process(bprb_func_process& pro)
   vil_image_view_base_sptr input_img =
     pro.get_input<vil_image_view_base_sptr>(0);
 
-  float sz = pro.get_input<float>(1);
+  auto sz = pro.get_input<float>(1);
 
   //check inputs validity
   if (!input_img) {
@@ -96,7 +98,7 @@ bool bbas_atmospheric_corr_process(bprb_func_process& pro)
   float min = 1.0e8f, max = -1.0e8f;
   for(unsigned j = 0; j<nj_; ++j)
     for(unsigned i = 0; i<ni_; ++i){
-      float v = static_cast<float>((byte_img(i,j)-airlight)/irrad);
+      auto v = static_cast<float>((byte_img(i,j)-airlight)/irrad);
       if(v<min) min = v;
       if(v>max) max = v;
       float_img(i,j) = v;
@@ -109,7 +111,7 @@ bool bbas_atmospheric_corr_process(bprb_func_process& pro)
   vil_image_view<float> float_stretch(ni_, nj_);
   vil_convert_stretch_range_limited<float>(float_img, float_stretch,
                                            0.0f, 3.0f, 0.0f, 255.0f);
-  vil_image_view<vxl_byte>* byte_output_img =
+  auto* byte_output_img =
     new vil_image_view<vxl_byte>(ni_, nj_, nplanes_);
   vil_convert_cast(float_stretch, *byte_output_img);
 
@@ -120,4 +122,3 @@ bool bbas_atmospheric_corr_process(bprb_func_process& pro)
 #endif
   return true;
 }
-

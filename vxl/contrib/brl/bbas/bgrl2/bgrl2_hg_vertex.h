@@ -13,8 +13,10 @@
 
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <bgrl2/bgrl2_vertex.h>
 
@@ -87,12 +89,10 @@ class bgrl2_hg_vertex //: public bgrl2_vertex
 
   //: ====== Constructor/Destructor and other functions ======
   bgrl2_hg_vertex () //: bgrl2_vertex ()
-  {
-  }
+  = default;
 
   ~bgrl2_hg_vertex ()
-  {
-  }
+  = default;
 };
 
 #endif // bgrl2_hg_vertex_h_

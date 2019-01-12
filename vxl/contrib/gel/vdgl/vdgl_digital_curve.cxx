@@ -1,11 +1,11 @@
 // This is gel/vdgl/vdgl_digital_curve.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 #include "vdgl_digital_curve.h"
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/io/vbl_io_smart_ptr.h>
 #include <vsol/vsol_point_2d.h>
 #include <vdgl/vdgl_edgel_chain.h>
@@ -20,7 +20,7 @@ vdgl_digital_curve::vdgl_digital_curve()
   assert(interpolator_);
 }
 
-vdgl_digital_curve::vdgl_digital_curve( vdgl_interpolator_sptr interpolator)
+vdgl_digital_curve::vdgl_digital_curve( const vdgl_interpolator_sptr& interpolator)
   : interpolator_(interpolator)
 {
   assert(interpolator);
@@ -35,7 +35,7 @@ vdgl_digital_curve::vdgl_digital_curve(vsol_point_2d_sptr const& p0,
     interpolator_ = new vdgl_interpolator_linear(ec);
     return;
   }
-  vdgl_edgel_chain* ec = new vdgl_edgel_chain(p0->x(), p0->y(),
+  auto* ec = new vdgl_edgel_chain(p0->x(), p0->y(),
                                               p1->x(), p1->y());
   interpolator_ = new vdgl_interpolator_linear(ec);
 }
@@ -257,7 +257,7 @@ void vsl_b_read(vsl_b_istream &is, vdgl_digital_curve* &dc)
     dc->b_read(is);
   }
   else
-    dc = VXL_NULLPTR;
+    dc = nullptr;
 }
 
 //: Print human readable summary of vdgl_digital_curve* to a stream.

@@ -1,15 +1,14 @@
 // This is core/vil1/file_formats/vil1_jpeg_destination_mgr.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
 
 #include <cstddef>
 #include "vil1_jpeg_destination_mgr.h"
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil1/vil1_stream.h>
 
 #define STATIC /*static*/
@@ -35,7 +34,7 @@ STATIC
 void
 vil1_jpeg_init_destination (j_compress_ptr cinfo)
 {
-  vil1_jpeg_dstptr dest = (vil1_jpeg_dstptr) cinfo->dest; // cast to derived class
+  auto dest = (vil1_jpeg_dstptr) cinfo->dest; // cast to derived class
 
   // Allocate the output buffer --- it will be released when done with image
   dest->buffer = (JOCTET *)
@@ -71,7 +70,7 @@ vil1_jpeg_init_destination (j_compress_ptr cinfo)
 jpeg_boolean
 vil1_jpeg_empty_output_buffer (j_compress_ptr cinfo)
 {
-  vil1_jpeg_dstptr dest = (vil1_jpeg_dstptr) cinfo->dest; // cast to derived class
+  auto dest = (vil1_jpeg_dstptr) cinfo->dest; // cast to derived class
 
   if (dest->stream->write(dest->buffer, vil1_jpeg_OUTPUT_BUF_SIZE) != (std::size_t) vil1_jpeg_OUTPUT_BUF_SIZE)
     ERREXIT(cinfo, JERR_FILE_WRITE);
@@ -91,7 +90,7 @@ vil1_jpeg_empty_output_buffer (j_compress_ptr cinfo)
 void
 vil1_jpeg_term_destination (j_compress_ptr cinfo)
 {
-  vil1_jpeg_dstptr dest = (vil1_jpeg_dstptr) cinfo->dest; // cast to derived class
+  auto dest = (vil1_jpeg_dstptr) cinfo->dest; // cast to derived class
   std::size_t datacount = vil1_jpeg_OUTPUT_BUF_SIZE - dest->base.free_in_buffer;
 
   // Write any data remaining in the buffer
@@ -117,7 +116,7 @@ vil1_jpeg_stream_dst_set (j_compress_ptr cinfo, vil1_stream *vs)
   assert(! cinfo->dest); // call this routine only once.
 
   // allocate
-  vil1_jpeg_dstptr dest = (vil1_jpeg_dstptr)
+  auto dest = (vil1_jpeg_dstptr)
     (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo,
                                 JPOOL_PERMANENT,
                                 SIZEOF(vil1_jpeg_stream_destination_mgr));
@@ -134,9 +133,9 @@ vil1_jpeg_stream_dst_set (j_compress_ptr cinfo, vil1_stream *vs)
 void
 vil1_jpeg_stream_dst_rewind(j_compress_ptr cinfo, vil1_stream *vs)
 {
-  vil1_jpeg_dstptr dst = ( vil1_jpeg_dstptr )( cinfo->dest );
+  auto dst = ( vil1_jpeg_dstptr )( cinfo->dest );
   { // verify
-    assert(dst != VXL_NULLPTR);
+    assert(dst != nullptr);
     assert(dst->stream == vs);
   }
 

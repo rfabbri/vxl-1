@@ -6,17 +6,19 @@
 #include <bpgl/depth_map/depth_map_scene.h>
 #include "volm_spherical_container.h"
 #include <bsol/bsol_algs.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vsph/vsph_utils.h>
 #include <vsph/vsph_segment_sphere.h>
 #include <volm/volm_io.h>
 
 volm_spherical_region_index::
 volm_spherical_region_index(std::map<std::string,std::string> & index_file_paths,
-                            std::string usph_file_path)
+                            const std::string& usph_file_path)
 {
-    std::map<std::string,std::string>::iterator iter = index_file_paths.begin();
+    auto iter = index_file_paths.begin();
     for (;iter!=index_file_paths.end(); iter++)
     {
         bool keep_sky = false;
@@ -56,7 +58,7 @@ volm_spherical_region_index(std::map<std::string,std::string> & index_file_paths
         seg_->segment();
         seg_->extract_region_bounding_boxes();
         const std::map<int, vsph_sph_box_2d>& boxes = seg_->region_boxes();
-        std::map<int, vsph_sph_box_2d>::const_iterator bit = boxes.begin();
+        auto bit = boxes.begin();
 
         for (; bit != boxes.end(); ++bit) {
             volm_spherical_region r(bit->second);
@@ -66,7 +68,7 @@ volm_spherical_region_index(std::map<std::string,std::string> & index_file_paths
             {
                 if (att==ORIENTATION)
                 {
-                    unsigned char ival = (unsigned char) seg_->region_median(bit->first);
+                    auto ival = (unsigned char) seg_->region_median(bit->first);
                     if (ival >=2 && ival <=9)
                         r.set_attribute(att,(unsigned char) 2);
                     else if (ival == 1)
@@ -99,7 +101,7 @@ volm_spherical_region_index::volm_spherical_region_index(float * boxes,int num_d
 
         box2d.set(boxes[count*6+3],boxes[count*6+4],this->check_phi_bounds(boxes[count*6+0]),this->check_phi_bounds(boxes[count*6+1]),this->check_phi_bounds(boxes[count*6+2]));
         volm_spherical_region r(box2d);
-        unsigned char ival = (unsigned char) boxes[count*6+5];
+        auto ival = (unsigned char) boxes[count*6+5];
         r.set_attribute(DEPTH_INTERVAL,ival);
         sph_regions_.add_region(r);
     }
@@ -108,7 +110,7 @@ volm_spherical_region_index::volm_spherical_region_index(float * boxes,int num_d
         vsph_sph_box_2d box2d;
        box2d.set(boxes[count*6+3],boxes[count*6+4],this->check_phi_bounds(boxes[count*6+0]),this->check_phi_bounds(boxes[count*6+1]),this->check_phi_bounds(boxes[count*6+2]));
         volm_spherical_region r(box2d);
-        unsigned char ival = (unsigned char) boxes[count*6+5];
+        auto ival = (unsigned char) boxes[count*6+5];
         r.set_attribute(ORIENTATION,ival);
         sph_regions_.add_region(r);
     }
@@ -117,7 +119,7 @@ volm_spherical_region_index::volm_spherical_region_index(float * boxes,int num_d
         vsph_sph_box_2d box2d;
         box2d.set(boxes[count*6+3],boxes[count*6+4],this->check_phi_bounds(boxes[count*6+0]),this->check_phi_bounds(boxes[count*6+1]),this->check_phi_bounds(boxes[count*6+2]));
        volm_spherical_region r(box2d);
-        unsigned char ival = (unsigned char) boxes[count*6+5];
+        auto ival = (unsigned char) boxes[count*6+5];
         r.set_attribute(NLCD,ival);
         sph_regions_.add_region(r);
     }
@@ -126,7 +128,7 @@ volm_spherical_region_index::volm_spherical_region_index(float * boxes,int num_d
         vsph_sph_box_2d box2d;
         box2d.set(boxes[count*6+3],boxes[count*6+4],this->check_phi_bounds(boxes[count*6+0]),this->check_phi_bounds(boxes[count*6+1]),this->check_phi_bounds(boxes[count*6+2]));
         volm_spherical_region r(box2d);
-        unsigned char ival = (unsigned char) boxes[count*6+5];
+        auto ival = (unsigned char) boxes[count*6+5];
         r.set_attribute(SKY,ival);
         sph_regions_.add_region(r);
     }
@@ -135,7 +137,7 @@ volm_spherical_region_index::volm_spherical_region_index(float * boxes,int num_d
 volm_spherical_region_index::volm_spherical_region_index(std::map<std::string,std::vector<unsigned char> > & index_buffers,
                                                          vsph_unit_sphere_sptr & usph)
 {
-    std::map<std::string,std::vector<unsigned char> >::iterator iter = index_buffers.begin();
+    auto iter = index_buffers.begin();
     for (;iter!=index_buffers.end(); iter++)
     {
         bool keep_sky = false;
@@ -173,7 +175,7 @@ volm_spherical_region_index::volm_spherical_region_index(std::map<std::string,st
         seg_->segment();
         seg_->extract_region_bounding_boxes();
         const std::map<int, vsph_sph_box_2d> boxes = seg_->region_boxes();
-        std::map<int, vsph_sph_box_2d>::const_iterator bit = boxes.begin();
+        auto bit = boxes.begin();
 
         for (; bit != boxes.end(); ++bit) {
             volm_spherical_region r(bit->second);
@@ -183,7 +185,7 @@ volm_spherical_region_index::volm_spherical_region_index(std::map<std::string,st
             {
                 if (att==ORIENTATION)
                 {
-                    unsigned char ival = (unsigned char) seg_->region_median(bit->first);
+                    auto ival = (unsigned char) seg_->region_median(bit->first);
                     if (ival >=2 && ival <=9)
                         r.set_attribute(att,(unsigned char) 2);
                     else if (ival == 1)
@@ -198,7 +200,7 @@ volm_spherical_region_index::volm_spherical_region_index(std::map<std::string,st
     }
 }
 
-void volm_spherical_region_index::load_unitsphere(std::string usph_file_path)
+void volm_spherical_region_index::load_unitsphere(const std::string& usph_file_path)
 {
   vsl_b_ifstream is(usph_file_path);
   if (!is)
@@ -222,7 +224,7 @@ volm_spherical_region_index::index_regions()
 void volm_spherical_region_index::print(std::ostream& os)
 {
   std::vector<volm_spherical_region> regions = sph_regions_.regions();
-  std::vector<volm_spherical_region>::iterator iter =  regions.begin();
+  auto iter =  regions.begin();
   for (; iter != regions.end(); ++iter) {
     iter->print(os);
   }
@@ -237,9 +239,9 @@ void volm_spherical_region_index::write_binary(std::ofstream & oconfig,std::ofst
     int num_regions[5];
     num_regions[1] =depth_regions.size();
     unsigned char ival ;
-    for (unsigned i = 0 ; i < depth_regions.size();i++)
+    for (unsigned int depth_region : depth_regions)
     {
-        volm_spherical_region r = regions[depth_regions[i]];
+        volm_spherical_region r = regions[depth_region];
         float vals[6];
         vals[0] = r.bbox_ref().a_phi();
         vals[1] = r.bbox_ref().b_phi();
@@ -254,9 +256,9 @@ void volm_spherical_region_index::write_binary(std::ofstream & oconfig,std::ofst
 
     std::vector<unsigned int> orientation_regions =sph_regions_.attributed_regions_by_type_only(ORIENTATION);
     num_regions[2] =orientation_regions.size();
-    for (unsigned i = 0 ; i < orientation_regions.size();i++)
+    for (unsigned int orientation_region : orientation_regions)
     {
-        volm_spherical_region r = regions[orientation_regions[i]];
+        volm_spherical_region r = regions[orientation_region];
         float vals[6];
         vals[0] = r.bbox_ref().a_phi();
         vals[1] = r.bbox_ref().b_phi();
@@ -270,9 +272,9 @@ void volm_spherical_region_index::write_binary(std::ofstream & oconfig,std::ofst
     }
     std::vector<unsigned int> nlcd_regions =sph_regions_.attributed_regions_by_type_only(NLCD);
     num_regions[3] =nlcd_regions.size();
-    for (unsigned i = 0 ; i < nlcd_regions.size();i++)
+    for (unsigned int nlcd_region : nlcd_regions)
     {
-        volm_spherical_region r = regions[nlcd_regions[i]];
+        volm_spherical_region r = regions[nlcd_region];
         float vals[6];
         vals[0] = r.bbox_ref().a_phi();
         vals[1] = r.bbox_ref().b_phi();
@@ -286,9 +288,9 @@ void volm_spherical_region_index::write_binary(std::ofstream & oconfig,std::ofst
     }
     std::vector<unsigned int> sky_regions =sph_regions_.attributed_regions_by_type_only(SKY);
     num_regions[4] =sky_regions.size();
-    for (unsigned i = 0 ; i < sky_regions.size();i++)
+    for (unsigned int sky_region : sky_regions)
     {
-        volm_spherical_region r = regions[sky_regions[i]];
+        volm_spherical_region r = regions[sky_region];
         float vals[6];
         vals[0] = r.bbox_ref().a_phi();
         vals[1] = r.bbox_ref().b_phi();
@@ -308,5 +310,4 @@ void volm_spherical_region_index::write_binary(std::ofstream & oconfig,std::ofst
 
 volm_spherical_region_index::
 ~volm_spherical_region_index()
-{
-}
+= default;

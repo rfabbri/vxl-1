@@ -1,7 +1,4 @@
 // This is oxl/xcv/xcv_multiview.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author K.Y.McGaul
@@ -21,7 +18,9 @@
 #include "xcv_tjunction.h"
 #include "xcv_segmentation.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil1/vil1_image.h>
 
 #include <mvl/HomgInterestPointSet.h>
@@ -318,7 +317,7 @@ void xcv_multiview::save_f_matrix()
   // Get the FMatrix from the twoview_manager and save it to file:
   xcv_twoview_manager* mgr = get_twoview_manager(col_pos, row_pos);
   FMatrix* fm = mgr->get_f_matrix();
-  if (fm == VXL_NULLPTR)
+  if (fm == nullptr)
   {
     std::cerr << "No FMatrix exists to save\n";
     return;
@@ -346,7 +345,7 @@ void xcv_multiview::save_h_matrix2d()
   // Get the HMatrix2D from the twoview_manager and save it to a file:
   xcv_twoview_manager* mgr = get_twoview_manager(col_pos, row_pos);
   HMatrix2D* hm = mgr->get_h_matrix();
-  if (hm == VXL_NULLPTR)
+  if (hm == nullptr)
   {
     std::cerr << "No HMatrix2D exists to save\n";
     return;
@@ -373,7 +372,7 @@ void xcv_multiview::save_corner_matches()
 
   xcv_twoview_manager* mgr = get_twoview_manager(col_pos, row_pos);
   PairMatchSetCorner* corner_matches = mgr->get_corner_matches();
-  if (corner_matches == VXL_NULLPTR)
+  if (corner_matches == nullptr)
   {
     std::cerr << "No corner matches between these two views exist to save\n";
     return;
@@ -441,7 +440,7 @@ void xcv_multiview::display_corner_tracks()
 
   xcv_twoview_manager* mgr = get_twoview_manager(col_pos, row_pos);
   PairMatchSetCorner* corner_matches = mgr->get_corner_matches();
-  if (corner_matches == VXL_NULLPTR)
+  if (corner_matches == nullptr)
   {
     std::cerr << "No corner matches exist between these two views.\n";
     return;
@@ -539,7 +538,7 @@ void xcv_multiview::save_tri_tensor()
   // chosen file:
   xcv_threeview_manager* mgr = get_threeview_manager(col_pos, row_pos);
   TriTensor* tt = mgr->get_tri_tensor();
-  if (tt == VXL_NULLPTR)
+  if (tt == nullptr)
   {
     std::cerr << "No TriTensor exists to save\n";
     return;
@@ -589,7 +588,7 @@ void xcv_multiview::transfer_point()
   xcv_threeview_manager* mgr = get_threeview_manager(col_pos, row_pos);
 
   // Go through the view and get the two selected points:
-  vgui_soview2D_point* points[3]; points[0]=points[1]=points[2]=VXL_NULLPTR;
+  vgui_soview2D_point* points[3]; points[0]=points[1]=points[2]=nullptr;
   vgui_easy2D_tableau_sptr easys[3];
   int point_count = 0;
   for (unsigned i=0; i<3; i++)
@@ -619,7 +618,7 @@ void xcv_multiview::transfer_point()
   int cw = 5; // width of cross
   // Get the TriTensor and transfer the points:
   TriTensor* tten = mgr->get_tri_tensor();
-  if (tten == VXL_NULLPTR)
+  if (tten == nullptr)
   {
     vgui_dialog dl("Error");
     dl.message("");
@@ -628,7 +627,7 @@ void xcv_multiview::transfer_point()
     dl.ask();
     return;
   }
-  if (points[0] == VXL_NULLPTR)
+  if (points[0] == nullptr)
   {
     HomgPoint2D point2(points[1]->x, points[1]->y);
     HomgPoint2D point3(points[2]->x, points[2]->y);
@@ -638,7 +637,7 @@ void xcv_multiview::transfer_point()
     easys[0]->add_line(float(x+cw),float(y+cw),float(x-cw),float(y-cw));
     easys[0]->add_line(float(x-cw),float(y+cw),float(x+cw),float(y-cw));
   }
-  else if (points[1] == VXL_NULLPTR)
+  else if (points[1] == nullptr)
   {
     HomgPoint2D point1(points[0]->x, points[0]->y);
     HomgPoint2D point3(points[2]->x, points[2]->y);
@@ -648,7 +647,7 @@ void xcv_multiview::transfer_point()
     easys[1]->add_line(float(x+cw),float(y+cw),float(x-cw),float(y-cw));
     easys[1]->add_line(float(x-cw),float(y+cw),float(x+cw),float(y-cw));
   }
-  else if (points[2] == VXL_NULLPTR)
+  else if (points[2] == nullptr)
   {
     HomgPoint2D point1(points[0]->x, points[0]->y);
     HomgPoint2D point2(points[1]->x, points[1]->y);
@@ -672,7 +671,7 @@ void xcv_multiview::transfer_line()
   xcv_threeview_manager* mgr = get_threeview_manager(col_pos, row_pos);
 
   // Go through the views and get the two selected lines:
-  vgui_soview2D_lineseg* lines[3]; lines[0]=lines[1]=lines[2]=VXL_NULLPTR;
+  vgui_soview2D_lineseg* lines[3]; lines[0]=lines[1]=lines[2]=nullptr;
   vgui_easy2D_tableau_sptr easys[3];
   int line_count = 0;
   for (unsigned i=0; i<3; i++)
@@ -700,7 +699,7 @@ void xcv_multiview::transfer_line()
   }
   // Get the TriTensor and transfer the lines:
   TriTensor* tten = mgr->get_tri_tensor();
-  if (tten == VXL_NULLPTR)
+  if (tten == nullptr)
   {
     vgui_dialog dl("Error");
     dl.message("");
@@ -709,14 +708,14 @@ void xcv_multiview::transfer_line()
     dl.ask();
     return;
   }
-  if (lines[0] == VXL_NULLPTR)
+  if (lines[0] == nullptr)
   {
     HomgLineSeg2D line2(lines[1]->x0, lines[1]->y0, lines[1]->x1, lines[1]->y1);
     HomgLineSeg2D line3(lines[2]->x0, lines[2]->y0, lines[2]->x1, lines[2]->y1);
     HomgLine2D line1 = tten->image1_transfer(line2, line3);
     easys[0]->add_infinite_line(float(line1[0]), float(line1[1]), float(line1[2]));
   }
-  else if (lines[1] == VXL_NULLPTR)
+  else if (lines[1] == nullptr)
   {
     HomgLineSeg2D line1(lines[0]->x0, lines[0]->y0, lines[0]->x1, lines[0]->y1);
     HomgLineSeg2D line3(lines[2]->x0, lines[2]->y0, lines[2]->x1, lines[2]->y1);

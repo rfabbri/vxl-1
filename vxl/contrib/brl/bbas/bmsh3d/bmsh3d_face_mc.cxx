@@ -17,8 +17,10 @@
 
 #include <bmsh3d/bmsh3d_vertex.h>
 #include <bmsh3d/bmsh3d_edge.h>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #if 0 // commented out
 bmsh3d_face_mc::bmsh3d_face_mc(const bmsh3d_face_mc& face)
@@ -36,9 +38,9 @@ bmsh3d_face_mc::bmsh3d_face_mc(const bmsh3d_face_mc& face)
 
 bmsh3d_halfedge* bmsh3d_face_mc::face_mc_map(int i)
 {
-  std::map<int, bmsh3d_halfedge*>::iterator it = set_he_.find(i);
+  auto it = set_he_.find(i);
   if (it == set_he_.end())
-    return VXL_NULLPTR;
+    return nullptr;
   return (*it).second;
 }
 
@@ -49,7 +51,7 @@ void bmsh3d_face_mc::add_mc_halfedge(bmsh3d_halfedge* inputHE)
 
 bool bmsh3d_face_mc::face_mc_id(bmsh3d_halfedge* inputHE, int& id)
 {
-  std::map<int, bmsh3d_halfedge*>::iterator it = set_he_.begin();
+  auto it = set_he_.begin();
   while (it != set_he_.end()) {
     if (inputHE == it->second) {
       id = it->first;

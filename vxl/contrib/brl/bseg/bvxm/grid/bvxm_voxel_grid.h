@@ -5,7 +5,9 @@
 
 #include <iostream>
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_vector_3d.h>
 
 #include "bvxm_voxel_grid_base.h"
@@ -23,7 +25,7 @@ class bvxm_voxel_grid : public bvxm_voxel_grid_base
 {
  public:
   //: Default Constructor
-  bvxm_voxel_grid() : bvxm_voxel_grid_base(vgl_vector_3d<unsigned>(0,0,0)), storage_(VXL_NULLPTR) {}
+  bvxm_voxel_grid() : bvxm_voxel_grid_base(vgl_vector_3d<unsigned>(0,0,0)), storage_(nullptr) {}
 
     //: Constructor from existent disk-based voxel grid. Grid size is obtained from file
   bvxm_voxel_grid(std::string storage_fname):bvxm_voxel_grid_base()
@@ -61,11 +63,11 @@ class bvxm_voxel_grid : public bvxm_voxel_grid_base
   }
 
   //: Destructor
-  virtual ~bvxm_voxel_grid()
+  ~bvxm_voxel_grid() override
   {
     if (storage_) {
       delete storage_;
-      storage_ = VXL_NULLPTR;
+      storage_ = nullptr;
     }
   }
 

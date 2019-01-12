@@ -11,7 +11,9 @@
 #include <vnl/algo/vnl_amoeba.h>
 #include <vnl/algo/vnl_levenberg_marquardt.h>
 #include <vnl/algo/vnl_powell.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 // generate a pyramid of transforms corresponding to the vil_image_pyramid
 static  std::vector<ihog_transform_2d>
@@ -183,7 +185,7 @@ ihog_minimizer::minimize(ihog_transform_2d& xform)
   vnl_vector<double> param, fx;
   xform.params(param);
   // the expression 1.0/(1<<X) is a bit more efficient than std::pow(0.5,X),
-  // and it avoids having to #include <cmath> :       -- PVr
+  // :       -- PVr
   double init_scale = 1.0/(1<<n_levels);
 
   ihog_transform_2d undo_xform;
@@ -267,7 +269,7 @@ void ihog_minimizer::minimize_exhaustive_minfo(int radius, ihog_transform_2d& xf
   vnl_vector<double> param, fx;
   xform.params(param);
   // the expression 1.0/(1<<X) is a bit more efficient than std::pow(0.5,X),
-  // and it avoids having to #include <cmath> :       -- PVr
+  // :       -- PVr
   double init_scale = 1.0/(1<<n_levels);
 
   ihog_transform_2d undo_xform;
@@ -482,4 +484,3 @@ void ihog_minimizer::minimize_using_minfo(ihog_transform_2d& xform)
            << " tx: " << xform.get_translation().x()
            << " ty: " << xform.get_translation().y() << '\n';
 }
-

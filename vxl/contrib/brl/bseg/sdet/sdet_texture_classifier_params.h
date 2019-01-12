@@ -14,7 +14,9 @@
 #include <iosfwd>
 #include <vector>
 #include <gevd/gevd_param_mixin.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_binary_io.h>
 
 class sdet_texture_classifier_params : public gevd_param_mixin
@@ -37,9 +39,9 @@ class sdet_texture_classifier_params : public gevd_param_mixin
                                  unsigned block_size,
                                  float weight_offset);
   sdet_texture_classifier_params(const sdet_texture_classifier_params& old_params);
- ~sdet_texture_classifier_params() {}
+ ~sdet_texture_classifier_params() override = default;
 
-  bool SanityCheck();
+  bool SanityCheck() override;
   std::string filter_dir_name();
  friend
   std::ostream& operator<<(std::ostream& os, const sdet_texture_classifier_params& imp);

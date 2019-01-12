@@ -20,7 +20,10 @@
 #include <vnl/algo/vnl_levenberg_marquardt.h>
 #include <vnl/algo/vnl_svd.h>
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 const static unsigned int maxval_unsigned = vnl_numeric_traits<unsigned int>::maxval;
 
@@ -46,7 +49,7 @@ rgrl_est_proj_func( bool with_grad )
 : vnl_least_squares_function( (Fdim+1)*(Tdim+1)-1,
                               1000 /*artificial number to avoid warning*/,
                               with_grad ? use_gradient : no_gradient ),
-  matches_ptr_( VXL_NULLPTR ),
+  matches_ptr_( nullptr ),
   from_centre_(double(0)), to_centre_(double(0)),
   index_row_(maxval_unsigned), index_col_(maxval_unsigned),
   max_num_iterations_(50),
@@ -253,7 +256,7 @@ f(vnl_vector<double> const& x, vnl_vector<double>& fx)
   restored_centered_proj( proj, x );
 
   for ( unsigned ms = 0; ms<matches_ptr_->size(); ++ms )
-    if ( (*matches_ptr_)[ms] != VXL_NULLPTR ) // if pointer is valid
+    if ( (*matches_ptr_)[ms] != nullptr ) // if pointer is valid
     {
       rgrl_match_set const& one_set = *((*matches_ptr_)[ms]);
       for ( FIter fi=one_set.from_begin(); fi!=one_set.from_end(); ++fi )

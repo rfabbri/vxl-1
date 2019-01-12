@@ -11,7 +11,9 @@
 #include <algorithm>
 #include <bprb/bprb_func_process.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/ocl/boxm2_opencl_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -31,13 +33,13 @@
 
 namespace boxm2_ocl_probability_of_image_process_globals
 {
-  const unsigned n_inputs_ = 8;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 8;
+  constexpr unsigned n_outputs_ = 1;
   std::size_t lthreads[2]={8,8};
 
   static std::map<std::string,std::vector<bocl_kernel*> > kernels;
 
-  void compile_kernel(bocl_device_sptr device,std::vector<bocl_kernel*> & vec_kernels, std::string opts)
+  void compile_kernel(const bocl_device_sptr& device,std::vector<bocl_kernel*> & vec_kernels, std::string opts)
   {
     //gather all render sources... seems like a lot for rendering...
   //gather all render sources... seems like a lot for rendering...
@@ -60,7 +62,7 @@ namespace boxm2_ocl_probability_of_image_process_globals
   opts += " -D STEP_CELL=step_cell_compute_probability_of_intensity(aux_args.mog,aux_args.alpha,data_ptr,d*linfo->block_len,vis,aux_args.prob_image,aux_args.intensity) ";
 
     //have kernel construct itself using the context and device
-    bocl_kernel * ray_trace_kernel=new bocl_kernel();
+    auto * ray_trace_kernel=new bocl_kernel();
 
     ray_trace_kernel->create_kernel( &device->context(),
                                      device->device_id(),
@@ -73,7 +75,7 @@ namespace boxm2_ocl_probability_of_image_process_globals
     std::vector<std::string> norm_src_paths;
     norm_src_paths.push_back(source_dir + "pixel_conversion.cl");
     norm_src_paths.push_back(source_dir + "bit/normalize_kernels.cl");
-    bocl_kernel * normalize_render_kernel=new bocl_kernel();
+    auto * normalize_render_kernel=new bocl_kernel();
 
     normalize_render_kernel->create_kernel( &device->context(),
                                             device->device_id(),
@@ -106,10 +108,10 @@ bool boxm2_ocl_probability_of_image_process_cons(bprb_func_process& pro)
   std::vector<std::string>  output_types_(n_outputs_);
   output_types_[0] = "vil_image_view_base_sptr";
 
-  brdb_value_sptr idx        = new brdb_value_t<std::string>("");
+  brdb_value_sptr idx = new brdb_value_t<std::string>("");
   pro.set_input(5, idx);
-  brdb_value_sptr tnearfactor   = new brdb_value_t<float>(100000.0f);  //by default update alpha
-  brdb_value_sptr tfarfactor   = new brdb_value_t<float>(0.0001f);  //by default update alpha
+  brdb_value_sptr tnearfactor = new brdb_value_t<float>(100000.0f);  //by default update alpha
+  brdb_value_sptr tfarfactor = new brdb_value_t<float>(0.0001f);  //by default update alpha
 
   pro.set_input(6, tnearfactor);
   pro.set_input(7, tfarfactor);
@@ -137,29 +139,29 @@ bool boxm2_ocl_probability_of_image_process(bprb_func_process& pro)
   vpgl_camera_double_sptr cam= pro.get_input<vpgl_camera_double_sptr>(i++);
   vil_image_view_base_sptr img =pro.get_input<vil_image_view_base_sptr>(i++);
   std::string data_identifier =pro.get_input<std::string>(i++);
-  float                    nearfactor   = pro.get_input<float>(i++);
-  float                    farfactor    = pro.get_input<float>(i++);
+  auto                    nearfactor = pro.get_input<float>(i++);
+  auto                    farfactor = pro.get_input<float>(i++);
   unsigned ni=img->ni();
   unsigned nj=img->nj();
   bool foundDataType = false;
   std::string data_type,options;
   std::vector<std::string> apps = scene->appearances();
-  for (unsigned int i=0; i<apps.size(); ++i) {
-    if ( apps[i] == boxm2_data_traits<BOXM2_MOG3_GREY>::prefix() )
+  for (const auto & app : apps) {
+    if ( app == boxm2_data_traits<BOXM2_MOG3_GREY>::prefix() )
     {
-      data_type = apps[i];
+      data_type = app;
       foundDataType = true;
       options=" -D MOG_TYPE_8 ";
     }
-    else if ( apps[i] == boxm2_data_traits<BOXM2_MOG3_GREY_16>::prefix() )
+    else if ( app == boxm2_data_traits<BOXM2_MOG3_GREY_16>::prefix() )
     {
-      data_type = apps[i];
+      data_type = app;
       foundDataType = true;
       options=" -D MOG_TYPE_16 ";
     }
-    else if ( apps[i] == boxm2_data_traits<BOXM2_FLOAT8>::prefix() )
+    else if ( app == boxm2_data_traits<BOXM2_FLOAT8>::prefix() )
     {
-      data_type = apps[i];
+      data_type = app;
       foundDataType = true;
       options=" -D FLOAT8 ";
     }
@@ -195,16 +197,16 @@ bool boxm2_ocl_probability_of_image_process(bprb_func_process& pro)
   persp_cam->create_buffer(CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR);
 
   vil_image_view_base_sptr float_img=boxm2_util::prepare_input_image(img);
-  vil_image_view<float>* img_view = static_cast<vil_image_view<float>* >(float_img.ptr());
+  auto* img_view = static_cast<vil_image_view<float>* >(float_img.ptr());
 
   unsigned cl_ni=RoundUp(img_view->ni(),local_threads[0]);
   unsigned cl_nj=RoundUp(img_view->nj(),local_threads[1]);
 
   global_threads[0]=cl_ni;
   global_threads[1]=cl_nj;
-  float* vis_buff = new float[cl_ni*cl_nj];
-  float* prob_image_buff = new float[cl_ni*cl_nj];
-  float* input_buff=new float[cl_ni*cl_nj];
+  auto* vis_buff = new float[cl_ni*cl_nj];
+  auto* prob_image_buff = new float[cl_ni*cl_nj];
+  auto* input_buff=new float[cl_ni*cl_nj];
   for (unsigned i=0;i<cl_ni*cl_nj;i++)
   {
       vis_buff[i]=1.0f;
@@ -242,7 +244,7 @@ bool boxm2_ocl_probability_of_image_process(bprb_func_process& pro)
 
   // Output Array
   float output_arr[100];
-  for (int i=0; i<100; ++i) output_arr[i] = 0.0f;
+  for (float & i : output_arr) i = 0.0f;
   bocl_mem_sptr  cl_output=new bocl_mem(device->context(), output_arr, sizeof(float)*100, "output buffer");
   cl_output->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
 
@@ -262,16 +264,16 @@ bool boxm2_ocl_probability_of_image_process(bprb_func_process& pro)
 
     //write the image values to the buffer
     vul_timer transfer;
-    bocl_mem* blk       = opencl_cache->get_block(scene,*id);
-    bocl_mem* blk_info  = opencl_cache->loaded_block_info();
-    bocl_mem* alpha     = opencl_cache->get_data<BOXM2_ALPHA>(scene,*id);
-    int mogTypeSize    = (int) boxm2_data_info::datasize(data_type);
-    boxm2_scene_info* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
+    bocl_mem* blk = opencl_cache->get_block(scene,*id);
+    bocl_mem* blk_info = opencl_cache->loaded_block_info();
+    bocl_mem* alpha = opencl_cache->get_data<BOXM2_ALPHA>(scene,*id);
+    int mogTypeSize = (int) boxm2_data_info::datasize(data_type);
+    auto* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
     int alphaTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_ALPHA>::prefix());
     info_buffer->data_buffer_length = (int) (alpha->num_bytes()/alphaTypeSize);
     blk_info->write_to_buffer((queue));
 
-    bocl_mem* mog       = opencl_cache->get_data(scene,*id,data_type,alpha->num_bytes()/alphaTypeSize*mogTypeSize,false);    //info_buffer->data_buffer_length*boxm2_data_info::datasize(data_type));
+    bocl_mem* mog = opencl_cache->get_data(scene,*id,data_type,alpha->num_bytes()/alphaTypeSize*mogTypeSize,false);    //info_buffer->data_buffer_length*boxm2_data_info::datasize(data_type));
     transfer_time += (float) transfer.all();
 
     ////3. SET args
@@ -316,7 +318,7 @@ bool boxm2_ocl_probability_of_image_process(bprb_func_process& pro)
 
   // read out expected image
   prob_image->read_to_buffer(queue);
-  vil_image_view<float>* prob_img_out=new vil_image_view<float>(ni,nj);
+  auto* prob_img_out=new vil_image_view<float>(ni,nj);
 
   for (unsigned c=0;c<nj;c++)
     for (unsigned r=0;r<ni;r++)

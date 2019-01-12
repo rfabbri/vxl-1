@@ -19,8 +19,10 @@
 #include <iostream>
 #include <stdexcept>
 #include <limits>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <vil/vil_stream.h>
 #include <vbl/vbl_smart_ptr.h>
@@ -48,12 +50,12 @@ vil_image_resource_sptr
 vil_openjpeg_file_format
 ::make_input_image(vil_stream* vs, vil_openjpeg_format opjfmt)
 {
-  vil_openjpeg_image *im = new vil_openjpeg_image(vs, opjfmt);
+  auto *im = new vil_openjpeg_image(vs, opjfmt);
 
   if ( !im->is_valid() )
   {
     delete im;
-    return VXL_NULLPTR;
+    return nullptr;
   }
   else
     return im;
@@ -67,7 +69,7 @@ vil_openjpeg_file_format
                     vil_pixel_format /*format*/, vil_openjpeg_format /*opjfmt*/)
 {
   assert(!"openjpeg write support is currently not implemented");
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 
@@ -159,7 +161,7 @@ struct vil_openjpeg_image_impl
   bool error_;
 
   vil_openjpeg_image_impl(void)
-  : encode_codec_(VXL_NULLPTR), image_(VXL_NULLPTR), vstream_(VXL_NULLPTR), vstream_start_(0),
+  : encode_codec_(nullptr), image_(nullptr), vstream_(nullptr), vstream_start_(0),
     is_valid_(false), error_(false)
   {
     std::memset(&this->encode_params_, 0, sizeof(opj_cparameters_t));
@@ -175,7 +177,7 @@ struct vil_openjpeg_image_impl
 
 vil_openjpeg_decoder
 ::vil_openjpeg_decoder(OPJ_CODEC_FORMAT opj_codec_format)
-: codec_(VXL_NULLPTR), image_(VXL_NULLPTR), stream_(VXL_NULLPTR), opj_codec_format_(opj_codec_format),
+: codec_(nullptr), image_(nullptr), stream_(nullptr), opj_codec_format_(opj_codec_format),
   error_(false), silent_(false)
 {
   std::memset(&this->params_, 0, sizeof(opj_dparameters_t));
@@ -190,17 +192,17 @@ vil_openjpeg_decoder
   if ( this->stream_ )
   {
     opj_stream_destroy(this->stream_);
-    this->stream_ = VXL_NULLPTR;
+    this->stream_ = nullptr;
   }
   if ( this->codec_ )
   {
     opj_destroy_codec(this->codec_);
-    this->codec_ = VXL_NULLPTR;
+    this->codec_ = nullptr;
   }
   if ( this->image_ )
   {
     opj_image_destroy(this->image_);
-    this->image_ = VXL_NULLPTR;
+    this->image_ = nullptr;
   }
 }
 
@@ -245,7 +247,7 @@ vil_openjpeg_decoder
   if ( this->stream_ )
   {
     opj_stream_destroy(this->stream_);
-    this->stream_ = VXL_NULLPTR;
+    this->stream_ = nullptr;
   }
 
   // Setup the input stream
@@ -275,7 +277,7 @@ vil_openjpeg_decoder
   if ( this->codec_ )
   {
     opj_destroy_codec(this->codec_);
-    this->codec_ = VXL_NULLPTR;
+    this->codec_ = nullptr;
   }
 
   // Set decoder parameters
@@ -314,7 +316,7 @@ vil_openjpeg_decoder
   if ( this->image_ )
   {
     opj_image_destroy(this->image_);
-    this->image_ = VXL_NULLPTR;
+    this->image_ = nullptr;
   }
 
   return opj_read_header( this->codec_,
@@ -344,7 +346,7 @@ vil_openjpeg_decoder
 ::take_image(void)
 {
   opj_image_t *image = this->image_;
-  this->image_ = VXL_NULLPTR;
+  this->image_ = nullptr;
   return image;
 }
 
@@ -376,7 +378,7 @@ vil_openjpeg_decoder
                       vxl_uint_32 p_nb_bytes,
                       void *p_user_data)
 {
-  vil_stream *stream = reinterpret_cast<vil_stream*>(p_user_data);
+  auto *stream = reinterpret_cast<vil_stream*>(p_user_data);
   vil_streampos b = stream->read(p_buffer, p_nb_bytes);
   if ( b == 0 || !stream->ok() )
   {
@@ -396,7 +398,7 @@ vil_openjpeg_decoder
                        vxl_uint_32 p_nb_bytes,
                        void *p_user_data)
 {
-  vil_stream *stream = reinterpret_cast<vil_stream*>(p_user_data);
+  auto *stream = reinterpret_cast<vil_stream*>(p_user_data);
   vil_streampos b = stream->write(p_buffer, p_nb_bytes);
   if ( b == 0 || !stream->ok() )
   {
@@ -415,7 +417,7 @@ vil_openjpeg_decoder
 ::opj_vil_stream_skip(vxl_uint_32 p_nb_bytes,
                       void *p_user_data)
 {
-  vil_stream *stream = reinterpret_cast<vil_stream*>(p_user_data);
+  auto *stream = reinterpret_cast<vil_stream*>(p_user_data);
   vil_streampos start = stream->tell();
   stream->seek(start+p_nb_bytes);
   if ( !stream->ok() )
@@ -437,7 +439,7 @@ vil_openjpeg_decoder
 ::opj_vil_stream_seek( vxl_uint_32 p_nb_bytes,
                        void *p_user_data)
 {
-  vil_stream *stream = reinterpret_cast<vil_stream*>(p_user_data);
+  auto *stream = reinterpret_cast<vil_stream*>(p_user_data);
   stream->seek(p_nb_bytes);
   if ( !stream->ok() )
   {
@@ -476,7 +478,7 @@ void
 vil_openjpeg_decoder
 ::opj_event_error(const char *msg, void *data)
 {
-  vil_openjpeg_decoder *decoder = reinterpret_cast<vil_openjpeg_decoder*>(data);
+  auto *decoder = reinterpret_cast<vil_openjpeg_decoder*>(data);
   if ( !decoder->silent_ )
     std::cerr << "vil_openjpeg_decoder::ERROR : " << msg << std::endl;
   decoder->error_ = true;
@@ -555,7 +557,7 @@ vil_openjpeg_image
   if ( this->impl_->image_ )
   {
     opj_image_destroy(this->impl_->image_);
-    this->impl_->image_ = VXL_NULLPTR;
+    this->impl_->image_ = nullptr;
   }
   delete this->impl_;
 }
@@ -711,7 +713,7 @@ vil_openjpeg_image
 
 const char *
 vil_openjpeg_image
-::file_format()
+::file_format() const
 {
   switch ( this->impl_->opj_codec_format_ )
   {
@@ -739,32 +741,32 @@ vil_openjpeg_image
                         unsigned int reduction) const
 {
   if ( !this->impl_->is_valid_ )
-    return VXL_NULLPTR;
+    return nullptr;
 
   if ( reduction > this->impl_->header_.num_reductions_ )
-    return VXL_NULLPTR;
+    return nullptr;
 
   vil_pixel_format pixel_format = this->pixel_format();
   if ( pixel_format == VIL_PIXEL_FORMAT_UNKNOWN )
-    return VXL_NULLPTR;
+    return nullptr;
 
   // Set up decoder
   this->impl_->vstream_->seek(this->impl_->vstream_start_);
   vil_openjpeg_decoder decoder(this->impl_->opj_codec_format_);
   if ( !decoder.init_from_stream(reduction, this->impl_->vstream_.as_pointer()) )
-    return VXL_NULLPTR;
+    return nullptr;
 
   // Configure the ROI
   int adj_mask = ~( (1 << reduction) - 1);
   i0 &= adj_mask; j0 &= adj_mask;
   ni &= adj_mask; nj &= adj_mask;
   if ( !decoder.set_decode_area( i0, j0, i0 + ni, j0 + nj ) )
-    return VXL_NULLPTR;
+    return nullptr;
 
   // Decode the JPEG2000 data
   opj_image_t *opj_view = decoder.decode();
   if ( !opj_view || decoder.error() )
-    return VXL_NULLPTR;
+    return nullptr;
 
   // Adjust ROI for reduction
   i0 >>= reduction;
@@ -781,7 +783,7 @@ vil_openjpeg_image
     return this->opj2vil<vxl_uint_16>(opj_view, i0, ni, j0, nj);
   case VIL_PIXEL_FORMAT_UINT_32 :
     return this->opj2vil<vxl_uint_32>(opj_view, i0, ni, j0, nj);
-  default: return VXL_NULLPTR;
+  default: return nullptr;
   }
 }
 
@@ -793,13 +795,13 @@ vil_openjpeg_image
   void *opj_view,
   unsigned int i0, unsigned int ni, unsigned int j0, unsigned int nj) const
 {
-  opj_image_t *opj_view_t = reinterpret_cast<opj_image_t*>(opj_view);
+  auto *opj_view_t = reinterpret_cast<opj_image_t*>(opj_view);
   unsigned int np = opj_view_t->numcomps;
 
   vil_memory_chunk_sptr chunk =
     new vil_memory_chunk(ni*nj*np*sizeof(T_PIXEL), this->pixel_format());
 
-  vil_image_view<T_PIXEL> *vil_view_t = new vil_image_view<T_PIXEL>(
+  auto *vil_view_t = new vil_image_view<T_PIXEL>(
     chunk, reinterpret_cast<T_PIXEL*>(chunk->data()),
     ni, nj, np, 1, ni, ni*nj);
 
@@ -842,4 +844,3 @@ vil_openjpeg_image
 {
   return false;
 }
-

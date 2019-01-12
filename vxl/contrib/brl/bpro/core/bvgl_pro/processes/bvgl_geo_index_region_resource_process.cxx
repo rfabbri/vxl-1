@@ -10,7 +10,9 @@
 #include <vgl/vgl_area.h>
 #include <bvgl/algo/bvgl_2d_geo_index.h>
 #include <bvgl/algo/bvgl_2d_geo_index_sptr.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bkml/bkml_parser.h>
 
 
@@ -47,10 +49,10 @@ bool bvgl_geo_index_region_resource_process(bprb_func_process& pro)
   // get inputs
   unsigned i = 0;
   std::string geo_index_txt = pro.get_input<std::string>(i++);
-  double ll_lon = pro.get_input<double>(i++);
-  double ll_lat = pro.get_input<double>(i++);
-  double ur_lon = pro.get_input<double>(i++);
-  double ur_lat = pro.get_input<double>(i++);
+  auto ll_lon = pro.get_input<double>(i++);
+  auto ll_lat = pro.get_input<double>(i++);
+  auto ur_lon = pro.get_input<double>(i++);
+  auto ur_lat = pro.get_input<double>(i++);
   std::string out_txt = pro.get_input<std::string>(i++);
   // read the tree
   // since we are interested only for the structure, type of the tree doesn't matter here
@@ -79,8 +81,8 @@ bool bvgl_geo_index_region_resource_process(bprb_func_process& pro)
     return false;
   }
   ofs << leaf_ids.size() << " leaves intersect with region [" << ll_lon << ',' << ll_lat << "] , [" << ur_lon << ',' << ur_lat << "]\n";
-  for (unsigned i = 0; i < leaf_ids.size(); i++)
-    ofs << leaf_ids[i] << '\n';
+  for (unsigned int leaf_id : leaf_ids)
+    ofs << leaf_id << '\n';
   ofs.close();
   pro.set_output_val<unsigned>(0, leaf_ids.size());
   return true;
@@ -151,8 +153,8 @@ bool bvgl_geo_index_region_poly_resource_process(bprb_func_process& pro)
     return false;
   }
   ofs << leaf_ids.size() << " leaves intersect with given polygon!\n";
-  for (unsigned i = 0; i < leaf_ids.size(); i++)
-    ofs << leaf_ids[i] << '\n';
+  for (unsigned int leaf_id : leaf_ids)
+    ofs << leaf_id << '\n';
   ofs.close();
 
   // output

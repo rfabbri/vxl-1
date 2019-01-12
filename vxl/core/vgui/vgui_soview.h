@@ -1,9 +1,6 @@
 // This is core/vgui/vgui_soview.h
 #ifndef vgui_soview_h_
 #define vgui_soview_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author  Philip C. Pritchett, Robotics Research Group, University of Oxford
@@ -19,7 +16,9 @@
 #include <vector>
 #include "dll.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include "vgui_style_sptr.h"
 
@@ -34,7 +33,7 @@ class vgui_soview
 {
  public:
   //: Constructor - create a default soview.
-  vgui_soview() : selectable(true), style(VXL_NULLPTR) { add_id(); }
+  vgui_soview() : selectable(true), style(nullptr) { add_id(); }
 
   //: Destructor - delete this soview.
   virtual ~vgui_soview();

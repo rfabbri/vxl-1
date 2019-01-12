@@ -7,8 +7,10 @@
 #include <cstdlib>
 #include "vpgl_em_compute_5_point.h"
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vnl/vnl_matrix_fixed.h>
 #include <vnl/vnl_inverse.h>
@@ -409,12 +411,12 @@ void vpgl_em_compute_5_point<T>::compute_e_matrices(
 
 
 //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-static void get_distinct_indices(
+static inline void get_distinct_indices(
     int n, int *idxs, int number_entries)
 {
     for (int i = 0; i < n; ++i) {
         bool found = false;
-        int idx;
+        int idx=0;
 
         while (!found) {
             found = true;
@@ -480,11 +482,11 @@ bool vpgl_em_compute_5_point_ransac<T>::compute(
         std::vector<vgl_point_2d<T> > right_points_to_use;
         std::vector<vgl_point_2d<T> > left_points_to_use;
 
-        get_distinct_indices(5, match_idxs, num_points);
+        get_distinct_indices(5, match_idxs, (int) num_points);
 
-        for (int idx = 0; idx < 5; ++idx) {
-            right_points_to_use.push_back(right_points[match_idxs[idx]]);
-            left_points_to_use.push_back(left_points[match_idxs[idx]]);
+        for (int & match_idx : match_idxs) {
+            right_points_to_use.push_back(right_points[match_idx]);
+            left_points_to_use.push_back(left_points[match_idx]);
         }
         std::vector<vpgl_essential_matrix<T> > ems;
         five_point.compute(

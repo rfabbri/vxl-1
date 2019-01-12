@@ -1,16 +1,14 @@
 // This is core/vul/vul_redirector.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 
 #include <iostream>
 #include <cstdio>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include "vul_redirector.h"
-#include <vcl_compiler.h>
 
 //----------------------------------------------------------------------
 // This class is used as a stream buffer that can
@@ -20,21 +18,10 @@ class vul_redirector_streambuf : public std::streambuf
   vul_redirector_data* p;
  public:
   vul_redirector_streambuf(vul_redirector_data* p_):p(p_) {}
-  int sync ();
-  int overflow (int ch);
-  int underflow(){return 0;}
-  // Some libraries which take char const *, which is
-  // non-standard, but we have to live with it. A
-  // better cpp test would be welcome. fsm.
-#if defined(__INTEL_COMPILER)
-  // RogueWave or ISO?
-# define xsputn_const const
-# define xsputn_sizet std::streamsize
-#else
-# define xsputn_const /* */
-# define xsputn_sizet std::streamsize
-#endif
-  xsputn_sizet xsputn (xsputn_const char* text, xsputn_sizet n);
+  int sync () override;
+  int overflow (int ch) override;
+  int underflow() override{return 0;}
+  std::streamsize xsputn (const char* text, std::streamsize n) override;
 };
 
 struct vul_redirector_data
@@ -70,7 +57,7 @@ int vul_redirector_streambuf::overflow (int ch)
   return 0;
 }
 
-xsputn_sizet vul_redirector_streambuf::xsputn (xsputn_const char* text, xsputn_sizet n)
+std::streamsize vul_redirector_streambuf::xsputn (const char* text, std::streamsize n)
 {
   return sync () == EOF ? 0 : p->owner->putchunk ( text, n);
 }

@@ -5,7 +5,10 @@
 
 #include <vgl/vgl_homg_point_3d.h>
 #include <pop/pop_point_3d.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: constructor
 // the parameters for this transform are
@@ -75,4 +78,3 @@ void pop_rigid_3d::update()
                          params_[4]->value_,
                          params_[5]->value_);
 }
-

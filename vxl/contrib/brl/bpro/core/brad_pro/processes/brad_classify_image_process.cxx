@@ -7,7 +7,9 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 namespace bbas_core_brad_classify_image
 {
 }
@@ -43,8 +45,8 @@ bool brad_classify_image_process_cons(bprb_func_process& pro)
 
   //no outputs
   std::vector<std::string> output_types;
-  output_types.push_back("vil_image_view_base_sptr");
-  output_types.push_back("vil_image_view_base_sptr");
+  output_types.emplace_back("vil_image_view_base_sptr");
+  output_types.emplace_back("vil_image_view_base_sptr");
   return pro.set_input_types(input_types)
      &&  pro.set_output_types(output_types);
 }
@@ -66,7 +68,7 @@ bool brad_classify_image_process(bprb_func_process& pro)
   bsta_joint_histogram_3d_base_sptr hno_ptr =
     pro.get_input<bsta_joint_histogram_3d_base_sptr>(1);
 
-  bsta_joint_histogram_3d<float>* hist_no = dynamic_cast<bsta_joint_histogram_3d<float>*>(hno_ptr.ptr());
+  auto* hist_no = dynamic_cast<bsta_joint_histogram_3d<float>*>(hno_ptr.ptr());
 
   if (!hist_no) {
     std::cout << "in classify_image_process, hist can't be cast\n";
@@ -76,7 +78,7 @@ bool brad_classify_image_process(bprb_func_process& pro)
   bsta_joint_histogram_3d_base_sptr h_atmos_ptr =
     pro.get_input<bsta_joint_histogram_3d_base_sptr>(2);
 
-  bsta_joint_histogram_3d<float>* hist_atmos = dynamic_cast<bsta_joint_histogram_3d<float>*>(h_atmos_ptr.ptr());
+  auto* hist_atmos = dynamic_cast<bsta_joint_histogram_3d<float>*>(h_atmos_ptr.ptr());
 
   if (!hist_atmos) {
     std::cout << "in classify_image_process, hist can't be cast\n";
@@ -90,8 +92,8 @@ bool brad_classify_image_process(bprb_func_process& pro)
   }
   //std::string output_path = pro.get_input<std::string>(4);
 
-  unsigned nit = pro.get_input<unsigned>(4);
-  unsigned njt = pro.get_input<unsigned>(5);
+  auto nit = pro.get_input<unsigned>(4);
+  auto njt = pro.get_input<unsigned>(5);
 
   //CAST_CALL_EIGENSPACE(es_ptr, ep->classify_image(input, *hist_no, *hist_atmos, nit, njt, output_path), "in classify_image_process - classify function failed\n")
   vil_image_resource_sptr out_r, out_r_orig_size;
@@ -102,4 +104,3 @@ bool brad_classify_image_process(bprb_func_process& pro)
 
   return true;
 }
-

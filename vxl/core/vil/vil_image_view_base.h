@@ -1,9 +1,6 @@
 // This is core/vil/vil_image_view_base.h
 #ifndef vil_image_view_base_h_
 #define vil_image_view_base_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief A base class reference-counting view of some image data.
@@ -16,8 +13,10 @@
 
 #include <iosfwd>
 #include <string>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vcl_atomic_count.h>
 #include <vil/vil_pixel_format.h>
 #include <vil/vil_smart_ptr.h>

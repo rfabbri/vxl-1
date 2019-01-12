@@ -2,7 +2,9 @@
 #define vsph_view_point_h_
 
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpgl/vpgl_camera.h>
 #include <vpgl/vpgl_perspective_camera.h>
 #include <vpgl/io/vpgl_io_perspective_camera.h>
@@ -13,8 +15,8 @@ template <class T_data>
 class vsph_view_point
 {
  public:
-  vsph_view_point() : cam_(VXL_NULLPTR), metadata_(VXL_NULLPTR) {}
-  vsph_view_point(vsph_sph_point_3d const& p) : cam_(VXL_NULLPTR),spher_coord_(p),metadata_(VXL_NULLPTR) {}
+  vsph_view_point() : cam_(nullptr), metadata_(nullptr) {}
+  vsph_view_point(vsph_sph_point_3d const& p) : cam_(nullptr),spher_coord_(p),metadata_(nullptr) {}
   vsph_view_point(vsph_sph_point_3d const& p,vpgl_camera_double_sptr cam) : cam_(cam), spher_coord_(p),metadata_(0) {}
   vsph_view_point(vsph_sph_point_3d const& p,vpgl_camera_double_sptr cam, T_data* metadata) : cam_(cam), spher_coord_(p), metadata_(metadata) {}
 

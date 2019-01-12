@@ -13,7 +13,9 @@
 // \endverbatim
 
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_least_squares_function.h>
 #include <vpgl/vpgl_rational_camera.h>
@@ -33,19 +35,19 @@ class vpgl_z_search_lsqr : public vnl_least_squares_function
 {
  public:
   //: Constructor
-  vpgl_z_search_lsqr(std::vector<vpgl_rational_camera<double> > const& cams,
-                     std::vector<float> const& cam_weights,
-                     std::vector<vgl_point_2d<double> > const& image_pts,
+  vpgl_z_search_lsqr(std::vector<vpgl_rational_camera<double> >  cams,
+                     std::vector<float>  cam_weights,
+                     std::vector<vgl_point_2d<double> >  image_pts,
                      vgl_point_3d<double> const& initial_pt,
                      double const& relative_diameter = 1.0);
   //: Destructor
-  virtual ~vpgl_z_search_lsqr() {}
+  ~vpgl_z_search_lsqr() override = default;
 
   //: The main function.
   //  Given the parameter vector x, compute the vector of residuals fx.
   //  fx has been sized appropriately before the call.
-  virtual void f(vnl_vector<double> const& elevation,
-                 vnl_vector<double>& projection_error);
+  void f(vnl_vector<double> const& elevation,
+                 vnl_vector<double>& projection_error) override;
   double xm() const {return xm_;}
   double ym() const {return ym_;}
  protected:
@@ -62,7 +64,7 @@ class vpgl_z_search_lsqr : public vnl_least_squares_function
 class vpgl_rational_adjust_onept
 {
  public:
-  ~vpgl_rational_adjust_onept() {}
+  ~vpgl_rational_adjust_onept() = default;
 
   static bool
   find_intersection_point(std::vector<vpgl_rational_camera<double> > const& cams,

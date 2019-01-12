@@ -1,9 +1,6 @@
 // This is oxl/mvl/LineSegSet.h
 #ifndef LineSegSet_h_
 #define LineSegSet_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //
 // \author
 //     Andrew W. Fitzgibbon, Oxford RRG, 19 Sep 96
@@ -13,7 +10,9 @@
 #include <vector>
 #include <iostream>
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <mvl/HomgLineSeg2D.h>
 #include <mvl/HomgMetric.h>
 
@@ -30,7 +29,7 @@ class LineSegSet
 
   LineSegSet();
   LineSegSet(const HomgMetric& c, const std::vector<HomgLineSeg2D>& lines, bool is_conditioned = true);
-  LineSegSet(const char* filename, const HomgMetric& c = VXL_NULLPTR);
+  LineSegSet(const char* filename, const HomgMetric& c = nullptr);
   LineSegSet(const LineSegSet& that);
  ~LineSegSet();
 

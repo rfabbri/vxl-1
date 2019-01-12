@@ -76,7 +76,7 @@
 #include <iostream>
 #include <sstream>
 #include <utility>
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vbl/vbl_ref_count.h>
 
 #include <vgl/vgl_point_3d.h>
@@ -98,7 +98,9 @@
 
 // These includes are for the implementations of the templated methods,
 // which should be moved from the header file if possible.
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_image_view_base.h>
 #include <vul/vul_file_iterator.h>
 
@@ -116,13 +118,13 @@ class bvxm_voxel_world: public vbl_ref_count
  public:
 
   //: default constructor
-  bvxm_voxel_world() {}
+  bvxm_voxel_world() = default;
 
   //: construct world with parameters
   bvxm_voxel_world(bvxm_world_params_sptr params) { params_ = params; }
 
   //: destructor
-  ~bvxm_voxel_world();
+  ~bvxm_voxel_world() override;
 
   //: update voxel grid with data from image/camera pair. Based on algorithm published in Pollard + Mundy 06.
   template<bvxm_voxel_type APM_T>
@@ -220,14 +222,14 @@ class bvxm_voxel_world: public vbl_ref_count
 
   //: generate a heightmap from the viewpoint of a virtual camera
   // The pixel values are the z values of the most likely voxel intercepted by the corresponding camera ray
-  bool heightmap(vpgl_camera_double_sptr virtual_camera, vil_image_view<unsigned> &heightmap, vil_image_view<float> &conf_map, unsigned scale_idx=0);
+  bool heightmap(const vpgl_camera_double_sptr& virtual_camera, vil_image_view<unsigned> &heightmap, vil_image_view<float> &conf_map, unsigned scale_idx=0);
 
   //: generate a heightmap from the viewpoint of a virtual camera
   // The pixel values are the expected z values and variance along the corresponding camera ray
-  bool heightmap_exp(vpgl_camera_double_sptr virtual_camera, vil_image_view<float> &heightmap, vil_image_view<float> &var, float&max_depth, unsigned scale_idx=0);
+  bool heightmap_exp(const vpgl_camera_double_sptr& virtual_camera, vil_image_view<float> &heightmap, vil_image_view<float> &var, float&max_depth, unsigned scale_idx=0);
 
   //: measure the average uncertainty along the rays
-  bool uncertainty(vpgl_camera_double_sptr virtual_camera, vil_image_view<float> &uncertainty, unsigned scale_idx=0);
+  bool uncertainty(const vpgl_camera_double_sptr& virtual_camera, vil_image_view<float> &uncertainty, unsigned scale_idx=0);
 
   //: generate a heightmap from the viewpoint of a virtual camera
   // The pixel values are the z values of the most likely voxel intercepted by the corresponding camera ray
@@ -261,7 +263,7 @@ class bvxm_voxel_world: public vbl_ref_count
   bvxm_voxel_grid_base_sptr get_grid(unsigned bin_index, unsigned scale, bool use_memory = false);
 
   //: save the occupancy grid as a 3-d tiff image
-  bool save_occupancy_vff(std::string filename, unsigned scale_idx=0);
+  bool save_occupancy_vff(const std::string& filename, unsigned scale_idx=0);
 
   //: save the occupancy grid in a ".raw" format readable by Drishti volume rendering software
   template<bvxm_voxel_type APM_T>
@@ -453,7 +455,7 @@ bvxm_voxel_grid_base_sptr bvxm_voxel_world::get_grid(unsigned bin_index, unsigne
     // fill grid with default value
     if (!grid->initialize_data(bvxm_voxel_traits<VOX_T>::initial_val())) {
       std::cerr << "error initializing voxel grid\n";
-      return bvxm_voxel_grid_base_sptr(VXL_NULLPTR);
+      return bvxm_voxel_grid_base_sptr(nullptr);
     }
 
     // Insert voxel grid into map
@@ -488,7 +490,7 @@ bvxm_voxel_grid_base_sptr bvxm_voxel_world::get_grid(unsigned bin_index, unsigne
     // fill grid with default value
     if (!grid->initialize_data(bvxm_voxel_traits<VOX_T>::initial_val())) {
       std::cerr << "error initializing voxel grid\n";
-      return bvxm_voxel_grid_base_sptr(VXL_NULLPTR);
+      return bvxm_voxel_grid_base_sptr(nullptr);
     }
 
     // Insert voxel grid into map
@@ -1734,7 +1736,6 @@ bool bvxm_voxel_world::mog_most_probable_image(bvxm_image_metadata const& observ
   // datatype for current appearance model
   typedef typename bvxm_voxel_traits<APM_T>::voxel_datatype apm_datatype; // datatype for current appearance model
   typedef typename bvxm_voxel_traits<APM_T>::obs_datatype obs_datatype;   // datatype of the pixels that the processor operates on.
-  typedef typename bvxm_voxel_traits<APM_T>::obs_mathtype obs_mathtype;
   typedef typename bvxm_voxel_traits<OCCUPANCY>::voxel_datatype ocp_datatype;
 
   typename bvxm_voxel_traits<APM_T>::appearance_processor apm_processor;

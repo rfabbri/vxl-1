@@ -1,9 +1,6 @@
 // This is core/vil/vil_file_format.h
 #ifndef vil_file_format_h_
 #define vil_file_format_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Base class for image formats
@@ -37,7 +34,7 @@ class vil_file_format
   //  ... or from an image file_format that supports multiple images per file.
   virtual vil_pyramid_image_resource_sptr
     make_input_pyramid_image(char const* /*directory_or_file*/)
-    {return VXL_NULLPTR;}
+    {return nullptr;}
 
   //: Construct a pyramid image resource from a base image.
   //  All levels are stored in the same resource file. Each level has the same
@@ -52,7 +49,15 @@ class vil_file_format
                                  vil_image_resource_sptr const& /*base_image*/,
                                  unsigned /*nlevels*/,
                                  char const* /*temp_dir*/)
-    {return VXL_NULLPTR;}
+    {return nullptr;}
+
+  virtual vil_pyramid_image_resource_sptr
+  make_pyramid_image_from_base(char const* directory,
+                               vil_image_resource_sptr const& base_image,
+                               unsigned int nlevels,
+                               bool copy_base,
+                               char const* level_file_format,
+                               char const* filename) { return nullptr; } ;
 
   //: Make a "generic_image" on which put_section may be applied.
   // The stream vs is assumed to be open for writing, as an image header may be
@@ -74,11 +79,11 @@ class vil_file_format
                               unsigned /*size_block_i*/,
                               unsigned /* size_block_j*/,
                               enum vil_pixel_format)
-    {return VXL_NULLPTR;}
+    {return nullptr;}
 
   virtual vil_pyramid_image_resource_sptr
     make_pyramid_output_image(char const* /*file*/)
-    {return VXL_NULLPTR;}
+    {return nullptr;}
 
  public:
   typedef std::list<vil_file_format*>::iterator iterator;

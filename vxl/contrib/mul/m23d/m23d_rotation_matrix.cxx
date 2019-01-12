@@ -6,7 +6,9 @@
 // \author Tim Cootes
 // \brief Generate pure 3x3 rotation matrices
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Generate 3x3 matrix which applies a rotation about the x axis
 vnl_matrix<double> m23d_rotation_matrix_x(double A)

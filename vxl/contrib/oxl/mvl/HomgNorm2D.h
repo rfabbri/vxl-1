@@ -1,9 +1,6 @@
 // This is oxl/mvl/HomgNorm2D.h
 #ifndef HomgNorm2D_h_
 #define HomgNorm2D_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 //  \file
 // \brief Normalize homogeneous points
@@ -27,7 +24,9 @@
 
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_homg_point_2d.h>
 #include <mvl/HomgPoint2D.h>
 #include <mvl/SimilarityMetric.h>
@@ -49,7 +48,7 @@ class HomgNorm2D : public SimilarityMetric
   HomgNorm2D(std::vector<vgl_homg_point_2d<double> > const& points, bool unit_omega = true);
 
 //: Destructor
- ~HomgNorm2D();
+ ~HomgNorm2D() override;
 
   // Computations--------------------------------------------------------------
 

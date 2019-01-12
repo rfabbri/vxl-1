@@ -6,7 +6,9 @@
 // \file
 
 #include <bprb/bprb_parameters.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpgl/vpgl_camera.h>
 #include <vpgl/vpgl_perspective_camera.h>
 #include <vpgl/vpgl_proj_camera.h>
@@ -21,8 +23,8 @@ bool vpgl_save_perspective_camera_process_cons(bprb_func_process& pro)
   //input[0]: the camera
   //input[1]: the filename
   std::vector<std::string> input_types;
-  input_types.push_back("vpgl_camera_double_sptr");
-  input_types.push_back("vcl_string");
+  input_types.emplace_back("vpgl_camera_double_sptr");
+  input_types.emplace_back("vcl_string");
   return pro.set_input_types(input_types);
 }
 
@@ -37,7 +39,7 @@ bool vpgl_save_perspective_camera_process(bprb_func_process& pro)
   // get the inputs
   vpgl_camera_double_sptr camera = pro.get_input<vpgl_camera_double_sptr>(0);
   std::string camera_filename = pro.get_input<std::string>(1);
-  vpgl_perspective_camera<double> *cam = dynamic_cast<vpgl_perspective_camera<double>*>(camera.as_pointer());
+  auto *cam = dynamic_cast<vpgl_perspective_camera<double>*>(camera.as_pointer());
 
   if (!cam) {
     std::cerr << "error: could not convert camera input to a vpgl_perspective_camera\n";
@@ -71,8 +73,8 @@ bool vpgl_save_projective_camera_process_cons(bprb_func_process& pro)
   //input[0]: the camera
   //input[1]: the filename
   std::vector<std::string> input_types;
-  input_types.push_back("vpgl_camera_double_sptr");
-  input_types.push_back("vcl_string");
+  input_types.emplace_back("vpgl_camera_double_sptr");
+  input_types.emplace_back("vcl_string");
   return pro.set_input_types(input_types);
 }
 
@@ -87,7 +89,7 @@ bool vpgl_save_projective_camera_process(bprb_func_process& pro)
   // get the inputs
   vpgl_camera_double_sptr camera = pro.get_input<vpgl_camera_double_sptr>(0);
   std::string camera_filename = pro.get_input<std::string>(1);
-  vpgl_proj_camera<double> *cam = dynamic_cast<vpgl_proj_camera<double>*>(camera.as_pointer());
+  auto *cam = dynamic_cast<vpgl_proj_camera<double>*>(camera.as_pointer());
 
   if (!cam) {
     std::cerr << "error: could not convert camera input to a vpgl_proj_camera\n";
@@ -103,4 +105,3 @@ bool vpgl_save_projective_camera_process(bprb_func_process& pro)
   ofs.close();
   return true;
 }
-

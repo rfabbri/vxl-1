@@ -2,11 +2,13 @@
 #include <fstream>
 #include "bstm_sio_mgr.h"
 //
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <sys/stat.h>  //for getting file sizes
 #include <vul/vul_file.h>
 
-bstm_block* bstm_sio_mgr::load_block(std::string dir, bstm_block_id block_id, bstm_block_metadata data )
+bstm_block* bstm_sio_mgr::load_block(const std::string& dir, const bstm_block_id& block_id, const bstm_block_metadata& data )
 {
   std::string filepath = dir + block_id.to_string() + ".bin";
 
@@ -19,14 +21,14 @@ bstm_block* bstm_sio_mgr::load_block(std::string dir, bstm_block_id block_id, bs
   myFile.read(bytes, numBytes);
   if (!myFile) {
     //std::cerr<<"bstm_sio_mgr::load_block cannot read file "<<filepath<<std::endl;
-    return VXL_NULLPTR;
+    return nullptr;
   }
 
   //instantiate new block
   return new bstm_block(block_id,data, bytes);
 }
 
-bstm_time_block* bstm_sio_mgr::load_time_block(std::string dir, bstm_block_id block_id, bstm_block_metadata data )
+bstm_time_block* bstm_sio_mgr::load_time_block(const std::string& dir, const bstm_block_id& block_id, const bstm_block_metadata& data )
 {
   std::string filepath = dir + "tt_" + block_id.to_string() + ".bin";
 
@@ -39,7 +41,7 @@ bstm_time_block* bstm_sio_mgr::load_time_block(std::string dir, bstm_block_id bl
   myFile.read(bytes, numBytes);
   if (!myFile) {
     //std::cerr<<"bstm_sio_mgr::load_block cannot read file "<<filepath<<std::endl;
-    return VXL_NULLPTR;
+    return nullptr;
   }
 
   //instantiate new block
@@ -47,7 +49,7 @@ bstm_time_block* bstm_sio_mgr::load_time_block(std::string dir, bstm_block_id bl
 }
 
 // loads a generic bstm_data_base* from disk (given data_type string prefix)
-bstm_data_base* bstm_sio_mgr::load_block_data_generic(std::string dir, bstm_block_id id, std::string data_type)
+bstm_data_base* bstm_sio_mgr::load_block_data_generic(const std::string& dir, const bstm_block_id& id, const std::string& data_type)
 {
   // file name
   std::string filename = dir + data_type + "_" + id.to_string() + ".bin";
@@ -61,7 +63,7 @@ bstm_data_base* bstm_sio_mgr::load_block_data_generic(std::string dir, bstm_bloc
   myFile.read(bytes, numBytes);
   if (!myFile) {
       //std::cerr<<"bstm_sio_mgr::load_data cannot read file "<<filename<<std::endl;
-      return VXL_NULLPTR;
+      return nullptr;
   }
 
   //instantiate new block
@@ -69,7 +71,7 @@ bstm_data_base* bstm_sio_mgr::load_block_data_generic(std::string dir, bstm_bloc
 }
 
 
-void bstm_sio_mgr::save_block(std::string dir, bstm_block* block)
+void bstm_sio_mgr::save_block(const std::string& dir, bstm_block* block)
 {
   std::string filepath = dir + block->block_id().to_string() + ".bin";
   //std::cout<<"bstm_sio_mgr::write save to file: "<<filepath<<std::endl;
@@ -82,7 +84,7 @@ void bstm_sio_mgr::save_block(std::string dir, bstm_block* block)
   myFile.close();
 }
 
-void bstm_sio_mgr::save_time_block(std::string dir, bstm_time_block* block)
+void bstm_sio_mgr::save_time_block(const std::string& dir, bstm_time_block* block)
 {
   std::string filepath = dir +  "tt_" + block->block_id().to_string() + ".bin";
   //std::cout<<"bstm_sio_mgr::write save to file: "<<filepath<<std::endl;
@@ -95,7 +97,7 @@ void bstm_sio_mgr::save_time_block(std::string dir, bstm_time_block* block)
 }
 
 // generically saves data_base * to disk (given prefix)
-void bstm_sio_mgr::save_block_data_base(std::string dir, bstm_block_id block_id, bstm_data_base* data, std::string prefix)
+void bstm_sio_mgr::save_block_data_base(const std::string& dir, const bstm_block_id& block_id, bstm_data_base* data, const std::string& prefix)
 {
   std::string filename = dir + prefix + "_" + block_id.to_string() + ".bin";
 
@@ -105,5 +107,3 @@ void bstm_sio_mgr::save_block_data_base(std::string dir, bstm_block_id block_id,
   myFile.close();
   return;
 }
-
-

@@ -9,9 +9,6 @@
 #include <cerrno>
 #include "vil_nitf2_typed_field_formatter.h"
 
-#include <vcl_compiler.h> //for VCL_WIN32
-
-#include <vcl_compiler.h>
 
 //==============================================================================
 // Class vil_nitf2_date_time_formatter
@@ -65,7 +62,7 @@ bool vil_nitf2_location_formatter::read_vcl_stream(std::istream& input,
       return true;
     } else {
       delete location;
-      out_value = VXL_NULLPTR;
+      out_value = nullptr;
       return false;
     }
   }
@@ -153,7 +150,7 @@ read_vcl_stream(std::istream& input, vil_nitf2_long& out_value, bool& out_blank)
 
 #if VXL_HAS_INT_64
 
-#if defined VCL_VC
+#if defined _MSC_VER
   out_value = _strtoi64(cstr, &endp, 10);
   conversion_ok = (endp-cstr)==field_width;   // processed all chars
 #else
@@ -290,7 +287,7 @@ bool vil_nitf2_exponential_formatter::write_vcl_stream(std::ostream& output,
          << std::internal << std::setfill('0') << std::setprecision(mantissa_width)
          << value;
   std::string buffer_string = buffer.str();
-  unsigned int length = (unsigned int)(buffer_string.length());
+  auto length = (unsigned int)(buffer_string.length());
   // Write everything up to the exponent sign
   output << buffer_string.substr(0,length-3);
   // Write exponent digits, padding or unpadding them to desired width
@@ -376,7 +373,7 @@ bool vil_nitf2_string_formatter::read_vcl_stream(std::istream& input,
   }
   std::string str = std::string(cstr);
   delete[] cstr;
-  std::string::size_type end_pos = str.find_last_not_of(" ")+1;
+  std::string::size_type end_pos = str.find_last_not_of(' ')+1;
   if (end_pos == std::string::npos) {
     out_value = str;
   } else {
@@ -401,8 +398,8 @@ bool vil_nitf2_string_formatter::is_valid(std::string /*value*/) const
 // Class vil_nitf2_enum_string_formatter
 
 vil_nitf2_enum_string_formatter::
-vil_nitf2_enum_string_formatter(int field_width, const vil_nitf2_enum_values& value_map)
-  : vil_nitf2_string_formatter(field_width), value_map(value_map)
+vil_nitf2_enum_string_formatter(int field_width, vil_nitf2_enum_values  value_map)
+  : vil_nitf2_string_formatter(field_width), value_map(std::move(value_map))
 {
   //field_type = Nitf::Enum;
   validate_value_map();
@@ -415,10 +412,9 @@ vil_nitf2_field_formatter* vil_nitf2_enum_string_formatter::copy() const
 
 void vil_nitf2_enum_string_formatter::validate_value_map()
 {
-  for (vil_nitf2_enum_values::iterator entry = value_map.begin();
-       entry != value_map.end(); ++entry)
+  for (auto & entry : value_map)
   {
-    std::string token = entry->first;
+    std::string token = entry.first;
 #if 0  // disable the err message
     if (int(token.length()) > field_width) {
       //std::cerr << "vil_nitf2_enum_values: WARNING: Ignoring token "
@@ -431,7 +427,7 @@ void vil_nitf2_enum_string_formatter::validate_value_map()
   }
 }
 
-bool vil_nitf2_enum_string_formatter::is_valid_value(std::string token) const
+bool vil_nitf2_enum_string_formatter::is_valid_value(const std::string& token) const
 {
   return value_map.find(token) != value_map.end();
 }
@@ -493,7 +489,7 @@ read( vil_nitf2_istream& input,
 }
 
 bool vil_nitf2_tagged_record_sequence_formatter::
-write(vil_nitf2_ostream& /*output*/, vil_nitf2_tagged_record_sequence& /*value*/ )
+write(vil_nitf2_ostream& /*output*/, const vil_nitf2_tagged_record_sequence& /*value*/ )
 {
   return false;
 }

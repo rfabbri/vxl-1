@@ -8,12 +8,14 @@
 // \date   28 Aug 2015
 //
 #include <iostream>
-#include <vcl_compiler.h>
-#include <iostream>
 #include <fstream>
+#include <utility>
 #include <vector>
 #include <string>
 #include <map>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_vector_3d.h>
 #include <vgl/vgl_cubic_spline_3d.h>
 #include <vgl/vgl_pointset_3d.h>
@@ -31,9 +33,9 @@ class boxm2_vecf_mandible : public bvgl_gen_cylinder, public boxm2_vecf_geometry
   }
  boxm2_vecf_mandible(std::string const& geometry_file);
 
- boxm2_vecf_mandible(std::map<std::string, unsigned> const& boundary_knots, vgl_cubic_spline_3d<double> const& axis,
+ boxm2_vecf_mandible(std::map<std::string, unsigned>  boundary_knots, vgl_cubic_spline_3d<double> const& axis,
                      std::vector<bvgl_cross_section> const& cross_sects, double cross_section_interval=0.5):
- bvgl_gen_cylinder(axis, cross_sects, cross_section_interval), boundary_knots_(boundary_knots){
+ bvgl_gen_cylinder(axis, cross_sects, cross_section_interval), boundary_knots_(std::move(boundary_knots)){
    fill_boundary_map(); set_inv_rot();
  }
 
@@ -53,10 +55,10 @@ class boxm2_vecf_mandible : public bvgl_gen_cylinder, public boxm2_vecf_geometry
 
  //: the functor operator for surface distance. dist_thresh is the distance a closest point on the normal plane
  // can be away from the closest point in the cross-section pointset.
- virtual double operator() (vgl_point_3d<double> const& p) const{ return bvgl_gen_cylinder::distance(p, params_.planar_surface_dist_thresh_);}
+ double operator() (vgl_point_3d<double> const& p) const override{ return bvgl_gen_cylinder::distance(p, params_.planar_surface_dist_thresh_);}
 
  //: compute the inverse vector field for a target point
- virtual bool inverse_vector_field(vgl_point_3d<double> const& target_pt, vgl_vector_3d<double>& inv_vf) const;
+ bool inverse_vector_field(vgl_point_3d<double> const& target_pt, vgl_vector_3d<double>& inv_vf) const override;
  //: accessors
  void set_params(boxm2_vecf_mandible_params const& params){params_ = params; this->set_inv_rot();}
 
@@ -65,7 +67,7 @@ class boxm2_vecf_mandible : public bvgl_gen_cylinder, public boxm2_vecf_geometry
  const vgl_rotation_3d<double>& inv_rot() const{return inv_rot_;}
 
  //:for debug purposes
- virtual void display_axis_spline(std::ofstream& ostr) const;
+ void display_axis_spline(std::ofstream& ostr) const override;
  private:
  vgl_rotation_3d<double> inv_rot_;
  boxm2_vecf_mandible_params params_;

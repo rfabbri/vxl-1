@@ -22,7 +22,10 @@
 
 #include <mvl/Homg.h>
 #include <vnl/vnl_double_3.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class Homg2D : public vnl_double_3, public Homg
 {
@@ -31,7 +34,7 @@ class Homg2D : public vnl_double_3, public Homg
   // Constructors/Initializers/Destructors-----------------------------------
 
   //: Default constructor
-  Homg2D() {}
+  Homg2D() = default;
 
   //: Copy constructor
   Homg2D(const Homg2D& that) : vnl_double_3(that) {}
@@ -46,7 +49,7 @@ class Homg2D : public vnl_double_3, public Homg
   Homg2D (const vnl_vector_fixed<double,3>& v) { set(v[0], v[1], v[2]); }
 
   //: Destructor
- ~Homg2D() {}
+ ~Homg2D() = default;
 
   //: Assignment
   Homg2D& operator=(const Homg2D& that) {
@@ -56,7 +59,7 @@ class Homg2D : public vnl_double_3, public Homg
 
   // Data Access-------------------------------------------------------------
 
-  vnl_double_3 get_vector() const { return vnl_double_3(x(),y(),w()); }
+  vnl_double_3 get_vector() const { return {x(),y(),w()}; }
   vnl_double_3& asVector() { return *this; }
 
   //: Retrieve components.  Do not attempt to write into null pointers.

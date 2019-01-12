@@ -8,8 +8,10 @@
 // \brief Compute entropy in region around each image pixel
 // \author Tim Cootes
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 inline double histo_entropy_sum(const std::vector<int>& histo,
                                 unsigned min_v, unsigned max_v)

@@ -21,13 +21,15 @@
 #include <iostream>
 #include <string>
 #include <bprb/bprb_func_process.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: global variables
 namespace bvxm_create_voxel_world_process_globals
 {
   // this process takes no inputs
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_outputs_ = 1;
   // Define parameters here
   const std::string param_input_directory_ =  "input_directory";
   const std::string param_corner_x_ = "corner_x";

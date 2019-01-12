@@ -5,7 +5,9 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_vector_2d.h>
@@ -29,7 +31,7 @@ vifa_group_pgram(imp_line_list&                  lg,
 
   for (int i = 0; i < th_dim_; i++)
   {
-    imp_line_list*  illp = new imp_line_list;
+    auto*  illp = new imp_line_list;
     curves_.push_back(illp);
   }
   this->Index(lg);
@@ -40,13 +42,11 @@ vifa_group_pgram(imp_line_list&                  lg,
 vifa_group_pgram::
 ~vifa_group_pgram()
 {
-  for (imp_line_table::iterator ilti = curves_.begin(); ilti != curves_.end();
-       ilti++)
+  for (auto illp : curves_)
   {
-    imp_line_list*  illp = (*ilti);
-    for (imp_line_iterator ili = illp->begin(); ili != illp->end(); ili++)
+    for (auto & ili : *illp)
     {
-      (*ili) = VXL_NULLPTR;
+      ili = nullptr;
     }
 
     delete illp;
@@ -56,7 +56,7 @@ vifa_group_pgram::
 //-----------------------------------------------------
 //: Add an ImplicitLine to the index
 void vifa_group_pgram::
-Index(imp_line_sptr il)
+Index(const imp_line_sptr& il)
 {
   int  ang_bin = this->AngleLoc(il);
   curves_[ang_bin]->push_back(il);
@@ -69,8 +69,8 @@ Index(imp_line_sptr il)
 void vifa_group_pgram::
 Index(imp_line_list& lg)
 {
-  for (imp_line_iterator ili = lg.begin(); ili != lg.end(); ili++)
-    Index(*ili);
+  for (auto & ili : lg)
+    Index(ili);
 }
 
 //------------------------------------------------------------
@@ -78,15 +78,14 @@ Index(imp_line_list& lg)
 void vifa_group_pgram::
 Clear()
 {
-  for (imp_line_table::iterator ilti = curves_.begin(); ilti != curves_.end();
-       ilti++)
+  for (auto & curve : curves_)
   {
-    imp_line_list*  illp = (*ilti);
-    for (imp_line_iterator ili = illp->begin(); ili != illp->end(); ili++)
-      (*ili) = VXL_NULLPTR;
+    imp_line_list*  illp = curve;
+    for (auto & ili : *illp)
+      ili = nullptr;
 
     delete illp;
-    (*ilti) = new imp_line_list;
+    curve = new imp_line_list;
   }
 
   this->touch();
@@ -120,7 +119,7 @@ GetLineCover(int  angle_bin)
 
   if (!lg.size())
   {
-    return VXL_NULLPTR;
+    return nullptr;
   }
 
   // Construct a bounding box from the ROI and clip
@@ -136,7 +135,7 @@ GetLineCover(int  angle_bin)
                             bx, by, ex, ey))
   {
     std::cerr << "In vifa_group_pgram::GetLineCover(): No intersection found\n";
-    return VXL_NULLPTR;
+    return nullptr;
   }
 
   // Here we set the clipping bounds.
@@ -148,13 +147,13 @@ GetLineCover(int  angle_bin)
   int len = int(il->length());
   if (!len)
   {
-    return VXL_NULLPTR;
+    return nullptr;
   }
 
   vifa_line_cover_sptr  cov = new vifa_line_cover(il, len);
-  for (imp_line_iterator ili = lg.begin(); ili != lg.end(); ili++)
+  for (auto & ili : lg)
   {
-    cov->InsertLine(*ili);
+    cov->InsertLine(ili);
   }
 
   return cov;
@@ -224,9 +223,9 @@ GetAdjacentPerimeter(int  bin)
   this->CollectAdjacentLines(bin, lg);
 
   double  sum = 0;
-  for (imp_line_iterator ili = lg.begin(); ili != lg.end(); ili++)
+  for (auto & ili : lg)
   {
-    vgl_vector_2d<double>  v = (*ili)->point2() - (*ili)->point1();
+    vgl_vector_2d<double>  v = ili->point2() - ili->point1();
     sum += v.length();
   }
 
@@ -247,7 +246,7 @@ norm_parallel_line_length(void)
 
   double max_cover = 0.0;
   int    max_dir = 0;
-  std::vector<int>::iterator  iit = dominant_dirs_.begin();
+  auto  iit = dominant_dirs_.begin();
   for (; iit != dominant_dirs_.end(); iit++)
   {
     int            dir = (*iit);
@@ -282,7 +281,7 @@ norm_parallel_line_length(void)
 //---------------------------------------------------------
 //: Find the angle bin corresponding to an implicit_line
 int vifa_group_pgram::
-AngleLoc(imp_line_sptr  il)
+AngleLoc(const imp_line_sptr&  il)
 {
   // Compute angle index
   double  angle = std::fmod(il->slope_degrees(), 180.0);
@@ -326,13 +325,11 @@ ComputeBoundingBox(void)
   // Reset the bounding box
   bb_->empty();
 
-  for (imp_line_table::iterator ilti = curves_.begin(); ilti != curves_.end();
-       ilti++)
+  for (auto illp : curves_)
   {
-    imp_line_list*  illp = (*ilti);
-    for (imp_line_iterator ili = illp->begin(); ili != illp->end(); ili++)
+    for (auto & ili : *illp)
     {
-      imp_line_sptr  il = (*ili);
+      const imp_line_sptr&  il = ili;
 
       bb_->add(il->point1());
       bb_->add(il->point2());

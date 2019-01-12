@@ -1,9 +1,6 @@
 // This is oxl/vrml/vrml_out.h
 #ifndef vrml_io_h_
 #define vrml_io_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author awf@robots.ox.ac.uk
@@ -12,7 +9,9 @@
 #include <iostream>
 #include <iosfwd>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class vrml_out_vertex_to_texture;
 
@@ -105,7 +104,7 @@ class vrml_out_vertex_to_texture
 
  public:
   vrml_out_vertex_to_texture(int xsize, int ysize): image_xsize(xsize), image_ysize(ysize) {}
-  virtual ~vrml_out_vertex_to_texture() {}
+  virtual ~vrml_out_vertex_to_texture() = default;
 
   virtual void get_texture_coords(const void* vertex, double* u, double* v) const = 0;
 };

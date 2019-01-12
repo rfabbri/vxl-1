@@ -1,7 +1,4 @@
 // This is mul/vil3d/file_formats/vil3d_analyze_format.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \brief Reader/Writer for analyze format images.
@@ -21,7 +18,9 @@
 #include <iostream>
 #include <cstddef>
 #include "vil3d_analyze_format.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_stream_fstream.h>
 #include <vil3d/vil3d_image_view.h>
 #include <vil3d/vil3d_new.h>
@@ -448,12 +447,10 @@ std::ostream& operator<<(std::ostream& os, const vil3d_analyze_header& header)
 // =================== vil3d_analyze_format =========================
 // ==================================================================
 
-vil3d_analyze_format::vil3d_analyze_format() {}
+vil3d_analyze_format::vil3d_analyze_format() = default;
 
 // The destructor must be virtual so that the memory chunk is destroyed.
-vil3d_analyze_format::~vil3d_analyze_format()
-{
-}
+vil3d_analyze_format::~vil3d_analyze_format() = default;
 
 vil3d_image_resource_sptr vil3d_analyze_format::make_input_image(const char *filename1) const
 {
@@ -466,7 +463,7 @@ vil3d_image_resource_sptr vil3d_analyze_format::make_input_image(const char *fil
   else
     base_filename = filename;
 
-  if (!header.read_file(std::string(base_filename)+".hdr")) return VXL_NULLPTR;
+  if (!header.read_file(std::string(base_filename)+".hdr")) return nullptr;
   std::cout<<"vil3d_analyze_format::make_input_image() Header: "<<header<<std::endl;
 
   return new vil3d_analyze_image(header,base_filename);
@@ -489,7 +486,7 @@ vil3d_image_resource_sptr vil3d_analyze_format::make_output_image(const char* fi
   {
     std::cerr << "vil3d_analyze_format::make_output_image() WARNING\n"
              << "  Unable to deal with pixel format : " << format << std::endl;
-    return VXL_NULLPTR;
+    return nullptr;
   }
 
   vil3d_analyze_header header;
@@ -505,7 +502,7 @@ vil3d_image_resource_sptr vil3d_analyze_format::make_output_image(const char* fi
     base_filename = filename.substr(0,n-4);
   else
     base_filename = filename;
-  if (!header.write_file(std::string(base_filename)+".hdr")) return VXL_NULLPTR;
+  if (!header.write_file(std::string(base_filename)+".hdr")) return nullptr;
   return new vil3d_analyze_image(header,base_filename);
 }
 
@@ -520,9 +517,7 @@ vil3d_analyze_image::vil3d_analyze_image(const vil3d_analyze_header& header,
   base_path_ = base_path;
 }
 
-vil3d_analyze_image::~vil3d_analyze_image()
-{
-}
+vil3d_analyze_image::~vil3d_analyze_image() = default;
 
 //: Number of planes (or time points in an image sequence).
 unsigned vil3d_analyze_image::nplanes() const
@@ -565,11 +560,11 @@ vil3d_image_view_base_sptr vil3d_analyze_image::get_copy_view(
   // Can only cope with loading whole image at present.
   if (i0!=0 || int(ni)!=header_.ni() ||
       j0!=0 || int(nj)!=header_.nj() ||
-      k0!=0 || int(nk)!=header_.nk()   ) return VXL_NULLPTR;
+      k0!=0 || int(nk)!=header_.nk()   ) return nullptr;
 
   std::string image_data_path=base_path_+".img";
   vil_smart_ptr<vil_stream> is = new vil_stream_fstream(image_data_path.c_str(),"r");
-  if (!is->ok()) return VXL_NULLPTR;
+  if (!is->ok()) return nullptr;
 
 // NOTE: See GIPL loader for more general data reading
 #define read_data_of_type(type) \
@@ -615,11 +610,11 @@ vil3d_image_view_base_sptr vil3d_analyze_image::get_copy_view(
    case VIL_PIXEL_FORMAT_BOOL:
     std::cout<<"ERROR: vil3d_analyze_format::get_copy_view()"
             <<pixel_format() << " pixel type not yet implemented\n";
-    return VXL_NULLPTR;
+    return nullptr;
    default:
     std::cout<<"ERROR: vil3d_analyze_format::get_copy_view()\n"
             <<"Can't deal with pixel type " << pixel_format() << std::endl;
-    return VXL_NULLPTR;
+    return nullptr;
   }
 }
 
@@ -629,7 +624,7 @@ bool vil3d_analyze_image::get_property(char const *key, void * value) const
 {
   if (std::strcmp(vil3d_property_voxel_size, key)==0)
   {
-    float* array = static_cast<float*>(value);
+    auto* array = static_cast<float*>(value);
     // analyze stores data in mm
     array[0] = header_.voxel_width_i() / 1000.0f;
     array[1] = header_.voxel_width_j() / 1000.0f;
@@ -640,7 +635,7 @@ bool vil3d_analyze_image::get_property(char const *key, void * value) const
   if (std::strcmp(vil3d_property_origin_offset, key)==0)
   {
     // Don't know how to get origin offset from header yet!
-    float* array = static_cast<float*>(value);
+    auto* array = static_cast<float*>(value);
     array[0] = (float)(0);
     array[1] = (float)(0);
     array[2] = (float)(0);
@@ -667,7 +662,7 @@ bool vil3d_analyze_image::put_view(const vil3d_image_view_base& view,
 
   std::string image_data_path=base_path_+".img";
   vil_smart_ptr<vil_stream> os = new vil_stream_fstream(image_data_path.c_str(),"w");
-  if (!os->ok()) return 0;
+  if (!os->ok()) return false;
 
   switch (pixel_format())
   {
@@ -737,4 +732,3 @@ bool vil3d_analyze_image::set_voxel_size_mm(float si,float sj,float sk)
   if (!header_.write_file(base_path_+".hdr")) return false;
   return true;
 }
-

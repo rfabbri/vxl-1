@@ -19,7 +19,9 @@
 #include <vil/vil_image_view.h>
 #include <vbl/vbl_array_2d.h>
 #include <vbl/vbl_ref_count.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class sdet_mrf_bp : public vbl_ref_count
 {
@@ -29,7 +31,7 @@ class sdet_mrf_bp : public vbl_ref_count
 
   //: constructor with observed labels provided by resc
   // In this case the data cost is just $\lambda \times (fp-x)^2$
-  sdet_mrf_bp(vil_image_resource_sptr obs_labels, unsigned n_labels,
+  sdet_mrf_bp(const vil_image_resource_sptr& obs_labels, unsigned n_labels,
               float discontinuity_cost, float truncation_cost,
               float kappa, float lambda);
 
@@ -39,8 +41,8 @@ class sdet_mrf_bp : public vbl_ref_count
               float kappa, float lambda);
 
   //: constructor with observed labels and variance resources
-  sdet_mrf_bp(vil_image_resource_sptr obs_labels,
-              vil_image_resource_sptr var,  unsigned n_labels,
+  sdet_mrf_bp(const vil_image_resource_sptr& obs_labels,
+              const vil_image_resource_sptr& var,  unsigned n_labels,
               float discontinuity_cost, float truncation_cost,
               float kappa, float lambda);
 

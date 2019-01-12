@@ -1,9 +1,6 @@
 // This is oxl/mvl/FileNameGeneratorBase.h
 #ifndef FileNameGeneratorBase_h_
 #define FileNameGeneratorBase_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //
 // \author
 //     Andrew W. Fitzgibbon, Oxford RRG, 28 Aug 98
@@ -18,7 +15,9 @@
 #include <iostream>
 #include <string>
 #include <vnl/vnl_unary_function.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class FileNameGeneratorBase
 {

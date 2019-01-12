@@ -27,7 +27,9 @@
 #define NITF_STR_BCSA(LEN) NITF_STR(LEN, vil_nitf2_string_formatter::BCSA)
 
 #include <list>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include "vil_nitf2.h" // vil_nitf2_istream, vil_nitf2_ostream
 #include "vil_nitf2_field_functor.h"
@@ -45,7 +47,7 @@ class vil_nitf2_field_definition_node
  public:
   enum node_type { type_field, type_repeat };
   vil_nitf2_field_definition_node(node_type type) : type(type) {}
-  virtual ~vil_nitf2_field_definition_node() {}
+  virtual ~vil_nitf2_field_definition_node() = default;
 
   // Downcast test methods (for convenience)
   bool is_field_definition() const { return type==type_field; }
@@ -97,18 +99,18 @@ class vil_nitf2_field_definition : public vil_nitf2_field_definition_node
     // whether this field may be unspecified (all blanks)
     bool blanks_ok = false,
     // function, when specified, that overrides formatter's field width.
-    vil_nitf2_field_functor<int>* width_functor = VXL_NULLPTR,
+    vil_nitf2_field_functor<int>* width_functor = nullptr,
     // conditional field predicate; 0 for required fields
-    vil_nitf2_field_functor<bool>* condition_functor = VXL_NULLPTR,
+    vil_nitf2_field_functor<bool>* condition_functor = nullptr,
     // additional documentation fields
     std::string units = "",
     std::string description = "");
 
   // Copy method
-  vil_nitf2_field_definition_node* copy() const;
+  vil_nitf2_field_definition_node* copy() const override;
 
   // Destructor
-  ~vil_nitf2_field_definition();
+  ~vil_nitf2_field_definition() override;
 };
 
 
@@ -129,10 +131,10 @@ class vil_nitf2_field_definitions : public std::list<vil_nitf2_field_definition_
     // whether this field may be unspecified (all blank)
     bool blanks_ok = false,
     // function, when specified, that overrides formatter's field width
-    vil_nitf2_field_functor<int>* width_functor = VXL_NULLPTR,
+    vil_nitf2_field_functor<int>* width_functor = nullptr,
     // predicate that returns whether this conditional field is present;
     // 0 for required fields
-    vil_nitf2_field_functor<bool>* condition_functor = VXL_NULLPTR,
+    vil_nitf2_field_functor<bool>* condition_functor = nullptr,
     std::string units = "",
     std::string description = "");
 
@@ -151,7 +153,7 @@ class vil_nitf2_field_definitions : public std::list<vil_nitf2_field_definition_
   vil_nitf2_field_definitions(const vil_nitf2_field_definitions&);
 
   // Default constructor
-  vil_nitf2_field_definitions() {}
+  vil_nitf2_field_definitions() = default;
 
   // Destructor
   virtual ~vil_nitf2_field_definitions();
@@ -176,10 +178,10 @@ class vil_nitf2_field_definition_repeat_node : public vil_nitf2_field_definition
   vil_nitf2_field_definitions* field_definitions;
 
   // Destructor
-  ~vil_nitf2_field_definition_repeat_node();
+  ~vil_nitf2_field_definition_repeat_node() override;
 
   // Copy method
-  vil_nitf2_field_definition_node* copy() const;
+  vil_nitf2_field_definition_node* copy() const override;
 };
 
 #endif // VIL_NITF2_FIELD_DEFINITION_H

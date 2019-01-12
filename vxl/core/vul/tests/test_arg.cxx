@@ -11,7 +11,9 @@
 #include <list>
 #include <algorithm>
 #include <vul/vul_arg.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <testlib/testlib_test.h>
 
 char const * my_argv_1[] =
@@ -31,7 +33,7 @@ char const * my_argv_1[] =
   "i",
   "j",
   "-req", "100",
-  VXL_NULLPTR
+  nullptr
 };
 
 int list1_contents[] = { 1,2,10,21,24,-1,-3,-5,-7 };

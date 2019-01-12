@@ -1,9 +1,6 @@
 // This is oxl/mvl/PMatrix.h
 #ifndef PMatrix_h_
 #define PMatrix_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief General 3x4 perspective projection matrix
@@ -24,7 +21,9 @@
 
 #include <iostream>
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vnl/algo/vnl_algo_fwd.h> // for vnl_svd
 #include <vnl/vnl_matrix.h>
@@ -67,7 +66,7 @@ class PMatrix : public vbl_ref_count
   explicit PMatrix(vnl_double_3x4 const&);
   PMatrix(const vnl_matrix<double>& A, const vnl_vector<double>& a);
   PMatrix(const PMatrix&);
- ~PMatrix();
+ ~PMatrix() override;
 
   static PMatrix read(const char* filename);
   static PMatrix read(std::istream&);

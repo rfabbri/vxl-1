@@ -4,7 +4,10 @@
 // \author Charlene Tsai
 // \date   Sep 2003
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/algo/vnl_svd.h>
 #include <vnl/vnl_math.h>
 #include <rgrl/rgrl_util.h>
@@ -187,10 +190,10 @@ inv_map( const vnl_vector<double>& to,
          vnl_vector<double>& from,
          vnl_vector<double>& from_next_est) const
 {
-  const double epsilon = 0.01;
+  constexpr double epsilon = 0.01;
   const double eps_squared = epsilon*epsilon;
   int t=0;
-  const int max_t = 20;  //  Generally, only one or two iterations should be needed.
+  constexpr int max_t = 20;  //  Generally, only one or two iterations should be needed.
   assert (to.size() == from.size());
   int m = to.size();
   vnl_vector<double> to_est = this->map_location(from);
@@ -358,7 +361,7 @@ rgrl_trans_reduced_quad::
 inverse_transform( ) const
 {
   assert ( ! "rgrl_trans_reduced_quad::inverse_transform() is not defined" );
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 //: make a clone copy

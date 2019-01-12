@@ -40,8 +40,8 @@ bool bsvg_plot_roc_process_cons(bprb_func_process& pro)
   //inputs
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("vcl_string");  // file with 3 lines: threshold values, TPRs and FPRs
-  input_types.push_back("vcl_string");  // name of the output svg file
+  input_types.emplace_back("vcl_string");  // file with 3 lines: threshold values, TPRs and FPRs
+  input_types.emplace_back("vcl_string");  // name of the output svg file
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
@@ -116,9 +116,9 @@ bool bsvg_plot_roc_process2_cons(bprb_func_process& pro)
   //inputs
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("bbas_1d_array_float_sptr");  // vector of TPR values
-  input_types.push_back("bbas_1d_array_float_sptr");  // vector of FPR values
-  input_types.push_back("vcl_string");  // name of the output svg file
+  input_types.emplace_back("bbas_1d_array_float_sptr");  // vector of TPR values
+  input_types.emplace_back("bbas_1d_array_float_sptr");  // vector of FPR values
+  input_types.emplace_back("vcl_string");  // name of the output svg file
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
@@ -181,11 +181,11 @@ bool bsvg_plot_initialize_process_cons(bprb_func_process& pro)
   //inputs
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("vcl_string");  // title of the plot
-  input_types.push_back("int");  // width
-  input_types.push_back("int");  // height
-  input_types.push_back("int");  // margin
-  input_types.push_back("int");  // fs
+  input_types.emplace_back("vcl_string");  // title of the plot
+  input_types.emplace_back("int");  // width
+  input_types.emplace_back("int");  // height
+  input_types.emplace_back("int");  // margin
+  input_types.emplace_back("int");  // fs
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
@@ -200,7 +200,7 @@ bool bsvg_plot_initialize_process_cons(bprb_func_process& pro)
 
   //output
   std::vector<std::string> output_types;
-  output_types.push_back("bxml_document_sptr");
+  output_types.emplace_back("bxml_document_sptr");
   ok = pro.set_output_types(output_types);
   return ok;
 }
@@ -221,7 +221,7 @@ bool bsvg_plot_initialize_process(bprb_func_process& pro)
   int m = pro.get_input<int>(i++);
   int fs = pro.get_input<int>(i++);
 
-  bsvg_plot* p = new bsvg_plot((float)w, (float)h);
+  auto* p = new bsvg_plot((float)w, (float)h);
   p->set_margin((float)m);
   p->set_font_size(fs);
   p->add_axes(0, 1, 0, 1);
@@ -238,10 +238,10 @@ bool bsvg_roc_plot_add_process_cons(bprb_func_process& pro)
   //inputs
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("bxml_document_sptr");
-  input_types.push_back("bbas_1d_array_float_sptr");  // vector of TPR values
-  input_types.push_back("bbas_1d_array_float_sptr");  // vector of FPR values
-  input_types.push_back("vcl_string");  // color of the line
+  input_types.emplace_back("bxml_document_sptr");
+  input_types.emplace_back("bbas_1d_array_float_sptr");  // vector of TPR values
+  input_types.emplace_back("bbas_1d_array_float_sptr");  // vector of FPR values
+  input_types.emplace_back("vcl_string");  // color of the line
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
@@ -276,8 +276,7 @@ bool bsvg_roc_plot_add_process(bprb_func_process& pro)
     xs.push_back(*iter2);
     ys.push_back(*iter);
   }
-  bsvg_plot* p = dynamic_cast<bsvg_plot*>(doc.ptr());
+  auto* p = dynamic_cast<bsvg_plot*>(doc.ptr());
   p->add_line(xs, ys, color);
   return true;
 }
-

@@ -15,8 +15,10 @@
 #include <vector>
 #include <iostream>
 #include <vxl_config.h>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vbl/vbl_ref_count.h>
 
@@ -101,7 +103,7 @@ class vtol_extract_topology_region_type
 
   //: Add an edge to this region
   void
-  push_back( edgel_chain_sptr chain );
+  push_back( const edgel_chain_sptr& chain );
 
   //: The number of edges in the boundary
   unsigned
@@ -157,14 +159,14 @@ struct vtol_extract_topology_vertex_node
   // A vertex with an index value >= this value does not correspond to
   // a node in the graph.
   //
-  static VXL_CONSTEXPR_VAR unsigned null_index   VCL_STATIC_CONST_INIT_INT_DECL( unsigned(-2) );
+  static constexpr unsigned null_index = static_cast<unsigned>(-2);
 
   //: "Processed" index value
   //
   // This is used to indicate that the boundary edge following went
   // through a vertex.
   //
-  static VXL_CONSTEXPR_VAR unsigned done_index   VCL_STATIC_CONST_INIT_INT_DECL( unsigned(-1) );
+  static constexpr unsigned done_index = static_cast<unsigned>(-1);
 };
 
 //: Extracts the topology from a segmentation label image.

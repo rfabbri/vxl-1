@@ -5,8 +5,10 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vnl/vnl_inverse.h>
 #include <vnl/vnl_transpose.h>
 #include <vnl/algo/vnl_svd.h>
@@ -27,8 +29,8 @@ vgl_h_matrix_2d_compute_linear::vgl_h_matrix_2d_compute_linear(bool allow_ideal_
 //
 // FSM - this is now done by vgl_h_matrix_2d_compute_design.
 
-const int TM_UNKNOWNS_COUNT = 9;
-const double DEGENERACY_THRESHOLD = 0.00001;  // FSM. see below.
+constexpr int TM_UNKNOWNS_COUNT = 9;
+constexpr double DEGENERACY_THRESHOLD = 0.00001;  // FSM. see below.
 
 //-----------------------------------------------------------------------------
 //
@@ -170,20 +172,18 @@ compute_l(std::vector<vgl_homg_line_2d<double> > const& lines1,
   if (!tr2.compute_from_lines(lines2))
     return false;
   std::vector<vgl_homg_point_2d<double> > tlines1, tlines2;
-  for (std::vector<vgl_homg_line_2d<double> >::const_iterator
-       lit = lines1.begin(); lit != lines1.end(); lit++)
+  for (const auto & lit : lines1)
   {
     // transform the lines according to the normalizing transform
-    vgl_homg_line_2d<double> l = tr1(*lit);
+    vgl_homg_line_2d<double> l = tr1(lit);
     // convert the line to a point to use the same linear code
     vgl_homg_point_2d<double> p(l.a(), l.b(), l.c());
     tlines1.push_back(p);
   }
-  for (std::vector<vgl_homg_line_2d<double> >::const_iterator
-       lit = lines2.begin(); lit != lines2.end(); lit++)
+  for (const auto & lit : lines2)
   {
     // transform the lines according to the normalizing transform
-    vgl_homg_line_2d<double> l = tr2(*lit);
+    vgl_homg_line_2d<double> l = tr2(lit);
     // convert the line to a point to use the same linear code
     vgl_homg_point_2d<double> p(l.a(), l.b(), l.c());
     tlines2.push_back(p);
@@ -357,18 +357,16 @@ compute_l(std::vector<vgl_homg_line_2d<double> > const& lines1,
   if (!tr2.compute_from_lines(lines2))
     return false;
   std::vector<vgl_homg_line_2d<double> > tlines1, tlines2;
-  for (std::vector<vgl_homg_line_2d<double> >::const_iterator
-       lit = lines1.begin(); lit != lines1.end(); lit++)
+  for (const auto & lit : lines1)
   {
     // transform the lines according to the normalizing transform
-    vgl_homg_line_2d<double> l = tr1(*lit);
+    vgl_homg_line_2d<double> l = tr1(lit);
     tlines1.push_back(l);
   }
-  for (std::vector<vgl_homg_line_2d<double> >::const_iterator
-       lit = lines2.begin(); lit != lines2.end(); lit++)
+  for (const auto & lit : lines2)
   {
     // transform the lines according to the normalizing transform
-    vgl_homg_line_2d<double> l = tr2(*lit);
+    vgl_homg_line_2d<double> l = tr2(lit);
     tlines2.push_back(l);
   }
 

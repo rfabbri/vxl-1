@@ -15,7 +15,10 @@
 #include "ihog_transform_2d.h"
 #include "ihog_image.h"
 #include "ihog_utils.h"
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Sample grid from image, using bilinear interpolation
 //  Grid points are p+i.u+j.v where i=[0..n1-1], j=[0..n2-1]

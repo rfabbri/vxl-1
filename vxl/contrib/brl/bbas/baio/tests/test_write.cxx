@@ -4,7 +4,9 @@
 #include <testlib/testlib_test.h>
 #include <testlib/testlib_root_dir.h>
 #include <baio/baio.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_random.h>
 #include <vpl/vpl.h>
 
@@ -37,10 +39,10 @@ static void test_write()
     while ( myfile.good() ) {
       getline (myfile,line);
       line += "\n";
-      for (unsigned int i=0 ; i<line.length(); ++i) {
+      for (char i : line) {
         if (charCount+1 > buffSize)
           break;
-        out_tester[charCount] = line[i];
+        out_tester[charCount] = i;
         ++charCount;
       }
     }

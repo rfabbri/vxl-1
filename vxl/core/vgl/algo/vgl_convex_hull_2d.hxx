@@ -1,14 +1,16 @@
 #ifndef vgl_convex_hull_2d_hxx_
 #define vgl_convex_hull_2d_hxx_
 #include <cstdlib>
+#include <limits>
 #include "vgl_convex_hull_2d.h"
 #include <vgl/vgl_box_2d.h>
 #include <vgl/vgl_area.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vnl/vnl_math.h>
-#include <limits>
 
 //:
 // \file
@@ -85,7 +87,7 @@ static int make_chain(double** V, int n, int (*cmp)(const void*, const void*))
   return s;
 }
 
-static int ch2d(double **P, int n)
+static inline int ch2d(double **P, int n)
 {
   int u = make_chain(P, n, cmpl);         // make lower hull
   if (!n) return 0;

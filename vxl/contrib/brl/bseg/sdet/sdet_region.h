@@ -22,14 +22,16 @@
 //
 #include <iostream>
 #include <iosfwd>
-#include <vcl_compiler.h>
+#include <set>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <sdet/sdet_region_sptr.h>
 #include <vsol/vsol_polygon_2d.h>
 #include <vsol/vsol_polygon_2d_sptr.h>
 #include <vdgl/vdgl_digital_region.h>
 #include <vgl/vgl_box_2d.h>
 #include <vgl/vgl_oriented_box_2d.h>
-#include <set>
 #include <bsta/bsta_histogram.h>
 //A structure for holding the similarity of neighboring regions
 class region_sim{
@@ -53,7 +55,7 @@ class sdet_region : public vdgl_digital_region
   sdet_region(int npts, const float* xp, const float* yp,
               const unsigned short *pix);
   sdet_region(vdgl_digital_region const& reg);
-  ~sdet_region() {}
+  ~sdet_region() override = default;
   //:accessors
   void set_label(const unsigned int label){region_label_ = label;}
   unsigned int label() const {return region_label_;}

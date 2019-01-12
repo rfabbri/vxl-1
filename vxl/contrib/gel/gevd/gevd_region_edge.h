@@ -43,16 +43,16 @@
 
 #include <vtol/vtol_edge_2d_sptr.h>
 #include <vbl/vbl_ref_count.h>
-#include <vcl_stlfwd.h> // for std::vector
+#include <vector>
 
 class gevd_region_edge : public vbl_ref_count
 {
  public:
   //Constructors/Destructors
-  gevd_region_edge(vtol_edge_2d_sptr e);
+  gevd_region_edge(const vtol_edge_2d_sptr& e);
   gevd_region_edge(gevd_region_edge const& e)
     : vbl_ref_count(), edge_(e.edge_), labels_(e.labels_) {}
-  ~gevd_region_edge();
+  ~gevd_region_edge() override;
   void Prop(gevd_region_edge const* re, unsigned int label);
   vtol_edge_2d_sptr get_edge() const {return edge_;}
   bool is_vertex() const;

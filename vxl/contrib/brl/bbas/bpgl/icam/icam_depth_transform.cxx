@@ -1,8 +1,10 @@
+#include <utility>
 #include "icam_depth_transform.h"
 //
 #include <vnl/vnl_inverse.h>
 #include <vnl/vnl_vector_fixed.h>
 #include <vnl/vnl_numeric_traits.h>
+
 
 void icam_depth_transform::cache_k()
 {
@@ -64,7 +66,7 @@ void icam_depth_transform::invert_depth(vil_image_view<double> const& depth)
   inv_depth_.set_size(ni, nj);
   for (unsigned j = 0; j<nj; ++j)
     for (unsigned i = 0; i<ni; ++i) {
-      float z = static_cast<float>(depth(i,j));
+      auto z = static_cast<float>(depth(i,j));
       if (z<1.0e-6f) {
         inv_depth_(i,j) = mval;
         continue;
@@ -76,10 +78,10 @@ void icam_depth_transform::invert_depth(vil_image_view<double> const& depth)
 icam_depth_transform::
 icam_depth_transform(vnl_matrix_fixed<double, 3, 3> const& K,
                      vil_image_view<double> const& depth,
-                     vgl_rotation_3d<double> const& rot,
+                     vgl_rotation_3d<double>  rot,
                      vgl_vector_3d<double> const& trans,
                      bool adjust_to_fl)
-  : adjust_to_fl_(adjust_to_fl), depth_(depth),rot_(rot), trans_(trans)
+  : adjust_to_fl_(adjust_to_fl), depth_(depth),rot_(std::move(rot)), trans_(trans)
 {
   this->set_k(K);
   this->cache_r();
@@ -92,10 +94,10 @@ icam_depth_transform::
 icam_depth_transform(vnl_matrix_fixed<double, 3, 3> const& K_from,
                      vnl_matrix_fixed<double, 3, 3> const& K_to,
                      vil_image_view<double> const& depth,
-                     vgl_rotation_3d<double> const& rot,
+                     vgl_rotation_3d<double>  rot,
                      vgl_vector_3d<double> const& trans,
                      bool adjust_to_fl)
-  : adjust_to_fl_(adjust_to_fl), depth_(depth),rot_(rot), trans_(trans)
+  : adjust_to_fl_(adjust_to_fl), depth_(depth),rot_(std::move(rot)), trans_(trans)
 {
   this->set_k(K_from, K_to);
   this->cache_r();
@@ -108,12 +110,12 @@ icam_depth_transform::
 icam_depth_transform(vnl_matrix_fixed<double, 3, 3> const& K_from,
                      double to_fl, double to_pu, double to_pv,
                      vil_image_view<double> const& depth,
-                     vgl_rotation_3d<double> const& rot,
+                     vgl_rotation_3d<double>  rot,
                      vgl_vector_3d<double> const& trans,
                      bool adjust_to_fl)
   : adjust_to_fl_(adjust_to_fl), depth_(depth),
     to_fl_(to_fl), to_pu_(to_pu), to_pv_(to_pv),
-    rot_(rot), trans_(trans)
+    rot_(std::move(rot)), trans_(trans)
 {
   this->set_k(K_from);
   this->cache_r();
@@ -187,4 +189,3 @@ vnl_vector<double> icam_depth_transform::params()
   scl_res = element_product(res, scale_factors_);
   return scl_res;
 }
-

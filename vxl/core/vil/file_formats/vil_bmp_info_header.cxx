@@ -1,7 +1,4 @@
 // This is core/vil/file_formats/vil_bmp_info_header.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
@@ -9,7 +6,9 @@
 #include <iostream>
 #include "vil_bmp_info_header.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vil/vil_stream.h>
 #include <vil/vil_stream_read.h>

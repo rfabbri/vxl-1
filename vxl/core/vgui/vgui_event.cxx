@@ -1,7 +1,4 @@
 // This is core/vgui/vgui_event.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \brief  See vgui_event.h for a description of this file.
@@ -15,7 +12,9 @@
 
 #include <iostream>
 #include "vgui_event.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_get_timestamp.h>
 
 //----------------------------------------------------------------------------
@@ -38,11 +37,11 @@ void vgui_event::init()
       secs_0 = secs_now, msecs_0 = msecs_now;
     timestamp = 1000*(secs_now - secs_0) + (msecs_now - msecs_0);
   }
-  origin = VXL_NULLPTR;
+  origin = nullptr;
   timer_id = 0;
   str = "";
-  user = VXL_NULLPTR;
-  data = VXL_NULLPTR;
+  user = nullptr;
+  data = nullptr;
 }
 
 //----------------------------------------------------------------------------
@@ -164,4 +163,3 @@ bool operator==(vgui_event const& a, vgui_event const& b)
           a.user    == b.user &&
           a.data    == b.data;
 }
-

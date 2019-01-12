@@ -12,12 +12,13 @@
 // \endverbatim
 
 #include <iostream>
-#include <vcl_memory.h>
+#include <memory>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <rsdl/rsdl_fwd.h>
 #include <rgrl/rgrl_feature_set.h>
 #include <rgrl/rgrl_mask.h>
-
-#include <vcl_compiler.h>
 
 //: A set of features grouped only by N-d location.
 //
@@ -54,43 +55,43 @@ class rgrl_feature_set_bins
                          double bin_size = 10,
                          rgrl_feature_set_label const& label = rgrl_feature_set_label() );
 
-  ~rgrl_feature_set_bins();
+  ~rgrl_feature_set_bins() override;
 
   void
-  features_in_region( feature_vector& results, rgrl_mask_box const& roi ) const;
+  features_in_region( feature_vector& results, rgrl_mask_box const& roi ) const override;
 
   //:  Return the features in a given circle/sphere.
   //
   void
-  features_within_radius( feature_vector& results, vnl_vector<double> const& center, double radius ) const;
+  features_within_radius( feature_vector& results, vnl_vector<double> const& center, double radius ) const override;
 
   //: Nearest feature based on Euclidean distance
   rgrl_feature_sptr
-  nearest_feature( const vnl_vector<double>& loc ) const;
+  nearest_feature( const vnl_vector<double>& loc ) const override;
 
   //: Nearest feature based on Euclidean distance
   rgrl_feature_sptr
-  nearest_feature( rgrl_feature_sptr const& feature ) const;
+  nearest_feature( rgrl_feature_sptr const& feature ) const override;
 
   //: Return all features within a given Euclidean distance
   void
-  features_within_radius( feature_vector& results, rgrl_feature_sptr const& feature, double distance ) const;
+  features_within_radius( feature_vector& results, rgrl_feature_sptr const& feature, double distance ) const override;
 
   //:  Return the k nearest features based on Euclidean distance.
   void
-  k_nearest_features( feature_vector& results, const vnl_vector<double>& feature_loc, unsigned int k ) const;
+  k_nearest_features( feature_vector& results, const vnl_vector<double>& feature_loc, unsigned int k ) const override;
 
   //:  Return the k nearest features based on Euclidean distance.
   void
-  k_nearest_features( feature_vector& results, rgrl_feature_sptr const& feature, unsigned int k ) const;
+  k_nearest_features( feature_vector& results, rgrl_feature_sptr const& feature, unsigned int k ) const override;
 
   //:  Return the bounding box encloses the feature set
   rgrl_mask_box
-  bounding_box() const;
+  bounding_box() const override;
 
   //:  Return the type of feature
   const std::type_info&
-  type() const;
+  type() const override;
 
   // Defines type-related functions
   rgrl_type_macro( rgrl_feature_set_bins, rgrl_feature_set );
@@ -103,7 +104,7 @@ class rgrl_feature_set_bins
   rgrl_mask_box bounding_box_;
 
   // Using bins as the data structure
-  vcl_unique_ptr< bin_type > bins_;
+  std::unique_ptr< bin_type > bins_;
 
   // Using kd_tree as the data structure
   //feature_vector features_;

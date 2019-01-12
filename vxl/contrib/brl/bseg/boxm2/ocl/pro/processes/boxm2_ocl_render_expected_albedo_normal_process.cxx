@@ -12,7 +12,9 @@
 #include <vector>
 #include <bprb/bprb_func_process.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/ocl/boxm2_opencl_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -34,12 +36,12 @@
 
 namespace boxm2_ocl_render_expected_albedo_normal_process_globals
 {
-  const unsigned n_inputs_ = 6;
-  const unsigned n_outputs_ = 3;
+  constexpr unsigned n_inputs_ = 6;
+  constexpr unsigned n_outputs_ = 3;
   std::size_t lthreads[2]={8,8};
 
   static std::map<std::string,std::vector<bocl_kernel*> > kernels;
-  bool compile_kernel(bocl_device_sptr device,std::vector<bocl_kernel*> & vec_kernels, std::string opts)
+  bool compile_kernel(const bocl_device_sptr& device,std::vector<bocl_kernel*> & vec_kernels, const std::string& opts)
   {
     //gather all render sources... seems like a lot for rendering...
     std::vector<std::string> src_paths;
@@ -60,7 +62,7 @@ namespace boxm2_ocl_render_expected_albedo_normal_process_globals
     options += " -D STEP_CELL=step_cell_render_albedo_normal(aux_args,data_ptr,d*linfo->block_len,vis)";
 
     //have kernel construct itself using the context and device
-    bocl_kernel * ray_trace_kernel=new bocl_kernel();
+    auto * ray_trace_kernel=new bocl_kernel();
 
     if (!ray_trace_kernel->create_kernel( &device->context(),
                                           device->device_id(),
@@ -119,17 +121,17 @@ bool boxm2_ocl_render_expected_albedo_normal_process(bprb_func_process& pro)
 
   boxm2_opencl_cache_sptr opencl_cache= pro.get_input<boxm2_opencl_cache_sptr>(2);
   vpgl_camera_double_sptr cam= pro.get_input<vpgl_camera_double_sptr>(3);
-  unsigned ni=pro.get_input<unsigned>(4);
-  unsigned nj=pro.get_input<unsigned>(5);
+  auto ni=pro.get_input<unsigned>(4);
+  auto nj=pro.get_input<unsigned>(5);
 
   bool found_appearance = false;
   std::string data_type,options;
   std::vector<std::string> apps = scene->appearances();
 
-  for (unsigned int i=0; i<apps.size(); ++i) {
-    if ( apps[i] == boxm2_data_traits<BOXM2_NORMAL_ALBEDO_ARRAY>::prefix() )
+  for (const auto & app : apps) {
+    if ( app == boxm2_data_traits<BOXM2_NORMAL_ALBEDO_ARRAY>::prefix() )
     {
-      data_type = apps[i];
+      data_type = app;
       found_appearance = true;
       // boxm2_data_traits<BOXM2_NORMAL_ALBEDO_ARRAY>::datasize();
     }
@@ -160,7 +162,7 @@ bool boxm2_ocl_render_expected_albedo_normal_process(bprb_func_process& pro)
 
   unsigned cl_ni=RoundUp(ni,lthreads[0]);
   unsigned cl_nj=RoundUp(nj,lthreads[1]);
-  float* exp_buff = new float[4*cl_ni*cl_nj];
+  auto* exp_buff = new float[4*cl_ni*cl_nj];
   std::fill(exp_buff, exp_buff + 4*cl_ni*cl_nj, 0.0f);
 
   bocl_mem_sptr exp_albedo_normal = opencl_cache->alloc_mem(4*cl_ni*cl_nj*sizeof(float), exp_buff,"exp normal albedo buffer");
@@ -174,7 +176,7 @@ bool boxm2_ocl_render_expected_albedo_normal_process(bprb_func_process& pro)
   exp_img_dim->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
 
   // visibility image
-  float* vis_buff = new float[cl_ni*cl_nj];
+  auto* vis_buff = new float[cl_ni*cl_nj];
   std::fill(vis_buff, vis_buff + cl_ni*cl_nj, 1.0f);
   bocl_mem_sptr vis_image=opencl_cache->alloc_mem(cl_ni*cl_nj*sizeof(float),vis_buff,"vis image buffer");
   vis_image->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
@@ -188,12 +190,12 @@ bool boxm2_ocl_render_expected_albedo_normal_process(bprb_func_process& pro)
   exp_albedo_normal->read_to_buffer(queue);
   vis_image->read_to_buffer(queue);
 
-  vil_image_view<float>* exp_albedo_out=new vil_image_view<float>(ni,nj);
+  auto* exp_albedo_out=new vil_image_view<float>(ni,nj);
   for (unsigned r=0;r<nj;r++)
     for (unsigned c=0;c<ni;c++)
       (*exp_albedo_out)(c,r)= exp_buff[4*(r*cl_ni+c)];
 
-  vil_image_view<float>* exp_normal_out = new vil_image_view<float>(ni,nj,3);
+  auto* exp_normal_out = new vil_image_view<float>(ni,nj,3);
   for (unsigned r=0;r<nj;r++)
     for (unsigned c=0;c<ni;c++) {
       (*exp_normal_out)(c,r,0)=exp_buff[4*(r*cl_ni+c)+1];
@@ -201,13 +203,13 @@ bool boxm2_ocl_render_expected_albedo_normal_process(bprb_func_process& pro)
       (*exp_normal_out)(c,r,2)=exp_buff[4*(r*cl_ni+c)+3];
     }
 
-  vil_image_view<float>* mask_out=new vil_image_view<float>(ni,nj);
+  auto* mask_out=new vil_image_view<float>(ni,nj);
   for (unsigned r=0;r<nj;r++)
     for (unsigned c=0;c<ni;c++)
       (*mask_out)(c,r)= 1.0f - vis_buff[r*cl_ni+c];
 
   // normalize images
-  const float mask_thresh = 0.1;
+  constexpr float mask_thresh = 0.1;
   for (unsigned int j=0; j<nj; ++j) {
      for (unsigned int i=0; i<ni; ++i) {
         float &mask_val = (*mask_out)(i,j);

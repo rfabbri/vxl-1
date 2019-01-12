@@ -1,9 +1,6 @@
 // This is oxl/mvl/ProjectiveBasis2D.h
 #ifndef ProjectiveBasis2D_h_
 #define ProjectiveBasis2D_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 //  \file
 // \brief Canonical basis of 4 points
@@ -29,7 +26,9 @@
 #include <iostream>
 #include <vector>
 #include <mvl/HMatrix2D.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 class HomgPoint2D;
 
 class ProjectiveBasis2D

@@ -11,8 +11,10 @@
 #include <iostream>
 #include <iterator>
 #include <vector>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #define imesh_invalid_idx (static_cast<unsigned int>(-1))
 
@@ -54,7 +56,7 @@ class imesh_half_edge_set
 {
   public:
     //: Default Constructor
-    imesh_half_edge_set() {}
+    imesh_half_edge_set() = default;
     //: Construct from a face index list
     imesh_half_edge_set(const std::vector<std::vector<unsigned int> >& face_list);
 

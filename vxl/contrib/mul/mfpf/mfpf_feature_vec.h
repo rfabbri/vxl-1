@@ -10,7 +10,9 @@
 #include <mfpf/mfpf_pose.h>
 #include <mfpf/mfpf_pose_set.h>
 #include <vsl/vsl_vector_io.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 //As well as pose_set, it can be helpful to think of vector combined pose/fit
@@ -74,11 +76,10 @@ inline void mfpf_feature_vec_to_pose_set(const mfpf_feature_vec& feature_vec, mf
 
     while(featureIter != featureIterEnd)
     {
-        pose_set.poses.push_back(mfpf_pose(featureIter->pose));
+        pose_set.poses.emplace_back(featureIter->pose);
         pose_set.fits.push_back(featureIter->fit);
         ++featureIter;
     }
 }
 
 #endif // mfpf_feature_vec_h_
-

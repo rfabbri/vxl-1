@@ -1,9 +1,6 @@
 #ifndef mvl2_video_reader_h_
 #define mvl2_video_reader_h_
 
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief A base class for cameras/virtual cameras
@@ -14,7 +11,9 @@
 #include <string>
 #include <vector>
 #include <vxl_config.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_image_view.h>
 
 
@@ -30,10 +29,10 @@ class mvl2_video_reader
   virtual ~mvl2_video_reader();
 
   //: Load configurations from a file, returns a configuration's name vector
-  std::vector<std::string> load_configs(std::string filename);
+  std::vector<std::string> load_configs(const std::string& filename);
 
   //: Use the configuration given by the configuration's name
-  bool use_config(std::string configname);
+  bool use_config(const std::string& configname);
 
   //: Display the configurations on the standard output
   void display_configs();

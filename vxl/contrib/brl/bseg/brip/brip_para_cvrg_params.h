@@ -15,7 +15,9 @@
 #include <iostream>
 #include <iosfwd>
 #include <gevd/gevd_param_mixin.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class brip_para_cvrg_params : public gevd_param_mixin
 {
@@ -34,7 +36,7 @@ class brip_para_cvrg_params : public gevd_param_mixin
     proj_height_(pcp.proj_height_), sup_radius_(pcp.sup_radius_),
     verbose_(pcp.verbose_) {}
 
-  bool SanityCheck();
+  bool SanityCheck() override;
 
   //
   float sigma_;       //!< Standard deviation of the smoothing kernel

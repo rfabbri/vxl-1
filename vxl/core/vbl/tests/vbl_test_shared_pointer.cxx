@@ -4,7 +4,9 @@
 #include <iostream>
 #include <testlib/testlib_test.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_shared_pointer.h>
 
 #define print std::cout
@@ -40,7 +42,7 @@ static void test_class()
   typedef vbl_shared_pointer<some_class> sp;
 
   sp a(new some_class);
-  sp b((some_class*)VXL_NULLPTR);
+  sp b((some_class*)nullptr);
 
   void* olda = (void*)a.as_pointer();
   void* oldb = (void*)b.as_pointer();
@@ -58,7 +60,7 @@ static void test_class()
 
 struct base_class
 {
-  virtual ~base_class() {}
+  virtual ~base_class() = default;
   virtual int who() const { return 0; }
 };
 
@@ -67,8 +69,8 @@ struct derv_class1
 {
   static int cnt;
   derv_class1() { ++cnt; }
-  ~derv_class1() { --cnt; }
-  virtual int who() const { return 1; }
+  ~derv_class1() override { --cnt; }
+  int who() const override { return 1; }
 };
 
 int derv_class1::cnt = 0;
@@ -78,8 +80,8 @@ struct derv_class2
 {
   static int cnt;
   derv_class2() { ++cnt; }
-  ~derv_class2() { --cnt; }
-  virtual int who() const { return 2; }
+  ~derv_class2() override { --cnt; }
+  int who() const override { return 2; }
 };
 
 int derv_class2::cnt = 0;

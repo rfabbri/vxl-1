@@ -1,6 +1,7 @@
-#include <iostream>
-#include <algorithm>
 #include "boxm2_ocl_reg_points_to_volume_mutual_info.h"
+#include <algorithm>
+#include <iostream>
+#include <utility>
 //:
 // \file
 #include <vgl/vgl_box_3d.h>
@@ -18,7 +19,9 @@
 #include <bocl/bocl_mem.h>
 #include <bocl/bocl_kernel.h>
 #include <vcl_where_root_dir.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 typedef vnl_vector_fixed<unsigned char,16> uchar16;
 
@@ -27,7 +30,7 @@ typedef vnl_vector_fixed<unsigned char,16> uchar16;
 boxm2_ocl_reg_points_to_volume_mutual_info::boxm2_ocl_reg_points_to_volume_mutual_info(boxm2_opencl_cache_sptr& opencl_cache,
                                                                                        float * pts,
                                                                                        boxm2_scene_sptr& sceneB,
-                                                                                       bocl_device_sptr device,
+                                                                                       const bocl_device_sptr& device,
                                                                                        int npts,
                                                                                        bool do_vary_scale)
                                                                                        : opencl_cache_(opencl_cache),device_(device), do_vary_scale_(do_vary_scale)
@@ -51,7 +54,7 @@ boxm2_ocl_reg_points_to_volume_mutual_info::~boxm2_ocl_reg_points_to_volume_mutu
 double boxm2_ocl_reg_points_to_volume_mutual_info::cost(vgl_rotation_3d<double> rot,vgl_vector_3d<double> trans, double scale, int depth)
 {
     float val = 0.0f;
-    this->boxm2_ocl_register_world(rot,trans,scale,depth,val);
+    this->boxm2_ocl_register_world(std::move(rot),trans,scale,depth,val);
     return val;
 }
 double boxm2_ocl_reg_points_to_volume_mutual_info:: cost(vnl_vector<double> const& x,  int depth )
@@ -102,7 +105,7 @@ bool boxm2_ocl_reg_points_to_volume_mutual_info::init_ocl_minfo()
     return true;
 }
 
-bool boxm2_ocl_reg_points_to_volume_mutual_info::boxm2_ocl_register_world(vgl_rotation_3d<double> rot,
+bool boxm2_ocl_reg_points_to_volume_mutual_info::boxm2_ocl_register_world(const vgl_rotation_3d<double>& rot,
                                                                           vgl_vector_3d<double> tx,
                                                                           double s,
                                                                           int depth,
@@ -135,7 +138,7 @@ bool boxm2_ocl_reg_points_to_volume_mutual_info::boxm2_ocl_register_world(vgl_ro
     ocl_depth->create_buffer(CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR );
 
     std::vector<boxm2_block_id> blocks_B = sceneB_->get_block_ids();
-    std::vector<boxm2_block_id>::iterator iter_blks_B = blocks_B.begin();
+    auto iter_blks_B = blocks_B.begin();
     std::size_t local_threads[1]={64};
     std::size_t global_threads[1]={1};
     int status=0;    float gpu_time = 0.0;
@@ -208,4 +211,3 @@ bool boxm2_ocl_reg_points_to_volume_mutual_info::boxm2_ocl_register_world(vgl_ro
     opencl_cache_->unref_mem(ocl_depth.ptr());
     return true;
 }
-

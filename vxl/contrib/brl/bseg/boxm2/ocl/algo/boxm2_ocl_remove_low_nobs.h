@@ -17,19 +17,19 @@
 class boxm2_ocl_remove_low_nobs
 {
 public:
-    static bool remove_low_nobs(boxm2_scene_sptr         scene,
-                                bocl_device_sptr         device,
-                                boxm2_opencl_cache_sptr  opencl_cache,
+    static bool remove_low_nobs(const boxm2_scene_sptr&         scene,
+                                const bocl_device_sptr&         device,
+                                const boxm2_opencl_cache_sptr&  opencl_cache,
                                 float                    nobs_threshold
                                 );
 
 private:
 
     //compile kernels and place in static map
-    static vcl_vector<bocl_kernel*>& get_remove_low_nobs_kernels(bocl_device_sptr device, vcl_string opts = "");
+    static std::vector<bocl_kernel*>& get_remove_low_nobs_kernels(const bocl_device_sptr& device, const std::string& opts = "");
 
     //map of paint kernel by device
-    static vcl_map<vcl_string, vcl_vector<bocl_kernel*> > remove_low_nobs_kernels_;
+    static std::map<std::string, std::vector<bocl_kernel*> > remove_low_nobs_kernels_;
 
 };
 

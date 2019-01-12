@@ -1,16 +1,16 @@
 // This is core/vbl/vbl_triple.h
 #ifndef vbl_triple_h_
 #define vbl_triple_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief a templated 3-tuple
 // \author fsm
 
 #include <iosfwd>
-#include <vcl_compiler.h>
+#include <utility>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: a templated 3-tuple
 template <class T1, class T2, class T3>
@@ -24,11 +24,11 @@ struct vbl_triple
   T2 second;
   T3 third;
 
-  vbl_triple() { }
-  vbl_triple(T1 const &a, T2 const &b, T3 const &c)
+  vbl_triple() = default;
+  vbl_triple(T1 const &a, T2 const &b, T3 c)
     : first (a)
     , second(b)
-    , third (c) { }
+    , third (std::move(c)) { }
 
   template <class U1, class U2, class U3>
   vbl_triple(vbl_triple<U1, U2, U3> const &that)

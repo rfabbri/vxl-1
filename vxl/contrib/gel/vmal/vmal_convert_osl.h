@@ -18,20 +18,22 @@
 
 #include <mvl/HomgPoint2D.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 vtol_vertex_2d_sptr convert_vertex_2d(osl_vertex & in);
 
 // Convert an osl_edge to a vtol_edge_2d.
 // If the osl_edge is a line then set type=LINE.
 // If you don't know anything about the shape of the curve, set type=CURVE_NO_TYPE (default)
-vtol_edge_2d_sptr convert_edge_2d(osl_edge & in,std::string type="CURVE_NO_TYPE");
+vtol_edge_2d_sptr convert_edge_2d(osl_edge & in,const std::string& type="CURVE_NO_TYPE");
 
 std::vector<vtol_edge_2d_sptr>* convert_vector_edge_2d(std::list<osl_edge*> & in,
-                                                      std::string type="CURVE_NO_TYPE");
+                                                      const std::string& type="CURVE_NO_TYPE");
 
 std::vector<std::vector<vtol_edge_2d_sptr>*>* convert_array_edge_2d(std::list<std::list<osl_edge *>*> & in,
-                                                                  std::string type);
+                                                                  const std::string& type);
 
 void convert_pointarray(std::vector<vtol_vertex_2d_sptr>& in,std::vector<HomgPoint2D> & out);
 

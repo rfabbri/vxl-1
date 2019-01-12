@@ -24,7 +24,9 @@
 //
 
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_point_3d.h>
 #include <vpgl/vpgl_camera.h>
@@ -36,7 +38,7 @@ class vpgl_ray_intersect
  public:
 
   vpgl_ray_intersect(unsigned dim);
-  ~vpgl_ray_intersect() {}
+  ~vpgl_ray_intersect() = default;
 
   //: Intersect the rays. return false if intersection fails
   // Note image points are not homogeneous because require

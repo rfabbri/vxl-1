@@ -8,7 +8,9 @@
 #include <msm/msm_cubic_bezier.h>
 
 #include <vul/vul_arg.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/algo/vnl_svd.h>
 #include <vnl/algo/vnl_cholesky.h>
 
@@ -107,4 +109,3 @@ int main(int argc, char** argv)
 
   return 0;
 }
-

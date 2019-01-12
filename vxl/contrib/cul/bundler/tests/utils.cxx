@@ -3,7 +3,9 @@
 #include "utils.h"
 //
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 static const double TOL = 480 * .2;
 
@@ -34,8 +36,8 @@ void test_recon(const bundler_inters_reconstruction &recon,
     {
         bool has_cont_pt = false;
 
-        for (unsigned int k = 0; k < (*j)->features.size(); k++) {
-            if ( (*j)->features[k]->is_contributing() ) {
+        for (auto & feature : (*j)->features) {
+            if ( feature->is_contributing() ) {
                 has_cont_pt = true;
                 break;
             }

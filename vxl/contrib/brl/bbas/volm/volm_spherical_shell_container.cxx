@@ -7,11 +7,14 @@
 #include <bvrml/bvrml_write.h>
 #include <volm/volm_io.h>
 #include <volm/volm_category_io.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_vector_io.h>
 
 // constructor
-volm_spherical_shell_container::volm_spherical_shell_container(double radius, float cap_angle, float point_angle, float top_angle, float bottom_angle)
+volm_spherical_shell_container::volm_spherical_shell_container(double  /*radius*/, float  /*cap_angle*/, float point_angle, float top_angle, float bottom_angle)
 {
   usph_ = new vsph_unit_sphere(point_angle, top_angle, 180.0-bottom_angle);
 }
@@ -46,7 +49,7 @@ std::vector<vsph_sph_point_3d> volm_spherical_shell_container::sph_points() cons
   return temp;
 }
 
-void volm_spherical_shell_container::draw_template(std::string vrml_file_name)
+void volm_spherical_shell_container::draw_template(const std::string& vrml_file_name)
 {
   std::ofstream ofs(vrml_file_name.c_str());
   if (!ofs.is_open()) {
@@ -72,8 +75,8 @@ void volm_spherical_shell_container::draw_template(std::string vrml_file_name)
   // write the voxel structure
 
   vgl_point_3d<double> orig(0.0,0.0,0.0);
-  for (unsigned i = 0; i < cart_pts.size(); i++) {
-    vgl_vector_3d<double> ray = cart_pts[i]-orig;
+  for (const auto & cart_pt : cart_pts) {
+    vgl_vector_3d<double> ray = cart_pt-orig;
     //bvrml_write::write_vrml_line(ofs, orig, ray, 10.0f, 0.0f, 0.0f, 1.0f);
     bvrml_write::write_vrml_disk(ofs, orig+10*ray, ray, 0.5f, 0.0f, 0.0f, 1.0f);
   }
@@ -81,7 +84,7 @@ void volm_spherical_shell_container::draw_template(std::string vrml_file_name)
 }
 
 //: draw each disk with a color with respect to the values, the size and order of the values should be the size and order of the cart_points
-void volm_spherical_shell_container::draw_template(std::string vrml_file_name, std::vector<unsigned char>& values, unsigned char special)
+void volm_spherical_shell_container::draw_template(const std::string& vrml_file_name, std::vector<unsigned char>& values, unsigned char special)
 {
   assert(values.size() == usph_->size());
 
@@ -135,8 +138,8 @@ void volm_spherical_shell_container::panaroma_img(vil_image_view<vil_rgb<vxl_byt
   img.fill(127);
   for (unsigned i = 0; i < sph_pts.size(); i++) {
     vsph_sph_point_3d pt = sph_pts[i];
-    unsigned ii = (unsigned)std::floor(vnl_math::angle_0_to_2pi(pt.phi_)*vnl_math::deg_per_rad+0.5);
-    unsigned jj = (unsigned)std::floor(vnl_math::angle_0_to_2pi(pt.theta_)*vnl_math::deg_per_rad+0.5);
+    auto ii = (unsigned)std::floor(vnl_math::angle_0_to_2pi(pt.phi_)*vnl_math::deg_per_rad+0.5);
+    auto jj = (unsigned)std::floor(vnl_math::angle_0_to_2pi(pt.theta_)*vnl_math::deg_per_rad+0.5);
     if (ii >= img.ni() || jj >= img.nj()) // cannot be negative since unsigned ...
       continue;
     if (values[i] == 253) { // invalid
@@ -165,8 +168,8 @@ void volm_spherical_shell_container::panaroma_img_class_labels(vil_image_view<vi
   img.fill(127);
   for (unsigned i = 0; i < sph_pts.size(); i++) {
     vsph_sph_point_3d pt = sph_pts[i];
-    unsigned ii = (unsigned)std::floor(vnl_math::angle_0_to_2pi(pt.phi_)*vnl_math::deg_per_rad+0.5);
-    unsigned jj = (unsigned)std::floor(vnl_math::angle_0_to_2pi(pt.theta_)*vnl_math::deg_per_rad+0.5);
+    auto ii = (unsigned)std::floor(vnl_math::angle_0_to_2pi(pt.phi_)*vnl_math::deg_per_rad+0.5);
+    auto jj = (unsigned)std::floor(vnl_math::angle_0_to_2pi(pt.theta_)*vnl_math::deg_per_rad+0.5);
     if (ii >= img.ni() || jj >= img.nj()) // cannot be negative since unsigned ...
       continue;
     if (values[i] == 253) { // invalid
@@ -208,8 +211,8 @@ void volm_spherical_shell_container::panaroma_img_orientations(vil_image_view<vi
   img.fill(127);
   for (unsigned i = 0; i < sph_pts.size(); i++) {
     vsph_sph_point_3d pt = sph_pts[i];
-    unsigned ii = (unsigned)std::floor(vnl_math::angle_0_to_2pi(pt.phi_)*vnl_math::deg_per_rad+0.5);
-    unsigned jj = (unsigned)std::floor(vnl_math::angle_0_to_2pi(pt.theta_)*vnl_math::deg_per_rad+0.5);
+    auto ii = (unsigned)std::floor(vnl_math::angle_0_to_2pi(pt.phi_)*vnl_math::deg_per_rad+0.5);
+    auto jj = (unsigned)std::floor(vnl_math::angle_0_to_2pi(pt.theta_)*vnl_math::deg_per_rad+0.5);
     if (ii >= img.ni() || jj >= img.nj()) // cannot be negative since unsigned ...
       continue;
     if (values[i] == 253) { // invalid
@@ -241,8 +244,8 @@ void volm_spherical_shell_container::panaroma_images_from_combined(vil_image_vie
   img_orientation.fill(127);
   for (unsigned i = 0; i < sph_pts.size(); i++) {
     vsph_sph_point_3d pt = sph_pts[i];
-    unsigned ii = (unsigned)std::floor(vnl_math::angle_0_to_2pi(pt.phi_)*vnl_math::deg_per_rad+0.5);
-    unsigned jj = (unsigned)std::floor(vnl_math::angle_0_to_2pi(pt.theta_)*vnl_math::deg_per_rad+0.5);
+    auto ii = (unsigned)std::floor(vnl_math::angle_0_to_2pi(pt.phi_)*vnl_math::deg_per_rad+0.5);
+    auto jj = (unsigned)std::floor(vnl_math::angle_0_to_2pi(pt.theta_)*vnl_math::deg_per_rad+0.5);
     if (ii >= img.ni() || jj >= img.nj()) // cannot be negative since unsigned ...
       continue;
     std::cout << '(' << (int)values[i] << ", ";

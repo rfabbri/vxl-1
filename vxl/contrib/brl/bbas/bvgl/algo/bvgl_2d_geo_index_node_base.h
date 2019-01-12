@@ -18,7 +18,9 @@
 #include <string>
 #include <vector>
 #include <vbl/vbl_ref_count.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_box_2d.h>
 #include <vgl/vgl_point_2d.h>
 #include "bvgl_2d_geo_index_sptr.h"
@@ -27,10 +29,10 @@ class bvgl_2d_geo_index_node_base : public vbl_ref_count
 {
 public:
   //: default constrcutor
-  bvgl_2d_geo_index_node_base() {}
+  bvgl_2d_geo_index_node_base() = default;
 
   //: destructor
-  virtual ~bvgl_2d_geo_index_node_base() { children_.clear(); }
+  ~bvgl_2d_geo_index_node_base() override { children_.clear(); }
 
   //: return a name base on the extent boundary
   std::string get_string() const;

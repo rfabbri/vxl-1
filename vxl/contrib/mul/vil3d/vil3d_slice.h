@@ -1,16 +1,16 @@
 // This is mul/vil3d/vil3d_slice.h
 #ifndef vil3d_slice_h_
 #define vil3d_slice_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author Tim Cootes.
 
 #include <vil/vil_image_view.h>
 #include <vil3d/vil3d_image_view.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Return a 2D view of slice k of 3D image aligned as (j,i).
 //  result(x,y,p)=im(y,x,k,p)

@@ -4,16 +4,18 @@
 //:
 // \file
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_homg_point_2d.h>
 #include <mvl/Probability.h>
 #include <mvl/AffineMetric.h>
 #include <mvl/HomgInterestPointSet.h>
 
-HMatrix2DComputeRobust::HMatrix2DComputeRobust() {}
+HMatrix2DComputeRobust::HMatrix2DComputeRobust() = default;
 
-HMatrix2DComputeRobust::~HMatrix2DComputeRobust() {}
+HMatrix2DComputeRobust::~HMatrix2DComputeRobust() = default;
 
 
 HMatrix2D HMatrix2DComputeRobust::compute(PairMatchSetCorner& matches)
@@ -30,8 +32,8 @@ HMatrix2D HMatrix2DComputeRobust::compute(std::vector<HomgPoint2D>& points1, std
   if (points1.size() != points2.size())
     std::cerr << __FILE__ ": Point vectors are not of equal length\n";
   assert(points1.size() <= points2.size());
-  HomgInterestPointSet p1(points1,VXL_NULLPTR);
-  HomgInterestPointSet p2(points2,VXL_NULLPTR);
+  HomgInterestPointSet p1(points1,nullptr);
+  HomgInterestPointSet p2(points2,nullptr);
   PairMatchSetCorner matches(&p1, &p2);
   int count = matches.size();
   std::vector<bool> inliers(count, true);
@@ -52,8 +54,8 @@ HMatrix2D HMatrix2DComputeRobust::compute(std::vector<vgl_homg_point_2d<double> 
   if (points1.size() != points2.size())
     std::cerr << __FILE__ ": Point vectors are not of equal length\n";
   assert(points1.size() <= points2.size());
-  HomgInterestPointSet p1(points1,VXL_NULLPTR);
-  HomgInterestPointSet p2(points2,VXL_NULLPTR);
+  HomgInterestPointSet p1(points1,nullptr);
+  HomgInterestPointSet p2(points2,nullptr);
   PairMatchSetCorner matches(&p1, &p2);
   int count = matches.size();
   std::vector<bool> inliers(count, true);

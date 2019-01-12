@@ -1,9 +1,6 @@
 // This is core/vgui/internals/vgui_dialog_impl.h
 #ifndef vgui_dialog_impl_h_
 #define vgui_dialog_impl_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief vgui_dialog_impl is the abstract base class for dialog implementation.
@@ -25,7 +22,9 @@
 
 #include <string>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgui/vgui_tableau.h>
 #include <vgui/vgui_command_sptr.h>
 
@@ -174,7 +173,7 @@ class vgui_dialog_impl
     // The derived GUI implementation should not delete these.
     vgui_dialog_field *field;
 
-    element() : type(unknown), widget(VXL_NULLPTR), field(VXL_NULLPTR) {}
+    element() : type(unknown), widget(nullptr), field(nullptr) {}
   };
 
  protected:

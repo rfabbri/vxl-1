@@ -1,7 +1,9 @@
 // This is core/vil/algo/tests/test_algo_convolve_2d.cxx
 #include <iostream>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vxl_config.h> // for vxl_byte
 #include <vil/algo/vil_convolve_2d.h>
 #include <vil/vil_print.h>

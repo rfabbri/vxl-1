@@ -1,7 +1,4 @@
 // This is mul/vil3d/vil3d_save.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 //
@@ -11,7 +8,9 @@
 #include <cstring>
 #include "vil3d_save.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vxl_config.h> // for vxl_byte
 
 #include <vil3d/vil3d_new.h>
@@ -166,4 +165,3 @@ bool vil3d_save(const vil3d_image_view_base & im,
     return out->put_view(im, 0, 0, 0);
   }
 }
-

@@ -5,7 +5,9 @@
 
 #include <iostream>
 #include <iterator>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vgl/vgl_vector_3d.h>
 
@@ -18,12 +20,12 @@ template <class T>
 class bvxm_voxel_slab_iterator_base
 {
  public:
-  bvxm_voxel_slab_iterator_base() : storage_(VXL_NULLPTR), slab_thickness_(0), slice_idx_(0), end_slab_(0,0,0,VXL_NULLPTR,VXL_NULLPTR) {}
+  bvxm_voxel_slab_iterator_base() : storage_(nullptr), slab_thickness_(0), slice_idx_(0), end_slab_(0,0,0,nullptr,nullptr) {}
   bvxm_voxel_slab_iterator_base(bvxm_voxel_storage<T> *storage,
                                 vgl_vector_3d<unsigned int> grid_size,
                                 unsigned slice_idx, unsigned slab_thickness);
 
-  ~bvxm_voxel_slab_iterator_base() {}
+  ~bvxm_voxel_slab_iterator_base() = default;
 
   int slice_idx() const {return slice_idx_;}
 
@@ -90,7 +92,7 @@ class bvxm_voxel_slab_const_iterator : public bvxm_voxel_slab_iterator_base<T>,
 
   bvxm_voxel_slab_const_iterator(const bvxm_voxel_slab_iterator<T> &non_const_it);
 
-  ~bvxm_voxel_slab_const_iterator() {}
+  ~bvxm_voxel_slab_const_iterator() = default;
 
   bvxm_voxel_slab_const_iterator& operator=(const bvxm_voxel_slab_const_iterator& that);
 

@@ -2,7 +2,9 @@
 #include <iostream>
 #include <cmath>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h>
 
 #include <rrel/rrel_util.h>
@@ -44,7 +46,7 @@ static void test_robust_util()
   }
   int num = 10;
   int dof = 1;
-  double est_wgted_scale = rrel_util_weighted_scale( rs.begin(), rs.end(), wgt.begin(), dof, (double*)VXL_NULLPTR );
+  double est_wgted_scale = rrel_util_weighted_scale( rs.begin(), rs.end(), wgt.begin(), dof, (double*)nullptr );
   double corr_wgted_scale = std::sqrt( sum_wr / ( sum_w * (num-dof) / num ) );
   TEST_NEAR("rrel_util_weighted_scale", est_wgted_scale, corr_wgted_scale, 1e-6);
 
@@ -56,7 +58,7 @@ static void test_robust_util()
                          13.1,  6.2, 55.8 };
   std::vector<double> test_vect4( test_arr4, test_arr4+18 );
   double median, scale;
-  const double corr_median = 1.1;
+  constexpr double corr_median = 1.1;
   dof = 1;
   const double corr_scale = 3.2 * (1.0 + 5.0/(18.0-dof)) * 1.4826;
   rrel_util_median_and_scale_copy( test_vect4.begin(), test_vect4.end(), median, scale, dof);

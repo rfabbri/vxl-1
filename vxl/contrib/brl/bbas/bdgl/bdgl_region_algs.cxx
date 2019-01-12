@@ -4,7 +4,9 @@
 #include "bdgl_region_algs.h"
 //:
 // \file
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vdgl/vdgl_digital_region.h>
 
 //:
@@ -18,8 +20,8 @@ mahalanobis_distance(vdgl_digital_region_sptr const& r1,
                      vdgl_digital_region_sptr const& r2)
 {
   //need this many points for standard deviation and mean to be valid
-  const unsigned int min_npts = 5;
-  const float SMALL = 1;
+  constexpr unsigned int min_npts = 5;
+  constexpr float SMALL = 1;
   if (!r1 || !r2)
     return -1.f;
   if (r1->Npix()<min_npts || r2->Npix()<min_npts)
@@ -42,8 +44,8 @@ mahalanobis_distance(vdgl_digital_region_sptr const& r1,
 float bdgl_region_algs::intensity_distance(vdgl_digital_region_sptr const& r1,
                                            vdgl_digital_region_sptr const& r2)
 {
-  const unsigned int min_npts = 5;
-  const float SMALL = 1;
+  constexpr unsigned int min_npts = 5;
+  constexpr float SMALL = 1;
   if (!r1 || !r2)
     return -1.f;
   if (r1->Npix()<min_npts || r2->Npix()<min_npts)
@@ -76,9 +78,9 @@ bool bdgl_region_algs::merge(vdgl_digital_region_sptr const& r1,
   int n = n1 + n2;
   if (!n)
     return false;
-  float* Xm = new float[n];
-  float* Ym = new float[n];
-  unsigned short* Im = new unsigned short[n];
+  auto* Xm = new float[n];
+  auto* Ym = new float[n];
+  auto* Im = new unsigned short[n];
 
   float const* X1 = r1->Xj();
   float const* Y1 = r1->Yj();
@@ -110,8 +112,8 @@ bool bdgl_region_algs::merge(vdgl_digital_region_sptr const& r1,
 
 static int increasing_compare(const void *x1, const void *x2)
 {
-  const unsigned short* f1 = (const unsigned short*)x1;
-  const unsigned short* f2 = (const unsigned short*)x2;
+  const auto* f1 = (const unsigned short*)x1;
+  const auto* f2 = (const unsigned short*)x2;
   if (*f1<*f2)
     return -1;
   else if (*f1==*f2)
@@ -122,8 +124,8 @@ static int increasing_compare(const void *x1, const void *x2)
 
 static int decreasing_compare(const void *x1, const void *x2)
 {
-  const unsigned short* f1 = (const unsigned short*)x1;
-  const unsigned short* f2 = (const unsigned short*)x2;
+  const auto* f1 = (const unsigned short*)x1;
+  const auto* f2 = (const unsigned short*)x2;
   if (*f1>*f2)
     return -1;
   else if (*f1==*f2)
@@ -137,13 +139,13 @@ float
 bdgl_region_algs::earth_mover_distance(vdgl_digital_region_sptr const& r1,
                                        vdgl_digital_region_sptr const& r2)
 {
-  const unsigned int min_npts = 5;
+  constexpr unsigned int min_npts = 5;
   if (!r1 || !r2)
     return -1.f;
   const unsigned int n1 = r1->Npix(), n2 = r2->Npix();
   if (n1<min_npts || n2<min_npts)
     return -1.f;
-  unsigned short *I1 = new unsigned short[n1],
+  auto *I1 = new unsigned short[n1],
                  *I2 = new unsigned short[n2];
   std::memcpy(I1, r1->Ij(), n1*sizeof(unsigned short));
   std::memcpy(I2, r2->Ij(), n2*sizeof(unsigned short));

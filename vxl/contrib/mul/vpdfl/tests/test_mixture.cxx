@@ -13,7 +13,9 @@
 // \author Ian Scott
 // \brief test vpdfl_gaussian, building, sampling, saving etc.
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpl/vpl.h> // vpl_unlink()
 #include <vpdfl/vpdfl_mixture.h>
 #include <vpdfl/vpdfl_mixture_builder.h>
@@ -69,7 +71,7 @@ void test_mixture()
       var[j](i) = i;
     }
 
-    vpdfl_axis_gaussian& gauss_j = static_cast<vpdfl_axis_gaussian&>(*(pdf.components()[j]));
+    auto& gauss_j = static_cast<vpdfl_axis_gaussian&>(*(pdf.components()[j]));
     gauss_j.set(mean[j],var[j]);
   }
 
@@ -108,7 +110,7 @@ void test_mixture()
           <<"Mean: " << p_pdf_MI->mean()<<std::endl
           <<"Var:  " << p_pdf_MI->variance()<<std::endl;
 
-  vpdfl_mixture & gmm =  static_cast<vpdfl_mixture &>(*p_pdf);
+  auto & gmm =  static_cast<vpdfl_mixture &>(*p_pdf);
 
   std::vector<double> test_wts(n_comp, 1.0/n_comp);
   TEST_NEAR("Weights are about correct",
@@ -131,7 +133,7 @@ void test_mixture()
          true);
   }
 
-  vpdfl_mixture & gmm_MI =  static_cast<vpdfl_mixture &>(*p_pdf);
+  auto & gmm_MI =  static_cast<vpdfl_mixture &>(*p_pdf);
 
   TEST_NEAR("Weights are about correct",
             vnl_c_vector<double>:: euclid_dist_sq(&gmm_MI.weights()[0], &test_wts[0], n_comp),
@@ -162,14 +164,14 @@ void test_mixture()
   vsl_b_write(bfs_out,builder);
   vsl_b_write(bfs_out,static_cast<vpdfl_builder_base*>(&builder));
   vsl_b_write(bfs_out,p_pdf);
-  vsl_b_write(bfs_out,(vpdfl_pdf_base*) VXL_NULLPTR);
+  vsl_b_write(bfs_out,(vpdfl_pdf_base*) nullptr);
   bfs_out.close();
 
   std::cout<<"Loading data...\n";
   vpdfl_mixture_builder builder2;
-  vpdfl_builder_base*  p_builder2 = VXL_NULLPTR;
-  vpdfl_pdf_base*         p_pdf2 = VXL_NULLPTR;
-  vpdfl_pdf_base*         p_pdf3 = VXL_NULLPTR;
+  vpdfl_builder_base*  p_builder2 = nullptr;
+  vpdfl_pdf_base*         p_pdf2 = nullptr;
+  vpdfl_pdf_base*         p_pdf3 = nullptr;
 
   vsl_b_ifstream bfs_in(test_path);
   TEST(("Opened "+test_path+" for reading").c_str(), (!bfs_in), false);
@@ -248,13 +250,13 @@ void test_mixture()
           "  max_its: 7\n"
           "}\n");
 
-    vcl_unique_ptr<vpdfl_builder_base>
+    std::unique_ptr<vpdfl_builder_base>
             builder = vpdfl_builder_base::new_pdf_builder_from_stream(ss);
 
     TEST("Correct builder",builder->is_a(),"vpdfl_mixture_builder");
     if (builder->is_a()=="vpdfl_mixture_builder")
     {
-      vpdfl_mixture_builder &a_builder = static_cast<vpdfl_mixture_builder&>(*builder);
+      auto &a_builder = static_cast<vpdfl_mixture_builder&>(*builder);
       std::cout<<a_builder<<std::endl;
       TEST_NEAR("Min var configured",
                 a_builder.min_var(),0.1234e-5,1e-8);
@@ -272,4 +274,3 @@ void test_mixture()
 }
 
 TESTMAIN(test_mixture);
-

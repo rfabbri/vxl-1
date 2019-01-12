@@ -8,7 +8,9 @@
 #include <vgl/vgl_plane_3d.h>
 #include <vgl/vgl_tolerance.h>
 #include <vgl/vgl_intersection.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 //:
 template <class Type>
 vgl_frustum_3d<Type>::

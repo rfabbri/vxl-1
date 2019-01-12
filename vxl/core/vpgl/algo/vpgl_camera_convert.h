@@ -10,7 +10,9 @@
 // Should template this class.
 
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_fwd.h>
 #include <vnl/vnl_fwd.h>
 #include <vpgl/vpgl_calibration_matrix.h>
@@ -42,7 +44,7 @@ class vpgl_proj_camera_convert
 
  private:
   //:default constructor (is private)
-  vpgl_proj_camera_convert();
+  vpgl_proj_camera_convert() = delete;
 };
 
 
@@ -69,7 +71,7 @@ class vpgl_perspective_camera_convert
                              vgl_h_matrix_3d<double>& norm_trans);
 
  private:
-  vpgl_perspective_camera_convert();
+  vpgl_perspective_camera_convert() = delete;
 };
 
 //:Various methods for converting to a generic camera
@@ -150,7 +152,22 @@ class vpgl_generic_camera_convert
                                               int n_levels,std::vector<int> nr, std::vector<int> nc,
                                               std::vector<unsigned int> scl,std::vector<vbl_array_2d<vgl_ray_3d<double> > > & ray_pyr );
 
-  vpgl_generic_camera_convert();
+  vpgl_generic_camera_convert() = delete;
+};
+
+//:methods for computing to an affine camera
+class vpgl_affine_camera_convert
+{
+ public:
+
+  //: Convert from rational camera using a local Euclidean coordinate system.
+  static bool convert( vpgl_local_rational_camera<double> const& camera_in,
+                       vgl_box_3d<double> const& region_of_interest,
+                       vpgl_affine_camera<double>& camera_out,
+                       unsigned int num_points=10000);
+
+ private:
+  vpgl_affine_camera_convert() = delete;
 };
 
 #endif // vpgl_camera_convert_h_

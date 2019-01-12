@@ -13,7 +13,9 @@
 
 #include <vsl/vsl_indent.h>
 #include <mbl/mbl_matxvec.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_binary_io.h>
 #include <mbl/mbl_parse_block.h>
 #include <mbl/mbl_read_props.h>
@@ -48,9 +50,7 @@ void mcal_general_ca::set_defaults()
 // Destructor
 //=======================================================================
 
-mcal_general_ca::~mcal_general_ca()
-{
-}
+mcal_general_ca::~mcal_general_ca() = default;
 
 class mcal_pair_cost1 : public vnl_cost_function
 {
@@ -69,7 +69,7 @@ class mcal_pair_cost1 : public vnl_cost_function
                   mcal_single_basis_cost& cost)
   : vnl_cost_function(1), proj1_(proj1),proj2_(proj2),mode1_(mode1),mode2_(mode2),cost_(cost) {}
 
-  double f(const vnl_vector<double>& x);
+  double f(const vnl_vector<double>& x) override;
 };
 
 double mcal_pair_cost1::f(const vnl_vector<double>& x)
@@ -112,7 +112,7 @@ class mcal_pair_cost2 : public vnl_cost_function
                   const vnl_vector<double>& mode2,
                   mcal_single_basis_cost& cost);
 
-  double f(const vnl_vector<double>& x);
+  double f(const vnl_vector<double>& x) override;
 
   void covar(const vnl_vector<double>& p1,
              const vnl_vector<double>& p2,
@@ -414,7 +414,7 @@ void mcal_general_ca::config_from_stream(std::istream & is)
   if (props.find("initial_ca")!=props.end())
   {
     std::istringstream ss(props["initial_ca"]);
-    vcl_unique_ptr<mcal_component_analyzer> ca;
+    std::unique_ptr<mcal_component_analyzer> ca;
     ca=mcal_component_analyzer::create_from_stream(ss);
     initial_ca_ = *ca;
 
@@ -424,7 +424,7 @@ void mcal_general_ca::config_from_stream(std::istream & is)
   if (props.find("basis_cost")!=props.end())
   {
     std::istringstream ss(props["basis_cost"]);
-    vcl_unique_ptr<mcal_single_basis_cost> bc;
+    std::unique_ptr<mcal_single_basis_cost> bc;
     bc=mcal_single_basis_cost::create_from_stream(ss);
     basis_cost_ = *bc;
 

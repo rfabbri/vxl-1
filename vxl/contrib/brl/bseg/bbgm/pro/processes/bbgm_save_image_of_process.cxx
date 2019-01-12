@@ -4,7 +4,9 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bbgm/bbgm_image_of.h>
 #include <bbgm/bbgm_image_sptr.h>
 #include <brdb/brdb_value.h>
@@ -38,7 +40,7 @@ bool bbgm_save_image_of_process(bprb_func_process& pro)
     return false;
   }
 
-  vsl_b_ostream& bos = static_cast<vsl_b_ostream&>(ostr);
+  auto& bos = static_cast<vsl_b_ostream&>(ostr);
 
   bbgm_image_sptr bgm = pro.get_input<bbgm_image_sptr>(1);
   if (!bgm) {
@@ -50,4 +52,3 @@ bool bbgm_save_image_of_process(bprb_func_process& pro)
 
   return true;
 }
-

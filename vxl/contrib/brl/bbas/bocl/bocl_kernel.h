@@ -14,7 +14,9 @@
 #include <vector>
 #include <iostream>
 #include <cstddef>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include "bocl_cl.h"
 #include "bocl_utils.h"
 
@@ -37,7 +39,7 @@ class bocl_kernel
 {
  public:
 
-  bocl_kernel() : kernel_(VXL_NULLPTR), program_(VXL_NULLPTR) {}
+  bocl_kernel() : kernel_(nullptr), program_(nullptr) {}
   ~bocl_kernel();
 
   //: create kernel from a list of sources, and a kernel name, and an ID
@@ -54,13 +56,13 @@ class bocl_kernel
                       std::string const& src,
                       std::string const& kernel_name,
                       std::string options,
-                      std::string id );
+                      const std::string& id );
 
   //: execute this kernel on given command queue with given workspace size
   bool execute(const cl_command_queue& cmd_queue, cl_uint dim,
                std::size_t* local_threads,
                std::size_t* global_threads,
-               std::size_t* global_offsets=VXL_NULLPTR);
+               std::size_t* global_offsets=nullptr);
 
   //: set a bocl_mem buffer arg (pushes it on the back)
   bool set_arg(bocl_mem* buffer);
@@ -131,7 +133,7 @@ class bocl_kernel
   //: for creating kernels from a list of sources
   bool load_kernel_source(std::string const& path);
   bool append_process_kernels(std::string const& path);
-  bool build_kernel_program(cl_program &program, std::string options);
+  bool build_kernel_program(cl_program &program, const std::string& options);
 };
 
 #endif

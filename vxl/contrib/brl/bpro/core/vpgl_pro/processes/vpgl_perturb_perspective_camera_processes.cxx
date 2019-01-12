@@ -18,7 +18,9 @@
 #include <vgl/algo/vgl_p_matrix.h>
 #include <bsta/bsta_random_wrapper.h>
 #if 0
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #endif
 
 struct ang_pair {
@@ -48,8 +50,8 @@ ang_pair sample_3d(double kappa)
 //: perturb the orientation of the given camera randomly in a cone around its pointing direction by the given angle
 namespace vpgl_perturb_persp_cam_orient_process_globals
 {
-  const unsigned n_inputs_ = 3;
-  const unsigned n_outputs_ = 3;
+  constexpr unsigned n_inputs_ = 3;
+  constexpr unsigned n_outputs_ = 3;
 }
 
 //: Init function
@@ -84,10 +86,10 @@ bool vpgl_perturb_persp_cam_orient_process(bprb_func_process& pro)
   // get the inputs
   unsigned i=0;
   vpgl_camera_double_sptr cam_ptr = pro.get_input<vpgl_camera_double_sptr>(i++);
-  float kappa = pro.get_input<float>(i++);
+  auto kappa = pro.get_input<float>(i++);
   bsta_random_wrapper_sptr rngw = pro.get_input<bsta_random_wrapper_sptr>(i++);
 
-  vpgl_perspective_camera<double>* cam = dynamic_cast<vpgl_perspective_camera<double>*>(cam_ptr.ptr());
+  auto* cam = dynamic_cast<vpgl_perspective_camera<double>*>(cam_ptr.ptr());
   if (!cam) {
     std::cerr << "vpgl_get_view_direction_at_point_process: couldn't cast camera\n";
     return false;
@@ -148,8 +150,8 @@ bool vpgl_perturb_persp_cam_orient_process(bprb_func_process& pro)
 //: perturb the orientation of the given camera by the given angles in a cone around its pointing direction
 namespace vpgl_rotate_persp_cam_process_globals
 {
-  const unsigned n_inputs_ = 3;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 3;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 //: Init function
@@ -186,7 +188,7 @@ bool vpgl_rotate_persp_cam_process(bprb_func_process& pro)
   ap.theta = pro.get_input<float>(i++);
   ap.phi = pro.get_input<float>(i++);
 
-  vpgl_perspective_camera<double>* cam = dynamic_cast<vpgl_perspective_camera<double>*>(cam_ptr.ptr());
+  auto* cam = dynamic_cast<vpgl_perspective_camera<double>*>(cam_ptr.ptr());
   if (!cam) {
     std::cerr << "vpgl_get_view_direction_at_point_process: couldn't cast camera\n";
     return false;
@@ -213,8 +215,8 @@ bool vpgl_rotate_persp_cam_process(bprb_func_process& pro)
 // perturb the orientation of the given camera randomly in a cone around it's pointing direction by the given angle
 namespace vpgl_perturb_loc_persp_cam_orient_process_globals
 {
-  const unsigned n_inputs_ = 3;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 3;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 //: Init function
@@ -247,10 +249,10 @@ bool vpgl_perturb_persp_loc_cam_orient_process(bprb_func_process& pro)
   // get the inputs
   unsigned i=0;
   vpgl_camera_double_sptr cam_ptr = pro.get_input<vpgl_camera_double_sptr>(i++);
-  float var = pro.get_input<float>(i++);
+  auto var = pro.get_input<float>(i++);
   bsta_random_wrapper_sptr rngw = pro.get_input<bsta_random_wrapper_sptr>(i++);
 
-  vpgl_perspective_camera<double>* cam = dynamic_cast<vpgl_perspective_camera<double>*>(cam_ptr.ptr());
+  auto* cam = dynamic_cast<vpgl_perspective_camera<double>*>(cam_ptr.ptr());
   if (!cam) {
     std::cerr << "vpgl_get_view_direction_at_point_process: couldn't cast camera\n";
     return false;
@@ -274,8 +276,8 @@ bool vpgl_perturb_persp_loc_cam_orient_process(bprb_func_process& pro)
 // sample the angle in the cone uniformly as opposed to normally in vpgl_perturb_persp_cam_orient_process
 namespace vpgl_perturb_uniform_persp_cam_orient_process_globals
 {
-  const unsigned n_inputs_ = 3;
-  const unsigned n_outputs_ = 3;
+  constexpr unsigned n_inputs_ = 3;
+  constexpr unsigned n_outputs_ = 3;
 }
 
 //: Init function
@@ -310,10 +312,10 @@ bool vpgl_perturb_uniform_persp_cam_orient_process(bprb_func_process& pro)
   // get the inputs
   unsigned i=0;
   vpgl_camera_double_sptr cam_ptr = pro.get_input<vpgl_camera_double_sptr>(i++);
-  float kappa = pro.get_input<float>(i++);
+  auto kappa = pro.get_input<float>(i++);
   bsta_random_wrapper_sptr rngw = pro.get_input<bsta_random_wrapper_sptr>(i++);
 
-  vpgl_perspective_camera<double>* cam = dynamic_cast<vpgl_perspective_camera<double>*>(cam_ptr.ptr());
+  auto* cam = dynamic_cast<vpgl_perspective_camera<double>*>(cam_ptr.ptr());
   if (!cam) {
     std::cerr << "vpgl_get_view_direction_at_point_process: couldn't cast camera\n";
     return false;
@@ -346,4 +348,3 @@ bool vpgl_perturb_uniform_persp_cam_orient_process(bprb_func_process& pro)
   pro.set_output_val<float>(2,float(ap.phi));
   return true;
 }
-

@@ -10,7 +10,9 @@
 #include <vil/vil_load.h>
 #include <vil/file_formats/vil_nitf2_image.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: set input and output types
 bool bvxm_illum_index_process_cons(bprb_func_process& pro)
@@ -53,8 +55,8 @@ bool bvxm_illum_index_process(bprb_func_process& pro)
   unsigned i = 0;
   std::string map_type = pro.get_input<std::string>(i++);
   std::string nitf_image_path = pro.get_input<std::string>(i++);
-  unsigned num_lat = pro.get_input<unsigned>(i++);
-  unsigned num_long = pro.get_input<unsigned>(i++);
+  auto num_lat = pro.get_input<unsigned>(i++);
+  auto num_long = pro.get_input<unsigned>(i++);
 
   //read and parse NITF image
 
@@ -63,7 +65,7 @@ bool bvxm_illum_index_process(bprb_func_process& pro)
   if (!image)
   {
     std::cout << "NITF image load failed in bvxm_illum_index_process\n";
-    return 0;
+    return false;
   }
 
   std::string format = image->file_format();
@@ -72,11 +74,11 @@ bool bvxm_illum_index_process(bprb_func_process& pro)
   if (prefix != "nitf")
   {
     std::cout << "source image is not NITF in bvxm_illum_index_process\n";
-    return 0;
+    return false;
   }
 
     //cast to an nitf2_image
-  vil_nitf2_image *nitf_image = static_cast<vil_nitf2_image*>(image.ptr());
+  auto *nitf_image = static_cast<vil_nitf2_image*>(image.ptr());
 
     //get NITF information
   std::vector< vil_nitf2_image_subheader* > headers = nitf_image->get_image_headers();
@@ -102,7 +104,7 @@ bool bvxm_illum_index_process(bprb_func_process& pro)
 
 
 unsigned
-bvxm_illum_index_process_globals::bin_index(std::string map_type,
+bvxm_illum_index_process_globals::bin_index(const std::string& map_type,
                                             double sun_el, double sun_az,
                                             unsigned num_lat, unsigned num_long)
 {

@@ -7,7 +7,9 @@
 #include <iostream>
 #include <fstream>
 #include "vpgl_proj_camera.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_ray_3d.h>
@@ -20,7 +22,7 @@
 //------------------------------------
 template <class T>
 vpgl_proj_camera<T>::vpgl_proj_camera() :
-  cached_svd_(VXL_NULLPTR)
+  cached_svd_(nullptr)
 {
   P_ = vnl_matrix_fixed<T,3,4>( (T)0 );
   P_(0,0) = P_(1,1) = P_(2,2) = (T)1;
@@ -30,7 +32,7 @@ vpgl_proj_camera<T>::vpgl_proj_camera() :
 template <class T>
 vpgl_proj_camera<T>::vpgl_proj_camera( const vnl_matrix_fixed<T,3,4>& camera_matrix ) :
   P_( camera_matrix ),
-  cached_svd_(VXL_NULLPTR)
+  cached_svd_(nullptr)
 {
 }
 
@@ -38,7 +40,7 @@ vpgl_proj_camera<T>::vpgl_proj_camera( const vnl_matrix_fixed<T,3,4>& camera_mat
 template <class T>
 vpgl_proj_camera<T>::vpgl_proj_camera( const T* camera_matrix ) :
   P_( camera_matrix ),
-  cached_svd_(VXL_NULLPTR)
+  cached_svd_(nullptr)
 {
 }
 
@@ -47,7 +49,7 @@ template <class T>
 vpgl_proj_camera<T>::vpgl_proj_camera( const vpgl_proj_camera& cam ) :
   vpgl_camera<T>(),
   P_( cam.get_matrix() ),
-  cached_svd_(VXL_NULLPTR)
+  cached_svd_(nullptr)
 {
 }
 
@@ -56,8 +58,8 @@ template <class T>
 const vpgl_proj_camera<T>& vpgl_proj_camera<T>::operator=( const vpgl_proj_camera& cam )
 {
   P_ = cam.get_matrix();
-  if ( cached_svd_ != VXL_NULLPTR ) delete cached_svd_;
-  cached_svd_ = VXL_NULLPTR;
+  if ( cached_svd_ != nullptr ) delete cached_svd_;
+  cached_svd_ = nullptr;
   return *this;
 }
 
@@ -65,8 +67,8 @@ const vpgl_proj_camera<T>& vpgl_proj_camera<T>::operator=( const vpgl_proj_camer
 template <class T>
 vpgl_proj_camera<T>::~vpgl_proj_camera()
 {
-  if ( cached_svd_ != VXL_NULLPTR ) delete cached_svd_;
-  cached_svd_ = VXL_NULLPTR;
+  if ( cached_svd_ != nullptr ) delete cached_svd_;
+  cached_svd_ = nullptr;
 }
 
 template <class T>
@@ -201,7 +203,7 @@ template <class T>
 vnl_svd<T>* vpgl_proj_camera<T>::svd() const
 {
   // Check if the cached copy is valid, if not recompute it.
-  if ( cached_svd_ == VXL_NULLPTR )
+  if ( cached_svd_ == nullptr )
   {
     cached_svd_ = new vnl_svd<T>(P_.as_ref());
 
@@ -218,8 +220,8 @@ template <class T>
 bool vpgl_proj_camera<T>::set_matrix( const vnl_matrix_fixed<T,3,4>& new_camera_matrix )
 {
   P_ = new_camera_matrix;
-  if ( cached_svd_ != VXL_NULLPTR ) delete cached_svd_;
-  cached_svd_ = VXL_NULLPTR;
+  if ( cached_svd_ != nullptr ) delete cached_svd_;
+  cached_svd_ = nullptr;
   return true;
 }
 
@@ -228,8 +230,8 @@ template <class T>
 bool vpgl_proj_camera<T>::set_matrix( const T* new_camera_matrix )
 {
   P_ = vnl_matrix_fixed<T,3,4>( new_camera_matrix );
-    if ( cached_svd_ != VXL_NULLPTR ) delete cached_svd_;
-    cached_svd_ = VXL_NULLPTR;
+    if ( cached_svd_ != nullptr ) delete cached_svd_;
+    cached_svd_ = nullptr;
   return true;
 }
 
@@ -382,7 +384,7 @@ image_jacobians(const vpgl_proj_camera<T>& camera,
   Dv(2,1) = -Dv(1,2);
 
 
-  const unsigned int num_pts = pts.size();
+  const std::size_t num_pts = pts.size();
   std::vector<vnl_matrix_fixed<T,2,3> > img_jac(num_pts);
 
   for (unsigned int i=0; i<num_pts; ++i)

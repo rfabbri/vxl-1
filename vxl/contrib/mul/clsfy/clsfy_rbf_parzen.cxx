@@ -9,8 +9,10 @@
 // \author
 //   Copyright: (C) 2000 British Telecommunications plc
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vsl/vsl_binary_io.h>
 #include <vsl/vsl_vector_io.h>
 #include <vnl/io/vnl_io_vector.h>

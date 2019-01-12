@@ -18,13 +18,15 @@
 #include <iostream>
 #include <iosfwd>
 #include <rsdl/rsdl_point.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class rsdl_bounding_box
 {
  private:
   //: default ctor is private!
-  rsdl_bounding_box() {}
+  rsdl_bounding_box() = default;
 
  public:
 

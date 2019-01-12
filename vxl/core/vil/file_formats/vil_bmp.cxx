@@ -1,15 +1,14 @@
 // This is core/vil/file_formats/vil_bmp.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 
 #include <iostream>
 #include <vector>
 #include <cstring>
 #include "vil_bmp.h"
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_stream.h>
 #include <vil/vil_property.h>
 #include <vil/vil_memory_chunk.h>
@@ -30,7 +29,7 @@ vil_image_resource_sptr vil_bmp_file_format::make_input_image(vil_stream* vs)
   if ( hdr.signature_valid() )
     return new vil_bmp_image(vs);
   else
-    return VXL_NULLPTR;
+    return nullptr;
 }
 
 vil_image_resource_sptr vil_bmp_file_format::make_output_image(vil_stream* vs,
@@ -341,13 +340,13 @@ bool vil_bmp_image::write_header()
   if (nplanes() == 1) // Need to write a colourmap in this case
     {
       unsigned int const n = 1<<vil_pixel_format_sizeof_components(pixel_format())*8;  // usually 256
-      vxl_byte* map = new vxl_byte[n*4];
+      auto* map = new vxl_byte[n*4];
       vxl_byte* ptr = map;
       for (unsigned int i=0; i<n; ++i, ptr+=4)
       {
         for (unsigned int j=0; j<3; ++j)
         {
-          unsigned char c = (unsigned char)i;
+          auto c = (unsigned char)i;
           ptr[j] = c;
           //is_->write(&c,1L);
         }
@@ -366,7 +365,7 @@ vil_image_view_base_sptr vil_bmp_image::get_copy_view(
   if (x0+nx > ni() || y0+ny > nj())
   {
     vil_exception_warning(vil_exception_out_of_bounds("vil_bmp_image::get_copy_view"));
-    return VXL_NULLPTR;
+    return nullptr;
   }
   //
   unsigned const bytes_per_pixel = core_hdr.bitsperpixel / 8;
@@ -427,10 +426,10 @@ vil_image_view_base_sptr vil_bmp_image::get_copy_view(
   {
     vil_exception_warning(
       vil_exception_corrupt_image_file("vil_bmp_image::get_copy_view", "BMP", ""));
-    return VXL_NULLPTR;
+    return nullptr;
   }
 
-  unsigned np;
+  unsigned np = 1;
   std::ptrdiff_t plane_step = 1;
   std::ptrdiff_t top_left_plane0_in_mem = 0;
   if( core_hdr.bitsperpixel == 8 )
@@ -455,7 +454,7 @@ vil_image_view_base_sptr vil_bmp_image::get_copy_view(
     // re-organize channel ordering from BGRA to RGBA.
     // In other words,  swap B and R
     assert( (want_bytes_per_raster & 3) == 0 );  //  must be multiple of 4
-    vxl_byte* data = reinterpret_cast<vxl_byte *>(buf->data());
+    auto* data = reinterpret_cast<vxl_byte *>(buf->data());
     vxl_byte* const data_end = data+(want_bytes_per_raster*ny);
     for(; data!=data_end; data+=4)
     {
@@ -493,7 +492,7 @@ bool vil_bmp_image::put_view(const vil_image_view_base& view,
     vil_exception_warning(vil_exception_pixel_formats_incompatible(VIL_PIXEL_FORMAT_BYTE, view.pixel_format(), "vil_bmp_image::put_view"));
     return false;
   }
-  const vil_image_view<vxl_byte> & view2 = static_cast<const vil_image_view<vxl_byte> &>(view);
+  const auto & view2 = static_cast<const vil_image_view<vxl_byte> &>(view);
 
   unsigned const bypp = nplanes();
   unsigned const rowlen = ni() * bypp;
@@ -515,7 +514,7 @@ bool vil_bmp_image::put_view(const vil_image_view_base& view,
   else if (nplanes()==3)
   {
     assert(nplanes()==3);
-    vxl_byte* buf = new vxl_byte[rowlen+padlen];
+    auto* buf = new vxl_byte[rowlen+padlen];
     for (unsigned i=rowlen; i<rowlen+padlen; ++i) buf[i]=0;
     for (unsigned j=0; j<view2.nj(); ++j)
     {
@@ -535,7 +534,7 @@ bool vil_bmp_image::put_view(const vil_image_view_base& view,
   else /*nplanes()==4*/
   {
     assert(nplanes()==4);
-    vxl_byte* buf = new vxl_byte[rowlen+padlen];
+    auto* buf = new vxl_byte[rowlen+padlen];
     for (unsigned i=rowlen; i<rowlen+padlen; ++i) buf[i]=0;
     for (unsigned j=0; j<view2.nj(); ++j)
     {

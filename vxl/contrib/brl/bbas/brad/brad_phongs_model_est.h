@@ -5,12 +5,14 @@
 #include <vector>
 #include <vnl/vnl_least_squares_function.h>
 #include <vnl/vnl_double_3.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 class brad_phongs_model
 {
  public:
   brad_phongs_model(float kd, float ks, float gamma, float normal_elev, float normal_azim);
-  ~brad_phongs_model(){}
+  ~brad_phongs_model()= default;
 
   float val(float view_elev, float view_azim, float sun_elev, float sun_azim);
   float val(vnl_double_3 view_dir, float sun_elev, float sun_azim);
@@ -49,10 +51,10 @@ class brad_phongs_model_est : public vnl_least_squares_function
                         vnl_vector<double> & obs_weights,
                         bool with_grad);
 
-  void f(vnl_vector<double> const& x, vnl_vector<double>& y);
+  void f(vnl_vector<double> const& x, vnl_vector<double>& y) override;
   float error_var(vnl_vector<double> const& x);
 
-  void gradf(vnl_vector<double> const& x, vnl_matrix<double> &J);
+  void gradf(vnl_vector<double> const& x, vnl_matrix<double> &J) override;
 
  protected:
   double sun_elev_;
@@ -68,7 +70,7 @@ class brad_phongs_model_approx
 {
  public:
   brad_phongs_model_approx(float kd, float ks, float gamma, float normal_elev, float normal_azim);
-  ~brad_phongs_model_approx(){}
+  ~brad_phongs_model_approx()= default;
 
   float val(float view_elev, float view_azim, float sun_elev, float sun_azim);
   float val(vnl_double_3 view_dir, float sun_elev, float sun_azim);
@@ -97,10 +99,10 @@ class brad_phongs_model_approx_est : public vnl_least_squares_function
                         vnl_vector<double> & obs_weights,
                         bool with_grad);
 
-  void f(vnl_vector<double> const& x, vnl_vector<double>& y);
+  void f(vnl_vector<double> const& x, vnl_vector<double>& y) override;
   float error_var(vnl_vector<double> const& x);
 
-  void gradf(vnl_vector<double> const& x, vnl_matrix<double> &J);
+  void gradf(vnl_vector<double> const& x, vnl_matrix<double> &J) override;
 
  protected:
   double sun_elev_;

@@ -4,7 +4,9 @@
 #include <volm/conf/volm_conf_object.h>
 #include <volm/conf/volm_conf_buffer.h>
 #include <vnl/vnl_random.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 static void test_volm_conf_buffer()
 {
@@ -21,7 +23,7 @@ static void test_volm_conf_buffer()
   {
     std::vector<volm_conf_object> value;
     for (unsigned i = 0; i < (k+1)*100; i++)
-      value.push_back(volm_conf_object(rnd.drand32(0.0, 360.0), rnd.drand32(0, 1000), rnd.drand32(0, 100.0), k));
+      value.emplace_back(rnd.drand32(0.0, 360.0), rnd.drand32(0, 1000), rnd.drand32(0, 100.0), k);
     values.push_back(value);
   }
 
@@ -34,8 +36,8 @@ static void test_volm_conf_buffer()
   TEST("initial current id in the buffer should be zero", index.current_id(), 0);
   TEST("initial global id in the buffer should be zero", index.global_current_id(), 0);
   TEST("initial length vector should be empty", index.length_vec().empty(), true);
-  for (unsigned k = 0; k < values.size(); k++)
-    TEST("add index to buffer", index.add_to_index(values[k]), true);
+  for (const auto & value : values)
+    TEST("add index to buffer", index.add_to_index(value), true);
   TEST("finish adding index into buffer", index.finalize(), true);
 
   // read values from binary file

@@ -40,7 +40,9 @@
 #include <map>
 #include <vector>
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_matrix_fixed.h>
 //: A histogram on the unit sphere
@@ -58,7 +60,7 @@ class bsta_spherical_histogram
                            angle_bounds az_branch_cut = B_180_180,
                            angle_bounds el_poles = B_90_90);
 
-  ~bsta_spherical_histogram() {}
+  ~bsta_spherical_histogram() = default;
 
   //: angle units e.g. RADIANS, DEG
   ang_units units() const {return units_;}

@@ -1,7 +1,4 @@
 // This is oxl/mvl/FMPlanarComputeNonLinear.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 
@@ -11,7 +8,9 @@
 #include <mvl/PairSetCorner.h>
 #include <mvl/FMatrixPlanar.h>
 #include <mvl/FMPlanarNonLinFun.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Constructor.
 // The parameter outlier_threshold is not currently used, but

@@ -22,7 +22,9 @@
 #include <iostream>
 #include <string>
 #include <vbl/vbl_ref_count.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_binary_io.h>
 #include <vgl/vgl_point_2d.h>
 #include <bsol/bsol_intrinsic_curve_2d_sptr.h>
@@ -35,12 +37,12 @@ class bcvr_cv_cor : public vbl_ref_count
  public:
   //: constructors
   bcvr_cv_cor();
-  bcvr_cv_cor(const bsol_intrinsic_curve_2d_sptr c1,
-              const bsol_intrinsic_curve_2d_sptr c2,
+  bcvr_cv_cor(const bsol_intrinsic_curve_2d_sptr& c1,
+              const bsol_intrinsic_curve_2d_sptr& c2,
               std::vector<std::pair<int,int> >& map,
               int n1);
 
-  virtual ~bcvr_cv_cor()  { poly1_ = VXL_NULLPTR; poly2_ = VXL_NULLPTR; };
+  ~bcvr_cv_cor() override  { poly1_ = nullptr; poly2_ = nullptr; };
 
   //access functions
   std::vector<vgl_point_2d<double> >& get_contour_pts1() { return pts1_; }
@@ -71,7 +73,7 @@ class bcvr_cv_cor : public vbl_ref_count
   double get_length2() { return length2_; }
 
   //: write points to a file
-  bool write_correspondence(std::string file_name, int increment = 1);
+  bool write_correspondence(const std::string& file_name, int increment = 1);
 
   vsol_polygon_2d_sptr get_poly1() { return poly1_; }
   vsol_polygon_2d_sptr get_poly2() { return poly2_; }

@@ -1,7 +1,4 @@
 // This is mul/vil3d/file_formats/vil3d_meta_image_format.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \brief Reader/Writer for meta image format images.
@@ -16,20 +13,23 @@
 //
 // The main work of loading and saving happens in vil3d_meta_image
 
-#include <iostream>
 #include <algorithm>
-#include <cstring>
-#include <cstdlib>
 #include <cstddef>
+#include <cstdlib>
+#include <cstring>
+#include <iostream>
+#include <utility>
 #include "vil3d_meta_image_format.h"
-#include <vul/vul_file.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_stream_fstream.h>
-#include <vil3d/vil3d_image_view.h>
-#include <vil3d/vil3d_property.h>
-#include <vil3d/vil3d_image_resource.h>
-#include <vil3d/vil3d_new.h>
 #include <vil3d/vil3d_copy.h>
-#include <vcl_compiler.h>
+#include <vil3d/vil3d_image_resource.h>
+#include <vil3d/vil3d_image_view.h>
+#include <vil3d/vil3d_new.h>
+#include <vil3d/vil3d_property.h>
+#include <vul/vul_file.h>
 
 //
 // Helper functions
@@ -446,14 +446,14 @@ bool vil3d_meta_image_header::check_next_header_line(const std::string &nxt_line
 std::string vil3d_meta_image_header::get_header_value(const std::string &nxt_line)
 {
   std::string::size_type pos, epos;
-  pos = nxt_line.find("=");
+  pos = nxt_line.find('=');
   if (pos == std::string::npos || pos == nxt_line.size()-1)
   {
     return "";
   }
 
-  pos = nxt_line.find_first_not_of(" ", pos+1);
-  epos = nxt_line.find_last_not_of(" ");
+  pos = nxt_line.find_first_not_of(' ', pos+1);
+  epos = nxt_line.find_last_not_of(' ');
   if (pos == std::string::npos || epos == std::string::npos)
   {
     return "";
@@ -468,7 +468,7 @@ std::string vil3d_meta_image_header::get_header_value(const std::string &nxt_lin
 bool vil3d_meta_image_header::set_header_offset(const std::string &offs)
 {
   std::string::size_type pos,epos;
-  epos=offs.find_first_of(" ");
+  epos=offs.find_first_of(' ');
   if (epos==std::string::npos)
   {
     std::cerr << "Offset does not contain three values.\n";
@@ -476,8 +476,8 @@ bool vil3d_meta_image_header::set_header_offset(const std::string &offs)
   }
 
   offset_i_=std::atof(offs.substr(0,epos).c_str());
-  pos=offs.find_first_not_of(" ",epos);
-  epos=offs.find_first_of(" ",pos);
+  pos=offs.find_first_not_of(' ',epos);
+  epos=offs.find_first_of(' ',pos);
   if (pos==std::string::npos || epos==std::string::npos)
   {
     std::cerr << "Offset does not contain three values.\n";
@@ -485,15 +485,15 @@ bool vil3d_meta_image_header::set_header_offset(const std::string &offs)
   }
 
   offset_j_=std::atof(offs.substr(pos,epos).c_str());
-  pos=offs.find_first_not_of(" ",epos);
+  pos=offs.find_first_not_of(' ',epos);
   if (pos==std::string::npos)
   {
     std::cerr << "Offset does not contain three values.\n";
     return false;
   }
   offset_k_=std::atof(offs.substr(pos).c_str());
-  epos = offs.find_first_of(" ",pos);
-  pos=offs.find_first_not_of(" ",epos);
+  epos = offs.find_first_of(' ',pos);
+  pos=offs.find_first_not_of(' ',epos);
   if (pos != std::string::npos)
   {
      std::cerr << "Offset contains more than three values.\n";
@@ -509,30 +509,30 @@ bool vil3d_meta_image_header::set_header_offset(const std::string &offs)
 bool vil3d_meta_image_header::set_header_dim_size(const std::string &dims)
 {
   std::string::size_type pos,epos;
-  epos=dims.find_first_of(" ");
+  epos=dims.find_first_of(' ');
   if (epos==std::string::npos)
   {
     std::cerr << "Dim Size does not contain three values.\n";
     return false;
   }
   dim_size_i_=std::atoi(dims.substr(0,epos).c_str());
-  pos=dims.find_first_not_of(" ",epos);
-  epos=dims.find_first_of(" ",pos);
+  pos=dims.find_first_not_of(' ',epos);
+  epos=dims.find_first_of(' ',pos);
   if (pos==std::string::npos || epos==std::string::npos)
   {
     std::cerr << "Dim Size does not contain three values.\n";
     return false;
   }
   dim_size_j_=std::atoi(dims.substr(pos,epos).c_str());
-  pos=dims.find_first_not_of(" ",epos);
+  pos=dims.find_first_not_of(' ',epos);
   if (pos==std::string::npos)
   {
     std::cerr << "Dim Size does not contain three values.\n";
     return false;
   }
   dim_size_k_=std::atoi(dims.substr(pos).c_str());
-  epos = dims.find_first_of(" ",pos);
-  pos=dims.find_first_not_of(" ",epos);
+  epos = dims.find_first_of(' ',pos);
+  pos=dims.find_first_not_of(' ',epos);
   if (pos != std::string::npos)
   {
      std::cerr << "Dim Size contains more than three values.\n";
@@ -550,30 +550,30 @@ bool vil3d_meta_image_header::set_header_dim_size(const std::string &dims)
 bool vil3d_meta_image_header::set_header_voxel_size(const std::string &vsize)
 {
   std::string::size_type pos,epos;
-  epos=vsize.find_first_of(" ");
+  epos=vsize.find_first_of(' ');
   if (epos==std::string::npos)
   {
     std::cerr << "Element Spacing/Size does not contain three values.\n";
     return false;
   }
   vox_size_i_=std::atof(vsize.substr(0,epos).c_str());
-  pos=vsize.find_first_not_of(" ",epos);
-  epos=vsize.find_first_of(" ",pos);
+  pos=vsize.find_first_not_of(' ',epos);
+  epos=vsize.find_first_of(' ',pos);
   if (pos==std::string::npos || epos==std::string::npos)
   {
     std::cerr << "Element Spacing/Size does not contain three values.\n";
     return false;
   }
   vox_size_j_=std::atof(vsize.substr(pos,epos).c_str());
-  pos=vsize.find_first_not_of(" ",epos);
+  pos=vsize.find_first_not_of(' ',epos);
   if (pos==std::string::npos)
   {
     std::cerr << "Element Spacing/Size does not contain three values.\n";
     return false;
   }
   vox_size_k_=std::atof(vsize.substr(pos).c_str());
-  epos = vsize.find_first_of(" ",pos);
-  pos=vsize.find_first_not_of(" ",epos);
+  epos = vsize.find_first_of(' ',pos);
+  pos=vsize.find_first_not_of(' ',epos);
   if (pos != std::string::npos)
   {
      std::cerr << "Element Spacing/Size contains more than three values.\n";
@@ -620,7 +620,7 @@ vil3d_image_resource_sptr vil3d_meta_image_format::make_input_image(const char *
   vil3d_meta_image_header header;
   std::string filename(fname);
 
-  if (!header.read_header(fname)) return VXL_NULLPTR;
+  if (!header.read_header(fname)) return nullptr;
   //std::cout<<"vil3d_meta_image_format::make_input_image() Header: "<<header<<std::endl;
 
   return new vil3d_meta_image(header,filename);
@@ -644,7 +644,7 @@ vil3d_image_resource_sptr vil3d_meta_image_format::make_output_image(const char 
   {
     std::cerr << "vil3d_meta_image_format::make_output_image() WARNING\n"
              << "  Unable to deal with pixel format : " << format << std::endl;
-    return VXL_NULLPTR;
+    return nullptr;
   }
 
   vil3d_meta_image_header header;
@@ -667,7 +667,7 @@ vil3d_image_resource_sptr vil3d_meta_image_format::make_output_image(const char 
   default:
       std::cerr << "vil3d_meta_image_format::make_output_image() WARNING\n"
                << "  Unable to deal with pixel format : " << format << std::endl;
-      return VXL_NULLPTR;
+      return nullptr;
   }
 
   std::string str_fname(filename);
@@ -679,7 +679,7 @@ vil3d_image_resource_sptr vil3d_meta_image_format::make_output_image(const char 
     base_filename = str_fname;
   std::string im_file = vul_file::strip_directory(base_filename);
   header.set_image_fname(im_file + ".raw");
-  if (!header.write_header(base_filename+".mhd")) return VXL_NULLPTR;
+  if (!header.write_header(base_filename+".mhd")) return nullptr;
   return new vil3d_meta_image(header,base_filename);
 }
 
@@ -691,9 +691,9 @@ vil3d_image_resource_sptr vil3d_meta_image_format::make_output_image(const char 
 // Construct an image
 //===================================================================
 vil3d_meta_image::vil3d_meta_image(const vil3d_meta_image_header &header,
-                                   const std::string &fname) :
+                                   std::string fname) :
 header_(header),
-fpath_(fname)
+fpath_(std::move(fname))
 {
   // No code necessary
 }
@@ -781,11 +781,11 @@ vil3d_image_view_base_sptr vil3d_meta_image::get_copy_view(unsigned int i0, unsi
   if (i0!=0 || ni!=header_.ni() ||
       j0!=0 || nj!=header_.nj() ||
       k0!=0 || nk!=header_.nk()   )
-    return VXL_NULLPTR;
+    return nullptr;
 
   std::string image_data_path=header_.image_fname();
   vil_smart_ptr<vil_stream> is = new vil_stream_fstream(image_data_path.c_str(),"r");
-  if (!is->ok()) return VXL_NULLPTR;
+  if (!is->ok()) return nullptr;
 
 // NOTE: See GIPL loader for more general data reading
 #define read_data_of_type(type) \
@@ -829,7 +829,7 @@ vil3d_image_view_base_sptr vil3d_meta_image::get_copy_view(unsigned int i0, unsi
    default:
     std::cout<<"ERROR: vil3d_meta_image_format::get_copy_view()\n"
             <<"Can't deal with pixel type " << pixel_format() << std::endl;
-    return VXL_NULLPTR;
+    return nullptr;
   }
 }
 
@@ -854,7 +854,7 @@ bool vil3d_meta_image::put_view(const vil3d_image_view_base &im,
 
   std::string image_data_path=fpath_+".raw";
   vil_smart_ptr<vil_stream> os = new vil_stream_fstream(image_data_path.c_str(),"w");
-  if (!os->ok()) return 0;
+  if (!os->ok()) return false;
 
   switch (pixel_format())
   {
@@ -922,7 +922,7 @@ bool vil3d_meta_image::get_property(const char *label, void *property_value) con
 {
   if (std::strcmp(vil3d_property_voxel_size, label)==0)
   {
-    float* array = static_cast<float*>(property_value);
+    auto* array = static_cast<float*>(property_value);
     // meta image stores data in mm
     array[0] = static_cast<float>(header_.vox_size_i() / 1000.0);
     array[1] = static_cast<float>(header_.vox_size_j() / 1000.0);
@@ -932,7 +932,7 @@ bool vil3d_meta_image::get_property(const char *label, void *property_value) con
 
   if (std::strcmp(vil3d_property_origin_offset, label)==0)
   {
-    float* array = static_cast<float*>(property_value);
+    auto* array = static_cast<float*>(property_value);
     array[0] = static_cast<float>((-header_.offset_i())/header_.vox_size_i());
     array[1] = static_cast<float>((-header_.offset_j())/header_.vox_size_j());
     array[2] = static_cast<float>((-header_.offset_k())/header_.vox_size_k());
@@ -941,4 +941,3 @@ bool vil3d_meta_image::get_property(const char *label, void *property_value) con
 
   return false;
 }
-

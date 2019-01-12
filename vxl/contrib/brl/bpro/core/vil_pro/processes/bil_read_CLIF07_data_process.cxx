@@ -12,7 +12,9 @@
 #include <vil/vil_image_view.h>
 
 #include <bil/bil_raw_image_istream.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Constructor
 bool bil_read_CLIF07_data_process_cons(bprb_func_process& pro)
@@ -47,7 +49,7 @@ bool bil_read_CLIF07_data_process(bprb_func_process& pro)
     std::sprintf(filename, "%s/00000%d-%06d.raw",in_dir.c_str(),camera_number,n);
     //std::stringstream ss;
     // ss << in_dir << "/00000"<<camera_number<<'-'<<std::setfill( '0' ) << std::setw(6) << n << ".raw";
-    imgNames.push_back( std::string(filename));
+    imgNames.emplace_back(filename);
   }
 
   vil_image_view<unsigned char> img( numCols, numRows );

@@ -12,7 +12,9 @@
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_point_3d.h>
 #include <vsl/vsl_basic_xml_element.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 // --------------
 // --- PARSER ---
 // --------------
@@ -34,7 +36,7 @@ void bwm_video_site_io::init_params()
   site_dir_ = "";
   video_path_ = "";
   camera_path_ = "";
-  corr_ = VXL_NULLPTR;
+  corr_ = nullptr;
   object_dir_ = "";
   fail_ = false;
 }
@@ -45,7 +47,7 @@ void bwm_video_site_io::clear()
   site_dir_ = "";
   video_path_ = "";
   camera_path_ = "";
-  corr_ = VXL_NULLPTR;
+  corr_ = nullptr;
   corrs_.clear();
   object_dir_ = "";
   fail_=false;
@@ -71,7 +73,7 @@ bool bwm_video_site_io::open(std::string const& xml_path)
 }
 
 void
-bwm_video_site_io ::cdataHandler(std::string name, std::string data)
+bwm_video_site_io ::cdataHandler(const std::string& name, std::string data)
 {
   // clean up the empty chars before and after the file paths
   trim_string(data);
@@ -88,7 +90,7 @@ bwm_video_site_io ::cdataHandler(std::string name, std::string data)
 }
 
 void
-bwm_video_site_io::handleAtts(const XML_Char** atts)
+bwm_video_site_io::handleAtts(const XML_Char**  /*atts*/)
 {
 }
 
@@ -204,8 +206,8 @@ void bwm_video_site_io::charData(const XML_Char* s, int len)
 
 void bwm_video_site_io::trim_string(std::string& s)
 {
-  int i = s.find_first_not_of(" ");
-  int j = s.find_last_not_of(" ");
+  int i = s.find_first_not_of(' ');
+  int j = s.find_last_not_of(' ');
   std::string t = s.substr(i,j-i+1);
   s = t;
 }
@@ -267,7 +269,7 @@ void bwm_video_site_io::x_write(std::string const& xml_path)
 //write the correspondences
 vsl_basic_xml_element corrs(CORRESPONDENCES_TAG);
 corrs.x_write_open(os);
-std::vector<bwm_video_corr_sptr >::iterator cit = corrs_.begin();
+auto cit = corrs_.begin();
 for (; cit != corrs_.end(); ++cit)
   (*cit)->x_write(os);
 corrs.x_write_close(os);

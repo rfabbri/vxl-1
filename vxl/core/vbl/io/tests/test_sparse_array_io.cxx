@@ -1,6 +1,8 @@
 // This is core/vbl/io/tests/test_sparse_array_io.cxx
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/io/vbl_io_sparse_array_2d.h>
 #include <vsl/vsl_binary_io.h>
 #include <vsl/vsl_indent.h>
@@ -46,7 +48,7 @@ void test_sparse_array_io()
     test_result=false;
   else {
     //check every key/data pair, require same order too.
-  vbl_sparse_array_2d<double>::const_iterator s = v_in.begin();
+  auto s = v_in.begin();
   vbl_sparse_array_2d<double>::const_iterator r;
   //N.B. relies on sensible == operator for <T>
   for (r = v_out.begin(); r != v_out.end(); ++r){

@@ -17,8 +17,10 @@
 //
 //-------------------------------------------------------------------------
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_random.h>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_vector_3d.h>
@@ -29,7 +31,7 @@ void bmsh3d_pt_set::reset_vertices_ids ()
 {
   std::vector<bmsh3d_vertex*> vertices;
 
-  std::map<int, bmsh3d_vertex*>::iterator it = vertexmap_.begin();
+  auto it = vertexmap_.begin();
   for (; it != vertexmap_.end(); it++) {
     bmsh3d_vertex* V = (*it).second;
     vertices.push_back (V);
@@ -51,7 +53,7 @@ void bmsh3d_pt_set::reset_vertices_ids ()
 //: Reset all vertices' i_value_ to 0.
 void bmsh3d_pt_set::reset_vertices_i_value (const int i_value)
 {
-  std::map<int, bmsh3d_vertex*>::iterator it = vertexmap_.begin();
+  auto it = vertexmap_.begin();
   for (; it != vertexmap_.end(); it++) {
     bmsh3d_vertex* V = (*it).second;
     V->set_i_visited (i_value);
@@ -63,7 +65,7 @@ void bmsh3d_pt_set::reset_vertices_i_value (const int i_value)
 //: Clone the point set.
 void clone_ptset (bmsh3d_pt_set* targetPS, bmsh3d_pt_set* inputPS)
 {
-  std::map<int, bmsh3d_vertex*>::iterator it = inputPS->vertexmap().begin();
+  auto it = inputPS->vertexmap().begin();
   for (; it != inputPS->vertexmap().end(); it++) {
     bmsh3d_vertex* V = (*it).second;
     bmsh3d_vertex* newV = targetPS->_new_vertex (V->id());
@@ -80,7 +82,7 @@ bool detect_bounding_box (bmsh3d_pt_set* pt_set, vgl_box_3d<double>& bbox)
   vul_printf (std::cerr, "  detect_bounding_box(): %u boundary points.\n",
               pt_set->vertexmap().size());
   bbox.empty();
-  std::map<int, bmsh3d_vertex*>::iterator it = pt_set->vertexmap().begin();
+  auto it = pt_set->vertexmap().begin();
   for (; it != pt_set->vertexmap().end(); it++) {
     bmsh3d_vertex* V = (*it).second;
     bbox.add (V->pt());
@@ -101,7 +103,7 @@ bool detect_geom_center (bmsh3d_pt_set* pt_set, vgl_point_3d<double>& C)
   }
 
   double x = 0, y = 0, z = 0;
-  std::map<int, bmsh3d_vertex*>::iterator it = pt_set->vertexmap().begin();
+  auto it = pt_set->vertexmap().begin();
   for (; it != pt_set->vertexmap().end(); it++) {
     bmsh3d_vertex* V = (*it).second;
     x += V->pt().x();
@@ -121,10 +123,10 @@ bool detect_geom_center (bmsh3d_pt_set* pt_set, vgl_point_3d<double>& C)
 
 bmsh3d_pt_set* clone_pt_set_3d (bmsh3d_pt_set* PS)
 {
-  bmsh3d_pt_set* newPS = new bmsh3d_pt_set ();
+  auto* newPS = new bmsh3d_pt_set ();
   //Clone all elements of PS.
   //Note: use _new_vertex() to create a new vertex.
-  std::map<int, bmsh3d_vertex*>::iterator it = PS->vertexmap().begin();
+  auto it = PS->vertexmap().begin();
   for (; it != PS->vertexmap().end(); it++) {
     bmsh3d_vertex* V = (*it).second;
     bmsh3d_vertex* newV = newPS->_new_vertex (V->id());
@@ -147,13 +149,13 @@ void remove_duplicate_points (bmsh3d_pt_set* pt_set)
   // index to be deleted
   std::vector<int> idToBeDeleted;
 
-  std::map<int, bmsh3d_vertex*>::iterator it1 = pt_set->vertexmap().begin();
-  std::map<int, bmsh3d_vertex*>::iterator end = pt_set->vertexmap().end();
+  auto it1 = pt_set->vertexmap().begin();
+  auto end = pt_set->vertexmap().end();
   end--;
   for (; it1 != end; it1++) {
     bmsh3d_vertex* v1 = (*it1).second;
 
-    std::map<int, bmsh3d_vertex*>::iterator it2 = it1;
+    auto it2 = it1;
     it2++;
     for (; it2 != pt_set->vertexmap().end(); it2++) {
       bmsh3d_vertex* v2 = (*it2).second;
@@ -171,9 +173,8 @@ void remove_duplicate_points (bmsh3d_pt_set* pt_set)
 
   // perform deletion
   std::cout<< "\n\tDeleting "<< idToBeDeleted.size() <<" duplicates...\n";
-  for (unsigned int i=0; i<idToBeDeleted.size(); i++) {
-    int id = idToBeDeleted[i];
-    std::map<int, bmsh3d_vertex*>::iterator it = pt_set->vertexmap().find (id);
+  for (int id : idToBeDeleted) {
+    auto it = pt_set->vertexmap().find (id);
     delete (*it).second;
     pt_set->vertexmap().erase (it);
   }
@@ -187,7 +188,7 @@ void translate_points (bmsh3d_pt_set* pt_set,
 {
   vgl_vector_3d<double> trans (tx, ty, tz);
 
-  std::map<int, bmsh3d_vertex*>::iterator it = pt_set->vertexmap().begin();
+  auto it = pt_set->vertexmap().begin();
   for (; it != pt_set->vertexmap().end(); it++) {
     bmsh3d_vertex* v = (*it).second;
     v->get_pt() += trans;
@@ -197,7 +198,7 @@ void translate_points (bmsh3d_pt_set* pt_set,
 void rotate_points (bmsh3d_pt_set* pt_set,
                     const float rx, const float ry, const float rz)
 {
-  std::map<int, bmsh3d_vertex*>::iterator it = pt_set->vertexmap().begin();
+  auto it = pt_set->vertexmap().begin();
   for (; it != pt_set->vertexmap().end(); it++) {
     bmsh3d_vertex* v = (*it).second;
 
@@ -229,7 +230,7 @@ void rotate_points (bmsh3d_pt_set* pt_set,
 void scale_points (bmsh3d_pt_set* pt_set, const float scale)
 {
   // Just multiply the coords (x, y, z) with fScale.
-  std::map<int, bmsh3d_vertex*>::iterator it = pt_set->vertexmap().begin();
+  auto it = pt_set->vertexmap().begin();
   for (; it != pt_set->vertexmap().end(); it++) {
     bmsh3d_vertex* v = (*it).second;
 
@@ -241,7 +242,7 @@ void scale_points (bmsh3d_pt_set* pt_set, const float scale)
 
 void perturb_points (bmsh3d_pt_set* pt_set, const float max_perturb)
 {
-  std::map<int, bmsh3d_vertex*>::iterator it = pt_set->vertexmap().begin();
+  auto it = pt_set->vertexmap().begin();
   for (unsigned int i=0; it != pt_set->vertexmap().end(); it++, i++) {
     bmsh3d_vertex* v = (*it).second;
     assert (v);
@@ -278,7 +279,7 @@ void crop_points (bmsh3d_pt_set* pt_set,
 
   vul_printf (std::cerr, "\tCropping %d points\n", pt_set->vertexmap().size());
 
-  std::map<int, bmsh3d_vertex*>::iterator it = pt_set->vertexmap().begin();
+  auto it = pt_set->vertexmap().begin();
   while (it != pt_set->vertexmap().end()) {
     bmsh3d_vertex* v = (*it).second;
 
@@ -289,7 +290,7 @@ void crop_points (bmsh3d_pt_set* pt_set,
         v->pt().y() > (double) maxY ||
         v->pt().z() > (double) maxZ) {
       delete v;
-      std::map<int, bmsh3d_vertex*>::iterator next = it;
+      auto next = it;
       ++next;
       pt_set->vertexmap().erase (it);
       it = next;
@@ -312,7 +313,7 @@ void shift_points_to_first_octant (bmsh3d_pt_set* pt_set)
   const vgl_vector_3d<double> shift (shiftX, shiftY, shiftZ);
 
   // 2)Move the box onto the first octant.
-  std::map<int, bmsh3d_vertex*>::iterator it = pt_set->vertexmap().begin();
+  auto it = pt_set->vertexmap().begin();
   for (; it != pt_set->vertexmap().end(); it++) {
     bmsh3d_vertex* v = (*it).second;
     v->get_pt() -= shift;
@@ -342,4 +343,3 @@ void subsample_points (bmsh3d_pt_set* pt_set, const unsigned int subsam_pts)
 
   assert (pt_set->vertexmap().size() == subsam_pts);
 }
-

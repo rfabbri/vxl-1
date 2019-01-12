@@ -1,15 +1,14 @@
 // This is core/vil1/vil1_memory_image.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 
 #include <iostream>
 #include "vil1_memory_image.h"
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vil1/vil1_image.h>
 #include <vil1/vil1_memory_image_impl.h>
@@ -121,16 +120,16 @@ vil1_memory_image& vil1_memory_image::operator= (vil1_memory_image const& that)
 
 void vil1_memory_image::resize(int width, int height)
 {
-  assert(ptr!=VXL_NULLPTR);
-  vil1_memory_image_impl* mi = (vil1_memory_image_impl*)ptr;
+  assert(ptr!=nullptr);
+  auto* mi = (vil1_memory_image_impl*)ptr;
   mi->resize(1, width, height);
   cache_from_impl;
 }
 
 void vil1_memory_image::resize(int planes, int width, int height)
 {
-  assert(ptr!=VXL_NULLPTR);
-  vil1_memory_image_impl* mi = (vil1_memory_image_impl*)ptr;
+  assert(ptr!=nullptr);
+  auto* mi = (vil1_memory_image_impl*)ptr;
   mi->resize(planes, width, height);
   cache_from_impl;
 }

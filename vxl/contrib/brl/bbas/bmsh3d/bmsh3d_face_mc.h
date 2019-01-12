@@ -17,7 +17,9 @@
 //-------------------------------------------------------------------------
 #include <iostream>
 #include <map>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include "bmsh3d_face.h"
 #include "bmsh3d_halfedge.h"
@@ -45,7 +47,7 @@ class bmsh3d_face_mc : public bmsh3d_face
   bmsh3d_face_mc (const bmsh3d_face_mc& face);
 #endif
 
-  virtual ~bmsh3d_face_mc () {}
+  ~bmsh3d_face_mc () override = default;
 
   bmsh3d_halfedge* face_mc_map(int i);
 

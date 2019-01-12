@@ -2,7 +2,9 @@
 #include <algorithm>
 #include "volm_desc_land.h"
 #include <volm/volm_io.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <volm/volm_category_io.h>
 
 #if 0
@@ -22,19 +24,19 @@ volm_desc_land::volm_desc_land(int land_type_id, std::string const& id_type)
   if (land_type_id > 0) {  // we don't want to consider invalid = 0 as one of the land types and leave the histogram as all zeros
     if (id_type.compare("geo_cover") == 0) {
       // current land_type_id is from geo cover, using volm_osm_category_io  (for phase1b)
-      std::map<int, volm_land_layer>::iterator mit = volm_osm_category_io::geo_land_table.find(land_type_id);
+      auto mit = volm_osm_category_io::geo_land_table.find(land_type_id);
       if (mit != volm_osm_category_io::geo_land_table.end())
         h_[mit->second.id_] = 1;
     }
     else if (id_type.compare("NLCD") == 0) {
       // use NLCD as input data
-      std::map<int, volm_land_layer>::iterator mit = volm_osm_category_io::nlcd_land_table.find(land_type_id);
+      auto mit = volm_osm_category_io::nlcd_land_table.find(land_type_id);
       if (mit != volm_osm_category_io::nlcd_land_table.end())
         h_[mit->second.id_] = 1;
     }
     else if (id_type.compare("volm") == 0) {
       // input land_type_id is the id defined in volm_osm_category_io
-      std::map<unsigned, volm_land_layer>::iterator mit = volm_osm_category_io::volm_land_table.find(land_type_id);
+      auto mit = volm_osm_category_io::volm_land_table.find(land_type_id);
       if (mit != volm_osm_category_io::volm_land_table.end())
         h_[mit->second.id_] = 1;
     }
@@ -43,9 +45,9 @@ volm_desc_land::volm_desc_land(int land_type_id, std::string const& id_type)
 
 std::string trim(const std::string & s)
 {
-  std::size_t start = s.find_first_not_of(" ");
+  std::size_t start = s.find_first_not_of(' ');
   if (start == std::string::npos) return "";
-  unsigned end = s.find_last_not_of(" ");
+  unsigned end = s.find_last_not_of(' ');
   return s.substr(start, 1+end-start);
 }
 
@@ -63,7 +65,7 @@ volm_desc_land::volm_desc_land(std::string& filename)
   std::string cat_name(buffer); // ifs >> cat_name;
 
   // now search in the land_type table in volm_io
-  std::map<std::string,  volm_land_layer>::iterator mit = volm_osm_category_io::volm_land_table_name.find(cat_name);
+  auto mit = volm_osm_category_io::volm_land_table_name.find(cat_name);
   if (mit != volm_osm_category_io::volm_land_table_name.end())
     h_[mit->second.id_] = 1;
 #if 0

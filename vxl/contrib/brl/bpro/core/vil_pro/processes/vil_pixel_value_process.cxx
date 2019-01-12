@@ -6,7 +6,9 @@
 // \brief Compute mean value in an image
 
 #include <vil/vil_image_view.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_rgb.h>
 
 
@@ -15,12 +17,12 @@ bool vil_pixel_value_process_cons(bprb_func_process& pro)
 {
   //this process takes 3 inputs and returns 1 output
   std::vector<std::string> input_types;
-  input_types.push_back("vil_image_view_base_sptr");
-  input_types.push_back("int");
-  input_types.push_back("int");
+  input_types.emplace_back("vil_image_view_base_sptr");
+  input_types.emplace_back("int");
+  input_types.emplace_back("int");
 
   std::vector<std::string> output_types;
-  output_types.push_back("float");  // pixel value
+  output_types.emplace_back("float");  // pixel value
   return pro.set_input_types(input_types)
      &&  pro.set_output_types(output_types);
 }
@@ -104,4 +106,3 @@ bool vil_pixel_value_process(bprb_func_process& pro)
   pro.set_output_val<float>(0, -1.0f);
   return true;
 }
-

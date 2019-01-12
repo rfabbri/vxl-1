@@ -1,7 +1,4 @@
 // This is core/vil1/file_formats/vil1_jpeg.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
@@ -15,9 +12,11 @@
 #include "vil1_jpeg_destination_mgr.h"
 #include "vil1_jpeg_compressor.h"
 
-#include <vcl_cassert.h>
-#include <vcl_climits.h> // CHAR_BIT
-#include <vcl_compiler.h>
+#include <cassert>
+#include <climits>// CHAR_BIT
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vil1/vil1_stream.h>
 #include <vil1/vil1_image.h>
@@ -53,7 +52,7 @@ char const* vil1_jpeg_file_format::tag() const
 //:
 vil1_image_impl *vil1_jpeg_file_format::make_input_image(vil1_stream *vs)
 {
-  return vil1_jpeg_file_probe(vs) ? new vil1_jpeg_generic_image(vs) : VXL_NULLPTR;
+  return vil1_jpeg_file_probe(vs) ? new vil1_jpeg_generic_image(vs) : nullptr;
 }
 
 vil1_image_impl *vil1_jpeg_file_format::make_output_image(vil1_stream *vs,
@@ -65,7 +64,7 @@ vil1_image_impl *vil1_jpeg_file_format::make_output_image(vil1_stream *vs,
                                                           vil1_component_format format)
 {
   if (format != VIL1_COMPONENT_FORMAT_UNSIGNED_INT)
-    return VXL_NULLPTR;
+    return nullptr;
   return new vil1_jpeg_generic_image(vs, planes, width, height, components, bits_per_component, format);
 }
 
@@ -74,7 +73,7 @@ vil1_image_impl *vil1_jpeg_file_format::make_output_image(vil1_stream *vs,
 // class vil1_jpeg_generic_image
 
 vil1_jpeg_generic_image::vil1_jpeg_generic_image(vil1_stream *s)
-  : jc(VXL_NULLPTR)
+  : jc(nullptr)
   , jd(new vil1_jpeg_decompressor(s))
   , stream(s)
 {
@@ -100,7 +99,7 @@ vil1_jpeg_generic_image::vil1_jpeg_generic_image(vil1_stream *s,
                                                  int bits_per_component,
                                                  vil1_component_format format)
   : jc(new vil1_jpeg_compressor(s))
-  , jd(VXL_NULLPTR)
+  , jd(nullptr)
   , stream(s)
 {
   stream->ref();
@@ -128,12 +127,12 @@ vil1_jpeg_generic_image::~vil1_jpeg_generic_image()
   // free the vil1_jpeg_stream_source_mgr allocated in vil1_jpeg_stream_xxx_set()
   if (jd)
     delete jd;
-  jd = VXL_NULLPTR;
+  jd = nullptr;
   if (jc)
     delete jc;
-  jc = VXL_NULLPTR;
+  jc = nullptr;
   stream->unref();
-  stream = VXL_NULLPTR;
+  stream = nullptr;
 }
 
 //--------------------------------------------------------------------------------
@@ -190,7 +189,7 @@ bool vil1_jpeg_generic_image::put_section(void const *buf, int x0, int y0, int w
 
   // write each scanline
   for (int i=0; i<h; ++i) {
-    JSAMPLE const *scanline = (JSAMPLE const*) ((char const*)buf + i*w*bpp);
+    auto const *scanline = (JSAMPLE const*) ((char const*)buf + i*w*bpp);
     if (!jc->write_scanline(y0+i, scanline))
       return false;
   }

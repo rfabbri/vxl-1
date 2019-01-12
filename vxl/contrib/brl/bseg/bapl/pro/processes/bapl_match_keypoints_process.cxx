@@ -33,15 +33,15 @@ bool bapl_match_keypoints_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("bapl_keypoint_set_sptr");    // first set of keypoints
-  input_types.push_back("bapl_keypoint_set_sptr");    // second set of keypoints
-  input_types.push_back("int");   // id of the first image, left image
-  input_types.push_back("int");   // id of the second image, right image
+  input_types.emplace_back("bapl_keypoint_set_sptr");    // first set of keypoints
+  input_types.emplace_back("bapl_keypoint_set_sptr");    // second set of keypoints
+  input_types.emplace_back("int");   // id of the first image, left image
+  input_types.emplace_back("int");   // id of the second image, right image
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   std::vector<std::string> output_types;
-  output_types.push_back("bapl_keypoint_match_set_sptr");
+  output_types.emplace_back("bapl_keypoint_match_set_sptr");
   ok = pro.set_output_types(output_types);
   if (!ok) return ok;
   return true;
@@ -69,8 +69,7 @@ bool bapl_match_keypoints_process(bprb_func_process& pro)
 
   std::vector<bapl_key_match> matches;
 
-  for (unsigned i=0; i<keypoints1.size(); ++i) {  // for each feature in I (first image)
-    bapl_keypoint_sptr query = keypoints1[i];
+  for (auto query : keypoints1) {  // for each feature in I (first image)
     std::vector<bapl_keypoint_sptr> match;
     bbf.n_nearest(query, match, 2, 200);       // find its two nearest neighbors, 200 is parameter value used in bundler package
     if ( vnl_vector_ssd(query->descriptor(),match[0]->descriptor()) <
@@ -95,15 +94,15 @@ bool bapl_match_display_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("vil_image_view_base_sptr"); // input image 1
-  input_types.push_back("vil_image_view_base_sptr"); // input image 2
-  input_types.push_back("bapl_keypoint_match_set_sptr");    // key matches
+  input_types.emplace_back("vil_image_view_base_sptr"); // input image 1
+  input_types.emplace_back("vil_image_view_base_sptr"); // input image 2
+  input_types.emplace_back("bapl_keypoint_match_set_sptr");    // key matches
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   std::vector<std::string> output_types;
-  output_types.push_back("vil_image_view_base_sptr"); // out img1 with keys marked same color
-  output_types.push_back("vil_image_view_base_sptr"); // out img2
+  output_types.emplace_back("vil_image_view_base_sptr"); // out img1 with keys marked same color
+  output_types.emplace_back("vil_image_view_base_sptr"); // out img2
   ok = pro.set_output_types(output_types);
   if (!ok) return ok;
   return true;
@@ -166,16 +165,15 @@ bool bapl_match_display_process(bprb_func_process& pro)
   std::vector<bapl_key_match>& matches = match_set->matches_;
 
   vnl_random rng;
-  for (unsigned i=0;i<matches.size();++i) {
-    bapl_key_match m = matches[i];
+  for (const auto& m : matches) {
     bapl_lowe_keypoint_sptr kp1;
     kp1.vertical_cast(m.first);
     bapl_lowe_keypoint_sptr kp2;
     kp2.vertical_cast(m.second);
 
-    vxl_byte color_r = (vxl_byte)rng.lrand32(0,255);
-    vxl_byte color_g = (vxl_byte)rng.lrand32(0,255);
-    vxl_byte color_b = (vxl_byte)rng.lrand32(0,255);
+    auto color_r = (vxl_byte)rng.lrand32(0,255);
+    auto color_g = (vxl_byte)rng.lrand32(0,255);
+    auto color_b = (vxl_byte)rng.lrand32(0,255);
     int ii = int(kp1->location_i()+0.5); int jj = int(kp1->location_j()+0.5);
     if (ii >= 0 && jj >= 0 && ii < (int)input_image1.ni() && jj < (int)input_image1.nj()) {
       //ipts_draw_cross(output_img1, ii,jj,int(kp1->scale()+0.5), vxl_byte(255) );
@@ -206,14 +204,14 @@ bool bapl_refine_match_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("bapl_keypoint_match_set_sptr");
-  input_types.push_back("float");  // outlier threshold
-  input_types.push_back("int"); // min number of matches to even try to compute F, if the set contains less matches just remove them all and return an empty match set
+  input_types.emplace_back("bapl_keypoint_match_set_sptr");
+  input_types.emplace_back("float");  // outlier threshold
+  input_types.emplace_back("int"); // min number of matches to even try to compute F, if the set contains less matches just remove them all and return an empty match set
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   std::vector<std::string> output_types;
-  output_types.push_back("bapl_keypoint_match_set_sptr");
+  output_types.emplace_back("bapl_keypoint_match_set_sptr");
   ok = pro.set_output_types(output_types);
   if (!ok) return ok;
   return true;
@@ -231,7 +229,7 @@ bool bapl_refine_match_process(bprb_func_process& pro)
   unsigned i=0;
   bapl_keypoint_match_set_sptr match_set = pro.get_input<bapl_keypoint_match_set_sptr>(i++);
   std::vector<bapl_key_match> matches = match_set->matches_;
-  float outlier_threshold = pro.get_input<float>(i++);
+  auto outlier_threshold = pro.get_input<float>(i++);
   int min_number_of_matches = pro.get_input<int>(i++);
   min_number_of_matches = min_number_of_matches < 9 ? 9 : min_number_of_matches;  // F computation requires at least 8 matches
 
@@ -267,14 +265,14 @@ bool bapl_load_match_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("bapl_keypoint_set_sptr"); // keypoint vector for image 1
-  input_types.push_back("bapl_keypoint_set_sptr"); // keypoint vector for image 2
-  input_types.push_back("vcl_string"); // match file name
+  input_types.emplace_back("bapl_keypoint_set_sptr"); // keypoint vector for image 1
+  input_types.emplace_back("bapl_keypoint_set_sptr"); // keypoint vector for image 2
+  input_types.emplace_back("vcl_string"); // match file name
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   std::vector<std::string> output_types;
-  output_types.push_back("bapl_keypoint_match_set_sptr"); // out img1 with keys marked same color
+  output_types.emplace_back("bapl_keypoint_match_set_sptr"); // out img1 with keys marked same color
   ok = pro.set_output_types(output_types);
   if (!ok) return ok;
   return true;
@@ -338,8 +336,8 @@ bool bapl_write_match_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("bapl_keypoint_match_set_sptr"); // keypoint vector for image 1
-  input_types.push_back("vcl_string"); // match file name
+  input_types.emplace_back("bapl_keypoint_match_set_sptr"); // keypoint vector for image 1
+  input_types.emplace_back("vcl_string"); // match file name
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
@@ -366,9 +364,7 @@ bool bapl_write_match_process(bprb_func_process& pro)
   std::ofstream ofs(input_match_file.c_str());
   ofs << input_sptr->id_left_ << ' ' << input_sptr->id_right_ << '\n'
       << matches.size() << std::endl;
-  for (unsigned i = 0; i < matches.size(); i++)
-    ofs << matches[i].first->id() << ' ' << matches[i].second->id() << std::endl;
+  for (auto & matche : matches)
+    ofs << matche.first->id() << ' ' << matche.second->id() << std::endl;
   return true;
 }
-
-

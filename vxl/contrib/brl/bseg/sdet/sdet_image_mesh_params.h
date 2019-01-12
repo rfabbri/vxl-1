@@ -14,7 +14,9 @@
 #include <iosfwd>
 #include <vbl/vbl_ref_count.h>
 #include <gevd/gevd_param_mixin.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_point_2d.h>
 
 class sdet_image_mesh_params : public gevd_param_mixin, public vbl_ref_count
@@ -26,9 +28,9 @@ class sdet_image_mesh_params : public gevd_param_mixin, public vbl_ref_count
                          double step_half_width = 5.0);
 
   sdet_image_mesh_params(const sdet_image_mesh_params& old_params);
- ~sdet_image_mesh_params() {}
+ ~sdet_image_mesh_params() override = default;
 
-  bool SanityCheck();
+  bool SanityCheck() override;
  friend
   std::ostream& operator<<(std::ostream& os, const sdet_image_mesh_params& imp);
  protected:

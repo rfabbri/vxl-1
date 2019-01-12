@@ -13,13 +13,15 @@
 #include <boxm/boxm_scene.h>
 #include <vnl/vnl_vector_fixed.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //:global variables
 namespace bvpl_grad_scene_to_bin_process_globals
 {
-  const unsigned n_inputs_ = 3;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 3;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 
@@ -57,9 +59,9 @@ bool bvpl_grad_scene_to_bin_process(bprb_func_process& pro)
 
   std::ofstream os(output_file.c_str(), std::ios::out);
 
-  if (boxm_scene<float_tree_type> *alpha_scene = dynamic_cast<boxm_scene< float_tree_type >* >(alpha_scene_base.as_pointer()))
+  if (auto *alpha_scene = dynamic_cast<boxm_scene< float_tree_type >* >(alpha_scene_base.as_pointer()))
   {
-    if (boxm_scene<grad_tree_type> *grad_scene = dynamic_cast<boxm_scene< grad_tree_type >* >(grad_scene_base.as_pointer()))
+    if (auto *grad_scene = dynamic_cast<boxm_scene< grad_tree_type >* >(grad_scene_base.as_pointer()))
     {
       double cell_length = alpha_scene->finest_cell_length();
       short finest_level = alpha_scene->finest_level();

@@ -2,17 +2,15 @@
 #include <iostream>
 #include <cmath>
 #include "vmal_operators.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_double_2.h>
 #include <vnl/vnl_cross.h>
 
-vmal_operators::vmal_operators()
-{
-}
+vmal_operators::vmal_operators() = default;
 
-vmal_operators::~vmal_operators()
-{
-}
+vmal_operators::~vmal_operators() = default;
 
 //Project the point (x0,y0) on the line [(ax,ay),(bx,by)]. (x,y) are
 //the coordinates of the projected. If (x,y) does not belong to the

@@ -4,7 +4,10 @@
 // \author Amitha Perera
 // \date   Feb 2003
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_fastops.h>
 #include <vnl/algo/vnl_svd.h>
 #include <rgrl/rgrl_util.h>
@@ -144,7 +147,7 @@ inv_map( const vnl_vector<double>& to,
          vnl_vector<double>& from,
          vnl_vector<double>& from_next_est) const
 {
-  const double epsilon = 0.01;
+  constexpr double epsilon = 0.01;
   vnl_vector<double> to_est = this->map_location(from);
 
   // compute the inverse of the Jacobian, which is the A_^-1

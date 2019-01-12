@@ -10,7 +10,9 @@
 #include <vector>
 #include "rgrl_initializer.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include "rgrl_view_sptr.h"
 #include "rgrl_mask.h"
@@ -29,19 +31,19 @@ class rgrl_initializer_inv_indexing
 {
  public:
   //: Constructor
-  rgrl_initializer_inv_indexing( rgrl_view_sptr prior_view,
+  rgrl_initializer_inv_indexing( const rgrl_view_sptr& prior_view,
                                  bool should_estimate_global_region = true,
                                  int max_num_matches_tried = -1);
 
   rgrl_initializer_inv_indexing( rgrl_mask_sptr const&     from_image_roi,
                                  rgrl_mask_sptr const&     to_image_roi,
-                                 rgrl_estimator_sptr xform_estimator = VXL_NULLPTR,
+                                 rgrl_estimator_sptr xform_estimator = nullptr,
                                  unsigned             initial_resolution = 0,
                                  bool should_estimate_global_region = true,
                                  int max_num_matches_tried = -1);
 
   //: Destructor
-  ~rgrl_initializer_inv_indexing() {}
+  ~rgrl_initializer_inv_indexing() override = default;
 
   //: Add the set of invariants from the fixed image and the set from one moving image
   //
@@ -77,7 +79,7 @@ class rgrl_initializer_inv_indexing
 
   //: Get and remove the next initial estimate from the end of the list for the current moving_set
   bool next_initial( rgrl_view_sptr  & view,
-                     rgrl_scale_sptr & prior_scale);
+                     rgrl_scale_sptr & prior_scale) override;
 
   //: Get and remove the next initial estimate from the end of the list for the current moving_set
   //  Return this match in best_match
@@ -85,7 +87,7 @@ class rgrl_initializer_inv_indexing
 
   //: return number of initializations
   //  -1 stands for unknown
-  virtual int size() const;
+  int size() const override;
 
   // Defines type-related functions
   rgrl_type_macro( rgrl_initializer_inv_indexing, rgrl_initializer );

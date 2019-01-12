@@ -7,8 +7,10 @@
 // \author Tim Cootes
 
 #include <vsl/vsl_binary_loader.h>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <mbl/mbl_parse_block.h>
 #include <mbl/mbl_read_props.h>
@@ -28,9 +30,7 @@ mfpf_region_about_lineseg::mfpf_region_about_lineseg()
 // Destructor
 //=======================================================================
 
-mfpf_region_about_lineseg::~mfpf_region_about_lineseg()
-{
-}
+mfpf_region_about_lineseg::~mfpf_region_about_lineseg() = default;
 
 //: Returns false as the region is not centred on an input point
 bool mfpf_region_about_lineseg::is_centred_on_pt() const

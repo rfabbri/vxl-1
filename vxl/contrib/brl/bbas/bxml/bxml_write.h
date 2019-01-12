@@ -1,9 +1,6 @@
 // This is brl/bbas/bxml/bxml_write.h
 #ifndef bxml_write_h_
 #define bxml_write_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief functions to write XML documents
@@ -17,7 +14,9 @@
 
 #include <iostream>
 #include "bxml_document.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Write the entire contents of \p filepath into an XML document class
 void bxml_write(const std::string& filepath, const bxml_document& doc);

@@ -1,9 +1,6 @@
 // This is core/vgl/vgl_box_2d.h
 #ifndef vgl_box_2d_h
 #define vgl_box_2d_h
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Contains class to represent a cartesian 2D bounding box.
@@ -29,7 +26,9 @@
 // \endverbatim
 
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_fwd.h> // forward declare vgl_point_2d
 
 //: Represents a cartesian 2D box

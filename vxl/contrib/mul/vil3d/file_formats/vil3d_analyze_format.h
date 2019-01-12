@@ -1,9 +1,6 @@
 // This is mul/vil3d/file_formats/vil3d_analyze_format.h
 #ifndef vil3d_analyze_format_h_
 #define vil3d_analyze_format_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Reader/Writer for analyze format images.
@@ -12,7 +9,9 @@
 
 #include <iostream>
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil3d/vil3d_file_format.h>
 
 //: Structure containing analyse header file information.
@@ -32,7 +31,7 @@ class vil3d_analyze_header
     char hkey_un0;
 
     Key() { reset(); }
-    ~Key() {}
+    ~Key() = default;
 
     void reset();
   };
@@ -65,7 +64,7 @@ class vil3d_analyze_header
     int glmin;
 
     Dimensions() { reset(); }
-    ~Dimensions() {}
+    ~Dimensions() = default;
 
     void reset();
   };
@@ -94,7 +93,7 @@ class vil3d_analyze_header
     int smin;
 
     History() { reset(); }
-    ~History() {}
+    ~History() = default;
 
     void reset();
   };
@@ -108,7 +107,7 @@ class vil3d_analyze_header
 
  public:
   vil3d_analyze_header() : swap_bytes_(false) {}
-  ~vil3d_analyze_header() {}
+  ~vil3d_analyze_header() = default;
 
   void reset();
 
@@ -157,22 +156,22 @@ class vil3d_analyze_format : public vil3d_file_format
  public:
   vil3d_analyze_format();
   //: The destructor must be virtual so that the memory chunk is destroyed.
-  virtual ~vil3d_analyze_format();
+  ~vil3d_analyze_format() override;
 
-  virtual vil3d_image_resource_sptr make_input_image(const char *) const;
+  vil3d_image_resource_sptr make_input_image(const char *) const override;
 
   //: Make a "generic_image" on which put_section may be applied.
   // The file may be opened immediately for writing so that a header can be written.
-  virtual vil3d_image_resource_sptr make_output_image(const char* filename,
+  vil3d_image_resource_sptr make_output_image(const char* filename,
                                                       unsigned ni,
                                                       unsigned nj,
                                                       unsigned nk,
                                                       unsigned nplanes,
-                                                      enum vil_pixel_format) const;
+                                                      enum vil_pixel_format) const override;
 
 
   //: default filename tag for this image.
-  virtual const char * tag() const {return "hdr";}
+  const char * tag() const override {return "hdr";}
 };
 
 //: Object which acts as an interface to an analyze format file
@@ -186,12 +185,6 @@ class vil3d_analyze_image: public vil3d_image_resource
   //: Header information
   vil3d_analyze_header header_;
 
-  //: number of planes
-  unsigned nplanes_;
-
-  //: Physical Voxel dimensions ( in mm )
-  float vox_width1_, vox_width2_, vox_width3_;
-
  public:
   //: Create object with given header and base_path, ready for reading/writing
   //  Doesn't actually load/save anything until get_copy_view() or put_view() called.
@@ -199,20 +192,20 @@ class vil3d_analyze_image: public vil3d_image_resource
   vil3d_analyze_image(const vil3d_analyze_header& header,
                       const std::string& base_path);
 
-  virtual ~vil3d_analyze_image();
+  ~vil3d_analyze_image() override;
 
   //: Dimensions:  nplanes x ni x nj x nk.
   // This concept is treated as a synonym to components.
-  virtual unsigned nplanes() const;
+  unsigned nplanes() const override;
   //: Dimensions:  nplanes x ni x nj x nk.
   // The number of pixels in each row.
-  virtual unsigned ni() const;
+  unsigned ni() const override;
   //: Dimensions:  nplanes x ni x nj x nk.
   // The number of pixels in each column.
-  virtual unsigned nj() const;
+  unsigned nj() const override;
   //: Dimensions:  nplanes x ni x nj x nk.
   // The number of slices per image.
-  virtual unsigned nk() const;
+  unsigned nk() const override;
 
   //: Basename of file (not including .hdr/.img)
   const std::string& base_path() const { return base_path_; }
@@ -221,16 +214,16 @@ class vil3d_analyze_image: public vil3d_image_resource
   const vil3d_analyze_header& header() { return header_; }
 
   //: Pixel Format.
-  virtual enum vil_pixel_format pixel_format() const;
+  enum vil_pixel_format pixel_format() const override;
 
 
   //: Create a read/write view of a copy of this data.
   // This function will always return a
   // multi-plane scalar-pixel view of the data.
   // \return 0 if unable to get view of correct size, or if resource is write-only.
-  virtual vil3d_image_view_base_sptr get_copy_view(unsigned i0, unsigned ni,
+  vil3d_image_view_base_sptr get_copy_view(unsigned i0, unsigned ni,
                                                    unsigned j0, unsigned nj,
-                                                   unsigned k0, unsigned nk) const;
+                                                   unsigned k0, unsigned nk) const override;
 
   //: Put the data in this view back into the image source.
   // The view must be of scalar components. Assign your
@@ -238,21 +231,21 @@ class vil3d_analyze_image: public vil3d_image_resource
   // \return false if failed, because e.g. resource is read-only,
   // format of view is not correct (if it is a compound pixel type, try
   // assigning it to a multi-plane scalar pixel view.)
-  virtual bool put_view(const vil3d_image_view_base& im,
-                        unsigned i0, unsigned j0, unsigned k0);
+  bool put_view(const vil3d_image_view_base& im,
+                        unsigned i0, unsigned j0, unsigned k0) override;
 
   //: Set the size of the each voxel in the i,j,k directions (mm).
   // You can get the voxel sizes via get_properties().
   // \return false if underlying image doesn't store pixel sizes.
-  virtual bool set_voxel_size_mm(float/*i*/,float/*j*/,float/*k*/);
+  bool set_voxel_size_mm(float/*i*/,float/*j*/,float/*k*/) override;
 
   //: Return a string describing the file format.
   // Only file images have a format, others return 0
-  virtual char const* file_format() const { return "analyze"; }
+  char const* file_format() const override { return "analyze"; }
 
   //: Extra property information
   // This will just return the property of the first slice in the list.
-  virtual bool get_property(char const* label, void* property_value = VXL_NULLPTR) const;
+  bool get_property(char const* label, void* property_value = nullptr) const override;
 };
 
 #endif

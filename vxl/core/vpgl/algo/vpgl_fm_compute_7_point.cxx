@@ -10,7 +10,9 @@
 #include <vnl/vnl_fwd.h>
 #include <vnl/vnl_math.h> // for twopi
 #include <vgl/algo/vgl_norm_trans_2d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //-------------------------------------------
 bool
@@ -51,7 +53,7 @@ vpgl_fm_compute_7_point::compute(
   }
 
   // Construct the design matrix from the point correspondences.
-  vnl_matrix<double> design_matrix(pr_norm.size(),9);
+  vnl_matrix<double> design_matrix(static_cast<unsigned int>(pr_norm.size()), 9);
   for ( unsigned r = 0; r < pr_norm.size(); r++ ) {
     design_matrix(r,0) = pr_norm[r].x()*pl_norm[r].x();
     design_matrix(r,1) = pr_norm[r].y()*pl_norm[r].x();

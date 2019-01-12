@@ -11,8 +11,10 @@
 #include "brip_mutual_info.h"
 
 #include "brip_histogram.h"
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 
 //: Calculate the Mutual Information between the images.

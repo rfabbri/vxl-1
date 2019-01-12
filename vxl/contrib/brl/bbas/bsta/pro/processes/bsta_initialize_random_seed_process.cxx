@@ -9,7 +9,9 @@
 //
 #include <bprb/bprb_parameters.h>
 #include <bsta/bsta_random_wrapper.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <brdb/brdb_value.h>
 
 //: sets input and output types
@@ -42,7 +44,7 @@ bool bsta_initialize_random_seed_process(bprb_func_process& pro)
   }
 
   //get the inputs
-  unsigned seed = pro.get_input<unsigned>(0);
+  auto seed = pro.get_input<unsigned>(0);
   if (!seed) {
     pro.set_output_val<bsta_random_wrapper_sptr>(0, new bsta_random_wrapper(std::clock()));
   }
@@ -51,4 +53,3 @@ bool bsta_initialize_random_seed_process(bprb_func_process& pro)
   }
   return true;
 }
-

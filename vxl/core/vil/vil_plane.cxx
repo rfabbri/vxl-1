@@ -1,7 +1,4 @@
 // This is core/vil/vil_plane.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Ian Scott.
@@ -14,7 +11,10 @@
 //-----------------------------------------------------------------------------
 
 #include "vil_plane.h"
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 vil_image_resource_sptr vil_plane(const vil_image_resource_sptr &src, unsigned p)
@@ -34,7 +34,7 @@ vil_image_view_base_sptr vil_plane_image_resource::get_copy_view(unsigned i0, un
                                                                  unsigned j0, unsigned nj) const
 {
   vil_image_view_base_sptr vs = src_->get_copy_view(i0, ni, j0, nj);
-  if (!vs) return VXL_NULLPTR;
+  if (!vs) return nullptr;
 
   switch (vs->pixel_format())
   {
@@ -58,7 +58,7 @@ vil_image_view_base_sptr vil_plane_image_resource::get_copy_view(unsigned i0, un
     macro(VIL_PIXEL_FORMAT_COMPLEX_DOUBLE , std::complex<double>)
 #undef macro
   default:
-    return VXL_NULLPTR;
+    return nullptr;
   }
 }
 
@@ -67,7 +67,7 @@ vil_image_view_base_sptr vil_plane_image_resource::get_view(unsigned i0, unsigne
                                                             unsigned j0, unsigned nj) const
 {
   vil_image_view_base_sptr vs = src_->get_view(i0, ni, j0, nj);
-  if (!vs) return VXL_NULLPTR;
+  if (!vs) return nullptr;
 
   switch (vs->pixel_format())
   {
@@ -91,7 +91,7 @@ vil_image_view_base_sptr vil_plane_image_resource::get_view(unsigned i0, unsigne
     macro(VIL_PIXEL_FORMAT_COMPLEX_DOUBLE , std::complex<double>)
 #undef macro
   default:
-    return VXL_NULLPTR;
+    return nullptr;
   }
 }
 
@@ -135,4 +135,3 @@ bool vil_plane_image_resource::put_view(const vil_image_view_base& im,
     return false;
   }
 }
-

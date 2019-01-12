@@ -2,11 +2,14 @@
 #include <iostream>
 #include <fstream>
 #include <cmath>
+#include <utility>
 #include "sdet_gauss_fit.h"
 //:
 // \file
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_point_3d.h>
 #include <vnl/vnl_math.h>
 #include <vsol/vsol_point_2d.h> // for dereferencing ps_list[j]
@@ -21,12 +24,12 @@
 // -----------------------------------------------------------------
 // constructor
 sdet_adjust_lsqr::
-    sdet_adjust_lsqr( std::vector<vgl_point_3d<double> > const& img_pts,
+    sdet_adjust_lsqr( std::vector<vgl_point_3d<double> >  img_pts,
                       unsigned int num_unknowns, unsigned int num_residuals,
                       int n_peaks)
             : vnl_least_squares_function(num_unknowns, num_residuals,
                                          vnl_least_squares_function::no_gradient)
-            , img_pts_(img_pts)
+            , img_pts_(std::move(img_pts))
             , num_pixels_(img_pts_.size())
             , n_peaks_(n_peaks)
 {
@@ -130,10 +133,10 @@ static bool init(std::vector<vgl_point_3d<double> > img_pts, std::vector<double>
 {
   //find the smallest intensity value in polygon
   plane = 65000.;
-  for (unsigned i=0; i<img_pts.size(); ++i)
+  for (auto & img_pt : img_pts)
   {
-    if ( img_pts[i].z() < plane )
-    plane = img_pts[i].z();
+    if ( img_pt.z() < plane )
+    plane = img_pt.z();
   }
 
   // With multiple peaks, finding the largest is more complex,
@@ -152,16 +155,16 @@ static bool init(std::vector<vgl_point_3d<double> > img_pts, std::vector<double>
     double xf = ps_list[j]->x() - xmin;            // "picked" values of x & y for this peak
     double yf = ps_list[j]->y() - ymin;
 
-    for (unsigned i=0; i<img_pts.size(); ++i)
+    for (auto & img_pt : img_pts)
     {
-      double dx = img_pts[i].x() - xf;
-      double dy = img_pts[i].y() - yf;
+      double dx = img_pt.x() - xf;
+      double dy = img_pt.y() - yf;
       // is this point within 2 pixels of selected peak's "picked" location??
       if (dx >= -2. && dx <= 2. && dy >= -2. && dy <= 2.)
-      if ( img_pts[i].z() > peak[j] )  {
-        peak[j] = img_pts[i].z();
-        ux[j] = img_pts[i].x();                // these are our rough guesses
-        uy[j] = img_pts[i].y();
+      if ( img_pt.z() > peak[j] )  {
+        peak[j] = img_pt.z();
+        ux[j] = img_pt.x();                // these are our rough guesses
+        uy[j] = img_pt.y();
       }
     }
 
@@ -224,7 +227,7 @@ static bool init(std::vector<vgl_point_3d<double> > img_pts, std::vector<double>
 //: Adjust the parameters of the 2d gaussian
 //    Returns adjusted fit parameters
 
-vnl_vector<double> sdet_gauss_fit::adjust( std::vector<vgl_point_3d<double> > img_pts,
+vnl_vector<double> sdet_gauss_fit::adjust( const std::vector<vgl_point_3d<double> >& img_pts,
                                            std::vector<vsol_point_2d_sptr> ps_list,
                                            int n_peaks, std::ofstream& outfile,
                                            double xmin, double ymin)
@@ -247,7 +250,7 @@ vnl_vector<double> sdet_gauss_fit::adjust( std::vector<vgl_point_3d<double> > im
   std::vector<double> syy;
   std::vector<double> sxy;
 
-  if (!init(img_pts, peak, plane, ux, uy, sxx, syy, sxy, ps_list, n_peaks, xmin, ymin))
+  if (!init(img_pts, peak, plane, ux, uy, sxx, syy, sxy, std::move(ps_list), n_peaks, xmin, ymin))
   {
     outfile << "ERROR!! sdet_gauss_fit::adjust(), Cannot init()" << std::endl;
     std::cerr << "ERROR!! sdet_gauss_fit::adjust(), Cannot init()\n";

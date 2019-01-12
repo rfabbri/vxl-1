@@ -9,7 +9,9 @@
 // \author Vishal Jain
 // \date Mar 10, 2011
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/ocl/boxm2_opencl_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -31,9 +33,9 @@
 
 namespace boxm2_ocl_merge_process_globals
 {
-    const unsigned n_inputs_ = 4;
-    const unsigned n_outputs_ = 0;
-    void compile_merge_tree_kernel(bocl_device_sptr device, bocl_kernel* merge_kernel)
+    constexpr unsigned n_inputs_ = 4;
+    constexpr unsigned n_outputs_ = 0;
+    void compile_merge_tree_kernel(const bocl_device_sptr& device, bocl_kernel* merge_kernel)
     {
         //gather all render sources... seems like a lot for rendering...
         std::vector<std::string> src_paths;
@@ -52,7 +54,7 @@ namespace boxm2_ocl_merge_process_globals
                                      " -D MOG_TYPE_8 ",
                                      "boxm2 opencl merge trees (pass one)"); //kernel identifier (for error checking)
     }
-    void compile_merge_data_kernel(bocl_device_sptr device, bocl_kernel* merge_data_kernel, std::string option)
+    void compile_merge_data_kernel(const bocl_device_sptr& device, bocl_kernel* merge_data_kernel, const std::string& option)
     {
         std::vector<std::string> src_paths;
         std::string source_dir = boxm2_ocl_util::ocl_src_root();
@@ -123,7 +125,7 @@ bool boxm2_ocl_merge_process(bprb_func_process& pro)
     bocl_device_sptr device= pro.get_input<bocl_device_sptr>(i++);
     boxm2_scene_sptr scene =pro.get_input<boxm2_scene_sptr>(i++);
     boxm2_opencl_cache_sptr opencl_cache= pro.get_input<boxm2_opencl_cache_sptr>(i++);
-    float thresh  =pro.get_input<float>(i++);
+    auto thresh  =pro.get_input<float>(i++);
 
     std::string identifier=device->device_identifier();
     // create a command queue.
@@ -141,7 +143,7 @@ bool boxm2_ocl_merge_process(bprb_func_process& pro)
     if (kernels.find(tree_identifier)==kernels.end())
     {
         std::cout<<"===========Compiling kernels==========="<<std::endl;
-        bocl_kernel * tree_kernel=new bocl_kernel();
+        auto * tree_kernel=new bocl_kernel();
         compile_merge_tree_kernel(device,tree_kernel);
         kernels[tree_identifier]=tree_kernel;
     }
@@ -149,13 +151,13 @@ bool boxm2_ocl_merge_process(bprb_func_process& pro)
     //compile the move data kernel for each data type
     std::vector<std::string> data_types = scene->appearances();
     data_types.push_back(boxm2_data_traits<BOXM2_ALPHA>::prefix());
-    for (unsigned int i=0; i<data_types.size(); ++i)
+    for (const auto & data_type : data_types)
     {
-        std::string options=get_option_string(boxm2_data_info::datasize(data_types[i]));
+        std::string options=get_option_string(boxm2_data_info::datasize(data_type));
         std::string data_identifier= identifier+options;
         if (kernels.find(data_identifier)==kernels.end())
         {
-            bocl_kernel * data_kernel=new bocl_kernel();
+            auto * data_kernel=new bocl_kernel();
             compile_merge_data_kernel(device,data_kernel,options);
             kernels[data_identifier]=data_kernel;
         }
@@ -167,7 +169,7 @@ bool boxm2_ocl_merge_process(bprb_func_process& pro)
     bocl_mem_sptr prob_thresh = new bocl_mem(device->context(), prob_buff, sizeof(float), "prob_thresh buffer");
     prob_thresh->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
     float output_arr[100];
-    for (int i=0; i<100; ++i) output_arr[i] = 0.0f;
+    for (float & i : output_arr) i = 0.0f;
     bocl_mem_sptr  cl_output=new bocl_mem(device->context(), output_arr, sizeof(float)*100, "output buffer");
     cl_output->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
     // bit lookup buffer
@@ -209,20 +211,20 @@ bool boxm2_ocl_merge_process(bprb_func_process& pro)
 
         //set up tree copy
         std::cout<<"  creating tree copy"<<std::endl;
-        bocl_mem_sptr blk_copy = new bocl_mem(device->context(), VXL_NULLPTR, numTrees*sizeof(cl_uchar16), "merge trees block copy buffer");
+        bocl_mem_sptr blk_copy = new bocl_mem(device->context(), nullptr, numTrees*sizeof(cl_uchar16), "merge trees block copy buffer");
         blk_copy->create_buffer(CL_MEM_READ_WRITE| CL_MEM_ALLOC_HOST_PTR, (queue));
 
         //set up tree size (first find num trees)
         std::cout<<"  creating tree sizes buff"<<std::endl;
-        bocl_mem_sptr tree_sizes = new bocl_mem(device->context(), VXL_NULLPTR, sizeof(cl_int)*numTrees, "merge tree sizes buffer");
+        bocl_mem_sptr tree_sizes = new bocl_mem(device->context(), nullptr, sizeof(cl_int)*numTrees, "merge tree sizes buffer");
         tree_sizes->create_buffer(CL_MEM_READ_WRITE | CL_MEM_ALLOC_HOST_PTR, (queue));
         clFinish((queue));
 
         //write the image values to the buffer
         vul_timer transfer;
-        bocl_mem* blk       = opencl_cache->get_block(scene,id);
-        bocl_mem* alpha     = opencl_cache->get_data<BOXM2_ALPHA>(scene,id);
-        bocl_mem* blk_info  = opencl_cache->loaded_block_info();
+        bocl_mem* blk = opencl_cache->get_block(scene,id);
+        bocl_mem* alpha = opencl_cache->get_data<BOXM2_ALPHA>(scene,id);
+        bocl_mem* blk_info = opencl_cache->loaded_block_info();
         transfer_time += (float) transfer.all();
         std::size_t lThreads[] = {64, 1};
         std::size_t gThreads[] = {RoundUp(numTrees,lThreads[0]), 1};
@@ -289,27 +291,27 @@ bool boxm2_ocl_merge_process(bprb_func_process& pro)
         //this vector will be passed in (listing data types to refine)
         std::vector<std::string> data_types = scene->appearances();
         data_types.push_back(boxm2_data_traits<BOXM2_ALPHA>::prefix());
-        for (unsigned int i=0; i<data_types.size(); ++i)
+        for (const auto & data_type : data_types)
         {
-            std::cout<<"  Swapping data of type: "<<data_types[i]<<std::endl;
-            std::string options=get_option_string(boxm2_data_info::datasize(data_types[i]));
+            std::cout<<"  Swapping data of type: "<<data_type<<std::endl;
+            std::string options=get_option_string(boxm2_data_info::datasize(data_type));
             std::string data_identifier= identifier+options;
             if (kernels.find(data_identifier)==kernels.end())
             {
                 std::cout<<"  boxm2_opencl_refine::Kernel for swapping datatype: "
-                        <<data_types[i]<<" and size "<<boxm2_data_info::datasize(data_types[i])
+                        <<data_type<<" and size "<<boxm2_data_info::datasize(data_type)
                         <<" is not compiled."<<std::endl;
                 return false;
             }
             bocl_kernel* kern=kernels[data_identifier];
 
             //get bocl_mem data independent of CPU pointer
-            bocl_mem* dat = opencl_cache->get_data(scene,id, data_types[i]);
+            bocl_mem* dat = opencl_cache->get_data(scene,id, data_type);
 
             //get a new data pointer (with newSize), will create CPU buffer and GPU buffer
-            std::cout<<"  new data size of "<<data_types[i]<<" is "<<newDataSize<<std::endl;
-            int dataBytes = boxm2_data_info::datasize(data_types[i]) * newDataSize;
-            bocl_mem* new_dat = new bocl_mem(device->context(), VXL_NULLPTR, dataBytes, "new data buffer " + data_types[i]);
+            std::cout<<"  new data size of "<<data_type<<" is "<<newDataSize<<std::endl;
+            int dataBytes = boxm2_data_info::datasize(data_type) * newDataSize;
+            bocl_mem* new_dat = new bocl_mem(device->context(), nullptr, dataBytes, "new data buffer " + data_type);
             new_dat->create_buffer(CL_MEM_READ_WRITE, queue);
 
             //grab the block out of the cache as well
@@ -318,7 +320,7 @@ bool boxm2_ocl_merge_process(bprb_func_process& pro)
 
             //determine swapping behavior
             int behavior_buffer[1];
-            if(data_types[i] == boxm2_data_traits<BOXM2_ALPHA>::prefix())
+            if(data_type == boxm2_data_traits<BOXM2_ALPHA>::prefix())
               behavior_buffer[0] = ALPHA_BEHAVIOR;
             else
               behavior_buffer[0] = ZERO_BEHAVIOR;
@@ -352,8 +354,8 @@ bool boxm2_ocl_merge_process(bprb_func_process& pro)
             gpu_time += kern->exec_time();
 
             ////write the data to buffer
-            opencl_cache->deep_replace_data(scene,id, data_types[i], new_dat);
-            if (data_types[i] == boxm2_data_traits<BOXM2_ALPHA>::prefix()) {
+            opencl_cache->deep_replace_data(scene,id, data_type, new_dat);
+            if (data_type == boxm2_data_traits<BOXM2_ALPHA>::prefix()) {
                 std::cout<<"   Writing refined trees."<<std::endl;
                 blk->read_to_buffer(queue);
             }
@@ -362,4 +364,3 @@ bool boxm2_ocl_merge_process(bprb_func_process& pro)
     std::cout<<" Merge GPU Time: "<<gpu_time<<", transfer time: "<<transfer_time<<std::endl;
     return true;
 }
-

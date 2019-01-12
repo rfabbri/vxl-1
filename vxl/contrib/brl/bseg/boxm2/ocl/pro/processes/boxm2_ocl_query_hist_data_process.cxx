@@ -9,7 +9,9 @@
 // \author Vishal Jain
 // \date Mar 10, 2011
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/ocl/boxm2_opencl_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -28,8 +30,8 @@
 
 namespace boxm2_ocl_query_hist_data_process_globals
 {
-  const unsigned n_inputs_ =  5;
-  const unsigned n_outputs_ = 7;
+  constexpr unsigned n_inputs_ = 5;
+  constexpr unsigned n_outputs_ = 7;
 }
 
 bool boxm2_ocl_query_hist_data_process_cons(bprb_func_process& pro)
@@ -63,15 +65,15 @@ bool boxm2_ocl_query_hist_data_process(bprb_func_process& pro)
   unsigned i = 0;
   boxm2_cache_sptr cache= pro.get_input<boxm2_cache_sptr>(i++);
   boxm2_scene_sptr scene =pro.get_input<boxm2_scene_sptr>(i++);
-  float x =pro.get_input<float>(i++);
-  float y =pro.get_input<float>(i++);
-  float z =pro.get_input<float>(i++);
-  vnl_vector_fixed<int,8> * element_int = VXL_NULLPTR;
+  auto x =pro.get_input<float>(i++);
+  auto y =pro.get_input<float>(i++);
+  auto z =pro.get_input<float>(i++);
+  vnl_vector_fixed<int,8> * element_int = nullptr;
   // set arguments
   std::vector<boxm2_block_id> block_ids = scene->get_block_ids();
-  for (std::vector<boxm2_block_id>::iterator id = block_ids.begin(); id != block_ids.end(); ++id)
+  for (auto & block_id : block_ids)
   {
-    boxm2_block_metadata mdata=scene->get_block_metadata(*id);
+    boxm2_block_metadata mdata=scene->get_block_metadata(block_id);
     vgl_vector_3d<double> dims(mdata.sub_block_dim_.x()*mdata.sub_block_num_.x(),
                                mdata.sub_block_dim_.y()*mdata.sub_block_num_.y(),
                                mdata.sub_block_dim_.z()*mdata.sub_block_num_.z());
@@ -88,7 +90,7 @@ bool boxm2_ocl_query_hist_data_process(bprb_func_process& pro)
     int index_x=(int)std::floor(local_x);
     int index_y=(int)std::floor(local_y);
     int index_z=(int)std::floor(local_z);
-    boxm2_block * blk=cache->get_block(scene, *id);
+    boxm2_block * blk=cache->get_block(scene, block_id);
 
 
     vnl_vector_fixed<unsigned char,16> treebits=blk->trees()(index_x,index_y,index_z);
@@ -98,7 +100,7 @@ bool boxm2_ocl_query_hist_data_process(bprb_func_process& pro)
     //int buff_index=(int)treebits[12]*256+(int)treebits[13];
     int data_offset=tree.get_data_index(bit_index,false);//buff_index*65536+tree.get_data_index(bit_index);
 
-    boxm2_data_base *  hist_base  = cache->get_data_base(scene, *id,boxm2_data_traits<BOXM2_BATCH_HISTOGRAM>::prefix());
+    boxm2_data_base *  hist_base = cache->get_data_base(scene, block_id,boxm2_data_traits<BOXM2_BATCH_HISTOGRAM>::prefix());
     boxm2_data<BOXM2_BATCH_HISTOGRAM> *hist_data=new boxm2_data<BOXM2_BATCH_HISTOGRAM>(hist_base->data_buffer(),hist_base->buffer_length(),hist_base->block_id());
 
     boxm2_array_1d<vnl_vector_fixed<float,8> > hist_data_array=hist_data->data();

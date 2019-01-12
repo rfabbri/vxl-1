@@ -7,8 +7,10 @@
 //:
 // \file
 #include <vsol/vsol_point_3d.h>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h>
 
 //***************************************************************************
@@ -140,9 +142,9 @@ void bsol_intrinsic_curve_3d::computeProperties()
   theta_.push_back(-1);
   thetas_.push_back(-1); thetas_.push_back(-1);
   thetass_.push_back(-1); thetass_.push_back(-1);
-  Tangent_.push_back(VXL_NULLPTR);
-  Normal_.push_back(VXL_NULLPTR); Normal_.push_back(VXL_NULLPTR);
-  Binormal_.push_back(VXL_NULLPTR); Binormal_.push_back(VXL_NULLPTR);
+  Tangent_.push_back(nullptr);
+  Normal_.push_back(nullptr); Normal_.push_back(nullptr);
+  Binormal_.push_back(nullptr); Binormal_.push_back(nullptr);
   curvature_.push_back(-1.0); curvature_.push_back(-1.0);
   torsion_.push_back(-1); torsion_.push_back(-1);
 
@@ -177,7 +179,7 @@ void bsol_intrinsic_curve_3d::computeProperties()
     double theta = std::acos(cur_dx/dLxy);
     theta_.push_back(theta);
 
-    vgl_vector_3d<double>* tangent = new vgl_vector_3d<double>(cur_dx, cur_dy, cur_dz);
+    auto* tangent = new vgl_vector_3d<double>(cur_dx, cur_dy, cur_dz);
     normalize(*tangent); //normalize the tangent vector.
     Tangent_.push_back(tangent);
 
@@ -214,11 +216,11 @@ void bsol_intrinsic_curve_3d::computeProperties()
     double normaly = cos_phi * sin_theta * phis -
                 sin_phi * cos_theta * thetas;
     double normalz = - std::sin(phi_[i]) * phis;
-    vgl_vector_3d<double>* normal = new vgl_vector_3d<double>(normalx, normaly, normalz);
+    auto* normal = new vgl_vector_3d<double>(normalx, normaly, normalz);
     normalize(*normal); //normalize the normal vector.
     Normal_.push_back(normal);
 
-    vgl_vector_3d<double>* binormal = new vgl_vector_3d<double>;
+    auto* binormal = new vgl_vector_3d<double>;
     *binormal = cross_product(*(Tangent_[i]), *normal);
     normalize(*binormal); //normalize the binormal vector.
     Binormal_.push_back(binormal);
@@ -411,12 +413,12 @@ void bsol_intrinsic_curve_3d::clear(void)
   totalAngleChange_ = 0;
 }
 
-bool bsol_intrinsic_curve_3d::LoadCON3File(std::string fileName)
+bool bsol_intrinsic_curve_3d::LoadCON3File(const std::string& fileName)
 {
   std::FILE* fp;
   char buffer[128];
 
-  if ((fp = std::fopen(fileName.c_str(), "r")) == VXL_NULLPTR) {
+  if ((fp = std::fopen(fileName.c_str(), "r")) == nullptr) {
     std::fprintf(stderr, "ERROR: Can't open input .con3 file %s.\n", fileName.c_str());
     return false;
   }
@@ -450,11 +452,11 @@ bool bsol_intrinsic_curve_3d::LoadCON3File(std::string fileName)
   return true;
 }
 
-bool bsol_intrinsic_curve_3d::SaveCON3File(std::string fileName)
+bool bsol_intrinsic_curve_3d::SaveCON3File(const std::string& fileName)
 {
   std::FILE* fp;
 
-  if ((fp = std::fopen(fileName.c_str(), "w")) == VXL_NULLPTR) {
+  if ((fp = std::fopen(fileName.c_str(), "w")) == nullptr) {
     std::fprintf(stderr, "ERROR( bsol_intrinsic_curve_3d::SaveCON3File): Can't open output .con3 file %s.\n", fileName.c_str());
     return false;
   }

@@ -5,8 +5,10 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <vgl/vgl_vector_3d.h>
 
@@ -23,8 +25,8 @@ double vpgl_triangulate_points::triangulate(
         const std::vector<vpgl_perspective_camera<double> > &cameras,
         vgl_point_3d<double> &point_3d)
 {
-    const int num_vars = 3;// One var for x, y, z of output 3d point
-    const int num_eqs = 2 * points.size();
+    constexpr int num_vars = 3;// One var for x, y, z of output 3d point
+    const int num_eqs = static_cast<const int>(2 * points.size());
 
     // Set up the least-squares solution.
     vnl_matrix<double> A(num_eqs, num_vars, 0.0);

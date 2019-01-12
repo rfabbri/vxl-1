@@ -1,9 +1,6 @@
 // This is core/vil/file_formats/vil_j2k_nitf2_pyramid_image_resource.h
 #ifndef vil_j2k_nitf2_pyramid_image_resource_h_
 #define vil_j2k_nitf2_pyramid_image_resource_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Representation of a pyramid resolution hierarchy based on JPEG2000 NITF image
@@ -15,7 +12,9 @@
 // DISTAR Case 14074
 //
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_pyramid_image_resource.h>
 #include <vil/file_formats/vil_nitf2_image.h>
 

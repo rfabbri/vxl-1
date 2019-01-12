@@ -6,14 +6,16 @@
 // \brief Base for objects which perform some form of linear component analysis.
 
 #include <string>
-#include <vcl_memory.h>
 #include <iostream>
+#include <memory>
 #include <iosfwd>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_fwd.h>
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_matrix.h>
 #include <mbl/mbl_data_wrapper.h>
-#include <vcl_compiler.h>
 
 //: Base for objects which perform some form of linear component analysis.
 // Derived classes (such as mcal_pca) generate linear modes to span
@@ -80,7 +82,7 @@ class mcal_component_analyzer
   virtual void config_from_stream(std::istream &);
 
   //: Create a concrete mcal_component_analyzer object, from a text specification.
-  static vcl_unique_ptr<mcal_component_analyzer> create_from_stream(std::istream &is);
+  static std::unique_ptr<mcal_component_analyzer> create_from_stream(std::istream &is);
 };
 
 //: Allows derived class to be loaded by base-class pointer

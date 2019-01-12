@@ -14,7 +14,9 @@
 #include <vil/vil_copy.h>
 #include <vil/vil_convert.h>
 #include <vil/algo/vil_convolve_1d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <mbl/mbl_stats_1d.h>
 #include <vil1/vil1_memory_image_of.h>
 #include <vil1/vil1_rgb.h>
@@ -23,8 +25,8 @@
 #include <vil1/vil1_convolve.h>
 #include <vil1/vil1_image_as.h>
 
-const unsigned NI=256;
-const unsigned NJ=256;
+constexpr unsigned NI = 256;
+constexpr unsigned NJ = 256;
 
 template <class T>
 double fill(vil_image_view<T>& image, int n_loops, bool print)

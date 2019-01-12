@@ -85,7 +85,9 @@
 //-----------------------------------------------------------------------------
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_ref_count.h>
 #include <vbl/vbl_bounding_box.h>
 #include <vbl/vbl_array_2d.h>
@@ -115,7 +117,7 @@ class bsol_hough_line_index :  public vbl_ref_count
       angle_range_(i.angle_range_), angle_increment_(i.angle_increment_),
       r_dim_(i.r_dim_), th_dim_(i.th_dim_), index_(i.index_) {}
 
-  ~bsol_hough_line_index();
+  ~bsol_hough_line_index() override;
 
   // Data Access---------------------------------------------------------------
 

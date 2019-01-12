@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <limits>
+#include <sstream>
 #include <imesh/imesh_fileio.h>
 #include <imesh/imesh_mesh.h>
 #include <vnl/vnl_math.h>
@@ -9,9 +10,10 @@
 #include <vgl/vgl_box_2d.h>
 #include <vgl/vgl_polygon.h>
 #include <vgl/algo/vgl_h_matrix_2d_compute_4point.h>
-#include <sstream>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_image_view.h>
 #include <vil/vil_image_resource.h>
 #include <vil/vil_load.h>
@@ -50,9 +52,9 @@ static float min_diff(vil_image_view<float> const & view0, float v1, size_t i1, 
   }
   return min_v;
 }
-static void update_hist_dem(vil_image_resource_sptr img0, vpgl_rational_camera<double>* cam0,
-                            vil_image_resource_sptr img1, vpgl_rational_camera<double>* cam1,
-                            vil_image_resource_sptr dem_resc,
+static void update_hist_dem(const vil_image_resource_sptr& img0, vpgl_rational_camera<double>* cam0,
+                            const vil_image_resource_sptr& img1, vpgl_rational_camera<double>* cam1,
+                            const vil_image_resource_sptr& dem_resc,
                             bsta_joint_histogram<float>& h, bool use_inten = true/* vs x_grad*/){
     if(!img0||!img1||!cam0||!cam1||!dem_resc)
       return;
@@ -99,11 +101,10 @@ static void update_hist_dem(vil_image_resource_sptr img0, vpgl_rational_camera<d
     double imin = std::numeric_limits<double>::max(), jmin = imin;
     double imax = 0.0, jmax = 0.0;
     std::vector<vgl_point_2d<double> > verts;
-    for(std::vector<vgl_point_3d<double> >::iterator cit = corns.begin();
-        cit != corns.end(); ++cit){
+    for(auto & corn : corns){
       double id, jd;
-      cam1->project(cit->x(), cit->y(), cit->z(), id, jd);
-      verts.push_back(vgl_point_2d<double>(id, jd));
+      cam1->project(corn.x(), corn.y(), corn.z(), id, jd);
+      verts.emplace_back(id, jd);
       if(id<imin) imin = id;
       if(jd<jmin) jmin = jd;
       if(id>imax) imax = id;
@@ -178,11 +179,11 @@ static void test_dem_appear()
     cam0->project(verts(i, 0), verts(i, 1), verts(i, 2), u0, v0);
     vgl_point_2d<double> p2d0(u0, v0);
     verts_2d_0.push_back(p2d0); bb0.add(p2d0);
-    hverts_2d_0.push_back(vgl_homg_point_2d<double>(p2d0));
+    hverts_2d_0.emplace_back(p2d0);
     cam1->project(verts(i, 0), verts(i, 1), verts(i, 2), u1, v1);
     vgl_point_2d<double> p2d1(u1, v1);
     verts_2d_1.push_back(p2d1); bb1.add(p2d1);
-    hverts_2d_1.push_back(vgl_homg_point_2d<double>(p2d1));
+    hverts_2d_1.emplace_back(p2d1);
   }
   vgl_polygon<double> poly0(verts_2d_0), poly1(verts_2d_1);
   size_t ni0 = vnl_math::rnd(bb0.width()), nj0 = vnl_math::rnd(bb0.height());

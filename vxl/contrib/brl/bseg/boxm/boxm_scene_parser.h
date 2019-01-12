@@ -9,7 +9,9 @@
  #define _LIB
 #endif
 #include <expatpp.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vpgl/vpgl_lvcs.h>
 #include <vgl/vgl_point_3d.h>
@@ -35,12 +37,12 @@ class boxm_scene_parser : public expatpp
  public:
   boxm_scene_parser();
 
-  ~boxm_scene_parser(void) {}
+  ~boxm_scene_parser(void) override = default;
 
    bool lvcs(vpgl_lvcs& lvcs);
-   vgl_point_3d<double> origin() const { return vgl_point_3d<double>(local_orig_x_,local_orig_y_,local_orig_z_); }
-   vgl_vector_3d<double> block_dim() const { return vgl_vector_3d<double>(block_dim_x_,block_dim_y_,block_dim_z_); }
-   vgl_vector_3d<unsigned> block_nums() const { return vgl_vector_3d<unsigned>(block_num_x_,block_num_y_,block_num_z_); }
+   vgl_point_3d<double> origin() const { return {local_orig_x_,local_orig_y_,local_orig_z_}; }
+   vgl_vector_3d<double> block_dim() const { return {block_dim_x_,block_dim_y_,block_dim_z_}; }
+   vgl_vector_3d<unsigned> block_nums() const { return {block_num_x_,block_num_y_,block_num_z_}; }
    void paths(std::string& scene_path, std::string& block_pref) { scene_path=path_; block_pref=block_pref_; }
    std::string app_model() const { return app_model_; }
    bool multi_bin() const { return multi_bin_; }
@@ -54,9 +56,9 @@ class boxm_scene_parser : public expatpp
    float p_init() const { return p_init_; }
 
  private:
-  virtual void startElement(const XML_Char* name, const XML_Char** atts);
-  virtual void endElement(const XML_Char* /*name*/) {}
-  virtual void charData(const XML_Char* /*s*/, int /*len*/) {}
+  void startElement(const XML_Char* name, const XML_Char** atts) override;
+  void endElement(const XML_Char* /*name*/) override {}
+  void charData(const XML_Char* /*s*/, int /*len*/) override {}
 
   void init_params();
 

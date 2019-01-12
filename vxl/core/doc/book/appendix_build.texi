@@ -292,9 +292,9 @@ ENDIF( BUILD_TESTING )
 
 # Same goes for examples.
 
-IF( BUILD_EXAMPLES )
+IF( VXL_BUILD_EXAMPLES )
   add_subdirectory(examples)
-ENDIF( BUILD_EXAMPLES )
+ENDIF( VXL_BUILD_EXAMPLES )
 
 @end example
 
@@ -456,10 +456,10 @@ are in @file{$VXLSRC/config/cmake/Modules/}.
 
 @table @asis
 @item  @bullet{} CMake: @code{WIN32} (defined by CMake, not in a file)
-@itemx @bullet{} Preprocessor: @code{VCL_WIN32} (@file{vcl_compiler.h}, included by each @file{vcl_*.h} file)
+@itemx @bullet{} Preprocessor: @code{_WIN32} (@file{vcl_compiler.h}, included by each @file{vcl_*.h} file)
 The Windows API is available.  Keep in mind that @code{WIN32} is
 defined under Cygwin, so it does not imply use of MSVC++.  Make sure
-you don't really want @code{HAS_MFC} or @code{VCL_VC} instead.
+you don't really want @code{HAS_MFC} or @code{_MSC_VER} instead.
 
 @item  @bullet{} CMake: @code{UNIX} (defined by CMake, not in a file)
 @itemx @bullet{} Preprocessor: system dependent
@@ -469,11 +469,6 @@ defined under Cygwin.
 @item  @bullet{} CMake: @code{CYGWIN} (defined by CMake, not in a file)
 @itemx @bullet{} Preprocessor: @code{__CYGWIN__} (gcc under Cygwin)
 The Cygwin API is present.
-
-@item  @bullet{} CMake: @code{SOLARIS} (VXL top level @file{UseVXL.cmake} file)
-@itemx @bullet{} Preprocessor: [???]
-The OS is Solaris.  This variable is set in the top level
-@file{CMakeLists.txt} file.
 
 @item  @bullet{} CMake: @code{MODULE_PATH} (VXL top level @file{CMakeLists.txt} file)
 @itemx @bullet{} Preprocessor: (none)

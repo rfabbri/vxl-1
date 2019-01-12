@@ -4,7 +4,9 @@
 #include <iostream>
 #include <cmath>
 #include "vipl_gaussian_convolution.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 template <class ImgIn,class ImgOut,class DataIn,class DataOut,class PixelItr>
 bool vipl_gaussian_convolution <ImgIn,ImgOut,DataIn,DataOut,PixelItr> :: section_applyop()
@@ -88,7 +90,7 @@ bool vipl_gaussian_convolution <ImgIn,ImgOut,DataIn,DataOut,PixelItr> :: preop()
 template <class ImgIn,class ImgOut,class DataIn,class DataOut,class PixelItr>
 bool vipl_gaussian_convolution <ImgIn,ImgOut,DataIn,DataOut,PixelItr> :: postop()
 {
-  delete[] ref_mask(); ref_mask()=VXL_NULLPTR;
+  delete[] ref_mask(); ref_mask()=nullptr;
   return true;
 }
 

@@ -1,9 +1,6 @@
 // This is oxl/mvl/ImageMetric.h
 #ifndef ImageMetric_h_
 #define ImageMetric_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Converting between image and metric coordinates
@@ -35,7 +32,9 @@
 #include <iosfwd>
 #include <vnl/vnl_fwd.h>
 #include <vgl/vgl_fwd.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 class HomgPoint2D;
 class HomgLineSeg2D;
 class HomgLine2D;
@@ -45,8 +44,8 @@ class ImageMetric
 {
  public:
   // Constructors/Destructors--------------------------------------------------
-  ImageMetric() {}
-  virtual ~ImageMetric() {}
+  ImageMetric() = default;
+  virtual ~ImageMetric() = default;
   //ImageMetric(ImageMetric const& that); - use default
   //ImageMetric& operator=(ImageMetric const& that); - use default
 

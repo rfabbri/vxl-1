@@ -16,10 +16,12 @@
 // \author Andrew Miller
 // \date   16 Dec 2010
 //
-#include <boxm2/basic/boxm2_block_id.h>
 #include <iosfwd>
 #include <iostream>
-#include <vcl_compiler.h>
+#include <boxm2/basic/boxm2_block_id.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_box_3d.h>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_vector_3d.h>
@@ -89,12 +91,12 @@ public:
   //: bounding box for this block
   vgl_box_3d<double> bbox() const;
   vgl_box_3d<double> bbox(int x, int y, int z) const {
-    return vgl_box_3d<double>(local_origin_.x() + x * sub_block_dim_.x(),
+    return {local_origin_.x() + x * sub_block_dim_.x(),
                               local_origin_.y() + y * sub_block_dim_.y(),
                               local_origin_.z() + z * sub_block_dim_.z(),
                               local_origin_.x() + (x + 1) * sub_block_dim_.x(),
                               local_origin_.y() + (y + 1) * sub_block_dim_.y(),
-                              local_origin_.z() + (z + 1) * sub_block_dim_.z());
+                              local_origin_.z() + (z + 1) * sub_block_dim_.z()};
   }
 };
 

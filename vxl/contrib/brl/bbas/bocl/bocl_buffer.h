@@ -15,7 +15,9 @@
 #include <iostream>
 #include <cstddef>
 #include "bocl_cl.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #define MEM_SUCCESS 1
 #define MEM_FAILURE 0

@@ -11,7 +11,9 @@
 #include <algorithm>
 #include <istream>
 #include <iterator>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <mbl/mbl_exception.h>
 
 //: Read a sequence of PODs from a stream.

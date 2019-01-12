@@ -8,7 +8,9 @@
 #include <bprb/bprb_parameters.h>
 
 #ifdef DEBUG
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #endif
 
 #include <brdb/brdb_value.h>
@@ -44,7 +46,7 @@ bool bvrml_write_box_process_cons(bprb_func_process& pro)
   bool good = pro.set_input_types(input_types_) &&
               pro.set_output_types(output_types_);
 
-  brdb_value_sptr idxw = new brdb_value_t<bool>(1);
+  brdb_value_sptr idxw = new brdb_value_t<bool>(true);
   pro.set_input(7, idxw);
   brdb_value_sptr idxr = new brdb_value_t<float>(1.0f);
   pro.set_input(8, idxr);
@@ -68,17 +70,17 @@ bool bvrml_write_box_process(bprb_func_process& pro)
   }
     //get the inputs
   std::string fname = pro.get_input<std::string>(0);
-  double xmin = pro.get_input<double>(1);
-  double ymin = pro.get_input<double>(2);
-  double zmin = pro.get_input<double>(3);
-  double xmax = pro.get_input<double>(4);
-  double ymax = pro.get_input<double>(5);
-  double zmax = pro.get_input<double>(6);
+  auto xmin = pro.get_input<double>(1);
+  auto ymin = pro.get_input<double>(2);
+  auto zmin = pro.get_input<double>(3);
+  auto xmax = pro.get_input<double>(4);
+  auto ymax = pro.get_input<double>(5);
+  auto zmax = pro.get_input<double>(6);
   bool wire = pro.get_input<bool>(7);
-  float r = pro.get_input<float>(8);
-  float g = pro.get_input<float>(9);
-  float b = pro.get_input<float>(10);
-  float transparency = pro.get_input<float>(11);
+  auto r = pro.get_input<float>(8);
+  auto g = pro.get_input<float>(9);
+  auto b = pro.get_input<float>(10);
+  auto transparency = pro.get_input<float>(11);
 
   std::ofstream ofs(fname.c_str(), std::ios::app);
   vgl_box_3d<double> box(xmin, ymin, zmin, xmax, ymax, zmax);
@@ -124,13 +126,13 @@ bool bvrml_write_perspective_cam_process(bprb_func_process& pro)
     //get the inputs
   std::string fname = pro.get_input<std::string>(0);
   vpgl_camera_double_sptr camera = pro.get_input<vpgl_camera_double_sptr>(1);
-  float rad = pro.get_input<float>(2);
-  float axis_len = pro.get_input<float>(3);
-  float red = pro.get_input<float>(4);
-  float green = pro.get_input<float>(5);
-  float blue = pro.get_input<float>(6);
+  auto rad = pro.get_input<float>(2);
+  auto axis_len = pro.get_input<float>(3);
+  auto red = pro.get_input<float>(4);
+  auto green = pro.get_input<float>(5);
+  auto blue = pro.get_input<float>(6);
 
-  vpgl_perspective_camera<double> *cam = dynamic_cast<vpgl_perspective_camera<double>*>(camera.as_pointer());
+  auto *cam = dynamic_cast<vpgl_perspective_camera<double>*>(camera.as_pointer());
   if (!cam) {
     std::cerr << "error: could not convert camera input to a vpgl_perspective_camera\n";
     return false;
@@ -179,7 +181,7 @@ bool bvrml_write_origin_and_axes_process(bprb_func_process& pro)
   }
     //get the inputs
   std::string fname = pro.get_input<std::string>(0);
-  float len = pro.get_input<float>(1);
+  auto len = pro.get_input<float>(1);
 
   std::ofstream ofs(fname.c_str(), std::ios::app);
 
@@ -231,13 +233,13 @@ bool bvrml_write_point_process(bprb_func_process& pro)
 
   //get the inputs
   std::string fname = pro.get_input<std::string>(0);
-  float x = pro.get_input<float>(1);
-  float y = pro.get_input<float>(2);
-  float z = pro.get_input<float>(3);
-  float rad = pro.get_input<float>(4);
-  float red = pro.get_input<float>(5);
-  float green = pro.get_input<float>(6);
-  float blue = pro.get_input<float>(7);
+  auto x = pro.get_input<float>(1);
+  auto y = pro.get_input<float>(2);
+  auto z = pro.get_input<float>(3);
+  auto rad = pro.get_input<float>(4);
+  auto red = pro.get_input<float>(5);
+  auto green = pro.get_input<float>(6);
+  auto blue = pro.get_input<float>(7);
 
   std::ofstream ofs(fname.c_str(), std::ios::app);
 
@@ -285,15 +287,15 @@ bool bvrml_write_line_process(bprb_func_process& pro)
 
   //get the inputs
   std::string fname = pro.get_input<std::string>(0);
-  float x1 = pro.get_input<float>(1);
-  float y1 = pro.get_input<float>(2);
-  float z1 = pro.get_input<float>(3);
-  float x2 = pro.get_input<float>(4);
-  float y2 = pro.get_input<float>(5);
-  float z2 = pro.get_input<float>(6);
-  float red = pro.get_input<float>(7);
-  float green = pro.get_input<float>(8);
-  float blue = pro.get_input<float>(9);
+  auto x1 = pro.get_input<float>(1);
+  auto y1 = pro.get_input<float>(2);
+  auto z1 = pro.get_input<float>(3);
+  auto x2 = pro.get_input<float>(4);
+  auto y2 = pro.get_input<float>(5);
+  auto z2 = pro.get_input<float>(6);
+  auto red = pro.get_input<float>(7);
+  auto green = pro.get_input<float>(8);
+  auto blue = pro.get_input<float>(9);
 
   std::ofstream ofs(fname.c_str(), std::ios::app);
 
@@ -305,4 +307,3 @@ bool bvrml_write_line_process(bprb_func_process& pro)
 
   return true;
 }
-

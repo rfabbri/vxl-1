@@ -8,8 +8,10 @@
 // \date   Oct 99
 // \brief  See vgui_utils.h for a description of this file.
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <vil1/vil1_rgba.h>
 #include <vil1/vil1_save.h>

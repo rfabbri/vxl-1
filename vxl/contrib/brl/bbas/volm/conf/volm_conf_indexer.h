@@ -15,10 +15,13 @@
 
 #include <iostream>
 #include <string>
+#include <utility>
 #include <vector>
 #include <vbl/vbl_ref_count.h>
 #include <vbl/vbl_smart_ptr.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <volm/volm_loc_hyp.h>
 #include <volm/volm_loc_hyp_sptr.h>
 #include <volm/volm_geo_index.h>
@@ -34,11 +37,11 @@ class volm_conf_indexer : public vbl_ref_count
 {
 public:
   // ================ constructor ===================
-  volm_conf_indexer() : out_index_folder_(""), loc_root_(VXL_NULLPTR), current_leaf_id_(0), tile_id_(0) { loc_leaves_.clear(); }
-  volm_conf_indexer(std::string const& out_index_folder)
-    : out_index_folder_(out_index_folder), loc_root_(VXL_NULLPTR), current_leaf_id_(0), tile_id_(0) { loc_leaves_.clear(); }
+  volm_conf_indexer() : out_index_folder_(""), loc_root_(nullptr), current_leaf_id_(0), tile_id_(0) { loc_leaves_.clear(); }
+  volm_conf_indexer(std::string  out_index_folder)
+    : out_index_folder_(std::move(out_index_folder)), loc_root_(nullptr), current_leaf_id_(0), tile_id_(0) { loc_leaves_.clear(); }
 
-  ~volm_conf_indexer() {}
+  ~volm_conf_indexer() override = default;
 
   // =================== access =====================
   volm_geo_index_node_sptr loc_root()  const { return loc_root_; }

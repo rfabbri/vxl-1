@@ -1,6 +1,8 @@
 #include <iostream>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <brip/brip_label_equivalence.h>
 
 static void test_label_equivalence()
@@ -21,9 +23,8 @@ static void test_label_equivalence()
   {
     std::set<unsigned>& eqs = (*mit).second;
     std::cout << '(' ;
-    for (std::set<unsigned>::iterator sit = eqs.begin();
-         sit != eqs.end(); ++sit)
-      std::cout << *sit << ' ';
+    for (const auto & eq : eqs)
+      std::cout << eq << ' ';
     std::cout << ")\n";
     good = eqs.size() == 7;
   }
@@ -42,9 +43,8 @@ static void test_label_equivalence()
   {
     std::set<unsigned>& eqs = (*mit).second;
     std::cout << '(' ;
-    for (std::set<unsigned>::iterator sit = eqs.begin();
-         sit != eqs.end(); ++sit)
-      std::cout << *sit << ' ';
+    for (const auto & eq : eqs)
+      std::cout << eq << ' ';
     std::cout << ")\n";
     good = good&& eqs.size() == 7;
   }
@@ -62,9 +62,8 @@ static void test_label_equivalence()
     std::set<unsigned>& eqs = (*mit).second;
     n+= eqs.size();
     std::cout << '(' ;
-    for (std::set<unsigned>::iterator sit = eqs.begin();
-         sit != eqs.end(); ++sit)
-      std::cout << *sit << ' ';
+    for (const auto & eq : eqs)
+      std::cout << eq << ' ';
     std::cout << ")\n";
   }
   good = good && n ==7;

@@ -10,7 +10,9 @@
 #include <boxm2/boxm2_data.h>
 #include <boxm2/basic/boxm2_block_id.h>
 #include <boxm2/io/boxm2_stream_cache.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <brad/brad_image_metadata.h>
 #include <brad/brad_atmospheric_parameters.h>
@@ -30,7 +32,7 @@ class boxm2_compute_normal_albedo_functor
 
   bool init_data(std::vector<brad_image_metadata> const& metadata,
                  std::vector<brad_atmospheric_parameters> const& atm_params,
-                 boxm2_stream_cache_sptr str_cache,
+                 const boxm2_stream_cache_sptr& str_cache,
                  boxm2_data_base * alpha_data,
                  boxm2_data_base * normal_albedo_model);
 

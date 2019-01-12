@@ -13,12 +13,15 @@
 //                                   add probability integration over a box
 // \endverbatim
 
+#include <utility>
 #include <vector>
 #include <iostream>
 #include <algorithm>
 #include "bsta_distribution.h"
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include "bsta_sampler.h"
 #include <vpdl/vpdt/vpdt_dist_traits.h>
 #include <vnl/vnl_random.h>
@@ -48,8 +51,8 @@ class bsta_mixture : public bsta_distribution<typename dist_::math_type,
     //: Constructor
     component(): distribution(), weight(T(0)) {}
     //: Constructor
-    component(const dist_& d, const T& w = T(0) )
-      : distribution(d), weight(w) {}
+    component(dist_  d, const T& w = T(0) )
+      : distribution(std::move(d)), weight(w) {}
 
     //: Used to sort by decreasing weight
     bool operator< (const component& rhs) const
@@ -88,11 +91,11 @@ class bsta_mixture : public bsta_distribution<typename dist_::math_type,
 
  public:
   // Default Constructor
-  bsta_mixture<dist_>() {}
+  bsta_mixture<dist_>() = default;
 
   // Copy Constructor
   bsta_mixture<dist_>(const bsta_mixture<dist_>& other)
-    : components_(other.components_.size(),VXL_NULLPTR)
+    : components_(other.components_.size(),nullptr)
   {
     // deep copy of the data
     for (unsigned int i=0; i<components_.size(); ++i){

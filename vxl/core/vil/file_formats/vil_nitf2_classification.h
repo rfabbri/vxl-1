@@ -10,7 +10,9 @@
 #include <utility>
 #include "vil_nitf2.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class vil_nitf2_field_definitions;
 
@@ -56,11 +58,11 @@ public:
   // of returning them.
   static void add_field_defs(
     vil_nitf2_field_definitions* defs, const file_version& version,
-    std::string prefix, std::string pretty_name_prefix);
+    std::string prefix, const std::string& pretty_name_prefix);
 
 private:
   // Purely static class; don't instantiate.
-  vil_nitf2_classification();
+  vil_nitf2_classification() = delete;
 
   // A cache of field definitions, indexed by version, tag_prefix and
   // pretty_name_prefix.

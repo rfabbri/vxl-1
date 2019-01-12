@@ -6,8 +6,10 @@
 // \author Tim Cootes
 // \brief Functions to construct linear constraints as rows in a matrix
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 //: Defines constraint on elements of Q of form a'Qb=r
 //  Q is a symmetric matrix, with n(n+1)/2 independent elements

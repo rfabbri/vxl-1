@@ -1,9 +1,6 @@
 // This is core/vil/vil_image_resource_plugin.h
 #ifndef vil_image_resource_plugin_h_
 #define vil_image_resource_plugin_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Interface for loading new image formats
@@ -13,7 +10,9 @@
 // \date        Sun Mar 17 22:57:00 2002
 
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_image_view_base.h>
 #include <vil/vil_image_resource.h>
 
@@ -30,22 +29,22 @@ class vil_image_resource_plugin : public vil_image_resource
   vil_image_resource_plugin() : filetype_(""), colour_(""), width_(-1), height_(-1) {}
 
   //: Destructor
-  virtual ~vil_image_resource_plugin() {}
+  ~vil_image_resource_plugin() override = default;
 
   //: Name of the class
   virtual std::string is_a() const { return "vil_image_resource_plugin"; }
 
-  virtual vil_pixel_format pixel_format() const { return VIL_PIXEL_FORMAT_UNKNOWN; }
+  vil_pixel_format pixel_format() const override { return VIL_PIXEL_FORMAT_UNKNOWN; }
 
-  virtual unsigned ni() const { return 0; }
-  virtual unsigned nj() const { return 0; }
-  virtual unsigned nplanes() const { return 0; }
+  unsigned ni() const override { return 0; }
+  unsigned nj() const override { return 0; }
+  unsigned nplanes() const override { return 0; }
 
-  virtual bool get_property(char const * /*tag*/, void * /*property_value*/=VXL_NULLPTR) const { return false; }
-  virtual vil_image_view_base_sptr get_copy_view(unsigned /*i0*/, unsigned /*ni*/, unsigned /*j0*/, unsigned /*nj*/) const
-  { return vil_image_view_base_sptr(VXL_NULLPTR); }
+  bool get_property(char const * /*tag*/, void * /*property_value*/=nullptr) const override { return false; }
+  vil_image_view_base_sptr get_copy_view(unsigned /*i0*/, unsigned /*ni*/, unsigned /*j0*/, unsigned /*nj*/) const override
+  { return vil_image_view_base_sptr(nullptr); }
 
-  virtual bool put_view(vil_image_view_base const& /*im*/, unsigned /*i0*/, unsigned /*j0*/) { return false; }
+  bool put_view(vil_image_view_base const& /*im*/, unsigned /*i0*/, unsigned /*j0*/) override { return false; }
 
   //: Attempt to load image from named file.
   // \return  true if successful

@@ -16,7 +16,9 @@
 #include <vector>
 #include <iostream>
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpgl/vpgl_perspective_camera.h>
 #include <bpgl/depth_map/depth_map_region.h>
 #include <vsph/vsph_sph_box_2d.h>

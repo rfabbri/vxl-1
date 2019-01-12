@@ -19,7 +19,9 @@
 //-------------------------------------------------------------------------
 #include <iostream>
 #include <map>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include "bmsh3d_face_mc.h"
 #include <vgl/vgl_point_2d.h>
@@ -48,7 +50,7 @@ class bmsh3d_textured_face_mc : public bmsh3d_face_mc
   bmsh3d_textured_face_mc (const bmsh3d_textured_face_mc& face);
 #endif
 
-  virtual ~bmsh3d_textured_face_mc () {tex_coords_.clear();}
+  ~bmsh3d_textured_face_mc () override {tex_coords_.clear();}
 
   // ====== Data access functions ======
 

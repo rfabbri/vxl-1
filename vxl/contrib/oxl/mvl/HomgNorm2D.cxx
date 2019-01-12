@@ -1,13 +1,12 @@
 // This is oxl/mvl/HomgNorm2D.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 
 #include <iostream>
 #include "HomgNorm2D.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h>
 #include <vgl/vgl_homg_point_2d.h>
 #include <vgl/algo/vgl_homg_operators_2d.h> // for matrix * vgl_homg_point_2d
@@ -28,9 +27,7 @@ HomgNorm2D::HomgNorm2D(const std::vector<HomgPoint2D>& points, bool unit_omega):
 }
 
 // Destructor
-HomgNorm2D::~HomgNorm2D()
-{
-}
+HomgNorm2D::~HomgNorm2D() = default;
 
 static bool paranoid = true;
 static void centre(const std::vector<HomgPoint2D>& in, std::vector<HomgPoint2D>& out, double* cx_out, double* cy_out);
@@ -79,8 +76,7 @@ void HomgNorm2D::normalize(std::vector<vgl_homg_point_2d<double> > const& points
 
   if (unit_omega_) {
     /* homogeneous scale factor is normally undetermined - set it here though. */
-    for (unsigned i = 0; i < normalized_.size(); ++i) {
-      HomgPoint2D& p = normalized_[i];
+    for (auto & p : normalized_) {
       double x = p.x();
       double y = p.y();
       double w = p.w();
@@ -148,8 +144,7 @@ void HomgNorm2D::normalize(const std::vector<HomgPoint2D>& points)
 
   if (unit_omega_) {
     /* homogeneous scale factor is normally undetermined - set it here though. */
-    for (unsigned i = 0; i < normalized_.size(); ++i) {
-      HomgPoint2D& p = normalized_[i];
+    for (auto & p : normalized_) {
       double x = p.x();
       double y = p.y();
       double w = p.w();
@@ -291,8 +286,7 @@ static double scale_xyroot2(const std::vector<HomgPoint2D>& in,
 {
   double magnitude = 0;
   unsigned numfinite = 0;
-  for (unsigned i = 0; i < in.size(); ++i) {
-    const HomgPoint2D& p = in[i];
+  for (const auto & p : in) {
     double x,y;
     if (p.get_nonhomogeneous(x, y)) {
       magnitude += vnl_math::hypot(x, y);

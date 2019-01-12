@@ -14,7 +14,9 @@
 #include <iostream>
 #include <iosfwd>
 #include <gevd/gevd_param_mixin.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class brip_watershed_params : public gevd_param_mixin
 {
@@ -26,7 +28,7 @@ class brip_watershed_params : public gevd_param_mixin
 
 
   brip_watershed_params(const brip_watershed_params& old_params);
-  bool SanityCheck();
+  bool SanityCheck() override;
   friend std::ostream& operator<<(std::ostream&, const brip_watershed_params& wp);
  protected:
   void InitParams(float sigma, float thresh,

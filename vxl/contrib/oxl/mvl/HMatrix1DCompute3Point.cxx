@@ -2,8 +2,10 @@
 #include <vector>
 #include "HMatrix1DCompute3Point.h"
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vgl/vgl_homg_point_1d.h>
 #include <mvl/HMatrix1D.h>
 
@@ -35,7 +37,7 @@ direct_compute(double T[2][2],
 }
 
 HMatrix1DCompute3Point::HMatrix1DCompute3Point(void) : HMatrix1DCompute() { }
-HMatrix1DCompute3Point::~HMatrix1DCompute3Point() { }
+HMatrix1DCompute3Point::~HMatrix1DCompute3Point() = default;
 
 bool
 HMatrix1DCompute3Point::compute_cool_homg(const std::vector<vgl_homg_point_1d<double> >& points1,

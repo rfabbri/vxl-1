@@ -4,8 +4,10 @@
 #include "bdgl_curve_algs.h"
 //:
 // \file
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vnl/vnl_numeric_traits.h>
 #include <vnl/vnl_double_2.h>
 #include <vnl/vnl_double_3.h>
@@ -23,16 +25,9 @@
 #include <vdgl/vdgl_digital_curve.h>
 #include <vnl/algo/vnl_gaussian_kernel_1d.h>
 
-const double bdgl_curve_algs::tol = 1e-16;
-const double bdgl_curve_algs::max_edgel_sep = 2.0; // the maximum separation
-                                                   // of edgels (in pixels)
-const double bdgl_curve_algs::synthetic = 0;//Indicates synthetic edgel
-                                            //default constructor is -1
-
 //: Destructor
 bdgl_curve_algs::~bdgl_curve_algs()
-{
-}
+= default;
 
 //:
 //--------------------------------------------------------------------------
@@ -185,7 +180,7 @@ bool bdgl_curve_algs::closest_point_near(vdgl_edgel_chain_sptr const& ec,
 vdgl_digital_curve_sptr bdgl_curve_algs::reverse(vdgl_digital_curve_sptr const& dc)
 {
   if (!dc)
-    return VXL_NULLPTR;
+    return nullptr;
   vdgl_interpolator_sptr intrp = dc->get_interpolator();
   vdgl_edgel_chain_sptr ec = intrp->get_edgel_chain();
   int N = ec->size();
@@ -571,19 +566,18 @@ bdgl_curve_algs::match_intersection(vdgl_digital_curve_sptr const& dc,
   vgl_homg_point_2d<double> rph(ref_point.x(), ref_point.y());
   double dist = 1e10;
   bool found_valid_intersection = false;
-  for (std::vector<double>::iterator iit = indices.begin();
-       iit != indices.end(); iit++)
+  for (double & index : indices)
   {
-    double grad_angle = dc->get_theta(*iit);
+    double grad_angle = dc->get_theta(index);
     if (std::fabs(ref_gradient_angle-grad_angle)>angle_tol)
       continue;
-    double ca = dc->get_tangent_angle(*iit);
+    double ca = dc->get_tangent_angle(index);
     if (ca<0)
       ca+=180;
     double delt = std::fabs(std::sin(std::fabs(vnl_math::pi_over_180*(ca-la)))*vnl_math::deg_per_rad);
     if (delt<angle_thresh)
       continue;
-    vgl_homg_point_2d<double> ph(dc->get_x(*iit), dc->get_y(*iit));
+    vgl_homg_point_2d<double> ph(dc->get_x(index), dc->get_y(index));
     double d = vgl_homg_operators_2d<double>::distance_squared(rph, ph);
     d = std::sqrt(d);
     found_valid_intersection = true;
@@ -592,7 +586,7 @@ bdgl_curve_algs::match_intersection(vdgl_digital_curve_sptr const& dc,
       //double best_delt = delt;
       //double best_ind = *iit;
       dist = d;
-      point = vgl_point_2d<double>(dc->get_x(*iit), dc->get_y(*iit));
+      point = vgl_point_2d<double>(dc->get_x(index), dc->get_y(index));
     }
   }
   return found_valid_intersection;
@@ -677,7 +671,7 @@ int bdgl_curve_algs::add_straight_edgels(vdgl_edgel_chain_sptr const& ec,
   assert (ec->size() > 0);
   int Npix = 0, last = ec->size()-1;
 
-  float xs = float((*ec)[last].x()), ys = float((*ec)[last].y());
+  auto xs = float((*ec)[last].x()), ys = float((*ec)[last].y());
   bool first = true, init = true, done = false;
   float x, y;
   while (bdgl_curve_algs::line_gen(xs, ys, float(xe), float(ye), init, done, x, y))
@@ -758,13 +752,12 @@ create_digital_curves(std::vector<vgl_point_2d<double> > & curve)
 {
   vdgl_edgel_chain_sptr vec;
   vec= new vdgl_edgel_chain;
-  for (unsigned int j=0; j<curve.size(); ++j)
+  for (auto & j : curve)
   {
-    vdgl_edgel el(curve[j].x(),curve[j].y(), 0,0 );
+    vdgl_edgel el(j.x(),j.y(), 0,0 );
     vec->add_edgel(el);
   }
   vdgl_interpolator_sptr interp= new vdgl_interpolator_linear(vec);
   vdgl_digital_curve_sptr dc = new vdgl_digital_curve(interp);
   return dc;
 }
-

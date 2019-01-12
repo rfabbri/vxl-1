@@ -2,7 +2,9 @@
 #include <vector>
 #include <string>
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_image_resource.h>
 #include <vil/vil_load.h>
 #include <vtol/vtol_intensity_face.h>

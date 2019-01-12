@@ -1,9 +1,6 @@
 // This is oxl/mvl/FMatrixAffine.h
 #ifndef FMatrixAffine_h_
 #define FMatrixAffine_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 
 //--------------------------------------------------------------
 //:
@@ -22,10 +19,10 @@ class FMatrixAffine : public FMatrix
  public:
 
   FMatrixAffine();
-  ~FMatrixAffine();
+  ~FMatrixAffine() override;
 
-  bool set (const double *f_matrix);
-  bool set (vnl_matrix<double> const& f_matrix);
+  bool set (const double *f_matrix) override;
+  bool set (const vnl_matrix<double>& f_matrix);
 };
 
 #endif // FMatrixAffine_h_

@@ -15,8 +15,11 @@
 // \endverbatim
 
 #include <iostream>
+#include <utility>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_ref_count.h>
 #include <vbl/vbl_smart_ptr.h>
 #include <vnl/vnl_vector_fixed.h>
@@ -46,7 +49,7 @@ class bapl_bbf_box
 
 //: Return the minimum square distance between \a p and any point in \a b.
 double
-bapl_bbf_dist_sq( const bapl_keypoint_sptr p, const bapl_bbf_box& b );
+bapl_bbf_dist_sq( const bapl_keypoint_sptr& p, const bapl_bbf_box& b );
 
 
 class bapl_bbf_node;
@@ -61,15 +64,15 @@ class bapl_bbf_node : public vbl_ref_count
                  const bapl_bbf_box& inner_box,
                  unsigned int depth )
     : outer_box_(outer_box), inner_box_(inner_box), depth_(depth),
-      point_indices_(0), left_(VXL_NULLPTR), right_(VXL_NULLPTR) {}
+      point_indices_(0), left_(nullptr), right_(nullptr) {}
 
   //: Constructor for leaf node
   bapl_bbf_node( const bapl_bbf_box& outer_box,
                  const bapl_bbf_box& inner_box,
                  unsigned int depth,
-                 const std::vector<int>& indices )
+                 std::vector<int>  indices )
     : outer_box_(outer_box), inner_box_(inner_box), depth_(depth),
-      point_indices_(indices), left_(VXL_NULLPTR), right_(VXL_NULLPTR) {}
+      point_indices_(std::move(indices)), left_(nullptr), right_(nullptr) {}
 
   //: Outer bounding box
   bapl_bbf_box outer_box_;
@@ -91,7 +94,7 @@ class bapl_bbf_queue_entry
 {
  public:
   //: Constructor
-  bapl_bbf_queue_entry() {}
+  bapl_bbf_queue_entry() = default;
   //: Constructor
   bapl_bbf_queue_entry( double dist, bapl_bbf_node_sptr node )
     : dist_(dist), node_(node) {}
@@ -111,11 +114,11 @@ class bapl_bbf_tree
 {
  public:
   //: Constructor
-  bapl_bbf_tree( const std::vector< bapl_keypoint_sptr >& points,
+  bapl_bbf_tree( std::vector< bapl_keypoint_sptr >  points,
                  int points_per_leaf=4 );
 
   //: Return an estimate of the n closest points to the query point
-  void n_nearest( const bapl_keypoint_sptr query_point,
+  void n_nearest( const bapl_keypoint_sptr& query_point,
                   std::vector< bapl_keypoint_sptr >& closest_points,
                   std::vector< int >& closest_indices,
                   int n=1, int max_search_nodes=-1 );
@@ -123,7 +126,7 @@ class bapl_bbf_tree
   //: Return an estimate of the n closest points to the query point
   // \param n is the number of nearest nodes to return
   // \param max_search_nodes is the number of nodes to examine (-1 mean all)
-  void n_nearest( const bapl_keypoint_sptr query_point,
+  void n_nearest( const bapl_keypoint_sptr& query_point,
                   std::vector< bapl_keypoint_sptr >& closest_points,
                   int n=1, int max_search_nodes=-1);
 
@@ -138,12 +141,12 @@ class bapl_bbf_tree
   //: Find the dimension with the greatest variation
   int greatest_variation( const std::vector<int>& indices );
   //: Update
-  void update_closest( const bapl_keypoint_sptr query_point, int n,
-                       bapl_bbf_node_sptr p, std::vector< int >& closest_indices,
+  void update_closest( const bapl_keypoint_sptr& query_point, int n,
+                       const bapl_bbf_node_sptr& p, std::vector< int >& closest_indices,
                        std::vector< double >& sq_distances, int & num_found );
   //: See if the current leaf contains the NN neighbors
-  bool bounded_at_leaf( const bapl_keypoint_sptr query_point, int n,
-                        bapl_bbf_node_sptr current, const std::vector< double >& sq_distances,
+  bool bounded_at_leaf( const bapl_keypoint_sptr& query_point, int n,
+                        const bapl_bbf_node_sptr& current, const std::vector< double >& sq_distances,
                         int & num_found );
 
   //: The number of leaves in the tree

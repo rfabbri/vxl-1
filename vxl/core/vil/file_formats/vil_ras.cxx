@@ -1,7 +1,4 @@
 // This is core/vil/file_formats/vil_ras.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 
@@ -9,8 +6,10 @@
 #include <vector>
 #include "vil_ras.h"
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vil/vil_stream.h>
 #include <vil/vil_image_resource.h>
@@ -35,7 +34,7 @@ namespace
   inline
   void swap_endian( vxl_uint_32& word )
   {
-    vxl_uint_8* bytes = reinterpret_cast<vxl_uint_8*>( &word );
+    auto* bytes = reinterpret_cast<vxl_uint_8*>( &word );
     vxl_uint_8 t = bytes[0];
     bytes[0] = bytes[3];
     bytes[3] = t;
@@ -82,12 +81,12 @@ namespace
   // From http://gmt.soest.hawaii.edu/gmt/doc/html/GMT_Docs/node111.html
   // and other documents on the web.
   const vxl_uint_8 RAS_MAGIC[] = { 0x59, 0xA6, 0x6A, 0x95 };
-  const vxl_uint_32 RT_OLD = 0;          //< Raw pixrect image in MSB-first order
-  const vxl_uint_32 RT_STANDARD = 1;     //< Raw pixrect image in MSB-first order
-  const vxl_uint_32 RT_BYTE_ENCODED = 2; //< (Run-length compression of bytes)
-  const vxl_uint_32 RT_FORMAT_RGB = 3;   //< ([X]RGB instead of [X]BGR)
-  const vxl_uint_32 RMT_NONE = 0;        //< No colourmap (ras_maplength is expected to be 0)
-  const vxl_uint_32 RMT_EQUAL_RGB = 1;   //< (red[ras_maplength/3],green[],blue[])
+  constexpr vxl_uint_32 RT_OLD = 0;          //< Raw pixrect image in MSB-first order
+  constexpr vxl_uint_32 RT_STANDARD = 1;     //< Raw pixrect image in MSB-first order
+  constexpr vxl_uint_32 RT_BYTE_ENCODED = 2; //< (Run-length compression of bytes)
+  constexpr vxl_uint_32 RT_FORMAT_RGB = 3;   //< ([X]RGB instead of [X]BGR)
+  constexpr vxl_uint_32 RMT_NONE = 0;        //< No colourmap (ras_maplength is expected to be 0)
+  constexpr vxl_uint_32 RMT_EQUAL_RGB = 1;   //< (red[ras_maplength/3],green[],blue[])
 }
 
 
@@ -104,7 +103,7 @@ make_input_image( vil_stream* vs )
   vs->read( buf, 4 );
   if ( ! ( buf[0] == RAS_MAGIC[0] && buf[1] == RAS_MAGIC[1] &&
            buf[2] == RAS_MAGIC[2] && buf[3] == RAS_MAGIC[3]  ) )
-    return VXL_NULLPTR;
+    return nullptr;
 
   return new vil_ras_image( vs );
 }
@@ -195,7 +194,7 @@ vil_ras_image(vil_stream* vs,
   map_type_ = RMT_NONE;
   map_length_ = 0;
   length_ = compute_length( width_, height_, depth_ );
-  col_map_ = VXL_NULLPTR;
+  col_map_ = nullptr;
 
   write_header();
 }
@@ -281,7 +280,7 @@ read_header()
     col_map_ = new vxl_uint_8[ map_length_ ];
     vs_->read( col_map_, (vil_streampos)map_length_ );
   } else {
-    col_map_ = VXL_NULLPTR;
+    col_map_ = nullptr;
   }
 
   start_of_data_ = vs_->tell();
@@ -358,7 +357,7 @@ get_copy_view( unsigned i0, unsigned ni,
                unsigned j0, unsigned nj ) const
 {
   if ( type_ == RT_BYTE_ENCODED )
-    return VXL_NULLPTR; // not yet implemented
+    return nullptr; // not yet implemented
 
   unsigned file_bytes_per_pixel = (depth_+7)/8;
   unsigned buff_bytes_per_pixel = components_ * ( (bits_per_component_+7)/8 );
@@ -369,7 +368,7 @@ get_copy_view( unsigned i0, unsigned ni,
   vil_pixel_format fmt = pixel_format();
   vil_memory_chunk_sptr buf = new vil_memory_chunk(ni * nj * buff_bytes_per_pixel, fmt );
 
-  vxl_uint_8* ib = reinterpret_cast<vxl_uint_8*>( buf->data() );
+  auto* ib = reinterpret_cast<vxl_uint_8*>( buf->data() );
 
   if ( !col_map_ )
   {
@@ -428,12 +427,12 @@ get_copy_view( unsigned i0, unsigned ni,
       *(ib+is+1)=s[0];
     }
 #endif
-    vxl_uint_16* sib = reinterpret_cast<vxl_uint_16*>(ib);
+    auto* sib = reinterpret_cast<vxl_uint_16*>(ib);
     return new vil_image_view<vxl_uint_16>( buf, sib,
                                             ni, nj, components_,
                                             components_, components_*ni, 1 );
   }
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 

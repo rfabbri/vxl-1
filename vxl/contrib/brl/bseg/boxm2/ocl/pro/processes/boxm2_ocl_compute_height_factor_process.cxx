@@ -1,4 +1,6 @@
 // This is brl/bseg/boxm2/ocl/pro/processes/boxm2_ocl_compute_height_factor_process.cxx
+#include <iostream>
+#include <fstream>
 #include <bprb/bprb_func_process.h>
 //:
 // \file
@@ -7,7 +9,9 @@
 // \author Vishal Jain
 // \date Mar 30, 2015
 
-#include <vcl_fstream.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/ocl/boxm2_opencl_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -28,8 +32,8 @@
 
 namespace boxm2_ocl_compute_height_factor_process_globals
 {
-    const unsigned n_inputs_ = 8;
-    const unsigned n_outputs_ = 0;
+    constexpr unsigned n_inputs_ = 8;
+    constexpr unsigned n_outputs_ = 0;
 
 
 }
@@ -39,7 +43,7 @@ bool boxm2_ocl_compute_height_factor_process_cons(bprb_func_process& pro)
     using namespace boxm2_ocl_compute_height_factor_process_globals;
 
     //process takes 7 inputs
-    vcl_vector<vcl_string> input_types_(n_inputs_);
+    std::vector<std::string> input_types_(n_inputs_);
     input_types_[0] = "bocl_device_sptr";
     input_types_[1] = "boxm2_scene_sptr";
     input_types_[2] = "boxm2_opencl_cache_sptr";
@@ -49,7 +53,7 @@ bool boxm2_ocl_compute_height_factor_process_cons(bprb_func_process& pro)
     input_types_[6] = "vil_image_view_base_sptr"; // yimg
     input_types_[7] = "int"; // smoothing radius
     // process has no outputs
-    vcl_vector<vcl_string> output_types_(n_outputs_);
+    std::vector<std::string> output_types_(n_outputs_);
 
     return pro.set_input_types(input_types_) && pro.set_output_types(output_types_);
 }
@@ -59,7 +63,7 @@ bool boxm2_ocl_compute_height_factor_process(bprb_func_process& pro)
     using namespace boxm2_ocl_compute_height_factor_process_globals;
 
     if (pro.n_inputs() < n_inputs_) {
-        vcl_cout << pro.name() << ": The input number should be " << n_inputs_ << vcl_endl;
+        std::cout << pro.name() << ": The input number should be " << n_inputs_ << std::endl;
         return false;
     }
     float transfer_time = 0.0f;
@@ -73,9 +77,7 @@ bool boxm2_ocl_compute_height_factor_process(bprb_func_process& pro)
     vil_image_view_base_sptr z_var_img = pro.get_input<vil_image_view_base_sptr>(i++);
     vil_image_view_base_sptr x_img = pro.get_input<vil_image_view_base_sptr>(i++);
     vil_image_view_base_sptr y_img = pro.get_input<vil_image_view_base_sptr>(i++);
-    int sradius  = pro.get_input<int>(i++);
+    int sradius = pro.get_input<int>(i++);
     boxm2_ocl_compute_heightmap_pre_post::compute_pre_post(scene, device, opencl_cache, z_img, z_var_img, x_img, y_img,sradius);
     return true;
 }
-
-

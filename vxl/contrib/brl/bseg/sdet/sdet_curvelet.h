@@ -22,7 +22,9 @@
 #include <map>
 #include <utility>
 #include <vbl/vbl_ref_count.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vnl/vnl_math.h>
 
@@ -61,10 +63,10 @@ public:
   bool used;                                     ///< to keep track of whether this curvelet was used in linking
 
   //: default constructor
-  sdet_curvelet(): ref_edgel(VXL_NULLPTR), edgel_chain(0), curve_model(VXL_NULLPTR), forward(true), length(0.0), quality(0.0), used(false){}
+  sdet_curvelet(): ref_edgel(nullptr), edgel_chain(0), curve_model(nullptr), forward(true), length(0.0), quality(0.0), used(false){}
 
   //: constructor 1
-  sdet_curvelet(sdet_edgel* e) : ref_edgel(e), edgel_chain(0), curve_model(VXL_NULLPTR), forward(true), length(0.0), quality(0.0), used(false){}
+  sdet_curvelet(sdet_edgel* e) : ref_edgel(e), edgel_chain(0), curve_model(nullptr), forward(true), length(0.0), quality(0.0), used(false){}
 
   //: constructor 2
   sdet_curvelet(sdet_edgel* e, sdet_curve_model* cm, bool dir=true) :

@@ -21,13 +21,15 @@
 #include <bvxm/grid/bvxm_opinion.h>
 
 #include <vgl/vgl_point_3d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class bvpl_susan_opinion_operator
 {
  public:
-  bvpl_susan_opinion_operator() {}
-  ~bvpl_susan_opinion_operator() {}
+  bvpl_susan_opinion_operator() = default;
+  ~bvpl_susan_opinion_operator() = default;
 
   // makes the neighborhood operation and stores the result in the output subgrid, which may be equal to the input
   void operate(bvxm_voxel_grid<int >* dirgrid,

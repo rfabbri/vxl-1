@@ -21,7 +21,9 @@
 #include <vgl/vgl_polygon.h>
 #include <vsl/vsl_binary_io.h>
 #include <vsl/vsl_set_io.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //================================================================
 //=======================  mask feature ===========================
@@ -231,7 +233,7 @@ bool pair_intersect(bbgm_mask_pair_feature const& mp0,
 class fless
 {
  public:
-  fless() {}
+  fless() = default;
   bool operator ()(bbgm_mask_pair_feature const& fa,
                    bbgm_mask_pair_feature const& fb) {
     unsigned short ica, jca, icb, jcb;
@@ -320,7 +322,7 @@ class bbgm_pair_group_feature
   //: Binary load self from stream.
   virtual void b_read(vsl_b_istream &is);
 
-  virtual ~bbgm_pair_group_feature() {} // virtual destructor, because presence of virtual methods
+  virtual ~bbgm_pair_group_feature() = default; // virtual destructor, because presence of virtual methods
  protected:
   static unsigned uid_; //!< a unique id
   unsigned id_;

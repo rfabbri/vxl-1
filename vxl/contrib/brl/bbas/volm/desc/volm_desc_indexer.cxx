@@ -2,7 +2,9 @@
 #include <sstream>
 #include "volm_desc_indexer.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_file.h>
 #include <volm/volm_geo_index.h>
 #include <volm/volm_geo_index_sptr.h>
@@ -111,4 +113,3 @@ bool volm_desc_indexer::index(float buffer_capacity, int min_leaf_id, int max_le
   return true;
 
 }
-

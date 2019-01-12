@@ -5,7 +5,9 @@
 // \file
 
 #include <bprb/bprb_parameters.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 bprb_process_ext::bprb_process_ext()
 : bprb_process()
@@ -19,7 +21,7 @@ bool bprb_process_ext::set_output_types(std::vector<std::string> const& types)
   return true;
 }
 
-bool bprb_process_ext::set_output(unsigned i, brdb_value_sptr val)
+bool bprb_process_ext::set_output(unsigned i, const brdb_value_sptr& val)
 {
   if (i < output_data_.size())
     output_data_[i] = val;

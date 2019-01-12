@@ -15,7 +15,9 @@
 #include <iostream>
 #include <string>
 #include <bprb/bprb_func_process.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: initialize input and output types
 bool sdet_detect_third_order_edges_process_cons(bprb_func_process& pro);

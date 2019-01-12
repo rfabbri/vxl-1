@@ -1,12 +1,11 @@
 // This is core/vil1/vil1_load.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 
 #include <iostream>
 #include "vil1_load.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vil1/vil1_open.h>
 #include <vil1/vil1_file_format.h>
@@ -41,7 +40,7 @@ vil1_image vil1_load_raw(vil1_stream *is)
     std::cerr << " \'" << (*p)->tag() << "\'" << std::flush;
   std::cerr << ": none succeeded\n";
 
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 vil1_image vil1_load_raw(char const* filename)

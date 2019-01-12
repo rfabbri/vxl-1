@@ -11,7 +11,9 @@
 #include <cmath>
 #include <string>
 #include <boxm2/boxm2_scene.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 // template over a functor that defines surface distance
 // the vector types contains the prefix strings for each database in databases

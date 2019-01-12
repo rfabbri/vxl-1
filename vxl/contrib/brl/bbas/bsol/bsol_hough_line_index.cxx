@@ -10,7 +10,9 @@
 //-----------------------------------------------------------------------------
 
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h>
 #include <vsol/vsol_line_2d.h>
 #include <vsol/vsol_point_2d.h>
@@ -107,7 +109,7 @@ void bsol_hough_line_index::array_loc(vsol_line_2d_sptr const& line,
                                       float& r, float& theta)
 {
   //Compute angle index
-  float angle = (float)line->tangent_angle();
+  auto angle = (float)line->tangent_angle();
   if (angle >= 180.0f)
     angle -= 180.0f;
 
@@ -123,8 +125,8 @@ void bsol_hough_line_index::array_loc(vsol_line_2d_sptr const& line,
 
   //Compute distance indices
   vsol_point_2d_sptr mid = line->middle();
-  float midx = float(mid->x()-xo_);
-  float midy = float(mid->y()-yo_);
+  auto midx = float(mid->x()-xo_);
+  auto midy = float(mid->y()-yo_);
   float xs2 = xsize_/2.0f;
   float ys2 = ysize_/2.0f;
 
@@ -257,7 +259,7 @@ bool bsol_hough_line_index::remove(vsol_line_2d_sptr const& line)
     return false;
   std::vector<vsol_line_2d_sptr>* lines = index_[r][theta];
 
-  std::vector<vsol_line_2d_sptr>::iterator lit =
+  auto lit =
     std::find(lines->begin(), lines->end(), line);
   if (lit == lines->end())
     return false;
@@ -337,12 +339,10 @@ lines_in_interval(vsol_line_2d_sptr const & l,
         continue;
       std::vector<vsol_line_2d_sptr> temp;
       this->lines_at_index(r_indx, t_indx,temp);
-      for (std::vector<vsol_line_2d_sptr>::iterator lit = temp.begin();
-           lit != temp.end(); lit++)
+      for (const auto& line : temp)
       {
         //Note, these tests should eventually be more
         //sophisticated - JLM
-        vsol_line_2d_sptr line = *lit;
         float l_angle, line_angle;
         float l_ndist, line_ndist;
         this->array_loc(l, l_ndist, l_angle);
@@ -426,12 +426,10 @@ bsol_hough_line_index::parallel_lines(const float angle,
       std::vector<vsol_line_2d_sptr> temp;
       this->lines_at_index(j, t_indx, temp);
 
-      for (std::vector<vsol_line_2d_sptr>::iterator lit = temp.begin();
-           lit != temp.end(); lit++)
+      for (const auto& line : temp)
       {
-        vsol_line_2d_sptr line = *lit;
         //Test angular error
-        float line_angle = (float)line->tangent_angle();
+        auto line_angle = (float)line->tangent_angle();
         if (line_angle >= 180.0f)
           line_angle -= 180.0f;
         float ang_error = std::fabs(ang - line_angle);
@@ -516,7 +514,7 @@ bsol_hough_line_index::parallel_lines(vsol_line_2d_sptr const &l,
     std::cout << "In bsol_hough_line_index::parallel_lines(..) NULL line\n";
     return;
   }
-  float angle = (float)l->tangent_angle();
+  auto angle = (float)l->tangent_angle();
   this->parallel_lines(angle, angle_dist, lines);
 }
 

@@ -1,9 +1,6 @@
 // This is core/vgl/vgl_homg_point_2d.h
 #ifndef vgl_homg_point_2d_h_
 #define vgl_homg_point_2d_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief point in projective 2D space
@@ -20,8 +17,10 @@
 #include <vgl/vgl_vector_2d.h>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_fwd.h> // forward declare vgl_homg_line_2d
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 //: Represents a homogeneous 2D point
 template <class T>

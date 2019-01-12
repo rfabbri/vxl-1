@@ -51,7 +51,7 @@ public:
   ~boct_bit_tree() {
     if (is_owning_ && bits_) {
       delete[] bits_;
-      bits_ = VXL_NULLPTR;
+      bits_ = nullptr;
     }
   }
 
@@ -150,7 +150,7 @@ public:
 
   //: Compares structure bits of the two trees
   static bool same_structure(const boct_bit_tree &t1, const boct_bit_tree &t2) {
-    return vcl_memcmp(t1.get_bits(), t2.get_bits(), 10) == 0;
+    return std::memcmp(t1.get_bits(), t2.get_bits(), 10) == 0;
   }
 
   // cached arrays are public - make em const too

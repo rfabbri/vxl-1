@@ -5,7 +5,9 @@
 #include <vil1/vil1_copy.h>
 
 #include <vxl_config.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <testlib/testlib_test.h>
 

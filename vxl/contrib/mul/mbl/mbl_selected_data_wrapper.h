@@ -1,9 +1,6 @@
 // This is mul/mbl/mbl_selected_data_wrapper.h
 #ifndef mbl_selected_data_wrapper_h
 #define mbl_selected_data_wrapper_h
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author Ian Scott
@@ -12,7 +9,9 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <mbl/mbl_data_wrapper.h>
 
 //: A subset of an existing mbl_data_wrapper.
@@ -41,7 +40,7 @@ class mbl_selected_data_wrapper: public mbl_data_wrapper<T>
   mbl_selected_data_wrapper();
 
   //: Default destructor.
-  virtual ~mbl_selected_data_wrapper();
+  ~mbl_selected_data_wrapper() override;
 
   //: Copy operator.
   mbl_selected_data_wrapper<T>& operator=(const mbl_selected_data_wrapper<T>& b);
@@ -53,36 +52,36 @@ class mbl_selected_data_wrapper: public mbl_data_wrapper<T>
     const std::vector<unsigned> &selection);
 
   //: Number of objects available.
-  virtual unsigned long size() const;
+  unsigned long size() const override;
 
   //: Reset so that current() returns first object.
-  virtual void reset();
+  void reset() override;
 
   //: Return current object.
-  virtual const T& current();
+  const T& current() override;
 
   //: Move to next object, returning true if is valid.
-  virtual bool next();
+  bool next() override;
 
   //: Return current index.
   //  First example has index 0
-  virtual unsigned long index() const;
+  unsigned long index() const override;
 
   //: Move to element n.
   //  First example has index 0
-  virtual void set_index(unsigned long n);
+  void set_index(unsigned long n) override;
 
   //: Create copy on heap and return base pointer.
   // This will create an independent iterator on the underlying data.
   // The original data is not copied.
   // Be careful of destruction of underlying data.
-  virtual mbl_data_wrapper< T >* clone() const ;
+  mbl_data_wrapper< T >* clone() const override ;
 
   //: Name of the class.
-  virtual std::string is_a() const;
+  std::string is_a() const override;
 
   //: True if this is (or is derived from) class named s
-  virtual bool is_class(std::string const& s) const;
+  bool is_class(std::string const& s) const override;
 };
 
 #endif // mbl_selected_data_wrapper_h

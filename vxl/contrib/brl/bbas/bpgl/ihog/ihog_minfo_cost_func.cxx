@@ -1,4 +1,5 @@
 // This is brl/bbas/bpgl/ihog/ihog_minfo_cost_func.cxx
+#include <utility>
 #include "ihog_minfo_cost_func.h"
 //:
 // \file
@@ -7,17 +8,18 @@
 #include <vbl/vbl_array_2d.h>
 #include <vbl/vbl_array_1d.h>
 
+
 //: Constructor
 ihog_minfo_cost_func::ihog_minfo_cost_func( const ihog_image<float>& image1,
                                             const ihog_image<float>& image2,
-                                            const ihog_world_roi& roi,
+                                            ihog_world_roi  roi,
                                             const ihog_transform_2d& init_xform,
                                             unsigned nbins)
  : //vnl_least_squares_function(1,1),
    vnl_cost_function(2),
    from_image_(image1),
    to_image_(image2),
-   roi_(roi),
+   roi_(std::move(roi)),
    form_(init_xform.form()),
    from_mask_(false),
    to_mask_(false),
@@ -38,13 +40,13 @@ ihog_minfo_cost_func::ihog_minfo_cost_func( const ihog_image<float>& image1,
 ihog_minfo_cost_func::ihog_minfo_cost_func( const ihog_image<float>& image1,
                                             const ihog_image<float>& image2,
                                             const ihog_image<float>& mask,
-                                            const ihog_world_roi& roi,
+                                            ihog_world_roi  roi,
                                             const ihog_transform_2d& init_xform, bool image1_mask, unsigned nbins)
  : //vnl_least_squares_function(1,1),
    vnl_cost_function(2),
    from_image_(image1),
    to_image_(image2),
-   roi_(roi),
+   roi_(std::move(roi)),
    form_(init_xform.form()),
    from_mask_(image1_mask),
    to_mask_(!image1_mask),
@@ -71,7 +73,7 @@ ihog_minfo_cost_func::ihog_minfo_cost_func(const ihog_image<float>& image1,
                                            const ihog_image<float>& image2,
                                            const ihog_image<float>& mask1,
                                            const ihog_image<float>& mask2,
-                                           const ihog_world_roi& roi,
+                                           ihog_world_roi  roi,
                                            const ihog_transform_2d& init_xform, unsigned nbins)
  : //vnl_least_squares_function(1,1),
    vnl_cost_function(2),
@@ -79,7 +81,7 @@ ihog_minfo_cost_func::ihog_minfo_cost_func(const ihog_image<float>& image1,
    to_image_(image2),
    from_mask_image_(mask1),
    to_mask_image_(mask2),
-   roi_(roi),
+   roi_(std::move(roi)),
    form_(init_xform.form()),
    from_mask_(true),
    to_mask_(true),
@@ -159,7 +161,7 @@ double ihog_minfo_cost_func::entropy_diff(vnl_vector<double>& mask_samples, vnl_
   for (unsigned i = 0; i<to_samples.size(); ++i)
     if (mask_samples[i]>0.0) {
       //match the gpu implementation, which does a floor operation
-      unsigned id = static_cast<unsigned>(std::floor(from_samples[i]*scl)),
+      auto id = static_cast<unsigned>(std::floor(from_samples[i]*scl)),
                is = static_cast<unsigned>(std::floor(to_samples[i]*scl));
 
       if (id+1>(unsigned)nbins || is+1>(unsigned)nbins)
@@ -172,7 +174,7 @@ double ihog_minfo_cost_func::entropy_diff(vnl_vector<double>& mask_samples, vnl_
     for (int c = 0; c<nbins; ++c)
       h[r][c] /= total_weight;
 
-  unsigned nr = (unsigned)h.rows(), nc = (unsigned)h.cols();
+  auto nr = (unsigned)h.rows(), nc = (unsigned)h.cols();
   //marginal distribution for mapped dest intensities
   vbl_array_1d<double> pmr(nc,0.0);
   for (unsigned r = 0; r<nr; ++r)

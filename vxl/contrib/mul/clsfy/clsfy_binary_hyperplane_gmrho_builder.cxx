@@ -15,8 +15,10 @@
 
 //=======================================================================
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_vector_ref.h>
 #include <vnl/algo/vnl_lbfgs.h>
 
@@ -52,10 +54,10 @@ namespace clsfy_binary_hyperplane_gmrho_builder_helpers
         void set_sigma(double sigma);
 
         //:  The main function.  Given the vector of weights parameters vector , compute the value of f(x).
-        virtual double f(vnl_vector<double> const& w);
+        double f(vnl_vector<double> const& w) override;
 
         //:  Calculate the gradient of f at parameter vector x.
-        virtual void gradf(vnl_vector<double> const& x, vnl_vector<double>& gradient);
+        void gradf(vnl_vector<double> const& x, vnl_vector<double>& gradient) override;
     };
 
     //: functor to accumulate gradient contributions for given training example
@@ -143,7 +145,7 @@ double clsfy_binary_hyperplane_gmrho_builder::build(clsfy_classifier_base& class
     weights_.set_size(num_vars_+1);
 
     //Initialise the weights using the standard least squares fit of my base class
-    clsfy_binary_hyperplane& hyperplane = dynamic_cast<clsfy_binary_hyperplane &>(classifier);
+    auto& hyperplane = dynamic_cast<clsfy_binary_hyperplane &>(classifier);
 
     weights_.update(hyperplane.weights(),0);
     weights_[num_vars_] = hyperplane.bias();
@@ -156,7 +158,7 @@ double clsfy_binary_hyperplane_gmrho_builder::build(clsfy_classifier_base& class
     //To avoid local minima perform deterministic annealing starting from a large initial sigma
     //Set initial kappa so that everything is an inlier
     double kappa = 5.0;
-    const double alpha_anneal=0.75;
+    constexpr double alpha_anneal = 0.75;
     //Num of iterations to reduce back to 10% on top of required sigma
     int N = 1+int(std::log(1.1/kappa)/std::log(alpha_anneal));
     if (N<1) N=1;
@@ -244,14 +246,14 @@ double clsfy_binary_hyperplane_gmrho_builder::estimate_sigma(const vnl_matrix<do
     double delta0=0.0;
     if (!falsePosScores.empty())
     {
-        std::vector<double >::iterator medianIter=falsePosScores.begin() + falsePosScores.size()/2;
+        auto medianIter=falsePosScores.begin() + falsePosScores.size()/2;
         std::nth_element(falsePosScores.begin(),medianIter,falsePosScores.end());
         delta0 = (*medianIter);
     }
     double delta1=0.0;
     if (!falseNegScores.empty())
     {
-        std::vector<double >::iterator medianIter=falseNegScores.begin() + falseNegScores.size()/2;
+        auto medianIter=falseNegScores.begin() + falseNegScores.size()/2;
         std::nth_element(falseNegScores.begin(),medianIter,falseNegScores.end());
         delta1 = (*medianIter);
     }
@@ -265,7 +267,7 @@ double clsfy_binary_hyperplane_gmrho_builder::estimate_sigma(const vnl_matrix<do
 
 void clsfy_binary_hyperplane_gmrho_builder::b_write(vsl_b_ostream &bfs) const
 {
-    const int version_no=1;
+    constexpr int version_no = 1;
     vsl_b_write(bfs, version_no);
     clsfy_binary_hyperplane_ls_builder::b_write(bfs);
 }

@@ -18,8 +18,10 @@
 #include <vidl/vidl_exception.h>
 #include <vidl/vidl_pixel_format.h>
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //-------------------------------------------------------------------------
 // Helper class, which should only concern this implementation.
@@ -575,4 +577,3 @@ void vidl_dshow::connect_filters(CComPtr<IFilterGraph2>& filter_graph,
   vidl_exception_error(vidl_dshow_exception(
     "Couldn't connect the filters." + DSHOW_GET_ERROR_TEXT(E_FAIL)));
 }
-

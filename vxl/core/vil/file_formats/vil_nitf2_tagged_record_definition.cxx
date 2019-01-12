@@ -7,7 +7,9 @@
 #include "vil_nitf2_tagged_record_definition.h"
 #include "vil_nitf2_field_definition.h"
 #include "vil_nitf2_typed_field_formatter.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 vil_nitf2_tagged_record_definition::tagged_record_definition_map&
@@ -18,8 +20,8 @@ vil_nitf2_tagged_record_definition::tagged_record_definition_map&
    public:
     ~tagged_record_definition_map_t()
     {
-      for (iterator it = begin(), last = end(); it != last; it++) {
-        delete it->second;
+      for (auto & it : *this) {
+        delete it.second;
       }
     }
   };
@@ -31,8 +33,8 @@ vil_nitf2_tagged_record_definition::tagged_record_definition_map&
 
 vil_nitf2_tagged_record_definition::vil_nitf2_tagged_record_definition(
   std::string name, std::string pretty_name, vil_nitf2_field_definitions* defs)
-  : m_name(name),
-    m_pretty_name(pretty_name),
+  : m_name(std::move(name)),
+    m_pretty_name(std::move(pretty_name)),
     m_field_definitions(defs ? defs : new vil_nitf2_field_definitions()),
     m_definition_completed(false)
 {
@@ -42,7 +44,7 @@ vil_nitf2_tagged_record_definition& vil_nitf2_tagged_record_definition::define(
   std::string name, std::string pretty_name)
 {
   vil_nitf2_tagged_record_definition* definition =
-    new vil_nitf2_tagged_record_definition(name, pretty_name);
+    new vil_nitf2_tagged_record_definition(name, std::move(pretty_name));
   if (all_definitions().find(name) != all_definitions().end()) {
     throw("vil_nitf2_tagged_record_definition already defined.");
   }
@@ -50,9 +52,9 @@ vil_nitf2_tagged_record_definition& vil_nitf2_tagged_record_definition::define(
   return *definition;
 }
 
-bool vil_nitf2_tagged_record_definition::undefine(std::string name)
+bool vil_nitf2_tagged_record_definition::undefine(const std::string& name)
 {
-  tagged_record_definition_map::iterator definition = all_definitions().find(name);
+  auto definition = all_definitions().find(name);
   if (definition == all_definitions().end()) {
     return false;
   }
@@ -75,8 +77,8 @@ vil_nitf2_tagged_record_definition& vil_nitf2_tagged_record_definition::field(
     std::cerr << "vil_nitf2_tagged_record_definition:field() failed; definition already complete.";
   } else {
     vil_nitf2_field_definition* field_definition = new vil_nitf2_field_definition(
-      tag, pretty_name, formatter, blanks_ok,
-      width_functor, condition_functor, units, description);
+      std::move(tag), std::move(pretty_name), formatter, blanks_ok,
+      width_functor, condition_functor, std::move(units), std::move(description));
     m_field_definitions->push_back(field_definition);
   }
   return *this;
@@ -102,10 +104,10 @@ void vil_nitf2_tagged_record_definition::end()
   m_definition_completed = true;
 }
 
-vil_nitf2_tagged_record_definition* vil_nitf2_tagged_record_definition::find(std::string name)
+vil_nitf2_tagged_record_definition* vil_nitf2_tagged_record_definition::find(const std::string& name)
 {
-  tagged_record_definition_map::iterator definition = all_definitions().find(name);
-  if (definition == all_definitions().end()) return VXL_NULLPTR;
+  auto definition = all_definitions().find(name);
+  if (definition == all_definitions().end()) return nullptr;
   return definition->second;
 }
 
@@ -117,7 +119,7 @@ vil_nitf2_tagged_record_definition::~vil_nitf2_tagged_record_definition()
 vil_nitf2_tagged_record_definition& vil_nitf2_tagged_record_definition::repeat(
   std::string int_tag, vil_nitf2_field_definitions& field_definitions)
 {
-  return repeat(new vil_nitf2_field_value<int>(int_tag), field_definitions);
+  return repeat(new vil_nitf2_field_value<int>(std::move(int_tag)), field_definitions);
 }
 
 vil_nitf2_tagged_record_definition& vil_nitf2_tagged_record_definition::repeat(

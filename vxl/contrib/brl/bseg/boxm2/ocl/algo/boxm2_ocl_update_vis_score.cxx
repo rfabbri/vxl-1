@@ -6,7 +6,9 @@
 
 #include <boxm2/ocl/boxm2_ocl_util.h>
 #include <boxm2/ocl/algo/boxm2_ocl_camera_converter.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_timer.h>
 
 bool
@@ -44,9 +46,9 @@ boxm2_ocl_update_vis_score
 }
 
 boxm2_ocl_update_vis_score
-::boxm2_ocl_update_vis_score(boxm2_scene_sptr scene,
-                             bocl_device_sptr device,
-                             boxm2_opencl_cache_sptr ocl_cache,
+::boxm2_ocl_update_vis_score(const boxm2_scene_sptr& scene,
+                             const bocl_device_sptr& device,
+                             const boxm2_opencl_cache_sptr& ocl_cache,
                              bool use_surface_normals,
                              bool optimize_transfers) :
   use_surface_normals_(use_surface_normals),
@@ -65,7 +67,7 @@ boxm2_ocl_update_vis_score
 ::run(vpgl_camera_double_sptr cam,
       unsigned ni,
       unsigned nj,
-      std::string prefix_name )
+      const std::string& prefix_name )
 {
   float transfer_time=0.0f;
   float gpu_time=0.0f;
@@ -86,14 +88,14 @@ boxm2_ocl_update_vis_score
   std::size_t global_threads[2]={cl_ni, cl_nj};
 
   // create all buffers
-  cl_float* ray_origins    = new cl_float[4*cl_ni*cl_nj];
-  cl_float* ray_directions = new cl_float[4*cl_ni*cl_nj];
+  auto* ray_origins    = new cl_float[4*cl_ni*cl_nj];
+  auto* ray_directions = new cl_float[4*cl_ni*cl_nj];
   bocl_mem_sptr ray_o_buff = ocl_cache_->alloc_mem(cl_ni*cl_nj*sizeof(cl_float4), ray_origins,"ray_origins buffer");
   bocl_mem_sptr ray_d_buff = ocl_cache_->alloc_mem(cl_ni*cl_nj*sizeof(cl_float4), ray_directions,"ray_directions buffer");
   boxm2_ocl_camera_converter::compute_ray_image( device_, queue, cam, cl_ni, cl_nj, ray_o_buff, ray_d_buff);
 
   //create vis, pre, norm and input image buffers
-  float* vis_buff  = new float[cl_ni*cl_nj];
+  auto* vis_buff  = new float[cl_ni*cl_nj];
   std::fill(vis_buff, vis_buff+cl_ni*cl_nj, 1.0f);
 
   bocl_mem_sptr vis_image = ocl_cache_->alloc_mem(cl_ni*cl_nj*sizeof(float), vis_buff,"vis image buffer");
@@ -110,7 +112,7 @@ boxm2_ocl_update_vis_score
 
   // Output Array
   float output_arr[100];
-  for (int i=0; i<100; ++i) output_arr[i] = 0.0f;
+  for (float & i : output_arr) i = 0.0f;
   bocl_mem_sptr cl_output= ocl_cache_->alloc_mem(sizeof(float)*100, output_arr, "output buffer");
   cl_output->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
 
@@ -134,14 +136,14 @@ boxm2_ocl_update_vis_score
       vul_timer transfer;
       bocl_mem* blk       = ocl_cache_->get_block(scene_,*id);
       bocl_mem* alpha     = ocl_cache_->get_data<BOXM2_ALPHA>(scene_,*id);
-      bocl_mem* normals = VXL_NULLPTR;
+      bocl_mem* normals = nullptr;
       if (use_surface_normals_) {
         normals   = ocl_cache_->get_data<BOXM2_NORMAL>(scene_,*id);
       }
       bocl_mem* blk_info  = ocl_cache_->loaded_block_info();
 
       //make sure the scene info data size reflects the real data size
-      boxm2_scene_info* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
+      auto* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
       int alphaTypeSize = boxm2_data_info::datasize(boxm2_data_traits<BOXM2_ALPHA>::prefix());
       info_buffer->data_buffer_length = (int) (alpha->num_bytes()/alphaTypeSize);
       blk_info->write_to_buffer((queue));
@@ -225,7 +227,7 @@ boxm2_ocl_update_vis_score
       bocl_mem * blk_info  = ocl_cache_->loaded_block_info();
 
       bocl_mem* alpha     = ocl_cache_->get_data<BOXM2_ALPHA>(scene_,*id);
-      boxm2_scene_info* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
+      auto* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
       int alphaTypeSize = boxm2_data_info::datasize(boxm2_data_traits<BOXM2_ALPHA>::prefix());
       info_buffer->data_buffer_length = (int) (alpha->num_bytes()/alphaTypeSize);
       blk_info->write_to_buffer((queue));
@@ -268,14 +270,14 @@ boxm2_ocl_update_vis_score
       //read info back to host memory
       if( ! optimize_transfers_){
         blk->read_to_buffer(queue);
-        //vcl_cout << "2" << vcl_endl;
-        //vcl_cout << "vis_score cpu_buffer= " << vis_score->cpu_buffer() << vcl_endl;
-        //vcl_cout << "vis_score nbytes = " << vis_score->num_bytes() << vcl_endl;
+        //std::cout << "2" << std::endl;
+        //std::cout << "vis_score cpu_buffer= " << vis_score->cpu_buffer() << std::endl;
+        //std::cout << "vis_score nbytes = " << vis_score->num_bytes() << std::endl;
         vis_score->read_to_buffer(queue);
-        //vcl_cout << "3" << vcl_endl;
+        //std::cout << "3" << std::endl;
         clFinish(queue);
       }
-      //vcl_cout << "4" << vcl_endl;
+      //std::cout << "4" << std::endl;
       //cache->remove_data_base(scene_,*id,boxm2_data_traits<BOXM2_AUX0>::prefix(prefix_name));
       //std::cout << "5" << std::endl;
   }
@@ -286,7 +288,7 @@ boxm2_ocl_update_vis_score
 
 void
 boxm2_ocl_update_vis_score
-::reset(std::string prefix_name){
+::reset(const std::string& prefix_name){
   int status=0;
   cl_command_queue queue = clCreateCommandQueue(device_->context(),*(device_->device_id()),
                                                 CL_QUEUE_PROFILING_ENABLE,&status);

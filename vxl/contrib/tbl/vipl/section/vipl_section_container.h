@@ -1,14 +1,13 @@
 // This is tbl/vipl/section/vipl_section_container.h
 #ifndef vipl_section_container_h_
 #define vipl_section_container_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 
 #include <vector>
 #include <iostream>
 #include <cstddef>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 template <  class DataType > class vipl_section_descriptor; //template forward reference
 template <  class DataType > class vipl_section_iterator; //template forward reference

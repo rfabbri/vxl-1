@@ -15,8 +15,10 @@
 #include "vgui_wx_dialog_impl.h"
 #include <vgui/vgui_gl.h>
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <wx/app.h>
 #include <wx/log.h>

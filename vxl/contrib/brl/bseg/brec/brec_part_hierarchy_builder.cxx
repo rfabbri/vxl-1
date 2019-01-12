@@ -7,7 +7,9 @@
 // \author Ozge C Ozcanli (ozge at lems dot brown dot edu)
 // \date Oct. 16, 2008
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include "brec_part_hierarchy.h"
 #include "brec_part_base_sptr.h"
@@ -618,4 +620,3 @@ brec_part_hierarchy_sptr brec_part_hierarchy_builder::construct_test_detector()
 
   return h;
 }
-

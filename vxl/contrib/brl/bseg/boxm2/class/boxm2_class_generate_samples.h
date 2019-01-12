@@ -8,15 +8,17 @@
 #include <cstddef>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_polygon.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Randomly samples the pixels of an image for training a model
 class boxm2_class_generate_samples
 {
   public:
     boxm2_class_generate_samples(std::string xml_label,
-                                 std::string eoPath,
-                                 std::string irPath,
+                                 const std::string& eoPath,
+                                 const std::string& irPath,
                                  std::size_t K=1000);
 
     //return ground truth samples

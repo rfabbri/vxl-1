@@ -4,7 +4,9 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 vifa_parallel_params::
 vifa_parallel_params(float  angle_min,

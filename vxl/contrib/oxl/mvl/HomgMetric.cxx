@@ -1,14 +1,13 @@
 // This is oxl/mvl/HomgMetric.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 
 #include <iostream>
 #include "HomgMetric.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_identity_3x3.h>
 #include <vnl/vnl_double_2.h>
@@ -56,13 +55,13 @@ std::ostream& HomgMetric::print(std::ostream & s) const
 vgl_point_2d<double> HomgMetric::homg_to_image(vgl_homg_point_2d<double> const& p) const
 {
   if (metric_) return metric_->homg_to_image(p);
-  else return vgl_point_2d<double>(p.x()/p.w(), p.y()/p.w());
+  else return {p.x()/p.w(), p.y()/p.w()};
 }
 
 vnl_double_2 HomgMetric::homg_to_image(const HomgPoint2D& p) const
 {
   if (metric_) return metric_->homg_to_image(p);
-  else return vnl_double_2(p.x()/p.w(), p.y()/p.w());
+  else return {p.x()/p.w(), p.y()/p.w()};
 }
 
 void HomgMetric::homg_to_image(const HomgPoint2D& homg, double* ix, double* iy) const
@@ -105,7 +104,7 @@ HomgPoint2D HomgMetric::homg_to_imagehomg(const HomgPoint2D& p) const
 vgl_homg_point_2d<double> HomgMetric::image_to_homg(vgl_point_2d<double> const& p) const
 {
   if (metric_) return metric_->image_to_homg(p);
-  else return vgl_homg_point_2d<double>(p.x(), p.y(), 1.0);
+  else return {p.x(), p.y(), 1.0};
 }
 
 HomgPoint2D HomgMetric::image_to_homg(const vnl_double_2& p) const

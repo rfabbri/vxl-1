@@ -10,23 +10,23 @@ vifa_int_face_attr(vdgl_fit_lines_params*  fitter_params,
                    vifa_group_pgram_params*  gpp,
                    vifa_group_pgram_params*  gpp_w,
                    vifa_norm_params*    np) :
-  vifa_int_face_attr_common(fitter_params, gpp, gpp_w, VXL_NULLPTR, np),
-  face_(VXL_NULLPTR),
+  vifa_int_face_attr_common(fitter_params, gpp, gpp_w, nullptr, np),
+  face_(nullptr),
   cached_min_(0.0f),
   cached_max_(0.0f),
   cached_mean_(0.0f),
   cached_var_(0.0f),
-  npobj_(VXL_NULLPTR)
+  npobj_(nullptr)
 {
 }
 
 vifa_int_face_attr::
-vifa_int_face_attr(vtol_intensity_face_sptr f,
+vifa_int_face_attr(const vtol_intensity_face_sptr& f,
                    vdgl_fit_lines_params*  fitter_params,
                    vifa_group_pgram_params*  gpp,
                    vifa_group_pgram_params*  gpp_w,
                    vifa_norm_params*    np) :
-  vifa_int_face_attr_common(fitter_params, gpp, gpp_w, VXL_NULLPTR, np),
+  vifa_int_face_attr_common(fitter_params, gpp, gpp_w, nullptr, np),
   face_(f),
   cached_min_(0.0f),
   cached_max_(0.0f),
@@ -35,7 +35,7 @@ vifa_int_face_attr(vtol_intensity_face_sptr f,
   cached_2_parallel_(-1),
   cached_4_parallel_(-1),
   cached_80_parallel_(-1),
-  npobj_(VXL_NULLPTR)
+  npobj_(nullptr)
 {
   attributes_valid_ = this->ComputeAttributes();
 }
@@ -52,11 +52,11 @@ vifa_int_face_attr::
 //
 
 void vifa_int_face_attr::
-SetFace(vtol_intensity_face_sptr  f)
+SetFace(const vtol_intensity_face_sptr&  f)
 {
   face_ = f;
   delete npobj_;
-  npobj_ = VXL_NULLPTR;
+  npobj_ = nullptr;
   attributes_valid_ = this->ComputeAttributes();
 }
 
@@ -74,9 +74,9 @@ GetEdges()
   }
 
   edge_list  fedges; face_->edges(fedges);
-  for (edge_iterator eli = fedges.begin(); eli != fedges.end(); eli++)
+  for (auto & fedge : fedges)
   {
-    vtol_edge_2d_sptr  e = (*eli)->cast_to_edge_2d();
+    vtol_edge_2d_sptr  e = fedge->cast_to_edge_2d();
     if (e)
       edges_.push_back(e);
   }
@@ -111,21 +111,21 @@ GetAttributes(std::vector<float>&  attrs)
 void vifa_int_face_attr::
 GetAttributeNames(std::vector<std::string>&  names)
 {
-  names.push_back("IntMax");
-  names.push_back("IntMin");
-  names.push_back("IntMean");
-  names.push_back("IntVar");
-  names.push_back("Area");
-  names.push_back("AspectRatio");
-  names.push_back("PerimeterLength");
-  names.push_back("WeightedPerimeterLength");
-  names.push_back("Complexity");
-  names.push_back("WeightedComplexity");
-  names.push_back("StrongParallel");
-  names.push_back("WeakParallel");
-  names.push_back("TwoPeakParallel");
-  names.push_back("FourPeakParallel");
-  names.push_back("EightyPercentParallel");
+  names.emplace_back("IntMax");
+  names.emplace_back("IntMin");
+  names.emplace_back("IntMean");
+  names.emplace_back("IntVar");
+  names.emplace_back("Area");
+  names.emplace_back("AspectRatio");
+  names.emplace_back("PerimeterLength");
+  names.emplace_back("WeightedPerimeterLength");
+  names.emplace_back("Complexity");
+  names.emplace_back("WeightedComplexity");
+  names.emplace_back("StrongParallel");
+  names.emplace_back("WeakParallel");
+  names.emplace_back("TwoPeakParallel");
+  names.emplace_back("FourPeakParallel");
+  names.emplace_back("EightyPercentParallel");
 }
 
 // Populate a vector containing attributes native to this class (not
@@ -190,9 +190,9 @@ WeightedPerimeterLength()
     double p = 0.0;
     double intensity_sum = 1.0;
 
-    for (edge_iterator eit = edges.begin(); eit != edges.end(); eit++)
+    for (auto & edge : edges)
     {
-      vtol_edge_2d_sptr  e = (*eit)->cast_to_edge_2d();
+      vtol_edge_2d_sptr  e = edge->cast_to_edge_2d();
       if (e)
       {
         // Leave at default of 1.0 if no adjacent face

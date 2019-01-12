@@ -12,8 +12,10 @@
 
 #include <vimt/vimt_image_pyramid.h>
 #include <vil/vil_save.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <vsl/vsl_indent.h>
 #include <vsl/vsl_binary_loader.h>
@@ -33,9 +35,7 @@ mfpf_mr_point_finder::mfpf_mr_point_finder()
 // Destructor
 //=======================================================================
 
-mfpf_mr_point_finder::~mfpf_mr_point_finder()
-{
-}
+mfpf_mr_point_finder::~mfpf_mr_point_finder() = default;
 
 //: Maximum number of candidates to retain during multi_search_and_prune
 //  If zero, then refine all.
@@ -107,7 +107,7 @@ void mfpf_mr_point_finder::get_sample_vector(
   }
 
   assert(image_pyr(im_L).is_a()=="vimt_image_2d_of<float>");
-  const vimt_image_2d_of<float>& image
+  const auto& image
     = static_cast<const vimt_image_2d_of<float>&>(image_pyr(im_L));
 
   finders_[L]->get_sample_vector(image,p,u,v);
@@ -129,7 +129,7 @@ double mfpf_mr_point_finder::search(const vimt_image_pyramid& im_pyr,
   {
     unsigned im_L = image_level(L,pose0,im_pyr);
     assert(im_pyr(im_L).is_a()=="vimt_image_2d_of<float>");
-    const vimt_image_2d_of<float>& image
+    const auto& image
       = static_cast<const vimt_image_2d_of<float>&>(im_pyr(im_L));
     fit = finder(L).search_with_opt(image,pose.p(),pose.u(),
                            best_pose.p(),best_pose.u());
@@ -157,7 +157,7 @@ double mfpf_mr_point_finder::mr_search(
   {
     unsigned im_L = image_level(L,pose0,im_pyr);
     assert(im_pyr(im_L).is_a()=="vimt_image_2d_of<float>");
-    const vimt_image_2d_of<float>& image
+    const auto& image
       = static_cast<const vimt_image_2d_of<float>&>(im_pyr(im_L));
     fit = finder(L).search_with_opt(image,pose0.p(),pose0.u(),
                                     pose.p(),pose.u());
@@ -176,7 +176,7 @@ void mfpf_mr_point_finder::refine_match(
 {
   unsigned im_L = image_level(L,pose,im_pyr);
   assert(im_pyr(im_L).is_a()=="vimt_image_2d_of<float>");
-  const vimt_image_2d_of<float>& image
+  const auto& image
     = static_cast<const vimt_image_2d_of<float>&>(im_pyr(im_L));
   finder(L).refine_match(image,pose.p(),pose.u(),fit);
 }
@@ -200,7 +200,7 @@ void mfpf_mr_point_finder::multi_search(
   int L=size()-1;
   unsigned im_L = image_level(L,pose0,im_pyr);
   assert(im_pyr(im_L).is_a()=="vimt_image_2d_of<float>");
-  const vimt_image_2d_of<float>& image
+  const auto& image
     = static_cast<const vimt_image_2d_of<float>&>(im_pyr(im_L));
   finder(L).multi_search(image,pose0.p(),pose0.u(),poses,fits);
 
@@ -241,7 +241,7 @@ void mfpf_mr_point_finder::multi_search_and_prune(
   int L0=size()-1;
   unsigned im_L = image_level(L0,pose0,im_pyr);
   assert(im_pyr(im_L).is_a()=="vimt_image_2d_of<float>");
-  const vimt_image_2d_of<float>& image
+  const auto& image
     = static_cast<const vimt_image_2d_of<float>&>(im_pyr(im_L));
   finder(L0).multi_search(image,pose0.p(),pose0.u(),poses,fits);
 
@@ -340,8 +340,8 @@ void mfpf_mr_point_finder::b_write(vsl_b_ostream& bfs) const
 {
   vsl_b_write(bfs,version_no());
   vsl_b_write(bfs,finders_.size());
-  for (unsigned i=0;i<finders_.size();++i)
-    vsl_b_write(bfs,finders_[i]);
+  for (const auto & finder : finders_)
+    vsl_b_write(bfs,finder);
   vsl_b_write(bfs,max_after_pruning_);
 }
 
@@ -397,5 +397,3 @@ void vsl_b_read(vsl_b_istream& bfs, mfpf_mr_point_finder& b)
 {
   b.b_read(bfs);
 }
-
-

@@ -9,7 +9,9 @@
 // \author Ozge C. Ozcanli
 // \date July 07, 2011
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/io/boxm2_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -28,8 +30,8 @@
 
 namespace boxm2_cpp_image_density_process_globals
 {
-  const unsigned n_inputs_ = 5;
-  const unsigned n_outputs_ = 2;
+  constexpr unsigned n_inputs_ = 5;
+  constexpr unsigned n_outputs_ = 2;
   std::size_t lthreads[2]={8,8};
 }
 
@@ -79,20 +81,20 @@ bool boxm2_cpp_image_density_process(bprb_func_process& pro)
   bool foundDataType = false;
   std::string data_type;
   std::vector<std::string> apps = scene->appearances();
-  for (unsigned int i=0; i<apps.size(); ++i) {
-    if ( apps[i] == boxm2_data_traits<BOXM2_MOG3_GREY>::prefix() )
+  for (const auto & app : apps) {
+    if ( app == boxm2_data_traits<BOXM2_MOG3_GREY>::prefix() )
     {
-      data_type = apps[i];
+      data_type = app;
       foundDataType = true;
     }
-    else if ( apps[i] == boxm2_data_traits<BOXM2_MOG3_GREY_16>::prefix() )
+    else if ( app == boxm2_data_traits<BOXM2_MOG3_GREY_16>::prefix() )
     {
-      data_type = apps[i];
+      data_type = app;
       foundDataType = true;
     }
-    else if ( apps[i] == boxm2_data_traits<BOXM2_GAUSS_GREY>::prefix() )
+    else if ( app == boxm2_data_traits<BOXM2_GAUSS_GREY>::prefix() )
     {
-      data_type = apps[i];
+      data_type = app;
       foundDataType = true;
     }
   }
@@ -104,7 +106,7 @@ bool boxm2_cpp_image_density_process(bprb_func_process& pro)
   if (identifier.size() > 0) {
     data_type += "_" + identifier;
   }
-  if (vil_image_view<float> * input_image=dynamic_cast<vil_image_view<float> * > (float_image.ptr()))
+  if (auto * input_image=dynamic_cast<vil_image_view<float> * > (float_image.ptr()))
   {
     std::vector<boxm2_block_id> vis_order=scene->get_vis_blocks(reinterpret_cast<vpgl_generic_camera<double>*>(cam.ptr()));
     if (vis_order.empty())
@@ -114,8 +116,8 @@ bool boxm2_cpp_image_density_process(bprb_func_process& pro)
     }
 
     // function call
-    vil_image_view<float> * density_img=new vil_image_view<float>(input_image->ni(),input_image->nj());
-    vil_image_view<float> * vis_img=new vil_image_view<float>(input_image->ni(),input_image->nj());
+    auto * density_img=new vil_image_view<float>(input_image->ni(),input_image->nj());
+    auto * vis_img=new vil_image_view<float>(input_image->ni(),input_image->nj());
     density_img->fill(0.0f);
     vis_img->fill(1.0f);
 
@@ -123,13 +125,13 @@ bool boxm2_cpp_image_density_process(bprb_func_process& pro)
     for (id = vis_order.begin(); id != vis_order.end(); ++id)
     {
       std::cout<<"Block Id "<<(*id)<<std::endl;
-      boxm2_block *     blk  =  cache->get_block(scene,*id);
+      boxm2_block *     blk = cache->get_block(scene,*id);
       boxm2_data_base *  alph = cache->get_data_base(scene,*id,boxm2_data_traits<BOXM2_ALPHA>::prefix());
-      boxm2_data_base *  mog  = cache->get_data_base(scene,*id,data_type);
+      boxm2_data_base *  mog = cache->get_data_base(scene,*id,data_type);
       std::vector<boxm2_data_base*> datas;
       datas.push_back(alph);
       datas.push_back(mog);
-      boxm2_scene_info_wrapper *scene_info_wrapper=new boxm2_scene_info_wrapper();
+      auto *scene_info_wrapper=new boxm2_scene_info_wrapper();
       scene_info_wrapper->info=scene->get_blk_metadata(*id);
 
       if ( data_type.find(boxm2_data_traits<BOXM2_MOG3_GREY>::prefix()) != std::string::npos )
@@ -167,8 +169,8 @@ bool boxm2_cpp_image_density_process(bprb_func_process& pro)
 
 namespace boxm2_cpp_image_density_masked_process_globals
 {
-  const unsigned n_inputs_ = 8;
-  const unsigned n_outputs_ = 2;
+  constexpr unsigned n_inputs_ = 8;
+  constexpr unsigned n_outputs_ = 2;
   std::size_t lthreads[2]={8,8};
 }
 
@@ -216,28 +218,28 @@ bool boxm2_cpp_image_density_masked_process(bprb_func_process& pro)
   vil_image_view_base_sptr img = pro.get_input<vil_image_view_base_sptr>(i++);
   vil_image_view_base_sptr float_image=boxm2_util::prepare_input_image(img);
   vpgl_camera_double_sptr cam= pro.get_input<vpgl_camera_double_sptr>(i++);
-  float shadow_prior = pro.get_input<float>(i++);
-  float shadow_sigma = pro.get_input<float>(i++);
-  float shadow_thres = pro.get_input<float>(i++);
+  auto shadow_prior = pro.get_input<float>(i++);
+  auto shadow_sigma = pro.get_input<float>(i++);
+  auto shadow_thres = pro.get_input<float>(i++);
   std::string identifier = pro.get_input<std::string>(i);
 
   bool foundDataType = false;
   std::string data_type;
   std::vector<std::string> apps = scene->appearances();
-  for (unsigned int i=0; i<apps.size(); ++i) {
-    if ( apps[i] == boxm2_data_traits<BOXM2_MOG3_GREY>::prefix() )
+  for (const auto & app : apps) {
+    if ( app == boxm2_data_traits<BOXM2_MOG3_GREY>::prefix() )
     {
-      data_type = apps[i];
+      data_type = app;
       foundDataType = true;
     }
-    else if ( apps[i] == boxm2_data_traits<BOXM2_MOG3_GREY_16>::prefix() )
+    else if ( app == boxm2_data_traits<BOXM2_MOG3_GREY_16>::prefix() )
     {
-      data_type = apps[i];
+      data_type = app;
       foundDataType = true;
     }
-    else if ( apps[i] == boxm2_data_traits<BOXM2_GAUSS_GREY>::prefix() )
+    else if ( app == boxm2_data_traits<BOXM2_GAUSS_GREY>::prefix() )
     {
-      data_type = apps[i];
+      data_type = app;
       foundDataType = true;
     }
   }
@@ -249,7 +251,7 @@ bool boxm2_cpp_image_density_masked_process(bprb_func_process& pro)
   if (identifier.size() > 0) {
     data_type += "_" + identifier;
   }
-  if (vil_image_view<float> * input_image=dynamic_cast<vil_image_view<float> * > (float_image.ptr()))
+  if (auto * input_image=dynamic_cast<vil_image_view<float> * > (float_image.ptr()))
   {
     std::vector<boxm2_block_id> vis_order=scene->get_vis_blocks(reinterpret_cast<vpgl_generic_camera<double>*>(cam.ptr()));
     if (vis_order.empty())
@@ -259,8 +261,8 @@ bool boxm2_cpp_image_density_masked_process(bprb_func_process& pro)
     }
 
     // function call
-    vil_image_view<float> * density_img=new vil_image_view<float>(input_image->ni(),input_image->nj());
-    vil_image_view<float> * vis_img=new vil_image_view<float>(input_image->ni(),input_image->nj());
+    auto * density_img=new vil_image_view<float>(input_image->ni(),input_image->nj());
+    auto * vis_img=new vil_image_view<float>(input_image->ni(),input_image->nj());
     density_img->fill(0.0f);
     vis_img->fill(1.0f);
 
@@ -268,13 +270,13 @@ bool boxm2_cpp_image_density_masked_process(bprb_func_process& pro)
     for (id = vis_order.begin(); id != vis_order.end(); ++id)
     {
       std::cout<<"Block Id "<<(*id)<<std::endl;
-      boxm2_block *     blk  =  cache->get_block(scene,*id);
+      boxm2_block *     blk = cache->get_block(scene,*id);
       boxm2_data_base *  alph = cache->get_data_base(scene,*id,boxm2_data_traits<BOXM2_ALPHA>::prefix());
-      boxm2_data_base *  mog  = cache->get_data_base(scene,*id,data_type);
+      boxm2_data_base *  mog = cache->get_data_base(scene,*id,data_type);
       std::vector<boxm2_data_base*> datas;
       datas.push_back(alph);
       datas.push_back(mog);
-      boxm2_scene_info_wrapper *scene_info_wrapper=new boxm2_scene_info_wrapper();
+      auto *scene_info_wrapper=new boxm2_scene_info_wrapper();
       scene_info_wrapper->info=scene->get_blk_metadata(*id);
 
       if ( data_type.find(boxm2_data_traits<BOXM2_MOG3_GREY>::prefix()) != std::string::npos )
@@ -334,4 +336,3 @@ bool boxm2_cpp_image_density_masked_process(bprb_func_process& pro)
 
   return true;
 }
-

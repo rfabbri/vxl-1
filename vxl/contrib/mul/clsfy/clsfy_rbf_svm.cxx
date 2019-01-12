@@ -10,8 +10,10 @@
 // \author Ian Scott
 // \date Jan 2001
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_indent.h>
 #include <vsl/vsl_vector_io.h>
 #include <vnl/io/vnl_io_vector.h>
@@ -19,15 +21,11 @@
 
 //=======================================================================
 
-clsfy_rbf_svm::clsfy_rbf_svm()
-{
-}
+clsfy_rbf_svm::clsfy_rbf_svm() = default;
 
 //=======================================================================
 
-clsfy_rbf_svm::~clsfy_rbf_svm()
-{
-}
+clsfy_rbf_svm::~clsfy_rbf_svm() = default;
 
 
 //==================================================================

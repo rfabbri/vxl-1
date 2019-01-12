@@ -1,7 +1,4 @@
 // This is mul/vil3d/vil3d_new.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Ian Scott 4 Mar 2003
@@ -10,7 +7,9 @@
 #include <cstring>
 #include "vil3d_new.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vil3d/vil3d_file_format.h>
 #include <vil3d/vil3d_image_resource.h>
@@ -43,7 +42,7 @@ vil3d_image_resource_sptr vil3d_new_image_resource(const char* name,
 
 
 
-  vil3d_image_resource_sptr outimage = VXL_NULLPTR;
+  vil3d_image_resource_sptr outimage = nullptr;
   for (unsigned i=0; i < vil3d_file_format::n_formats(); ++i)
   {
     const vil3d_file_format& fmt = vil3d_file_format::format(i);
@@ -64,5 +63,5 @@ vil3d_image_resource_sptr vil3d_new_image_resource(const char* name,
   }
   std::cerr << '.' << std::endl;
 
-  return VXL_NULLPTR;
+  return nullptr;
 }

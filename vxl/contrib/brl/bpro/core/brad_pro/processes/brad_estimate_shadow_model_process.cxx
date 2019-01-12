@@ -7,8 +7,8 @@
 
 namespace brad_estimate_shadow_model_process_globals
 {
-  const unsigned n_inputs_  = 3;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 3;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 
@@ -45,7 +45,7 @@ bool brad_estimate_shadow_model_process(bprb_func_process& pro)
   unsigned i=0;
   bbas_1d_array_float_sptr intensities = pro.get_input<bbas_1d_array_float_sptr>(i++);
   bbas_1d_array_float_sptr visibilities = pro.get_input<bbas_1d_array_float_sptr>(i++);
-  float ambient_light = pro.get_input<float>(i++);
+  auto ambient_light = pro.get_input<float>(i++);
 
   unsigned num_samples=intensities->data_array.size();
 
@@ -66,4 +66,3 @@ bool brad_estimate_shadow_model_process(bprb_func_process& pro)
   pro.set_output_val<float>(0, reflectance);
   return true;
 }
-

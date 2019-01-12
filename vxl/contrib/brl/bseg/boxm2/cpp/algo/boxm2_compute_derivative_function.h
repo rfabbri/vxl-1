@@ -9,7 +9,9 @@
 #include <boxm2/cpp/algo/boxm2_mog3_grey_processor.h>
 #include <boct/boct_bit_tree.h>
 #include <vnl/vnl_vector_fixed.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/io/boxm2_cache.h>
 #include <vgl/vgl_point_3d.h>
 
@@ -37,7 +39,7 @@ class boxm2_compute_derivative_function
             const std::vector<std::pair<vgl_point_3d<int>, vgl_point_3d<double> > >& neighbors,  const boxm2_array_3d<uchar16>& trees,
             const boxm2_data_traits<BOXM2_ALPHA>::datatype* alpha_data, int curr_depth);
   //: load kernel from file
-  std::vector<std::pair<vgl_point_3d<int>, float> > load_kernel(std::string filename);
+  std::vector<std::pair<vgl_point_3d<int>, float> > load_kernel(const std::string& filename);
   //: apply a filter to given neighborhood
   float apply_filter(std::vector<std::pair<vgl_point_3d<int>, float> > neighbors, std::vector<std::pair<vgl_point_3d<int>, float> > filter);
 

@@ -7,7 +7,9 @@
 #include "mcal_pca.h"
 //:
 // \file
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vsl/vsl_indent.h>
 #include <vsl/vsl_binary_io.h>
@@ -37,9 +39,7 @@ mcal_pca::mcal_pca()
 // Destructor
 //=======================================================================
 
-mcal_pca::~mcal_pca()
-{
-}
+mcal_pca::~mcal_pca() = default;
 
 
 //: Return the number of modes to retain

@@ -12,7 +12,9 @@
 //
 
 #include <bprb/bprb_parameters.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpgl/vpgl_camera.h>
 #include <vpgl/vpgl_perspective_camera.h>
 
@@ -23,9 +25,9 @@ bool vpgl_compute_persp_cam_pa_covariance_process_cons(bprb_func_process& pro)
   //input[1]: the std dev of theta
   //input[2]: output file name to write 3x3 covariance matrix
   std::vector<std::string> input_types;
-  input_types.push_back("vpgl_camera_double_sptr");
-  input_types.push_back("float");  // passed to the process in degrees, will be converted to radians
-  input_types.push_back("vcl_string");
+  input_types.emplace_back("vpgl_camera_double_sptr");
+  input_types.emplace_back("float");  // passed to the process in degrees, will be converted to radians
+  input_types.emplace_back("vcl_string");
   return pro.set_input_types(input_types);
 }
 
@@ -41,7 +43,7 @@ bool vpgl_compute_persp_cam_pa_covariance_process(bprb_func_process& pro)
   vpgl_camera_double_sptr camera = pro.get_input<vpgl_camera_double_sptr>(0);
   double std_dev = pro.get_input<float>(1)/180.0*vnl_math::pi;
   std::string filename = pro.get_input<std::string>(2);
-  vpgl_perspective_camera<double> *cam = dynamic_cast<vpgl_perspective_camera<double>*>(camera.as_pointer());
+  auto *cam = dynamic_cast<vpgl_perspective_camera<double>*>(camera.as_pointer());
 
   if (!cam) {
     std::cerr << "error: could not convert camera input to a vpgl_perspective_camera\n";
@@ -66,4 +68,3 @@ bool vpgl_compute_persp_cam_pa_covariance_process(bprb_func_process& pro)
 
   return true;
 }
-

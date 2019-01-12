@@ -22,7 +22,9 @@
 #include <vgl/vgl_box_3d.h>
 #include <vnl/vnl_vector_fixed.h>
 #include <vsl/vsl_binary_io.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 template <class T_loc, class T_data>
 class boct_tree
@@ -35,7 +37,7 @@ class boct_tree
   typedef T_data datatype;
 
   //: Default constructor
-  boct_tree() : num_levels_(0), root_level_(-1), max_val_(0), root_(VXL_NULLPTR), global_bbox_() {}
+  boct_tree() : num_levels_(0), root_level_(-1), max_val_(0), root_(nullptr), global_bbox_() {}
 
   //: Construct an empty tree from maximum number of levels and levels, to initialize
   boct_tree(short num_levels, short init_levels=1);

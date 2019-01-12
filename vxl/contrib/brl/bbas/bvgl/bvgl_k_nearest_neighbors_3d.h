@@ -7,30 +7,35 @@
 // \author February 22, 2016 J.L. Mundy
 //
 
+#include <iostream>
+#include <iosfwd>
+#include <limits>
+#include <algorithm>
+#include <utility>
 #include <vgl/vgl_pointset_3d.h>
 #include <bnabo/bnabo.h>
-#include <vcl_iosfwd.h>
-#include <vcl_limits.h>
-#include <algorithm> // for std::swap
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 template <class Type>
 class bvgl_k_nearest_neighbors_3d
 {
  public:
   //: default constructor
- bvgl_k_nearest_neighbors_3d():tolerance_(Type(0)), search_tree_(VXL_NULLPTR){}
+ bvgl_k_nearest_neighbors_3d():tolerance_(Type(0)), search_tree_(nullptr){}
   //: Construct from a vgl_pointset
-  bvgl_k_nearest_neighbors_3d(vgl_pointset_3d<Type> const& ptset, Type tolerance = Type(0));
+  bvgl_k_nearest_neighbors_3d(vgl_pointset_3d<Type>  const &ptset, Type tolerance = Type(0));
   //: destructor
   ~bvgl_k_nearest_neighbors_3d(){
     if(search_tree_)
       delete search_tree_;
-    search_tree_ = VXL_NULLPTR;
+    search_tree_ = nullptr;
   }
   //: copy constructor
   bvgl_k_nearest_neighbors_3d(bvgl_k_nearest_neighbors_3d const& other) :
     tolerance_(other.tolerance_), ptset_(other.ptset_),
-    search_tree_(VXL_NULLPTR)
+    search_tree_(nullptr)
   {
     // create handles init of M_ and search_tree_, and flags_
     create();
@@ -102,13 +107,13 @@ template <class Type>
 bool bvgl_k_nearest_neighbors_3d<Type>::create(){
   if(search_tree_){
     delete search_tree_;
-    search_tree_ = VXL_NULLPTR;
+    search_tree_ = nullptr;
   }
   flags_ = 0;
   flags_ = flags_ |  Nabo::NearestNeighbourSearch<Type>::ALLOW_SELF_MATCH;
   unsigned n = ptset_.npts(), dim = 3;
   if(n==0){
-    search_tree_ = VXL_NULLPTR;
+    search_tree_ = nullptr;
     return false;
   }
   M_.set_size(dim, n);
@@ -121,7 +126,9 @@ bool bvgl_k_nearest_neighbors_3d<Type>::create(){
 }
 template <class Type>
 bvgl_k_nearest_neighbors_3d<Type>::bvgl_k_nearest_neighbors_3d(vgl_pointset_3d<Type> const& ptset, Type tolerance):
-search_tree_(VXL_NULLPTR), tolerance_(tolerance), ptset_(ptset){
+tolerance_(tolerance),
+search_tree_(nullptr),
+ptset_(std::move(ptset)){
   create();
 }
 
@@ -135,7 +142,7 @@ bool bvgl_k_nearest_neighbors_3d<Type>::knn_indices(vgl_point_3d<Type> const& p,
     return false;
   }
   search_tree_->knn(q, indices, dists2, k, tolerance_, flags_);
-  if(dists2[k-1] == vcl_numeric_limits<Type>::infinity()||indices[k-1]<0) {
+  if(dists2[k-1] == std::numeric_limits<Type>::infinity()||indices[k-1]<0) {
     return false;
   }
   return true;
@@ -150,7 +157,7 @@ bool bvgl_k_nearest_neighbors_3d<Type>::closest_index(vgl_point_3d<Type> const& 
   if(!search_tree_)
     return false;
   search_tree_->knn(q, indices,dists2, k, tolerance_, flags_);
-  if(dists2[0] == vcl_numeric_limits<Type>::infinity()||indices[0]<0)
+  if(dists2[0] == std::numeric_limits<Type>::infinity()||indices[0]<0)
     return false;
   index = static_cast<unsigned>(indices[0]);
   return true;
@@ -184,7 +191,7 @@ inline bool bvgl_k_nearest_neighbors_3d<Type>::knn_util(vgl_point_3d<Type> const
   search_tree_->knn(q, indices, dists2, k, tolerance_, flags_);
   bool has_normals = ptset_.has_normals();
   for(unsigned i = 0; i<k; ++i){
-    if(dists2[i] == vcl_numeric_limits<Type>::infinity()||indices[i]<0)
+    if(dists2[i] == std::numeric_limits<Type>::infinity()||indices[i]<0)
       return false;
     unsigned indx = static_cast<unsigned>(indices[i]);
     if(has_normals)

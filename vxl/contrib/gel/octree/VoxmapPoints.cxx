@@ -1,7 +1,4 @@
 // This is gel/octree/VoxmapPoints.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author
@@ -12,6 +9,7 @@
 //
 //-----------------------------------------------------------------------------
 
+#include <utility>
 #include "VoxmapPoints.h"
 
 // Default ctor

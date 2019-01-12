@@ -1,14 +1,14 @@
 // This is core/vgui/vgui_tag.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
 // \brief  See vgui_tag.h for a description of this file.
 
 #include "vgui_tag.h"
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #define MAXTAGS 255
 
@@ -25,7 +25,7 @@ int vgui_tag_add(vgui_tag_function f, char const * /*tk*/) {
 }
 
 vgui_tag_function const *vgui_tag_list() {
-  tags[numtags] = VXL_NULLPTR;
+  tags[numtags] = nullptr;
   return tags;
 }
 

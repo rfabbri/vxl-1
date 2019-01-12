@@ -1,9 +1,6 @@
 // This is core/vidl/vidl_dc1394_istream.h
 #ifndef vidl_dc1394_istream_h_
 #define vidl_dc1394_istream_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief A video input stream using libdc1394
@@ -26,7 +23,9 @@
 #include <string>
 #include "vidl_istream.h"
 #include "vidl_iidc1394_params.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 //: A video input stream using libdc1394

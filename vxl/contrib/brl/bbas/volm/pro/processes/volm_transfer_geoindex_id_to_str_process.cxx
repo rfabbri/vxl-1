@@ -14,8 +14,8 @@
 
 namespace volm_transfer_geoindex_id_to_str_process_globals
 {
-  const unsigned n_inputs_ = 2;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 2;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool volm_transfer_geoindex_id_to_str_process_cons(bprb_func_process& pro)
@@ -63,8 +63,8 @@ bool volm_transfer_geoindex_id_to_str_process(bprb_func_process& pro)
 
 namespace volm_transfer_geoindex_id_to_str_process2_globals
 {
-  const unsigned n_inputs_  = 3;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 3;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool volm_transfer_geoindex_id_to_str_process2_cons(bprb_func_process& pro)
@@ -87,7 +87,7 @@ bool volm_transfer_geoindex_id_to_str_process2(bprb_func_process& pro)
   }
   // get the input
   unsigned i = 0;
-  float min_size = pro.get_input<float>(i++);
+  auto min_size = pro.get_input<float>(i++);
   std::string in_poly = pro.get_input<std::string>(i++);
   std::string out_txt = pro.get_input<std::string>(i++);
   // create the tree
@@ -98,8 +98,8 @@ bool volm_transfer_geoindex_id_to_str_process2(bprb_func_process& pro)
   // find the bbox of ROI from the input polygon
   vgl_polygon<double> poly = bkml_parser::parse_polygon(in_poly);
   vgl_box_2d<double> bbox;
-  for (unsigned i = 0; i < poly[0].size(); i++)
-    bbox.add(poly[0][i]);
+  for (auto i : poly[0])
+    bbox.add(i);
   std::cout << "bbox of ROI: " << bbox << std::endl;
 
   // create a geo index and use the leaves as scenes, use template param as volm_loc_hyp_sptr but it won't actually be used

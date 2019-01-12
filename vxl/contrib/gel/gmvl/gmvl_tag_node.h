@@ -12,14 +12,17 @@
 
 #include <iostream>
 #include <string>
-#include <vcl_compiler.h>
+#include <utility>
 #include <gmvl/gmvl_node.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class gmvl_tag_node : public gmvl_node
 {
  public:
-  gmvl_tag_node(std::string const& name) : name_(name) { type_="gmvl_tag_node"; }
-  ~gmvl_tag_node() {}
+  gmvl_tag_node(std::string  name) : name_(std::move(name)) { type_="gmvl_tag_node"; }
+  ~gmvl_tag_node() override = default;
 
   // accessor
   std::string &get() { return name_; }

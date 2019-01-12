@@ -16,8 +16,10 @@
 #include <vector>
 #include <cmath>
 #include <limits>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_line_2d.h>
 #include <vpgl/vpgl_perspective_camera.h>
 class bpgl_camera_utils
@@ -46,7 +48,7 @@ class bpgl_camera_utils
                     double tilt, double roll);
 
   // return a vector of cameras saved in the specified directory
-  static std::vector<vpgl_perspective_camera<double>* > cameras_from_directory(std::string dir);
+  static std::vector<vpgl_perspective_camera<double>* > cameras_from_directory(const std::string& dir);
 
   // the horizon line for a given camera
   static vgl_line_2d<double>

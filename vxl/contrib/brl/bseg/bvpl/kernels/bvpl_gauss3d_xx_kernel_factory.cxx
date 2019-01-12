@@ -5,7 +5,9 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_float_3.h>
 
@@ -99,7 +101,7 @@ void bvpl_gauss3d_xx_kernel_factory::create_canonical()
       for (int z= min_z; z<= max_z; z++)
       {
         float exponential = std::exp( -0.5f * (x_2_over_v1 + second_power(float(y))/var2 + second_power(float(z))/var3));
-        canonical_kernel_.push_back(std::pair<point_3d,dispatch>(point_3d(float(x),float(y),float(z)), dispatch((exponential/w)*diff_term)));
+        canonical_kernel_.emplace_back(point_3d(float(x),float(y),float(z)), dispatch((exponential/w)*diff_term));
       }
     }
   }

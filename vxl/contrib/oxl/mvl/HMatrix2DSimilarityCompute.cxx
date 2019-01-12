@@ -1,11 +1,11 @@
 // This is oxl/mvl/HMatrix2DSimilarityCompute.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 
 #include "HMatrix2DSimilarityCompute.h"
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vnl/vnl_double_2.h>
 #include <vnl/vnl_double_2x2.h>
@@ -21,7 +21,7 @@
 //
 //
 HMatrix2DSimilarityCompute::HMatrix2DSimilarityCompute(void) : HMatrix2DCompute() { }
-HMatrix2DSimilarityCompute::~HMatrix2DSimilarityCompute() { }
+HMatrix2DSimilarityCompute::~HMatrix2DSimilarityCompute() = default;
 
 //
 //

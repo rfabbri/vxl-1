@@ -5,7 +5,9 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bvxm/grid/bvxm_voxel_grid.h>
 
 void bvxm_merge_mog::kl_merge(bvxm_merge_mog::mix_gauss_type const& mixture, bsta_gauss_sf1 &gaussian)
@@ -45,12 +47,12 @@ void bvxm_merge_mog::kl_merge(bvxm_merge_mog::mix_gauss_type const& mixture, bst
 
 //: Merges the components of the gaussian mixtures at each voxel into a single gaussian
 //  Thus the resulting grid contains unimodal gaussians
-bool bvxm_merge_mog::kl_merge_grid(bvxm_voxel_grid_base_sptr apm_base,
-                                   bvxm_voxel_grid_base_sptr gauss_base)
+bool bvxm_merge_mog::kl_merge_grid(const bvxm_voxel_grid_base_sptr& apm_base,
+                                   const bvxm_voxel_grid_base_sptr& gauss_base)
 {
   //cast grids
-  bvxm_voxel_grid< mix_gauss_type >* apm_grid = static_cast<bvxm_voxel_grid< mix_gauss_type>* >(apm_base.ptr());
-  bvxm_voxel_grid< gauss_type >* gauss_grid = static_cast<bvxm_voxel_grid< gauss_type>* >(gauss_base.ptr());
+  auto* apm_grid = static_cast<bvxm_voxel_grid< mix_gauss_type>* >(apm_base.ptr());
+  auto* gauss_grid = static_cast<bvxm_voxel_grid< gauss_type>* >(gauss_base.ptr());
 
   //iterate through the grid merging mixtures
   bvxm_voxel_grid< mix_gauss_type >::iterator apm_it = apm_grid->begin();
@@ -70,12 +72,12 @@ bool bvxm_merge_mog::kl_merge_grid(bvxm_voxel_grid_base_sptr apm_base,
 }
 
 //: Converts a mog grid into a most probable mode grid
-bool bvxm_merge_mog::mpm_grid(bvxm_voxel_grid_base_sptr apm_base,
-                              bvxm_voxel_grid_base_sptr gauss_base)
+bool bvxm_merge_mog::mpm_grid(const bvxm_voxel_grid_base_sptr& apm_base,
+                              const bvxm_voxel_grid_base_sptr& gauss_base)
 {
   //cast grids
-  bvxm_voxel_grid< mix_gauss_type >* apm_grid = static_cast<bvxm_voxel_grid< mix_gauss_type>* >(apm_base.ptr());
-  bvxm_voxel_grid< gauss_type >* gauss_grid = static_cast<bvxm_voxel_grid< gauss_type>* >(gauss_base.ptr());
+  auto* apm_grid = static_cast<bvxm_voxel_grid< mix_gauss_type>* >(apm_base.ptr());
+  auto* gauss_grid = static_cast<bvxm_voxel_grid< gauss_type>* >(gauss_base.ptr());
 
   //iterate through the grid merging mixtures
   bvxm_voxel_grid< mix_gauss_type >::iterator apm_it = apm_grid->begin();
@@ -94,4 +96,3 @@ bool bvxm_merge_mog::mpm_grid(bvxm_voxel_grid_base_sptr apm_base,
   }
   return true;
 }
-

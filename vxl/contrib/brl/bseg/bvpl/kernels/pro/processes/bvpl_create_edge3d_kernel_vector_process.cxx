@@ -19,8 +19,8 @@
 
 namespace bvpl_create_edge3d_kernel_vector_process_globals
 {
-  const unsigned n_inputs_ = 6;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 6;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 
@@ -71,4 +71,3 @@ bool bvpl_create_edge3d_kernel_vector_process(bprb_func_process& pro)
 
   return true;
 }
-

@@ -10,9 +10,7 @@ rgrl_object()
 {}
 
 rgrl_object::
-~rgrl_object()
-{
-}
+~rgrl_object() = default;
 
 void
 rgrl_object::
@@ -44,7 +42,7 @@ warning() const
 
 unsigned int
 rgrl_object::
-add_observer( rgrl_event_sptr event, rgrl_command_sptr cmd )
+add_observer( const rgrl_event_sptr& event, const rgrl_command_sptr& cmd )
 {
   rgrl_object_observer new_observer( cmd, event );
   observers_[observer_count_] = new_observer;
@@ -56,10 +54,10 @@ rgrl_command_sptr
 rgrl_object::
 get_command(unsigned int tag)
 {
-  observer_map::iterator i =  observers_.find( tag );
+  auto i =  observers_.find( tag );
 
   if ( i == observers_.end() )
-    return VXL_NULLPTR;
+    return nullptr;
 
   return i->second.command_;
 }
@@ -69,7 +67,7 @@ rgrl_object::
 invoke_event( const rgrl_event & event)
 {
   typedef observer_map::iterator obs_itr;
-  obs_itr i = observers_.begin();
+  auto i = observers_.begin();
   for ( ; i != observers_.end(); ++i) {
     rgrl_event_sptr e =  i->second.event_;
     if (e->is_same_type(event)) {
@@ -82,8 +80,7 @@ void
 rgrl_object::
 invoke_event( const rgrl_event & event) const
 {
-  typedef observer_map::const_iterator const_obs_itr;
-  const_obs_itr i = observers_.begin();
+  auto i = observers_.begin();
   for ( ; i != observers_.end(); ++i) {
     const rgrl_event_sptr e =  i->second.event_;
     if (e->is_same_type(event)) {
@@ -96,7 +93,7 @@ void
 rgrl_object::
 remove_observer(unsigned int tag)
 {
-  observer_map::iterator i =  observers_.find( tag );
+  auto i =  observers_.find( tag );
 
   if ( i == observers_.end() ) return;
   observers_.erase(tag);
@@ -106,8 +103,7 @@ bool
 rgrl_object::
 has_observer( const rgrl_event & event ) const
 {
-  typedef observer_map::const_iterator const_obs_itr;
-  const_obs_itr i = observers_.begin();
+  auto i = observers_.begin();
   for ( ; i != observers_.end(); ++i) {
     const rgrl_event_sptr e = i->second.event_;
     if ( e->is_same_type(event) ) {

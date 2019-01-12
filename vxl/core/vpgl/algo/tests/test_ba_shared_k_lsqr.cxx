@@ -13,33 +13,33 @@ void setup_scene(const vpgl_calibration_matrix<double>& K,
 {
   world.clear();
   // The world points are the 8 corners of a unit cube
-  world.push_back(vgl_point_3d<double>(0.0, 0.0, 0.0));
-  world.push_back(vgl_point_3d<double>(0.0, 0.0, 1.0));
-  world.push_back(vgl_point_3d<double>(0.0, 1.0, 0.0));
-  world.push_back(vgl_point_3d<double>(0.0, 1.0, 1.0));
-  world.push_back(vgl_point_3d<double>(1.0, 0.0, 0.0));
-  world.push_back(vgl_point_3d<double>(1.0, 0.0, 1.0));
-  world.push_back(vgl_point_3d<double>(1.0, 1.0, 0.0));
-  world.push_back(vgl_point_3d<double>(1.0, 1.0, 1.0));
+  world.emplace_back(0.0, 0.0, 0.0);
+  world.emplace_back(0.0, 0.0, 1.0);
+  world.emplace_back(0.0, 1.0, 0.0);
+  world.emplace_back(0.0, 1.0, 1.0);
+  world.emplace_back(1.0, 0.0, 0.0);
+  world.emplace_back(1.0, 0.0, 1.0);
+  world.emplace_back(1.0, 1.0, 0.0);
+  world.emplace_back(1.0, 1.0, 1.0);
 
   vgl_rotation_3d<double> I; // no rotation initially
 
   cameras.clear();
-  cameras.push_back(vpgl_perspective_camera<double>(K,vgl_homg_point_3d<double>(8.0, 0.0, 8.0),I));
-  cameras.push_back(vpgl_perspective_camera<double>(K,vgl_homg_point_3d<double>(10.0, 10.0, 0.0),I));
-  cameras.push_back(vpgl_perspective_camera<double>(K,vgl_homg_point_3d<double>(7.0, 7.0, 7.0),I));
-  cameras.push_back(vpgl_perspective_camera<double>(K,vgl_homg_point_3d<double>(0.0, -15.0, -2.0),I));
-  cameras.push_back(vpgl_perspective_camera<double>(K,vgl_homg_point_3d<double>(5.0, 0.0, 0.0),I));
+  cameras.emplace_back(K,vgl_homg_point_3d<double>(8.0, 0.0, 8.0),I);
+  cameras.emplace_back(K,vgl_homg_point_3d<double>(10.0, 10.0, 0.0),I);
+  cameras.emplace_back(K,vgl_homg_point_3d<double>(7.0, 7.0, 7.0),I);
+  cameras.emplace_back(K,vgl_homg_point_3d<double>(0.0, -15.0, -2.0),I);
+  cameras.emplace_back(K,vgl_homg_point_3d<double>(5.0, 0.0, 0.0),I);
 
   // point all cameras to look at the origin
-  for (unsigned int i=0; i<cameras.size(); ++i)
-    cameras[i].look_at(vgl_homg_point_3d<double>(0.0, 0.0, 0.0));
+  for (auto & camera : cameras)
+    camera.look_at(vgl_homg_point_3d<double>(0.0, 0.0, 0.0));
 
   // project all points in all images
   image_points.clear();
-  for (unsigned int i=0; i<cameras.size(); ++i){
-    for (unsigned int j=0; j<world.size(); ++j){
-      image_points.push_back(cameras[i](vgl_homg_point_3d<double>(world[j])));
+  for (auto & camera : cameras){
+    for (const auto & j : world){
+      image_points.emplace_back(camera(vgl_homg_point_3d<double>(j)));
     }
   }
 }
@@ -99,13 +99,13 @@ static void test_ba_shared_k_lsqr()
 
   vnl_random rnd;
   vnl_vector<double> a2(a),b2(b),c2(c);
-  for ( unsigned i=0; i<b2.size(); ++i)
+  for (double & i : b2)
   {
-    b2[i] += rnd.normal()/1000;
+    i += rnd.normal()/1000;
   }
-  for ( unsigned i=0; i<a2.size(); ++i)
+  for (double & i : a2)
   {
-    a2[i] += rnd.normal()/1000;
+    i += rnd.normal()/1000;
   }
 
   func.set_residual_scale(10.0);

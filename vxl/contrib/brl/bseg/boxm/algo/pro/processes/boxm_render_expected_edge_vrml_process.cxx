@@ -22,12 +22,14 @@
 #include <bvrml/bvrml_write.h>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_intersection.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 namespace boxm_render_expected_edge_vrml_process_globals
 {
-  const unsigned n_inputs_ = 4;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 4;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool boxm_render_expected_edge_vrml_process_cons(bprb_func_process& pro)
@@ -63,7 +65,7 @@ bool boxm_render_expected_edge_vrml_process(bprb_func_process& pro)
   boxm_scene_base_sptr scene_ptr = pro.get_input<boxm_scene_base_sptr>(i++);
   //vpgl_camera_double_sptr camera = pro.get_input<vpgl_camera_double_sptr>(i++);
   std::string path = pro.get_input<std::string>(i++);
-  float threshold = pro.get_input<float>(i++);
+  auto threshold = pro.get_input<float>(i++);
   int s = pro.get_input<int>(i++); // FIXME - unused!
 
   std::ofstream stream(path.c_str());
@@ -73,7 +75,7 @@ bool boxm_render_expected_edge_vrml_process(bprb_func_process& pro)
     if (!scene_ptr->multi_bin())
     {
       typedef boct_tree<short, boxm_inf_line_sample<float> > type;
-      boxm_scene<type>* scene = dynamic_cast<boxm_scene<type>*> (scene_ptr.as_pointer());
+      auto* scene = dynamic_cast<boxm_scene<type>*> (scene_ptr.as_pointer());
       if (!scene) {
         std::cout << "boxm_render_expected_edge_process: the scene is not of expected type" << std::endl;
         return false;
@@ -99,9 +101,8 @@ bool boxm_render_expected_edge_vrml_process(bprb_func_process& pro)
         std::vector<boct_tree_cell<short,boxm_inf_line_sample<float> >*> cells = tree->leaf_cells();
 
         // iterate over cells
-        for (unsigned i=0; i<cells.size(); ++i)
+        for (auto cell : cells)
         {
-          boct_tree_cell<short,boxm_inf_line_sample<float> >* cell = cells[i];
           boxm_inf_line_sample<float> data = cell->data();
           vgl_infinite_line_3d<float> line = data.line_;
           vgl_vector_2d<double> x0(line.x0().x(), line.x0().y());

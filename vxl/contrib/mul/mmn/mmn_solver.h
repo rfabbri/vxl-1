@@ -7,15 +7,17 @@
 
 #include <vector>
 #include <string>
-#include <vcl_memory.h>
 #include <iostream>
+#include <memory>
 #include <iosfwd>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <mmn/mmn_arc.h>
 #include <vnl/vnl_fwd.h>
 
 #include <vsl/vsl_binary_io.h>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
 
 //: Base for classes which solve Markov Random Field problems.
 class mmn_solver
@@ -32,7 +34,7 @@ public:
 
     //: Input the arcs that define the graph
   virtual void set_arcs(unsigned num_nodes,
-                        const std::vector<mmn_arc>& arcs) =0;
+                        const std::vector<mmn_arc>& arcs) = 0;
 
   //: Find values for each node with minimise the total cost
   //  \param node_cost: node_cost[i][j] is cost of selecting value j for node i
@@ -69,7 +71,7 @@ public:
     //: Load class from binary file stream
   virtual void b_read(vsl_b_istream& bfs) =0;
 
-  static vcl_unique_ptr<mmn_solver>
+  static std::unique_ptr<mmn_solver>
     create_from_stream(std::istream &is);
 };
 
@@ -89,5 +91,3 @@ std::ostream& operator<<(std::ostream& os,const mmn_solver& b);
 std::ostream& operator<<(std::ostream& os,const mmn_solver* b);
 
 #endif
-
-

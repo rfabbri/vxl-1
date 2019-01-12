@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cmath>
 #include <cstdio>
+#include <utility>
 #include "bwm_video_corr_processor.h"
 //:
 // \file
@@ -29,7 +30,9 @@
 
 #include <vpgl/vpgl_lvcs.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //Minimum number of correspondences on a frame to compute cameras
 //static const unsigned min_corrs = 10;
@@ -38,7 +41,7 @@ static const unsigned min_corrs = 6;
 // if an element of pixels is negative it indicates the point was outside the
 // image
 static void extract_window(float u, float v, int radius,
-                           vil_image_view<float> image,
+                           const vil_image_view<float>& image,
                            std::vector<float>& pixels)
 {
   pixels.clear();
@@ -61,7 +64,7 @@ bwm_video_corr_lsqr_cost_func(vil_image_view<float> const& base_image,
                               std::vector<float> corr_window_ab
                              )
   : vnl_least_squares_function(1,1), base_image_(base_image),
-    match_radius_(match_radius), corr_window_ab_(corr_window_ab)
+    match_radius_(match_radius), corr_window_ab_(std::move(corr_window_ab))
 {
   use_gradient_ = false;
   // a mxm image region centered on the projected world pointa
@@ -76,8 +79,8 @@ bwm_video_corr_lsqr_cost_func(vil_image_view<float> const& base_image,
 void bwm_video_corr_lsqr_cost_func::f(vnl_vector<double> const& x,
                                       vnl_vector<double>& fx)
 {
-  float u = static_cast<float>(x[0]);
-  float v = static_cast<float>(x[1]);
+  auto u = static_cast<float>(x[0]);
+  auto v = static_cast<float>(x[1]);
   std::vector<float> pixels;
   extract_window(u, v, match_radius_, base_image_, pixels);
   unsigned msq = pixels.size();
@@ -101,13 +104,13 @@ bwm_video_corr_cost_function(vil_image_view<float> const& base_image,
                              unsigned match_radius,
                              std::vector<float> corr_window_ab)
   : vnl_cost_function(2), base_image_(base_image),
-    match_radius_(match_radius), corr_window_ab_(corr_window_ab)
+    match_radius_(match_radius), corr_window_ab_(std::move(corr_window_ab))
 {}
 
 double bwm_video_corr_cost_function::f(vnl_vector<double> const& x)
 {
-  float u = static_cast<float>(x[0]);
-  float v = static_cast<float>(x[1]);
+  auto u = static_cast<float>(x[0]);
+  auto v = static_cast<float>(x[1]);
   double r = 0;
   std::vector<float> pixels;
   extract_window(u, v, match_radius_, base_image_, pixels);
@@ -220,8 +223,8 @@ bool bwm_video_corr_processor::open_video_site(std::string const& site_path,
 void bwm_video_corr_processor::
 set_world_pts(std::vector<vgl_point_3d<double> > const& pts)
 {
-  std::vector<vgl_point_3d<double> >::const_iterator pit = pts.begin();
-  for (std::vector<bwm_video_corr_sptr>::iterator cit = corrs_.begin();
+  auto pit = pts.begin();
+  for (auto cit = corrs_.begin();
        cit != corrs_.end()&&pit!=pts.end(); ++cit, ++pit)
     (*cit)->set_world_pt(*pit);
 }
@@ -229,26 +232,24 @@ set_world_pts(std::vector<vgl_point_3d<double> > const& pts)
 std::vector<vgl_point_3d<double> > bwm_video_corr_processor::world_pts()
 {
   std::vector<vgl_point_3d<double> > pts;
-  for (std::vector<bwm_video_corr_sptr>::iterator cit = corrs_.begin();
-       cit != corrs_.end(); ++cit)
-    if ((*cit)->world_pt_valid())
-      pts.push_back((*cit)->world_pt());
+  for (auto & corr : corrs_)
+    if (corr->world_pt_valid())
+      pts.push_back(corr->world_pt());
   return pts;
 }
 
 //: if the world coordinates are given in global coordinates of satellite cameras, convert them to local coordinate frame of the given lvcs
-void bwm_video_corr_processor::convert_world_pts_to_local(vpgl_lvcs_sptr lvcs)
+void bwm_video_corr_processor::convert_world_pts_to_local(const vpgl_lvcs_sptr& lvcs)
 {
-  for (std::vector<bwm_video_corr_sptr>::iterator cit = corrs_.begin();
-       cit != corrs_.end(); ++cit)
+  for (auto & corr : corrs_)
   {
-    if ((*cit)->world_pt_valid()) {
-      vgl_point_3d<double> pt = (*cit)->world_pt();
+    if (corr->world_pt_valid()) {
+      vgl_point_3d<double> pt = corr->world_pt();
       double x,y,z;
       lvcs->global_to_local(pt.x(), pt.y(), pt.z(), lvcs->get_cs_name(), x,y,z);
       vgl_point_3d<double> new_pt(x,y,z);
       std::cout << "world pt: " << pt << " converted to " << new_pt << std::endl;
-      (*cit)->set_world_pt(new_pt);
+      corr->set_world_pt(new_pt);
     }
   }
 }
@@ -371,11 +372,10 @@ void min_max_frame(std::vector<bwm_video_corr_sptr> const& corrs,
 {
   min_frame = vnl_numeric_traits<unsigned>::maxval;
   max_frame = 0;
-  for (std::vector<bwm_video_corr_sptr>::const_iterator cit = corrs.begin();
-       cit != corrs.end(); ++cit)
+  for (const auto & corr : corrs)
     {
-      unsigned minf = (*cit)->min_frame();
-      unsigned maxf = (*cit)->max_frame();
+      unsigned minf = corr->min_frame();
+      unsigned maxf = corr->max_frame();
       if (minf<min_frame)
         min_frame = minf;
       if (maxf>max_frame)
@@ -526,8 +526,8 @@ initialize_world_pts_and_cameras(vpgl_calibration_matrix<double> const& K,
 bool bwm_video_corr_processor::write_cameras_to_stream()
 {
   if (cam_ostr_&&cam_ostr_->is_open()){
-    for (unsigned i = 0; i<cameras_.size(); ++i)
-      cam_ostr_->write_camera(&cameras_[i]);
+    for (auto & camera : cameras_)
+      cam_ostr_->write_camera(&camera);
     return true;
   }
   return false;
@@ -595,12 +595,12 @@ compute_ab_corr_windows(unsigned match_radius,
     vgl_point_2d<double> ipta = corrs_a[i], iptb = corrs_b[i];
     if (ipta.x()<0||ipta.y()<0||iptb.x()<0||iptb.y()<0)
       continue;
-    float ua = static_cast<float>(ipta.x());
-    float va = static_cast<float>(ipta.y());
+    auto ua = static_cast<float>(ipta.x());
+    auto va = static_cast<float>(ipta.y());
     std::vector<float> pixels_a;
     extract_window(ua, va, match_radius, image_a_, pixels_a);
-    float ub = static_cast<float>(iptb.x());
-    float vb = static_cast<float>(iptb.y());
+    auto ub = static_cast<float>(iptb.x());
+    auto vb = static_cast<float>(iptb.y());
     std::vector<float> pixels_b;
     extract_window(ub, vb, match_radius, image_b_, pixels_b);
     corr_windows_a_.push_back(pixels_a);
@@ -623,13 +623,13 @@ exhaustive_init(vnl_vector<double>& position,
                 double& start_error,
                 double& end_error)
 {
-  float u0 = static_cast<float>(position[0]);
-  float v0 = static_cast<float>(position[1]);
+  auto u0 = static_cast<float>(position[0]);
+  auto v0 = static_cast<float>(position[1]);
   float uf = 0, vf = 0;
   float umin = u0-search_radius, umax = u0+search_radius;
   float vmin = v0-search_radius, vmax = v0+search_radius;
   if (umin < 0) umin = 0;
-  float ni = static_cast<float>(base.ni()), nj = static_cast<float>(base.nj());
+  auto ni = static_cast<float>(base.ni()), nj = static_cast<float>(base.nj());
   if (umax>=ni) umax = ni-1;
   if (vmin < 0) vmin = 0;
   if (vmax>=nj) vmax = nj-1;
@@ -681,7 +681,7 @@ bool bwm_video_corr_processor::find_missing_corrs(unsigned frame_index_a,
                                                   unsigned frame_index_x,
                                                   unsigned win_radius,
                                                   unsigned search_radius,
-                                                  bool use_lmq)
+                                                  bool  /*use_lmq*/)
 {
   unsigned n = corrs_.size();
   if (!n) return false;
@@ -1009,15 +1009,15 @@ void bwm_video_corr_processor::close()
 {
   if (video_istr_)
     video_istr_->close();
-  video_istr_ = VXL_NULLPTR;
+  video_istr_ = nullptr;
 
   if (cam_istr_)
     cam_istr_->close();
-  cam_istr_ = VXL_NULLPTR;
+  cam_istr_ = nullptr;
 
   if (cam_ostr_)
     cam_ostr_->close();
-  cam_ostr_ = VXL_NULLPTR;
+  cam_ostr_ = nullptr;
 
   site_name_ = "";
   site_path_ = "";

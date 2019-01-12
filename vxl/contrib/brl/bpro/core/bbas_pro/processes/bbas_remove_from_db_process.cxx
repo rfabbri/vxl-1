@@ -7,7 +7,9 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Constructor
 bool bbas_remove_from_db_process_cons(bprb_func_process& pro)
@@ -15,7 +17,7 @@ bool bbas_remove_from_db_process_cons(bprb_func_process& pro)
   //input
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("unsigned"); // databse id to be removed
+  input_types.emplace_back("unsigned"); // databse id to be removed
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
@@ -35,7 +37,7 @@ bool bbas_remove_from_db_process(bprb_func_process& pro)
     return false;
   }
   // get the inputs
-  unsigned db_id = pro.get_input<unsigned>(0);
+  auto db_id = pro.get_input<unsigned>(0);
   bprb_batch_process_manager::instance()->remove_data(db_id);
   return true;
 }

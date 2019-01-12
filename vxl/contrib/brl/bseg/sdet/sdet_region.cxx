@@ -1,3 +1,4 @@
+#include <limits>
 #include "sdet_region.h"
 //:
 // \file
@@ -10,10 +11,9 @@
 #include <vsol/vsol_polygon_2d.h>
 #include <bsol/bsol_algs.h>
 #include <vnl/vnl_float_2.h>
-#include <limits>
 sdet_region::sdet_region()
 {
-  boundary_ = VXL_NULLPTR;
+  boundary_ = nullptr;
   bbox_valid_ = false;
   obox_valid_ = false;
   boundary_valid_ = false;
@@ -26,7 +26,7 @@ sdet_region::sdet_region(int npts, const float* xp, const float* yp,
 {
   bbox_valid_ = false;
   obox_valid_ = false;
-  boundary_ = VXL_NULLPTR;
+  boundary_ = nullptr;
   boundary_valid_ = false;
   region_label_ = 0;
 }
@@ -36,7 +36,7 @@ sdet_region::sdet_region(vdgl_digital_region const& reg)
 {
   bbox_valid_ = false;
   obox_valid_ = false;
-  boundary_ = VXL_NULLPTR;
+  boundary_ = nullptr;
   boundary_valid_ = false;
   region_label_ = 0;
 }
@@ -50,7 +50,7 @@ bool sdet_region::compute_boundary()
     return false;
   std::vector<vgl_point_2d<double> > region_points;
   for (this->reset(); this->next();)
-    region_points.push_back(vgl_point_2d<double>(this->X(), this->Y()));
+    region_points.emplace_back(this->X(), this->Y());
   vgl_convex_hull_2d<double> ch(region_points);
   vgl_polygon<double> h = ch.hull();
   vsol_polygon_2d_sptr poly = bsol_algs::poly_from_vgl(h);
@@ -140,32 +140,29 @@ vgl_box_2d<float> sdet_region::bbox(){
 }
 void sdet_region::increment_neighbors(unsigned delta){
   std::set<unsigned> new_nbrs;
-  for(std::set<unsigned>::iterator nit = nbrs_.begin();
-      nit != nbrs_.end(); ++nit)
-    new_nbrs.insert((*nit)+delta);
+  for(const auto & nbr : nbrs_)
+    new_nbrs.insert(nbr+delta);
   nbrs_ = new_nbrs;
 }
 sdet_region_sptr merge(sdet_region_sptr const& r1,sdet_region_sptr const& r2,
                        unsigned merged_label){
-  vdgl_digital_region* r1_ptr = dynamic_cast<vdgl_digital_region*>(r1.ptr());
-  vdgl_digital_region* r2_ptr = dynamic_cast<vdgl_digital_region*>(r2.ptr());
+  auto* r1_ptr = dynamic_cast<vdgl_digital_region*>(r1.ptr());
+  auto* r2_ptr = dynamic_cast<vdgl_digital_region*>(r2.ptr());
   sdet_region_sptr ret = new sdet_region();
-  vdgl_digital_region* r12_ptr = dynamic_cast<vdgl_digital_region*>(ret.ptr());
+  auto* r12_ptr = dynamic_cast<vdgl_digital_region*>(ret.ptr());
   merge(r1_ptr, r2_ptr, r12_ptr);
   r12_ptr->ComputeIntensityStdev();
   const std::set<unsigned>& nbrs1 = r1->nbrs();
   const std::set<unsigned>& nbrs2 = r2->nbrs();
   unsigned lab1 = r1->label(), lab2 = r2->label();
   // add set union of neigbors to the merged region
-  for(std::set<unsigned>::const_iterator nit = nbrs1.begin();
-      nit != nbrs1.end(); ++nit){
-    if(*nit != lab1 && *nit != lab2)
-      ret->add_neighbor(*nit);
+  for(const auto & nit : nbrs1){
+    if(nit != lab1 && nit != lab2)
+      ret->add_neighbor(nit);
   }
-  for(std::set<unsigned>::const_iterator nit = nbrs2.begin();
-      nit != nbrs2.end(); ++nit){
-    if(*nit != lab1 && *nit != lab2)
-      ret->add_neighbor(*nit);
+  for(const auto & nit : nbrs2){
+    if(nit != lab1 && nit != lab2)
+      ret->add_neighbor(nit);
   }
   ret->set_label(merged_label);
   // note that other regions may still have neighbor pointers to r1 or r2
@@ -178,7 +175,7 @@ sdet_region_sptr merge(sdet_region_sptr const& r1,sdet_region_sptr const& r2,
 float similarity(sdet_region_sptr const& r1, bsta_histogram<float> const& h1,
                  sdet_region_sptr const& r2, bsta_histogram<float> const& h2){
    float sim_intensity = hist_intersect(h1, h2);//min probability
-  float n1 = static_cast<float>(r1->Npix()), n2 = static_cast<float>(r2->Npix());
+  auto n1 = static_cast<float>(r1->Npix()), n2 = static_cast<float>(r2->Npix());
   if(n1 == 0.0f || n2 == 0.0f)
     return std::numeric_limits<float>::max();
   float sim_size = n1/n2;
@@ -193,7 +190,7 @@ float similarity(sdet_region_sptr const& r1, bsta_histogram<float> const& h1,
                  sdet_region_sptr const& r2, bsta_histogram<float> const& h2,
                  float image_area){
   float sim_intensity = hist_intersect(h1, h2);//min probability
-  float n1 = static_cast<float>(r1->Npix()), n2 = static_cast<float>(r2->Npix());
+  auto n1 = static_cast<float>(r1->Npix()), n2 = static_cast<float>(r2->Npix());
   if(n1 == 0.0f || n2 == 0.0f)
     return std::numeric_limits<float>::max();
   float sim_size = 1.0f - ((n1 + n2)/image_area);

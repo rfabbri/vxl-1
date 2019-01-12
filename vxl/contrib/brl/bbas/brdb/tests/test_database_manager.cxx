@@ -9,7 +9,9 @@
 #include <brdb/brdb_database_sptr.h>
 #include <brdb/brdb_database_manager.h>
 #include <brdb/brdb_query.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 static void test_database_manager()
 {

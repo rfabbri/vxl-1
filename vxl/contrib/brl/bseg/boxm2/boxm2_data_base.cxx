@@ -1,7 +1,9 @@
 #include <iostream>
 #include <algorithm>
 #include "boxm2_data_base.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 //:
 // \file
 
@@ -36,7 +38,7 @@ void helper(boxm2_block_metadata& data, long& num_cells, double& side_len)
 }
 
 //: allocate an empty data diddy
-boxm2_data_base::boxm2_data_base(boxm2_block_metadata data, const std::string data_type, bool read_only)
+boxm2_data_base::boxm2_data_base(boxm2_block_metadata data, const std::string& data_type, bool read_only)
 {
   read_only_ = read_only;
   id_ = data.id_;
@@ -60,7 +62,7 @@ boxm2_data_base::boxm2_data_base(boxm2_block_metadata data, const std::string da
   this->set_default_value(data_type, data);
 }
 //: accessor to a portion of the byte buffer
-void boxm2_data_base::set_default_value(std::string data_type, boxm2_block_metadata data)
+void boxm2_data_base::set_default_value(const std::string& data_type, boxm2_block_metadata data)
 {
   long num_cells;
   double side_len;
@@ -68,13 +70,13 @@ void boxm2_data_base::set_default_value(std::string data_type, boxm2_block_metad
 
   //initialize the data to the correct value
   if (data_type.find(boxm2_data_traits<BOXM2_ALPHA>::prefix()) != std::string::npos) {
-    const float ALPHA_INIT = float(-std::log(1.0f - data.p_init_) / side_len);
-    float* alphas = (float*) data_buffer_;
+    const auto ALPHA_INIT = float(-std::log(1.0f - data.p_init_) / side_len);
+    auto* alphas = (float*) data_buffer_;
     std::fill(alphas, alphas+num_cells, ALPHA_INIT);
   }
   else if (data_type.find(boxm2_data_traits<BOXM2_GAMMA>::prefix()) != std::string::npos) {
-    const float GAMMA_INIT = float(-std::log(1.0f - data.p_init_) / (side_len*side_len*side_len));
-    float* alphas = (float*) data_buffer_;
+    const auto GAMMA_INIT = float(-std::log(1.0f - data.p_init_) / (side_len*side_len*side_len));
+    auto* alphas = (float*) data_buffer_;
     int buffer_length = (int)(buffer_length_/sizeof(float));
     for (int i=0; i<buffer_length; ++i) alphas[i] = GAMMA_INIT;
   }
@@ -86,17 +88,17 @@ void boxm2_data_base::set_default_value(std::string data_type, boxm2_block_metad
     std::memset(data_buffer_, (vxl_byte) 128, buffer_length_);
   }
   else if ( data_type.find(boxm2_data_traits<BOXM2_FLOAT8>::prefix()) != std::string::npos ) {
-      float* floats = (float*) data_buffer_;
+      auto* floats = (float*) data_buffer_;
       int buffer_length = (int)(buffer_length_/sizeof(float));
       for (int i=0; i<buffer_length; ++i) floats[i] = 0.0;
   }
   else if ( data_type.find(boxm2_data_traits<BOXM2_FLOAT16>::prefix()) != std::string::npos ) {
-      float* floats = (float*) data_buffer_;
+      auto* floats = (float*) data_buffer_;
       int buffer_length = (int)(buffer_length_/sizeof(float));
       for (int i=0; i<buffer_length; ++i) floats[i] = 0.0;
   }
   else if (data_type.find(boxm2_data_traits<BOXM2_VIS_SPHERE>::prefix()) != std::string::npos ) {
-        float* floats = (float*) data_buffer_;
+        auto* floats = (float*) data_buffer_;
         int buffer_length = (int)(buffer_length_/sizeof(float));
         for (int i=0; i<buffer_length; ++i) floats[i] = 1.0f;
     }
@@ -115,24 +117,24 @@ char * boxm2_data_base::cell_buffer(int i, std::size_t cell_size)
     }
     return out;
   }
-  else return VXL_NULLPTR;
+  else return nullptr;
 }
 
 
 //: Binary write boxm2_data_base to stream
-void vsl_b_write(vsl_b_ostream& os, boxm2_data_base const& scene) {}
+void vsl_b_write(vsl_b_ostream&  /*os*/, boxm2_data_base const&  /*scene*/) {}
 //: Binary write boxm2_data_base to stream
-void vsl_b_write(vsl_b_ostream& os, const boxm2_data_base* &p) {}
+void vsl_b_write(vsl_b_ostream&  /*os*/, const boxm2_data_base* & /*p*/) {}
 //: Binary write boxm2_data_base_sptr to stream
-void vsl_b_write(vsl_b_ostream& os, boxm2_data_base_sptr& sptr) {}
+void vsl_b_write(vsl_b_ostream&  /*os*/, boxm2_data_base_sptr&  /*sptr*/) {}
 //: Binary write boxm2_data_base_sptr to stream
-void vsl_b_write(vsl_b_ostream& os, boxm2_data_base_sptr const& sptr) {}
+void vsl_b_write(vsl_b_ostream&  /*os*/, boxm2_data_base_sptr const&  /*sptr*/) {}
 
 //: Binary load boxm2_data_base from stream.
-void vsl_b_read(vsl_b_istream& is, boxm2_data_base &scene) {}
+void vsl_b_read(vsl_b_istream&  /*is*/, boxm2_data_base & /*scene*/) {}
 //: Binary load boxm2_data_base from stream.
-void vsl_b_read(vsl_b_istream& is, boxm2_data_base* p) {}
+void vsl_b_read(vsl_b_istream&  /*is*/, boxm2_data_base*  /*p*/) {}
 //: Binary load boxm2_data_base_sptr from stream.
-void vsl_b_read(vsl_b_istream& is, boxm2_data_base_sptr& sptr) {}
+void vsl_b_read(vsl_b_istream&  /*is*/, boxm2_data_base_sptr&  /*sptr*/) {}
 //: Binary load boxm2_data_base_sptr from stream.
-void vsl_b_read(vsl_b_istream& is, boxm2_data_base_sptr const& sptr) {}
+void vsl_b_read(vsl_b_istream&  /*is*/, boxm2_data_base_sptr const&  /*sptr*/) {}

@@ -15,7 +15,9 @@
 #include <iostream>
 #include <bsta/bsta_mixture.h>
 #include <vsl/vsl_binary_io.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Binary save bsta_mixture to stream.
 template <class comp_>

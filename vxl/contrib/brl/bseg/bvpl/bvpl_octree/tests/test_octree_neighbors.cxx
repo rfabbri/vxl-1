@@ -32,11 +32,11 @@ void fill_octree(boct_tree<short,float>* tree)
     tree->init_cells(0.1f);
     leaves[1]->set_data(0.5);
     if (debug)
-      for (unsigned i=0; i<leaves.size(); i++) {
-        std::cout<< leaves[i]->get_code().x_loc_ << ','
-                << leaves[i]->get_code().y_loc_ << ','
-                << leaves[i]->get_code().z_loc_ << ','
-                << leaves[i]->data() << std::endl;
+      for (auto & leave : leaves) {
+        std::cout<< leave->get_code().x_loc_ << ','
+                << leave->get_code().y_loc_ << ','
+                << leave->get_code().z_loc_ << ','
+                << leave->data() << std::endl;
       }
 
     leaves[0]->split();
@@ -61,7 +61,7 @@ void fill_octree(boct_tree<short,float>* tree)
 
 static void test_octree_neighbors()
 {
-  boct_tree<short,float>* tree = new boct_tree<short,float>(4,3);
+  auto* tree = new boct_tree<short,float>(4,3);
   fill_octree(tree);
   bvpl_kernel_iterator iter;
   vgl_point_3d<int> min_pt(-1,-1,-1);
@@ -77,15 +77,14 @@ static void test_octree_neighbors()
 
   std::vector<boct_tree_cell<short,float>*> leaves = tree->leaf_cells();
   bvpl_octree_neighbors<float> neighb(tree);
-  for (unsigned i=0; i<leaves.size(); i++) {
-    boct_tree_cell<short,float>* cell=leaves[i];
+  for (auto cell : leaves) {
     std::cout << cell->code_
              << "THIS   " << tree->local_origin(cell) << std::endl;
     std::vector<boct_tree_cell<short,float> *> neighb_cells;
     neighb.neighbors(kernel, cell, neighb_cells);
     std::cout << "Number of neighbors: " << neighb_cells.size() << std::endl;
-    for (unsigned n=0; n<neighb_cells.size(); n++) {
-      std::cout << "  " << tree->local_origin(neighb_cells[n]) << std::endl;
+    for (auto & neighb_cell : neighb_cells) {
+      std::cout << "  " << tree->local_origin(neighb_cell) << std::endl;
     }
   }
 }

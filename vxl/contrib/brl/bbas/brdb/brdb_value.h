@@ -15,10 +15,13 @@
 #include <string>
 #include <map>
 #include <iostream>
+#include <utility>
 #include <brdb/brdb_value_sptr.h>
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vbl/vbl_ref_count.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_binary_io.h>
 
 // forward declaration
@@ -30,7 +33,7 @@ class brdb_value : public vbl_ref_count
  public:
 
   //: Destructor
-  virtual ~brdb_value() {}
+  ~brdb_value() override = default;
 
   //: Return the actual value
   template< class T >
@@ -92,7 +95,7 @@ class brdb_value : public vbl_ref_count
 
   //: binary io write value only
   //  Handles only the value (without version or type info)
-  virtual void b_write_value(vsl_b_ostream&)
+  virtual void b_write_value(vsl_b_ostream&) const
   {
     std::cout << "Warning: calling binary write on parent value class, this value is not being saved" << std::endl;
   }
@@ -100,7 +103,7 @@ class brdb_value : public vbl_ref_count
 
  protected:
   //: Constructor
-  brdb_value() {}
+  brdb_value() = default;
   //: Copy Constructor
   brdb_value(const brdb_value&) : vbl_ref_count() {}
 
@@ -162,31 +165,31 @@ class brdb_value_t : public brdb_value
 {
  public:
   //: Default Constructor
-  brdb_value_t<T>() {}
+  brdb_value_t<T>() = default;
 
   //: Constructor
-  explicit brdb_value_t<T>(const T& value)
-   : value_(value) {}
+  explicit brdb_value_t<T>(T  value)
+   : value_(std::move(value)) {}
 
   //: Return the string identifying this class
-  virtual std::string is_a() const { return get_type_string(); }
+  std::string is_a() const override { return get_type_string(); }
 
   static std::string const& type() { return get_type_string(); }
 
   //: Clone
-  virtual brdb_value * clone() const { return new brdb_value_t<T>(*this); }
+  brdb_value * clone() const override { return new brdb_value_t<T>(*this); }
 
   //: Test for equality under polymorphism
-  virtual bool eq(const brdb_value& other) const;
+  bool eq(const brdb_value& other) const override;
 
   //: Test for inequality (less than) under polymorphism
-  virtual bool lt(const brdb_value& other) const;
+  bool lt(const brdb_value& other) const override;
 
   //: Assign the value of /p other to this if the types are the same
-  virtual bool assign(const brdb_value& other);
+  bool assign(const brdb_value& other) override;
 
   //: Return the string identifying this class
-  virtual void print() const { std::cout << value_ << "   ";}
+  void print() const override { std::cout << value_ << "   ";}
 
   //: Return the value
   T value() const { return value_; }
@@ -204,11 +207,11 @@ class brdb_value_t : public brdb_value
 
   //: binary io read value only
   //  Handles only the value (without version or type info)
-  virtual void b_read_value(vsl_b_istream& is);
+  void b_read_value(vsl_b_istream& is) override;
 
   //: binary io write value only
   //  Handles only the value (without version or type info)
-  virtual void b_write_value(vsl_b_ostream& os) const;
+  void b_write_value(vsl_b_ostream& os) const override;
 
  private:
   //: The stored data

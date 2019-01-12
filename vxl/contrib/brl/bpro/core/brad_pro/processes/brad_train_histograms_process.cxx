@@ -11,7 +11,9 @@
 #include <brad/brad_eigenspace.h>
 #include <bpro/core/bbas_pro/bbas_1d_array_string.h>
 #include <vil/vil_load.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 namespace bbas_core_brad_train_hist
 {
@@ -44,9 +46,8 @@ namespace bbas_core_brad_train_hist
     bsta_joint_histogram_3d<float> hist_init;
 
     std::vector<vil_image_resource_sptr> resources = low_resources;
-    for (std::vector<vil_image_resource_sptr>::iterator rit = high_resources.begin();
-         rit != high_resources.end(); ++rit)
-      resources.push_back(*rit);
+    for (auto & high_resource : high_resources)
+      resources.push_back(high_resource);
     if (frac==1.0)
       espace.init_histogram_blocked(resources, nbins, hist_init, nit, njt);
     else
@@ -81,8 +82,8 @@ bool brad_train_histograms_process_cons(bprb_func_process& pro)
 
   //outputs
   std::vector<std::string> output_types;
-  output_types.push_back("bsta_joint_histogram_3d_base_sptr"); // low atmos hist
-  output_types.push_back("bsta_joint_histogram_3d_base_sptr"); // high atmos hist
+  output_types.emplace_back("bsta_joint_histogram_3d_base_sptr"); // low atmos hist
+  output_types.emplace_back("bsta_joint_histogram_3d_base_sptr"); // high atmos hist
 
   return pro.set_input_types(input_types) &&
          pro.set_output_types(output_types);
@@ -108,9 +109,9 @@ bool brad_train_histograms_process(bprb_func_process& pro)
   bbas_1d_array_string_sptr high_paths =
     pro.get_input<bbas_1d_array_string_sptr>(2);
 
-  double frac = pro.get_input<double>(3);
-  unsigned nit = pro.get_input<unsigned>(4);
-  unsigned njt = pro.get_input<unsigned>(5);
+  auto frac = pro.get_input<double>(3);
+  auto nit = pro.get_input<unsigned>(4);
+  auto njt = pro.get_input<unsigned>(5);
 
   bsta_joint_histogram_3d<float> low_hist;
   bsta_joint_histogram_3d<float> high_hist;
@@ -123,4 +124,3 @@ bool brad_train_histograms_process(bprb_func_process& pro)
   pro.set_output_val<bsta_joint_histogram_3d_sptr>(1, high_ptr);
   return true;
 }
-

@@ -10,7 +10,9 @@
 // \author Ali Osman Ulusoy
 // \date Mar 21, 2011
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/io/boxm2_cache.h>
 
@@ -18,8 +20,8 @@
 
 namespace boxm2_extract_point_cloud_process_globals
 {
-  const unsigned n_inputs_ = 4;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 4;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool boxm2_extract_point_cloud_process_cons (bprb_func_process& pro)
@@ -57,10 +59,9 @@ bool boxm2_extract_point_cloud_process (bprb_func_process& pro)
   unsigned i = 0;
   boxm2_scene_sptr scene = pro.get_input<boxm2_scene_sptr>(i++);
   boxm2_cache_sptr cache = pro.get_input<boxm2_cache_sptr>(i++);
-  float prob_t = pro.get_input<float>(i++);
-  unsigned int depth = pro.get_input<unsigned>(i++);
+  auto prob_t = pro.get_input<float>(i++);
+  auto depth = pro.get_input<unsigned>(i++);
 
   return boxm2_extract_point_cloud::extract_point_cloud(scene, cache, prob_t, depth);
 
 }
-

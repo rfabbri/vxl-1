@@ -30,7 +30,7 @@ void vsl_b_write(vsl_b_ostream& bfs, const mipa_vector_normaliser& b)
 // The default implementation is for attribute-less normalisers,
 // and throws if it finds any data in the stream.
 void mipa_vector_normaliser::config_from_stream(
-  std::istream &is, const mbl_read_props_type &extra_props)
+  std::istream &is, const mbl_read_props_type & /*extra_props*/)
 {
   std::string s = mbl_parse_block(is);
   if (s.empty() || s=="{}") return;
@@ -44,14 +44,14 @@ void mipa_vector_normaliser::config_from_stream(
 
 //=======================================================================
 //: Create a concrete mipa_vector_normaliser-derived object, from a text specification.
-vcl_unique_ptr<mipa_vector_normaliser>
+std::unique_ptr<mipa_vector_normaliser>
   mipa_vector_normaliser::new_normaliser_from_stream(
     std::istream &is, const mbl_read_props_type &extra_props)
 {
   std::string name;
   is >> name;
 
-  vcl_unique_ptr<mipa_vector_normaliser> ps =
+  std::unique_ptr<mipa_vector_normaliser> ps =
     mbl_cloneables_factory<mipa_vector_normaliser>::get_clone(name);
 
   ps -> config_from_stream(is, extra_props);

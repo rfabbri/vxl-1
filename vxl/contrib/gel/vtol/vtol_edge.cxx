@@ -2,7 +2,10 @@
 #include "vtol_edge.h"
 //:
 // \file
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vtol/vtol_zero_chain.h>
 #include <vtol/vtol_one_chain.h>
 #include <vtol/vtol_macros.h>
@@ -12,12 +15,12 @@
 // Initialization
 //***************************************************************************
 
-void vtol_edge::link_inferior(vtol_zero_chain_sptr inf)
+void vtol_edge::link_inferior(const vtol_zero_chain_sptr& inf)
 {
   vtol_topology_object::link_inferior(inf->cast_to_topology_object());
 }
 
-void vtol_edge::unlink_inferior(vtol_zero_chain_sptr inf)
+void vtol_edge::unlink_inferior(const vtol_zero_chain_sptr& inf)
 {
   vtol_topology_object::unlink_inferior(inf->cast_to_topology_object());
 }
@@ -28,13 +31,13 @@ void vtol_edge::unlink_inferior(vtol_zero_chain_sptr inf)
 vtol_zero_chain_sptr vtol_edge::zero_chain(void) const
 {
   topology_list const& inf = *(inferiors());
-  for (unsigned int i=0; i<inf.size(); ++i)
-    if (inf[i]->cast_to_zero_chain()->v0()) // PVr- avoid returning empty chain
-      return inf[i]->cast_to_zero_chain();
-  for (unsigned int i=0; i<inf.size(); ++i)
-    if (inf[i]->cast_to_zero_chain()) // return empty chain if nothing else present
-      return inf[i]->cast_to_zero_chain();
-  return VXL_NULLPTR;
+  for (const auto & i : inf)
+    if (i->cast_to_zero_chain()->v0()) // PVr- avoid returning empty chain
+      return i->cast_to_zero_chain();
+  for (const auto & i : inf)
+    if (i->cast_to_zero_chain()) // return empty chain if nothing else present
+      return i->cast_to_zero_chain();
+  return nullptr;
 }
 
 //---------------------------------------------------------------------------
@@ -107,8 +110,8 @@ void vtol_edge::set_vertices_from_zero_chains(void)
     switch (zc0->numinf())
     {
      case 0:
-      v1_=VXL_NULLPTR;
-      v2_=VXL_NULLPTR;
+      v1_=nullptr;
+      v2_=nullptr;
       break;
      case 1:
       v1_=v2_=zc0->inferiors()->front()->cast_to_vertex();
@@ -130,8 +133,8 @@ void vtol_edge::set_vertices_from_zero_chains(void)
     switch (verts.size())
     {
      case 0:
-      v1_=VXL_NULLPTR;
-      v2_=VXL_NULLPTR;
+      v1_=nullptr;
+      v2_=nullptr;
       break;
      default:
       v1_=verts.front();
@@ -267,7 +270,7 @@ std::vector<vtol_block *> *vtol_edge::compute_blocks(void)
 // These vertices are v1_ and v2_ in that order.
 vertex_list *vtol_edge::endpoints(void)
 {
-  vertex_list *newl=new vertex_list;
+  auto *newl=new vertex_list;
   if (v1_)
     newl->push_back(v1_);
   if (v2_)
@@ -314,9 +317,9 @@ bool vtol_edge::add_vertex(vtol_vertex_sptr const& newvert)
 bool vtol_edge::remove_vertex(vtol_vertex_sptr const& uglyvert)
 {
   if (uglyvert==v1_)
-    set_v1(VXL_NULLPTR);
+    set_v1(nullptr);
   else if (uglyvert==v2_)
-    set_v2(VXL_NULLPTR);
+    set_v2(nullptr);
   else
     return false;
   touch();
@@ -350,7 +353,7 @@ vtol_vertex_sptr vtol_edge::other_endpoint(const vtol_vertex &overt) const
   else if (overt==*v2_)
     return v1_;
   else
-    return VXL_NULLPTR;
+    return nullptr;
 }
 
 // ******************************************************

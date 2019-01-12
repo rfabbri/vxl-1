@@ -9,18 +9,20 @@
 #include <bprb/bprb_parameters.h>
 #include <vil/vil_image_view_base.h>
 #include <vgl/vgl_vector_2d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Constructor
 bool vil_gradient_angle_process_cons(bprb_func_process& pro)
 {
   //input
   std::vector<std::string> input_types;
-  input_types.push_back("vil_image_view_base_sptr"); // dI/dx
-  input_types.push_back("vil_image_view_base_sptr"); // dI/dy
+  input_types.emplace_back("vil_image_view_base_sptr"); // dI/dx
+  input_types.emplace_back("vil_image_view_base_sptr"); // dI/dy
   //output
   std::vector<std::string> output_types;
-  output_types.push_back("vil_image_view_base_sptr"); // the angle of vector (dI/dx + dI/dy)
+  output_types.emplace_back("vil_image_view_base_sptr"); // the angle of vector (dI/dx + dI/dy)
   return pro.set_input_types(input_types)
      &&  pro.set_output_types(output_types);
 }
@@ -48,7 +50,7 @@ bool vil_gradient_angle_process(bprb_func_process& pro)
 
   //calc angle
   vgl_vector_2d<float> horiz(1.0f, 0.0f);
-  vil_image_view<float>* theta = new vil_image_view<float>(dx.ni(), dx.nj());
+  auto* theta = new vil_image_view<float>(dx.ni(), dx.nj());
   for (unsigned i=0; i<dx.ni(); ++i) {
     for (unsigned j=0; j<dx.nj(); ++j) {
       //vgl_vector_2d<float> pvec(dx(i,j), dy(i,j));
@@ -63,4 +65,3 @@ bool vil_gradient_angle_process(bprb_func_process& pro)
 
   return true;
 }
-

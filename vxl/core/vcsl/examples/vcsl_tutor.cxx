@@ -15,8 +15,10 @@
 #include <vcsl/vcsl_rotation.h>
 #include <vnl/vnl_math.h>
 #include <vcsl/vcsl_graph.h>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 int main()
 {

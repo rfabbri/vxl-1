@@ -14,10 +14,13 @@
 #include <vsol/vsol_polygon_2d_sptr.h>
 #include <bsol/bsol_algs.h>
 #include <vul/vul_file.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
-#include <vsl/vsl_vector_io.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include "volm_utils.h"
+#include <cassert>
+#include <utility>
+#include <vsl/vsl_vector_io.h>
 
 std::map<std::string, depth_map_region::orientation> create_orient_map()
 {
@@ -120,7 +123,7 @@ unsigned volm_label_table::compute_number_of_labels()
 unsigned volm_label_table::number_of_labels_ = compute_number_of_labels();
 
 
-void volm_category_attribute::read_category(std::map<std::string, volm_category_attribute> & category_table, std::string fname)
+void volm_category_attribute::read_category(std::map<std::string, volm_category_attribute> & category_table, const std::string& fname)
 {
   std::ifstream ifs(fname.c_str());
   std::string type;
@@ -283,10 +286,10 @@ std::map<unsigned char, std::vector<float> > volm_fallback_label::fallback_weigh
 
 void volm_fallback_label::print_fallback_table()
 {
-  for (std::map<unsigned char, std::vector<unsigned char> >::iterator iter = fallback_id.begin(); iter != fallback_id.end(); iter++) {
-    std::cout << volm_label_table::land_string(iter->first) << " (" << (int)iter->first << "):\t";
-    for (unsigned k = 0; k < iter->second.size(); k++) {
-      std::cout << volm_label_table::land_string(iter->second[k]) << '(' << (int)iter->second[k] << ", w: " << fallback_weight[iter->first][k] << ")\t";
+  for (auto & iter : fallback_id) {
+    std::cout << volm_label_table::land_string(iter.first) << " (" << (int)iter.first << "):\t";
+    for (unsigned k = 0; k < iter.second.size(); k++) {
+      std::cout << volm_label_table::land_string(iter.second[k]) << '(' << (int)iter.second[k] << ", w: " << fallback_weight[iter.first][k] << ")\t";
     }
     std::cout << '\n';
   }
@@ -294,7 +297,7 @@ void volm_fallback_label::print_fallback_table()
 
 std::string volm_label_table::land_string(unsigned char id)
 {
-  std::map<int, volm_attributes >::iterator mit = volm_label_table::land_id.begin();
+  auto mit = volm_label_table::land_id.begin();
   for (; mit != volm_label_table::land_id.end(); ++mit) {
     if ( mit->second.id_ == id ) {
       return mit->second.name_;
@@ -318,17 +321,17 @@ void volm_io_extract_values(unsigned char combined_value, unsigned char& orienta
   label_value = combined_value - (orientation_value << 6);
 }
 
-bool volm_attributes::contains(std::string name)
+bool volm_attributes::contains(const std::string& name)
 {
   return name_.find(name) != std::string::npos
      ||  name.find(name_) != std::string::npos;
 }
 
-unsigned char volm_label_table::get_id_closest_name(std::string name)
+unsigned char volm_label_table::get_id_closest_name(const std::string& name)
 {
-  for (std::map<int, volm_attributes >::iterator iter = land_id.begin(); iter != land_id.end(); iter++) {
-    if (iter->second.contains(name))
-      return iter->first;
+  for (auto & iter : land_id) {
+    if (iter.second.contains(name))
+      return iter.first;
   }
   return volm_label_table::INVALID;
 }
@@ -336,17 +339,17 @@ unsigned char volm_label_table::get_id_closest_name(std::string name)
 //: pass the id of the class labeled in the query (volm_attribute.id_)
 vil_rgb<vxl_byte> volm_label_table::get_color(unsigned char id)
 {
-  std::map<int, volm_attributes >::iterator mit = volm_label_table::land_id.begin();
+  auto mit = volm_label_table::land_id.begin();
   for (; mit != volm_label_table::land_id.end(); ++mit) {
     if ( mit->second.id_ == id ) {
       return mit->second.color_;
     }
   }
   std::cerr << "cannot find id: " << (int)id << " (and thus color) in the land class table, returning invalid color!\n";
-  return vil_rgb<vxl_byte>(255,0,0); // default invalid color
+  return {255,0,0}; // default invalid color
 }
 
-bool volm_io::read_camera(std::string kml_file,
+bool volm_io::read_camera(const std::string& kml_file,
                           unsigned const& ni, unsigned const& nj,
                           double& heading,   double& heading_dev,
                           double& tilt,      double& tilt_dev,
@@ -359,7 +362,7 @@ bool volm_io::read_camera(std::string kml_file,
   roll_dev = 0;
   top_fov_dev = 0;
   heading = 0;
-  bkml_parser* parser = new bkml_parser();
+  auto* parser = new bkml_parser();
   std::FILE* xmlFile = std::fopen(kml_file.c_str(), "r");
   if (!xmlFile) {
     std::cerr << kml_file.c_str() << " ERROR in camera kml: can not open the given camera kml file.\n";
@@ -476,7 +479,7 @@ bool volm_io::read_labelme(std::string xml_file, std::string category_file, dept
 
   // create depth_map_scene from labelme
   std::map<std::string, volm_category_attribute> category_table;
-  volm_category_attribute::read_category(category_table, category_file);
+  volm_category_attribute::read_category(category_table, std::move(category_file));
 
   for (unsigned i = 0; i < polys.size(); i++) {
     vsol_polygon_2d_sptr poly = bsol_algs::poly_from_vgl(polys[i]);
@@ -573,7 +576,7 @@ bool volm_io::read_query_tags(std::string xml_file,
                             depth_map_region::FRONT_PARALLEL, 0,
                             volm_osm_category_io::tag_to_volm_land_table.find(land_type)->second.id_);
     // add the weight
-    weights.push_back(volm_weight(object_names[i], object_names[i], 0.0, 0.0, 0.0, 0.0, object_weight[i]));
+    weights.emplace_back(object_names[i], object_names[i], 0.0, 0.0, 0.0, 0.0, object_weight[i]);
   }
   return true;
 }
@@ -675,7 +678,7 @@ bool volm_io::read_conf_query_tags(std::string xml_file,
 
 }
 
-bool volm_io::write_status(std::string out_folder, int status_code, int percent, std::string log_message, std::string status_file)
+bool volm_io::write_status(const std::string& out_folder, int status_code, int percent, const std::string& log_message, const std::string& status_file)
 {
   std::ofstream file;
   std::string out_file = out_folder + "/" + status_file;
@@ -721,7 +724,7 @@ bool volm_io::write_status(std::string out_folder, int status_code, int percent,
 }
 
 //: return true if MATCHER_EXE_FINISHED, otherwise return false
-bool volm_io::check_matcher_status(std::string out_folder)
+bool volm_io::check_matcher_status(const std::string& out_folder)
 {
   std::ifstream ifs;
   std::string file = out_folder + "/status.xml";
@@ -740,7 +743,7 @@ bool volm_io::check_matcher_status(std::string out_folder)
 }
 
 
-bool volm_io::write_log(std::string out_folder, std::string log)
+bool volm_io::write_log(const std::string& out_folder, const std::string& log)
 {
   std::ofstream file;
   std::string out_file = out_folder + "/log.xml";
@@ -751,7 +754,7 @@ bool volm_io::write_log(std::string out_folder, std::string log)
   return true;
 }
 
-bool volm_io::write_composer_log(std::string out_folder, std::string log)
+bool volm_io::write_composer_log(const std::string& out_folder, const std::string& log)
 {
   std::ofstream file;
   std::string out_file = out_folder + "/composer_log.xml";
@@ -762,7 +765,7 @@ bool volm_io::write_composer_log(std::string out_folder, std::string log)
   return true;
 }
 
-bool volm_io::write_post_processing_log(std::string log_file, std::string log)
+bool volm_io::write_post_processing_log(const std::string& log_file, const std::string& log)
 {
   std::ofstream file;
   file.open(log_file.c_str());
@@ -798,7 +801,7 @@ unsigned char volm_io::scale_score_to_1_255(float threshold, float score)
     return (unsigned char) (((score-threshold)/(1-threshold))*128 + 127);
 }
 
-unsigned char volm_io::scale_score_to_1_255_sig(float const& kl, float const & ku, float const& threshold, float const& score)
+unsigned char volm_io::scale_score_to_1_255_sig(float const& kl, float const &  /*ku*/, float const& threshold, float const& score)
 {
   float t = threshold;
   float x;
@@ -810,7 +813,7 @@ unsigned char volm_io::scale_score_to_1_255_sig(float const& kl, float const & k
     return  volm_io::scale_score_to_1_255(threshold, score);
 }
 
-float volm_io::scale_score_to_0_1_sig(float const& kl, float const& ku, float const& threshold, unsigned char pix_value)
+float volm_io::scale_score_to_0_1_sig(float const& kl, float const&  /*ku*/, float const& threshold, unsigned char pix_value)
 {
   if (pix_value < 127)
     if (pix_value == 1)
@@ -879,7 +882,7 @@ bool volm_rationale::read_top_matches(std::multiset<std::pair<float, volm_ration
 }
 
 // x is lon, y is lat
-void volm_io::read_polygons(std::string poly_file, vgl_polygon<double>& out)
+void volm_io::read_polygons(const std::string& poly_file, vgl_polygon<double>& out)
 {
   std::ifstream ifs(poly_file.c_str());
   unsigned np, nvert;
@@ -972,7 +975,7 @@ void volm_score::b_read(vsl_b_istream& is)
   }
 }
 
-int volm_io::read_gt_file(std::string gt_file, std::vector<std::pair<vgl_point_3d<double>, std::pair<std::pair<std::string, int>, std::string> > >& samples)
+int volm_io::read_gt_file(const std::string& gt_file, std::vector<std::pair<vgl_point_3d<double>, std::pair<std::pair<std::string, int>, std::string> > >& samples)
 {
   std::ifstream ifs(gt_file.c_str());
   int cnt; ifs >> cnt;
@@ -984,7 +987,7 @@ int volm_io::read_gt_file(std::string gt_file, std::vector<std::pair<vgl_point_3
 
     char *tok = std::strtok(name_buf, "-");
     char *tok2 = std::strtok(tok, "_");
-    tok2 = std::strtok(VXL_NULLPTR, "_"); // tokenize the remaining string
+    tok2 = std::strtok(nullptr, "_"); // tokenize the remaining string
     int img_id;
     std::stringstream tv(tok2); tv >> img_id;
 
@@ -994,8 +997,7 @@ int volm_io::read_gt_file(std::string gt_file, std::vector<std::pair<vgl_point_3
     vgl_point_3d<double> pt(lon, lat, elev);
     std::pair<std::string, int> np(name, img_id);
     std::pair<std::pair<std::string, int>, std::string> p(np, type);
-    samples.push_back(std::pair<vgl_point_3d<double>,
-                      std::pair<std::pair<std::string, int>, std::string> >(pt,  p) );
+    samples.emplace_back(pt,  p );
   }
   ifs.close();
   return cnt;
@@ -1005,8 +1007,8 @@ void volm_score::write_scores(std::vector<volm_score_sptr>& scores, std::string 
 {
   vsl_b_ofstream ofs(file_name);
   vsl_b_write(ofs, (unsigned)(scores.size()));
-  for (unsigned i = 0; i < scores.size(); i++)
-    scores[i]->b_write(ofs);
+  for (auto & score : scores)
+    score->b_write(ofs);
   ofs.close();
 }
 
@@ -1041,7 +1043,7 @@ void volm_weight::read_weight(std::vector<volm_weight>& weights, std::string con
     ifs >> w_dst;
     ifs >> w_ord;
     ifs >> w_obj;
-    weights.push_back(volm_weight(w_name, w_typ, w_ori, w_lnd, w_ord, w_dst, w_obj));
+    weights.emplace_back(w_name, w_typ, w_ori, w_lnd, w_ord, w_dst, w_obj);
     if (ifs.eof()) break;
   }
   ifs.close();
@@ -1052,7 +1054,7 @@ bool volm_weight::check_weight(std::vector<volm_weight> const& /*weight*/)
   return true;
 }
 
-void volm_weight::equal_weight(std::vector<volm_weight>& weights, depth_map_scene_sptr dms)
+void volm_weight::equal_weight(std::vector<volm_weight>& weights, const depth_map_scene_sptr& dms)
 {
   float w_avg;
   float w_obj;
@@ -1061,27 +1063,27 @@ void volm_weight::equal_weight(std::vector<volm_weight>& weights, depth_map_scen
     float w_sky = w_avg * 1.5f;
     float w_grd = w_avg * 1.0f;
     w_obj = (1.0f - w_sky - w_grd) / dms->scene_regions().size();
-    weights.push_back(volm_weight("sky", "sky", 0.0f, 0.0f, 0.0f, 1.0f, w_sky));
-    weights.push_back(volm_weight("ground_plane", "ground_plane", 0.3f, 0.4f, 0.0f, 0.3f, w_grd));
+    weights.emplace_back("sky", "sky", 0.0f, 0.0f, 0.0f, 1.0f, w_sky);
+    weights.emplace_back("ground_plane", "ground_plane", 0.3f, 0.4f, 0.0f, 0.3f, w_grd);
   }
   else if (!dms->sky().empty()) {
     w_avg = 1.0f / (1 + dms->scene_regions().size());
     float w_sky = w_avg * 1.5f;
     w_obj = (1.0f - w_sky) / dms->scene_regions().size();
-    weights.push_back(volm_weight("sky", "sky", 0.0f, 0.0f, 0.0f, 1.0f, w_sky));
+    weights.emplace_back("sky", "sky", 0.0f, 0.0f, 0.0f, 1.0f, w_sky);
   }
   else if (!dms->ground_plane().empty()) {
     w_avg = 1.0f / (1 + dms->scene_regions().size());
     float w_grd = w_avg * 1.0f;
     w_obj = (1.0f - w_grd) / dms->scene_regions().size();
-    weights.push_back(volm_weight("ground_plane", "ground_plane", 0.3f, 0.4f, 0.0f, 0.3f, w_grd));
+    weights.emplace_back("ground_plane", "ground_plane", 0.3f, 0.4f, 0.0f, 0.3f, w_grd);
   }
   else {
     w_avg = 1.0f / dms->scene_regions().size();
     w_obj = w_avg;
   }
   for (unsigned i = 0; i < dms->scene_regions().size(); i++) {
-      weights.push_back(volm_weight(dms->scene_regions()[i]->name(), dms->scene_regions()[i]->name(), 0.25f, 0.25f, 0.25f, 0.25f, w_obj));
+      weights.emplace_back(dms->scene_regions()[i]->name(), dms->scene_regions()[i]->name(), 0.25f, 0.25f, 0.25f, 0.25f, w_obj);
   }
 
 #if 0
@@ -1139,7 +1141,7 @@ void volm_io_expt_params::read_cam_inc_params(std::string const& params_file)
   ifs.close();
 }
 
-bool volm_io::read_ray_index_data(std::string path, std::vector<unsigned char>& data)
+bool volm_io::read_ray_index_data(const std::string& path, std::vector<unsigned char>& data)
 {
   std::ifstream is(path.c_str());
   if (!is.is_open())
@@ -1155,7 +1157,7 @@ bool volm_io::read_ray_index_data(std::string path, std::vector<unsigned char>& 
 }
 
 //: read the building footprint file
-bool volm_io::read_building_file(std::string file, std::vector<std::pair<vgl_polygon<double>, vgl_point_2d<double> > >& builds, std::vector<double>& heights)
+bool volm_io::read_building_file(const std::string& file, std::vector<std::pair<vgl_polygon<double>, vgl_point_2d<double> > >& builds, std::vector<double>& heights)
 {
   std::cout << "\t\t !!!!!!!!!!!!!! reading file: " << file << std::endl;
   std::ifstream ifs(file.c_str());
@@ -1171,36 +1173,36 @@ bool volm_io::read_building_file(std::string file, std::vector<std::pair<vgl_pol
     char *tok = std::strtok(buffer, ",");
     std::stringstream th(tok); th >> height;
 
-    tok = std::strtok(VXL_NULLPTR, ","); // tokenize the remaining string
+    tok = std::strtok(nullptr, ","); // tokenize the remaining string
     std::stringstream tv(tok); tv >> volume;
 
-    tok = std::strtok(VXL_NULLPTR, ",");
+    tok = std::strtok(nullptr, ",");
     std::stringstream ta(tok); ta >> area;
 
-    tok = std::strtok(VXL_NULLPTR, ",");
+    tok = std::strtok(nullptr, ",");
     std::stringstream tc(tok); tc >> confidence;
 
-    tok = std::strtok(VXL_NULLPTR, ",");
+    tok = std::strtok(nullptr, ",");
     std::stringstream tcl(tok); tcl >> cent_lon;
 
-    tok = std::strtok(VXL_NULLPTR, ",");
+    tok = std::strtok(nullptr, ",");
     std::stringstream tcla(tok); tcla >> cent_lat;
 
     vgl_point_2d<double> cent_pt(cent_lon, cent_lat);
 
     vgl_polygon<double> poly(1);
-    tok = std::strtok(VXL_NULLPTR, ",");
-    while (tok != VXL_NULLPTR) {
+    tok = std::strtok(nullptr, ",");
+    while (tok != nullptr) {
       std::stringstream tl(tok);
       tl >> lon;
 
-      tok = std::strtok(VXL_NULLPTR, ",");
+      tok = std::strtok(nullptr, ",");
       std::stringstream tlat(tok);
       tlat >> lat;
 
       vgl_point_2d<double> pt(lon, lat);  // lon is x
       poly[0].push_back(pt);
-      tok = std::strtok(VXL_NULLPTR, ",");
+      tok = std::strtok(nullptr, ",");
     }
     // remove the duplicated points inside polygon
     vgl_polygon<double> prune_poly(1);
@@ -1208,14 +1210,14 @@ bool volm_io::read_building_file(std::string file, std::vector<std::pair<vgl_pol
     for (unsigned i = 1; i < poly[0].size(); i++)
       if (poly[0][i] != poly[0][i-1])
         prune_poly[0].push_back(poly[0][i]);
-    builds.push_back(std::pair<vgl_polygon<double>, vgl_point_2d<double> >(prune_poly, cent_pt));
+    builds.emplace_back(prune_poly, cent_pt);
     heights.push_back(height);
   }
   return true;
 }
 
 //: read the sme labels
-bool volm_io::read_sme_file(std::string file, std::vector<std::pair<vgl_point_2d<double>, int> >& objects)
+bool volm_io::read_sme_file(const std::string& file, std::vector<std::pair<vgl_point_2d<double>, int> >& objects)
 {
   std::cout << "\t\t !!!!!!!!!!!!!! reading file: " << file << std::endl;
   std::ifstream ifs(file.c_str());
@@ -1234,20 +1236,20 @@ bool volm_io::read_sme_file(std::string file, std::vector<std::pair<vgl_point_2d
     char *tok = std::strtok(buffer, ",");
     std::stringstream th(tok); th >> name;
 
-    tok = std::strtok(VXL_NULLPTR, ","); // tokenize the remaining string
+    tok = std::strtok(nullptr, ","); // tokenize the remaining string
     std::stringstream tv(tok); tv >> lon;
 
-    tok = std::strtok(VXL_NULLPTR, ",");
+    tok = std::strtok(nullptr, ",");
     std::stringstream ta(tok); ta >> lat;
 
-    tok = std::strtok(VXL_NULLPTR, ",");
+    tok = std::strtok(nullptr, ",");
     std::stringstream tc(tok); tc >> type;
 
     vgl_point_2d<double> pt(lon, lat);
 
     // find its label code
     int label = 0;
-    std::map<std::string, volm_land_layer>::iterator mit = volm_osm_category_io::volm_land_table_name.find(type);
+    auto mit = volm_osm_category_io::volm_land_table_name.find(type);
     if (mit != volm_osm_category_io::volm_land_table_name.end())
       label = mit->second.id_;
 #if 0
@@ -1257,12 +1259,12 @@ bool volm_io::read_sme_file(std::string file, std::vector<std::pair<vgl_point_2d
         label = iter->first;
 #endif
 
-    objects.push_back(std::pair<vgl_point_2d<double>, int>(pt, label));
+    objects.emplace_back(pt, label);
   }
   return true;
 }
 
-bool volm_io::write_sme_kml(std::string file, std::vector<std::pair<vgl_point_2d<double>, int> >& objects)
+bool volm_io::write_sme_kml(const std::string& file, std::vector<std::pair<vgl_point_2d<double>, int> >& objects)
 {
   std::ofstream ofs(file.c_str());
   bkml_write::open_document(ofs);
@@ -1275,7 +1277,7 @@ bool volm_io::write_sme_kml(std::string file, std::vector<std::pair<vgl_point_2d
   return true;
 }
 
-bool volm_io::write_sme_kml_type(std::string file, std::string type_name, std::vector<std::pair<vgl_point_2d<double>, int> >& objects)
+bool volm_io::write_sme_kml_type(const std::string& file, const std::string& type_name, std::vector<std::pair<vgl_point_2d<double>, int> >& objects)
 {
   std::ofstream ofs(file.c_str());
   bkml_write::open_document(ofs);
@@ -1309,14 +1311,14 @@ bool volm_io::read_dem_peak_file(std::string const& file, std::vector<std::pair<
     char *tok = std::strtok(buffer, " ");
     std::stringstream tlat(tok);  tlat >> lat;
 
-    tok = std::strtok(VXL_NULLPTR, " ");
+    tok = std::strtok(nullptr, " ");
     std::stringstream tlon(tok);  tlon >> lon;
 
-    tok = std::strtok(VXL_NULLPTR, " ");
+    tok = std::strtok(nullptr, " ");
     std::stringstream theight(tok);  theight >> height;
 
     vgl_point_2d<double> peak_loc(lon, lat);
-    objects.push_back(std::pair<vgl_point_2d<double>, double>(peak_loc, height));
+    objects.emplace_back(peak_loc, height);
   }
   return true;
 }

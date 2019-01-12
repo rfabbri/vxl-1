@@ -1,7 +1,4 @@
 // This is core/vbl/vbl_bit_array_3d.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author
@@ -14,9 +11,11 @@
 #include <iostream>
 #include "vbl_bit_array_3d.h"
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
-#include <vcl_climits.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <climits>
 
 void vbl_bit_array_3d::put(unsigned int i1, unsigned int i2, unsigned int i3, bool v)
 {
@@ -25,8 +24,8 @@ void vbl_bit_array_3d::put(unsigned int i1, unsigned int i2, unsigned int i3, bo
 
   index(i1, i2, i3, byteindex, bitindex);
 
-  unsigned char mask = (unsigned char)(v?(1<<bitindex):0);
-  unsigned char nmask = (unsigned char)(~(1<<bitindex));
+  auto mask = (unsigned char)(v?(1<<bitindex):0);
+  auto nmask = (unsigned char)(~(1<<bitindex));
 
   data_[byteindex] = mask|(nmask & data_[byteindex]);
 }
@@ -38,8 +37,8 @@ void vbl_bit_array_3d::flip(unsigned int i1, unsigned int i2, unsigned int i3)
 
   index(i1, i2, i3, byteindex, bitindex);
 
-  unsigned char mask = (unsigned char)((data_[byteindex] & (1<<bitindex)) ? 0 : (1<<bitindex));
-  unsigned char nmask = (unsigned char)(~(1<<bitindex));
+  auto mask = (unsigned char)((data_[byteindex] & (1<<bitindex)) ? 0 : (1<<bitindex));
+  auto nmask = (unsigned char)(~(1<<bitindex));
 
   data_[byteindex] = mask|(nmask & data_[byteindex]);
 }
@@ -56,7 +55,7 @@ bool vbl_bit_array_3d::operator() (unsigned int i1, unsigned int i2, unsigned in
   unsigned char bitindex;
 
   index(i1, i2, i3, byteindex, bitindex);
-  unsigned char mask = (unsigned char)(1<<bitindex);
+  auto mask = (unsigned char)(1<<bitindex);
 
   return (data_[byteindex] & mask) != 0;
 }
@@ -93,7 +92,7 @@ std::ostream &operator<<(std::ostream& os, vbl_bit_array_3d const& bitarray)
 void vbl_bit_array_3d::construct(unsigned int m, unsigned int n, unsigned int p)
 {
   // quick return if possible
-  if (m==0 || n==0 || p==0) { row1_count_=row2_count_=row3_count_=0; data_ = VXL_NULLPTR; return; }
+  if (m==0 || n==0 || p==0) { row1_count_=row2_count_=row3_count_=0; data_ = nullptr; return; }
   row1_count_ = m; row2_count_ = n; row3_count_ = p;
   data_ = new unsigned char [this->size()];
   data_[this->size()-1]=0; // avoids uninitialized data problems in operator==()
@@ -101,7 +100,7 @@ void vbl_bit_array_3d::construct(unsigned int m, unsigned int n, unsigned int p)
 
 //: Copy constructor
 vbl_bit_array_3d::vbl_bit_array_3d(vbl_bit_array_3d const& that)
-  : row1_count_(0), row2_count_(0), row3_count_(0), data_(VXL_NULLPTR)
+  : row1_count_(0), row2_count_(0), row3_count_(0), data_(nullptr)
 {
   if ( that.data_)
   {

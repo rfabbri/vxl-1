@@ -11,7 +11,9 @@
 #include <exception>
 #include <map>
 #include <typeinfo>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_arg.h>
 #include <vul/vul_sprintf.h>
 #include <mbl/mbl_log.h>
@@ -96,7 +98,7 @@ int main2(int argc, char *argv[])
   vul_arg_parse(argc, argv);
 
   // Try to open the input file if specified or use stdin
-  std::istream* is=VXL_NULLPTR;
+  std::istream* is=nullptr;
   if (!in_file().empty())
   {
     is = new std::ifstream(in_file().c_str());
@@ -119,18 +121,18 @@ int main2(int argc, char *argv[])
 
   if (absolute())
   {
-    for (unsigned i=0;i<data_vec.size();++i) data_vec[i]=std::abs(data_vec[i]);
+    for (double & i : data_vec) i=std::abs(i);
   }
 
   // Clean up if input was from a file
   {
-    std::ifstream* ifs = dynamic_cast<std::ifstream*>(is);
+    auto* ifs = dynamic_cast<std::ifstream*>(is);
     if (ifs)
     {
       ifs->close();
       delete ifs;
     }
-    is = VXL_NULLPTR;
+    is = nullptr;
   }
 
   // Calculate the requested statistics
@@ -168,7 +170,7 @@ int main2(int argc, char *argv[])
   }
 
   // Open output file if requested, otherwise use stdout
-  std::ostream* os=VXL_NULLPTR;
+  std::ostream* os=nullptr;
   if (!out_file().empty())
   {
     os = new std::ofstream(out_file().c_str(), std::ios::app);
@@ -229,13 +231,13 @@ int main2(int argc, char *argv[])
 
   // Clean up if output was to a file
   {
-    std::ofstream* ofs = dynamic_cast<std::ofstream*>(os);
+    auto* ofs = dynamic_cast<std::ofstream*>(os);
     if (ofs)
     {
       ofs->close();
       delete ofs;
     }
-    os = VXL_NULLPTR;
+    os = nullptr;
   }
 
   return 0;
@@ -265,4 +267,3 @@ int main(int argc, char *argv[])
 
   return errcode;
 }
-

@@ -19,7 +19,10 @@
 
 #include <vpdl/vpdt/vpdt_dist_traits.h>
 #include <vnl/vnl_math.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Compute the probability from the density and normalization constant.
 template <class dist>

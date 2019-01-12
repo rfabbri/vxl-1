@@ -13,7 +13,9 @@
 #include <iostream>
 #include <cmath>
 #include "brec_fg_pair_density.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_erf.h>
 
@@ -57,4 +59,3 @@ double brec_fg_pair_density::gradient_of_negative_log(const double y0, const dou
   double ssss = std::pow(sigma_, 4.0);
   return -sigma_*B1*A1*( -(2*B*A2)/(sigma_*A1*A1) - B/(ss*A1) + (B*std::pow(y0-y1, 2.0))/(ssss*A1) );
 }
-

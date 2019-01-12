@@ -7,7 +7,9 @@
 #include <iostream>
 #include <sstream>
 #include <expatpplib.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 // bvxm files
 #include <bvxm/bvxm_world_params.h>
 
@@ -28,9 +30,9 @@
 class bvxm_world_param_parser : public expatpp
 {
  public:
-  bvxm_world_param_parser() {}
+  bvxm_world_param_parser() = default;
   bvxm_world_param_parser(std::string& filename);
-  ~bvxm_world_param_parser(void) {}
+  ~bvxm_world_param_parser(void) override = default;
 
   bvxm_world_params_sptr create_bvxm_world_params();
 
@@ -48,9 +50,9 @@ class bvxm_world_param_parser : public expatpp
   unsigned int max_scale() const { return max_scale_; } // "max_scale";
 
  private:
-  virtual void startElement(const XML_Char* name, const XML_Char** atts);
-  virtual void endElement(const XML_Char* name);
-  virtual void charData(const XML_Char* s, int len);
+  void startElement(const XML_Char* name, const XML_Char** atts) override;
+  void endElement(const XML_Char* name) override;
+  void charData(const XML_Char* s, int len) override;
 
   std::string world_dir_, lvcs_path_, temp_str_, active_tag_;
   float corner_x_, corner_y_, corner_z_;

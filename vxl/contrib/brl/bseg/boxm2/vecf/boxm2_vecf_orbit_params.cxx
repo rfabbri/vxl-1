@@ -1,6 +1,8 @@
 #include <iostream>
 #include "boxm2_vecf_orbit_params.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 double
 boxm2_vecf_orbit_params
 ::height_to_width_ratio()
@@ -21,7 +23,7 @@ std::ostream&  operator<<(std::ostream& s, boxm2_vecf_orbit_params const& prc){
     return s;
   }
   // bad practice --- but easy
-  boxm2_vecf_orbit_params & pr = const_cast<boxm2_vecf_orbit_params &>(prc);
+  auto & pr = const_cast<boxm2_vecf_orbit_params &>(prc);
   s << "eye_radius: " << pr.eye_radius_ << '\n';
   s << "iris_radius: " << pr.iris_radius_ << '\n';
   s << "medial_socket_radius: " << pr.medial_socket_radius_coef_ << '\n';

@@ -1,7 +1,4 @@
 // This is core/vil1/vil1_new.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Andrew W. Fitzgibbon, Oxford RRG
@@ -13,8 +10,10 @@
 #include <iostream>
 #include "vil1_new.h"
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <vil1/vil1_file_format.h>
 #include <vil1/vil1_stream_fstream.h>
@@ -28,7 +27,7 @@ vil1_image vil1_new(int width, int height, vil1_image const& prototype)
   case VIL1_BYTE: return vil1_memory_image_of<unsigned char>(width, height);
   default:
     assert(!"vil1_new");
-    return VXL_NULLPTR;
+    return nullptr;
   }
 }
 
@@ -49,14 +48,14 @@ vil1_image vil1_new(vil1_stream* os,
     vil1_file_format* fmt = *p;
     if (std::strcmp(fmt->tag(), file_format) == 0) {
       vil1_image_impl* outimage = fmt->make_output_image(os, planes, width, height, components, bits_per_component, format);
-      if (outimage == VXL_NULLPTR)
+      if (outimage == nullptr)
         std::cerr << "vil1_new: Unknown cannot new to type [" << file_format << "]\n";
       return outimage;
     }
   }
 
   std::cerr << "vil1_new: Unknown file type [" << file_format << "]\n";
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 //: Make a new vil1_image_impl, writing to stream "os", size "w" x "h", copying pixel format etc from "prototype".
@@ -81,7 +80,7 @@ vil1_image vil1_new(char const* filename,
                     vil1_image const& prototype,
                     char const* file_format)
 {
-  vil1_stream_fstream* os = new vil1_stream_fstream(filename, "w");
+  auto* os = new vil1_stream_fstream(filename, "w");
   return vil1_new(os,
                   prototype.planes(),
                   width,

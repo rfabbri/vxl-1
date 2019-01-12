@@ -4,7 +4,9 @@
 #include "sdet_harris_detector.h"
 //:
 // \file
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil1/vil1_memory_image_of.h>
 #include <vil/vil_image_view.h>
 #include <vil/vil_convert.h>
@@ -17,7 +19,7 @@
 //  Will result in descending order according to strength
 struct sdet_harris_point
 {
-  sdet_harris_point () {}
+  sdet_harris_point () = default;
 
   void set_point(vsol_point_2d_sptr const& p) {p_ = p;}
   void set_strength(const float s) {strength_ = s;}
@@ -48,16 +50,15 @@ static int compare(sdet_harris_point*  pa,
 sdet_harris_detector::sdet_harris_detector(sdet_harris_detector_params& rpp)
   : sdet_harris_detector_params(rpp)
 {
-  image_ = VXL_NULLPTR;
-  vimage_ = VXL_NULLPTR;
+  image_ = nullptr;
+  vimage_ = nullptr;
   //don't really know but have to pick one
   use_vil_image_ = true;
 }
 
 //:Default Destructor
 sdet_harris_detector::~sdet_harris_detector()
-{
-}
+= default;
 
 //-------------------------------------------------------------------------
 //: Set the image to be processed
@@ -175,7 +176,7 @@ void sdet_harris_detector::extract_corners()
     return;
   }
   //Sort the corners according to strength
-  sdet_harris_point* point_array = new sdet_harris_point[n_corners];
+  auto* point_array = new sdet_harris_point[n_corners];
   for (int i = 0; i<n_corners; i++)
   {
     vsol_point_2d_sptr p = new vsol_point_2d(x_pos[i], y_pos[i]);
@@ -205,4 +206,3 @@ void sdet_harris_detector::clear()
   points_.clear();
   points_valid_ = false;
 }
-

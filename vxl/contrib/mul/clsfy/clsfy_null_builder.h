@@ -2,9 +2,6 @@
 // Copyright: (C) 2001 British Telecommunications plc
 #ifndef clsfy_null_builder_h_
 #define clsfy_null_builder_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Describe a knn classifier builder
@@ -16,7 +13,9 @@
 #include <iostream>
 #include <iosfwd>
 #include <clsfy/clsfy_builder_base.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <mbl/mbl_data_wrapper.h>
 #include <vnl/vnl_vector.h>
 
@@ -36,35 +35,35 @@ class clsfy_null_builder : public clsfy_builder_base
 
   //: Create empty model
   // Caller is responsible for deletion
-  virtual clsfy_classifier_base* new_classifier() const;
+  clsfy_classifier_base* new_classifier() const override;
 
   //: Build classifier from data
   // return the mean error over the training set.
-  virtual double build(clsfy_classifier_base& model,
+  double build(clsfy_classifier_base& model,
                        mbl_data_wrapper<vnl_vector<double> >& inputs,
                        unsigned nClasses,
-                       const std::vector<unsigned> &outputs) const;
+                       const std::vector<unsigned> &outputs) const override;
 
   //: Name of the class
-  virtual std::string is_a() const;
+  std::string is_a() const override;
 
   //: Name of the class
-  virtual bool is_class(std::string const& s) const;
+  bool is_class(std::string const& s) const override;
 
   //: IO Version number
   short version_no() const;
 
   //: Create a copy on the heap and return base class pointer
-  virtual clsfy_builder_base* clone() const;
+  clsfy_builder_base* clone() const override;
 
   //: Print class to os
-  virtual void print_summary(std::ostream& os) const;
+  void print_summary(std::ostream& os) const override;
 
   //: Save class to binary file stream
-  virtual void b_write(vsl_b_ostream& bfs) const;
+  void b_write(vsl_b_ostream& bfs) const override;
 
   //: Load class from binary file stream
-  virtual void b_read(vsl_b_istream& bfs);
+  void b_read(vsl_b_istream& bfs) override;
 
   //: The number of nearest neighbours to look for.
   unsigned k() const;
@@ -73,7 +72,7 @@ class clsfy_null_builder : public clsfy_builder_base
   void set_k(unsigned);
 
   //: Initialise the parameters from a text stream.
-  void config(std::istream &as);
+  void config(std::istream &as) override;
 };
 
 #endif // clsfy_null_builder_h_

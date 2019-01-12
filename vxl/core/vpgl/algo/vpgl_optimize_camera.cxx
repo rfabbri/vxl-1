@@ -1,4 +1,5 @@
 // This is core/vpgl/algo/vpgl_optimize_camera.cxx
+#include <utility>
 #include "vpgl_optimize_camera.h"
 //:
 // \file
@@ -11,19 +12,23 @@
 #include <vgl/algo/vgl_h_matrix_3d.h>
 #endif
 #include <vgl/algo/vgl_rotation_3d.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+
 
 //: Constructor
 vpgl_orientation_lsqr::
   vpgl_orientation_lsqr(const vpgl_calibration_matrix<double>& K,
                         const vgl_point_3d<double>& c,
                         const std::vector<vgl_homg_point_3d<double> >& world_points,
-                        const std::vector<vgl_point_2d<double> >& image_points )
- : vnl_least_squares_function(3,2*world_points.size(),no_gradient),
+                        std::vector<vgl_point_2d<double> >  image_points )
+ : vnl_least_squares_function(3,static_cast<unsigned int>(2*world_points.size()),no_gradient),
    K_(K),
    c_(c),
    world_points_(world_points),
-   image_points_(image_points)
+   image_points_(std::move(image_points))
 {
   assert(world_points_.size() == image_points_.size());
 }
@@ -52,11 +57,11 @@ vpgl_orientation_lsqr::f(vnl_vector<double> const& x, vnl_vector<double>& fx)
 vpgl_orientation_position_lsqr::
   vpgl_orientation_position_lsqr(const vpgl_calibration_matrix<double>& K,
                                  const std::vector<vgl_homg_point_3d<double> >& world_points,
-                                 const std::vector<vgl_point_2d<double> >& image_points )
- : vnl_least_squares_function(6,2*world_points.size(),no_gradient),
+                                 std::vector<vgl_point_2d<double> >  image_points )
+ : vnl_least_squares_function(6, static_cast<unsigned int>(2 * world_points.size()), no_gradient),
    K_(K),
    world_points_(world_points),
-   image_points_(image_points)
+   image_points_(std::move(image_points))
 {
   assert(world_points_.size() == image_points_.size());
 }
@@ -105,10 +110,10 @@ vpgl_orientation_position_lsqr::trace(int iteration,
 //: Constructor
 vpgl_orientation_position_calibration_lsqr::
 vpgl_orientation_position_calibration_lsqr(const std::vector<vgl_homg_point_3d<double> >& world_points,
-                                           const std::vector<vgl_point_2d<double> >& image_points )
+                                           std::vector<vgl_point_2d<double> >  image_points )
  : vnl_least_squares_function(10,2*world_points.size(),no_gradient),
    world_points_(world_points),
-   image_points_(image_points)
+   image_points_(std::move(image_points))
 {
   assert(world_points_.size() == image_points_.size());
 }
@@ -154,11 +159,11 @@ vpgl_orientation_position_calibration_lsqr::f(vnl_vector<double> const& x, vnl_v
 vpgl_orientation_position_focal_lsqr::
 vpgl_orientation_position_focal_lsqr(const vpgl_calibration_matrix<double>& K_init,
                                      const std::vector<vgl_homg_point_3d<double> >& world_points,
-                                     const std::vector<vgl_point_2d<double> >& image_points )
+                                     std::vector<vgl_point_2d<double> >  image_points )
  : vnl_least_squares_function(8,2*world_points.size(),use_gradient),
    K_init_(K_init),
    world_points_(world_points),
-   image_points_(image_points)
+   image_points_(std::move(image_points))
 {
   assert(world_points_.size() == image_points_.size());
 }
@@ -229,14 +234,11 @@ vpgl_orientation_position_focal_lsqr::gradf(vnl_vector<double> const& xvec, vnl_
 
   for (unsigned int idx=0; idx < world_points_.size(); ++idx)
   {
-    vgl_homg_point_3d<double> wp = world_points_[idx];
     X = world_points_[idx].x(); Y = world_points_[idx].y(); Z = world_points_[idx].z(); W = world_points_[idx].w();
 
     A = Rmat[0][0]*X + Rmat[0][1]*Y + Rmat[0][2]*Z + t1*W;
     B = Rmat[1][0]*X + Rmat[1][1]*Y + Rmat[1][2]*Z + t2*W;
     C = Rmat[2][0]*X + Rmat[2][1]*Y + Rmat[2][2]*Z + t3*W;
-
-    vgl_homg_point_2d<double> proj = cam(world_points_[idx]);
 
     double dex_dr1, dex_dr2, dex_dr3, dex_dr4, dey_dr1, dey_dr2, dey_dr3, dey_dr4;
     double dex_dt1, dey_dt1, dex_dt2, dey_dt2, dex_dt3, dey_dt3, dex_df, dey_df;
@@ -344,7 +346,6 @@ vpgl_optimize_camera::opt_orient_pos_f(const vpgl_perspective_camera<double>& ca
                                        const double xtol, const unsigned nevals)
 {
   const vpgl_calibration_matrix<double>& K = camera.get_calibration();
-  vgl_point_3d<double> c = camera.get_camera_center();
   vgl_vector_3d<double> t= camera.get_translation();
   const vgl_rotation_3d<double>& R = camera.get_rotation();
   vnl_quaternion<double> q = R.as_quaternion();

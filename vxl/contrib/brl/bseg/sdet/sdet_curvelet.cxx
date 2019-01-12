@@ -4,8 +4,10 @@
 #include <algorithm>
 #include "sdet_curvelet.h"
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: copy constructor
 sdet_curvelet::sdet_curvelet(const sdet_curvelet& other)
@@ -29,7 +31,7 @@ sdet_curvelet::sdet_curvelet(const sdet_curvelet& other)
     case sdet_curve_model::ES:
       curve_model = new sdet_ES_curve_model(*(sdet_ES_curve_model*)other.curve_model);
     default:
-      curve_model=VXL_NULLPTR; //TO DO
+      curve_model=nullptr; //TO DO
   }
 
   forward = other.forward;
@@ -101,8 +103,8 @@ void sdet_curvelet::print(std::ostream& os)
 {
   //first output the edgel chain
   os << "[";
-  for (unsigned i=0; i< edgel_chain.size(); i++){
-    os << edgel_chain[i]->id << " ";
+  for (auto & i : edgel_chain){
+    os << i->id << " ";
   }
   os << "] ";
 
@@ -123,12 +125,12 @@ std::list<sdet_edgel*> sdet_curvelet::child_chain()
 {
     bool flag=false;
     std::list<sdet_edgel*> return_chain;
-    for(unsigned i=0;i<edgel_chain.size();i++)
+    for(auto & i : edgel_chain)
     {
         if(flag)
-            return_chain.push_back(edgel_chain[i]);
+            return_chain.push_back(i);
 
-        if(edgel_chain[i]->id==ref_edgel->id)
+        if(i->id==ref_edgel->id)
             flag=true;
 
     }
@@ -140,13 +142,13 @@ std::list<sdet_edgel*> sdet_curvelet::parent_chain()
 {
     bool flag=true;
     std::list<sdet_edgel*> return_chain;
-    for(unsigned i=0;i<edgel_chain.size();i++)
+    for(auto & i : edgel_chain)
     {
 
-        if(edgel_chain[i]->id==ref_edgel->id)
+        if(i->id==ref_edgel->id)
             flag=false;
         if(flag)
-            return_chain.push_front(edgel_chain[i]);
+            return_chain.push_front(i);
     }
     return return_chain;
 }

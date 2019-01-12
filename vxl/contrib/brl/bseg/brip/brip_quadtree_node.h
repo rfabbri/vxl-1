@@ -22,7 +22,9 @@
 
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_ref_count.h>
 #include <brip/brip_quadtree_node_base_sptr.h>
 
@@ -39,7 +41,7 @@ class brip_quadtree_node_base : public vbl_ref_count
   : iul_(iul), jul_(jul), ilr_(ilr), jlr_(jlr), valid_(valid),
     children_(std::vector<brip_quadtree_node_base_sptr>(4)) {}
 
-  ~brip_quadtree_node_base() {}
+  ~brip_quadtree_node_base() override = default;
 
   bool data_valid() const { return valid_; }
 
@@ -97,7 +99,7 @@ class brip_quadtree_node : public brip_quadtree_node_base
                      unsigned jlr, T data)
   : brip_quadtree_node_base(iul, jul, ilr, jlr, true),data_(data){}
 
-  ~brip_quadtree_node(){}
+  ~brip_quadtree_node() override= default;
 
   // Data Access----------------------------------------------------
 
@@ -124,7 +126,7 @@ class brip_quadtree_node<float> : public brip_quadtree_node_base
                      unsigned jlr, float data)
   : brip_quadtree_node_base(iul, jul, ilr, jlr, true), data_(data) {}
 
-  ~brip_quadtree_node() {}
+  ~brip_quadtree_node() override = default;
 
   // Data Access----------------------------------------------------
 

@@ -2,6 +2,7 @@
 #include <set>
 #include <iostream>
 #include <algorithm>
+#include <utility>
 #include "brdb_relation.h"
 //:
 // \file
@@ -10,8 +11,10 @@
 // \date Apr 4th, 2007
 // Make it work with the whole database initially based on Matt's sketch.
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_vector_io.h>
 #include <brdb/brdb_value.h>
 #include <brdb/brdb_tuple.h>
@@ -30,9 +33,9 @@ brdb_relation::brdb_relation()
 }
 
 //: Constructor - create an empty relation but define the columns
-brdb_relation::brdb_relation( const std::vector<std::string>& names,
-                              const std::vector<std::string>& types )
- : names_(names), types_(types)
+brdb_relation::brdb_relation( std::vector<std::string>  names,
+                              std::vector<std::string>  types )
+ : names_(std::move(names)), types_(std::move(types))
 {
   assert(this->is_valid());
   // init the time stamp;
@@ -41,9 +44,9 @@ brdb_relation::brdb_relation( const std::vector<std::string>& names,
 
 //: Constructor - create a relation populated with tuples
 brdb_relation::brdb_relation( const std::vector<std::string>& names,
-                              const std::vector<brdb_tuple_sptr>& tuples,
-                              const std::vector<std::string>& types )
- : names_(names), types_(types), tuples_(tuples)
+                              std::vector<brdb_tuple_sptr>  tuples,
+                              std::vector<std::string>  types )
+ : names_(names), types_(std::move(types)), tuples_(std::move(tuples))
 {
   // if no types are specified infer them from the data
   if (types_.empty())
@@ -51,11 +54,11 @@ brdb_relation::brdb_relation( const std::vector<std::string>& names,
     types_.resize(names.size(),"");
     for (unsigned int i=0; i<types_.size(); ++i)
     {
-      for (unsigned int j=0; j<tuples_.size(); ++j)
+      for (auto & tuple : tuples_)
       {
-        if (!tuples_[j]->is_null(i))
+        if (!tuple->is_null(i))
         {
-          types_[i] = (*tuples_[j])[i].is_a();
+          types_[i] = (*tuple)[i].is_a();
           break;
         }
       }
@@ -68,8 +71,7 @@ brdb_relation::brdb_relation( const std::vector<std::string>& names,
 
 //: Destructor
 brdb_relation::~brdb_relation()
-{
-}
+= default;
 
 
 //: Verify that the data stored in this class make a valid relation
@@ -83,13 +85,13 @@ brdb_relation::is_valid() const
     return false;
 
   // check for valid type names
-  for (unsigned int i=0; i<types_.size(); ++i)
-    if (brdb_value::registry().count(types_[i]) <= 0)
+  for (const auto & type : types_)
+    if (brdb_value::registry().count(type) <= 0)
       return false;
 
   // check that each tuple matches the arity and types of the relation
-  for (unsigned int i=0; i<tuples_.size(); ++i){
-    if (!is_valid(tuples_[i]))
+  for (const auto & tuple : tuples_){
+    if (!is_valid(tuple))
       return false;
   }
 
@@ -167,7 +169,7 @@ brdb_relation::name(unsigned int index) const
 unsigned int
 brdb_relation::index(const std::string& name) const
 {
-  std::vector<std::string>::const_iterator itr = std::find(names_.begin(), names_.end(), name);
+  auto itr = std::find(names_.begin(), names_.end(), name);
   return itr - names_.begin();
 }
 
@@ -479,7 +481,7 @@ brdb_join(const brdb_relation_sptr& r1, const brdb_relation_sptr& r2)
         {
           std::cerr << "join: trying to join relations which having same name "
                    << "attributes with different types!\n";
-          return VXL_NULLPTR;
+          return nullptr;
         }
 
         common_attribute_count++;
@@ -500,9 +502,9 @@ brdb_join(const brdb_relation_sptr& r1, const brdb_relation_sptr& r2)
     for (unsigned int i=0; i<r1->arity(); i++)
     {
       bool isCommon = false;
-      for (unsigned int j=0; j<r1_common_attribute_index.size(); j++)
+      for (unsigned int j : r1_common_attribute_index)
       {
-        if (i == r1_common_attribute_index[j])
+        if (i == j)
           isCommon = true;
       }
 
@@ -518,7 +520,7 @@ brdb_join(const brdb_relation_sptr& r1, const brdb_relation_sptr& r2)
     {
       std::cerr << "join: trying to join relations which don't have any "
                << "common attributes.\n";
-      return VXL_NULLPTR;
+      return nullptr;
     }
 
     // compose a new relation
@@ -529,10 +531,10 @@ brdb_join(const brdb_relation_sptr& r1, const brdb_relation_sptr& r2)
     unsigned int arity2 = r2->arity();
 
     // go through all tuples in r1
-    for (std::vector<brdb_tuple_sptr>::iterator itr_1 = r1->begin(); itr_1<r1->end(); ++itr_1)
+    for (auto itr_1 = r1->begin(); itr_1<r1->end(); ++itr_1)
     {
       // go through all tuples in r2
-      for (std::vector<brdb_tuple_sptr>::iterator itr_2 = r2->begin(); itr_2<r2->end(); ++itr_2)
+      for (auto itr_2 = r2->begin(); itr_2<r2->end(); ++itr_2)
       {
         bool isMatched = true;
         for (unsigned int k=0; k<common_attribute_count; k++)
@@ -554,25 +556,25 @@ brdb_join(const brdb_relation_sptr& r1, const brdb_relation_sptr& r2)
           for (unsigned int m=0; m<arity1; m++)
           {
             if (!new_tup->add_value((*(*itr_1))[m]))
-              return VXL_NULLPTR;
+              return nullptr;
           }
 
           // add all non-common values of tuple in r2
-          for (unsigned int m=0; m<r2_non_common_attribute_index.size(); m++)
+          for (unsigned int m : r2_non_common_attribute_index)
           {
-            if (!new_tup->add_value((*(*itr_2))[r2_non_common_attribute_index[m]]))
-              return VXL_NULLPTR;
+            if (!new_tup->add_value((*(*itr_2))[m]))
+              return nullptr;
           }
 
           // check the size of the new tuple
           if (new_tup->arity() != (arity1+arity2-common_attribute_count))
-            return VXL_NULLPTR;
+            return nullptr;
 
           // add the new tuple into the resulting relation
           if (!new_relation->add_tuple(new_tup))
           {
             std::cerr << "join: failed to add tuple.\n";
-            return VXL_NULLPTR;
+            return nullptr;
           }
         }
       }

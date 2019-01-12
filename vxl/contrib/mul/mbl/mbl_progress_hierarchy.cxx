@@ -9,7 +9,9 @@
 #include <iostream>
 #include <algorithm>
 #include "mbl_progress_hierarchy.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <mbl/mbl_log.h>
 
 
@@ -24,7 +26,7 @@ inline mbl_logger& logger()
 //  Derived classes may take some action here.
 //  \param identifier The operation being monitored.
 void mbl_progress_hierarchy::on_set_estimated_iterations(const std::string& identifier,
-  const int total_iterations)
+  const int  /*total_iterations*/)
 {
   if (std::find(identifier_stack_.begin(), identifier_stack_.end(), identifier) !=
     identifier_stack_.end())
@@ -46,7 +48,7 @@ void mbl_progress_hierarchy::on_set_estimated_iterations(const std::string& iden
 //  \param identifier The operation being monitored.
 //  \param progress The new progress status.
 void mbl_progress_hierarchy::on_set_progress(const std::string& identifier,
-                               const int progress)
+                               const int  /*progress*/)
 {
   just_ended_=false;
 

@@ -1,20 +1,23 @@
-#include <iostream>
-#include <algorithm>
-#include <limits>
 #include "boxm2_vecf_ocl_head_model.h"
-#include <vnl/vnl_vector_fixed.h>
-#include <vgl/vgl_distance.h>
-#include <vgl/vgl_box_3d.h>
-#include <vnl/vnl_math.h>
-#include <vgl/vgl_sphere_3d.h>
+#include <algorithm>
+#include <boct/boct_bit_tree.h>
 #include <boxm2/boxm2_util.h>
 #include <boxm2/io/boxm2_lru_cache.h>
-#include <boct/boct_bit_tree.h>
-#include <vcl_compiler.h>
+#include <iostream>
+#include <limits>
+#include <utility>
+#include <vgl/vgl_box_3d.h>
+#include <vgl/vgl_distance.h>
+#include <vgl/vgl_sphere_3d.h>
+#include <vnl/vnl_math.h>
+#include <vnl/vnl_vector_fixed.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
-boxm2_vecf_ocl_head_model::boxm2_vecf_ocl_head_model(std::string const& scene_file,bocl_device_sptr device,boxm2_opencl_cache_sptr opencl_cache,bool optimize, std::string color_apm_ident):
+boxm2_vecf_ocl_head_model::boxm2_vecf_ocl_head_model(std::string const& scene_file,const bocl_device_sptr& device,const boxm2_opencl_cache_sptr& opencl_cache,bool optimize, std::string color_apm_ident):
 
-  boxm2_vecf_articulated_scene(scene_file,color_apm_ident),
+  boxm2_vecf_articulated_scene(scene_file,std::move(color_apm_ident)),
   scale_(1.0, 1.0, 1.0),opencl_cache_(opencl_cache),device_(device), scene_transformer_(base_model_,opencl_cache_,"",color_apm_id_),optimize_(optimize)
 {
 }
@@ -60,12 +63,11 @@ void boxm2_vecf_ocl_head_model::clear_target(boxm2_scene_sptr target_scene)
   // for each block of the target scene
   std::vector<boxm2_block_id> target_blocks = target_scene->get_block_ids();
 
-  for (std::vector<boxm2_block_id>::iterator tblk = target_blocks.begin();
-       tblk != target_blocks.end(); ++tblk) {
-    bocl_mem* color_app_db =  opencl_cache_->get_data(target_scene, *tblk, boxm2_data_traits<BOXM2_GAUSS_RGB>::prefix(color_apm_id_));
-    bocl_mem* nobs_db      =  opencl_cache_->get_data(target_scene, *tblk, boxm2_data_traits<BOXM2_NUM_OBS_SINGLE>::prefix(color_apm_id_));
-    bocl_mem* alpha_db     =  opencl_cache_->get_data(target_scene, *tblk, boxm2_data_traits<BOXM2_ALPHA>::prefix());
-    bocl_mem* gray_app_db  =  opencl_cache_->get_data(target_scene, *tblk, boxm2_data_traits<BOXM2_MOG3_GREY>::prefix());
+  for (auto & target_block : target_blocks) {
+    bocl_mem* color_app_db =  opencl_cache_->get_data(target_scene, target_block, boxm2_data_traits<BOXM2_GAUSS_RGB>::prefix(color_apm_id_));
+    bocl_mem* nobs_db      =  opencl_cache_->get_data(target_scene, target_block, boxm2_data_traits<BOXM2_NUM_OBS_SINGLE>::prefix(color_apm_id_));
+    bocl_mem* alpha_db     =  opencl_cache_->get_data(target_scene, target_block, boxm2_data_traits<BOXM2_ALPHA>::prefix());
+    bocl_mem* gray_app_db  =  opencl_cache_->get_data(target_scene, target_block, boxm2_data_traits<BOXM2_MOG3_GREY>::prefix());
 
 
     int status;
@@ -87,16 +89,16 @@ void boxm2_vecf_ocl_head_model::clear_target(boxm2_scene_sptr target_scene)
     }
   } // for each target block
 }
-void boxm2_vecf_ocl_head_model::inverse_vector_field_unrefined(std::vector<vgl_point_3d<double> > const& unrefined_target_pts) {
+void boxm2_vecf_ocl_head_model::inverse_vector_field_unrefined(std::vector<vgl_point_3d<double> > const&  /*unrefined_target_pts*/) {
 
   return ;
 }
-int boxm2_vecf_ocl_head_model::prerefine_target_sub_block(vgl_point_3d<double> const& sub_block_pt, unsigned pt_index) {
+int boxm2_vecf_ocl_head_model::prerefine_target_sub_block(vgl_point_3d<double> const&  /*sub_block_pt*/, unsigned  /*pt_index*/) {
   return true;
 }
-bool boxm2_vecf_ocl_head_model::inverse_vector_field(vgl_point_3d<double> const& target_pt, vgl_vector_3d<double>& inv_vf)const {
+bool boxm2_vecf_ocl_head_model::inverse_vector_field(vgl_point_3d<double> const&  /*target_pt*/, vgl_vector_3d<double>&  /*inv_vf*/)const {
   return true;
 }
-bool boxm2_vecf_ocl_head_model::apply_vector_field(cell_info const& target_cell, vgl_vector_3d<double> const& inv_vf) {
+bool boxm2_vecf_ocl_head_model::apply_vector_field(cell_info const&  /*target_cell*/, vgl_vector_3d<double> const&  /*inv_vf*/) {
   return true;
 }

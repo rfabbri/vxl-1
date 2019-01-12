@@ -14,15 +14,15 @@
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_homg_point_3d.h>
 #include <vgl/algo/vgl_rotation_3d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include "vpgl_proj_camera.h"
 
 
 //---------------------------------
 template <class T>
-vpgl_essential_matrix<T>::vpgl_essential_matrix()
-{
-}
+vpgl_essential_matrix<T>::vpgl_essential_matrix() = default;
 
 template <class T>
 vpgl_essential_matrix<T>::
@@ -74,9 +74,7 @@ vpgl_essential_matrix<T>::operator=( const vpgl_essential_matrix<T>& fm )
 //---------------------------------
 //: Destructor
 template <class T>
-vpgl_essential_matrix<T>::~vpgl_essential_matrix()
-{
-}
+vpgl_essential_matrix<T>::~vpgl_essential_matrix() = default;
 
 //---------------------------------
 // Decompose the essential matrix to obtain rotation and translation of

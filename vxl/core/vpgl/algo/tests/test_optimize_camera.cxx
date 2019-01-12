@@ -1,6 +1,8 @@
 #include <iostream>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_vector_2d.h>
 #include <vgl/vgl_vector_3d.h>
@@ -17,7 +19,7 @@ void test_opt_orient_pos(vpgl_perspective_camera<double> const& cam,
                          std::vector<vgl_homg_point_3d<double> > const& world,
                          std::vector<vgl_point_2d<double> > const& image,
                          vnl_random &rnd) {
-  const double max_t_err = 10.0; // maximum translation error to introduce
+  constexpr double max_t_err = 10.0; // maximum translation error to introduce
   const double max_r_err = vnl_math::pi/4; // maximum rotation error to introduce (radians)
 
   // select a random rotation axis
@@ -32,8 +34,8 @@ void test_opt_orient_pos(vpgl_perspective_camera<double> const& cam,
            << "Initial principal ray:" << cam.principal_axis() << std::endl;
 
   vgl_point_3d<double> c = cam.get_camera_center();
-  vpgl_calibration_matrix<double> K = cam.get_calibration();
-  vgl_rotation_3d<double> R = cam.get_rotation();
+  const vpgl_calibration_matrix<double>& K = cam.get_calibration();
+  const vgl_rotation_3d<double>& R = cam.get_rotation();
 
   vgl_point_3d<double> new_center = c + max_t_err*dc;
   std::cout << "new center = " << new_center << std::endl;
@@ -60,8 +62,8 @@ void test_opt_orient_pos_f(vpgl_perspective_camera<double> const& cam,
                            std::vector<vgl_point_2d<double> > const& image,
                            vnl_random &rnd) {
 
-  const double max_t_err = 0;//10.0; // maximum translation error to introduce
-  const double max_r_err = 0;//vnl_math::pi/4; // maximum rotation error to introduce (radians)
+  constexpr double max_t_err = 0;//10.0; // maximum translation error to introduce
+  constexpr double max_r_err = 0;//vnl_math::pi/4; // maximum rotation error to introduce (radians)
 
   // select a random rotation axis
   vnl_double_3 dw = (vnl_double_3(rnd.drand32(), rnd.drand32(), rnd.drand32())-0.5).normalize();
@@ -76,8 +78,8 @@ void test_opt_orient_pos_f(vpgl_perspective_camera<double> const& cam,
            << "Initial focal length:" << cam.get_calibration().focal_length() << std::endl;
 
   vgl_point_3d<double> c = cam.get_camera_center();
-  vpgl_calibration_matrix<double> K = cam.get_calibration();
-  vgl_rotation_3d<double> R = cam.get_rotation();
+  const vpgl_calibration_matrix<double>& K = cam.get_calibration();
+  const vgl_rotation_3d<double>& R = cam.get_rotation();
 
   vgl_point_3d<double> new_center = c + max_t_err*dc;
   std::cout << "new center = " << new_center << std::endl;
@@ -107,18 +109,18 @@ void test_opt_orient_pos_f(vpgl_perspective_camera<double> const& cam,
 
 static void test_optimize_camera()
 {
-  const double max_p_err = 0.25; // maximum image error to introduce (pixels)
+  constexpr double max_p_err = 0.25; // maximum image error to introduce (pixels)
 
   std::vector<vgl_homg_point_3d<double> > world;
   double side_len = 1.0;
-  world.push_back(vgl_homg_point_3d<double>(0.0,0.0,0.0));
-  world.push_back(vgl_homg_point_3d<double>(0.0, 0.0, side_len));
-  world.push_back(vgl_homg_point_3d<double>(0.0, side_len, 0.0));
-  world.push_back(vgl_homg_point_3d<double>(0.0, side_len, side_len));
-  world.push_back(vgl_homg_point_3d<double>(side_len, 0.0, 0.0));
-  world.push_back(vgl_homg_point_3d<double>(side_len, 0.0, side_len));
-  world.push_back(vgl_homg_point_3d<double>(side_len, side_len, 0.0));
-  world.push_back(vgl_homg_point_3d<double>(side_len, side_len, side_len));
+  world.emplace_back(0.0,0.0,0.0);
+  world.emplace_back(0.0, 0.0, side_len);
+  world.emplace_back(0.0, side_len, 0.0);
+  world.emplace_back(0.0, side_len, side_len);
+  world.emplace_back(side_len, 0.0, 0.0);
+  world.emplace_back(side_len, 0.0, side_len);
+  world.emplace_back(side_len, side_len, 0.0);
+  world.emplace_back(side_len, side_len, side_len);
 
   vpgl_calibration_matrix<double> K(2000.0,vgl_homg_point_2d<double>(512,384));
   vgl_homg_point_3d<double> c(4.0,4.0,4.0);
@@ -130,8 +132,8 @@ static void test_optimize_camera()
   // seed with fixed number for repeatable results
   vnl_random rnd(1234);
   // project each point adding uniform noise in a [-max_p_err, max_p_err] pixel window
-  for (unsigned int i=0; i<world.size(); ++i){
-    vgl_homg_point_2d<double> hpt = cam(world[i]);
+  for (const auto & i : world){
+    vgl_homg_point_2d<double> hpt = cam(i);
     vgl_vector_2d<double> err(rnd.drand32()-0.5, rnd.drand32()-0.5);
     err *= max_p_err;
     image.push_back(vgl_point_2d<double>(hpt.x()/hpt.w(), hpt.y()/hpt.w())+err);

@@ -8,8 +8,10 @@
 #include <cmath>
 #include "bil_scale_image.h"
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <vil/vil_math.h>
 #include <vil/vil_resample_bilin.h>

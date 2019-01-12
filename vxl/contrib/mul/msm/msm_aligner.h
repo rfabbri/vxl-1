@@ -7,10 +7,12 @@
 // \brief Base for functions which calculate and apply 2D transformations
 
 #include <string>
-#include <vcl_memory.h>
 #include <iostream>
+#include <memory>
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_fwd.h>
 #include <vnl/vnl_fwd.h>
 #include <msm/msm_points.h>
@@ -27,7 +29,7 @@ class mbl_read_props_type;
 class msm_aligner
 {
  public:
-  virtual ~msm_aligner() {}
+  virtual ~msm_aligner() = default;
 
   //: Return number of parameters defining the transformation
   virtual unsigned size() const=0;
@@ -132,7 +134,7 @@ class msm_aligner
   virtual void b_read(vsl_b_istream& bfs);
 
   //: Create a concrete msm_aligner-derived object, from a text specification.
-  static vcl_unique_ptr<msm_aligner> create_from_stream(std::istream &is);
+  static std::unique_ptr<msm_aligner> create_from_stream(std::istream &is);
 
   //: Initialise from a text stream.
   // The default implementation is for attribute-less normalisers,
@@ -170,5 +172,3 @@ void vsl_print_summary(std::ostream& os,const msm_aligner& b);
 void vsl_print_summary(std::ostream& os,const msm_aligner* b);
 
 #endif // msm_aligner_h_
-
-

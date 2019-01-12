@@ -1,7 +1,4 @@
 // This is core/vgui/internals/vgui_simple_field.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Philip C. Pritchett, RRG, University of Oxford
@@ -11,7 +8,9 @@
 #include <sstream>
 #include "vgui_simple_field.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 template <class T>

@@ -8,8 +8,10 @@
 #include <vnl/algo/vnl_svd.h>
 #include <vgl/vgl_point_2d.h>
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 rrel_affine_est::
 rrel_affine_est( const std::vector< vgl_point_2d<double> > & from_pts,
@@ -18,7 +20,7 @@ rrel_affine_est( const std::vector< vgl_point_2d<double> > & from_pts,
 {
   assert( from_pts.size() == to_pts.size() );
 
-  const unsigned dim  = 2;
+  constexpr unsigned dim = 2;
   const unsigned size = from_pts.size();
 
   // convert from vector to vnl_vector type
@@ -52,9 +54,7 @@ rrel_affine_est( const std::vector< vnl_vector<double> > & from_pts,
   num_samples_ = size;
 }
 
-rrel_affine_est::~rrel_affine_est()
-{
-}
+rrel_affine_est::~rrel_affine_est() = default;
 
 
 unsigned int
@@ -73,7 +73,7 @@ void set_row_wise( vnl_matrix<double>& des, unsigned r, unsigned c,
 
 inline
 void copy_to_nth_pos( vnl_vector<double>& des, unsigned c,
-                      const vnl_vector<double> s )
+                      const vnl_vector<double>& s )
 {
   for ( unsigned int i=0; i<s.size(); ++i )
     des(c+i) = s(i);

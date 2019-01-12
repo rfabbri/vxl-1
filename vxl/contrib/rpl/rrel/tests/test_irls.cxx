@@ -1,7 +1,9 @@
 #include <iostream>
 #include <cmath>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vnl/vnl_double_3.h>
 #include <vnl/vnl_double_4.h>
@@ -24,7 +26,7 @@ regression_points( const vnl_vector<double>& a,
                    double sigma,
                    std::vector< vnl_vector<double> >& pts )
 {
-  const int num_pts=20;
+  constexpr int num_pts = 20;
   pts.resize( num_pts );
 
   //  Initialize variables.
@@ -99,7 +101,7 @@ inline bool
 check( const vnl_vector<double>& correct_params,
        rrel_irls* irls )
 {
-  vnl_vector<double> res(irls->params());
+  const vnl_vector<double>& res(irls->params());
   double s = irls->scale();
   vnl_matrix<double> covar(irls->cofactor()*s*s);
   vnl_vector<double> err_vector(res - correct_params);
@@ -134,13 +136,13 @@ static void test_irls()
   double sigma = 0.25;
   std::vector< vnl_vector<double> > pts;
   regression_points( true_params.as_vector(), sigma, pts );
-  rrel_linear_regression * lr = new rrel_linear_regression( pts, use_intercept );
+  auto * lr = new rrel_linear_regression( pts, use_intercept );
   int dof = lr->param_dof();
   rrel_wls_obj * m_est = new rrel_tukey_obj( dof );
   int max_iterations = 50;
   testlib_test_begin( "ctor" );
-  rrel_irls * irls = new rrel_irls( max_iterations );
-  testlib_test_perform( irls != VXL_NULLPTR );
+  auto * irls = new rrel_irls( max_iterations );
+  testlib_test_perform( irls != nullptr );
 
   //  Setting max iteration parameters.
   max_iterations = 50;

@@ -4,7 +4,7 @@
 #include <bsta/vis/bsta_svg_tools.h>
 #include <vsl/vsl_vector_io.h>
 
-float volm_desc::similarity(volm_desc_sptr other)
+float volm_desc::similarity(volm_desc_sptr  /*other*/)
 {
   return 0.0f;
 }
@@ -17,7 +17,7 @@ unsigned int volm_desc::get_area()
   return area;
 }
 
-void volm_desc::visualize(std::string outfile, unsigned char const& y_max) const
+void volm_desc::visualize(const std::string& outfile, unsigned char const& y_max) const
 {
   // use bsvg_plot to visualize the bin
   // define the width and height from descriptor
@@ -94,5 +94,3 @@ void volm_desc::get_char_array(std::vector<unsigned char>& values) const
   values.resize(nbins_);
   values = h_;
 }
-
-

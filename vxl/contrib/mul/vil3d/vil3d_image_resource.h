@@ -1,9 +1,6 @@
 // This is mul/vil3d/vil3d_image_resource.h
 #ifndef vil3d_image_resource_h_
 #define vil3d_image_resource_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Representation of a generic image source or destination.
@@ -12,7 +9,10 @@
 // \date 2 Mar 2003
 
 #include <vil3d/vil3d_image_view_base.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_smart_ptr.h>
 #include <vil/vil_pixel_format.h>
 
@@ -29,7 +29,7 @@ class vil3d_image_resource
 {
  public:
   vil3d_image_resource(): reference_count_(0) {}
-  virtual ~vil3d_image_resource() {}
+  virtual ~vil3d_image_resource() = default;
 
   //: Dimensions:  Planes x ni x nj.
   // This concept is treated as a synonym to components.
@@ -105,11 +105,11 @@ class vil3d_image_resource
 
   //: Return a string describing the file format.
   // Only file images have a format, others return 0
-  virtual char const* file_format() const { return VXL_NULLPTR; }
+  virtual char const* file_format() const { return nullptr; }
 
   //: Extra property information
   // Note that get_properties() returns voxel sizes in metres, not mm.
-  virtual bool get_property(char const* label, void* property_value = VXL_NULLPTR) const =0;
+  virtual bool get_property(char const* label, void* property_value = nullptr) const =0;
 
  private:
   // You probably should not use a vil3d_image_resource in a vbl_smart_ptr, so the

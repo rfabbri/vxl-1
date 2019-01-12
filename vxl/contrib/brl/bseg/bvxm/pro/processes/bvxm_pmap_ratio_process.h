@@ -21,16 +21,18 @@
 #include <iostream>
 #include <string>
 #include <bprb/bprb_func_process.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: globals variables/functions
 namespace bvxm_pmap_ratio_process_globals
 {
-  const unsigned n_inputs_ = 3;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 3;
+  constexpr unsigned n_outputs_ = 0;
 
   // functions
-  bool compute(std::string pmap1,std::string pmap2, std::string path);
+  bool compute(const std::string& pmap1,const std::string& pmap2, const std::string& path);
 }
 
 //: set input and output types

@@ -1,7 +1,4 @@
 // This is oxl/mvl/HomgLineSeg2D.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 
@@ -11,7 +8,9 @@
 #include <mvl/HomgLine2D.h>
 #include <mvl/HomgOperator2D.h>
 #include <vnl/vnl_double_2.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //--------------------------------------------------------------
 //

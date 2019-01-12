@@ -18,12 +18,14 @@
 #include <vector>
 #include <string>
 #include <vnl/vnl_float_3.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class bvpl_create_directions_base
 {
  public:
- bvpl_create_directions_base() {}
+ bvpl_create_directions_base() = default;
 
 #if 0
  //:Destructor
@@ -35,7 +37,7 @@ class bvpl_create_directions_base
  std::vector<float> get_angles() const { return angles_; }
 
  //:Print to file
- void save_directions_map(std::string outfile);
+ void save_directions_map(const std::string& outfile);
 
  protected:
   std::vector<vnl_float_3> axes_;

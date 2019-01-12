@@ -3,8 +3,10 @@
 #include "vsol_polyhedron.h"
 //:
 // \file
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_vector_io.h>
 #include <vsol/vsol_point_3d.h>
 
@@ -31,8 +33,8 @@ vsol_polyhedron::vsol_polyhedron(vsol_polyhedron const &other)
   : vsol_volume_3d(other)
 {
   storage_.clear();
-  for (unsigned int i=0;i<other.storage_.size();++i)
-    storage_.push_back(other.storage_[i]); // smart pointers do refcounting
+  for (const auto & i : other.storage_)
+    storage_.push_back(i); // smart pointers do refcounting
 }
 
 //***************************************************************************
@@ -196,7 +198,7 @@ void vsol_polyhedron::print_summary(std::ostream &os) const
 void
 vsl_b_write(vsl_b_ostream &os, vsol_polyhedron const* p)
 {
-  if (p==VXL_NULLPTR) {
+  if (p==nullptr) {
     vsl_b_write(os, false); // Indicate null pointer stored
   }
   else{
@@ -217,5 +219,5 @@ vsl_b_read(vsl_b_istream &is, vsol_polyhedron* &p)
     p->b_read(is);
   }
   else
-    p = VXL_NULLPTR;
+    p = nullptr;
 }

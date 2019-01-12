@@ -19,7 +19,10 @@
 
 #include "bmsh3d_edge.h"
 #include "bmsh3d_face.h"
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: warning: this vertex may be different than the he->edge's sV
 bmsh3d_vertex* bmsh3d_halfedge::s_vertex() const
@@ -50,8 +53,8 @@ bmsh3d_vertex* incident_V_of_Es (const bmsh3d_halfedge* HE0,
 
 void add_HE_to_circular_chain_end (bmsh3d_halfedge* headHE, bmsh3d_halfedge* inputHE)
 {
-  assert (headHE != VXL_NULLPTR);
-  if (headHE->next() == VXL_NULLPTR) {
+  assert (headHE != nullptr);
+  if (headHE->next() == nullptr) {
     headHE->set_next (inputHE);
     inputHE->set_next (headHE);
   }
@@ -63,5 +66,3 @@ void add_HE_to_circular_chain_end (bmsh3d_halfedge* headHE, bmsh3d_halfedge* inp
   prevHE->set_next (inputHE);
   inputHE->set_next (headHE);
 }
-
-

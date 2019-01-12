@@ -19,7 +19,10 @@
 #include <vpdl/vpdt/vpdt_mixture_accessors.h>
 #include <vpdl/vpdt/vpdt_enable_if.h>
 #include <vil/vil_math.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: base class for objects that extract the mean from an image of distribution
 class bbgm_view_maker_base : public vbl_ref_count
@@ -48,23 +51,22 @@ class bbgm_view_maker
   : public bbgm_view_maker_base
 {
   //: return the type_info for the distribution type
-  virtual const std::type_info& dist_typeid() const
+  const std::type_info& dist_typeid() const override
   { return typeid(dist_type); }
 
   //: Return the maximum number of components if a mixture
   // If not a mixture return 1
-  virtual unsigned int max_components(const bbgm_image_sptr& dimg) const
+  unsigned int max_components(const bbgm_image_sptr& dimg) const override
   { return 1; }
 
   //: Compute the mean of the distribution image to produce a vil image
   // \param component_idx indicated the component index to operate on.
   //        If < 0 or not a mixture then operate on the whole distribution
-  virtual bool apply(const bbgm_image_sptr& dimg,
+  bool apply(const bbgm_image_sptr& dimg,
                      vil_image_view<double>& image,
                      const double* fail_val,
-                     int component_idx = -1) const
+                     int component_idx = -1) const override
   {
-    typedef typename dist_type::component_type d_test;
     typedef bbgm_image_of<dist_type> dist_image;
     const dist_image* d = dynamic_cast<const dist_image*>(dimg.ptr());
     if (!d)
@@ -113,12 +115,12 @@ class bbgm_view_maker<dist_type, func_type,
   : public bbgm_view_maker_base
 {
   //: Return the type_info for the distribution type
-  virtual const std::type_info& dist_typeid() const
+  const std::type_info& dist_typeid() const override
   { return typeid(dist_type); }
 
   //: Return the maximum number of components if a mixture
   // If not a mixture return 1
-  virtual unsigned int max_components(const bbgm_image_sptr& dimg) const
+  unsigned int max_components(const bbgm_image_sptr& dimg) const override
   {
     typedef bbgm_image_of<dist_type> dist_image;
     const dist_image* d = dynamic_cast<const dist_image*>(dimg.ptr());
@@ -129,10 +131,10 @@ class bbgm_view_maker<dist_type, func_type,
   //: Compute the mean of the distribution image to produce a vil image
   // \param component_idx indicated the component index to operate on.
   //        If < 0 or not a mixture then operate on the whole distribution
-  virtual bool apply(const bbgm_image_sptr& dimg,
+  bool apply(const bbgm_image_sptr& dimg,
                      vil_image_view<double>& image,
                      const double* fail_val,
-                     int component_idx = -1) const
+                     int component_idx = -1) const override
   {
     typedef bbgm_image_of<dist_type> dist_image;
     typedef typename dist_type::component_type comp_type;

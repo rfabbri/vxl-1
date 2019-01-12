@@ -9,7 +9,9 @@
 #include <boxm2/cpp/algo/boxm2_mog3_grey_processor.h>
 #include <boct/boct_bit_tree.h>
 #include <vnl/vnl_vector_fixed.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/io/boxm2_cache.h>
 #include <vgl/vgl_point_3d.h>
 
@@ -23,7 +25,7 @@ class boxm2_filter_block_function
   typedef vnl_vector_fixed<ushort, 4> ushort4;
 
   //: "default" constructor
-  boxm2_filter_block_function(boxm2_scene_sptr scene, boxm2_block_metadata data, boxm2_block* blk, boxm2_data_base* alphas);
+  boxm2_filter_block_function(const boxm2_scene_sptr& scene, boxm2_block_metadata data, boxm2_block* blk, boxm2_data_base* alphas);
 
  private:
 

@@ -64,14 +64,13 @@ bool sdet_image_mesh:: step_boundary(vgl_line_segment_2d<double> const& parent,
 
 // constructor from a parameter block (the only way)
 sdet_image_mesh::sdet_image_mesh(sdet_image_mesh_params& imp)
-  : sdet_image_mesh_params(imp), mesh_valid_(false), resc_(VXL_NULLPTR)
+  : sdet_image_mesh_params(imp), mesh_valid_(false), resc_(nullptr)
 {
 }
 
 // Destructor
 sdet_image_mesh::~sdet_image_mesh()
-{
-}
+= default;
 
 bool sdet_image_mesh::compute_line_segments(vil_image_resource_sptr const& resc,
                                             std::vector<vgl_line_segment_2d<double> > & segs)
@@ -123,10 +122,9 @@ bool sdet_image_mesh::compute_mesh()
   det.SetImage(resc_);
   det.DoContour();
   std::vector<vtol_edge_2d_sptr>* edges = det.GetEdges();
-  for (std::vector<vtol_edge_2d_sptr>::iterator eit = edges->begin();
-       eit != edges->end(); eit++)
+  for (auto & edge : *edges)
   {
-    vsol_curve_2d_sptr c = (*eit)->curve();
+    vsol_curve_2d_sptr c = edge->curve();
     vdgl_digital_curve_sptr dc = c->cast_to_vdgl_digital_curve();
     if (!dc)
       continue;
@@ -158,13 +156,13 @@ bool sdet_image_mesh::compute_mesh()
  segs_pair.insert(segs_pair.end(),lines.begin(),lines.end());
  line_img.fill(255);
 
- for (unsigned i = 0;i<segs_pair.size();i++)
+ for (auto & i : segs_pair)
  {
    bool init = true;
-   float xs= float(segs_pair[i].point1().x());
-   float ys= float(segs_pair[i].point1().y());
-   float xe= float(segs_pair[i].point2().x());
-   float ye= float(segs_pair[i].point2().y());
+   float xs= float(i.point1().x());
+   float ys= float(i.point1().y());
+   float xe= float(i.point2().x());
+   float ye= float(i.point2().y());
    float x=0.0f;
    float y=0.0f;
    while (brip_line_generator::generate(init, xs, ys, xe, ye, x, y))
@@ -193,7 +191,7 @@ bool sdet_image_mesh::compute_mesh()
 
   //lift vertices to 3-d
   const imesh_vertex_array<2>& verts = mesh_one.vertices<2>();
-  imesh_vertex_array<3>* verts3 = new imesh_vertex_array<3>();
+  auto* verts3 = new imesh_vertex_array<3>();
 
   // convert image to float
   vil_image_view<float> view = brip_vil_float_ops::convert_to_float(resc_);
@@ -203,8 +201,8 @@ bool sdet_image_mesh::compute_mesh()
   unsigned nverts = mesh_one.num_verts();
   for (unsigned iv = 0; iv<nverts; ++iv)
   {
-    unsigned i = static_cast<unsigned>(verts[iv][0]);
-    unsigned j = static_cast<unsigned>(verts[iv][1]);
+    auto i = static_cast<unsigned>(verts[iv][0]);
+    auto j = static_cast<unsigned>(verts[iv][1]);
     double height =maxv;
     if (i<ni && j<nj)
       height = static_cast<double>(view(i,j));
@@ -212,8 +210,8 @@ bool sdet_image_mesh::compute_mesh()
     imesh_vertex<3> v3(verts[iv][0], verts[iv][1], height);
     verts3->push_back(v3);
   }
-  vcl_unique_ptr<imesh_vertex_array_base> v3(verts3);
-  mesh_one.set_vertices(vcl_move(v3));
+  std::unique_ptr<imesh_vertex_array_base> v3(verts3);
+  mesh_one.set_vertices(std::move(v3));
   //mesh_valid_ = true;
 
   ///////////////////////////////////////////////////////
@@ -224,7 +222,7 @@ bool sdet_image_mesh::compute_mesh()
   std::cout<<"Number of anchor points: "<<anchor_points_.size()<<std::endl;
   imesh_generate_mesh_2d_2(cvexh, segs_pair, anchor_points_, mesh_);
   const imesh_vertex_array<2>& verts2 = mesh_.vertices<2>();
-  imesh_vertex_array<3>* newVerts = new imesh_vertex_array<3>();
+  auto* newVerts = new imesh_vertex_array<3>();
 
   // convert image to float
   ni = view.ni(), nj = view.nj();
@@ -232,8 +230,8 @@ bool sdet_image_mesh::compute_mesh()
   nverts = mesh_.num_verts();
   for (unsigned iv = 0; iv<nverts; ++iv)
   {
-    unsigned i = static_cast<unsigned>(verts2[iv][0]);
-    unsigned j = static_cast<unsigned>(verts2[iv][1]);
+    auto i = static_cast<unsigned>(verts2[iv][0]);
+    auto j = static_cast<unsigned>(verts2[iv][1]);
     double height =maxv;
     if (i<ni && j<nj)
       height = static_cast<double>(view(i,j));
@@ -241,8 +239,8 @@ bool sdet_image_mesh::compute_mesh()
     imesh_vertex<3> v3(verts2[iv][0], verts2[iv][1], height);
     newVerts->push_back(v3);
   }
-  vcl_unique_ptr<imesh_vertex_array_base> v3_ptr(newVerts);
-  mesh_.set_vertices(vcl_move(v3_ptr));
+  std::unique_ptr<imesh_vertex_array_base> v3_ptr(newVerts);
+  mesh_.set_vertices(std::move(v3_ptr));
   mesh_valid_ = true;
 
   return true;
@@ -257,7 +255,7 @@ void sdet_image_mesh::set_anchor_points(imesh_mesh& mesh, vil_image_view<float> 
   vil_image_view<float> tri_depth(ni, nj);
 
   //find the range of triangles in the Z direction
-  imesh_regular_face_array<3>& faces = (imesh_regular_face_array<3>&) mesh.faces();
+  auto& faces = (imesh_regular_face_array<3>&) mesh.faces();
   imesh_vertex_array<3>& verts = mesh.vertices<3>();
   unsigned nfaces = mesh.num_faces();
   for (unsigned iface = 0; iface<nfaces; ++iface)
@@ -299,7 +297,7 @@ void sdet_image_mesh::set_anchor_points(imesh_mesh& mesh, vil_image_view<float> 
     for (int i=0; i<ni; i+=4)
       for (int j=0; j<nj; j+=4)
         if ( std::fabs( tri_depth(i,j)- z_img(i,j) ) > max_z_diff && dt_img(i,j) >= 3.5 )
-          anchor_points_.push_back(vgl_point_2d<double>(i,j));
+          anchor_points_.emplace_back(i,j);
   }
 }
 
@@ -316,8 +314,8 @@ void sdet_image_mesh::set_image(vil_image_resource_sptr const& resource)
 
     //makvil_image_view_base_sptr byte_img = vil_convert_cast<vxl_byte>(0, stretched*255.0f);
     vil_image_view_base_sptr dest_sptr = new vil_image_view<float>(stretched->ni(), stretched->nj());
-    vil_image_view<float>* dest = (vil_image_view<float>*) dest_sptr.ptr();
-    vil_image_view<float>* stf  = (vil_image_view<float>*) stretched.ptr();
+    auto* dest = (vil_image_view<float>*) dest_sptr.ptr();
+    auto* stf  = (vil_image_view<float>*) stretched.ptr();
     vil_convert_stretch_range<float>( *stf, *dest, 0.0f, 255.0f);
 
     //now turn em into bytes
@@ -327,4 +325,3 @@ void sdet_image_mesh::set_image(vil_image_resource_sptr const& resource)
     resc_ = vil_new_image_resource_of_view(*converted.ptr());
   }
 }
-

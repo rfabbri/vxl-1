@@ -44,7 +44,9 @@
 
 #include <iostream>
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vtol/vtol_zero_chain.h>
 #include <vtol/vtol_vertex_2d.h>
 #include <vtol/vtol_vertex_2d_sptr.h>
@@ -70,7 +72,7 @@ class vtol_edge_2d : public vtol_edge
   //---------------------------------------------------------------------------
   //: Default constructor. Empty edge. Not a valid edge.
   //---------------------------------------------------------------------------
-  vtol_edge_2d() : vtol_edge(), curve_(VXL_NULLPTR) {}
+  vtol_edge_2d() : vtol_edge(), curve_(nullptr) {}
 
   //---------------------------------------------------------------------------
   //: Constructor from the two endpoints `new_v1', `new_v2' and from a curve `new_curve'.
@@ -78,16 +80,16 @@ class vtol_edge_2d : public vtol_edge
   //---------------------------------------------------------------------------
   vtol_edge_2d(vtol_vertex_2d_sptr const& new_v1,
                vtol_vertex_2d_sptr const& new_v2,
-               const vsol_curve_2d_sptr &new_curve=VXL_NULLPTR);
+               const vsol_curve_2d_sptr &new_curve=nullptr);
 
   vtol_edge_2d(vtol_vertex_sptr const& new_v1,
                vtol_vertex_sptr const& new_v2,
-               const vsol_curve_2d_sptr &new_curve=VXL_NULLPTR);
+               const vsol_curve_2d_sptr &new_curve=nullptr);
  private:
   // deprecated interface:
   vtol_edge_2d(vtol_vertex_2d &new_v1,
                vtol_vertex_2d &new_v2,
-               const vsol_curve_2d_sptr &new_curve=VXL_NULLPTR);
+               const vsol_curve_2d_sptr &new_curve=nullptr);
 
   //---------------------------------------------------------------------------
   //: Copy constructor. Deep copy.  Deprecated.
@@ -115,24 +117,24 @@ class vtol_edge_2d : public vtol_edge
   explicit vtol_edge_2d(vsol_curve_2d &);
 
   //: Constructor from two vertices (alternate interface)
-  vtol_edge_2d(double, double, double, double, vsol_curve_2d_sptr c=VXL_NULLPTR);
+  vtol_edge_2d(double, double, double, double, const vsol_curve_2d_sptr& c=nullptr);
 
   //---------------------------------------------------------------------------
   //: Destructor
   //---------------------------------------------------------------------------
-  virtual ~vtol_edge_2d() {}
+  ~vtol_edge_2d() override = default;
 
   //---------------------------------------------------------------------------
   //: Clone `this': creation of a new object and initialization
   //  See Prototype pattern
   //---------------------------------------------------------------------------
-  virtual vsol_spatial_object_2d* clone() const;
+  vsol_spatial_object_2d* clone() const override;
 
   //: Return a platform independent string identifying the class
-  virtual std::string is_a() const { return std::string("vtol_edge_2d"); }
+  std::string is_a() const override { return std::string("vtol_edge_2d"); }
 
   //: Return true if the argument matches the string identifying the class or any parent class
-  virtual bool is_class(const std::string& cls) const
+  bool is_class(const std::string& cls) const override
   { return cls==is_a() || vtol_edge::is_class(cls); }
 
   //---------------------------------------------------------------------------
@@ -150,8 +152,8 @@ class vtol_edge_2d : public vtol_edge
   //---------------------------------------------------------------------------
   virtual bool operator==(const vtol_edge_2d &other) const;
   inline bool operator!=(const vtol_edge_2d &other)const{return !operator==(other);}
-  bool operator==(const vtol_edge &other) const; // virtual of vtol_edge
-  bool operator==(const vsol_spatial_object_2d& obj) const; // virtual of vsol_spatial_object_2d
+  bool operator==(const vtol_edge &other) const override; // virtual of vtol_edge
+  bool operator==(const vsol_spatial_object_2d& obj) const override; // virtual of vsol_spatial_object_2d
 
   //***************************************************************************
   // Replaces dynamic_cast<T>
@@ -160,24 +162,24 @@ class vtol_edge_2d : public vtol_edge
   //---------------------------------------------------------------------------
   //: Return `this' if `this' is an edge, 0 otherwise
   //---------------------------------------------------------------------------
-  virtual const vtol_edge_2d *cast_to_edge_2d() const { return this; }
+  const vtol_edge_2d *cast_to_edge_2d() const override { return this; }
 
   //---------------------------------------------------------------------------
   //: Return `this' if `this' is an edge, 0 otherwise
   //---------------------------------------------------------------------------
-  virtual vtol_edge_2d *cast_to_edge_2d() { return this; }
+  vtol_edge_2d *cast_to_edge_2d() override { return this; }
 
-  virtual void compute_bounding_box() const; //A local implementation
+  void compute_bounding_box() const override; //A local implementation
 
-  virtual void print(std::ostream &strm=std::cout) const;
-  virtual void describe(std::ostream &strm=std::cout,
-                        int blanking=0) const;
+  void print(std::ostream &strm=std::cout) const override;
+  void describe(std::ostream &strm=std::cout,
+                        int blanking=0) const override;
 
   //:  copy the geometry
-  virtual void copy_geometry(const vtol_edge &other);
+  void copy_geometry(const vtol_edge &other) override;
 
   //: comparison of geometry
-  virtual bool compare_geometry(const vtol_edge &other) const;
+  bool compare_geometry(const vtol_edge &other) const override;
 };
 
 #endif // vtol_edge_2d_h_

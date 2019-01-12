@@ -11,7 +11,9 @@
 #include <algorithm>
 #include <bprb/bprb_func_process.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/ocl/boxm2_opencl_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -29,20 +31,20 @@
 
 namespace boxm2_ocl_convert_float_image_to_rgba_process_globals
 {
-  const unsigned n_inputs_ = 7 ;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 7;
+  constexpr unsigned n_outputs_ = 0;
   std::size_t lthreads[2]={8,8};
 
   static std::map<std::string,std::vector<bocl_kernel*> > kernels;
 
-  void compile_kernel(bocl_device_sptr device,std::vector<bocl_kernel*> & vec_kernels, std::string opts)
+  void compile_kernel(const bocl_device_sptr& device,std::vector<bocl_kernel*> & vec_kernels, const std::string&  /*opts*/)
   {
     //create normalize image kernel
     std::string source_dir = boxm2_ocl_util::ocl_src_root();
     std::vector<std::string> norm_src_paths;
     norm_src_paths.push_back(source_dir + "pixel_conversion.cl");
     norm_src_paths.push_back(source_dir + "bit/pixel_conversion_kernels.cl");
-    bocl_kernel * convert_float_to_rgba=new bocl_kernel();
+    auto * convert_float_to_rgba=new bocl_kernel();
 
     convert_float_to_rgba->create_kernel( &device->context(),
                                           device->device_id(),
@@ -51,7 +53,7 @@ namespace boxm2_ocl_convert_float_image_to_rgba_process_globals
                                           "convert float to rgba"); //kernel identifier (for error checking)
 
     vec_kernels.push_back(convert_float_to_rgba);
-    bocl_kernel * convert_float4_to_rgba=new bocl_kernel();
+    auto * convert_float4_to_rgba=new bocl_kernel();
 
     convert_float4_to_rgba->create_kernel( &device->context(),
                                            device->device_id(),
@@ -97,21 +99,21 @@ bool boxm2_ocl_convert_float_image_to_rgba_process(bprb_func_process& pro)
   bocl_mem_sptr in_image =pro.get_input<bocl_mem_sptr>(i++);
   bocl_mem_sptr in_img_dim =pro.get_input<bocl_mem_sptr>(i++);
   bocl_mem_sptr gl_img =pro.get_input<bocl_mem_sptr>(i++);
-  unsigned ni =pro.get_input<unsigned>(i++);
-  unsigned nj =pro.get_input<unsigned>(i++);
+  auto ni =pro.get_input<unsigned>(i++);
+  auto nj =pro.get_input<unsigned>(i++);
 
   bool foundDataType = false;
   std::string data_type="";
   std::vector<std::string> apps = scene->appearances();
-  for (unsigned int i=0; i<apps.size(); ++i) {
-      if ( apps[i] == boxm2_data_traits<BOXM2_MOG3_GREY>::prefix() )
+  for (const auto & app : apps) {
+      if ( app == boxm2_data_traits<BOXM2_MOG3_GREY>::prefix() )
       {
-          data_type = apps[i];
+          data_type = app;
           foundDataType = true;
       }
-      else if ( apps[i] == boxm2_data_traits<BOXM2_MOG3_GREY_16>::prefix() )
+      else if ( app == boxm2_data_traits<BOXM2_MOG3_GREY_16>::prefix() )
       {
-          data_type = apps[i];
+          data_type = app;
           foundDataType = true;
       }
   }

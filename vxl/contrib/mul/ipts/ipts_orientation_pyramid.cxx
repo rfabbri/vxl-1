@@ -7,7 +7,10 @@
 
 #include <vil/algo/vil_orientations.h>
 #include <vimt/vimt_image_2d_of.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Compute edge orientations at each level of a scale space pyramid.
 //  smooth_pyramid must be of type float. orient_pyramid is set to be of type vxl_byte.
@@ -27,9 +30,9 @@ void ipts_orientation_pyramid(const vimt_image_pyramid& smooth_pyramid,
   orient_pyramid.resize(n_levels,vimt_image_2d_of<vxl_byte>());
   for (int i=0;i<n_levels;++i)
   {
-    const vimt_image_2d_of<float>& smooth_im
+    const auto& smooth_im
             = static_cast<const vimt_image_2d_of<float>&>(smooth_pyramid(i));
-    vimt_image_2d_of<vxl_byte>& orient_im
+    auto& orient_im
             = static_cast<vimt_image_2d_of<vxl_byte>&>(orient_pyramid(i));
 
     vil_image_view<float> grad_i,grad_j,grad_mag;

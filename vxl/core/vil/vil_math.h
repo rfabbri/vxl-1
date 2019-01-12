@@ -8,8 +8,10 @@
 #include <vector>
 #include <cmath>
 #include <algorithm>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_image_view.h>
 #include <vil/vil_image_resource.h>
 #include <vil/vil_view_as.h>
@@ -318,11 +320,11 @@ inline bool vil_math_sum_squares(sumT& sum, sumT& sum_sq, unsigned int & count,
     return false;
   }
   const imT* row = im.top_left_ptr()+p*im.planestep();
-  vcl_ptrdiff_t istep = im.istep(),jstep=im.jstep();
+  std::ptrdiff_t istep = im.istep(),jstep=im.jstep();
   const imT* row_end = row + im.nj()*jstep;
-  vcl_ptrdiff_t row_len = im.ni()*im.istep();
+  std::ptrdiff_t row_len = im.ni()*im.istep();
   const bool* m_row = mask.top_left_ptr()+mask.planestep();
-  vcl_ptrdiff_t m_istep = mask.istep(), m_jstep=mask.jstep();
+  std::ptrdiff_t m_istep = mask.istep(), m_jstep=mask.jstep();
   sum = 0; sum_sq = 0;
   for (;row!=row_end;row+=jstep, m_row+=m_jstep)
   {
@@ -378,7 +380,7 @@ template< class sumT >
 inline bool vil_math_mean_and_variance(sumT& mean, sumT& var, const vil_image_resource_sptr im,
                                        const vil_image_view<bool> & mask, unsigned p)
 {
-  if(im == VXL_NULLPTR || im->get_view() == VXL_NULLPTR)
+  if(im == nullptr || im->get_view() == nullptr)
   {
     return false;
   }
@@ -580,7 +582,7 @@ void vil_math_rms(const vil_image_view<srcT>& src,
       {
         destT sum2 = destT(*pixelA)*(*pixelA)
           + destT(pixelA[pstepA])*(pixelA[pstepA]);
-        *pixelB = destT(vcl_sqrt(sum2/2));
+        *pixelB = destT(std::sqrt(sum2/2));
       }
     }
     else
@@ -630,7 +632,7 @@ void vil_math_rss(const vil_image_view<srcT>& src,
       {
         destT sum2 = destT(*pixelA)*(*pixelA)
           + destT(pixelA[pstepA])*(pixelA[pstepA]);
-        *pixelB = destT(vcl_sqrt(sum2));
+        *pixelB = destT(std::sqrt(sum2));
       }
     }
     else
@@ -920,9 +922,9 @@ inline void vil_math_image_difference(const vil_image_view<aT>& imA,
 // \relatesalso vil_image_view
 template<class aT, class bT, class dT>
 inline void vil_math_image_abs_difference_1d_generic(
-  const aT* pxA, vcl_ptrdiff_t isA,
-  const bT* pxB, vcl_ptrdiff_t isB,
-  dT* pxD, vcl_ptrdiff_t isD,
+  const aT* pxA, std::ptrdiff_t isA,
+  const bT* pxB, std::ptrdiff_t isB,
+  dT* pxD, std::ptrdiff_t isD,
   unsigned len)
 {
   for (unsigned i =0; i < len; ++i, pxA += isA, pxB += isB, pxD += isD)
@@ -937,9 +939,9 @@ inline void vil_math_image_abs_difference_1d_generic(
 // Specialize this function for an optimized implementation
 template<class aT, class bT, class dT>
 inline void vil_math_image_abs_difference_1d(
-  const aT* pxA, vcl_ptrdiff_t isA,
-  const bT* pxB, vcl_ptrdiff_t isB,
-  dT* pxD, vcl_ptrdiff_t isD,
+  const aT* pxA, std::ptrdiff_t isA,
+  const bT* pxB, std::ptrdiff_t isB,
+  dT* pxD, std::ptrdiff_t isD,
   unsigned len)
 {
   vil_math_image_abs_difference_1d_generic<aT, bT, dT>(
@@ -958,9 +960,9 @@ inline void vil_math_image_abs_difference(const vil_image_view<aT>& imA,
   assert(imB.ni() == ni && imB.nj() == nj && imB.nplanes() == np);
   imD.set_size(ni, nj, np);
 
-  vcl_ptrdiff_t isA=imA.istep(), jsA=imA.jstep(), psA = imA.planestep();
-  vcl_ptrdiff_t isB=imB.istep(), jsB=imB.jstep(), psB = imB.planestep();
-  vcl_ptrdiff_t isD=imD.istep(), jsD=imD.jstep(), psD = imD.planestep();
+  std::ptrdiff_t isA=imA.istep(), jsA=imA.jstep(), psA = imA.planestep();
+  std::ptrdiff_t isB=imB.istep(), jsB=imB.jstep(), psB = imB.planestep();
+  std::ptrdiff_t isD=imD.istep(), jsD=imD.jstep(), psD = imD.planestep();
   const aT* planeA = imA.top_left_ptr();
   const bT* planeB = imB.top_left_ptr();
   dT* planeD = imD.top_left_ptr();

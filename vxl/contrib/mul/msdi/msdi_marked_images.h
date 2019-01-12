@@ -12,13 +12,15 @@ class msm_points;
 
 #include <iostream>
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Base for iterator which returns images+points
 class msdi_marked_images
 {
  public:
-  virtual ~msdi_marked_images() {}
+  virtual ~msdi_marked_images() = default;
 
   //: Move to start of data
   virtual void reset()=0;
@@ -48,5 +50,3 @@ class msdi_marked_images
 
 
 #endif // msdi_marked_images_h_
-
-

@@ -13,8 +13,10 @@
 //  Modifications
 // \endverbatim
 #include <vector>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vnl/vnl_least_squares_function.h>
 #include <vgl/vgl_homg_point_2d.h>
 #include <vgl/vgl_homg_line_2d.h>
@@ -39,17 +41,17 @@ class projection_lsqf : public vnl_least_squares_function
     for (unsigned i = 0; i<n_; ++i)
     {
       from_points_.push_back(from_points[i]);
-      to_points_.push_back(to_points[i]);
+      to_points_.emplace_back(to_points[i]);
     }
   }
 
-  ~projection_lsqf() {}
+  ~projection_lsqf() override = default;
 
   //: compute the projection error given a set of h parameters.
   // The residuals required by f are the Euclidean x and y coordinate
   // differences between the projected from points and the
   // corresponding to points.
-  void f(const vnl_vector<double>& hv, vnl_vector<double>& proj_err)
+  void f(const vnl_vector<double>& hv, vnl_vector<double>& proj_err) override
   {
     assert(hv.size()==9);
     assert(proj_err.size()==2*n_+1);
@@ -76,7 +78,7 @@ class vgl_h_matrix_2d_optimize
     : verbose_(false), trace_(false), ftol_(1e-9), gtol_(1e-9),
     htol_(1e-9), max_iter_(2000), initial_h_(initial_h){}
 
-  virtual ~vgl_h_matrix_2d_optimize() {}
+  virtual ~vgl_h_matrix_2d_optimize() = default;
 
   //: set this to true for verbose run-time information
   void set_verbose(bool v) { verbose_ = v; }

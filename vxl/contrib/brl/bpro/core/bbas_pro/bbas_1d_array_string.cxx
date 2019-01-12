@@ -23,7 +23,7 @@ void vsl_b_read(vsl_b_istream& is, bbas_1d_array_string* aptr){
     vsl_b_read(is, *aptr);
   }
   else
-    aptr = VXL_NULLPTR;
+    aptr = nullptr;
 }
 
 void vsl_b_read(vsl_b_istream& is, bbas_1d_array_string_sptr& aptr){
@@ -38,4 +38,3 @@ void vsl_b_write(vsl_b_ostream& os, const bbas_1d_array_string_sptr & aptr){
     return;
   vsl_b_write(os, *(aptr.ptr()));
 }
-

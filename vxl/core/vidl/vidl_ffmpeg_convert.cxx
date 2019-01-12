@@ -1,7 +1,4 @@
 // This is core/vidl/vidl_ffmpeg_convert.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Matt Leotta
@@ -15,8 +12,10 @@
 #include "vidl_ffmpeg_convert.h"
 #include "vidl_ffmpeg_pixel_format.h"
 #include "vidl_frame.h"
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vidl/vidl_config.h>
 extern "C" {
@@ -116,7 +115,7 @@ bool vidl_ffmpeg_convert(vidl_frame const& in_frame,
 
   unsigned ni = in_frame.ni();
   unsigned nj = in_frame.nj();
-  unsigned out_size = (unsigned)avpicture_get_size(out_fmt, ni, nj);
+  auto out_size = (unsigned)avpicture_get_size(out_fmt, ni, nj);
 
   if (out_frame.size() != out_size ||
       out_frame.ni() != ni ||
@@ -145,7 +144,7 @@ bool vidl_ffmpeg_convert(vidl_frame const& in_frame,
   SwsContext* ctx = sws_getContext(ni, nj, in_fmt,
                                    ni, nj, out_fmt,
                                    SWS_BILINEAR,
-                                   NULL, NULL, NULL);
+                                   nullptr, nullptr, nullptr);
   sws_scale(ctx,
             in_pic.data, in_pic.linesize,
             0, nj,
@@ -173,7 +172,7 @@ bool vidl_ffmpeg_convert(const vidl_frame_sptr& in_frame,
 
   unsigned ni = in_frame->ni();
   unsigned nj = in_frame->nj();
-  unsigned out_size = (unsigned)avpicture_get_size(out_fmt, ni, nj);
+  auto out_size = (unsigned)avpicture_get_size(out_fmt, ni, nj);
 
   if (out_frame->size() != out_size ||
       out_frame->ni() != ni ||
@@ -197,7 +196,7 @@ bool vidl_ffmpeg_convert(const vidl_frame_sptr& in_frame,
   SwsContext* ctx = sws_getContext(ni, nj, in_fmt,
                                    ni, nj, out_fmt,
                                    SWS_BILINEAR,
-                                   NULL, NULL, NULL);
+                                   nullptr, nullptr, nullptr);
   sws_scale(ctx,
             in_pic.data, in_pic.linesize,
             0, nj,

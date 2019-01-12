@@ -20,9 +20,11 @@
 
 #include <vnl/vnl_float_3.h>
 #include <vul/vul_file.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
-void create_grid(std::string grid_filename)
+void create_grid(const std::string& grid_filename)
 {
   if (vul_file_exists(grid_filename))
     vul_file::delete_file_glob(grid_filename);
@@ -32,10 +34,10 @@ void create_grid(std::string grid_filename)
   surface_grid.initialize_data(bnonsurf);
 
   std::vector<vgl_point_3d<double> > poly_points;
-  poly_points.push_back(vgl_point_3d<double>(10.0,10.0,10.0));
-  poly_points.push_back(vgl_point_3d<double>(10.0,20.0,10.0));
-  poly_points.push_back(vgl_point_3d<double>(20.0,20.0,10.0));
-  poly_points.push_back(vgl_point_3d<double>(20.0,10.0,10.0));
+  poly_points.emplace_back(10.0,10.0,10.0);
+  poly_points.emplace_back(10.0,20.0,10.0);
+  poly_points.emplace_back(20.0,20.0,10.0);
+  poly_points.emplace_back(20.0,10.0,10.0);
 
   bvxm_opinion bsurf(0.1f,0.9f);
   bvxm_load_polygon_into_grid<bvxm_opinion>(&surface_grid,poly_points,bsurf);
@@ -218,17 +220,17 @@ void test_non_max_suppression()
 void test_keep_top_responses()
 {
   vgl_vector_3d<unsigned> grid_size(2,2,2);
-  bvxm_voxel_grid<float> *grid1=new bvxm_voxel_grid<float>(grid_size);
+  auto *grid1=new bvxm_voxel_grid<float>(grid_size);
   grid1->initialize_data(1.0f);
-  bvxm_voxel_grid<float> *grid2=new bvxm_voxel_grid<float>(grid_size);
+  auto *grid2=new bvxm_voxel_grid<float>(grid_size);
   grid2->initialize_data(2.0f);
-  bvxm_voxel_grid<float> *grid3=new bvxm_voxel_grid<float>(grid_size);
+  auto *grid3=new bvxm_voxel_grid<float>(grid_size);
   grid3->initialize_data(3.0f);
-  bvxm_voxel_grid<float> *grid4=new bvxm_voxel_grid<float>(grid_size);
+  auto *grid4=new bvxm_voxel_grid<float>(grid_size);
   grid4->initialize_data(4.0f);
 
-  bvxm_voxel_grid<vnl_vector_fixed<float,3> > *resp = new bvxm_voxel_grid<vnl_vector_fixed<float,3> >(grid_size);
-  bvxm_voxel_grid<vnl_vector_fixed<int,3> > *id_grid = new bvxm_voxel_grid<vnl_vector_fixed<int,3> >(grid_size);
+  auto *resp = new bvxm_voxel_grid<vnl_vector_fixed<float,3> >(grid_size);
+  auto *id_grid = new bvxm_voxel_grid<vnl_vector_fixed<int,3> >(grid_size);
 
   bvpl_discriminative_non_max_suppression vec_oper;
   vec_oper.keep_top_responses(resp, grid1,id_grid, 1);

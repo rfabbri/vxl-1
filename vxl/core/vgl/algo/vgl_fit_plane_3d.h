@@ -1,9 +1,6 @@
 // This is core/vgl/algo/vgl_fit_plane_3d.h
 #ifndef vgl_fit_plane_3d_h_
 #define vgl_fit_plane_3d_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Fits a plane to a set of 3D points
@@ -22,7 +19,9 @@
 #include <iosfwd>
 #include <vgl/vgl_homg_point_3d.h>
 #include <vgl/vgl_homg_plane_3d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 template <class T>
 class vgl_fit_plane_3d
@@ -36,11 +35,11 @@ class vgl_fit_plane_3d
 
   // Constructors/Initializers/Destructors-------------------------------------
 
-   vgl_fit_plane_3d() {}
+   vgl_fit_plane_3d() = default;
 
    vgl_fit_plane_3d(std::vector<vgl_homg_point_3d<T> > points);
 
-  ~vgl_fit_plane_3d() {}
+  ~vgl_fit_plane_3d() = default;
 
   // Operations---------------------------------------------------------------
 
@@ -53,12 +52,12 @@ class vgl_fit_plane_3d
 
   //:fits a plane to the stored points
   // report issues over an ostream if declared
-  bool fit(const T error_marg, std::ostream* outstream=VXL_NULLPTR);
+  bool fit(const T error_marg, std::ostream* outstream=nullptr);
 
   //:fits a plane returning the smallest singular value
   //:of the data scatter matrix decomposition, a measure
   //:of variance in the direction of the plane normal
-  T fit(std::ostream* outstream=VXL_NULLPTR);
+  T fit(std::ostream* outstream=nullptr);
 
   // Data Access---------------------------------------------------------------
 

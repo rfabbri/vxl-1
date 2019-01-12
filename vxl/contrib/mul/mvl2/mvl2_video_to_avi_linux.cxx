@@ -1,6 +1,3 @@
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \brief A class for writing videos
@@ -9,7 +6,9 @@
 #include <iostream>
 #include <cstring>
 #include "mvl2_video_to_avi_linux.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_resample_bilin.h>
 
 mvl2_video_to_avi::mvl2_video_to_avi()

@@ -21,15 +21,14 @@
 class brdb_query
 {
  protected:
-  //: Destructor - private to prevent allocation on the heap
 #if __cplusplus >= 201103L
-  friend vcl_unique_ptr<brdb_query>;
+  friend std::unique_ptr<brdb_query>;
 #else
-  virtual ~brdb_query() {}
-  friend class vcl_unique_ptr<brdb_query>;
+  friend class std::unique_ptr<brdb_query>;
 #endif
 
  public:
+  virtual ~brdb_query() = default;
   virtual brdb_query_aptr clone() const = 0;
   virtual brdb_query_aptr complement() const = 0;
 
@@ -88,12 +87,12 @@ class brdb_query_and : public brdb_query_branch
   //: Constructor from two queries (makes copies)
   brdb_query_and(const brdb_query& q1, const brdb_query& q2);
 
-  brdb_query_aptr clone() const;
+  brdb_query_aptr clone() const override;
 
   //: Destructor
-  ~brdb_query_and() {}
+  ~brdb_query_and() override = default;
 
-  brdb_query_aptr complement() const;
+  brdb_query_aptr complement() const override;
 };
 
 
@@ -111,12 +110,12 @@ class brdb_query_or : public brdb_query_branch
   //: Constructor from two queries (makes copies)
   brdb_query_or(const brdb_query& q1, const brdb_query& q2);
 
-  brdb_query_aptr clone() const;
+  brdb_query_aptr clone() const override;
 
   //: Destructor
-  ~brdb_query_or() {}
+  ~brdb_query_or() override = default;
 
-  brdb_query_aptr complement() const;
+  brdb_query_aptr complement() const override;
 };
 
 
@@ -130,24 +129,24 @@ class brdb_query_comp : public brdb_query
  public:
 
   //: make a query on a certain attribute, with a certain type of comparison to a value
-  brdb_query_comp(const std::string& attribute_name,
+  brdb_query_comp(std::string  attribute_name,
                   const brdb_query::comp_type& type,
-                  vcl_unique_ptr<brdb_value> value);
+                  std::unique_ptr<brdb_value> value);
 
   //: Copy Constructor
   brdb_query_comp(const brdb_query_comp& other);
 
   //: Destructor
-  ~brdb_query_comp() {}
+  ~brdb_query_comp() override = default;
 
   //: Assignment operator
   brdb_query_comp& operator = (const brdb_query_comp& rhs);
 
   //: clone this query
-  brdb_query_aptr clone() const;
+  brdb_query_aptr clone() const override;
 
   //: produce the complement query
-  brdb_query_aptr complement() const;
+  brdb_query_aptr complement() const override;
 
   //: get the value
   const brdb_value& value() const { return *value_; }
@@ -171,7 +170,7 @@ class brdb_query_comp : public brdb_query
   brdb_query::comp_type comparison_type_;
 
   //: the value which will be used by the constraints
-  vcl_unique_ptr<brdb_value> value_;
+  std::unique_ptr<brdb_value> value_;
 };
 
 
@@ -182,7 +181,7 @@ brdb_query_aptr
                         const T& value)
 {
   return brdb_query_aptr(new brdb_query_comp(attribute_name, type,
-                            vcl_unique_ptr<brdb_value>(new brdb_value_t<T>(value))));
+                            std::unique_ptr<brdb_value>(new brdb_value_t<T>(value))));
 }
 
 

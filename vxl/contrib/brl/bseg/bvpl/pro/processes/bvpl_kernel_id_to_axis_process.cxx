@@ -19,12 +19,14 @@
 #include <bvpl/kernels/bvpl_kernel_factory.h>
 #include <bvpl/bvpl_direction_to_color_map.h>
 #include <vnl/vnl_float_3.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 namespace bvpl_kernel_id_to_axis_process_globals
 {
-  const unsigned n_inputs_ = 3;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 3;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 
@@ -66,8 +68,8 @@ bool bvpl_kernel_id_to_axis_process(bprb_func_process& pro)
     std::cerr << "In bvpl_kernel_id_to_axis_process -- input grid is not valid!\n";
     return false;
   }
-  bvxm_voxel_grid<int > *grid
-  = dynamic_cast< bvxm_voxel_grid<int>* >(grid_base.ptr());
+  auto *grid
+ = dynamic_cast< bvxm_voxel_grid<int>* >(grid_base.ptr());
   if (grid)
   {
     bvxm_voxel_grid<vnl_float_3> *axes_grid = new bvxm_voxel_grid<vnl_float_3>(output_world_dir, grid->grid_size());
@@ -96,4 +98,3 @@ bool bvpl_kernel_id_to_axis_process(bprb_func_process& pro)
 
   return false;
 }
-

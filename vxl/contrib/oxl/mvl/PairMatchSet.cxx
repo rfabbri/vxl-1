@@ -1,7 +1,4 @@
 // This is oxl/mvl/PairMatchSet.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 
@@ -10,8 +7,10 @@
 #include <vector>
 #include "PairMatchSet.h"
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <mvl/MatchSet.h>
 
@@ -29,9 +28,7 @@ PairMatchSet::PairMatchSet(unsigned size):
 }
 
 //: Destructor
-PairMatchSet::~PairMatchSet()
-{
-}
+PairMatchSet::~PairMatchSet() = default;
 
 // == OPERATIONS ==
 
@@ -131,8 +128,8 @@ bool PairMatchSet::get_match(int c, int* i1, int* i2) const
 //: Empty this match set.
 void PairMatchSet::clear()
 {
-  for (unsigned i = 0; i < matches_.size(); ++i)
-    matches_[i] = MatchSet::NoMatch;
+  for (int & matche : matches_)
+    matche = MatchSet::NoMatch;
   match_count_ = 0;
 }
 
@@ -148,8 +145,8 @@ void PairMatchSet::set_identity()
 int PairMatchSet::compute_match_count()
 {
   match_count_ = 0;
-  for (unsigned i = 0; i < matches_.size(); ++i)
-    if (matches_[i] != MatchSet::NoMatch)
+  for (int matche : matches_)
+    if (matche != MatchSet::NoMatch)
       ++match_count_;
 
   return match_count_;
@@ -244,8 +241,8 @@ std::istream& operator>>(std::istream& s, PairMatchSet& cc)
 void PairMatchSet::print_brief(std::ostream& s) const
 {
   s << "PairMatchSet: ";
-  for (unsigned i = 0; i < matches_.size(); i++)
-    s << matches_[i] << ' ';
+  for (int matche : matches_)
+    s << matche << ' ';
   s << std::endl;
 }
 
@@ -273,7 +270,7 @@ void PairMatchSet::print_brief() const
 
 //: Construct an empty iterator.
 PairMatchSet::iterator::iterator(bool full_only):
-  c_(VXL_NULLPTR),
+  c_(nullptr),
   match_index_(0),
   full_only_(full_only)
 {

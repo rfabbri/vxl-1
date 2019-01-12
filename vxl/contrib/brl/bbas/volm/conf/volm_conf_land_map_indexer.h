@@ -24,7 +24,9 @@
 #include <vgl/vgl_box_2d.h>
 #include <vpgl/vpgl_lvcs.h>
 #include <vpgl/file_formats/vpgl_geo_camera.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_polygon.h>
 #include <vsol/vsol_point_2d.h>
 #include <vsol/vsol_point_2d_sptr.h>
@@ -42,7 +44,7 @@ class volm_conf_land_map_indexer : public vbl_ref_count
 public:
   // ================ constructor ===================
   //: default constructor
-  volm_conf_land_map_indexer() {}
+  volm_conf_land_map_indexer() = default;
   //: constructor from a given bounding box
   volm_conf_land_map_indexer(vgl_box_2d<double> const& bbox, double const& density);
   volm_conf_land_map_indexer(vgl_box_2d<float>  const& bbox, float  const& density);
@@ -55,7 +57,7 @@ public:
   volm_conf_land_map_indexer(std::string const& bin_file);
 
   //: destructor
-  ~volm_conf_land_map_indexer() {}
+  ~volm_conf_land_map_indexer() override = default;
 
   // ================ access ===================
   vgl_box_2d<double> bbox() const { return bbox_; }

@@ -1,7 +1,7 @@
 // This is brl/bpro/core/vpgl_pro/processes/vpgl_convert_geotiff_to_point_cloud_process.cxx
+#include <iostream>
 #include <vil/vil_config.h>
 #if HAS_GEOTIFF
-#include <iostream>
 #include <bprb/bprb_func_process.h>
 //:
 // \file
@@ -47,12 +47,12 @@ bool vpgl_convert_geotiff_to_point_cloud_process(bprb_func_process& pro)
   bool is_convert_z = pro.get_input<bool>(in_i++);
 
   // check and covert inputs
-  vil_image_view<float>* in_img = dynamic_cast<vil_image_view<float>*>(in_img_sptr.ptr());
+  auto* in_img = dynamic_cast<vil_image_view<float>*>(in_img_sptr.ptr());
   if (!in_img) {
     std::cerr << pro.name() << ": Unsupported input image pixel type: " << in_img_sptr->pixel_format() << ", only Float is supported!\n";
     return false;
   }
-  vpgl_geo_camera* in_cam = dynamic_cast<vpgl_geo_camera*>(in_cam_sptr.ptr());
+  auto* in_cam = dynamic_cast<vpgl_geo_camera*>(in_cam_sptr.ptr());
   if (!in_cam) {
     std::cerr << pro.name() << ": failed to load input geo-camera!\n";
     return false;
@@ -83,8 +83,8 @@ bool vpgl_convert_geotiff_to_point_cloud_process(bprb_func_process& pro)
     std::cerr << "Failed to open file " << out_filename.c_str() << std::endl;
     return false;
   }
-  for (unsigned i = 0; i < pts.size(); i++) {
-    ofs << pts[i].x() << ' ' << pts[i].y() << ' ' << pts[i].z() << '\n';
+  for (auto & pt : pts) {
+    ofs << pt.x() << ' ' << pt.y() << ' ' << pt.z() << '\n';
   }
 
   ofs.close();

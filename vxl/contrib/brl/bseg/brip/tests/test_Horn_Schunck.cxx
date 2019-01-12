@@ -1,7 +1,9 @@
 // This is brl/bseg/brip/tests/test_Horn_Schunck.cxx
 #include <iostream>
 #include <iomanip>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h>
 #include <vil/vil_image_view.h>
 #include <brip/brip_vil_float_ops.h>

@@ -16,7 +16,10 @@
 #include <rsdl/rsdl_kd_tree.h>
 
 #include <vnl/vnl_vector_fixed.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 template<unsigned N>
 rgrl_feature_set_location<N>::
@@ -61,8 +64,8 @@ rgrl_feature_set_location( feature_vector const& features,
   // Use kd_tree
   std::vector<rsdl_point> search_pts;
   search_pts.reserve( features.size() );
-  for ( feature_vector::const_iterator itr = features.begin(); itr != features.end(); ++itr ) {
-    search_pts.push_back( rsdl_point((*itr)->location()) );
+  for (const auto & feature : features) {
+    search_pts.emplace_back(feature->location() );
   }
   kd_tree_ = new rsdl_kd_tree( search_pts );
 }
@@ -70,9 +73,7 @@ rgrl_feature_set_location( feature_vector const& features,
 
 template<unsigned N>
 rgrl_feature_set_location<N>::
-~rgrl_feature_set_location()
-{
-}
+~rgrl_feature_set_location() = default;
 
 
 template<unsigned N>

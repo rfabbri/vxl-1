@@ -12,7 +12,9 @@
 #include <iosfwd>
 #include <vtol/vtol_topology_object_sptr.h>
 #include <vsol/vsol_spatial_object_2d.h> // parent class
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vtol/vtol_vertex_sptr.h>
 #include <vtol/vtol_zero_chain_sptr.h>
 #include <vtol/vtol_edge_sptr.h>
@@ -172,94 +174,94 @@ class vtol_topology_object : public vsol_spatial_object_2d
   //---------------------------------------------------------------------------
   //: Destructor
   //---------------------------------------------------------------------------
-  virtual ~vtol_topology_object();
+  ~vtol_topology_object() override;
 
  public:
   //***************************************************************************
   // Replaces dynamic_cast<T>
   //***************************************************************************
-  virtual vtol_topology_object *cast_to_topology_object() { return this; }
-  virtual const vtol_topology_object*cast_to_topology_object()const{return this;}
+  vtol_topology_object *cast_to_topology_object() override { return this; }
+  const vtol_topology_object*cast_to_topology_object()const override{return this;}
 
   //---------------------------------------------------------------------------
   //: Return `this' if `this' is a vertex, 0 otherwise
   //---------------------------------------------------------------------------
-  virtual const vtol_vertex *cast_to_vertex() const { return VXL_NULLPTR; }
+  virtual const vtol_vertex *cast_to_vertex() const { return nullptr; }
 
   //---------------------------------------------------------------------------
   //: Return `this' if `this' is a vertex, 0 otherwise
   //---------------------------------------------------------------------------
-  virtual vtol_vertex *cast_to_vertex() { return VXL_NULLPTR; }
+  virtual vtol_vertex *cast_to_vertex() { return nullptr; }
 
   //---------------------------------------------------------------------------
   //: Return `this' if `this' is a zero_chain, 0 otherwise
   //---------------------------------------------------------------------------
-  virtual const vtol_zero_chain *cast_to_zero_chain() const { return VXL_NULLPTR; }
+  virtual const vtol_zero_chain *cast_to_zero_chain() const { return nullptr; }
 
   //---------------------------------------------------------------------------
   //: Return `this' if `this' is a zero_chain, 0 otherwise
   //---------------------------------------------------------------------------
-  virtual vtol_zero_chain *cast_to_zero_chain() { return VXL_NULLPTR; }
+  virtual vtol_zero_chain *cast_to_zero_chain() { return nullptr; }
 
   //---------------------------------------------------------------------------
   //: Return `this' if `this' is an edge, 0 otherwise
   //---------------------------------------------------------------------------
-  virtual const vtol_edge *cast_to_edge() const { return VXL_NULLPTR; }
+  virtual const vtol_edge *cast_to_edge() const { return nullptr; }
 
   //---------------------------------------------------------------------------
   //: Return `this' if `this' is an edge, 0 otherwise
   //---------------------------------------------------------------------------
-  virtual vtol_edge *cast_to_edge() { return VXL_NULLPTR; }
+  virtual vtol_edge *cast_to_edge() { return nullptr; }
 
   //---------------------------------------------------------------------------
   //: Return `this' if `this' is a chain, 0 otherwise
   //---------------------------------------------------------------------------
-  virtual const vtol_chain *cast_to_chain() const { return VXL_NULLPTR; }
+  virtual const vtol_chain *cast_to_chain() const { return nullptr; }
 
   //---------------------------------------------------------------------------
   //: Return `this' if `this' is a chain, 0 otherwise
   //---------------------------------------------------------------------------
-  virtual vtol_chain *cast_to_chain() { return VXL_NULLPTR; }
+  virtual vtol_chain *cast_to_chain() { return nullptr; }
 
   //---------------------------------------------------------------------------
   //: Return `this' if `this' is a one_chain, 0 otherwise
   //---------------------------------------------------------------------------
-  virtual const vtol_one_chain *cast_to_one_chain() const { return VXL_NULLPTR; }
+  virtual const vtol_one_chain *cast_to_one_chain() const { return nullptr; }
 
   //---------------------------------------------------------------------------
   //: Return `this' if `this' is a one_chain, 0 otherwise
   //---------------------------------------------------------------------------
-  virtual vtol_one_chain *cast_to_one_chain() { return VXL_NULLPTR; }
+  virtual vtol_one_chain *cast_to_one_chain() { return nullptr; }
 
   //---------------------------------------------------------------------------
   //: Return `this' if `this' is a face, 0 otherwise
   //---------------------------------------------------------------------------
-  virtual const vtol_face *cast_to_face() const { return VXL_NULLPTR; }
+  virtual const vtol_face *cast_to_face() const { return nullptr; }
 
   //---------------------------------------------------------------------------
   //: Return `this' if `this' is a face, 0 otherwise
   //---------------------------------------------------------------------------
-  virtual vtol_face *cast_to_face() { return VXL_NULLPTR; }
+  virtual vtol_face *cast_to_face() { return nullptr; }
 
   //---------------------------------------------------------------------------
   //: Return `this' if `this' is a two_chain, 0 otherwise
   //---------------------------------------------------------------------------
-  virtual const vtol_two_chain *cast_to_two_chain() const { return VXL_NULLPTR; }
+  virtual const vtol_two_chain *cast_to_two_chain() const { return nullptr; }
 
   //---------------------------------------------------------------------------
   //: Return `this' if `this' is a two_chain, 0 otherwise
   //---------------------------------------------------------------------------
-  virtual vtol_two_chain *cast_to_two_chain() { return VXL_NULLPTR; }
+  virtual vtol_two_chain *cast_to_two_chain() { return nullptr; }
 
   //---------------------------------------------------------------------------
   //: Return `this' if `this' is a block, 0 otherwise
   //---------------------------------------------------------------------------
-  virtual const vtol_block *cast_to_block() const { return VXL_NULLPTR; }
+  virtual const vtol_block *cast_to_block() const { return nullptr; }
 
   //---------------------------------------------------------------------------
   //: Return `this' if `this' is a block, 0 otherwise
   //---------------------------------------------------------------------------
-  virtual vtol_block *cast_to_block() { return VXL_NULLPTR; }
+  virtual vtol_block *cast_to_block() { return nullptr; }
 
   //***************************************************************************
   // Status report
@@ -279,7 +281,7 @@ class vtol_topology_object : public vsol_spatial_object_2d
   //---------------------------------------------------------------------------
   //: Is `inferior' already an inferior of `this' ?
   //---------------------------------------------------------------------------
-  bool is_inferior(vtol_topology_object_sptr inferior) const;
+  bool is_inferior(const vtol_topology_object_sptr& inferior) const;
 
   //---------------------------------------------------------------------------
   //: Is `superior' already a superior of `this' ?
@@ -313,7 +315,7 @@ class vtol_topology_object : public vsol_spatial_object_2d
   //---------------------------------------------------------------------------
   //: Return the spatial type
   //---------------------------------------------------------------------------
-  virtual vsol_spatial_object_2d_type spatial_type()const{return TOPOLOGYOBJECT;}
+  vsol_spatial_object_2d_type spatial_type()const override{return TOPOLOGYOBJECT;}
 
   //***************************************************************************
   // Basic operations
@@ -323,13 +325,13 @@ class vtol_topology_object : public vsol_spatial_object_2d
   //: Link `this' with an inferior `inferior'
   //  REQUIRE: valid_inferior_type(inferior) and !is_inferior(inferior)
   //---------------------------------------------------------------------------
-  void link_inferior(vtol_topology_object_sptr inferior);
+  void link_inferior(const vtol_topology_object_sptr& inferior);
 
   //---------------------------------------------------------------------------
   //: Unlink `this' from the inferior `inferior'
   //  REQUIRE: valid_inferior_type(inferior) and is_inferior(inferior)
   //---------------------------------------------------------------------------
-  void unlink_inferior(vtol_topology_object_sptr inferior);
+  void unlink_inferior(const vtol_topology_object_sptr& inferior);
 
   //---------------------------------------------------------------------------
   //: Unlink `this' from all its inferiors
@@ -408,12 +410,12 @@ class vtol_topology_object : public vsol_spatial_object_2d
   //---------------------------------------------------------------------------
   //: print and describe the objects
   //---------------------------------------------------------------------------
-  virtual void print(std::ostream &strm=std::cout) const;
+  void print(std::ostream &strm=std::cout) const override;
   void describe_inferiors(std::ostream &strm=std::cout, int blanking=0) const;
   void describe_superiors(std::ostream &strm=std::cout, int blanking=0) const;
-  virtual void describe(std::ostream &strm=std::cout, int blanking=0) const;
+  void describe(std::ostream &strm=std::cout, int blanking=0) const override;
 
-  virtual void compute_bounding_box() const; //A local implementation
+  void compute_bounding_box() const override; //A local implementation
 
   //---------------------------------------------------------------------------
   //: compute lists of vertices

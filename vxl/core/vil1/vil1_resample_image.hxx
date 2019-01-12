@@ -5,8 +5,10 @@
 #include <vector>
 #include <iostream>
 #include "vil1_resample_image.h"
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <vil1/vil1_image.h>
 
@@ -41,7 +43,7 @@ bool vil1_resample_image(vil1_image const &base, unsigned new_width, unsigned ne
   }
 
   // "e" is as close as possible to 1.
-  const double e = 0.999999999999;
+  constexpr double e = 0.999999999999;
 
   // iterate over the destination buffer.
   for (int u=0; u<w; ++u) {

@@ -8,7 +8,9 @@
 
 #include <ImageClasses/MemoryImage.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 inline Image* vil1_to_Image(vil1_image const& im)
 {

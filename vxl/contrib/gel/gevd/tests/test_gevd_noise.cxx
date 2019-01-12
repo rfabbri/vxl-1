@@ -12,14 +12,16 @@
 #include <gevd/gevd_noise.h>
 #include <testlib/testlib_test.h>
 #include <vnl/vnl_sample.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 void
 test_gevd_noise()
 {
-  const int size=100000;
+  constexpr int size = 100000;
   vnl_sample_reseed();
-  float* data = new float[size];
+  auto* data = new float[size];
   for (int i=0; i<size; ++i) data[i]=(float)vnl_sample_normal(.5,.1);
   gevd_noise noise_estim(data,size); // default # bins (200)
   delete[] data; // "data" should not be needed after constructor is called!

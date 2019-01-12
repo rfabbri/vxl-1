@@ -10,8 +10,10 @@
 #include <mfpf/mfpf_norm_corr1d.h>
 #include <vsl/vsl_binary_loader.h>
 #include <vul/vul_string.h>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <mbl/mbl_parse_block.h>
 #include <mbl/mbl_read_props.h>
@@ -42,9 +44,7 @@ void mfpf_norm_corr1d_builder::set_defaults()
 // Destructor
 //=======================================================================
 
-mfpf_norm_corr1d_builder::~mfpf_norm_corr1d_builder()
-{
-}
+mfpf_norm_corr1d_builder::~mfpf_norm_corr1d_builder() = default;
 
 //: Create new mfpf_norm_corr1d on heap
 mfpf_point_finder* mfpf_norm_corr1d_builder::new_finder() const
@@ -77,7 +77,7 @@ unsigned mfpf_norm_corr1d_builder::model_dim()
 
 //: Initialise building
 // Must be called before any calls to add_example(...)
-void mfpf_norm_corr1d_builder::clear(unsigned n_egs)
+void mfpf_norm_corr1d_builder::clear(unsigned  /*n_egs*/)
 {
   n_added_=0;
 }
@@ -103,7 +103,7 @@ void mfpf_norm_corr1d_builder::add_example(const vimt_image_2d_of<float>& image,
 void mfpf_norm_corr1d_builder::build(mfpf_point_finder& pf)
 {
   assert(pf.is_a()=="mfpf_norm_corr1d");
-  mfpf_norm_corr1d& nc = static_cast<mfpf_norm_corr1d&>(pf);
+  auto& nc = static_cast<mfpf_norm_corr1d&>(pf);
   vnl_vector<double> mean=sum_/n_added_;
   mean.normalize();
   nc.set(ilo_,ihi_,mean);
@@ -211,4 +211,3 @@ void mfpf_norm_corr1d_builder::b_read(vsl_b_istream& bfs)
       return;
   }
 }
-

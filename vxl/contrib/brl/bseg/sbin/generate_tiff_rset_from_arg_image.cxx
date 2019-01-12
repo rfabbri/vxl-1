@@ -2,7 +2,9 @@
 #include <iostream>
 #include <cstdlib>
 #include <vpl/vpl.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_file.h>
 #include <vil/vil_load.h>
 #include <vil/vil_image_resource.h>
@@ -13,7 +15,7 @@ static bool convert_to_greyscale(vil_image_resource_sptr const& imgr, vil_image_
   vil_pixel_format fmt = imgr->pixel_format();
   unsigned ni = imgr->ni(), nj = imgr->nj();
   unsigned np = imgr->nplanes();
-  double npd = static_cast<double>(np);
+  auto npd = static_cast<double>(np);
   for(unsigned j = 0; j<nj; ++j){
     if(fmt == VIL_PIXEL_FORMAT_BYTE){
       vil_image_view<unsigned char> img = imgr->get_view(0, ni, j, 1);
@@ -72,7 +74,7 @@ static bool generate_rset(std::string const& base_image_path,
 {
   std::string slash;
   //generate the temporary dir
-#ifdef VCL_WIN32
+#ifdef _WIN32
   slash =  "\\";
 #else
   slash = "/";

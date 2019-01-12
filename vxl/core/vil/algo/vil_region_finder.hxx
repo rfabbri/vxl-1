@@ -2,7 +2,10 @@
 #define vil_region_finder_hxx_
 
 #include "vil_region_finder.h"
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 // ---------------------------------------------------------------------------
 //                                                                 constructor

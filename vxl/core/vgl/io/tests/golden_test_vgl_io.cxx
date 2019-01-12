@@ -23,7 +23,9 @@
 #include <string>
 #include <iostream>
 #include <cstdlib>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_binary_io.h>
 #include <vsl/vsl_indent.h>
 #include <testlib/testlib_root_dir.h>
@@ -41,6 +43,7 @@
 #include <vgl/io/vgl_io_point_2d.h>
 #include <vgl/io/vgl_io_point_3d.h>
 #include <vgl/io/vgl_io_polygon.h>
+
 
 void golden_test_vgl_io(bool save_file=false);
 

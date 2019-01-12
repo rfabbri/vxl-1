@@ -16,7 +16,9 @@
 // \endverbatim
 
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_array_2d.h>
 #include "vgui_grid_tableau_sptr.h"
 #include <vgui/vgui_poly_tableau.h>

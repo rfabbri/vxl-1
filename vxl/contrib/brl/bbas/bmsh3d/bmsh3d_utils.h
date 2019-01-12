@@ -8,7 +8,9 @@
 
 #include <iostream>
 #include <sstream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include "bmsh3d_fuzzy_boolean.h"
 
@@ -35,8 +37,8 @@ class vispt_elm
   // ====== Constructor/Destructor ======
 
  public:
-  vispt_elm()  { vis_pointer_ = VXL_NULLPTR; }
-  virtual ~vispt_elm() {}
+  vispt_elm()  { vis_pointer_ = nullptr; }
+  virtual ~vispt_elm() = default;
 
   // ====== Data access functions ======
 

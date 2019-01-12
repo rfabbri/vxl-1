@@ -1,6 +1,9 @@
 // This is core/vcsl/vcsl_spatial.cxx
 #include "vcsl_spatial.h"
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vcsl/vcsl_spatial_transformation.h>
 #include <vcsl/vcsl_graph.h>
 
@@ -46,7 +49,7 @@ void vcsl_spatial::set_parent(std::vector<vcsl_spatial_sptr> const& new_parent)
     // Add 'this' to the list of the new parents' potential children
     for (i=parent_.begin();i!=parent_.end();++i)
       if (*i)
-        (*i)->potential_children_.push_back(this);
+        (*i)->potential_children_.emplace_back(this);
   }
 }
 

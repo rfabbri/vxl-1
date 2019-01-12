@@ -1,7 +1,8 @@
+#include "boxm2_ocl_paint_batch.h"
+#include <algorithm>
 #include <fstream>
 #include <iostream>
-#include <algorithm>
-#include "boxm2_ocl_paint_batch.h"
+#include <utility>
 //:
 // \file
 #include <boxm2/ocl/boxm2_opencl_cache.h>
@@ -21,20 +22,22 @@
 #include <bocl/bocl_device.h>
 #include <bocl/bocl_kernel.h>
 #include <vul/vul_timer.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Declare kernels
 std::map<std::string, bocl_kernel*> boxm2_ocl_paint_batch::kernels_;
 
 //paint block
 void boxm2_ocl_paint_batch::paint_block( boxm2_scene_sptr           scene,
-                                         bocl_device_sptr           device,
-                                         boxm2_stream_cache_sptr    str_cache,
-                                         boxm2_opencl_cache_sptr    opencl_cache,
+                                         const bocl_device_sptr&           device,
+                                         const boxm2_stream_cache_sptr&    str_cache,
+                                         const boxm2_opencl_cache_sptr&    opencl_cache,
                                          cl_command_queue           &queue,
-                                         std::string                 data_type,
-                                         boxm2_block_id             id,
-                                         bsta_sigma_normalizer_sptr n_table )
+                                         const std::string&                 data_type,
+                                         const boxm2_block_id&             id,
+                                         const bsta_sigma_normalizer_sptr&  /*n_table*/ )
 {
   typedef boxm2_data_traits<BOXM2_AUX0>::datatype aux0_datatype;
   typedef boxm2_data_traits<BOXM2_AUX1>::datatype aux1_datatype;
@@ -68,7 +71,7 @@ void boxm2_ocl_paint_batch::paint_block( boxm2_scene_sptr           scene,
   //----------------
 
   //int buffer indicating starting location for each sample
-  cl_uint* sampleIndex = new cl_uint[data_buff_length];
+  auto* sampleIndex = new cl_uint[data_buff_length];
   cl_uint  currIdx     = 0;
   std::vector<vxl_byte> all_obs, all_vis;
 
@@ -90,7 +93,7 @@ void boxm2_ocl_paint_batch::paint_block( boxm2_scene_sptr           scene,
     stream_time += st.all();
 
     //push all samples into block
-    unsigned nimgs = (unsigned) cell_len.size();
+    auto nimgs = (unsigned) cell_len.size();
     for (unsigned m = 0; m < nimgs; m++) {
 
       float obs_seg_len = cell_len[m];
@@ -101,8 +104,8 @@ void boxm2_ocl_paint_batch::paint_block( boxm2_scene_sptr           scene,
         float vis = cell_vis[m]/obs_seg_len; // mean vis
 
         //store bytes
-        vxl_byte obsByte = (vxl_byte) (obs*255.0f);
-        vxl_byte visByte = (vxl_byte) (vis*255.0f);
+        auto obsByte = (vxl_byte) (obs*255.0f);
+        auto visByte = (vxl_byte) (vis*255.0f);
         all_obs.push_back(obsByte);
         all_vis.push_back(visByte);
         ++currIdx;
@@ -113,8 +116,8 @@ void boxm2_ocl_paint_batch::paint_block( boxm2_scene_sptr           scene,
 
   //report some buffer sizes
   long totalSize = sizeof(int)*data_buff_length + (all_obs.size()+all_vis.size())*sizeof(vxl_byte);
-  unsigned int numSamps = (unsigned int) all_obs.size();
-  float time = (float) t.all();
+  auto numSamps = (unsigned int) all_obs.size();
+  auto time = (float) t.all();
   std::cout<<"  total time: "<<time<<"; "
           <<"  num cells: "<<data_buff_length<<"; "
           <<"  num samps: "<<numSamps<<" = "<< (float)(numSamps/data_buff_length)<<" samples per cell (avg)\n"
@@ -148,7 +151,7 @@ void boxm2_ocl_paint_batch::paint_block( boxm2_scene_sptr           scene,
   bocl_mem* mog       = opencl_cache->get_data(scene, id, data_type, data_buff_length*mogTypeSize, false);
   bocl_mem* blk_info  = opencl_cache->loaded_block_info();
 
-  boxm2_scene_info* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
+  auto* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
   info_buffer->data_buffer_length = data_buff_length;
   blk_info->write_to_buffer(queue);
   transfer_time += (float) transfer.all();
@@ -184,7 +187,7 @@ void boxm2_ocl_paint_batch::paint_block( boxm2_scene_sptr           scene,
 
 
 //: Keeps track of already compiled kernels, and returns matching ones
-bocl_kernel* boxm2_ocl_paint_batch::compile_kernels( bocl_device_sptr device,
+bocl_kernel* boxm2_ocl_paint_batch::compile_kernels( const bocl_device_sptr& device,
                                                      std::string       opts )
 {
   //make id out of device
@@ -203,8 +206,8 @@ bocl_kernel* boxm2_ocl_paint_batch::compile_kernels( bocl_device_sptr device,
   src_paths.push_back(source_dir + "batch/batch_update_appearance.cl");
 
   //compilation options
-  bocl_kernel* kernel = new bocl_kernel();
-  kernel->create_kernel(&device->context(),device->device_id(), src_paths, "batch_update_appearance", opts, "batch_paint::paint_kernel");
+  auto* kernel = new bocl_kernel();
+  kernel->create_kernel(&device->context(),device->device_id(), src_paths, "batch_update_appearance", std::move(opts), "batch_paint::paint_kernel");
 
   //store in map
   kernels_[identifier] = kernel;
@@ -255,4 +258,3 @@ void boxm2_ocl_paint_batch::weighted_mean_var(const float* obs, const float* vis
   mean = sample_mean;
   return;
 }
-

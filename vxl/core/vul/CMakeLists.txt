@@ -55,25 +55,11 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 endif()
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
-if(APPLE)
-  vxl_add_library(LIBRARY_NAME ${VXL_LIB_PREFIX}vul LIBRARY_SOURCES ${vul_sources})
-else()
 
-if(NOT SOLARIS)
-  vxl_add_library(LIBRARY_NAME ${VXL_LIB_PREFIX}vul LIBRARY_SOURCES ${vul_sources} ${vul_network_sources})
-else()
-  vxl_add_library(LIBRARY_NAME ${VXL_LIB_PREFIX}vul LIBRARY_SOURCES ${vul_sources})
-  vxl_add_library(LIBRARY_NAME ${VXL_LIB_PREFIX}vul_network LIBRARY_SOURCES ${vul_network_sources})
-endif()
+vxl_add_library(LIBRARY_NAME ${VXL_LIB_PREFIX}vul LIBRARY_SOURCES ${vul_sources} ${vul_network_sources})
 
 if(NOT UNIX)
   target_link_libraries( ${VXL_LIB_PREFIX}vul ws2_32 )
-endif()
-
-if(SOLARIS)
-  target_link_libraries( ${VXL_LIB_PREFIX}vul nsl ${VXL_LIB_PREFIX}vul_network socket )
-endif()
-
 endif()
 
 set(CURR_LIB_NAME vul)
@@ -87,10 +73,14 @@ set_vxl_library_properties(
 
 target_link_libraries( ${VXL_LIB_PREFIX}vul ${VXL_LIB_PREFIX}vcl )
 
-if( BUILD_EXAMPLES )
+if( VXL_BUILD_EXAMPLES )
   add_subdirectory(examples)
 endif()
 
 if( BUILD_TESTING )
   add_subdirectory(tests)
+endif()
+
+if (VXL_BUILD_OBJECT_LIBRARIES)
+  add_library(vul-obj OBJECT ${vul_sources})
 endif()

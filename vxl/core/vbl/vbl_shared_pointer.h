@@ -12,7 +12,9 @@
 //   13 Feb. 2007 Amitha Perera   Change implementation to allow base class conversions.
 // \endverbatim
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #define vbl_shared_pointer_zero(var) (var) = 0
 
@@ -39,7 +41,7 @@ class vbl_shared_pointer
 
   typedef vbl_shared_pointer_data data_t;
 
-  vbl_shared_pointer() : pointer(VXL_NULLPTR), count_data(VXL_NULLPTR) { }
+  vbl_shared_pointer() : pointer(nullptr), count_data(nullptr) { }
 
   explicit
   vbl_shared_pointer(T *p) {
@@ -47,8 +49,8 @@ class vbl_shared_pointer
       pointer = p;
       count_data = new data_t(1);
     } else {
-      pointer = VXL_NULLPTR;
-      count_data = VXL_NULLPTR;
+      pointer = nullptr;
+      count_data = nullptr;
     }
   }
 
@@ -121,11 +123,11 @@ class vbl_shared_pointer
   }
 
  private:
-  VCL_SAFE_BOOL_DEFINE;
+
  public:
   // conversion to bool
-  operator safe_bool () const
-    { return (pointer != 0)? VCL_SAFE_BOOL_TRUE : 0; }
+  explicit operator bool () const
+    { return (pointer != 0)? true : false; }
 
   // inverse conversion to bool
   bool operator!() const
@@ -133,8 +135,6 @@ class vbl_shared_pointer
 
   // conversion to pointer
 #if !defined VBL_SHARED_POINTER_OF_NON_COMPOUND // Get rid of warning with vbl_shared_pointer<int>
-      // VCL_DO_NOT_INSTANTIATE can't be used instead because the declaration of
-      // the method that causes the problem, not the instantiation.
   T const *operator->() const { return as_pointer(); }
   T       *operator->() { return as_pointer(); }
 #endif

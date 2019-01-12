@@ -5,7 +5,10 @@
 // \file
 
 #include <vsl/vsl_binary_loader.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //=======================================================================
 //: Cunning pointer for objects that can be cloned.
@@ -15,7 +18,7 @@
 //  suitable polymorphic I/O is invoked.
 //
 // \code
-// vcl_unique_ptr<T> inst = get_from_some_factory_function();
+// std::unique_ptr<T> inst = get_from_some_factory_function();
 // mbl_cloneable_ptr<T> long_term_store;
 // long_term_store = inst.release();
 // \endcode
@@ -25,16 +28,16 @@ class mbl_cloneable_ptr
   BaseClass* ptr_;
  public:
   //: Default constructor (zeros pointer)
-  mbl_cloneable_ptr() : ptr_(VXL_NULLPTR) {}
+  mbl_cloneable_ptr() : ptr_(nullptr) {}
 
   //: Delete object pointed to and set pointer to zero
-  void deleteObject() { delete ptr_; ptr_=VXL_NULLPTR; }
+  void deleteObject() { delete ptr_; ptr_=nullptr; }
 
   //: Destructor
   ~mbl_cloneable_ptr() { deleteObject(); }
 
   //: Copy constructor
-  mbl_cloneable_ptr(const mbl_cloneable_ptr<BaseClass>& p) : ptr_(VXL_NULLPTR) { *this = p; }
+  mbl_cloneable_ptr(const mbl_cloneable_ptr<BaseClass>& p) : ptr_(nullptr) { *this = p; }
 
   //: Construct from pointer, making a clone of r.
   mbl_cloneable_ptr(const BaseClass& r) : ptr_(r.clone()) { assert(ptr_); }
@@ -46,7 +49,7 @@ class mbl_cloneable_ptr
   mbl_cloneable_ptr<BaseClass>& operator=(const mbl_cloneable_ptr<BaseClass>& p)
   {
     if (this==&p) return *this;
-    deleteObject(); if (p.ptr_!=VXL_NULLPTR) ptr_=p.ptr_->clone();
+    deleteObject(); if (p.ptr_!=nullptr) ptr_=p.ptr_->clone();
     return *this;
   }
 
@@ -71,7 +74,7 @@ class mbl_cloneable_ptr
   }
 
   //: Return true if pointer defined
-  bool isDefined() const { return ptr_!=VXL_NULLPTR; }
+  bool isDefined() const { return ptr_!=nullptr; }
 
   //: Make object behave like pointer to BaseClass
   const BaseClass* operator->() const { return ptr_; }
@@ -87,10 +90,10 @@ class mbl_cloneable_ptr
 
   //: Return wrapped pointer and give up ownership
   BaseClass* release()
-  { BaseClass* p = ptr_; ptr_=VXL_NULLPTR; return p; }
+  { BaseClass* p = ptr_; ptr_=nullptr; return p; }
 
   //: Cast to allow object to look like thing pointed to
-  operator BaseClass&() { assert(ptr_!=VXL_NULLPTR); return *ptr_; }
+  operator BaseClass&() { assert(ptr_!=nullptr); return *ptr_; }
 
   //: Dereferencing the pointer
   BaseClass &operator * () { return *ptr_; }
@@ -99,7 +102,7 @@ class mbl_cloneable_ptr
   const BaseClass &operator * () const { return *ptr_; }
 
   //: Cast to allow object to look like thing pointed to
-  operator const BaseClass&() const { assert(ptr_!=VXL_NULLPTR); return *ptr_; }
+  operator const BaseClass&() const { assert(ptr_!=nullptr); return *ptr_; }
 
   //: Save to binary stream
   void b_write(vsl_b_ostream& bfs) const
@@ -132,9 +135,9 @@ void vsl_b_read(vsl_b_istream& bfs, mbl_cloneable_ptr<BaseClass>& p)
 //  When written or read to/from binary streams,
 //  suitable polymorphic I/O is invoked.
 //
-// To take ownership of the contents of a vcl_unique_ptr<T> use
+// To take ownership of the contents of a std::unique_ptr<T> use
 // \code
-// vcl_unique_ptr<T> inst = get_from_some_factory_function();
+// std::unique_ptr<T> inst = get_from_some_factory_function();
 // mbl_cloneable_nzptr<T> long_term_store(inst.release());
 // \endcode
 template <class BaseClass>
@@ -234,7 +237,7 @@ class mbl_cloneable_nzptr
   void b_read(vsl_b_istream& bfs)
   {
     delete ptr_;
-    ptr_ = VXL_NULLPTR;
+    ptr_ = nullptr;
     vsl_b_read(bfs,ptr_);
   }
 };

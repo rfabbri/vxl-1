@@ -4,14 +4,12 @@
 // \file
 #include <vtol/vtol_edge_2d.h>
 
-gevd_region_edge::gevd_region_edge(vtol_edge_2d_sptr e)
+gevd_region_edge::gevd_region_edge(const vtol_edge_2d_sptr& e)
 : edge_(e)
 {
 }
 
-gevd_region_edge::~gevd_region_edge()
-{
-}
+gevd_region_edge::~gevd_region_edge() = default;
 
 bool gevd_region_edge::is_vertex() const
 {
@@ -45,4 +43,3 @@ void gevd_region_edge::Prop(gevd_region_edge const* re, unsigned int label)
       this->SetNewLabel(re->GetLabel(i));
   this->SetNewLabel(label);
 }
-

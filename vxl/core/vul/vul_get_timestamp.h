@@ -1,9 +1,6 @@
 // This is core/vul/vul_get_timestamp.h
 #ifndef vul_get_timestamp_h_
 #define vul_get_timestamp_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 
 //:
 // \file
@@ -17,7 +14,9 @@
 
 
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 //: purpose: obtain time elapsed since 1 Jan 1970, in seconds and milliseconds.

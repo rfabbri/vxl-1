@@ -2,7 +2,9 @@
 // \brief   Example using vgui_satellite_tableau.
 
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vgui/vgui_satellite_tableau.h>
 #include <vgui/vgui_satellite_tableau.hxx>

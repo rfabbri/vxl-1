@@ -5,7 +5,9 @@
 
 #include <vil/vil_load.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 // TODO: Save an image with the location of all the features.
 
@@ -61,7 +63,7 @@ static void test_tracks_detect(int argc, char* argv[])
 
         TEST("The track is not yet set.",
             (*i)->track,
-            NULL);
+            nullptr);
 
         TEST_EQUAL("Descriptors are the same size.",
             (*i)->descriptor.size(),

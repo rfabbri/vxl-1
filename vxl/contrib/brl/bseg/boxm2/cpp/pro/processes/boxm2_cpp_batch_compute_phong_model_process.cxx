@@ -9,7 +9,9 @@
 // \author Ozge C. Ozcanli
 // \date May 12, 2011
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/io/boxm2_stream_cache.h>
 #include <boxm2/io/boxm2_cache.h>
 #include <boxm2/boxm2_scene.h>
@@ -25,8 +27,8 @@
 //: run batch update
 namespace boxm2_cpp_batch_compute_phong_model_process_globals
 {
-  const unsigned n_inputs_ = 6;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 6;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool boxm2_cpp_batch_compute_phong_model_process_cons(bprb_func_process& pro)
@@ -65,8 +67,8 @@ bool boxm2_cpp_batch_compute_phong_model_process(bprb_func_process& pro)
   boxm2_scene_sptr scene =pro.get_input<boxm2_scene_sptr>(i++);
   boxm2_cache_sptr cache= pro.get_input<boxm2_cache_sptr>(i++);
   boxm2_stream_cache_sptr str_cache = pro.get_input<boxm2_stream_cache_sptr>(i++);
-  float  sun_elev = pro.get_input<float>(i++);
-  float  sun_azim = pro.get_input<float>(i++);
+  auto  sun_elev = pro.get_input<float>(i++);
+  auto  sun_azim = pro.get_input<float>(i++);
   bsta_sigma_normalizer_sptr n_table = pro.get_input<bsta_sigma_normalizer_sptr>(i++);
 
   // iterate the scene block by block and write to output
@@ -74,9 +76,9 @@ bool boxm2_cpp_batch_compute_phong_model_process(bprb_func_process& pro)
   std::vector<boxm2_block_id>::iterator id;
   id = blk_ids.begin();
   for (id = blk_ids.begin(); id != blk_ids.end(); id++) {
-    boxm2_block *     blk     = cache->get_block(scene,*id);
-    boxm2_data_base *  alpha  = cache->get_data_base(scene,*id,boxm2_data_traits<BOXM2_ALPHA>::prefix(),0,true);
-    boxm2_data_base *  phongs_model_data  = cache->get_data_base(scene,*id,boxm2_data_traits<BOXM2_FLOAT8>::prefix("phongs_model"),alpha->buffer_length()* 8 ,false);
+    boxm2_block *     blk = cache->get_block(scene,*id);
+    boxm2_data_base *  alpha = cache->get_data_base(scene,*id,boxm2_data_traits<BOXM2_ALPHA>::prefix(),0,true);
+    boxm2_data_base *  phongs_model_data = cache->get_data_base(scene,*id,boxm2_data_traits<BOXM2_FLOAT8>::prefix("phongs_model"),alpha->buffer_length()* 8 ,false);
     boxm2_compute_phongs_model_functor data_functor;
     data_functor.init_data(sun_elev,
                            sun_azim,
@@ -90,4 +92,3 @@ bool boxm2_cpp_batch_compute_phong_model_process(bprb_func_process& pro)
   }
   return true;
 }
-

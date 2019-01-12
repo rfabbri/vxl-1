@@ -1,16 +1,15 @@
 // This is core/vil/vil_stream_core.h
 #ifndef vil_stream_core_h_
 #define vil_stream_core_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief An in-core vil_stream implementation
 // \author  fsm
 
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_stream.h>
 
 //: An in-core vil_stream implementation.
@@ -35,16 +34,16 @@ class vil_stream_core : public vil_stream
   vil_streampos m_transfer(char *buf, vil_streampos pos, vil_streampos n, bool read);
 
   // implement virtual vil_stream interface:
-  bool ok() const { return true; }
-  vil_streampos read (void       *buf, vil_streampos n);
-  vil_streampos write(void const *buf, vil_streampos n);
-  vil_streampos tell()     const    { return curpos_; }
-  void seek(vil_streampos position) { curpos_ = position; }
+  bool ok() const override { return true; }
+  vil_streampos read (void       *buf, vil_streampos n) override;
+  vil_streampos write(void const *buf, vil_streampos n) override;
+  vil_streampos tell()     const override    { return curpos_; }
+  void seek(vil_streampos position) override { curpos_ = position; }
 
-  vil_streampos file_size() const { return tailpos_; }
+  vil_streampos file_size() const override { return tailpos_; }
 
  protected:
-  ~vil_stream_core();
+  ~vil_stream_core() override;
 };
 
 #endif // vil_stream_core_h_

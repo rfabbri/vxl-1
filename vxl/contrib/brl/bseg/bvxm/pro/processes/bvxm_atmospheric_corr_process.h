@@ -13,7 +13,9 @@
 #include <iostream>
 #include <string>
 #include <bprb/bprb_func_process.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <bvxm/bvxm_voxel_traits.h>
 #include <bvxm/grid/bvxm_voxel_slab_base.h>
@@ -21,8 +23,8 @@
 // global variables/functions for bvxm_atmospheric_corr_process_globals
 namespace bvxm_atmospheric_corr_process_globals
 {
-  const unsigned n_inputs_ = 2;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 2;
+  constexpr unsigned n_outputs_ = 1;
 
   // other global variables
   unsigned ni_= 0;

@@ -26,16 +26,16 @@ class ihog_cost_func : public vnl_cost_function
   //: Constructor
   ihog_cost_func( const vil_image_view<float>& image1,
                   const vil_image_view<float>& image2,
-                  const ihog_world_roi& roi,
+                  ihog_world_roi  roi,
                   const ihog_transform_2d& init_xform );
   //: Constructor
   ihog_cost_func( const vil_image_view<float>& image1,
                   const vil_image_view<float>& image2,
                   const vil_image_view<float>& mask,
-                  const ihog_world_roi& roi,
+                  ihog_world_roi  roi,
                   const ihog_transform_2d& init_xform );
   //: The main function.
-  virtual double f(vnl_vector<double> const& x);
+  double f(vnl_vector<double> const& x) override;
 
   //: Returns the transformed second image
   vil_image_view<float> last_xformed_image();
@@ -49,4 +49,3 @@ class ihog_cost_func : public vnl_cost_function
 };
 
 #endif // ihog_cost_func_h_
-

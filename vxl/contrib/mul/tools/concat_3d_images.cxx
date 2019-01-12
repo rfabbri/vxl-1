@@ -6,8 +6,10 @@
 #include <numeric>
 #include <functional>
 #include <cstring>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_file.h>
 #include <vbl/vbl_array_3d.hxx>
 #include <vil3d/vil3d_property.h>
@@ -92,7 +94,7 @@ void parse_cmdline(int argc, const char **argv, vbl_array_3d<std::string>& fname
 
 vil3d_image_resource_sptr fname_to_resource(const std::string& fname)
 {
-  if (fname.empty()) return VXL_NULLPTR;
+  if (fname.empty()) return nullptr;
 
   vil3d_image_resource_sptr im = vil3d_load_image_resource(fname.c_str());
 

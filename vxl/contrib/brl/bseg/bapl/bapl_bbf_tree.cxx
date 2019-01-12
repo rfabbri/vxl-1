@@ -7,8 +7,10 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_vector.h>
 
@@ -34,23 +36,16 @@ bapl_bbf_box::bapl_bbf_box( const vnl_vector_fixed<double,128>& min_point,
 }
 
 //: Copy Constructor
-bapl_bbf_box::bapl_bbf_box( const bapl_bbf_box& old )
-  : min_point_(old.min_point_), max_point_(old.max_point_)
-{
-}
+bapl_bbf_box::bapl_bbf_box( const bapl_bbf_box& old ) = default;
 
 //: Assignment Operator
 bapl_bbf_box &
 bapl_bbf_box::operator= ( const bapl_bbf_box& old )
-{
-  min_point_ = old.min_point_;
-  max_point_ = old.max_point_;
-  return *this;
-}
+= default;
 
 //: Return the minimum square distance between \a p and any point in \a b.
 double
-bapl_bbf_dist_sq( const bapl_keypoint_sptr p, const bapl_bbf_box& b )
+bapl_bbf_dist_sq( const bapl_keypoint_sptr& p, const bapl_bbf_box& b )
 {
   double sum_sq = 0;
   unsigned int dim = p->descriptor().size();
@@ -77,9 +72,9 @@ bapl_bbf_dist_sq( const bapl_keypoint_sptr p, const bapl_bbf_box& b )
 
 
 //: Constructor
-bapl_bbf_tree::bapl_bbf_tree(const std::vector< bapl_keypoint_sptr >& points, int points_per_leaf)
+bapl_bbf_tree::bapl_bbf_tree(std::vector< bapl_keypoint_sptr >  points, int points_per_leaf)
  : leaf_count_(0), leaves_examined_(0), internal_count_(0),
-   internal_examined_(0), points_(points)
+   internal_examined_(0), points_(std::move(points))
 {
   assert(points_per_leaf > 0);
 
@@ -216,7 +211,7 @@ bapl_bbf_tree::greatest_variation( const std::vector<int>& indices )
 
 //: Return an estimate of the n closest points to the query point
 void
-bapl_bbf_tree::n_nearest( const bapl_keypoint_sptr query_point,
+bapl_bbf_tree::n_nearest( const bapl_keypoint_sptr& query_point,
                           std::vector< bapl_keypoint_sptr >& closest_points,
                           int n, int max_search_nodes)
 {
@@ -226,7 +221,7 @@ bapl_bbf_tree::n_nearest( const bapl_keypoint_sptr query_point,
 
 //: Return an estimate of the n closest points to the query point
 void
-bapl_bbf_tree::n_nearest(const bapl_keypoint_sptr query_point,
+bapl_bbf_tree::n_nearest(const bapl_keypoint_sptr& query_point,
                          std::vector< bapl_keypoint_sptr >& closest_points,
                          std::vector< int >& closest_indices,
                          int n, int max_search_nodes)
@@ -254,12 +249,12 @@ bapl_bbf_tree::n_nearest(const bapl_keypoint_sptr query_point,
 
     if ( bapl_bbf_dist_sq( query_point, current->left_->outer_box_ ) < 1.0e-5 ) {
       right_box_sq_dist = bapl_bbf_dist_sq( query_point, current->right_->inner_box_ );
-      priority_queue.push_back( bapl_bbf_queue_entry( right_box_sq_dist, current->right_ ) );
+      priority_queue.emplace_back( right_box_sq_dist, current->right_ );
       current = current->left_ ;
     }
     else {
       left_box_sq_dist = bapl_bbf_dist_sq( query_point, current->left_->inner_box_ );
-      priority_queue.push_back( bapl_bbf_queue_entry( left_box_sq_dist, current->left_ ) );
+      priority_queue.emplace_back( left_box_sq_dist, current->left_ );
       current = current->right_ ;
     }
   }
@@ -300,7 +295,7 @@ bapl_bbf_tree::n_nearest(const bapl_keypoint_sptr query_point,
          //std::cout << "left sq distance = " << left_box_sq_dist << std::endl;
         if ( num_found < n || sq_distances[ num_found-1 ] > left_box_sq_dist ) {
            //std::cout << "pushing left onto the heap\n";
-          priority_queue.push_back( bapl_bbf_queue_entry( left_box_sq_dist, current->left_ ) );
+          priority_queue.emplace_back( left_box_sq_dist, current->left_ );
           std::push_heap( priority_queue.begin(), priority_queue.end() );
         };
 
@@ -308,7 +303,7 @@ bapl_bbf_tree::n_nearest(const bapl_keypoint_sptr query_point,
          //std::cout << "right sq distance = " << right_box_sq_dist << std::endl;
         if ( num_found < n || sq_distances[ num_found-1 ] > right_box_sq_dist ) {
            //std::cout << "pushing right onto the heap\n";
-          priority_queue.push_back( bapl_bbf_queue_entry( right_box_sq_dist, current->right_ ) );
+          priority_queue.emplace_back( right_box_sq_dist, current->right_ );
           std::push_heap( priority_queue.begin(), priority_queue.end() );
         }
       }
@@ -342,9 +337,9 @@ bapl_bbf_tree::n_nearest(const bapl_keypoint_sptr query_point,
 }
 
 void
-bapl_bbf_tree::update_closest( const bapl_keypoint_sptr query_point,
+bapl_bbf_tree::update_closest( const bapl_keypoint_sptr& query_point,
                                int n,
-                               bapl_bbf_node_sptr p,
+                               const bapl_bbf_node_sptr& p,
                                std::vector< int >& closest_indices,
                                std::vector< double >& sq_distances,
                                int & num_found )
@@ -357,8 +352,7 @@ bapl_bbf_tree::update_closest( const bapl_keypoint_sptr query_point,
            << " sq_dist = " << rsdl_dist_sq( query_point, p->inner_box_ ) << std::endl;
 #endif
 
-  for ( unsigned int i=0; i < p->point_indices_.size(); ++i ) {  // check each id
-    int id = p->point_indices_[i];
+  for (int id : p->point_indices_) {  // check each id
     double sq_dist = vnl_vector_ssd( query_point->descriptor(), points_[ id ]->descriptor() );
     // std::cout << "  id = " << id << ", point = " << points_[ id ]
     //          << ", sq_dist = " << sq_dist << std::endl;
@@ -401,9 +395,9 @@ bapl_bbf_tree::update_closest( const bapl_keypoint_sptr query_point,
 //  anywhere else in the tree will can replace any of the closest
 //  points.
 bool
-bapl_bbf_tree::bounded_at_leaf( const bapl_keypoint_sptr query_point,
+bapl_bbf_tree::bounded_at_leaf( const bapl_keypoint_sptr& query_point,
                                 int n,
-                                bapl_bbf_node_sptr current,
+                                const bapl_bbf_node_sptr& current,
                                 const std::vector< double >& sq_distances,
                                 int & num_found )
 {

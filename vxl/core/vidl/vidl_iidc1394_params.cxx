@@ -1,7 +1,4 @@
 // This is core/vidl/vidl_iidc1394_params.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Matt Leotta
@@ -10,7 +7,10 @@
 //-----------------------------------------------------------------------------
 
 #include "vidl_iidc1394_params.h"
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //-----------------------------------------------------------------------------
 

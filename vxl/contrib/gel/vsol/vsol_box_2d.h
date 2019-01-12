@@ -25,7 +25,9 @@
 #include <vbl/vbl_ref_count.h>
 #include <vbl/vbl_bounding_box.h>
 #include "vsol_box_2d_sptr.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: A bounding box for 2d spatial objects
 
@@ -36,14 +38,14 @@ class vsol_box_2d : public vsol_box, public vbl_ref_count, public vul_timestamp
 
  public:
   //: create an empty box
-  vsol_box_2d() {}
+  vsol_box_2d() = default;
 
   vsol_box_2d(vsol_box_2d const &b)
     :  vsol_box(), vbl_ref_count(), vul_timestamp(), box_(b.box_) {}
 
   vsol_box_2d(vbl_bounding_box<double,2> const &b) : box_(b) {}
 
-  ~vsol_box_2d() {}
+  ~vsol_box_2d() override = default;
 
   // accessors
   bool empty() const { return box_.empty(); }

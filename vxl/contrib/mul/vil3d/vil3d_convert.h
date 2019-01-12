@@ -1,9 +1,6 @@
 // This is mul/vil3d/vil3d_convert.h
 #ifndef vil3d_convert_h_
 #define vil3d_convert_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Some standard conversion functions.
@@ -57,8 +54,10 @@
 
 #include <iostream>
 #include <limits>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_convert.h>
 #include <vil3d/vil3d_transform.h>
 #include <vil3d/vil3d_math.h>
@@ -212,7 +211,7 @@ inline vil3d_image_view_base_sptr vil3d_convert_cast(outP /*dummy*/,
     macro( VIL_PIXEL_FORMAT_DOUBLE, double )
     macro( VIL_PIXEL_FORMAT_BOOL, bool )
 #undef macro
-    default: dest=VXL_NULLPTR;
+    default: dest=nullptr;
   }
   return dest;
 }
@@ -262,7 +261,7 @@ inline vil3d_image_view_base_sptr vil3d_convert_round(
     macro(VIL_PIXEL_FORMAT_FLOAT , float )
     macro(VIL_PIXEL_FORMAT_DOUBLE , double )
 #undef macro
-   default: dest=VXL_NULLPTR;
+   default: dest=nullptr;
   }
   return dest;
 }

@@ -5,8 +5,10 @@
 
 #include <algorithm>
 #include "vil_blob.h"
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 namespace
 {
@@ -109,7 +111,6 @@ void vil_blob_labels(const vil_image_view<bool>& src_binary,
   int neighbourhood_ii[] = { -1,  0, -1, +1};
   int neighbourhood_jj[] = {  0, -1, -1, -1};
 
-  typedef std::vector<unsigned>::iterator ITER;
 
   for (unsigned j=0; j<nj; ++j)
     for (unsigned i=0; i<ni; ++i)
@@ -134,10 +135,10 @@ void vil_blob_labels(const vil_image_view<bool>& src_binary,
       {
         // See how many unique labels neighbouring labels we have
         std::sort(neighbouring_labels.begin(), neighbouring_labels.end());
-        ITER end = std::unique(neighbouring_labels.begin(), neighbouring_labels.end());
+        auto end = std::unique(neighbouring_labels.begin(), neighbouring_labels.end());
         // don't bother erasing unique's suffix, just keeping the end iterator
         // will be enough.
-        ITER it=neighbouring_labels.begin();
+        auto it=neighbouring_labels.begin();
         unsigned label = *it++;
         dest_label(i,j) = label;
 
@@ -173,14 +174,14 @@ void vil_blob_labels(const vil_image_view<bool>& src_binary,
   std::vector<unsigned> labels(renumbering.begin(), renumbering.end());
   std::sort(labels.begin(), labels.end());
   labels.erase(std::unique(labels.begin(), labels.end()), labels.end());
-  const unsigned dodgy = static_cast<unsigned>(-1);
+  const auto dodgy = static_cast<unsigned>(-1);
   std::vector<unsigned> renum_renum(renumbering.size(), dodgy);
   renum_renum[0]=0;
   for (unsigned l=0, n=labels.size(); l<n; ++l)
     renum_renum[labels[l]] = l;
 
-  for (ITER it=renumbering.begin(), end=renumbering.end(); it!=end; ++it)
-    *it=renum_renum[*it];
+  for (unsigned int & it : renumbering)
+    it=renum_renum[it];
 
   // Check than no DODGY values got into the renumbering.
   assert(std::find(renumbering.begin(), renumbering.end(), dodgy)

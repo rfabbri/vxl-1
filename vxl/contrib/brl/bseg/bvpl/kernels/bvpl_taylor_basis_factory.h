@@ -12,8 +12,10 @@
 //   <none yet>
 // \endverbatim
 
+#include <utility>
 #include <bvpl/kernels/bvpl_kernel_factory.h>
 #include <vgl/vgl_point_3d.h>
+
 
 //: This class reads from disk the taylor kernels.
 class bvpl_taylor_basis_factory: public bvpl_kernel_factory
@@ -30,7 +32,7 @@ class bvpl_taylor_basis_factory: public bvpl_kernel_factory
   std::string filename_;
 
   //: Creates canonical kernel from file
-  virtual void create_canonical();
+  void create_canonical() override;
 };
 
 
@@ -43,7 +45,7 @@ class bvpl_taylor_basis_loader
   bvpl_taylor_basis_loader(std::string path,
                            vgl_point_3d<int> min_point = vgl_point_3d<int>(-2,-2,-2),
                            vgl_point_3d<int> max_point = vgl_point_3d<int>(2,2,2),
-                           unsigned degree=2): path_(path), min_point_(min_point), max_point_(max_point),degree_(degree) {}
+                           unsigned degree=2): path_(std::move(path)), min_point_(min_point), max_point_(max_point),degree_(degree) {}
 
   //: Returns a map of kernels and their names
   void create_basis(std::map<std::string, bvpl_kernel_sptr> &taylor_basis);

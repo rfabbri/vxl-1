@@ -14,12 +14,14 @@
 
 #include <vector>
 #include <algorithm>
-#include <vcl_memory.h>
+#include <iostream>
+#include <memory>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpdl/vpdl_multi_cmp_dist.h>
 #include <vpdl/vpdt/vpdt_access.h>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
-#include <vcl_memory.h>
+#include <cassert>
 
 //: A mixture of distributions
 // A mixture is a weighted linear combination of other mixtures.
@@ -59,7 +61,7 @@ class vpdl_mixture : public vpdl_multi_cmp_dist<T,n>
     // ============ Data =============
 
     //: The distribution
-    vcl_unique_ptr<vpdl_distribution<T,n> > distribution;
+    std::unique_ptr<vpdl_distribution<T,n> > distribution;
     //: The weight
     T weight;
   };
@@ -94,7 +96,7 @@ class vpdl_mixture : public vpdl_multi_cmp_dist<T,n>
 
   // Copy Constructor
   vpdl_mixture(vpdl_mixture<T,n> const& other)
-    : vpdl_multi_cmp_dist<T,n>(other), components_(other.components_.size(),VXL_NULLPTR)
+    : vpdl_multi_cmp_dist<T,n>(other), components_(other.components_.size(),nullptr)
   {
     // deep copy of the data
     for (unsigned int i=0; i<components_.size(); ++i) {

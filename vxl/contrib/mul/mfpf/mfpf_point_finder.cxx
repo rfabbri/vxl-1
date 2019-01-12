@@ -9,7 +9,9 @@
 #include <vsl/vsl_indent.h>
 #include <vsl/vsl_binary_loader.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vimt/algo/vimt_find_troughs.h>
 #include <vimt/vimt_image_pyramid.h>
 #include <vnl/vnl_cost_function.h>
@@ -43,7 +45,7 @@ class mfpf_pf_cost : public vnl_cost_function
   vgl_vector_2d<double> v_;
   double ds_,dA_;
  public:
-  virtual ~mfpf_pf_cost() {}
+  ~mfpf_pf_cost() override = default;
   mfpf_pf_cost(mfpf_point_finder& pf,
                const vimt_image_2d_of<float>& image,
                const vgl_point_2d<double>& p0,
@@ -55,7 +57,7 @@ class mfpf_pf_cost : public vnl_cost_function
       ds_(ds),dA_(dA) {}
 
     //:  Given the parameter vector x, compute the value of f(x).
-  virtual double f(const vnl_vector<double>& params);
+  double f(const vnl_vector<double>& params) override;
 
   void get_pose(const vnl_vector<double>& params,
                 vgl_point_2d<double>& p,
@@ -130,9 +132,7 @@ mfpf_point_finder::mfpf_point_finder()
 // Destructor
 //=======================================================================
 
-mfpf_point_finder::~mfpf_point_finder()
-{
-}
+mfpf_point_finder::~mfpf_point_finder() = default;
 
 //: Size of step between sample points
 void mfpf_point_finder::set_step_size(double s)
@@ -176,9 +176,9 @@ unsigned mfpf_point_finder::model_dim()
 }
 
 //: Get sample of region around specified point in image
-void mfpf_point_finder::get_sample_vector(const vimt_image_2d_of<float>& image,
-                                          const vgl_point_2d<double>& p,
-                                          const vgl_vector_2d<double>& u,
+void mfpf_point_finder::get_sample_vector(const vimt_image_2d_of<float>&  /*image*/,
+                                          const vgl_point_2d<double>&  /*p*/,
+                                          const vgl_vector_2d<double>&  /*u*/,
                                           std::vector<double>& v)
 {
   // Return empty vector
@@ -355,7 +355,7 @@ void mfpf_point_finder::grid_search_one_pose(
   {
     unsigned x =t_pts[i].x(), y=t_pts[i].y();
     fit.push_back(t_value[i]);
-    pts.push_back(mfpf_pose(im2w(x,y),u));
+    pts.emplace_back(im2w(x,y),u);
   }
 }
 
@@ -382,9 +382,9 @@ void mfpf_point_finder::multi_search_one_pose(
   vimt_find_image_troughs_3x3(t_pts,r_im);
   vimt_transform_2d im2w = response_im.world2im().inverse();
 
-  for (unsigned i=0;i<t_pts.size();++i)
+  for (auto & t_pt : t_pts)
   {
-    unsigned x =t_pts[i].x(), y=t_pts[i].y();
+    unsigned x =t_pt.x(), y=t_pt.y();
     double f0 = r_im(x,y);  // Value at minima on grid
 
     if (vnl_math::isnan(f0))
@@ -437,7 +437,7 @@ void mfpf_point_finder::multi_search_one_pose(
     pf_cost.get_pose(params,p1,u1);
 
     fit.push_back(f1);
-    pts.push_back(mfpf_pose(p1,u1));
+    pts.emplace_back(p1,u1);
   }
 }
 
@@ -590,8 +590,8 @@ unsigned mfpf_point_finder::image_level(const mfpf_pose& pose,
 }
 
 //: Return true if modelled regions at pose1 and pose2 overlap
-bool mfpf_point_finder::overlap(const mfpf_pose& pose1,
-                                const mfpf_pose& pose2) const
+bool mfpf_point_finder::overlap(const mfpf_pose&  /*pose1*/,
+                                const mfpf_pose&  /*pose2*/) const
 {
   return false;
 }

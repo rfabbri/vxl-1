@@ -17,8 +17,10 @@
 
 #include <vector>
 #include <iostream>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bsta/bsta_histogram_base.h>
 
 template <class T> class bsta_histogram : public bsta_histogram_base
@@ -43,7 +45,7 @@ template <class T> class bsta_histogram : public bsta_histogram_base
   bsta_histogram(const T min, const T max, std::vector<T> const& data,
                  const T min_prob = 0.0);
 
-  ~bsta_histogram() {}
+  ~bsta_histogram() override = default;
 
   // The number of bins in the histogram
   unsigned int nbins() const { return nbins_; }

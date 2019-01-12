@@ -4,7 +4,9 @@
 #include <iterator>
 #include <sstream>
 #include "mmn_lbp_solver.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <mbl/mbl_exception.h>
 #include <mbl/mbl_stl.h>
 #include <mbl/mbl_parse_block.h>
@@ -14,9 +16,6 @@
 // \file
 // \brief Run loopy belief propagation to estimate maximum marginal probabilities of all node states
 // \author Martin Roberts
-
-const unsigned mmn_lbp_solver::NHISTORY_=5;
-const unsigned mmn_lbp_solver::NCYCLE_DETECT_=7;
 
 //: Default constructor
 mmn_lbp_solver::mmn_lbp_solver()
@@ -58,9 +57,9 @@ void mmn_lbp_solver::set_arcs(unsigned num_nodes,const std::vector<mmn_arc>& arc
     arcs_ = arcs;
     //Verify consistency
     unsigned max_node=0;
-    for (unsigned i=0; i<arcs.size();++i)
+    for (auto arc : arcs)
     {
-        max_node=std::max(max_node,arcs[i].max_v());
+        max_node=std::max(max_node,arc.max_v());
     }
     if (nnodes_ != max_node+1)
     {
@@ -115,8 +114,8 @@ double mmn_lbp_solver::operator()(const std::vector<vnl_vector<double> >& node_c
         belief_[inode].fill(priorb);
 
         const std::vector<std::pair<unsigned,unsigned> >& neighbours=neighbourhoods[inode];
-        std::vector<std::pair<unsigned,unsigned> >::const_iterator neighIter=neighbours.begin();
-        std::vector<std::pair<unsigned,unsigned> >::const_iterator neighIterEnd=neighbours.end();
+        auto neighIter=neighbours.begin();
+        auto neighIterEnd=neighbours.end();
         while (neighIter != neighIterEnd)
         {
             unsigned arcId=neighIter->second;
@@ -146,7 +145,7 @@ double mmn_lbp_solver::operator()(const std::vector<vnl_vector<double> >& node_c
             }
             linkCosts*= -1.0; //convert to maximising log prob (not min -log prob)
             unsigned nstates=linkCosts.cols();
-            double dnstates=double(nstates);
+            auto dnstates=double(nstates);
             messages_[inode][neighIter->first].set_size(nstates);
             messages_[inode][neighIter->first].fill(std::log(1.0/dnstates)); //set all initial messages to uniform prob
 
@@ -206,9 +205,9 @@ double mmn_lbp_solver::operator()(const std::vector<vnl_vector<double> >& node_c
     for (unsigned inode=0; inode<nnodes_;++inode)
     {
         renormalise_log(belief_[inode]);
-        for (unsigned i=0; i<belief_[inode].size();i++)
+        for (double & i : belief_[inode])
         {
-            belief_[inode][i]=std::exp(belief_[inode][i]);
+            i=std::exp(i);
         }
     }
 
@@ -247,8 +246,8 @@ void mmn_lbp_solver::calculate_beliefs(std::vector<unsigned>& x)
             double b=node_costs_[inode][istate];
             //Now loop over neighbourhood
             const std::vector<std::pair<unsigned,unsigned> >& neighbours=graph_.node_data()[inode];
-            std::vector<std::pair<unsigned,unsigned> >::const_iterator neighIter=neighbours.begin();
-            std::vector<std::pair<unsigned,unsigned> >::const_iterator neighIterEnd=neighbours.end();
+            auto neighIter=neighbours.begin();
+            auto neighIterEnd=neighbours.end();
             while (neighIter != neighIterEnd)
             {
                 vnl_vector<double>& msgsFromNeigh = messages_[neighIter->first][inode];
@@ -302,9 +301,9 @@ double mmn_lbp_solver::best_solution_cost_in_history(std::vector<unsigned>& x)
 {
     double zbest=solution_cost(x);
     std::vector<double> solution_vals(soln_history_.size());
-    std::deque<std::vector<unsigned> >::iterator xIter=soln_history_.begin();
-    std::deque<std::vector<unsigned> >::iterator xIterEnd=soln_history_.end();
-    std::deque<std::vector<unsigned> >::iterator xIterBest=soln_history_.end()-1;
+    auto xIter=soln_history_.begin();
+    auto xIterEnd=soln_history_.end();
+    auto xIterBest=soln_history_.end()-1;
     while (xIter != xIterEnd)
     {
         double z = solution_cost(*xIter);
@@ -326,8 +325,8 @@ void mmn_lbp_solver::update_messages_to_neighbours(unsigned inode,
 
     const std::vector<std::pair<unsigned,unsigned> >& neighbours=graph_.node_data()[inode];
 
-    std::vector<std::pair<unsigned,unsigned> >::const_iterator neighIter=neighbours.begin();
-    std::vector<std::pair<unsigned,unsigned> >::const_iterator neighIterEnd=neighbours.end();
+    auto neighIter=neighbours.begin();
+    auto neighIterEnd=neighbours.end();
     while (neighIter != neighIterEnd) //Loop over all my neighbours
     {
         vnl_vector<double>& msgsToNeigh = messages_[inode][neighIter->first];
@@ -349,8 +348,8 @@ void mmn_lbp_solver::update_messages_to_neighbours(unsigned inode,
             {
                 double logProdIncoming=0.0;
                 //Compute product of all incoming messages to this node i from elsewhere (excluding target node j)
-                std::vector<std::pair<unsigned,unsigned> >::const_iterator tomeIter=neighbours.begin();
-                std::vector<std::pair<unsigned,unsigned> >::const_iterator tomeIterEnd=neighbours.end();
+                auto tomeIter=neighbours.begin();
+                auto tomeIterEnd=neighbours.end();
                 while (tomeIter != tomeIterEnd)
                 {
                     if (tomeIter != neighIter)
@@ -447,7 +446,7 @@ bool mmn_lbp_solver::continue_propagation(std::vector<unsigned>& x)
     {
         isCycling_=false;
         //Check for cycling condition
-        std::deque<std::vector<unsigned  > >::iterator finder=std::find(soln_history_.begin(),soln_history_.end(),x);
+        auto finder=std::find(soln_history_.begin(),soln_history_.end(),x);
         if (finder != soln_history_.end())
         {
             ++nrevisits_;
@@ -580,4 +579,3 @@ void mmn_lbp_solver::b_read(vsl_b_istream& bfs)
       return;
   }
 }
-

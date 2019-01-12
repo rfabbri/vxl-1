@@ -1,14 +1,13 @@
 // This is oxl/mvl/HomgPlane3D.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 //  \file
 
 #include <iostream>
 #include "HomgPlane3D.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_double_3.h>
 #include <mvl/Homg3D.h>
 #include <mvl/HomgPoint3D.h>
@@ -17,9 +16,7 @@
 //--------------------------------------------------------------
 //
 //: Constructor
-HomgPlane3D::HomgPlane3D ()
-{
-}
+HomgPlane3D::HomgPlane3D () = default;
 
 //--------------------------------------------------------------
 //
@@ -40,9 +37,7 @@ HomgPlane3D::HomgPlane3D (const vnl_double_3& n, double d)
 //--------------------------------------------------------------
 //
 //: Destructor
-HomgPlane3D::~HomgPlane3D ()
-{
-}
+HomgPlane3D::~HomgPlane3D () = default;
 
 //: closest point
 HomgPoint3D HomgPlane3D::closest_point(const HomgPoint3D& p) const

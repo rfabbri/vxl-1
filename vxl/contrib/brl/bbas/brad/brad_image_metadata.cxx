@@ -6,11 +6,13 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_awk.h>
 #include <vul/vul_file.h>
 #include <vul/vul_file_iterator.h>
-#include <vcl_cassert.h>
+#include <cassert>
 
 #include <vil/vil_image_resource.h>
 #include <vil/vil_load.h>
@@ -72,13 +74,13 @@ std::ostream&  operator<<(std::ostream& s, brad_image_metadata const& md)
      << "band_type = " << md.band_ << '\n'
      << "band_number = " << md.n_bands_ << '\n'
      << "abscal = ";
-   for (unsigned i = 0; i < md.abscal_.size(); i++) {
-     s << md.abscal_[i] << ", ";
+   for (double i : md.abscal_) {
+     s << i << ", ";
    }
    s << '\n';
    s << "effect_band_width = ";
-   for (unsigned i = 0; i < md.effect_band_width_.size(); i++) {
-     s << md.effect_band_width_[i] << ", ";
+   for (double i : md.effect_band_width_) {
+     s << i << ", ";
    }
    s << '\n';
    s << "number_of_bits = " << md.number_of_bits_ << std::endl;
@@ -182,9 +184,9 @@ bool brad_image_metadata::read_band_dependent_gain_offset()
   default_offset["SWIR"] = d_swir_offset;
   std::vector<std::string> sat_names;
   std::vector<std::string> band_types;
-  band_types.push_back("PAN");
-  band_types.push_back("MULTI");
-  band_types.push_back("SWIR");
+  band_types.emplace_back("PAN");
+  band_types.emplace_back("MULTI");
+  band_types.emplace_back("SWIR");
   for (unsigned i = 0; i < num_of_satllite; i++) {
     std::string sat_name, band_name;
     ifs >> sat_name;
@@ -272,9 +274,9 @@ bool brad_image_metadata::read_band_dependent_solar_irradiance()
   std::map<std::string, std::map<std::string, std::vector<double> > > sun_irrad_map;
   std::vector<std::string> sat_names;
   std::vector<std::string> band_types;
-  band_types.push_back("PAN");
-  band_types.push_back("MULTI");
-  band_types.push_back("SWIR");
+  band_types.emplace_back("PAN");
+  band_types.emplace_back("MULTI");
+  band_types.emplace_back("SWIR");
   for (unsigned i = 0; i < num_of_satellite; i++)
   {
     std::string sat_name, band_name;
@@ -372,7 +374,7 @@ bool brad_image_metadata::parse_from_imd(std::string const& filename)
     if (tag.compare("satId") == 0) {
       linestr >> tag;
       linestr >> satellite_name_;
-      satellite_name_ = satellite_name_.substr(satellite_name_.find_first_of("\"")+1, satellite_name_.find_last_of("\"")-1);
+      satellite_name_ = satellite_name_.substr(satellite_name_.find_first_of('\"')+1, satellite_name_.find_last_of('\"')-1);
       continue;
     }
     if (tag.compare("LLLon") == 0 || tag.compare("URLon") == 0 || tag.compare("ULLon") == 0 || tag.compare("LRLon") == 0) {
@@ -435,9 +437,9 @@ bool brad_image_metadata::parse_from_imd(std::string const& filename)
       linestr >> tag;
       std::string band_str;
       linestr >> band_str;
-      if (band_str.find("P") != std::string::npos) {
+      if (band_str.find('P') != std::string::npos) {
         band_ = "PAN";
-      } else if (band_str.find("S") != std::string::npos) {
+      } else if (band_str.find('S') != std::string::npos) {
         band_ = "SWIR";
       } else
         band_ = "MULTI";
@@ -518,7 +520,7 @@ bool brad_image_metadata::parse_from_imd_only(std::string const& filename)
     if (tag.compare("satId") == 0) {
       linestr >> tag;
       linestr >> satellite_name_;
-      satellite_name_ = satellite_name_.substr(satellite_name_.find_first_of("\"")+1, satellite_name_.find_last_of("\"")-1);
+      satellite_name_ = satellite_name_.substr(satellite_name_.find_first_of('\"')+1, satellite_name_.find_last_of('\"')-1);
       continue;
     }
     // image footprint and cover extent
@@ -580,9 +582,9 @@ bool brad_image_metadata::parse_from_imd_only(std::string const& filename)
       linestr >> tag;
       std::string band_str;
       linestr >> band_str;
-      if (band_str.find("P") != std::string::npos) {
+      if (band_str.find('P') != std::string::npos) {
         band_ = "PAN";
-      } else if (band_str.find("S") != std::string::npos) {
+      } else if (band_str.find('S') != std::string::npos) {
         band_ = "SWIR";
       } else
         band_ = "MULTI";
@@ -753,7 +755,7 @@ bool brad_image_metadata::parse_from_pvl_only(std::string const& filename)
     if (tag.compare("satelliteName") == 0) {
       linestr >> tag;
       linestr >> satellite_name_;
-      satellite_name_ = satellite_name_.substr(satellite_name_.find_first_of("\"")+1, satellite_name_.find_last_of("\"")-1);
+      satellite_name_ = satellite_name_.substr(satellite_name_.find_first_of('\"')+1, satellite_name_.find_last_of('\"')-1);
       continue;
     }
     // gain and offset
@@ -1034,7 +1036,6 @@ bool brad_image_metadata::parse_from_txt(std::string const& filename)
   double val;
 
   bool parsed_gain_offset = false, parsed_sun_irradiance = false;
-  bool parsed_abs_cal = false, parsed_effect_band = false;
   bool parsed_coverage_percentage_ = false;
   std::vector<double> gain_vec;
   std::vector<double> offset_vec;
@@ -1221,7 +1222,7 @@ bool brad_image_metadata::parse(std::string const& nitf_filename, std::string co
   }
 
   //cast to an nitf2_image
-  vil_nitf2_image *nitf_image = static_cast<vil_nitf2_image*>(image.ptr());
+  auto *nitf_image = static_cast<vil_nitf2_image*>(image.ptr());
 
   vpgl_nitf_rational_camera nitf_cam(nitf_image, false);
 
@@ -1355,7 +1356,6 @@ bool brad_image_metadata::parse(std::string const& nitf_filename, std::string co
   // Parse from metadata file for further improvement
   // Also set band dependent adjustment factors gain and offset, could either obtained from hardcoded table or specified from
   // user prepared text metadata file
-  double solar_irrad = 1500.0;
   std::vector<double> solar_irrads; // for multi-spectral imagery there are multiple values
   bool parsed_sun_irradiance = false;
   bool parsed_gain_offset = false;
@@ -1488,7 +1488,7 @@ bool brad_image_metadata::parse(std::string const& nitf_filename, std::string co
   // normalize the soalr irradiance by earth-sun distance
   double d = brad_sun_distance(year, month, day, hour, min);
   double d_sqr = d*d;
-  std::vector<double>::iterator vit = this->normal_sun_irradiance_values_.begin();
+  auto vit = this->normal_sun_irradiance_values_.begin();
   for (; vit != this->normal_sun_irradiance_values_.end(); ++vit)
     *vit /= d_sqr;
 
@@ -1599,7 +1599,7 @@ bool brad_image_metadata::parse_from_meta_file(std::string const& meta_file)
   // normalize the soalr irradiance by earth-sun distance
   double d = brad_sun_distance(this->t_.year, this->t_.month, this->t_.day, this->t_.hour, this->t_.min);
   double d_sqr = d*d;
-  std::vector<double>::iterator vit = this->normal_sun_irradiance_values_.begin();
+  auto vit = this->normal_sun_irradiance_values_.begin();
   for (; vit != this->normal_sun_irradiance_values_.end(); ++vit)
     *vit /= d_sqr;
 
@@ -1777,7 +1777,7 @@ void brad_image_metadata::print_out_radiometric_parameter()
   }
   std::cout << "]" << std::endl;
   std::cout << "Band dependent relative adjustment factors -- GAIN: (" << this->band_ << "): " << std::endl;
-  std::vector<double>::iterator vit = this->gains_.begin();
+  auto vit = this->gains_.begin();
   for (; vit != this->gains_.end(); ++vit)
     std::cout << *vit << ' ';
   std::cout << "]\n";
@@ -1794,9 +1794,8 @@ void brad_image_metadata::print_out_radiometric_parameter()
 void brad_image_metadata::print_out_solar_irradiance()
 {
   std::cout << "Satellite normalized solar irradiance: " << std::endl;
-  for (std::vector<double>::iterator vit = this->normal_sun_irradiance_values_.begin();
-       vit != this->normal_sun_irradiance_values_.end(); ++vit)
-    std::cout << *vit << ' ';
+  for (double & normal_sun_irradiance_value : this->normal_sun_irradiance_values_)
+    std::cout << normal_sun_irradiance_value << ' ';
   std::cout << "]\n";
   return;
 }

@@ -15,8 +15,6 @@
 #include <vil/vil_plane.h>
 #include <vil/vil_resample_bilin.h>
 #include <vil/vil_convert.h>
-#include <vil/vil_math.h>
-#include <vil/vil_save.h>
 
 //: this process extracts the filter bank of an image (assumes a float image in the range [0, 1])
 //  and saves it in the filter_bank object of the passed texture_classifier instance
@@ -24,9 +22,9 @@
 bool sdet_extract_filter_bank_process_cons(bprb_func_process& pro)
 {
   std::vector<std::string> input_types;
-  input_types.push_back("sdet_texture_classifier_sptr"); // classifier instance
-  input_types.push_back("vcl_string"); // input image name
-  input_types.push_back("vcl_string");   // filter bank folder
+  input_types.emplace_back("sdet_texture_classifier_sptr"); // classifier instance
+  input_types.emplace_back("vcl_string"); // input image name
+  input_types.emplace_back("vcl_string");   // filter bank folder
   if (!pro.set_input_types(input_types))
     return false;
 
@@ -62,8 +60,8 @@ bool sdet_extract_filter_bank_process(bprb_func_process& pro)
 bool sdet_extract_filter_bank_img_process_cons(bprb_func_process& pro)
 {
   std::vector<std::string> input_types;
-  input_types.push_back("sdet_texture_classifier_sptr"); // classifier instance
-  input_types.push_back("vil_image_view_base_sptr"); // input image
+  input_types.emplace_back("sdet_texture_classifier_sptr"); // classifier instance
+  input_types.emplace_back("vil_image_view_base_sptr"); // input image
   if (!pro.set_input_types(input_types))
     return false;
 
@@ -100,12 +98,12 @@ bool sdet_extract_filter_bank_img_process(bprb_func_process& pro)
 bool sdet_add_to_filter_bank_process_cons(bprb_func_process& pro)
 {
   std::vector<std::string> input_types;
-  input_types.push_back("sdet_texture_classifier_sptr"); // classifier instance
-  input_types.push_back("vcl_string");   // input image name
-  input_types.push_back("unsigned");     // the plane to extract the filters from
-  input_types.push_back("vcl_string");   // filter bank folder
-  input_types.push_back("vcl_string");   // filter name : unique name to be used to write the response to filter folder
-  input_types.push_back("bool");         // option to turn on gauss smoothing on image
+  input_types.emplace_back("sdet_texture_classifier_sptr"); // classifier instance
+  input_types.emplace_back("vcl_string");   // input image name
+  input_types.emplace_back("unsigned");     // the plane to extract the filters from
+  input_types.emplace_back("vcl_string");   // filter bank folder
+  input_types.emplace_back("vcl_string");   // filter name : unique name to be used to write the response to filter folder
+  input_types.emplace_back("bool");         // option to turn on gauss smoothing on image
   if (!pro.set_input_types(input_types))
     return false;
 
@@ -123,7 +121,7 @@ bool sdet_add_to_filter_bank_process(bprb_func_process& pro)
   // get inputs
   sdet_texture_classifier_sptr tc_ptr = pro.get_input<sdet_texture_classifier_sptr>(0);
   std::string name = pro.get_input<std::string>(1);
-  unsigned n = pro.get_input<unsigned>(2);
+  auto n = pro.get_input<unsigned>(2);
   std::string folder = pro.get_input<std::string>(3);
   std::string res_name = pro.get_input<std::string>(4);
   bool is_smooth = pro.get_input<bool>(5);
@@ -131,12 +129,12 @@ bool sdet_add_to_filter_bank_process(bprb_func_process& pro)
   vil_image_view_base_sptr img_sptr = vil_load(name.c_str());
 
   vil_image_view<float> img_f;
-  if (vil_image_view<vxl_byte>* img_ptr = dynamic_cast<vil_image_view<vxl_byte>*>(img_sptr.ptr())) {
+  if (auto* img_ptr = dynamic_cast<vil_image_view<vxl_byte>*>(img_sptr.ptr())) {
     std::cout << " loaded image, ni: " << img_ptr->ni() << " " << img_ptr->nj() << " nplanes: " << img_ptr->nplanes()
              << " with pixel format: " << img_ptr->pixel_format() << std::endl;
     vil_image_view<vxl_byte> img_band = vil_plane(*img_ptr, n);
     vil_convert_stretch_range_limited(img_band, img_f, (vxl_byte)0, (vxl_byte)255, 0.0f, 1.0f);
-  }else if (vil_image_view<float>* img_ptr = dynamic_cast<vil_image_view<float>*>(img_sptr.ptr())) {
+  }else if (auto* img_ptr = dynamic_cast<vil_image_view<float>*>(img_sptr.ptr())) {
     std::cout << " loaded image, ni: " << img_ptr->ni() << " " << img_ptr->nj() << " nplanes: " << img_ptr->nplanes()
              << " with pixel format: " << img_ptr->pixel_format() << std::endl;
     img_f = vil_plane(*img_ptr, n);
@@ -169,9 +167,9 @@ bool sdet_add_to_filter_bank_process(bprb_func_process& pro)
 bool sdet_add_to_filter_bank_process2_cons(bprb_func_process& pro)
 {
   std::vector<std::string> input_types;
-  input_types.push_back("sdet_texture_classifier_sptr"); // classifier instance
-  input_types.push_back("vcl_string");   // input image name
-  input_types.push_back("vcl_string");   // filter bank folder
+  input_types.emplace_back("sdet_texture_classifier_sptr"); // classifier instance
+  input_types.emplace_back("vcl_string");   // input image name
+  input_types.emplace_back("vcl_string");   // filter bank folder
   if (!pro.set_input_types(input_types))
     return false;
 
@@ -279,11 +277,11 @@ bool sdet_add_to_filter_bank_process2(bprb_func_process& pro)
 bool sdet_add_responses_to_filter_bank_process_cons(bprb_func_process& pro)
 {
   std::vector<std::string> input_types;
-  input_types.push_back("sdet_texture_classifier_sptr"); // classifier instance
-  input_types.push_back("vcl_string");   // input image name
-  input_types.push_back("vil_image_view_base_sptr");     // input image
-  input_types.push_back("vcl_string");   // filter bank folder
-  input_types.push_back("vcl_string");   // filter name : unique name to be used to write the response to filter folder  (the id of the filter bank will be appended to this name)
+  input_types.emplace_back("sdet_texture_classifier_sptr"); // classifier instance
+  input_types.emplace_back("vcl_string");   // input image name
+  input_types.emplace_back("vil_image_view_base_sptr");     // input image
+  input_types.emplace_back("vcl_string");   // filter bank folder
+  input_types.emplace_back("vcl_string");   // filter name : unique name to be used to write the response to filter folder  (the id of the filter bank will be appended to this name)
   if (!pro.set_input_types(input_types))
     return false;
 
@@ -291,7 +289,6 @@ bool sdet_add_responses_to_filter_bank_process_cons(bprb_func_process& pro)
   return pro.set_output_types(output_types);
 }
 
-#include <vil/vil_math.h>
 bool sdet_add_responses_to_filter_bank_process(bprb_func_process& pro)
 {
   if (!pro.verify_inputs())
@@ -333,4 +330,3 @@ bool sdet_add_responses_to_filter_bank_process(bprb_func_process& pro)
 
   return true;
 }
-

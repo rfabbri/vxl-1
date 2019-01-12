@@ -4,7 +4,9 @@
 #include "sdet_nonmax_suppression.h"
 //:
 // \file
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsol/vsol_point_2d.h>
 #include <vsol/vsol_line_2d.h>
 #include <vgl/vgl_point_2d.h>
@@ -12,7 +14,7 @@
 #include <vnl/algo/vnl_svd.h>
 #include <vgl/vgl_homg_point_2d.h>
 #include <vgl/algo/vgl_homg_operators_2d.h>
-#include <vcl_cassert.h>
+#include <cassert>
 
 //---------------------------------------------------------------
 // Constructors
@@ -201,8 +203,7 @@ sdet_nonmax_suppression::sdet_nonmax_suppression(sdet_nonmax_suppression_params&
 
 //:Default Destructor
 sdet_nonmax_suppression::~sdet_nonmax_suppression()
-{
-}
+= default;
 
 //-------------------------------------------------------------------------
 //: Apply the algorithm

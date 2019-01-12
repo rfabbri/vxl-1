@@ -15,8 +15,10 @@
 #include <rsdl/rsdl_kd_tree.h>
 #include <rsdl/rsdl_point.h>
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 static const double TOL = .01;
 
@@ -328,7 +330,7 @@ static void create_new_track(
     const bundler_inters_feature_sptr &f2,
     bundler_inters_track_sptr &new_track)
 {
-    assert(new_track != VXL_NULLPTR);
+    assert(new_track != nullptr);
     assert(!f1->visited);
     assert(!f2->visited);
 

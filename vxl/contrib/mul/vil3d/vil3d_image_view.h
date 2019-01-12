@@ -1,9 +1,6 @@
 // This is mul/vil3d/vil3d_image_view.h
 #ifndef vil3d_image_view_h_
 #define vil3d_image_view_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief A base class reference-counting view of some image data.
@@ -13,8 +10,10 @@
 #include <string>
 #include <iostream>
 #include <cstddef>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil3d/vil3d_image_view_base.h>
 #include <vil/vil_memory_chunk.h>
 #include <vil/vil_pixel_format.h>
@@ -37,7 +36,7 @@ template <class T>
 class vil3d_image_view : public vil3d_image_view_base
 {
  private:
-  VCL_SAFE_BOOL_DEFINE;
+
  protected:
   //: Pointer to pixel at origin.
   T * top_left_;
@@ -54,7 +53,7 @@ class vil3d_image_view : public vil3d_image_view_base
   vil_memory_chunk_sptr ptr_;
 
   //: Disconnect this view from the underlying data,
-  void release_memory() { ptr_ = VXL_NULLPTR; }
+  void release_memory() { ptr_ = nullptr; }
 
  public:
 
@@ -114,7 +113,7 @@ class vil3d_image_view : public vil3d_image_view_base
   }
 
   //  Destructor
-  virtual ~vil3d_image_view();
+  ~vil3d_image_view() override;
 
   // Standard container stuff
   // This assumes that the data is arranged contiguously.
@@ -158,12 +157,12 @@ class vil3d_image_view : public vil3d_image_view_base
   inline std::ptrdiff_t planestep() const { return planestep_; }
 
   //: Cast to bool is true if pointing at some data.
-  operator safe_bool () const
-    { return (top_left_ != (T*)VXL_NULLPTR)? VCL_SAFE_BOOL_TRUE : VXL_NULLPTR; }
+  explicit operator bool () const
+    { return (top_left_ != (T*)nullptr)? true : false; }
 
   //: Return false if pointing at some data.
   bool operator!() const
-    { return (top_left_ != (T*)VXL_NULLPTR)? false : true; }
+    { return (top_left_ != (T*)nullptr)? false : true; }
 
   //: The number of bytes in the data
   inline std::size_t size_bytes() const { return size() * sizeof(T); }
@@ -208,18 +207,18 @@ class vil3d_image_view : public vil3d_image_view_base
 
   //: resize current planes to ni x nj x nk
   // If already correct size, this function returns quickly
-  virtual void set_size(unsigned ni, unsigned nj, unsigned nk);
+  void set_size(unsigned ni, unsigned nj, unsigned nk) override;
 
   //: resize to ni x nj x nk x nplanes
   // If already correct size, this function returns quickly
-  virtual void set_size(unsigned ni, unsigned nj, unsigned nk, unsigned nplanes);
+  void set_size(unsigned ni, unsigned nj, unsigned nk, unsigned nplanes) override;
 
   //: Make a copy of the data in src and set this to view it
   void deep_copy(const vil3d_image_view<T>& src);
 
   //: Make empty.
   // Disconnects view from underlying data.
-  inline void clear() { release_memory(); ni_=nj_=nk_=nplanes_=0; top_left_=VXL_NULLPTR; }
+  inline void clear() { release_memory(); ni_=nj_=nk_=nplanes_=0; top_left_=nullptr; }
 
   //: Set this view to look at someone else's memory data.
   //  If the data goes out of scope then this view could be invalid, and
@@ -236,17 +235,17 @@ class vil3d_image_view : public vil3d_image_view_base
   void fill(T value);
 
   //: Print a 1-line summary of contents
-  virtual void print(std::ostream&) const;
+  void print(std::ostream&) const override;
 
   //: Return class name
-  virtual std::string is_a() const;
+  std::string is_a() const override;
 
   //: True if this is (or is derived from) class s
-  virtual bool is_class(std::string const& s) const;
+  bool is_class(std::string const& s) const override;
 
   //: Return a description of the concrete data pixel type.
   // The value corresponds directly to pixel_type.
-  inline vil_pixel_format pixel_format() const { return vil_pixel_format_of(T()); }
+  inline vil_pixel_format pixel_format() const override { return vil_pixel_format_of(T()); }
 
   //: True if they share same view of same image data.
   //  This does not do a deep equality on image data. If the images point

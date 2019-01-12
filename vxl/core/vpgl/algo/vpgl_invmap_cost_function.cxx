@@ -3,7 +3,10 @@
 #include "vpgl_invmap_cost_function.h"
 //:
 // \file
-#include <vcl_compiler.h>
+#include <vcl_compiler_detection.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vcl_deprecated.h>
 
 vpgl_invmap_cost_function::
@@ -176,4 +179,3 @@ point_3d(vnl_vector<double> const& x, vnl_vector_fixed<double, 3>& xyz)
     }
   }
 }
-

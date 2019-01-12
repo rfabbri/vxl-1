@@ -11,8 +11,9 @@
 #include <bvxm/bvxm_world_params.h>
 #include <bvxm/bvxm_voxel_world.h>
 
-#include <vcl_string.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <brdb/brdb_value.h>
 #include <brdb/brdb_selection.h>
@@ -45,7 +46,6 @@
 static void test_brec_create_mog_image_process()
 {
   typedef bvxm_voxel_traits<APM_MOG_RGB>::voxel_datatype mog_type_rgb;
-  typedef bvxm_voxel_traits<APM_MOG_RGB>::obs_datatype obs_datatype_rgb;
 
   typedef bvxm_voxel_traits<APM_MOG_GREY>::voxel_datatype mog_type;
   typedef bvxm_voxel_traits<APM_MOG_GREY>::obs_datatype obs_datatype;
@@ -86,7 +86,7 @@ static void test_brec_create_mog_image_process()
 
   //DECLARE_FUNC_CONS(brec_create_mog_image_process);
 
-  REGISTER_DATATYPE(vcl_string);
+  REGISTER_DATATYPE_LONG_FORM(std::string,vcl_string);
   REGISTER_DATATYPE(float);
   REGISTER_DATATYPE(unsigned);
   REGISTER_DATATYPE(bbgm_image_sptr);
@@ -113,12 +113,12 @@ static void test_brec_create_mog_image_process()
   good = good && bprb_batch_process_manager::instance()->commit_output(0, id_img1);
   TEST("run create mog image process", good ,true);
   brdb_query_aptr Q_img = brdb_query_comp_new("id", brdb_query::EQ, id_img1);
-  brdb_selection_sptr S_img = DATABASE->select("bbgm_image_sptr_data", vcl_move(Q_img));
+  brdb_selection_sptr S_img = DATABASE->select("bbgm_image_sptr_data", std::move(Q_img));
   TEST("output image is in db", S_img->size(), 1);
   brdb_value_sptr value_img;
   TEST("output image is in db", S_img->get_value(std::string("value"), value_img), true);
-  TEST("output image is non-null", (value_img != VXL_NULLPTR) ,true);
-  brdb_value_t<bbgm_image_sptr>* result = static_cast<brdb_value_t<bbgm_image_sptr>* >(value_img.ptr());
+  TEST("output image is non-null", (value_img != nullptr) ,true);
+  auto* result = static_cast<brdb_value_t<bbgm_image_sptr>* >(value_img.ptr());
   bbgm_image_sptr out_exp_img = result->value();
   TEST("output image is a valid bbgm image", !out_exp_img, false);
 
@@ -142,7 +142,7 @@ static void test_brec_create_mog_image_process()
   good = good && bprb_batch_process_manager::instance()->commit_output(1, id_mog);
   TEST("run create mog image process", good ,true);
   brdb_query_aptr Q_img1 = brdb_query_comp_new("id", brdb_query::EQ, id_mog);
-  brdb_selection_sptr S_img1 = DATABASE->select("bbgm_image_sptr_data", Q_img1);
+  brdb_selection_sptr S_img1 = DATABASE->select("bbgm_image_sptr_data", std::move(Q_img1));
   TEST("output image is in db", S_img1->size(), 1);
   brdb_value_sptr value_img1;
   TEST("output image is in db", S_img1->get_value(std::string("value"), value_img1), true);
@@ -176,7 +176,7 @@ static void test_brec_create_mog_image_process()
 
     unsigned id_mean; bprb_batch_process_manager::instance()->commit_output(0, id_mean);
     Q_img1 = brdb_query_comp_new("id", brdb_query::EQ, id_mean);
-    S_img1 = DATABASE->select("vil_image_view_base_sptr_data", Q_img1);
+    S_img1 = DATABASE->select("vil_image_view_base_sptr_data", std::move(Q_img1));
     S_img1->get_value(std::string("value"), value_img1);
     result = static_cast<brdb_value_t<vil_image_view_base_sptr>* >(value_img1.ptr());
 
@@ -200,7 +200,7 @@ static void test_brec_create_mog_image_process()
 
     bprb_batch_process_manager::instance()->commit_output(0, id_mean);
     Q_img1 = brdb_query_comp_new("id", brdb_query::EQ, id_mean);
-    S_img1 = DATABASE->select("vil_image_view_base_sptr_data", Q_img1);
+    S_img1 = DATABASE->select("vil_image_view_base_sptr_data", std::move(Q_img1));
     S_img1->get_value(std::string("value"), value_img1);
     result = static_cast<brdb_value_t<vil_image_view_base_sptr>* >(value_img1.ptr());
 

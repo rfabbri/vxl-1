@@ -5,7 +5,10 @@
 
 #include "rgrl_converge_status.h"
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 rgrl_converge_status::
@@ -68,9 +71,7 @@ rgrl_converge_status( bool     in_has_converged,
 }
 
 rgrl_converge_status::
-~rgrl_converge_status()
-{
-}
+~rgrl_converge_status() = default;
 
 
 bool

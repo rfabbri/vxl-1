@@ -3,7 +3,10 @@
 #include <bsta/bsta_histogram.h>
 #include <vil/vil_image_view.h>
 #include <vnl/vnl_math.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 vnl_vector<double> brad_grad_int_feature_vector::
 operator()(vil_image_view<float> const& view) const
@@ -28,8 +31,8 @@ operator()(vil_image_view<float> const& view) const
     ret[b]=h_int.p(b);
     ret[b+nbins_+1] = h_grad.p(b);
   }
-  float l2e = static_cast<float>(vnl_math::log2e);
-  float nb = static_cast<float>(nbins_);
+  auto l2e = static_cast<float>(vnl_math::log2e);
+  auto nb = static_cast<float>(nbins_);
   float max_entropy = l2e*std::log(nb);
   ret[nbins_]= h_int.entropy()/max_entropy;
   ret[2*nbins_+1]= h_grad.entropy()/max_entropy;

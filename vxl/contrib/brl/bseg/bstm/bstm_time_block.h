@@ -18,7 +18,9 @@
 #include <bstm/basic/bstm_block_id.h>
 #include <boxm2/basic/boxm2_array_1d.h>
 #include <vnl/vnl_vector_fixed.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //smart pointer stuff
 #include <vbl/vbl_ref_count.h>
@@ -33,16 +35,16 @@ class bstm_time_block : public vbl_ref_count
  public:
 
   //: creates possibly refined time block from existing data
-  bstm_time_block(bstm_block_id id, bstm_block_metadata data, char* buffer, std::size_t length);
+  bstm_time_block(const bstm_block_id& id, bstm_block_metadata data, char* buffer, std::size_t length);
 
   //: creates possibly refined time block with specified number of elements
-  bstm_time_block(bstm_block_id id, bstm_block_metadata data, unsigned num_el);
+  bstm_time_block(const bstm_block_id& id, bstm_block_metadata data, unsigned num_el);
 
   //: creates empty block from metadata
   bstm_time_block(bstm_block_metadata data);
 
   //: default destructor
-  virtual ~bstm_time_block() { if (buffer_) delete[] buffer_;}
+  ~bstm_time_block() override { if (buffer_) delete[] buffer_;}
 
   //: returns a cell's the time tree containing the specified local time t.
   uchar8&                   get_cell_tt(int cell_data_offset, double local_t);

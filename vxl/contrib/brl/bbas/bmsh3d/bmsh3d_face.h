@@ -19,8 +19,10 @@
 #include <vector>
 #include <iostream>
 #include <sstream>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_vector_3d.h>
@@ -69,7 +71,7 @@ class bmsh3d_face : public vispt_elm
  public:
   //###### Constructor/Destructor ######
   bmsh3d_face() {
-    halfedge_ = VXL_NULLPTR;
+    halfedge_ = nullptr;
     i_value_  = 0;
     id_       = -1;
   }
@@ -79,16 +81,16 @@ class bmsh3d_face : public vispt_elm
     id_       = -1;
   }
   bmsh3d_face(const int id) {
-    halfedge_ = VXL_NULLPTR;
+    halfedge_ = nullptr;
     id_         = id;
     i_value_  = 0;
   }
 
-  virtual ~bmsh3d_face() {
+  ~bmsh3d_face() override {
     vertices_.clear();
     //  make sure that all halfedges are deleted before the destructor.
     //  You should use bmsh3d_mesh::delete_face to delete a face.
-    assert (halfedge_ == VXL_NULLPTR);
+    assert (halfedge_ == nullptr);
   }
 
   //###### Data access functions ######
@@ -166,7 +168,7 @@ class bmsh3d_face : public vispt_elm
         return vertices_[i-1];
     }
     assert (0);
-    return VXL_NULLPTR;
+    return nullptr;
   }
   bmsh3d_vertex* _ifs_next_V(bmsh3d_vertex* inputV) const {
     if (vertices_[vertices_.size()-1] == inputV)
@@ -177,14 +179,13 @@ class bmsh3d_face : public vispt_elm
         return vertices_[i+1];
     }
     assert (0);
-    return VXL_NULLPTR;
+    return nullptr;
   }
   //: track incident vertices and reset ifs_face::vertices_[]
   void _ifs_track_ordered_vertices();
 
   void _ifs_assign_Vs_vid_by_id() {
-    for (unsigned int i=0; i<vertices_.size(); i++) {
-      bmsh3d_vertex* V = vertices_[i];
+    for (auto V : vertices_) {
       V->set_vid(V->id());
     }
   }
@@ -228,7 +229,7 @@ class bmsh3d_face : public vispt_elm
 
   //###### Other functions ######
 
-  virtual void getInfo(std::ostringstream& ostrm);
+  void getInfo(std::ostringstream& ostrm) override;
 
   //###### For triangular face only ######
   TRIFACE_TYPE tri_get_topo_type() const;

@@ -88,8 +88,6 @@ _tiffReadProc(thandle_t fd, void* buf, tmsize_t size)
                 if (count <= 0)
                         break;
         }
-        if (count < 0)
-                return (tmsize_t)-1;
         return (tmsize_t) bytes_read;
 }
 
@@ -116,8 +114,6 @@ _tiffWriteProc(thandle_t fd, void* buf, tmsize_t size)
                 if (count <= 0)
                         break;
         }
-        if (count < 0)
-                return (tmsize_t)-1;
         return (tmsize_t) bytes_written;
 	/* return ((tmsize_t) write(fdh.fd, buf, bytes_total)); */
 }
@@ -298,9 +294,9 @@ TIFFOpenW(const wchar_t* name, const char* mode)
 
 	tif = TIFFFdOpen((int)fd, (mbname != NULL) ? mbname : "<unknown>",
 			 mode);
-	
+
 	_TIFFfree(mbname);
-	
+
 	if(!tif)
 		close(fd);
 	return tif;

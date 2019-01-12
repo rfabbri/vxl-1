@@ -12,8 +12,10 @@
 //   2 May 2001 IMS Converted to VXL
 // \endverbatim
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vsl/vsl_indent.h>
 #include <vsl/vsl_binary_loader.h>
 
@@ -166,4 +168,3 @@ double clsfy_test_error(const clsfy_classifier_base &classifier,
   if (n_class==0) return -1.0;
   return ((double) n_bad) / ((double) n_class);
 }
-

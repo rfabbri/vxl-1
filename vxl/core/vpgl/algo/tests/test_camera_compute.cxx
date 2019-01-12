@@ -3,7 +3,9 @@
 #if 0
 #include <testlib/testlib_root_dir.h>
 #endif
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_fwd.h>
 #include <vnl/vnl_vector_fixed.h>
 #include <vnl/vnl_matrix_fixed.h>
@@ -29,18 +31,19 @@ static void test_camera_compute_setup()
   vnl_vector_fixed<double,4> r2( -1, 4, -2, 0 );
   vpgl_affine_camera<double> C1( r1, r2 );
   std::vector< vgl_point_3d<double> > world_pts;
-  world_pts.push_back( vgl_point_3d<double>( 1, 0, -1 ) );
-  world_pts.push_back( vgl_point_3d<double>( 6, 1, 2 ) );
-  world_pts.push_back( vgl_point_3d<double>( -1, -3, -2 ) );
-  world_pts.push_back( vgl_point_3d<double>( 0, 0, 2 ) );
-  world_pts.push_back( vgl_point_3d<double>( 2, -1, -5 ) );
-  world_pts.push_back( vgl_point_3d<double>( 8, 1, -2 ) );
-  world_pts.push_back( vgl_point_3d<double>( -4, -4, 5 ) );
-  world_pts.push_back( vgl_point_3d<double>( -1, 3, 4 ) );
-  world_pts.push_back( vgl_point_3d<double>( 1, 2, -7 ) );
+  world_pts.emplace_back( 1, 0, -1 );
+  world_pts.emplace_back( 6, 1, 2 );
+  world_pts.emplace_back( -1, -3, -2 );
+  world_pts.emplace_back( 0, 0, 2 );
+  world_pts.emplace_back( 2, -1, -5 );
+  world_pts.emplace_back( 8, 1, -2 );
+  world_pts.emplace_back( -4, -4, 5 );
+  world_pts.emplace_back( -1, 3, 4 );
+  world_pts.emplace_back( 1, 2, -7 );
   std::vector< vgl_point_2d<double> > image_pts;
-  for ( unsigned int i = 0; i < world_pts.size(); ++i )
-    image_pts.push_back( C1.project( vgl_homg_point_3d<double>(world_pts[i]) ) );
+  image_pts.reserve(world_pts.size());
+for (const auto & world_pt : world_pts)
+    image_pts.emplace_back(C1.project( vgl_homg_point_3d<double>(world_pt) ) );
 
   vpgl_affine_camera<double> C1e;
   vpgl_affine_camera_compute::compute( image_pts, world_pts, C1e );
@@ -120,12 +123,12 @@ static void test_perspective_compute_direct_linear_transform()
 {
   //Create the world points
   std::vector< vgl_point_3d<double> > world_pts;
-  world_pts.push_back( vgl_point_3d<double>( 1, 0, -1 ) );
-  world_pts.push_back( vgl_point_3d<double>( 6, 1, 2 ) );
-  world_pts.push_back( vgl_point_3d<double>( -1, -3, -2 ) );
-  world_pts.push_back( vgl_point_3d<double>( 0, 0, 2 ) );
-  world_pts.push_back( vgl_point_3d<double>( 2, -1, -5 ) );
-  world_pts.push_back( vgl_point_3d<double>( 8, 1, -2 ) );
+  world_pts.emplace_back( 1, 0, -1 );
+  world_pts.emplace_back( 6, 1, 2 );
+  world_pts.emplace_back( -1, -3, -2 );
+  world_pts.emplace_back( 0, 0, 2 );
+  world_pts.emplace_back( 2, -1, -5 );
+  world_pts.emplace_back( 8, 1, -2 );
 
   //Come up with the projection matrix.
   vnl_matrix_fixed<double, 3, 4> proj;
@@ -135,18 +138,18 @@ static void test_perspective_compute_direct_linear_transform()
 
   //Do the projection for each of the points
   std::vector< vgl_point_2d<double> > image_pts;
-  for (unsigned int i = 0; i < world_pts.size(); i++) {
+  for (auto & i : world_pts) {
     vnl_vector_fixed<double, 4> world_pt;
-    world_pt[0] = world_pts[i].x();
-    world_pt[1] = world_pts[i].y();
-    world_pt[2] = world_pts[i].z();
+    world_pt[0] = i.x();
+    world_pt[1] = i.y();
+    world_pt[2] = i.z();
     world_pt[3] = 1.0;
 
     vnl_vector_fixed<double, 3> projed_pt = proj * world_pt;
 
-    image_pts.push_back(vgl_point_2d<double>(
+    image_pts.emplace_back(
         projed_pt[0] / projed_pt[2],
-        projed_pt[1] / projed_pt[2]));
+        projed_pt[1] / projed_pt[2]);
   }
 
   //Calculate the projected points
@@ -177,17 +180,17 @@ static void test_perspective_compute_ground()
 
   // generate some points on the ground
   std::vector<vgl_point_2d<double> > ground_pts;
-  ground_pts.push_back( vgl_point_2d<double>( 14.3256, 5.7912 ) );
-  ground_pts.push_back( vgl_point_2d<double>( 14.3256, 9.4488 ) );
-  ground_pts.push_back( vgl_point_2d<double>( 14.3256, 15.24 ) );
-  ground_pts.push_back( vgl_point_2d<double>( 5.7404, 9.398 ) );
-  ground_pts.push_back( vgl_point_2d<double>( 22.8092, 9.398 ) );
+  ground_pts.emplace_back( 14.3256, 5.7912 );
+  ground_pts.emplace_back( 14.3256, 9.4488 );
+  ground_pts.emplace_back( 14.3256, 15.24 );
+  ground_pts.emplace_back( 5.7404, 9.398 );
+  ground_pts.emplace_back( 22.8092, 9.398 );
 
   // project them to the image
   std::vector< vgl_point_2d<double> > image_pts;
-  for ( size_t k = 0; k < ground_pts.size(); ++k )
+  for (auto & ground_pt : ground_pts)
   {
-    vgl_homg_point_3d<double> world_pt(ground_pts[k].x(), ground_pts[k].y(), 0, 1);
+    vgl_homg_point_3d<double> world_pt(ground_pt.x(), ground_pt.y(), 0, 1);
 
     vgl_point_2d<double> img_pt = trueP.project(world_pt);
     assert( img_pt.x() >= 0 );
@@ -217,17 +220,17 @@ static void test_calibration_compute_natural()
 
   // generate some points on the ground
   std::vector<vgl_point_2d<double> > ground_pts;
-  ground_pts.push_back( vgl_point_2d<double>( 14.3256, 5.7912 ) );
-  ground_pts.push_back( vgl_point_2d<double>( 14.3256, 9.4488 ) );
-  ground_pts.push_back( vgl_point_2d<double>( 14.3256, 15.24 ) );
-  ground_pts.push_back( vgl_point_2d<double>( 5.7404, 9.398 ) );
-  ground_pts.push_back( vgl_point_2d<double>( 22.8092, 9.398 ) );
+  ground_pts.emplace_back( 14.3256, 5.7912 );
+  ground_pts.emplace_back( 14.3256, 9.4488 );
+  ground_pts.emplace_back( 14.3256, 15.24 );
+  ground_pts.emplace_back( 5.7404, 9.398 );
+  ground_pts.emplace_back( 22.8092, 9.398 );
 
   // project them to the image
   std::vector< vgl_point_2d<double> > image_pts;
-  for ( size_t k = 0; k < ground_pts.size(); ++k )
+  for (auto & ground_pt : ground_pts)
   {
-    vgl_homg_point_3d<double> world_pt( ground_pts[k].x(), ground_pts[k].y(), 0, 1 );
+    vgl_homg_point_3d<double> world_pt( ground_pt.x(), ground_pt.y(), 0, 1 );
 
     vgl_point_2d<double> img_pt = trueP.project( world_pt );
     assert( img_pt.x() >= 0 );

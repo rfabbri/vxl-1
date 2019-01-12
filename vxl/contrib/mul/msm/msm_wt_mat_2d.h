@@ -8,8 +8,10 @@
 #include <iostream>
 #include <iosfwd>
 #include <string>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_fwd.h>
 #include <vgl/vgl_vector_2d.h>
 
@@ -32,7 +34,7 @@ class msm_wt_mat_2d
   { assert(m11_>=0); assert(m22_>=0);}
 
   // Destructor
-  ~msm_wt_mat_2d() {}
+  ~msm_wt_mat_2d() = default;
 
   //: Sets axis (eigenvector) of matrix and var along each
   //  Sets to s1*u*u' + s2*v*v', where u is the unit vector

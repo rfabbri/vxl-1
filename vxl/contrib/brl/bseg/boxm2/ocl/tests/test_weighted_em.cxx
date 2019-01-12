@@ -16,7 +16,9 @@
 #include <bocl/bocl_kernel.h>
 #include <bocl/bocl_mem.h>
 #include <bocl/bocl_device.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <bsta/algo/bsta_sigma_normalizer.h>
 #include <boxm2/cpp/algo/boxm2_mog3_grey_processor.h>
@@ -51,9 +53,9 @@ void mog_samples(float* samps)
 void test_weighted_em()
 {
   //create the observations and their weights
-  float* obs = new float[50];
+  auto* obs = new float[50];
   mog_samples(obs);
-  float* vis = new float[50];
+  auto* vis = new float[50];
   for (int i=0; i<50; ++i)
     vis[i] = (float) 1.0f;
 

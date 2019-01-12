@@ -24,7 +24,9 @@
 #include <bvxm/bvxm_voxel_world.h>
 #include <bvxm/grid/bvxm_voxel_slab_base.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 bool bvxm_create_mog_image_process_cons(bprb_func_process& pro);
 
@@ -37,7 +39,6 @@ bool mix_gaussian(bvxm_voxel_world_sptr world,
                   bvxm_image_metadata observation,
                   bvxm_voxel_slab_base_sptr& mog_image)
 {
-  typedef typename bvxm_voxel_traits<APM_T>::voxel_datatype mog_type;
   typedef typename bvxm_voxel_traits<APM_T>::obs_datatype obs_datatype;
 
   bool done = false;

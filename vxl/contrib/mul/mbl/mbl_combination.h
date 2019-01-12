@@ -8,8 +8,10 @@
 #include <vector>
 #include <iostream>
 #include <algorithm>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Generate first combination (n.size() zeros)
 inline
@@ -46,7 +48,7 @@ inline
 unsigned mbl_n_combinations(const std::vector<unsigned>& n)
 {
   unsigned nc = 1;
-  for (unsigned i=0;i<n.size();++i) if (n[i]>1) nc*=n[i];
+  for (unsigned int i : n) if (i>1) nc*=i;
   return nc;
 }
 

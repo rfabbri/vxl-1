@@ -1,7 +1,4 @@
 // This is core/vil1/file_formats/vil1_pnm.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 
@@ -11,8 +8,10 @@
 #include <cstdio>
 #include "vil1_pnm.h"
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vil1/vil1_stream.h>
 #include <vil1/vil1_image_impl.h>
@@ -43,7 +42,7 @@ vil1_image_impl* vil1_pnm_file_format::make_input_image(vil1_stream* vs)
              iseol(buf[2]) &&
              (buf[1] >= '1' && buf[2] <= '6'));
   if (!ok)
-    return VXL_NULLPTR;
+    return nullptr;
 
   return new vil1_pnm_generic_image(vs);
 }
@@ -158,7 +157,7 @@ static int ReadInteger(vil1_stream* vs, char& temp)
 // Convert the buffer of 16 bit words from MSB to host order
 static void ConvertMSBToHost( void* buf, int num_words )
 {
-  unsigned char* ptr = (unsigned char*)buf;
+  auto* ptr = (unsigned char*)buf;
   for ( int i=0; i < num_words; ++i ) {
     unsigned char t = *ptr;
     *ptr = *(ptr+1);
@@ -170,7 +169,7 @@ static void ConvertMSBToHost( void* buf, int num_words )
 // Convert the buffer of 16 bit words from host order to MSB
 static void ConvertHostToMSB( void* buf, int num_words )
 {
-  unsigned char* ptr = (unsigned char*)buf;
+  auto* ptr = (unsigned char*)buf;
   for ( int i=0; i < num_words; ++i ) {
     unsigned char t = *ptr;
     *ptr = *(ptr+1);
@@ -297,9 +296,9 @@ bool operator>>(vil1_stream& vs, unsigned int& a)
 
 bool vil1_pnm_generic_image::get_section(void* buf, int x0, int y0, int xs, int ys) const
 {
-  unsigned char* ib = (unsigned char*) buf;
-  unsigned short* jb = (unsigned short*) buf;
-  unsigned int* kb = (unsigned int*) buf;
+  auto* ib = (unsigned char*) buf;
+  auto* jb = (unsigned short*) buf;
+  auto* kb = (unsigned int*) buf;
   //
   if (magic_ > 4) // pgm or ppm raw image
   {
@@ -383,9 +382,9 @@ void operator<<(vil1_stream& vs, int a)
 
 bool vil1_pnm_generic_image::put_section(void const* buf, int x0, int y0, int xs, int ys)
 {
-  unsigned char const* ob = (unsigned char const*) buf;
-  unsigned short const* pb = (unsigned short const*) buf;
-  unsigned int const* qb = (unsigned int const*) buf;
+  auto const* ob = (unsigned char const*) buf;
+  auto const* pb = (unsigned short const*) buf;
+  auto const* qb = (unsigned int const*) buf;
 
   if (magic_ > 4) // pgm or ppm raw image
   {

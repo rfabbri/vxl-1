@@ -14,7 +14,9 @@
 #include <vector>
 #include <iostream>
 #include <list>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <sdet/sdet_edgel.h>
 #include <sdet/sdet_curvelet.h>
@@ -111,9 +113,9 @@ public:
   void clear()
   {
     //delete all the links
-    for (unsigned i=0; i<cLinks.size(); i++){
-      sdet_link_list_iter l_it = cLinks[i].begin();
-      for (;l_it!=cLinks[i].end(); l_it++)
+    for (auto & cLink : cLinks){
+      sdet_link_list_iter l_it = cLink.begin();
+      for (;l_it!=cLink.end(); l_it++)
         delete (*l_it);
     }
 
@@ -171,7 +173,7 @@ public:
       if ((*cit1)->ce == e1)
         return (*cit1); //return link
     }
-    return VXL_NULLPTR; //not linked
+    return nullptr; //not linked
   }
 
   //: link edgels if not already linked

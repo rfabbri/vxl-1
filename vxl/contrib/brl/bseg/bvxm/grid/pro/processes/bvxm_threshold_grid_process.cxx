@@ -13,7 +13,9 @@
 //   <none yet>
 // \endverbatim
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <brdb/brdb_value.h>
 #include <bprb/bprb_parameters.h>
 
@@ -26,11 +28,11 @@
 namespace bvxm_threshold_grid_process_globals
 {
   // Inputs
-  const unsigned int n_inputs_ = 4;
+  constexpr unsigned int n_inputs_ = 4;
 
   //Outputs
   // This process has no outputs to the database because the outputs grids are disk based
-  const unsigned int n_outputs_ = 0;
+  constexpr unsigned int n_outputs_ = 0;
 }
 
 
@@ -82,7 +84,7 @@ bool bvxm_threshold_grid_process(bprb_func_process& pro)
   std::string grid_in_path = pro.get_input<std::string>(0);
   std::string grid_out_path = pro.get_input<std::string>(1);
   std::string mask_path = pro.get_input<std::string>(2);
-  float threshold = pro.get_input<float>(3);
+  auto threshold = pro.get_input<float>(3);
 
   bvxm_voxel_grid_base_sptr grid_in_base = new bvxm_voxel_grid<float>(grid_in_path);
   bvxm_voxel_grid_base_sptr grid_out_base = new bvxm_voxel_grid<float>(grid_out_path, grid_in_base->grid_size());

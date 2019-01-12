@@ -7,7 +7,10 @@
 #include "grid/bvxm_voxel_slab.h"
 #include "grid/bvxm_voxel_slab.hxx"
 #include "grid/bvxm_voxel_slab_iterator.h"
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Return probability density of observing pixel values
 template <unsigned int dim, unsigned int modes>

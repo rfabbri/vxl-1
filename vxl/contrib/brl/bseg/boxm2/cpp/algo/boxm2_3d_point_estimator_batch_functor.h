@@ -8,7 +8,9 @@
 #include <iostream>
 #include <cmath>
 #include <boxm2/io/boxm2_stream_cache.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vnl/algo/vnl_symmetric_eigensystem.h>
 
@@ -21,7 +23,7 @@ class boxm2_3d_point_estimator_batch_functor
   typedef boxm2_data_traits<BOXM2_COVARIANCE>::datatype cov_datatype;
 
   //: "default" constructor
-  boxm2_3d_point_estimator_batch_functor() {}
+  boxm2_3d_point_estimator_batch_functor() = default;
 
   bool init_data(boxm2_data_base *output_pts, boxm2_data_base *output_covs, boxm2_stream_cache_sptr str_cache,
     boxm2_block_id spt_bid, int spt_data_index)
@@ -65,11 +67,11 @@ class boxm2_3d_point_estimator_batch_functor
 #endif
 
     float w_sum = 0.0f;
-    for (unsigned j = 0; j < im_pts.size(); j++) {
-      float w = im_pts[j][3];
-      pt[0] += im_pts[j][0];
-      pt[1] += im_pts[j][1];
-      pt[2] += im_pts[j][2];
+    for (auto & im_pt : im_pts) {
+      float w = im_pt[3];
+      pt[0] += im_pt[0];
+      pt[1] += im_pt[1];
+      pt[2] += im_pt[2];
       w_sum += w;
     }
     pt[0] /= w_sum;
@@ -149,7 +151,7 @@ class boxm2_3d_point_estimator_functor
   typedef boxm2_data_traits<BOXM2_COVARIANCE>::datatype cov_datatype;
 
   //: "default" constructor
-  boxm2_3d_point_estimator_functor() {}
+  boxm2_3d_point_estimator_functor() = default;
 
   bool init_data(boxm2_data_base *output_pts, boxm2_data_base *output_covs, boxm2_data_base *img_pts, boxm2_data_base *img_covs)
   {
@@ -244,7 +246,7 @@ class boxm2_3d_point_estimator_functor2
   typedef boxm2_data_traits<BOXM2_COVARIANCE>::datatype cov_datatype;
 
   //: "default" constructor
-  boxm2_3d_point_estimator_functor2() {}
+  boxm2_3d_point_estimator_functor2() = default;
 
   bool init_data(boxm2_data_base *output_pts, boxm2_data_base *output_covs)
   {

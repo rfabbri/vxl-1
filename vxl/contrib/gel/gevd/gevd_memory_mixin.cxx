@@ -6,7 +6,9 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //=========================================================================
 //=========================================================================
@@ -21,7 +23,7 @@ gevd_memory_mixin::gevd_memory_mixin(int s, void* ib, unsigned int type)
   offset    = 0;
   SetStatus((type&MM_CREATION_FLAGS));
 
-  if ((ib == VXL_NULLPTR) && (s>0))
+  if ((ib == nullptr) && (s>0))
   {
     touched = 0;
     buffer  = new unsigned char[size];
@@ -82,7 +84,7 @@ gevd_memory_mixin::~gevd_memory_mixin()
 int
 gevd_memory_mixin::ReadBytes(void* ib, int b)
 {
-  if ((ib == VXL_NULLPTR) || !(GetStatusCode()&MM_READ))
+  if ((ib == nullptr) || !(GetStatusCode()&MM_READ))
     return 0;
   int num_b;
   if ((num_b=std::min(b, touched-curr_into)) < 0) num_b = 0;
@@ -102,7 +104,7 @@ gevd_memory_mixin::ReadBytes(void* ib, int b)
 int
 gevd_memory_mixin::ReadBytes(void* ib, int b, int loc)
 {
-  if ((ib == VXL_NULLPTR) || !(GetStatusCode()&MM_READ))
+  if ((ib == nullptr) || !(GetStatusCode()&MM_READ))
     return 0;
 
   //
@@ -131,7 +133,7 @@ gevd_memory_mixin::ReadBytes(void* ib, int b, int loc)
 int
 gevd_memory_mixin::ReadBytes(void* ib, int b, const int* mapping)
 {
-  if ((ib == VXL_NULLPTR) || !(GetStatusCode()&MM_READ))
+  if ((ib == nullptr) || !(GetStatusCode()&MM_READ))
     return 0;
   int num_b;
   if ((num_b=std::min(b, touched-curr_into)) < 0) num_b = 0;;
@@ -152,7 +154,7 @@ gevd_memory_mixin::ReadBytes(void* ib, int b, const int* mapping)
 int
 gevd_memory_mixin::ReadBytes(void* ib, int b, int loc, const int* mapping)
 {
-  if ((ib == VXL_NULLPTR) || !(GetStatusCode()&MM_READ))
+  if ((ib == nullptr) || !(GetStatusCode()&MM_READ))
     return 0;
   //
   // loc is always relative to offset, so modify...
@@ -202,7 +204,7 @@ gevd_memory_mixin::SetMemoryPtr(int s, void* ib)
   ClearStatus();
   SetStatus(MM_READ|MM_WRITE);
 
-  if ((ib == VXL_NULLPTR) && (s>0))
+  if ((ib == nullptr) && (s>0))
   {
     touched = 0;
     buffer  = new unsigned char[size];

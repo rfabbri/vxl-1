@@ -1,9 +1,6 @@
 // This is oxl/mvl/NViewMatches.h
 #ifndef NViewMatches_h_
 #define NViewMatches_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Multiple view matches with wildcards
@@ -36,7 +33,9 @@
 #include <iostream>
 #include <iosfwd>
 #include <vnl/vnl_vector.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 struct NViewMatch : public vnl_vector<int>
 {
@@ -44,7 +43,7 @@ struct NViewMatch : public vnl_vector<int>
   enum { nomatch = -1 };
 
   // Constructors
-  NViewMatch() {}
+  NViewMatch() = default;
   NViewMatch(int n): vnl_vector<int>(n, nomatch) {}
 
   // Operations
@@ -102,18 +101,9 @@ class OffsetNViewMatch : public NViewMatch
   {
   }
 
-  OffsetNViewMatch(const OffsetNViewMatch& that):
-    NViewMatch(that),
-    min_view_(that.min_view_)
-  {
-  }
+  OffsetNViewMatch(const OffsetNViewMatch& that) = default;
 
-  OffsetNViewMatch& operator=(const OffsetNViewMatch& that)
-  {
-    NViewMatch::operator=(that);
-    min_view_ = that.min_view_;
-    return *this;
-  }
+  OffsetNViewMatch& operator=(const OffsetNViewMatch& that) = default;
 
   int& operator[] (int i) { return NViewMatch::operator[] (i - min_view_); }
 };

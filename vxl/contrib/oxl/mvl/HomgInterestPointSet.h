@@ -1,9 +1,6 @@
 // This is oxl/mvl/HomgInterestPointSet.h
 #ifndef HomgInterestPointSet_h_
 #define HomgInterestPointSet_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Set of interest points on an image
@@ -26,7 +23,9 @@
 #include <vector>
 #include <iostream>
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vnl/vnl_double_2.h>
 #include <vgl/vgl_homg_point_2d.h>
@@ -50,7 +49,7 @@ class HomgInterestPointSet
 
   HomgInterestPointSet();
   HomgInterestPointSet(const HomgMetric&);
-  HomgInterestPointSet(const char* filename, const HomgMetric& = VXL_NULLPTR);
+  HomgInterestPointSet(const char* filename, const HomgMetric& = nullptr);
   HomgInterestPointSet(const std::vector<HomgPoint2D>&, ImageMetric* conditioner);
   HomgInterestPointSet(std::vector<vgl_homg_point_2d<double> > const&, ImageMetric* conditioner);
   HomgInterestPointSet(const HomgInterestPointSet& that);
@@ -92,15 +91,15 @@ class HomgInterestPointSet
   void clear();
 
   // Input/Output--------------------------------------------------------------
-  bool read(const char* filename, const HomgMetric& c = VXL_NULLPTR);
-  bool read(const char* filename, vil1_image const& src, const HomgMetric& c = VXL_NULLPTR);
+  bool read(const char* filename, const HomgMetric& c = nullptr);
+  bool read(const char* filename, vil1_image const& src, const HomgMetric& c = nullptr);
   bool write(const char* filename) const;
 
   bool read(std::istream& f, const ImageMetric* c);
   bool write(std::ostream& f, const ImageMetric* c) const;
 
  protected:
-  void init_conditioner(const HomgMetric& c = VXL_NULLPTR);
+  void init_conditioner(const HomgMetric& c = nullptr);
   void delete_conditioner();
 };
 

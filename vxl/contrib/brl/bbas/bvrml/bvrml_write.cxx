@@ -1,7 +1,9 @@
 #include <iostream>
 #include <cmath>
 #include "bvrml_write.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 unsigned bvrml_color::heatmap_classic_size = 256;
 unsigned char bvrml_color::heatmap_classic[256][3] = {
@@ -341,7 +343,7 @@ void bvrml_write::write_vrml_cylinder(std::ofstream& str,
     axis_x=-float(dir.y()/denom);
     axis_y=float(dir.x()/denom);
   }
-  float phi=float(std::acos(dir.z()));
+  auto phi=float(std::acos(dir.z()));
 
   str << "Transform {\n"
       << "translation " << pt.x() << ' ' << pt.y() << ' '
@@ -403,4 +405,3 @@ void bvrml_write::write_vrml_line(std::ofstream& str,vgl_point_3d<double> pt,
       <<  " ]\n"
       << "}\n";
 }
-

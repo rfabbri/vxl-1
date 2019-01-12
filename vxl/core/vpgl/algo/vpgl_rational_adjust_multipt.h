@@ -13,7 +13,9 @@
 // \endverbatim
 
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_least_squares_function.h>
 #include <vpgl/vpgl_rational_camera.h>
@@ -34,17 +36,17 @@ class vpgl_cam_trans_search_lsqr : public vnl_least_squares_function
  public:
   //: Constructor
   vpgl_cam_trans_search_lsqr(std::vector<vpgl_rational_camera<double> > const& cams,
-                             std::vector<float> const& cam_weights,
+                             std::vector<float>  cam_weights,
                              std::vector< std::vector<vgl_point_2d<double> > > const& image_pts,  // for each 3D corr, an array of 2D corrs for each camera
-                             std::vector< vgl_point_3d<double> > const& initial_pts);
+                             std::vector< vgl_point_3d<double> >  initial_pts);
   //: Destructor
-  virtual ~vpgl_cam_trans_search_lsqr() {}
+  ~vpgl_cam_trans_search_lsqr() override = default;
 
   //: The main function.
   //  Given the parameter vector x, compute the vector of residuals fx.
   //  fx has been sized appropriately before the call.
-  virtual void f(vnl_vector<double> const& translation,   // size is 2*cams.size()
-                 vnl_vector<double>& projection_errors);  // size is cams.size()*image_pts.size() --> compute a residual for each 3D corr point in each image
+  void f(vnl_vector<double> const& translation,   // size is 2*cams.size()
+                 vnl_vector<double>& projection_errors) override;  // size is cams.size()*image_pts.size() --> compute a residual for each 3D corr point in each image
 
   void get_finals(std::vector<vgl_point_3d<double> >& finals);
 
@@ -60,7 +62,7 @@ class vpgl_cam_trans_search_lsqr : public vnl_least_squares_function
 class vpgl_rational_adjust_multiple_pts
 {
  public:
-  ~vpgl_rational_adjust_multiple_pts() {}
+  ~vpgl_rational_adjust_multiple_pts() = default;
 
   //: exhaustively searches the parameter space to find the best parameter setting
   static bool adjust(std::vector<vpgl_rational_camera<double> > const& cams,

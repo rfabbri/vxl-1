@@ -1,7 +1,4 @@
 // This is mul/vpdfl/vpdfl_gaussian.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \brief Multi-variate Gaussian PDF with arbitrary axes.
@@ -19,8 +16,10 @@
 #include <cmath>
 #include "vpdfl_gaussian.h"
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vsl/vsl_indent.h>
 #include <vnl/vnl_math.h>
@@ -69,15 +68,11 @@ static bool vectorHasDescendingOrder(const vnl_vector<double>& v)
 
 //=======================================================================
 
-vpdfl_gaussian::vpdfl_gaussian()
-{
-}
+vpdfl_gaussian::vpdfl_gaussian() = default;
 
 //=======================================================================
 
-vpdfl_gaussian::~vpdfl_gaussian()
-{
-}
+vpdfl_gaussian::~vpdfl_gaussian() = default;
 
 //=======================================================================
 
@@ -190,7 +185,7 @@ vnl_matrix<double> vpdfl_gaussian::covariance() const
 
 vpdfl_sampler_base* vpdfl_gaussian::new_sampler() const
 {
-  vpdfl_gaussian_sampler *i = new vpdfl_gaussian_sampler;
+  auto *i = new vpdfl_gaussian_sampler;
   i->set_model(*this);
   return i;
 }

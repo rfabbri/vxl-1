@@ -7,8 +7,10 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_vector_2d.h>
@@ -40,8 +42,8 @@ typedef vtol_extract_topology_vertex_node vertex_node;
 
 // ---------------------------------------------------------------------------
 //                                              static variables and constants
-VXL_CONSTEXPR_VAR unsigned vtol_extract_topology_vertex_node::null_index  VCL_STATIC_CONST_INIT_INT_DEFN( unsigned(-2) );
-VXL_CONSTEXPR_VAR unsigned vtol_extract_topology_vertex_node::done_index  VCL_STATIC_CONST_INIT_INT_DEFN( unsigned(-1) );
+constexpr unsigned vtol_extract_topology_vertex_node::null_index;
+constexpr unsigned vtol_extract_topology_vertex_node::done_index;
 
 
 // ---------------------------------------------------------------------------
@@ -96,9 +98,9 @@ faces( data_image_type const& data_img ) const
   // than one face based on containment, etc.
   //
   std::vector< vtol_intensity_face_sptr > faces;
-  for ( unsigned i = 0; i < region_list.size(); ++i ) {
-    if ( ! region_list[i].empty() ) {
-      compute_faces( region_list[i], faces, &data_img );
+  for (auto & i : region_list) {
+    if ( ! i.empty() ) {
+      compute_faces( i, faces, &data_img );
     }
   }
 
@@ -118,9 +120,9 @@ faces( ) const
   // than one face based on containment, etc.
   //
   std::vector< vtol_intensity_face_sptr > faces;
-  for ( unsigned i = 0; i < region_list.size(); ++i ) {
-    if ( ! region_list[i].empty() ) {
-      compute_faces( region_list[i], faces, VXL_NULLPTR );
+  for (auto & i : region_list) {
+    if ( ! i.empty() ) {
+      compute_faces( i, faces, nullptr );
     }
   }
 
@@ -749,9 +751,9 @@ compute_faces( std::vector< region_type_sptr > const& chains,
   // into a tree. The adding process makes sure that the chain falls
   // into the appropriate place in the containment hierarchy.
 
-  chain_tree_node universe( VXL_NULLPTR );
-  for ( unsigned i = 0; i < chains.size(); ++i ) {
-    universe.add( chains[i] );
+  chain_tree_node universe( nullptr );
+  for (const auto & chain : chains) {
+    universe.add( chain );
   }
 
   // If we have a data image, use it to add digital region information
@@ -763,7 +765,7 @@ compute_faces( std::vector< region_type_sptr > const& chains,
     delete finder;
   }
   else {
-    add_faces( faces, VXL_NULLPTR, VXL_NULLPTR, &universe );
+    add_faces( faces, nullptr, nullptr, &universe );
   }
 }
 

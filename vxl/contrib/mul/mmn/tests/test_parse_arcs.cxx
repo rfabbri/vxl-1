@@ -6,7 +6,9 @@
 #include <iterator>
 #include <testlib/testlib_test.h>
 #include <mmn/mmn_parse_arcs.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 void test_parse_arcs_a()
@@ -14,17 +16,17 @@ void test_parse_arcs_a()
   std::cout<<"========= test_parse_arcs =========\n" << std::endl;
 
   std::vector<std::string> nodeNames;
-  nodeNames.push_back("L1_top_post");
-  nodeNames.push_back("L1_top_ant");
-  nodeNames.push_back("L1_bot_post");
-  nodeNames.push_back("L1_bot_ant");
-  nodeNames.push_back("L1_pedicle");
+  nodeNames.emplace_back("L1_top_post");
+  nodeNames.emplace_back("L1_top_ant");
+  nodeNames.emplace_back("L1_bot_post");
+  nodeNames.emplace_back("L1_bot_ant");
+  nodeNames.emplace_back("L1_pedicle");
 
-  nodeNames.push_back("L2_top_post");
-  nodeNames.push_back("L2_top_ant");
-  nodeNames.push_back("L2_bot_post");
-  nodeNames.push_back("L2_bot_ant");
-  nodeNames.push_back("L2_pedicle");
+  nodeNames.emplace_back("L2_top_post");
+  nodeNames.emplace_back("L2_top_ant");
+  nodeNames.emplace_back("L2_bot_post");
+  nodeNames.emplace_back("L2_bot_ant");
+  nodeNames.emplace_back("L2_pedicle");
 
   std::string testStreamStr= "{\n"
       "arc: { L1_top_post L1_top_ant }\n"

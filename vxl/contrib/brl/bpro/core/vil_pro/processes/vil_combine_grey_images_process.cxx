@@ -14,12 +14,12 @@ bool vil_combine_grey_images_process_cons(bprb_func_process& pro)
   // input(0): Filename containing the list of images to combine
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("vcl_string");
+  input_types.emplace_back("vcl_string");
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   std::vector<std::string> output_types;
-  output_types.push_back("vil_image_view_base_sptr");  // label image
+  output_types.emplace_back("vil_image_view_base_sptr");  // label image
   ok = pro.set_output_types(output_types);
   if (!ok) return ok;
 
@@ -27,7 +27,7 @@ bool vil_combine_grey_images_process_cons(bprb_func_process& pro)
 }
 
 // Get images from a file.
-bool get_images(std::string file,
+bool get_images(const std::string& file,
                 std::vector<vil_image_view_base_sptr>  &grey_imgs,
                 unsigned& width, unsigned& height)
 {
@@ -125,4 +125,3 @@ bool vil_combine_grey_images_process(bprb_func_process& pro)
 
   return true;
 }
-

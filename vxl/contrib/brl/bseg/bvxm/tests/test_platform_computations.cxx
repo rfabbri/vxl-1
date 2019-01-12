@@ -1,6 +1,8 @@
 #include <iostream>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 // The following test is to determine if there are platform differences in
 // roc calculations. The reference counts are obtained on
 // a Dell XPS M1710 Centro Duo running Windows XP
@@ -19,8 +21,8 @@ static void test_platform_computations()
   for (unsigned  k=0; k<100; t+=0.01, k++)
   {
     unsigned c = 0;
-    for (unsigned i = 0; i<100; ++i)
-      if (rnums[i]>t)
+    for (double rnum : rnums)
+      if (rnum>t)
         c++;
 #if 0
     std::cout << c << ' ';
@@ -39,8 +41,8 @@ static void test_platform_computations()
   for (unsigned k=0; k<100; tf+=0.01f, k++)
   {
     unsigned c = 0;
-    for  (unsigned i = 0; i<100; ++i)
-      if (static_cast<float>(rnums[i])>tf)
+    for  (double rnum : rnums)
+      if (static_cast<float>(rnum)>tf)
         c++;
 #if 0
     std::cout << c << ' ';

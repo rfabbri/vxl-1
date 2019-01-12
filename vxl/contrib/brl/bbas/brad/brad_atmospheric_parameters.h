@@ -11,7 +11,9 @@
 
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_ref_count.h>
 #include <vbl/vbl_smart_ptr.h>
 
@@ -43,4 +45,3 @@ std::ostream&  operator<<(std::ostream& s, brad_atmospheric_parameters const& at
 std::istream&  operator>>(std::istream& s, brad_atmospheric_parameters& atm);
 
 #endif
-

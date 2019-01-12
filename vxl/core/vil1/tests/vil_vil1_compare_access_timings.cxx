@@ -9,14 +9,16 @@
 #include <ctime>
 #include <vxl_config.h> // for imT
 #include <vil/vil_image_view.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <mbl/mbl_stats_1d.h>
 #include <vil1/vil1_memory_image_of.h>
 #include <vil1/vil1_rgb.h>
 #include <vil/vil_rgb.h>
 
-const unsigned NI=256;
-const unsigned NJ=256;
+constexpr unsigned NI = 256;
+constexpr unsigned NJ = 256;
 
 template <class T>
 unsigned width(const vil_image_view<T> & im){return im.ni();}

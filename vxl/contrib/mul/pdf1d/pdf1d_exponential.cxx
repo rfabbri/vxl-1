@@ -10,8 +10,10 @@
 #include <cmath>
 #include "pdf1d_exponential.h"
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <pdf1d/pdf1d_exponential_sampler.h>
 #include <pdf1d/pdf1d_sampler.h>
@@ -30,9 +32,7 @@ pdf1d_exponential::pdf1d_exponential(double lambda)
 
 //=======================================================================
 
-pdf1d_exponential::~pdf1d_exponential()
-{
-}
+pdf1d_exponential::~pdf1d_exponential() = default;
 
 //=======================================================================
 
@@ -52,7 +52,7 @@ void pdf1d_exponential::set_lambda(double lambda)
 
 pdf1d_sampler* pdf1d_exponential::new_sampler() const
 {
-  pdf1d_exponential_sampler *i = new pdf1d_exponential_sampler;
+  auto *i = new pdf1d_exponential_sampler;
   i->set_model(*this);
   return i;
 }

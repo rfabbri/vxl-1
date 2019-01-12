@@ -12,13 +12,13 @@ bool bsta_clone_joint_hist_3d_process_cons(bprb_func_process& pro)
   // no inputs
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("bsta_joint_histogram_3d_base_sptr"); //joint_hist_3d
+  input_types.emplace_back("bsta_joint_histogram_3d_base_sptr"); //joint_hist_3d
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   //no output
   std::vector<std::string> output_types;
-  output_types.push_back("bsta_joint_histogram_3d_base_sptr"); //joint_hist_3d
+  output_types.emplace_back("bsta_joint_histogram_3d_base_sptr"); //joint_hist_3d
   ok = pro.set_output_types(output_types);
   if (!ok) return ok;
   return true;
@@ -40,9 +40,9 @@ bool bsta_clone_joint_hist_3d_process(bprb_func_process& pro)
     std::cout << "in clone_joint_hist_3d_process, null input hist ptr\n";
     return false;
   }
-  bsta_joint_histogram_3d<float>* h = dynamic_cast<bsta_joint_histogram_3d<float>*>(in_hist_ptr.ptr());
+  auto* h = dynamic_cast<bsta_joint_histogram_3d<float>*>(in_hist_ptr.ptr());
 
-  bsta_joint_histogram_3d<float>* h_clone  =
+  auto* h_clone  =
     new bsta_joint_histogram_3d<float>(*h);
   h_clone->clear();
 
@@ -51,4 +51,3 @@ bool bsta_clone_joint_hist_3d_process(bprb_func_process& pro)
 
   return true;
 }
-

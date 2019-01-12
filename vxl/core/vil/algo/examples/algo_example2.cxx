@@ -5,7 +5,9 @@
 
 #include <iostream>
 #include <cmath>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_image_view.h>
 #include <vil/vil_load.h>
 #include <vil/vil_save.h>
@@ -37,7 +39,7 @@ int main( int argc, char* argv[] )
   std::cout << "Creating kernel...\n";
   float sigma = 2.f;
   float scaleFactor = 1.f / ( 2.f * sigma * sigma );
-  const int halfSupport = 1;
+  constexpr int halfSupport = 1;
 
   // build kernel
   float kernel[2*halfSupport+1];
@@ -73,4 +75,3 @@ int main( int argc, char* argv[] )
   vil_save(imageOut, outputFilename);
   return 0;
 }
-

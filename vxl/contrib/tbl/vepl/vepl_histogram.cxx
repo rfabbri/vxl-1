@@ -1,14 +1,16 @@
 // This is tbl/vepl/vepl_histogram.cxx
 #include <iostream>
 #include "vepl_histogram.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vipl/accessors/vipl_accessors_vcl_vector.h>
 #include <vepl/accessors/vipl_accessors_vil_image_view_base.h>
 #include <vipl/vipl_histogram.h>
 #include <vil/vil_pixel_format.h>
 #include <vxl_config.h> // for vxl_byte
 
-std::vector<unsigned int> vepl_histogram(vil_image_resource_sptr image)
+std::vector<unsigned int> vepl_histogram(const vil_image_resource_sptr& image)
 {
   // byte rgb
   if (image->nplanes() > 1 || image->pixel_format() == VIL_PIXEL_FORMAT_RGB_BYTE) {
@@ -68,4 +70,3 @@ std::vector<unsigned int> vepl_histogram(vil_image_resource_sptr image)
     return std::vector<unsigned int>();
   }
 }
-

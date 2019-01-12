@@ -24,8 +24,10 @@
 #include <vgl/vgl_polygon.h>
 #include <vgl/vgl_box_2d.h>
 #include <vgl/vgl_closest_point.h>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 template <class T>
 static inline T square_of(T x) { return x*x; }

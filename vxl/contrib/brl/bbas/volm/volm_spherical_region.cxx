@@ -26,7 +26,7 @@ bool volm_spherical_region::attribute_value(spherical_region_attributes att, uns
 void volm_spherical_region::print(std::ostream& os)
 {
     os<<"Box "<<box_<<' ';
-    std::map<spherical_region_attributes,unsigned char>::iterator iter = attributes_.begin();
+    auto iter = attributes_.begin();
     for (;iter!= attributes_.end();iter++)
     {
         os<<'('<<iter->first<<", "<<(int)iter->second<<") " ;
@@ -37,7 +37,7 @@ void volm_spherical_region::print(std::ostream& os)
 std::vector<spherical_region_attributes> volm_spherical_region::attribute_types()
 {
     std::vector<spherical_region_attributes> attributes;
-    std::map<spherical_region_attributes,unsigned char>::iterator iter = attributes_.begin();
+    auto iter = attributes_.begin();
     for (;iter!= attributes_.end();iter++)
     {
         attributes.push_back(iter->first);
@@ -45,7 +45,7 @@ std::vector<spherical_region_attributes> volm_spherical_region::attribute_types(
     return attributes;
 }
 
-void volm_spherical_regions_layer::add_region(volm_spherical_region region)
+void volm_spherical_regions_layer::add_region(const volm_spherical_region& region)
 {
     regions_.push_back(region);
     this->update_attribute_map(regions_.size()-1);
@@ -71,7 +71,7 @@ volm_spherical_regions_layer::attributed_regions_by_type_only(spherical_region_a
 {
     if ( attributed_regions_.find(att)!= attributed_regions_.end())
     {
-        std::map<unsigned char,std::vector<unsigned int > >::iterator iter = attributed_regions_[att].begin();
+        auto iter = attributed_regions_[att].begin();
         std::vector<unsigned int>  sids;
         for (;iter!=attributed_regions_[att].end();iter++)
             sids.insert(sids.begin(),iter->second.begin(),iter->second.end());
@@ -100,10 +100,10 @@ std::vector<unsigned int>
 void volm_spherical_regions_layer::update_attribute_map(int id)
 {
     std::vector<spherical_region_attributes> attribute_types = regions_[id].attribute_types();
-    for (unsigned i =0; i < attribute_types.size(); i++)
+    for (auto & attribute_type : attribute_types)
     {
         unsigned char val =255;
-        if (regions_[id].attribute_value(attribute_types[i],val))
-            attributed_regions_[attribute_types[i]][val].push_back(id);
+        if (regions_[id].attribute_value(attribute_type,val))
+            attributed_regions_[attribute_type][val].push_back(id);
     }
 }

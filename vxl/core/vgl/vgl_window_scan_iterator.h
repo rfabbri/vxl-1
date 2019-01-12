@@ -12,7 +12,9 @@
 // \endverbatim
 
 #include <cmath>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_region_scan_iterator.h>
 
 //: Iterator to scan rectangular windows
@@ -50,7 +52,7 @@ class vgl_window_scan_iterator : public vgl_region_scan_iterator
   { set_window_corners(x - r, y - r, x + r, y + r); }
 
   //: makes uninitialized iterator.
-  inline vgl_window_scan_iterator() {}
+  inline vgl_window_scan_iterator() = default;
 
   //: region is [x1, x2] x [y1, y2].  No assumption about x1<x2 or y1<y2.
   inline vgl_window_scan_iterator(T x1_, T y1_, T x2_, T y2_)
@@ -58,11 +60,11 @@ class vgl_window_scan_iterator : public vgl_region_scan_iterator
 
   int current_y;
 
-  inline void reset() { current_y = y1<=y2 ? y1-1 : y1+1; }
-  inline bool next () { return y1<=y2 ? ++current_y <= y2 : --current_y >= y2; }
-  inline int  scany () const { return current_y; }
-  inline int  startx() const { return x1; }
-  inline int  endx  () const { return x2; }
+  inline void reset() override { current_y = y1<=y2 ? y1-1 : y1+1; }
+  inline bool next () override { return y1<=y2 ? ++current_y <= y2 : --current_y >= y2; }
+  inline int  scany () const override { return current_y; }
+  inline int  startx() const override { return x1; }
+  inline int  endx  () const override { return x2; }
 };
 
 #define VGL_WINDOW_SCAN_ITERATOR_INSTANTIATE(T) extern "please include <vgl/vgl_window_scan_iterator.hxx> instead"

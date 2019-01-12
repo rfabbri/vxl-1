@@ -9,7 +9,9 @@
 // \author Vishal Jain
 // \date Mar 10, 2011
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/io/boxm2_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -25,8 +27,8 @@
 
 namespace boxm2_cpp_render_expected_image_process_globals
 {
-  const unsigned n_inputs_ = 6;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 6;
+  constexpr unsigned n_outputs_ = 1;
   std::size_t lthreads[2]={8,8};
 }
 
@@ -69,27 +71,27 @@ bool boxm2_cpp_render_expected_image_process(bprb_func_process& pro)
   boxm2_scene_sptr scene = pro.get_input<boxm2_scene_sptr>(i++);
   boxm2_cache_sptr cache = pro.get_input<boxm2_cache_sptr>(i++);
   vpgl_camera_double_sptr cam= pro.get_input<vpgl_camera_double_sptr>(i++);
-  unsigned ni=pro.get_input<unsigned>(i++);
-  unsigned nj=pro.get_input<unsigned>(i++);
+  auto ni=pro.get_input<unsigned>(i++);
+  auto nj=pro.get_input<unsigned>(i++);
   std::string identifier = pro.get_input<std::string>(i);
 
   bool foundDataType = false;
   std::string data_type;
   std::vector<std::string> apps = scene->appearances();
-  for (unsigned int i=0; i<apps.size(); ++i) {
-    if ( apps[i] == boxm2_data_traits<BOXM2_MOG3_GREY>::prefix() )
+  for (const auto & app : apps) {
+    if ( app == boxm2_data_traits<BOXM2_MOG3_GREY>::prefix() )
     {
-      data_type = apps[i];
+      data_type = app;
       foundDataType = true;
     }
-    else if ( apps[i] == boxm2_data_traits<BOXM2_MOG3_GREY_16>::prefix() )
+    else if ( app == boxm2_data_traits<BOXM2_MOG3_GREY_16>::prefix() )
     {
-      data_type = apps[i];
+      data_type = app;
       foundDataType = true;
     }
-    else if ( apps[i] == boxm2_data_traits<BOXM2_GAUSS_GREY>::prefix() )
+    else if ( app == boxm2_data_traits<BOXM2_GAUSS_GREY>::prefix() )
     {
-      data_type = apps[i];
+      data_type = app;
       foundDataType = true;
     }
   }
@@ -103,12 +105,12 @@ bool boxm2_cpp_render_expected_image_process(bprb_func_process& pro)
   }
 
   // function call
-  vil_image_view<float> * exp_img=new vil_image_view<float>(ni,nj);
-  vil_image_view<float> * vis_img=new vil_image_view<float>(ni,nj);
+  auto * exp_img=new vil_image_view<float>(ni,nj);
+  auto * vis_img=new vil_image_view<float>(ni,nj);
   exp_img->fill(0.0f);
   vis_img->fill(1.0f);
   std::vector<boxm2_block_id> vis_order;
-  if (vpgl_perspective_camera<double>* pcam = // assignment, not comparison
+  if (auto* pcam = // assignment, not comparison
       dynamic_cast<vpgl_perspective_camera<double>* >(cam.ptr()))
   {
     vis_order=scene->get_vis_blocks(pcam);
@@ -121,14 +123,14 @@ bool boxm2_cpp_render_expected_image_process(bprb_func_process& pro)
   for (id = vis_order.begin(); id != vis_order.end(); ++id)
   {
     std::cout<<"Block Id "<<(*id)<<std::endl;
-    boxm2_block *     blk  =  cache->get_block(scene,*id);
+    boxm2_block *     blk = cache->get_block(scene,*id);
     boxm2_data_base *  alph = cache->get_data_base(scene,*id,boxm2_data_traits<BOXM2_ALPHA>::prefix());
-    boxm2_data_base *  mog  = cache->get_data_base(scene,*id,data_type);
+    boxm2_data_base *  mog = cache->get_data_base(scene,*id,data_type);
     std::vector<boxm2_data_base*> datas;
     datas.push_back(alph);
     datas.push_back(mog);
 
-    boxm2_scene_info_wrapper *scene_info_wrapper=new boxm2_scene_info_wrapper();
+    auto *scene_info_wrapper=new boxm2_scene_info_wrapper();
     scene_info_wrapper->info=scene->get_blk_metadata(*id);
     //scene_info_wrapper->info->tree_buffer_length = blk->tree_buff_length();
     //scene_info_wrapper->info->data_buffer_length = 65536;

@@ -21,7 +21,9 @@
 
 #include <vnl/vnl_vector_fixed.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class bvpl_scene_vector_operator
 {
@@ -99,10 +101,8 @@ void bvpl_scene_vector_operator::operate(boxm_scene<boct_tree<short, T_data_in> 
     //(2) Run vector of kernels
 
     std::vector<T_data_in> responses;
-    for (unsigned k= 0; k< kernel_vector->kernels_.size(); k++)
+    for (auto kernel : kernel_vector->kernels_)
     {
-      bvpl_kernel_sptr kernel = kernel_vector->kernels_[k];
-
       bvpl_kernel_iterator kernel_iter = kernel->iterator();
       kernel_iter.begin(); // reset the kernel iterator
       while (!kernel_iter.isDone())

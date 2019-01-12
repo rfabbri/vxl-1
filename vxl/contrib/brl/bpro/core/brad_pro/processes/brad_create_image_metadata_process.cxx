@@ -6,7 +6,9 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Constructor
 bool brad_create_image_metadata_process_cons(bprb_func_process& pro)
@@ -14,13 +16,13 @@ bool brad_create_image_metadata_process_cons(bprb_func_process& pro)
   //input
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("float"); // input 0: absolute calibration parameter
-  input_types.push_back("float"); // input 1: effect band width
-  input_types.push_back("float"); // input 2: view azimuth
-  input_types.push_back("float"); // input 3: view elevation
-  input_types.push_back("float"); // input 4: sun azimuth
-  input_types.push_back("float"); // input 5: sun elevation
-  input_types.push_back("float"); // input 6: sun irradiance
+  input_types.emplace_back("float"); // input 0: absolute calibration parameter
+  input_types.emplace_back("float"); // input 1: effect band width
+  input_types.emplace_back("float"); // input 2: view azimuth
+  input_types.emplace_back("float"); // input 3: view elevation
+  input_types.emplace_back("float"); // input 4: sun azimuth
+  input_types.emplace_back("float"); // input 5: sun elevation
+  input_types.emplace_back("float"); // input 6: sun irradiance
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
@@ -29,7 +31,7 @@ bool brad_create_image_metadata_process_cons(bprb_func_process& pro)
 
   //output
   std::vector<std::string> output_types;
-  output_types.push_back("brad_image_metadata_sptr");
+  output_types.emplace_back("brad_image_metadata_sptr");
   ok = pro.set_output_types(output_types);
   if (!ok) return ok;
   return true;
@@ -45,13 +47,13 @@ bool brad_create_image_metadata_process(bprb_func_process& pro)
   }
 
   // get the inputs
-  float abscal = pro.get_input<float>(0);
-  float effect_band_width = pro.get_input<float>(1);
-  float view_azimuth = pro.get_input<float>(2);
-  float view_elevation = pro.get_input<float>(3);
-  float sun_azimuth = pro.get_input<float>(4);
-  float sun_elevation = pro.get_input<float>(5);
-  float sun_irradiance = pro.get_input<float>(6);
+  auto abscal = pro.get_input<float>(0);
+  auto effect_band_width = pro.get_input<float>(1);
+  auto view_azimuth = pro.get_input<float>(2);
+  auto view_elevation = pro.get_input<float>(3);
+  auto sun_azimuth = pro.get_input<float>(4);
+  auto sun_elevation = pro.get_input<float>(5);
+  auto sun_irradiance = pro.get_input<float>(6);
 
   brad_image_metadata_sptr metadata = new brad_image_metadata();
   metadata->n_bands_ = 1;
@@ -70,4 +72,3 @@ bool brad_create_image_metadata_process(bprb_func_process& pro)
 
   return true;
 }
-

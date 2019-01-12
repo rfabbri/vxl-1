@@ -1,6 +1,8 @@
 #include <iostream>
 #include <cstring>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vgui/vgui.h>
 #include <vgui/vgui_shell_tableau.h>

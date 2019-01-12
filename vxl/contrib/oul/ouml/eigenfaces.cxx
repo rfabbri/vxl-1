@@ -10,8 +10,10 @@
 
 #include <vnl/algo/vnl_symmetric_eigensystem.h>
 #include <vil1/vil1_save.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 
 //----------------------------------------------------------------------
@@ -66,7 +68,7 @@ EigenFace::~EigenFace()
 bool EigenFace::add_training_image(Image *im, const char * label)
 {
   // precondition
-  assert(im!=VXL_NULLPTR);
+  assert(im!=nullptr);
   vnl_vector<double> *image_vector = convert_image_to_vector(im);
   if (!image_vector) return false;
   if (image_size==0)
@@ -104,7 +106,7 @@ vnl_vector<double> *EigenFace::get_eigenvector(int i)
   {
     std::cerr << "Requesting eigenvector, " << i << " which doesn't exist\n"
              << "Number of eigenvectors is: " << eigenvectors.size() << std::endl;
-    return VXL_NULLPTR;
+    return nullptr;
   }
   return eigenvectors[i];
 }
@@ -206,7 +208,7 @@ bool EigenFace::calculate_eigenfaces()
   std::cout << "Eigenvectors\n";
   for (unsigned int i=0; i<training_images.size(); i++)
   {
-    vnl_vector<double> *new_vec = new vnl_vector<double>(image_size);
+    auto *new_vec = new vnl_vector<double>(image_size);
     *new_vec = A*eigen.get_eigenvector(i);
     //new_vec->normalize();
     eigenvectors.push_back(new_vec);
@@ -226,7 +228,7 @@ bool EigenFace::calculate_eigenfaces()
 void EigenFace::check_training()
 {
   std::cout << "Check training image\n";
-  if (average_training_image!=VXL_NULLPTR)
+  if (average_training_image!=nullptr)
     std::cout << "ati size = " << average_training_image->size() << std::endl;
   else
     std::cout << "ati not set\n";
@@ -252,9 +254,9 @@ void EigenFace::check_training()
 
 vnl_vector<double> *EigenFace::convert_image_to_vector(Image *im)
 {
-  assert(im!=VXL_NULLPTR);
+  assert(im!=nullptr);
   int index=0;
-  vnl_vector<double> *new_vec = new vnl_vector<double>(im->width()*im->height());
+  auto *new_vec = new vnl_vector<double>(im->width()*im->height());
   for (int j=0; j<im->height(); j++)
     for (int i=0; i<im->width(); i++)
       (*new_vec)[index++] = (double)(*im)(i,j);
@@ -367,11 +369,11 @@ vnl_vector<double>* EigenFace::encode(Image *im)
 {
   if (eigenvectors.size()<=0)
   {
-    return VXL_NULLPTR;
+    return nullptr;
   }
   vnl_vector<double> *im_vec = convert_image_to_vector(im);
   *im_vec -= *average_training_image;
-  vnl_vector<double> *wts = new vnl_vector<double>(eigenvectors.size());
+  auto *wts = new vnl_vector<double>(eigenvectors.size());
   for (unsigned int i=0; i<eigenvectors.size(); i++)
     (*wts)[i] = dot_product(*im_vec, *(eigenvectors[i]));
   delete im_vec;
@@ -382,11 +384,11 @@ vnl_vector<double>* EigenFace::encode(vnl_vector<double> *t_vec)
 {
   if (eigenvectors.size()<=0)
   {
-    return VXL_NULLPTR;
+    return nullptr;
   }
-  vnl_vector<double> *im_vec = new vnl_vector<double>(*t_vec);
+  auto *im_vec = new vnl_vector<double>(*t_vec);
   *im_vec -= *average_training_image;
-  vnl_vector<double> *wts = new vnl_vector<double>(eigenvectors.size());
+  auto *wts = new vnl_vector<double>(eigenvectors.size());
   for (unsigned int i=0; i<eigenvectors.size(); i++)
     (*wts)[i] = dot_product(*im_vec, *(eigenvectors[i]));
   delete im_vec;
@@ -434,15 +436,15 @@ char *EigenFace::classify(Image *im, double threshold, int k, int dim)
 {
   std::priority_queue<LabelDist> pq;
 
-  if (num_vectors()==0) return VXL_NULLPTR;
-  if (eigenvectors.size()==0) return VXL_NULLPTR;
+  if (num_vectors()==0) return nullptr;
+  if (eigenvectors.size()==0) return nullptr;
 
   vnl_vector<double> *all_rep = encode(im);
   vnl_vector<double> rep(all_rep->extract(dim, all_rep->size()-dim));
   vnl_vector<double> diff(rep.size());
   double min_dist = DBL_MAX;
   int best=-1;
-  char *ret=VXL_NULLPTR;
+  char *ret=nullptr;
 #if 0
   std::cout << "rep = " << *rep << std::endl;
 #endif
@@ -485,7 +487,7 @@ char *EigenFace::classify(Image *im, double threshold, int k, int dim)
     }
   }
   std::cout << "label = " << ret << " num = " << max << std::endl;
-  if (max<k/2+1) ret=VXL_NULLPTR;
+  if (max<k/2+1) ret=nullptr;
 #if 0
   char ch;
   std::cin >> ch;

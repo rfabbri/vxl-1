@@ -1,15 +1,14 @@
 // This is core/vbl/vbl_quadruple.h
 #ifndef vbl_quadruple_h_
 #define vbl_quadruple_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief a templated 4-tuple
 // \author fsm
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: a templated 4-tuple
 template <class T1, class T2, class T3, class T4>
@@ -25,7 +24,7 @@ struct vbl_quadruple
   T3 third;
   T4 fourth;
 
-  vbl_quadruple() { }
+  vbl_quadruple() = default;
   vbl_quadruple(T1 const &a, T2 const &b, T3 const &c, T4 const &d)
     : first (a)
     , second(b)

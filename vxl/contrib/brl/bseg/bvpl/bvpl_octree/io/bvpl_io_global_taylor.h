@@ -16,7 +16,9 @@
 #include <iostream>
 #include <bvpl/bvpl_octree/bvpl_global_taylor.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_binary_io.h>
 
 

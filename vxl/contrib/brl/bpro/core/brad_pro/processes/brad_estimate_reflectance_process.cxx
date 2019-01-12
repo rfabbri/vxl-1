@@ -6,7 +6,9 @@
 #include <bprb/bprb_func_process.h>
 #include <bprb/bprb_parameters.h>
 #include <brdb/brdb_value.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_image_view_base.h>
 #include <vil/vil_image_view.h>
 #include <brad/brad_image_metadata.h>
@@ -55,7 +57,7 @@ bool brad_estimate_reflectance_process(bprb_func_process& pro)
   //get the inputs
   vil_image_view_base_sptr radiance_img_base = pro.get_input<vil_image_view_base_sptr>(0);
   brad_image_metadata_sptr mdata = pro.get_input<brad_image_metadata_sptr>(1);
-  float mean_reflectance = pro.get_input<float>(2);
+  auto mean_reflectance = pro.get_input<float>(2);
   bool average_airlight = pro.get_input<bool>(3);
   bool is_normalize = pro.get_input<bool>(4);
 
@@ -69,7 +71,7 @@ bool brad_estimate_reflectance_process(bprb_func_process& pro)
      std::cerr << "ERROR: brad_estimate_reflectance: expecting floating point image\n";
      return false;
   }
-  vil_image_view<float>* radiance_img = dynamic_cast<vil_image_view<float>*>(radiance_img_base.ptr());
+  auto* radiance_img = dynamic_cast<vil_image_view<float>*>(radiance_img_base.ptr());
   if (!radiance_img) {
      std::cerr << "ERROR: brad_estimate_reflectance: error casting to float image\n";
      return false;
@@ -81,7 +83,7 @@ bool brad_estimate_reflectance_process(bprb_func_process& pro)
   if (mean_reflectance <= 0.0)
     is_normalize = false;
 
-  vil_image_view<float> *reflectance_img = new vil_image_view<float>(ni, nj, np);
+  auto *reflectance_img = new vil_image_view<float>(ni, nj, np);
   bool success = brad_estimate_reflectance_image(*radiance_img, *mdata, mean_reflectance, *reflectance_img, average_airlight, is_normalize);
 
   if (!success)
@@ -90,4 +92,3 @@ bool brad_estimate_reflectance_process(bprb_func_process& pro)
   pro.set_output_val<vil_image_view_base_sptr>(0, output_img);
   return true;
 }
-

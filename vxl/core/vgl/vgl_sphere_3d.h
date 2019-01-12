@@ -1,16 +1,15 @@
 // This is core/vgl/vgl_sphere_3d.h
 #ifndef vgl_sphere_3d_h
 #define vgl_sphere_3d_h
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief a sphere in 3D nonhomogeneous space
 // \author Ian Scott
 
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_fwd.h> // forward declare vgl_line_3d_2_points
 #include <vgl/vgl_point_3d.h>
 

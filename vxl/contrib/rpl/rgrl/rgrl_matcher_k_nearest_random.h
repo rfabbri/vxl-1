@@ -7,7 +7,6 @@
 
 #include <rgrl/rgrl_matcher_k_nearest.h>
 #include <vnl/vnl_random.h>
-#include <vcl_stlfwd.h>
 
 //: For each "from" feature, match the k nearest "to" features.
 //
@@ -37,7 +36,7 @@ class rgrl_matcher_k_nearest_random
                    rgrl_view const&              current_view,
                    rgrl_transformation const&    current_xform,
                    rgrl_scale const&             /* current_scale */,
-                   rgrl_match_set_sptr const& old_matches = VXL_NULLPTR );
+                   rgrl_match_set_sptr const& old_matches = nullptr ) override;
 
   // Defines type-related functions
   rgrl_type_macro( rgrl_matcher_k_nearest_random, rgrl_matcher);

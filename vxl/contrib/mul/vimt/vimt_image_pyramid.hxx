@@ -10,8 +10,10 @@
 #include <vimt/vimt_image.h>
 #include <vimt/vimt_image_2d.h>
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 //------------------------------------------------------------------------
 //: Convert an image pyramid into a flat image containing each layer.

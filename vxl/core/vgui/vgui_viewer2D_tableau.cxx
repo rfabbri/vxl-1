@@ -1,7 +1,4 @@
 // This is core/vgui/vgui_viewer2D_tableau.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Philip C. Pritchett, RRG, University of Oxford
@@ -11,7 +8,9 @@
 #include <cmath>
 #include "vgui_viewer2D_tableau.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_bool_ostream.h>
 
 #include <vgui/vgui_gl.h>

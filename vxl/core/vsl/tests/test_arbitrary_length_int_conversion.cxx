@@ -2,8 +2,9 @@
 #include <iostream>
 #include <sstream>
 #include <ctime>
-#include <vcl_compiler.h>
-#include <vcl_config_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_binary_explicit_io.h>
 #include <testlib/testlib_test.h>
 #include <vpl/vpl.h>
@@ -14,8 +15,8 @@ void test_arbitrary_length_int_conversion_int()
            << "Testing arbitrary length int conversion for unsigned ints\n"
            << "*********************************************************\n";
 
-  signed int  * a = new signed int [25000000];
-  signed int  * b = new signed int [25000000];
+  auto  * a = new signed int [25000000];
+  auto  * b = new signed int [25000000];
 
   int i;
   for (i = 0; i < 25000000; ++i)
@@ -24,7 +25,7 @@ void test_arbitrary_length_int_conversion_int()
   unsigned maxbuf =  VSL_MAX_ARBITRARY_INT_BUFFER_LENGTH(sizeof(signed int)) *
     25000000;
 
-  unsigned char * buf = new unsigned char[maxbuf];
+  auto * buf = new unsigned char[maxbuf];
 
   std::clock_t t1, t2;
 
@@ -83,7 +84,7 @@ void test_arbitrary_length_int_conversion_short()
     VSL_MAX_ARBITRARY_INT_BUFFER_LENGTH(sizeof(unsigned short))
     * 65538;
 
-  unsigned char * buf = new unsigned char[maxbuf];
+  auto * buf = new unsigned char[maxbuf];
   unsigned long len = vsl_convert_to_arbitrary_length(a, buf, 65538);
   std::cout << " Max required buffer size is " << maxbuf << ". Used " << len
            << std::endl;
@@ -131,7 +132,7 @@ void test_arbitrary_length_int_conversion_ushort()
     VSL_MAX_ARBITRARY_INT_BUFFER_LENGTH(sizeof(unsigned short))
     * 65538;
 
-  unsigned char * buf = new unsigned char[maxbuf];
+  auto * buf = new unsigned char[maxbuf];
   unsigned long len = vsl_convert_to_arbitrary_length(a, buf, 65538);
   std::cout << " Max required buffer size is " << maxbuf << ". Used " << len
            << std::endl;

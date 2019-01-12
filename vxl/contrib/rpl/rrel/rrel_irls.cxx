@@ -13,12 +13,10 @@
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_matrix.h>
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
-
-const double rrel_irls::dflt_convergence_tol_ = 1e-4;
-const int rrel_irls::dflt_max_iterations_ = 25;
-const int rrel_irls::dflt_iterations_for_scale_ = 1;
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 // -------------------------------------------------------------------------
 rrel_irls::rrel_irls( int max_iterations )
@@ -204,7 +202,7 @@ rrel_irls::estimate( const rrel_estimation_problem* problem,
       if ( use_weighted_scale_ ) {
         assert( residuals.size() == weights.size() );
         scale_ = rrel_util_weighted_scale( residuals.begin(), residuals.end(),
-                                           weights.begin(), num_for_fit, (double*)VXL_NULLPTR );
+                                           weights.begin(), num_for_fit, (double*)nullptr );
       }
       else {
         scale_ = rrel_util_median_abs_dev_scale( residuals.begin(), residuals.end(), num_for_fit );
@@ -230,8 +228,8 @@ rrel_irls::estimate( const rrel_estimation_problem* problem,
     // Test to see if the sum of the weights is less or equal to zero.
     double sum_wgt = 0;
 
-    for ( unsigned int i = 0; i < weights.size(); ++i ) {
-      sum_wgt += weights[i];
+    for (double weight : weights) {
+      sum_wgt += weight;
     }
 
     if (sum_wgt <= 0)

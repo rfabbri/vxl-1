@@ -39,7 +39,9 @@
 #include <utility>
 #include <vbl/vbl_ref_count.h>
 #include <vbl/vbl_array_2d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <sdet/sdet_edgel.h>
 #include <sdet/sdet_edgemap_sptr.h>
@@ -76,13 +78,13 @@ class sdet_sel_base : public vbl_ref_count
 public:
 
   //: constructor
-  sdet_sel_base(sdet_edgemap_sptr edgemap,
+  sdet_sel_base(const sdet_edgemap_sptr& edgemap,
                  sdet_curvelet_map& cvlet_map,
                  sdet_edgel_link_graph& edge_link_graph,
                  sdet_curve_fragment_graph& curve_frag_graph,
                  sdet_curvelet_params cvlet_params=sdet_curvelet_params());  //various parameters
 
-  virtual ~sdet_sel_base();
+  ~sdet_sel_base() override;
 
   // Access parameters
   unsigned nrows() { return nrows_; }

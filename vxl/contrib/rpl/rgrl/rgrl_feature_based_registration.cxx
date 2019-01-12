@@ -16,11 +16,14 @@
 #include "rgrl_util.h"
 #include "rgrl_convergence_on_median_error.h"
 #include "rgrl_event.h"
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 rgrl_feature_based_registration::
-rgrl_feature_based_registration( rgrl_data_manager_sptr data,
-                                 rgrl_convergence_tester_sptr conv_tester )
+rgrl_feature_based_registration( const rgrl_data_manager_sptr& data,
+                                 const rgrl_convergence_tester_sptr& conv_tester )
   :data_( data ),
    conv_tester_( conv_tester ),
    num_xforms_tested_( 0 ),
@@ -34,7 +37,7 @@ rgrl_feature_based_registration( rgrl_data_manager_sptr data,
 }
 
 rgrl_feature_based_registration::
-rgrl_feature_based_registration( rgrl_data_manager_sptr data )
+rgrl_feature_based_registration( const rgrl_data_manager_sptr& data )
   :data_( data ),
    num_xforms_tested_( 0 ),
    max_icp_iter_(25),
@@ -48,26 +51,24 @@ rgrl_feature_based_registration( rgrl_data_manager_sptr data )
 }
 
 rgrl_feature_based_registration::
-~rgrl_feature_based_registration()
-{
-}
+~rgrl_feature_based_registration() = default;
 
 void
 rgrl_feature_based_registration::
 clear_results()
 {
   num_xforms_tested_ = 0;
-  best_xform_estimate_ = VXL_NULLPTR;
+  best_xform_estimate_ = nullptr;
   best_matches_.clear();
   best_scales_.clear();
-  best_status_ = VXL_NULLPTR;
+  best_status_ = nullptr;
 }
 
 //: Running from multiple initial estimates, produced by the initializer during registration.
 //  Loop through the set of initial estimates, and call the next \a run(.) in the loop.
 void
 rgrl_feature_based_registration::
-run( rgrl_initializer_sptr initializer )
+run( const rgrl_initializer_sptr& initializer )
 {
   //  Clear previous results
   this->clear_results();
@@ -107,11 +108,11 @@ run( rgrl_initializer_sptr initializer )
 //
 void
 rgrl_feature_based_registration::
-run( rgrl_mask_box              from_image_region,
-     rgrl_mask_box              to_image_region,
-     rgrl_estimator_sptr        init_xform_estimator,
-     rgrl_transformation_sptr   initial_xform,
-     rgrl_scale_sptr            prior_scale,
+run( const rgrl_mask_box&              from_image_region,
+     const rgrl_mask_box&              to_image_region,
+     const rgrl_estimator_sptr&        init_xform_estimator,
+     const rgrl_transformation_sptr&   initial_xform,
+     const rgrl_scale_sptr&            prior_scale,
      unsigned                   init_resolution)
 {
   if ( data_->is_multi_feature() ) {
@@ -192,7 +193,7 @@ bool
 rgrl_feature_based_registration::
 has_final_transformation() const
 {
-  return best_xform_estimate_ != VXL_NULLPTR;
+  return best_xform_estimate_ != nullptr;
 }
 
 //: Set the max number of icp iteration per level
@@ -276,8 +277,8 @@ void
 rgrl_feature_based_registration::
 register_single_feature( rgrl_mask_box            from_image_region,
                          rgrl_mask_box            to_image_region,
-                         rgrl_estimator_sptr      initial_xform_estimator,
-                         rgrl_transformation_sptr xform_estimate,
+                         const rgrl_estimator_sptr&      initial_xform_estimator,
+                         const rgrl_transformation_sptr& xform_estimate,
                          rgrl_scale_sptr          scale,
                          unsigned                 resolution )
 {
@@ -303,7 +304,7 @@ register_single_feature( rgrl_mask_box            from_image_region,
   do { // for each stage/resolution
     data_->get_data_at_stage( resolution, from_set, to_set, matcher, weighter,
                               unwgted_scale_est, wgted_scale_est, xform_estimators);
-    match_set = VXL_NULLPTR;
+    match_set = nullptr;
     current_stage_ = resolution;
 
     DebugMacro(  1, " Current resolution "<< resolution <<'\n' );
@@ -319,7 +320,7 @@ register_single_feature( rgrl_mask_box            from_image_region,
     assert ( xform_estimator );
 
     iterations_at_stage_ = 0; //keeps track of total iter at stage
-    current_status = VXL_NULLPTR;
+    current_status = nullptr;
     bool should_estimate_scale = true;
     int  scale_est_count = 0;
 
@@ -346,7 +347,7 @@ register_single_feature( rgrl_mask_box            from_image_region,
         should_estimate_scale = false;
       }
 
-      rgrl_scale_sptr  new_scale = VXL_NULLPTR;
+      rgrl_scale_sptr  new_scale = nullptr;
       if ( !should_estimate_scale ) {
         DebugMacro(  2, "No scale estimation\n" );
       }
@@ -544,8 +545,8 @@ void
 rgrl_feature_based_registration::
 register_multi_feature( rgrl_mask_box            from_image_region,
                         rgrl_mask_box            to_image_region,
-                        rgrl_estimator_sptr      initial_xform_estimator,
-                        rgrl_transformation_sptr xform_estimate,
+                        const rgrl_estimator_sptr&      initial_xform_estimator,
+                        const rgrl_transformation_sptr& xform_estimate,
                         rgrl_scale_sptr          prior_scale,
                         unsigned                 resolution )
 {
@@ -607,7 +608,7 @@ register_multi_feature( rgrl_mask_box            from_image_region,
     }
 
     iterations_at_stage_ = 0; //keeps track of total iter at level
-    current_status = VXL_NULLPTR;
+    current_status = nullptr;
     bool should_estimate_scale = true;
     int  scale_est_count = 0;
 
@@ -635,7 +636,7 @@ register_multi_feature( rgrl_mask_box            from_image_region,
           should_estimate_scale = false;
         }
 
-        rgrl_scale_sptr new_scale = VXL_NULLPTR;
+        rgrl_scale_sptr new_scale = nullptr;
         if ( !should_estimate_scale ) {
           DebugMacro(  2, "No scale estimation\n" );
         }
@@ -833,7 +834,7 @@ register_multi_feature( rgrl_mask_box            from_image_region,
 void
 rgrl_feature_based_registration::
 initialize_for_next_resolution(  rgrl_mask_box            & from_image_region,
-                                 rgrl_mask_box            & to_image_region,
+                                 rgrl_mask_box            &  /*to_image_region*/,
                                  rgrl_transformation_sptr & xform_estimate,
                                  unsigned                 & current_resol ) const
 {

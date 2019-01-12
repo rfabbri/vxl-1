@@ -8,7 +8,9 @@
 #include <vbl/vbl_smart_ptr.h>
 #include <vbl/vbl_array_1d.h>
 #include <vsl/vsl_binary_io.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 class bbas_1d_array_string: public vbl_ref_count
 {
  public:

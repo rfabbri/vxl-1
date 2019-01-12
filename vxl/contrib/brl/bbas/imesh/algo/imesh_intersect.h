@@ -17,7 +17,9 @@
 #include <limits>
 #include <imesh/imesh_mesh.h>
 #include <vgl/vgl_vector_3d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 //: Intersect the ray from point p with direction d and the triangle defined by a,b,c
@@ -70,7 +72,7 @@ bool imesh_intersect_triangle_min_dist(const vgl_point_3d<double>& p,
 int imesh_intersect_min_dist(const vgl_point_3d<double>& p,
                              const vgl_vector_3d<double>& d,
                              const imesh_mesh& mesh,
-                             double& dist, double* u=VXL_NULLPTR, double* v=VXL_NULLPTR);
+                             double& dist, double* u=nullptr, double* v=nullptr);
 
 
 //: Find the closest point on the triangle a,b,c to point p
@@ -126,7 +128,7 @@ imesh_triangle_closest_point(const vgl_point_3d<double>& p,
 int imesh_closest_point(const vgl_point_3d<double>& p,
                         const imesh_mesh& mesh,
                         vgl_point_3d<double>& cp,
-                        double* u=VXL_NULLPTR, double* v=VXL_NULLPTR);
+                        double* u=nullptr, double* v=nullptr);
 
 
 //: Find the closest intersection point from p along d with triangle a,b,c

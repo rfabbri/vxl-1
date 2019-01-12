@@ -7,8 +7,10 @@
 // \author Lee, Ying-Lin (Bess)
 // \date   Sept 2003
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vnl/vnl_math.h>
 
 static double g( int a1, int a2, int m );
@@ -50,8 +52,8 @@ rgrl_spline::
 set_control_points( vnl_vector<double> const& c )
 {
   unsigned n = 1;
-  for (unsigned i=0; i < m_.size(); ++i)
-    n *= (m_[i]+3);
+  for (unsigned int i : m_)
+    n *= (i+3);
   assert ( c.size() == n );
   c_ = c;
 }

@@ -5,7 +5,9 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bapl/bapl_lowe_pyramid_set.h>
 
 //: Constructor
@@ -19,7 +21,7 @@ bapl_lowe_keypoint::bapl_lowe_keypoint()
 }
 
 //: Constructor
-bapl_lowe_keypoint::bapl_lowe_keypoint( bapl_lowe_pyramid_set_sptr pyramid_set,
+bapl_lowe_keypoint::bapl_lowe_keypoint( const bapl_lowe_pyramid_set_sptr& pyramid_set,
                                         double i, double j, double s, double o )
  : pyramid_set_(pyramid_set), location_i_(i),
    location_j_(j), scale_(s), orientation_(o)
@@ -29,7 +31,7 @@ bapl_lowe_keypoint::bapl_lowe_keypoint( bapl_lowe_pyramid_set_sptr pyramid_set,
 }
 
 //: Constructor - do not extract descriptor from the pyramid but use the one that is passed, assumes the passed descriptor is normalized
-bapl_lowe_keypoint::bapl_lowe_keypoint(bapl_lowe_pyramid_set_sptr pyramid_set,
+bapl_lowe_keypoint::bapl_lowe_keypoint(const bapl_lowe_pyramid_set_sptr& pyramid_set,
                                        double i , double j, double s, double o, vnl_vector_fixed<double, 128>& desc)
  : descriptor_(desc), pyramid_set_(pyramid_set), location_i_(i),
    location_j_(j), scale_(s), orientation_(o)
@@ -110,4 +112,3 @@ bapl_lowe_keypoint_sptr read_from_file(std::istream& ifs, int len, int img_width
   bapl_lowe_keypoint_sptr kp = new bapl_lowe_keypoint(py, loc_y, loc_x, scale, orientation, desc);
   return kp;
 }
-

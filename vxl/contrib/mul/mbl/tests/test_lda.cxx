@@ -2,8 +2,10 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpl/vpl.h> // vpl_unlink()
 
 #include <mbl/mbl_lda.h>

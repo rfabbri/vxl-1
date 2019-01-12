@@ -4,7 +4,9 @@
 #include <iostream>
 #include <limits>
 #include "vdtop_set_8_veinerization_structure.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 template <class T>
 void vdtop_compute_8_veinerization_mask(vil_image_view<T> & img,

@@ -12,7 +12,9 @@
 #include <vector>
 #include <bprb/bprb_func_process.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/ocl/boxm2_opencl_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -37,12 +39,12 @@
 
 namespace boxm2_ocl_render_expected_image_naa_process_globals
 {
-  const unsigned n_inputs_ = 8;
-  const unsigned n_outputs_ = 2;
+  constexpr unsigned n_inputs_ = 8;
+  constexpr unsigned n_outputs_ = 2;
   std::size_t lthreads[2]={8,8};
 
   static std::map<std::string,std::vector<bocl_kernel*> > kernels;
-  bool compile_kernel(bocl_device_sptr device,std::vector<bocl_kernel*> & vec_kernels, std::string opts)
+  bool compile_kernel(const bocl_device_sptr& device,std::vector<bocl_kernel*> & vec_kernels, const std::string& opts)
   {
     //gather all render sources... seems like a lot for rendering...
     std::vector<std::string> src_paths;
@@ -64,7 +66,7 @@ namespace boxm2_ocl_render_expected_image_naa_process_globals
     options += " -D STEP_CELL=step_cell_render_naa(aux_args,data_ptr,d*linfo->block_len,vis,aux_args.expint)";
 
     //have kernel construct itself using the context and device
-    bocl_kernel * ray_trace_kernel=new bocl_kernel();
+    auto * ray_trace_kernel=new bocl_kernel();
 
     if (!ray_trace_kernel->create_kernel( &device->context(),
                                           device->device_id(),
@@ -81,7 +83,7 @@ namespace boxm2_ocl_render_expected_image_naa_process_globals
     std::vector<std::string> norm_src_paths;
     norm_src_paths.push_back(source_dir + "pixel_conversion.cl");
     norm_src_paths.push_back(source_dir + "bit/normalize_kernels.cl");
-    bocl_kernel * normalize_render_kernel=new bocl_kernel();
+    auto * normalize_render_kernel=new bocl_kernel();
 
     options = opts + " -D RENDER_NAA ";
     if (!normalize_render_kernel->create_kernel( &device->context(),
@@ -139,8 +141,8 @@ bool boxm2_ocl_render_expected_image_naa_process(bprb_func_process& pro)
 
   boxm2_opencl_cache_sptr opencl_cache= pro.get_input<boxm2_opencl_cache_sptr>(2);
   vpgl_camera_double_sptr cam= pro.get_input<vpgl_camera_double_sptr>(3);
-  unsigned ni=pro.get_input<unsigned>(4);
-  unsigned nj=pro.get_input<unsigned>(5);
+  auto ni=pro.get_input<unsigned>(4);
+  auto nj=pro.get_input<unsigned>(5);
 
   brad_image_metadata_sptr metadata = pro.get_input<brad_image_metadata_sptr>(6);
   brad_atmospheric_parameters_sptr atm_params = pro.get_input<brad_atmospheric_parameters_sptr>(7);
@@ -149,10 +151,10 @@ bool boxm2_ocl_render_expected_image_naa_process(bprb_func_process& pro)
   std::string data_type,options;
   std::vector<std::string> apps = scene->appearances();
 
-  for (unsigned int i=0; i<apps.size(); ++i) {
-    if ( apps[i] == boxm2_data_traits<BOXM2_NORMAL_ALBEDO_ARRAY>::prefix() )
+  for (const auto & app : apps) {
+    if ( app == boxm2_data_traits<BOXM2_NORMAL_ALBEDO_ARRAY>::prefix() )
     {
-      data_type = apps[i];
+      data_type = app;
       found_appearance = true;
       // boxm2_data_traits<BOXM2_NORMAL_ALBEDO_ARRAY>::datasize();
     }
@@ -183,7 +185,7 @@ bool boxm2_ocl_render_expected_image_naa_process(bprb_func_process& pro)
 
   unsigned cl_ni=RoundUp(ni,lthreads[0]);
   unsigned cl_nj=RoundUp(nj,lthreads[1]);
-  float* buff = new float[cl_ni*cl_nj];
+  auto* buff = new float[cl_ni*cl_nj];
   for (unsigned i=0;i<cl_ni*cl_nj;i++) buff[i]=0.0f;
 
   bocl_mem_sptr exp_image=opencl_cache->alloc_mem(cl_ni*cl_nj*sizeof(float), buff,"exp image buffer");
@@ -197,14 +199,14 @@ bool boxm2_ocl_render_expected_image_naa_process(bprb_func_process& pro)
 
   float background_rad_buff[1];
   // assume expected value of albedo is around 0.2
-  const double expected_albedo = 0.2;
+  constexpr double expected_albedo = 0.2;
   double expected_radiance = brad_expected_radiance_chavez(expected_albedo,vgl_vector_3d<double>(0,0,1),*metadata,*atm_params);
   background_rad_buff[0] = expected_radiance;
   bocl_mem_sptr background_rad = new bocl_mem(device->context(), background_rad_buff, sizeof(float), "background radiance value");
   background_rad->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
 
   // visibility image
-  float* vis_buff = new float[cl_ni*cl_nj];
+  auto* vis_buff = new float[cl_ni*cl_nj];
   std::fill(vis_buff, vis_buff + cl_ni*cl_nj, 1.0f);
   bocl_mem_sptr vis_image=opencl_cache->alloc_mem(cl_ni*cl_nj*sizeof(float),vis_buff,"vis image buffer");
   vis_image->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
@@ -241,11 +243,11 @@ bool boxm2_ocl_render_expected_image_naa_process(bprb_func_process& pro)
   std::cout << "done reading images" << std::endl;
 
 #if 1 //output a float image by default
-  vil_image_view<float>* exp_img_out=new vil_image_view<float>(ni,nj);
+  auto* exp_img_out=new vil_image_view<float>(ni,nj);
   for (unsigned c=0;c<nj;c++)
     for (unsigned r=0;r<ni;r++)
       (*exp_img_out)(r,c)=buff[c*cl_ni+r];
-  vil_image_view<float>* vis_img_out=new vil_image_view<float>(ni,nj);
+  auto* vis_img_out=new vil_image_view<float>(ni,nj);
   for (unsigned c=0;c<nj;c++)
     for (unsigned r=0;r<ni;r++)
       (*vis_img_out)(r,c)=vis_buff[c*cl_ni+r];

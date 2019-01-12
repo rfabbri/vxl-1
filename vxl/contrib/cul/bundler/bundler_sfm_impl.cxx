@@ -7,8 +7,10 @@
 #include <bundler/bundler_inters.h>
 #include <bundler/bundler_utils.h>
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vpgl/vpgl_calibration_matrix.h>
 #include <vpgl/algo/vpgl_em_compute_5_point.h>
@@ -60,7 +62,7 @@ bool bundler_sfm_impl_create_initial_recon::operator()(
     // First step: Find the two images to base the reconstruction on.
     // We do this by selecting the match in the set that is modeled the
     // worst by a homography (i.e. has the fewest number of inliers).
-    bundler_inters_match_set *best_match = VXL_NULLPTR;
+    bundler_inters_match_set *best_match = nullptr;
     double best_inlier_p = 1.0;
 
     std::vector<bundler_inters_match_set>::iterator i;
@@ -282,7 +284,7 @@ class image_adder
 void bundler_sfm_impl_add_next_images::operator()(
     const std::vector<bundler_inters_image_sptr> &to_add,
 
-    bundler_inters_reconstruction &reconstruction,
+    bundler_inters_reconstruction & /*reconstruction*/,
     std::vector<bundler_inters_image_sptr> &added_cameras)
 {
     // Create an image adder
@@ -321,7 +323,6 @@ static bool can_be_added(
 
 
 static void add_new_track(
-    bundler_inters_reconstruction &reconstruction,
     bundler_inters_track_sptr &track)
 {
     assert(!track->observed);
@@ -392,7 +393,7 @@ void bundler_sfm_impl_add_new_points::operator()(
                         (*f)->track,
                         settings.min_observing_images,
                         settings.min_ray_angle)) {
-                add_new_track(recon, (*f)->track);
+                add_new_track((*f)->track);
                 num_points_added++;
             }
         }
@@ -436,7 +437,7 @@ static bool find_point_in_image(
     // Try and find the world_point in img.
     track_membership_tester pred(world_point);
 
-    std::vector<bundler_inters_feature_sptr>::iterator found =
+    auto found =
         std::find_if (img->features.begin(), img->features.end(), pred);
 
 

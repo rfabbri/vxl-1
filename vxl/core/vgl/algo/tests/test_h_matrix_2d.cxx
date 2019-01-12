@@ -10,7 +10,9 @@
 
 #include <iostream>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_homg_point_2d.h>
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_matrix_fixed.h>
@@ -178,7 +180,7 @@ static void test_norm_trans()
            << "Normalized Points\n";
   unsigned n = 0;
   double Sxx = 0, Sxy = 0, Syy=0;
-  for (std::vector<vgl_homg_point_2d<double> >::iterator pit = points1.begin();
+  for (auto pit = points1.begin();
        pit != points1.end(); ++pit,++n)
   {
     vgl_homg_point_2d<double> p = nt(*pit);

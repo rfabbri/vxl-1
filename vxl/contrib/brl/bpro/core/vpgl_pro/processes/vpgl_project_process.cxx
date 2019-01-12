@@ -6,7 +6,9 @@
 // \file
 
 #include <bprb/bprb_parameters.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpgl/vpgl_camera.h>
 #include <vsl/vsl_binary_io.h>
 
@@ -16,16 +18,16 @@ bool vpgl_project_process_cons(bprb_func_process& pro)
   //this process takes 4 inputs:
   //input[0]: the camera
   std::vector<std::string> input_types;
-  input_types.push_back("vpgl_camera_double_sptr");
-  input_types.push_back("double");
-  input_types.push_back("double");
-  input_types.push_back("double");
+  input_types.emplace_back("vpgl_camera_double_sptr");
+  input_types.emplace_back("double");
+  input_types.emplace_back("double");
+  input_types.emplace_back("double");
   pro.set_input_types(input_types);
 
   // this process has two outputs:
   std::vector<std::string> output_types;
-  output_types.push_back("double");
-  output_types.push_back("double");
+  output_types.emplace_back("double");
+  output_types.emplace_back("double");
   pro.set_output_types(output_types);
 
   return true;
@@ -43,9 +45,9 @@ bool vpgl_project_process(bprb_func_process& pro)
   int i=0;
   vpgl_camera_double_sptr camera = pro.get_input<vpgl_camera_double_sptr>(i);
 
-  double x=pro.get_input<double>(++i);
-  double y=pro.get_input<double>(++i);
-  double z=pro.get_input<double>(++i);
+  auto x=pro.get_input<double>(++i);
+  auto y=pro.get_input<double>(++i);
+  auto z=pro.get_input<double>(++i);
 
   double u,v;
   camera->project(x,y,z,u,v);
@@ -55,4 +57,3 @@ bool vpgl_project_process(bprb_func_process& pro)
 
   return true;
 }
-

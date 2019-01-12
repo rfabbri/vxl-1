@@ -9,15 +9,13 @@
 #include "rgrl_view.h"
 
 rgrl_matcher_fixed::
-rgrl_matcher_fixed( rgrl_match_set_sptr  init_match_set_ ):
+rgrl_matcher_fixed( const rgrl_match_set_sptr&  init_match_set_ ):
   match_set_( init_match_set_ )
 {
 }
 
 rgrl_matcher_fixed::
-~rgrl_matcher_fixed()
-{
-}
+~rgrl_matcher_fixed() = default;
 
 rgrl_match_set_sptr
 rgrl_matcher_fixed::
@@ -48,7 +46,7 @@ compute_matches( rgrl_feature_set const&       /*from_features*/,
       for ( TIter ti = fi.begin(); ti != fi.end(); ++ti ) {
         matching_to.push_back( ti.to_feature());
       }
-      sub_match_set->add_feature_and_matches( from_feature, VXL_NULLPTR, matching_to);
+      sub_match_set->add_feature_and_matches( from_feature, nullptr, matching_to);
     }
   }
   sub_match_set->remap_from_features( current_xform );

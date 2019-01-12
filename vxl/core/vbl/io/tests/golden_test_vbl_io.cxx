@@ -24,7 +24,9 @@
 #include <vbl/io/vbl_io_sparse_array_1d.h>
 #include <vbl/io/vbl_io_bounding_box.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <testlib/testlib_root_dir.h>
 
 static void golden_test_vbl_io(bool save_file)
@@ -56,8 +58,8 @@ static void golden_test_vbl_io(bool save_file)
 
 
   // 2d Array
-  const int array_rows = 8;
-  const int array_cols = 6;
+  constexpr int array_rows = 8;
+  constexpr int array_cols = 6;
   vbl_array_2d<int> a2_out(array_rows, array_cols), a2_in;
 
   for (int i=0; i<array_rows; i++)
@@ -68,9 +70,9 @@ static void golden_test_vbl_io(bool save_file)
 
 
   // 3d Array
-  const int array_row1 = 8;
-  const int array_row2 = 7;
-  const int array_row3 = 9;
+  constexpr int array_row1 = 8;
+  constexpr int array_row2 = 7;
+  constexpr int array_row3 = 9;
   vbl_array_3d<int> a3_out(array_row1, array_row2, array_row3), a3_in;
   for (int i=0; i<array_row1; i++)
     for (int j=0; j< array_row2; j++)
@@ -94,7 +96,7 @@ static void golden_test_vbl_io(bool save_file)
   // Smart Pointer
   n = 50;
   vbl_smart_ptr<impl > sp1_out(new impl(n));
-  vbl_smart_ptr<impl> sp2_out(sp1_out);
+  const vbl_smart_ptr<impl>& sp2_out(sp1_out);
   vbl_smart_ptr<impl > sp1_in, sp2_in;
 
 
@@ -155,7 +157,7 @@ static void golden_test_vbl_io(bool save_file)
     test_result1 = false;
   else
   {
-    unsigned int array_size = (unsigned int)(a1_out.size());
+    auto array_size = (unsigned int)(a1_out.size());
     for (unsigned int i=0; i<array_size; i++)
     {
       if (a1_out[i] != a1_in[i])
@@ -173,8 +175,8 @@ static void golden_test_vbl_io(bool save_file)
     test_result2 = false;
   else
   {
-    unsigned int array_rows = (unsigned int)(a2_out.rows());
-    unsigned int array_cols = (unsigned int)(a2_out.cols());
+    auto array_rows = (unsigned int)(a2_out.rows());
+    auto array_cols = (unsigned int)(a2_out.cols());
     for (unsigned int i=0; i<array_rows; ++i)
     {
       for (unsigned int j=0; j<array_cols; ++j)
@@ -195,9 +197,9 @@ static void golden_test_vbl_io(bool save_file)
     test_result3 = false;
   else
   {
-    unsigned int array_row1 = (unsigned int)(a3_out.get_row1_count());
-    unsigned int array_row2 = (unsigned int)(a3_out.get_row2_count());
-    unsigned int array_row3 = (unsigned int)(a3_out.get_row3_count());
+    auto array_row1 = (unsigned int)(a3_out.get_row1_count());
+    auto array_row2 = (unsigned int)(a3_out.get_row2_count());
+    auto array_row3 = (unsigned int)(a3_out.get_row3_count());
     for (unsigned int i=0; i<array_row1; ++i)
       for (unsigned int j=0; j<array_row2; ++j)
         for (unsigned int k=0; k<array_row3; ++k)
@@ -214,10 +216,10 @@ static void golden_test_vbl_io(bool save_file)
     test_result4=false;
   else {
     //check every key/data pair, require same order too.
-    vbl_sparse_array_1d<double>::const_iterator s = sa_in.begin();
+    auto s = sa_in.begin();
     //N.B. relies on sensible == operator for <T>
-    for (vbl_sparse_array_1d<double>::const_iterator r = sa_out.begin(); r != sa_out.end(); ++r){
-      if (((*s).first != (*r).first) || ((*s).second != (*r).second)) test_result4=false;
+    for (auto r : sa_out){
+      if (((*s).first != r.first) || ((*s).second != r.second)) test_result4=false;
       s++;
     }
   }

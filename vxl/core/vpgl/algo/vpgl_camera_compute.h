@@ -13,7 +13,9 @@
 #include <vpgl/vpgl_perspective_camera.h>
 #include <vpgl/vpgl_proj_camera.h>
 #include <vpgl/vpgl_affine_camera.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_fwd.h>
 #include <vnl/vnl_fwd.h>
 
@@ -35,7 +37,7 @@ class vpgl_proj_camera_compute
                        vpgl_proj_camera<double>& camera );
  private:
   //:default constructor (is private)
-  vpgl_proj_camera_compute();
+  vpgl_proj_camera_compute() = delete;
 };
 
 
@@ -50,7 +52,7 @@ class vpgl_affine_camera_compute
                        const std::vector< vgl_point_3d<double> >& world_pts,
                        vpgl_affine_camera<double>& camera );
  private:
-  vpgl_affine_camera_compute();
+  vpgl_affine_camera_compute() = delete;
 };
 
 
@@ -92,7 +94,7 @@ class vpgl_perspective_camera_compute
                        vpgl_perspective_camera<double>& camera );
 
  private:
-  vpgl_perspective_camera_compute();
+  vpgl_perspective_camera_compute() = delete;
 };
 
 #endif // vpgl_camera_compute_h_

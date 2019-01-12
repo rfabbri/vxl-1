@@ -41,7 +41,7 @@
 #include <vipl/filter/vipl_filter_2d.h> // parent class
 
 //: set pixel to given value if above/below certain threshold
-template <class ImgIn,class ImgOut,class DataIn,class DataOut, VCL_DFL_TYPE_PARAM_STLDECL(PixelItr, vipl_trivial_pixeliter) >
+template <class ImgIn,class ImgOut,class DataIn,class DataOut, class PixelItr = vipl_trivial_pixeliter >
 class vipl_threshold : public vipl_filter_2d<ImgIn,ImgOut,DataIn,DataOut,PixelItr>
 {
   // -+-+- data members: -+-+-
@@ -63,10 +63,10 @@ class vipl_threshold : public vipl_filter_2d<ImgIn,ImgOut,DataIn,DataOut,PixelIt
   inline vipl_threshold(vipl_threshold const& A)
     : vipl_filter_2d<ImgIn,ImgOut,DataIn,DataOut,PixelItr>(A), threshold_(A.threshold()), below_(A.below()),
       above_(A.above()), aboveset_(A.aboveset()) {}
-  inline ~vipl_threshold() {}
+  inline ~vipl_threshold() override = default;
 
   // -+-+- required method for filters: -+-+-
-  bool section_applyop();
+  bool section_applyop() override;
 };
 
 #ifdef INSTANTIATE_TEMPLATES

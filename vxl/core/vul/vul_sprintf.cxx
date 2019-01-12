@@ -1,7 +1,4 @@
 // This is core/vul/vul_sprintf.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //
 // Author: Andrew W. Fitzgibbon, Oxford RRG
 // Created: 08 Aug 96
@@ -14,7 +11,9 @@
 #include <cstdio>
 #include "vul_sprintf.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #undef vsprintf // this works around a bug in libintl.h
 
 vul_sprintf::vul_sprintf(char const *fmt, ...) : std::string("")

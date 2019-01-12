@@ -1,15 +1,15 @@
 #include <boxm2/vecf/boxm2_vecf_estimate_camera_from_canthus.h>
 
-bool boxm2_vecf_estimate_camera_from_canthus::estimate_camera(vgl_vector_2d<double> t){
+bool boxm2_vecf_estimate_camera_from_canthus::estimate_camera(vgl_vector_2d<double>  /*t*/){
   std::map<std::string,vgl_point_2d<double> >::iterator it;
   std::string fields [] =  {"image_shape","left_iris_part_0","left_iris_part_1","right_iris_part_0","right_iris_part_1","nose_ridge_part_0","left_medial_canthus","right_medial_canthus","left_lateral_canthus","right_lateral_canthus"};
   std::vector<std::string> field_array;
   field_array.assign(fields,fields + sizeof(fields)/sizeof(fields[0]));
   unsigned count_missing = 0;
-  for (unsigned i = 0 ; i <field_array.size();i++){
-    it = this->dlib_part_map_.find(field_array[i]);
+  for (const auto & i : field_array){
+    it = this->dlib_part_map_.find(i);
     if (it == dlib_part_map_.end()){
-      std::cout<<" Missing dlib part " << field_array[i] << std::endl;
+      std::cout<<" Missing dlib part " << i << std::endl;
       count_missing++;
     }
   }
@@ -106,7 +106,7 @@ bool boxm2_vecf_estimate_camera_from_canthus::parse_files(std::string& left_dlib
     double x,y;
     lfile >> x;
     lfile >> y;
-    pts_l.push_back(vgl_point_2d<double>(x ,y));
+    pts_l.emplace_back(x ,y);
   }
   if (pts_l.size()!= this->n_dlib_orbit_parts_){
     std::cout<< " file has "<<pts_l.size()<<" orbit parts instead of the required "<<this->n_dlib_orbit_parts_<<std::endl;
@@ -123,7 +123,7 @@ bool boxm2_vecf_estimate_camera_from_canthus::parse_files(std::string& left_dlib
     double x,y;
     rfile >> x;
     rfile >> y;
-    pts_r.push_back(vgl_point_2d<double>(x ,y));
+    pts_r.emplace_back(x ,y);
   }
   if (pts_r.size()!= this->n_dlib_orbit_parts_){
     std::cout<< " file has "<<pts_r.size()<<" orbit parts instead of the required "<<this->n_dlib_orbit_parts_<<std::endl;
@@ -139,7 +139,7 @@ bool boxm2_vecf_estimate_camera_from_canthus::parse_files(std::string& left_dlib
     double x,y;
     alfw_file >> x;
     alfw_file >> y;
-    pts_alfw.push_back(vgl_point_2d<double>(x ,y));
+    pts_alfw.emplace_back(x ,y);
   }
   if (pts_alfw.size()!= this->n_dlib_alfw_landmarks_){
     std::cout<< " file has "<<pts_alfw.size()<<" aflw parts instead of the required "<<this->n_dlib_alfw_landmarks_ <<std::endl;

@@ -17,8 +17,10 @@
 
 #include <string>
 #include <iostream>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_point_3d.h>
 
 #include <vnl/vnl_numeric_traits.h>
@@ -51,7 +53,7 @@ bool bmsh3d_load_ply (bmsh3d_mesh* M, const char* file)
   parsed_mesh.mesh = M;
 
   // OPEN file
-  p_ply ply = ply_open(file, VXL_NULLPTR, 0, VXL_NULLPTR);
+  p_ply ply = ply_open(file, nullptr, 0, nullptr);
   if (!ply)
     return false;
 
@@ -93,7 +95,7 @@ bool bmsh3d_load_ply_v (bmsh3d_mesh* M, const char* file)
   parsed_mesh.mesh = M;
 
   // OPEN file
-  p_ply ply = ply_open(file, VXL_NULLPTR, 0, VXL_NULLPTR);
+  p_ply ply = ply_open(file, nullptr, 0, nullptr);
   if (!ply)
     return false;
 
@@ -132,12 +134,12 @@ bool bmsh3d_load_ply_v (bmsh3d_mesh* M, const char* file)
 bool bmsh3d_load_ply_f (bmsh3d_mesh* M, const char* file)
 {
   //Temp solution: load to a tmpM and copy faces to M.
-  bmsh3d_mesh* tmpM = new bmsh3d_mesh;
+  auto* tmpM = new bmsh3d_mesh;
   if (! bmsh3d_load_ply(tmpM, file))
     return false;
 
   //Copy faces from tmpM to M.
-  std::map <int, bmsh3d_face*>::iterator it = tmpM->facemap().begin();
+  auto it = tmpM->facemap().begin();
   for (; it != tmpM->facemap().end(); it++) {
     int id = (*it).first;
     bmsh3d_face* tmpF = (*it).second;
@@ -166,7 +168,7 @@ int bmsh3d_fileio_vertex_cb_(p_ply_argument argument)
   void* temp;
   ply_get_argument_user_data(argument, &temp, &index);
 
-  bmsh3d_fileio_parsed_mesh_* parsed_mesh =
+  auto* parsed_mesh =
     (bmsh3d_fileio_parsed_mesh_*) temp;
 
   switch (index)
@@ -196,12 +198,12 @@ int bmsh3d_fileio_vertex_cb_(p_ply_argument argument)
 int bmsh3d_fileio_face_cb_(p_ply_argument argument)
 {
   void* temp;
-  ply_get_argument_user_data(argument, &temp, VXL_NULLPTR);
-  bmsh3d_fileio_parsed_mesh_* parsed_mesh =
+  ply_get_argument_user_data(argument, &temp, nullptr);
+  auto* parsed_mesh =
     (bmsh3d_fileio_parsed_mesh_*) temp;
 
   long length, value_index, value;
-  ply_get_argument_property(argument, VXL_NULLPTR, &length, &value_index);
+  ply_get_argument_property(argument, nullptr, &length, &value_index);
   value = (int) ply_get_argument_value(argument);
 
   if (value_index == -1)
@@ -220,10 +222,9 @@ int bmsh3d_fileio_face_cb_(p_ply_argument argument)
     // INSERT FACE INTO THE MESH
     bmsh3d_face* F = M->_new_face ();
     // get pointers to the vertices of the new face
-    for (unsigned int k=0; k < parsed_mesh->vertex_indices.size(); ++k )
+    for (int ind : parsed_mesh->vertex_indices)
     {
       // get pointer to the vertex from its index
-      int ind = parsed_mesh->vertex_indices[k];
       bmsh3d_vertex* V =
         M->vertexmap(ind);
       assert(V);
@@ -237,13 +238,13 @@ int bmsh3d_fileio_face_cb_(p_ply_argument argument)
 // ----------------------------------------------------------------------------
 //: save mesh to a .ply file
 // This implementation uses LITTLE_ENDIAN and uses '\n' for new line
-bool bmsh3d_save_ply (bmsh3d_mesh* M, const char* file, bool ascii_mode, std::string comment)
+bool bmsh3d_save_ply (bmsh3d_mesh* M, const char* file, bool ascii_mode, const std::string& comment)
 {
   // determine storage mode
   e_ply_storage_mode storage_mode = (ascii_mode) ? PLY_ASCII : PLY_LITTLE_ENDIAN;
 
   // OPEN FILE
-  p_ply oply = ply_create(file, storage_mode, VXL_NULLPTR, 0, VXL_NULLPTR);
+  p_ply oply = ply_create(file, storage_mode, nullptr, 0, nullptr);
 
   std::cerr << "  saving " << file << " :\n\t"
            << M->vertexmap().size() << " points, "
@@ -280,7 +281,7 @@ bool bmsh3d_save_ply (bmsh3d_mesh* M, const char* file, bool ascii_mode, std::st
   M->assign_IFS_vertex_vid_by_vertex_order();
 
   // traverse thru all vertices and write to ply file
-  std::map<int, bmsh3d_vertex*>::iterator it = M->vertexmap().begin();
+  auto it = M->vertexmap().begin();
   for (; it != M->vertexmap().end(); it++)
   {
     bmsh3d_vertex* v = (*it).second;
@@ -292,7 +293,7 @@ bool bmsh3d_save_ply (bmsh3d_mesh* M, const char* file, bool ascii_mode, std::st
   }
 
   // faces
-  std::map<int, bmsh3d_face*>::iterator fit = M->facemap().begin();
+  auto fit = M->facemap().begin();
   for (; fit != M->facemap().end(); fit++)
   {
     bmsh3d_face* f = (*fit).second;

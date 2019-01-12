@@ -10,8 +10,10 @@
 #include <cmath>
 #include "pdf1d_gaussian.h"
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vnl/vnl_math.h>
 #include <pdf1d/pdf1d_gaussian_sampler.h>
@@ -34,9 +36,7 @@ pdf1d_gaussian::pdf1d_gaussian(double mean, double variance)
 
 //=======================================================================
 
-pdf1d_gaussian::~pdf1d_gaussian()
-{
-}
+pdf1d_gaussian::~pdf1d_gaussian() = default;
 
 //=======================================================================
 
@@ -68,7 +68,7 @@ void pdf1d_gaussian::set_mean(double mean)
 
 pdf1d_sampler* pdf1d_gaussian::new_sampler() const
 {
-  pdf1d_gaussian_sampler *i = new pdf1d_gaussian_sampler;
+  auto *i = new pdf1d_gaussian_sampler;
   i->set_model(*this);
   return i;
 }

@@ -6,7 +6,9 @@
 // \file
 
 #include <bprb/bprb_parameters.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_image_view.h>
 #include <vil/vil_image_view_base.h>
 
@@ -15,10 +17,10 @@ bool vil_init_byte_image_process_cons(bprb_func_process& pro)
 {
   // input
   std::vector<std::string> input_types_;
-  input_types_.push_back("unsigned");  // ni
-  input_types_.push_back("unsigned");  // nj
-  input_types_.push_back("unsigned");  // np
-  input_types_.push_back("unsigned");  // initial value
+  input_types_.emplace_back("unsigned");  // ni
+  input_types_.emplace_back("unsigned");  // nj
+  input_types_.emplace_back("unsigned");  // np
+  input_types_.emplace_back("unsigned");  // initial value
 
   if (!pro.set_input_types(input_types_))
     return false;
@@ -31,7 +33,7 @@ bool vil_init_byte_image_process_cons(bprb_func_process& pro)
 
   // output
   std::vector<std::string> output_types_;
-  output_types_.push_back("vil_image_view_base_sptr");
+  output_types_.emplace_back("vil_image_view_base_sptr");
   return pro.set_output_types(output_types_);
 }
 
@@ -47,12 +49,12 @@ bool vil_init_byte_image_process(bprb_func_process& pro)
   // get the input
   // get the inputs
   unsigned i = 0;
-  unsigned int ni = pro.get_input<unsigned>(i++);
-  unsigned int nj = pro.get_input<unsigned>(i++);
-  unsigned int np = pro.get_input<unsigned>(i++);
-  unsigned init_val_in = pro.get_input<unsigned>(i++);
-  vxl_byte init_val = (unsigned char)init_val_in;
-  vil_image_view<vxl_byte>* img = new vil_image_view<vxl_byte>(ni, nj, np);
+  auto ni = pro.get_input<unsigned>(i++);
+  auto nj = pro.get_input<unsigned>(i++);
+  auto np = pro.get_input<unsigned>(i++);
+  auto init_val_in = pro.get_input<unsigned>(i++);
+  auto init_val = (unsigned char)init_val_in;
+  auto* img = new vil_image_view<vxl_byte>(ni, nj, np);
   img->fill(init_val);
 
   pro.set_output_val<vil_image_view_base_sptr>(0, vil_image_view_base_sptr(img));

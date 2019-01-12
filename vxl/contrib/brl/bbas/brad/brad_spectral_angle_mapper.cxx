@@ -33,7 +33,7 @@ brad_spectral_angle_mapper::brad_spectral_angle_mapper(std::vector<float>& bands
 //: Create Spectral Angle Map
 //---------------------------------------------------------------------------
 bool brad_spectral_angle_mapper::compute_sam_img(const vil_image_view<float>& image,
-  const std::string keyword,
+  const std::string& keyword,
   vil_image_view<float>& spectral_angle)
 {
   // Ensure our library has at least one material
@@ -246,7 +246,7 @@ bool brad_spectral_angle_mapper::aster_classify_material(
 //---------------------------------------------------------------------------
 //: add a material to the library
 //---------------------------------------------------------------------------
-bool brad_spectral_angle_mapper::add_material(const std::string type,
+bool brad_spectral_angle_mapper::add_material(const std::string& type,
   const vil_image_view<float>& image,
   const vil_image_view<bool>& mask)
 {
@@ -301,7 +301,7 @@ bool brad_spectral_angle_mapper::add_material(const std::string type,
 //---------------------------------------------------------------------------
 //: add a material to the library
 //---------------------------------------------------------------------------
-bool brad_spectral_angle_mapper::add_material_per_pixel(const std::string type,
+bool brad_spectral_angle_mapper::add_material_per_pixel(const std::string& type,
   const vil_image_view<float>& image,
   const vil_image_view<bool>& mask)
 {
@@ -341,9 +341,8 @@ bool brad_spectral_angle_mapper::add_material_per_pixel(const std::string type,
 //---------------------------------------------------------------------------
 //: Adds all valid files in the directory to the library
 //---------------------------------------------------------------------------
-void brad_spectral_angle_mapper::add_aster_dir(const std::string aster_dir) {
+void brad_spectral_angle_mapper::add_aster_dir(const std::string& aster_dir) {
 
-  int num_bands = bands_min_.size();
 
   bool good_file;
   for (vul_file_iterator fi(aster_dir); fi; ++fi) {
@@ -352,7 +351,7 @@ void brad_spectral_angle_mapper::add_aster_dir(const std::string aster_dir) {
     std::ifstream is(fi());     // open file
     char c;
     while (is.get(c)) {          // loop getting single characters
-      if (c <= -1 || c >= 255) { // check if the file contains bad character
+      if (c <= -1 || c == 255) { // check if the file contains bad character
         good_file = false;
         std::cerr << "File " << vul_file::strip_directory(fi()) << " contains an invalid character. Continuing to next file...\n";
         break;

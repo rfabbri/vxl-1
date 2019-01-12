@@ -5,7 +5,9 @@
 // \file
 #include <vpgl/vpgl_perspective_camera.h>
 #include <vgui/vgui_modifier.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/ocl/boxm2_ocl_util.h>
 #include <boxm2/view/boxm2_view_utils.h>
 
@@ -201,7 +203,7 @@ float boxm2_ocl_render_trajectory_tableau::render_frame()
     unsigned int time_id = 0;
     good = good && bprb_batch_process_manager::instance()->commit_output(0, time_id);
     brdb_query_aptr Q = brdb_query_comp_new("id", brdb_query::EQ, time_id);
-    brdb_selection_sptr S = DATABASE->select("float_data", Q);
+    brdb_selection_sptr S = DATABASE->select("float_data", std::move(Q));
     if (S->size()!=1){
         std::cout << "in bprb_batch_process_manager::set_input_from_db(.) -"
             << " no selections\n";

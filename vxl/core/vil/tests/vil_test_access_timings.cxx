@@ -9,13 +9,15 @@
 #include <ctime>
 #include <vxl_config.h> // for vxl_byte
 #include <vil/vil_image_view.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <mbl/mbl_stats_1d.h>
-#include <vcl_cassert.h>
+#include <cassert>
 
-const unsigned NI=256;
-const unsigned NJ=256;
-const unsigned NP=3;
+constexpr unsigned NI = 256;
+constexpr unsigned NJ = 256;
+constexpr unsigned NP = 3;
 
 template <class imT>
 double method1(vil_image_view<imT>& image, int n_loops)

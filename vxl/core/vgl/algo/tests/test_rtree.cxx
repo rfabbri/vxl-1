@@ -1,5 +1,7 @@
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_box_2d.h>
 #include <vgl/vgl_polygon.h>
@@ -75,8 +77,8 @@ static void test_point_box()
   unsigned ni = 1000;
   for (unsigned i = 0; i<ni; ++i)
   {
-    float x = static_cast<float>(r.drand32(0.0,1.0));
-    float y = static_cast<float>(r.drand32(0.0,1.0));
+    auto x = static_cast<float>(r.drand32(0.0,1.0));
+    auto y = static_cast<float>(r.drand32(0.0,1.0));
     vgl_point_2d<float> p(x,y);
     tr_big.add(p);
   }

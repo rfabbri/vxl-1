@@ -9,7 +9,9 @@
 #include "bapl_lowe_keypoint.h"
 #include "bapl_lowe_keypoint_sptr.h"
 #include "bapl_keypoint_sptr.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vgl/vgl_point_2d.h>
 #include <vpgl/vpgl_fundamental_matrix.h>
@@ -41,12 +43,12 @@ void vsl_b_read(vsl_b_istream& is, bapl_keypoint_set* ph)
     vsl_b_read(is, *ph);
   }
   else
-    ph = VXL_NULLPTR;
+    ph = nullptr;
 }
 
 void vsl_b_write(vsl_b_ostream& os, const bapl_keypoint_set* &ph)
 {
-  if (ph==VXL_NULLPTR)
+  if (ph==nullptr)
   {
     vsl_b_write(os, false); // Indicate null pointer stored
   }
@@ -83,12 +85,12 @@ void vsl_b_read(vsl_b_istream& is, bapl_keypoint_match_set* ph)
     vsl_b_read(is, *ph);
   }
   else
-    ph = VXL_NULLPTR;
+    ph = nullptr;
 }
 
 void vsl_b_write(vsl_b_ostream& os, const bapl_keypoint_match_set* &ph)
 {
-  if (ph==VXL_NULLPTR)
+  if (ph==nullptr)
   {
     vsl_b_write(os, false); // Indicate null pointer stored
   }
@@ -105,7 +107,7 @@ void bapl_keypoint_match_set::prune_spurious_matches(std::vector<bapl_key_match>
   std::set<int> helper;
   int cnt = (int)matches.size();
   for (int ii = 0; ii < cnt; ii++) {
-    std::set<int>::iterator it = helper.find(matches[ii].second->id());
+    auto it = helper.find(matches[ii].second->id());
     if (it == helper.end()) {
       helper.insert(matches[ii].second->id());
     }
@@ -121,8 +123,7 @@ void bapl_keypoint_match_set::prune_spurious_matches(std::vector<bapl_key_match>
 void bapl_keypoint_match_set::refine_matches(float outlier_threshold, std::vector<bapl_key_match>& refined_matches)
 {
   std::vector<vgl_point_2d<double> > lpts, rpts; std::vector<vgl_point_2d<double> > lpts_refined, rpts_refined;
-  for (unsigned i = 0; i < matches_.size(); i++) {
-    bapl_key_match m = matches_[i];
+  for (const auto& m : matches_) {
     bapl_lowe_keypoint_sptr kp1;
     kp1.vertical_cast(m.first);
     bapl_lowe_keypoint_sptr kp2;
@@ -155,8 +156,8 @@ void bapl_keypoint_match_set::refine_matches(float outlier_threshold, std::vecto
     if (outliers[i])
       continue;
     refined_matches.push_back(matches_[i]);
-    lpoints.push_back(vgl_homg_point_2d<double>(lpts[i]));
-    rpoints.push_back(vgl_homg_point_2d<double>(rpts[i]));
+    lpoints.emplace_back(lpts[i]);
+    rpoints.emplace_back(rpts[i]);
     lpts_refined.push_back(lpts[i]);
     rpts_refined.push_back(rpts[i]);
   }
@@ -191,4 +192,3 @@ void bapl_keypoint_match_set::refine_matches(float outlier_threshold, std::vecto
   std::cout << "After F optimization found: " << matches_pruned2.size() << " matches, initial number was: " << matches_pruned.size() << "!\n";
 #endif
 }
-

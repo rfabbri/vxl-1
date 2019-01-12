@@ -1,26 +1,22 @@
 // This is oxl/mvl/FMatrixAffine.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 //  \file
 
 #include "FMatrixAffine.h"
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //--------------------------------------------------------------
 //
 //: Constructor
-FMatrixAffine::FMatrixAffine ()
-{
-}
+FMatrixAffine::FMatrixAffine () = default;
 
 //--------------------------------------------------------------
 //
 //: Destructor
-FMatrixAffine::~FMatrixAffine()
-{
-}
+FMatrixAffine::~FMatrixAffine() = default;
 
 //--------------------------------------------------------------
 //

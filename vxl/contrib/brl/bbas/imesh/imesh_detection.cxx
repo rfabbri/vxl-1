@@ -3,7 +3,10 @@
 //:
 // \file
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Return the indices of half edges that are on the mesh boundary
 // The results are organized into loops
@@ -199,9 +202,8 @@ imesh_detect_connected_components(const imesh_half_edge_set& he)
   {
     if (visited[i]) continue;
     components.push_back(imesh_detect_connected_faces(he,i));
-    for (std::set<unsigned int>::const_iterator itr=components.back().begin();
-         itr != components.back().end(); ++itr)
-      visited[*itr] = true;
+    for (auto &itr : components.back())
+      visited[itr] = true;
   }
   return components;
 }

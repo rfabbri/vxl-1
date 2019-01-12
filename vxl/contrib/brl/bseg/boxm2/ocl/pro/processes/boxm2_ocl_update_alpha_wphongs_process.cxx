@@ -1,7 +1,8 @@
 // This is brl/bseg/boxm2/ocl/pro/processes/boxm2_ocl_update_alpha_wphongs_process.cxx
-#include <iostream>
-#include <fstream>
 #include <bprb/bprb_func_process.h>
+#include <fstream>
+#include <iostream>
+#include <utility>
 //:
 // \file
 // \brief  A process for updating the scene.
@@ -9,7 +10,9 @@
 // \author Vishal Jain
 // \date Mar 25, 2011
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/ocl/boxm2_opencl_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -30,17 +33,17 @@
 
 namespace boxm2_ocl_update_alpha_wphongs_process_globals
 {
-  const unsigned n_inputs_  = 6;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 6;
+  constexpr unsigned n_outputs_ = 0;
   enum {
       UPDATE_SEGLEN = 0,
       UPDATE_PREINF = 1,
-      UPDATE_PROC   = 2,
-      UPDATE_BAYES  = 3,
-      UPDATE_CELL   = 4
+      UPDATE_PROC = 2,
+      UPDATE_BAYES = 3,
+      UPDATE_CELL = 4
   };
 
-  void compile_kernel(bocl_device_sptr device,std::vector<bocl_kernel*> & vec_kernels,std::string opts)
+  void compile_kernel(const bocl_device_sptr& device,std::vector<bocl_kernel*> & vec_kernels,std::string opts)
   {
     //gather all render sources... seems like a lot for rendering...
     std::vector<std::string> src_paths;
@@ -58,33 +61,33 @@ namespace boxm2_ocl_update_alpha_wphongs_process_globals
     src_paths.push_back(source_dir + "bit/cast_ray_bit.cl");
 
     //compilation options
-    std::string options = opts;
+    std::string options = std::move(opts);
 
     //create all passes
-    bocl_kernel* seg_len = new bocl_kernel();
+    auto* seg_len = new bocl_kernel();
     std::string seg_opts = options + " -D SEGLEN -D STEP_CELL=step_cell_seglen(aux_args,data_ptr,llid,d) ";
     seg_len->create_kernel(&device->context(),device->device_id(), src_paths, "seg_len_main", seg_opts, "update::seg_len");
     vec_kernels.push_back(seg_len);
 
-    bocl_kernel* pre_inf = new bocl_kernel();
+    auto* pre_inf = new bocl_kernel();
     std::string pre_opts = options + " -D PREINF -D PREINF_PHONGS -D STEP_CELL=step_cell_preinf_phongs(aux_args,data_ptr,llid,d) ";
     pre_inf->create_kernel(&device->context(),device->device_id(), src_paths, "pre_inf_main", pre_opts, "update::pre_inf");
     vec_kernels.push_back(pre_inf);
 
     //may need DIFF LIST OF SOURCES FOR THIS GUY
-    bocl_kernel* proc_img = new bocl_kernel();
+    auto* proc_img = new bocl_kernel();
     std::string proc_norm_opts =options+ " -D PROC_NORM ";
     proc_img->create_kernel(&device->context(),device->device_id(), non_ray_src, "proc_norm_image", proc_norm_opts, "update::proc_norm_image");
     vec_kernels.push_back(proc_img);
 
     //push back cast_ray_bit
-    bocl_kernel* bayes_main = new bocl_kernel();
+    auto* bayes_main = new bocl_kernel();
     std::string bayes_opt = options + " -D BAYES -D BAYES_PHONGS -D STEP_CELL=step_cell_bayes_phongs(aux_args,data_ptr,llid,d) ";
     bayes_main->create_kernel(&device->context(),device->device_id(), src_paths, "bayes_main", bayes_opt, "update::bayes_main");
     vec_kernels.push_back(bayes_main);
 
     //may need DIFF LIST OF SOURCES FOR THSI GUY TOO
-    bocl_kernel* update = new bocl_kernel();
+    auto* update = new bocl_kernel();
     update->create_kernel(&device->context(),device->device_id(), non_ray_src, "update_bit_scene_main", options+="-D UPDATE_ALPHA ",  "update::update_main");
     vec_kernels.push_back(update);
 
@@ -113,7 +116,7 @@ bool boxm2_ocl_update_alpha_wphongs_process_cons(bprb_func_process& pro)
   bool good = pro.set_input_types(input_types_) && pro.set_output_types(output_types_);
 
   // default 6 and 7 inputs
-  brdb_value_sptr idx        = new brdb_value_t<std::string>("");
+  brdb_value_sptr idx = new brdb_value_t<std::string>("");
   pro.set_input(5, idx);
 
   return good;
@@ -135,12 +138,12 @@ bool boxm2_ocl_update_alpha_wphongs_process(bprb_func_process& pro)
 
   //get the inputs
   unsigned i = 0;
-  bocl_device_sptr         device       = pro.get_input<bocl_device_sptr>(i++);
-  boxm2_scene_sptr         scene        = pro.get_input<boxm2_scene_sptr>(i++);
+  bocl_device_sptr         device = pro.get_input<bocl_device_sptr>(i++);
+  boxm2_scene_sptr         scene = pro.get_input<boxm2_scene_sptr>(i++);
   boxm2_opencl_cache_sptr  opencl_cache = pro.get_input<boxm2_opencl_cache_sptr>(i++);
-  vpgl_camera_double_sptr  cam          = pro.get_input<vpgl_camera_double_sptr>(i++);
-  vil_image_view_base_sptr img          = pro.get_input<vil_image_view_base_sptr>(i++);
-  std::string               ident        = pro.get_input<std::string>(i++);                // type of model.
+  vpgl_camera_double_sptr  cam = pro.get_input<vpgl_camera_double_sptr>(i++);
+  vil_image_view_base_sptr img = pro.get_input<vil_image_view_base_sptr>(i++);
+  std::string               ident = pro.get_input<std::string>(i++);                // type of model.
 
   //cache size sanity check
   long binCache = opencl_cache.ptr()->bytes_in_cache();
@@ -151,10 +154,10 @@ bool boxm2_ocl_update_alpha_wphongs_process(bprb_func_process& pro)
   std::string data_type,num_obs_type="boxm2_num_obs",options;
   std::vector<std::string> apps = scene->appearances();
   int appTypeSize;
-  for (unsigned int i=0; i<apps.size(); ++i) {
-    if ( apps[i] == boxm2_data_traits<BOXM2_FLOAT8>::prefix() )
+  for (const auto & app : apps) {
+    if ( app == boxm2_data_traits<BOXM2_FLOAT8>::prefix() )
     {
-      data_type = apps[i];
+      data_type = app;
       foundDataType = true;
       options=" -D FLOAT8 ";
       appTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_FLOAT8>::prefix());
@@ -188,24 +191,24 @@ bool boxm2_ocl_update_alpha_wphongs_process(bprb_func_process& pro)
 
   //grab input image, establish cl_ni, cl_nj (so global size is divisible by local size)
   vil_image_view_base_sptr float_img = boxm2_util::prepare_input_image(img, true);
-  vil_image_view<float>* img_view = static_cast<vil_image_view<float>* >(float_img.ptr());
-  unsigned cl_ni=(unsigned)RoundUp(img_view->ni(),(int)local_threads[0]);
-  unsigned cl_nj=(unsigned)RoundUp(img_view->nj(),(int)local_threads[1]);
+  auto* img_view = static_cast<vil_image_view<float>* >(float_img.ptr());
+  auto cl_ni=(unsigned)RoundUp(img_view->ni(),(int)local_threads[0]);
+  auto cl_nj=(unsigned)RoundUp(img_view->nj(),(int)local_threads[1]);
   global_threads[0]=cl_ni;
   global_threads[1]=cl_nj;
 
   //set generic cam
-  cl_float* ray_origins    = new cl_float[4*cl_ni*cl_nj];
-  cl_float* ray_directions = new cl_float[4*cl_ni*cl_nj];
+  auto* ray_origins = new cl_float[4*cl_ni*cl_nj];
+  auto* ray_directions = new cl_float[4*cl_ni*cl_nj];
   bocl_mem_sptr ray_o_buff = opencl_cache->alloc_mem(cl_ni*cl_nj * sizeof(cl_float4), ray_origins,    "ray_origins buffer");
   bocl_mem_sptr ray_d_buff = opencl_cache->alloc_mem(cl_ni*cl_nj * sizeof(cl_float4), ray_directions, "ray_directions buffer");
   boxm2_ocl_camera_converter::compute_ray_image( device, queue, cam, cl_ni, cl_nj, ray_o_buff, ray_d_buff);
 
   //Visibility, Preinf, Norm, and input image buffers
-  float* vis_buff = new float[cl_ni*cl_nj];
-  float* pre_buff = new float[cl_ni*cl_nj];
-  float* norm_buff = new float[cl_ni*cl_nj];
-  float* input_buff=new float[cl_ni*cl_nj];
+  auto* vis_buff = new float[cl_ni*cl_nj];
+  auto* pre_buff = new float[cl_ni*cl_nj];
+  auto* norm_buff = new float[cl_ni*cl_nj];
+  auto* input_buff=new float[cl_ni*cl_nj];
   for (unsigned i=0;i<cl_ni*cl_nj;i++)
   {
     vis_buff[i]=1.0f;
@@ -249,7 +252,7 @@ bool boxm2_ocl_update_alpha_wphongs_process(bprb_func_process& pro)
 
   // Output Array
   float output_arr[100];
-  for (int i=0; i<100; ++i) output_arr[i] = 0.0f;
+  for (float & i : output_arr) i = 0.0f;
   bocl_mem_sptr  cl_output=new bocl_mem(device->context(), output_arr, sizeof(float)*100, "output buffer");
   cl_output->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
 
@@ -305,24 +308,24 @@ bool boxm2_ocl_update_alpha_wphongs_process(bprb_func_process& pro)
 
       //write the image values to the buffer
       vul_timer transfer;
-      bocl_mem* blk       = opencl_cache->get_block(scene,*id);
-      bocl_mem* blk_info  = opencl_cache->loaded_block_info();
-      bocl_mem* alpha     = opencl_cache->get_data<BOXM2_ALPHA>(scene,*id,0,false);
-      boxm2_scene_info* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
+      bocl_mem* blk = opencl_cache->get_block(scene,*id);
+      bocl_mem* blk_info = opencl_cache->loaded_block_info();
+      bocl_mem* alpha = opencl_cache->get_data<BOXM2_ALPHA>(scene,*id,0,false);
+      auto* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
       int alphaTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_ALPHA>::prefix());
       info_buffer->data_buffer_length = (int) (alpha->num_bytes()/alphaTypeSize);
       blk_info->write_to_buffer((queue));
 
       int nobsTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_NUM_OBS>::prefix());
       // data type string may contain an identifier so determine the buffer size
-      bocl_mem* cubic_model       = opencl_cache->get_data(scene,*id,data_type,alpha->num_bytes()/alphaTypeSize*appTypeSize,false);
-      bocl_mem* num_obs   = opencl_cache->get_data(scene,*id,num_obs_type,alpha->num_bytes()/alphaTypeSize*nobsTypeSize,false);
+      bocl_mem* cubic_model = opencl_cache->get_data(scene,*id,data_type,alpha->num_bytes()/alphaTypeSize*appTypeSize,false);
+      bocl_mem* num_obs = opencl_cache->get_data(scene,*id,num_obs_type,alpha->num_bytes()/alphaTypeSize*nobsTypeSize,false);
 
       //grab an appropriately sized AUX data buffer
       int auxTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_AUX0>::prefix());
-      bocl_mem *aux0   = opencl_cache->get_data<BOXM2_AUX0>(scene,*id, info_buffer->data_buffer_length*auxTypeSize);
+      bocl_mem *aux0 = opencl_cache->get_data<BOXM2_AUX0>(scene,*id, info_buffer->data_buffer_length*auxTypeSize);
       auxTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_AUX1>::prefix());
-      bocl_mem *aux1   = opencl_cache->get_data<BOXM2_AUX1>(scene,*id, info_buffer->data_buffer_length*auxTypeSize);
+      bocl_mem *aux1 = opencl_cache->get_data<BOXM2_AUX1>(scene,*id, info_buffer->data_buffer_length*auxTypeSize);
 
       transfer_time += (float) transfer.all();
       if (i==UPDATE_SEGLEN)
@@ -393,10 +396,10 @@ bool boxm2_ocl_update_alpha_wphongs_process(bprb_func_process& pro)
       else if (i==UPDATE_BAYES)
       {
         auxTypeSize = boxm2_data_info::datasize(boxm2_data_traits<BOXM2_AUX2>::prefix());
-        bocl_mem *aux2   = opencl_cache->get_data<BOXM2_AUX2>(scene,*id, info_buffer->data_buffer_length*auxTypeSize);
+        bocl_mem *aux2 = opencl_cache->get_data<BOXM2_AUX2>(scene,*id, info_buffer->data_buffer_length*auxTypeSize);
         aux2->zero_gpu_buffer(queue);
         auxTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_AUX3>::prefix());
-        bocl_mem *aux3   = opencl_cache->get_data<BOXM2_AUX3>(scene,*id, info_buffer->data_buffer_length*auxTypeSize);
+        bocl_mem *aux3 = opencl_cache->get_data<BOXM2_AUX3>(scene,*id, info_buffer->data_buffer_length*auxTypeSize);
         aux3->zero_gpu_buffer(queue);
 
         kern->set_arg( blk_info );
@@ -436,10 +439,10 @@ bool boxm2_ocl_update_alpha_wphongs_process(bprb_func_process& pro)
       else if (i==UPDATE_CELL)
       {
         auxTypeSize = boxm2_data_info::datasize(boxm2_data_traits<BOXM2_AUX2>::prefix());
-        bocl_mem *aux2   = opencl_cache->get_data<BOXM2_AUX2>(scene,*id, info_buffer->data_buffer_length*auxTypeSize);
+        bocl_mem *aux2 = opencl_cache->get_data<BOXM2_AUX2>(scene,*id, info_buffer->data_buffer_length*auxTypeSize);
 
         auxTypeSize = boxm2_data_info::datasize(boxm2_data_traits<BOXM2_AUX3>::prefix());
-        bocl_mem *aux3   = opencl_cache->get_data<BOXM2_AUX3>(scene,*id, info_buffer->data_buffer_length*auxTypeSize);
+        bocl_mem *aux3 = opencl_cache->get_data<BOXM2_AUX3>(scene,*id, info_buffer->data_buffer_length*auxTypeSize);
 
         local_threads[0] = 64;
         local_threads[1] = 1 ;

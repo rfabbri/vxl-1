@@ -1,6 +1,8 @@
 #include <iostream>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_point_2d.h>
 
 #include <volm/volm_satellite_resources.h>
@@ -24,10 +26,10 @@ static volm_satellite_resources_sptr create_test_sat_res()
   res.meta_->lower_left_.set(36.10513, 32.13166, 0.0);   res.meta_->upper_right_.set(36.40004, 32.51381, 0.0);
   res.meta_->gsd_ = 1.0f;  res.meta_->band_ = "PAN";  res.meta_->satellite_name_ = "GeoEye-1";
   std::vector<vgl_point_2d<double> > footprint_corners;
-  footprint_corners.push_back(vgl_point_2d<double>(res.meta_->lower_left_.x(),  res.meta_->lower_left_.y()));
-  footprint_corners.push_back(vgl_point_2d<double>(res.meta_->upper_right_.x(), res.meta_->lower_left_.y()));
-  footprint_corners.push_back(vgl_point_2d<double>(res.meta_->upper_right_.x(), res.meta_->upper_right_.y()));
-  footprint_corners.push_back(vgl_point_2d<double>(res.meta_->lower_left_.x(),  res.meta_->upper_right_.y()));
+  footprint_corners.emplace_back(res.meta_->lower_left_.x(),  res.meta_->lower_left_.y());
+  footprint_corners.emplace_back(res.meta_->upper_right_.x(), res.meta_->lower_left_.y());
+  footprint_corners.emplace_back(res.meta_->upper_right_.x(), res.meta_->upper_right_.y());
+  footprint_corners.emplace_back(res.meta_->lower_left_.x(),  res.meta_->upper_right_.y());
   res.meta_->footprint_ = vgl_polygon<double>(footprint_corners);
   res_sptr->resources_.push_back(res);
 
@@ -39,10 +41,10 @@ static volm_satellite_resources_sptr create_test_sat_res()
   res.meta_->lower_left_.set(36.03285, 32.14575, 0.0);   res.meta_->upper_right_.set(36.46879, 32.49186, 0.0);
   res.meta_->gsd_ = 1.0f;  res.meta_->band_ = "PAN";  res.meta_->satellite_name_ = "GeoEye-1";
   footprint_corners.clear();
-  footprint_corners.push_back(vgl_point_2d<double>(res.meta_->lower_left_.x(),  res.meta_->lower_left_.y()));
-  footprint_corners.push_back(vgl_point_2d<double>(res.meta_->upper_right_.x(), res.meta_->lower_left_.y()));
-  footprint_corners.push_back(vgl_point_2d<double>(res.meta_->upper_right_.x(), res.meta_->upper_right_.y()));
-  footprint_corners.push_back(vgl_point_2d<double>(res.meta_->lower_left_.x(),  res.meta_->upper_right_.y()));
+  footprint_corners.emplace_back(res.meta_->lower_left_.x(),  res.meta_->lower_left_.y());
+  footprint_corners.emplace_back(res.meta_->upper_right_.x(), res.meta_->lower_left_.y());
+  footprint_corners.emplace_back(res.meta_->upper_right_.x(), res.meta_->upper_right_.y());
+  footprint_corners.emplace_back(res.meta_->lower_left_.x(),  res.meta_->upper_right_.y());
   res.meta_->footprint_ = vgl_polygon<double>(footprint_corners);
   res_sptr->resources_.push_back(res);
 
@@ -54,10 +56,10 @@ static volm_satellite_resources_sptr create_test_sat_res()
   res.meta_->lower_left_.set(36.08056, 32.14817, 0.0);   res.meta_->upper_right_.set(36.43067, 32.61172, 0.0);
   res.meta_->gsd_ = 1.0f;  res.meta_->band_ = "PAN";  res.meta_->satellite_name_ = "GeoEye-1";
   footprint_corners.clear();
-  footprint_corners.push_back(vgl_point_2d<double>(res.meta_->lower_left_.x(),  res.meta_->lower_left_.y()));
-  footprint_corners.push_back(vgl_point_2d<double>(res.meta_->upper_right_.x(), res.meta_->lower_left_.y()));
-  footprint_corners.push_back(vgl_point_2d<double>(res.meta_->upper_right_.x(), res.meta_->upper_right_.y()));
-  footprint_corners.push_back(vgl_point_2d<double>(res.meta_->lower_left_.x(),  res.meta_->upper_right_.y()));
+  footprint_corners.emplace_back(res.meta_->lower_left_.x(),  res.meta_->lower_left_.y());
+  footprint_corners.emplace_back(res.meta_->upper_right_.x(), res.meta_->lower_left_.y());
+  footprint_corners.emplace_back(res.meta_->upper_right_.x(), res.meta_->upper_right_.y());
+  footprint_corners.emplace_back(res.meta_->lower_left_.x(),  res.meta_->upper_right_.y());
   res.meta_->footprint_ = vgl_polygon<double>(footprint_corners);
   res_sptr->resources_.push_back(res);
 
@@ -69,10 +71,10 @@ static volm_satellite_resources_sptr create_test_sat_res()
   res.meta_->lower_left_.set(36.10970, 32.05984, 0.0);   res.meta_->upper_right_.set(36.39290, 32.50900, 0.0);
   res.meta_->gsd_ = 1.0f;  res.meta_->band_ = "PAN";  res.meta_->satellite_name_ = "GeoEye-1";
   footprint_corners.clear();
-  footprint_corners.push_back(vgl_point_2d<double>(res.meta_->lower_left_.x(),  res.meta_->lower_left_.y()));
-  footprint_corners.push_back(vgl_point_2d<double>(res.meta_->upper_right_.x(), res.meta_->lower_left_.y()));
-  footprint_corners.push_back(vgl_point_2d<double>(res.meta_->upper_right_.x(), res.meta_->upper_right_.y()));
-  footprint_corners.push_back(vgl_point_2d<double>(res.meta_->lower_left_.x(),  res.meta_->upper_right_.y()));
+  footprint_corners.emplace_back(res.meta_->lower_left_.x(),  res.meta_->lower_left_.y());
+  footprint_corners.emplace_back(res.meta_->upper_right_.x(), res.meta_->lower_left_.y());
+  footprint_corners.emplace_back(res.meta_->upper_right_.x(), res.meta_->upper_right_.y());
+  footprint_corners.emplace_back(res.meta_->lower_left_.x(),  res.meta_->upper_right_.y());
   res.meta_->footprint_ = vgl_polygon<double>(footprint_corners);
   res_sptr->resources_.push_back(res);
 
@@ -84,10 +86,10 @@ static volm_satellite_resources_sptr create_test_sat_res()
   res.meta_->lower_left_.set(35.98952, 32.19027, 0.0);   res.meta_->upper_right_.set(36.54515, 32.53180, 0.0);
   res.meta_->gsd_ = 1.0f;  res.meta_->band_ = "PAN";  res.meta_->satellite_name_ = "GeoEye-1";
   footprint_corners.clear();
-  footprint_corners.push_back(vgl_point_2d<double>(res.meta_->lower_left_.x(),  res.meta_->lower_left_.y()));
-  footprint_corners.push_back(vgl_point_2d<double>(res.meta_->upper_right_.x(), res.meta_->lower_left_.y()));
-  footprint_corners.push_back(vgl_point_2d<double>(res.meta_->upper_right_.x(), res.meta_->upper_right_.y()));
-  footprint_corners.push_back(vgl_point_2d<double>(res.meta_->lower_left_.x(),  res.meta_->upper_right_.y()));
+  footprint_corners.emplace_back(res.meta_->lower_left_.x(),  res.meta_->lower_left_.y());
+  footprint_corners.emplace_back(res.meta_->upper_right_.x(), res.meta_->lower_left_.y());
+  footprint_corners.emplace_back(res.meta_->upper_right_.x(), res.meta_->upper_right_.y());
+  footprint_corners.emplace_back(res.meta_->lower_left_.x(),  res.meta_->upper_right_.y());
   res.meta_->footprint_ = vgl_polygon<double>(footprint_corners);
   res_sptr->resources_.push_back(res);
 
@@ -99,10 +101,10 @@ static volm_satellite_resources_sptr create_test_sat_res()
   res.meta_->lower_left_.set(35.94401, 32.16550, 0.0);   res.meta_->upper_right_.set(36.56926, 32.46338, 0.0);
   res.meta_->gsd_ = 1.0f;  res.meta_->band_ = "PAN";  res.meta_->satellite_name_ = "GeoEye-1";
   footprint_corners.clear();
-  footprint_corners.push_back(vgl_point_2d<double>(res.meta_->lower_left_.x(),  res.meta_->lower_left_.y()));
-  footprint_corners.push_back(vgl_point_2d<double>(res.meta_->upper_right_.x(), res.meta_->lower_left_.y()));
-  footprint_corners.push_back(vgl_point_2d<double>(res.meta_->upper_right_.x(), res.meta_->upper_right_.y()));
-  footprint_corners.push_back(vgl_point_2d<double>(res.meta_->lower_left_.x(),  res.meta_->upper_right_.y()));
+  footprint_corners.emplace_back(res.meta_->lower_left_.x(),  res.meta_->lower_left_.y());
+  footprint_corners.emplace_back(res.meta_->upper_right_.x(), res.meta_->lower_left_.y());
+  footprint_corners.emplace_back(res.meta_->upper_right_.x(), res.meta_->upper_right_.y());
+  footprint_corners.emplace_back(res.meta_->lower_left_.x(),  res.meta_->upper_right_.y());
   res.meta_->footprint_ = vgl_polygon<double>(footprint_corners);
   res_sptr->resources_.push_back(res);
 
@@ -114,10 +116,10 @@ static volm_satellite_resources_sptr create_test_sat_res()
   res.meta_->lower_left_.set(36.09320, 32.12822, 0.0);   res.meta_->upper_right_.set(36.39953, 32.58570, 0.0);
   res.meta_->gsd_ = 1.0f;  res.meta_->band_ = "PAN";  res.meta_->satellite_name_ = "GeoEye-1";
   footprint_corners.clear();
-  footprint_corners.push_back(vgl_point_2d<double>(res.meta_->lower_left_.x(),  res.meta_->lower_left_.y()));
-  footprint_corners.push_back(vgl_point_2d<double>(res.meta_->upper_right_.x(), res.meta_->lower_left_.y()));
-  footprint_corners.push_back(vgl_point_2d<double>(res.meta_->upper_right_.x(), res.meta_->upper_right_.y()));
-  footprint_corners.push_back(vgl_point_2d<double>(res.meta_->lower_left_.x(),  res.meta_->upper_right_.y()));
+  footprint_corners.emplace_back(res.meta_->lower_left_.x(),  res.meta_->lower_left_.y());
+  footprint_corners.emplace_back(res.meta_->upper_right_.x(), res.meta_->lower_left_.y());
+  footprint_corners.emplace_back(res.meta_->upper_right_.x(), res.meta_->upper_right_.y());
+  footprint_corners.emplace_back(res.meta_->lower_left_.x(),  res.meta_->upper_right_.y());
   res.meta_->footprint_ = vgl_polygon<double>(footprint_corners);
   res_sptr->resources_.push_back(res);
 
@@ -129,10 +131,10 @@ static volm_satellite_resources_sptr create_test_sat_res()
   res.meta_->lower_left_.set(35.98967, 32.14767, 0.0);   res.meta_->upper_right_.set(36.53007, 32.51360, 0.0);
   res.meta_->gsd_ = 1.0f;  res.meta_->band_ = "PAN";  res.meta_->satellite_name_ = "GeoEye-1";
   footprint_corners.clear();
-  footprint_corners.push_back(vgl_point_2d<double>(res.meta_->lower_left_.x(),  res.meta_->lower_left_.y()));
-  footprint_corners.push_back(vgl_point_2d<double>(res.meta_->upper_right_.x(), res.meta_->lower_left_.y()));
-  footprint_corners.push_back(vgl_point_2d<double>(res.meta_->upper_right_.x(), res.meta_->upper_right_.y()));
-  footprint_corners.push_back(vgl_point_2d<double>(res.meta_->lower_left_.x(),  res.meta_->upper_right_.y()));
+  footprint_corners.emplace_back(res.meta_->lower_left_.x(),  res.meta_->lower_left_.y());
+  footprint_corners.emplace_back(res.meta_->upper_right_.x(), res.meta_->lower_left_.y());
+  footprint_corners.emplace_back(res.meta_->upper_right_.x(), res.meta_->upper_right_.y());
+  footprint_corners.emplace_back(res.meta_->lower_left_.x(),  res.meta_->upper_right_.y());
   res.meta_->footprint_ = vgl_polygon<double>(footprint_corners);
   res_sptr->resources_.push_back(res);
 
@@ -144,10 +146,10 @@ static volm_satellite_resources_sptr create_test_sat_res()
   res.meta_->lower_left_.set(36.03028, 32.15126, 0.0);   res.meta_->upper_right_.set(36.48835, 32.52314, 0.0);
   res.meta_->gsd_ = 1.0f;  res.meta_->band_ = "PAN";  res.meta_->satellite_name_ = "GeoEye-1";
   footprint_corners.clear();
-  footprint_corners.push_back(vgl_point_2d<double>(res.meta_->lower_left_.x(),  res.meta_->lower_left_.y()));
-  footprint_corners.push_back(vgl_point_2d<double>(res.meta_->upper_right_.x(), res.meta_->lower_left_.y()));
-  footprint_corners.push_back(vgl_point_2d<double>(res.meta_->upper_right_.x(), res.meta_->upper_right_.y()));
-  footprint_corners.push_back(vgl_point_2d<double>(res.meta_->lower_left_.x(),  res.meta_->upper_right_.y()));
+  footprint_corners.emplace_back(res.meta_->lower_left_.x(),  res.meta_->lower_left_.y());
+  footprint_corners.emplace_back(res.meta_->upper_right_.x(), res.meta_->lower_left_.y());
+  footprint_corners.emplace_back(res.meta_->upper_right_.x(), res.meta_->upper_right_.y());
+  footprint_corners.emplace_back(res.meta_->lower_left_.x(),  res.meta_->upper_right_.y());
   res.meta_->footprint_ = vgl_polygon<double>(footprint_corners);
   res_sptr->resources_.push_back(res);
 
@@ -159,10 +161,10 @@ static volm_satellite_resources_sptr create_test_sat_res()
   res.meta_->lower_left_.set(36.00632, 32.13226, 0.0);   res.meta_->upper_right_.set(36.51066, 32.52135, 0.0);
   res.meta_->gsd_ = 1.0f;  res.meta_->band_ = "PAN";  res.meta_->satellite_name_ = "GeoEye-1";
   footprint_corners.clear();
-  footprint_corners.push_back(vgl_point_2d<double>(res.meta_->lower_left_.x(),  res.meta_->lower_left_.y()));
-  footprint_corners.push_back(vgl_point_2d<double>(res.meta_->upper_right_.x(), res.meta_->lower_left_.y()));
-  footprint_corners.push_back(vgl_point_2d<double>(res.meta_->upper_right_.x(), res.meta_->upper_right_.y()));
-  footprint_corners.push_back(vgl_point_2d<double>(res.meta_->lower_left_.x(),  res.meta_->upper_right_.y()));
+  footprint_corners.emplace_back(res.meta_->lower_left_.x(),  res.meta_->lower_left_.y());
+  footprint_corners.emplace_back(res.meta_->upper_right_.x(), res.meta_->lower_left_.y());
+  footprint_corners.emplace_back(res.meta_->upper_right_.x(), res.meta_->upper_right_.y());
+  footprint_corners.emplace_back(res.meta_->lower_left_.x(),  res.meta_->upper_right_.y());
   res.meta_->footprint_ = vgl_polygon<double>(footprint_corners);
   res_sptr->resources_.push_back(res);
 
@@ -173,8 +175,8 @@ static volm_satellite_resources_sptr create_test_sat_res()
     satellite_footprint.add(vgl_point_2d<double>(res_sptr->resources_[i].meta_->lower_left_.x(),  res_sptr->resources_[i].meta_->lower_left_.y()));
     satellite_footprint.add(vgl_point_2d<double>(res_sptr->resources_[i].meta_->upper_right_.x(), res_sptr->resources_[i].meta_->upper_right_.y()));
     volm_geo_index2::get_leaves(res_sptr->root_, leaves, satellite_footprint);
-    for (unsigned j = 0; j < leaves.size(); j++) {
-      volm_geo_index2_node<std::vector<unsigned> >* leaf_ptr = dynamic_cast<volm_geo_index2_node<std::vector<unsigned> >* >(leaves[j].ptr());
+    for (auto & leave : leaves) {
+      auto* leaf_ptr = dynamic_cast<volm_geo_index2_node<std::vector<unsigned> >* >(leave.ptr());
       leaf_ptr->contents_.push_back(i);  // push this satellite image to this leave that intersects its footprint
     }
   }
@@ -186,10 +188,10 @@ static void create_a_test_kml(std::string const& kml_file)
 {
   vgl_polygon<double> poly;
   std::vector<vgl_point_2d<double> > points;
-  points.push_back(vgl_point_2d<double>(36.18825968469867,32.32497866643852));
-  points.push_back(vgl_point_2d<double>(36.22929773807768,32.34162986956272));
-  points.push_back(vgl_point_2d<double>(36.22927331990476,32.34222250106324));
-  points.push_back(vgl_point_2d<double>(36.19077105901775,32.34223021056664));
+  points.emplace_back(36.18825968469867,32.32497866643852);
+  points.emplace_back(36.22929773807768,32.34162986956272);
+  points.emplace_back(36.22927331990476,32.34222250106324);
+  points.emplace_back(36.19077105901775,32.34223021056664);
   poly.push_back(points);
   std::ofstream ofs(kml_file.c_str());
   bkml_write::open_document(ofs);
@@ -209,9 +211,9 @@ static void test_overlapping_resources()
   std::vector<std::string> overlapping_res;
   res->highly_overlapping_resources(overlapping_res, res, kml_file, 100.0f);
 
-  for (unsigned int i=0; i < overlapping_res.size(); ++i)
+  for (const auto & overlapping_re : overlapping_res)
     {
-    std::cout << overlapping_res[i] << std::endl;
+    std::cout << overlapping_re << std::endl;
     }
   std::cout << std::endl;
 

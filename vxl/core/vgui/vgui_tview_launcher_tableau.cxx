@@ -1,7 +1,4 @@
 // This is core/vgui/vgui_tview_launcher_tableau.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \brief  See vgui_tview_launcher.h for a description of this file.
@@ -17,7 +14,9 @@
 
 #include <iostream>
 #include "vgui_tview_launcher_tableau.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgui/vgui.h>
 #include <vgui/vgui_adaptor.h>
 #include <vgui/vgui_viewer2D_tableau.h>
@@ -66,7 +65,7 @@ void vgui_tview_launcher_tableau::go(vgui_adaptor* a)
   vgui_dialog tview_dialog("Tableau hierarchy");
   tview_dialog.inline_tableau(viewer, 300,300);
   tview_dialog.set_ok_button("close");
-  tview_dialog.set_cancel_button(VXL_NULLPTR);
+  tview_dialog.set_cancel_button(nullptr);
   tview_dialog.ask();
   this->post_redraw();
 }

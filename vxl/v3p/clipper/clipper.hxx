@@ -45,9 +45,9 @@
 
 //use_lines: Enables line clipping. Adds a very minor cost to performance.
 #define use_lines
-  
+
 //use_deprecated: Enables temporary support for the obsolete functions
-//#define use_deprecated  
+//#define use_deprecated
 
 #include <vector>
 #include <list>
@@ -98,7 +98,7 @@ struct IntPoint {
   }
   friend inline bool operator!= (const IntPoint& a, const IntPoint& b)
   {
-    return a.X != b.X  || a.Y != b.Y; 
+    return a.X != b.X  || a.Y != b.Y;
   }
 };
 //------------------------------------------------------------------------------
@@ -133,11 +133,11 @@ enum EndType {etClosedPolygon, etClosedLine, etOpenButt, etOpenSquare, etOpenRou
 class PolyNode;
 typedef std::vector< PolyNode* > PolyNodes;
 
-class PolyNode 
-{ 
+class PolyNode
+{
 public:
     PolyNode();
-    virtual ~PolyNode(){};
+    virtual ~PolyNode()= default;;
     Path Contour;
     PolyNodes Childs;
     PolyNode* Parent;
@@ -146,7 +146,7 @@ public:
     bool IsOpen() const;
     int ChildCount() const;
 private:
-    //PolyNode& operator =(PolyNode& other); 
+    //PolyNode& operator =(PolyNode& other);
     unsigned Index; //node index in Parent.Childs
     bool m_IsOpen;
     JoinType m_jointype;
@@ -154,13 +154,13 @@ private:
     PolyNode* GetNextSiblingUp() const;
     void AddChild(PolyNode& child);
     friend class Clipper; //to access Index
-    friend class ClipperOffset; 
+    friend class ClipperOffset;
 };
 
 class PolyTree: public PolyNode
-{ 
+{
 public:
-    ~PolyTree(){ Clear(); };
+    ~PolyTree() override{ Clear(); };
     PolyNode* GetFirst() const;
     void Clear();
     int Total() const;
@@ -300,10 +300,10 @@ private:
   PolyFillType     m_ClipFillType;
   PolyFillType     m_SubjFillType;
   bool             m_ReverseOutput;
-  bool             m_UsingPolyTree; 
+  bool             m_UsingPolyTree;
   bool             m_StrictSimple;
 #ifdef use_xyz
-  ZFillCallback   m_ZFill; //custom callback 
+  ZFillCallback   m_ZFill; //custom callback
 #endif
   void SetWindingCount(TEdge& edge);
   bool IsEvenOddFillType(const TEdge& edge) const;
@@ -357,7 +357,7 @@ private:
 };
 //------------------------------------------------------------------------------
 
-class ClipperOffset 
+class ClipperOffset
 {
 public:
   ClipperOffset(double miterLimit = 2.0, double roundPrecision = 0.25);
@@ -392,8 +392,8 @@ class clipperException : public std::exception
 {
   public:
     clipperException(const char* description): m_descr(description) {}
-    virtual ~clipperException() throw() {}
-    virtual const char* what() const throw() {return m_descr.c_str();}
+    ~clipperException() throw() override = default;
+    const char* what() const throw() override {return m_descr.c_str();}
   private:
     std::string m_descr;
 };

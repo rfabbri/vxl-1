@@ -4,12 +4,14 @@
 //:
 //  \file
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_vector.h>
 
 rsdl_point::rsdl_point( )
-  : Nc_(0), Na_(0), data_(VXL_NULLPTR)
+  : Nc_(0), Na_(0), data_(nullptr)
 {
 }
 
@@ -121,7 +123,7 @@ void
 rsdl_point::resize( unsigned int Nc, unsigned int Na )
 {
   if ( Nc_ != Nc || Na_ != Na ) {
-    double* buf = new double[ Nc + Na ];
+    auto* buf = new double[ Nc + Na ];
     unsigned int min_c = ( Nc < Nc_ ? Nc : Nc_ );
     unsigned int min_a = ( Na < Na_ ? Na : Na_ );
     for ( unsigned int i=0; i < min_c; ++i )  buf[i] = data_[i];

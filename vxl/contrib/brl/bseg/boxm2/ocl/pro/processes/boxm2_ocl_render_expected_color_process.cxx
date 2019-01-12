@@ -11,7 +11,9 @@
 #include <algorithm>
 #include <bprb/bprb_func_process.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/ocl/boxm2_opencl_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -30,13 +32,13 @@
 
 namespace boxm2_ocl_render_expected_color_process_globals
 {
-  const unsigned n_inputs_ = 8;
-  const unsigned n_outputs_ = 2;
+  constexpr unsigned n_inputs_ = 8;
+  constexpr unsigned n_outputs_ = 2;
   std::size_t lthreads[2]={8,8};
 
   static std::map<std::string,std::vector<bocl_kernel*> > kernels;
 
-  void compile_kernel(bocl_device_sptr device,std::vector<bocl_kernel*> & vec_kernels, std::string opts)
+  void compile_kernel(const bocl_device_sptr& device,std::vector<bocl_kernel*> & vec_kernels, const std::string& opts)
   {
     //gather all render sources... seems like a lot for rendering...
     std::vector<std::string> src_paths;
@@ -57,7 +59,7 @@ namespace boxm2_ocl_render_expected_color_process_globals
     options += " -D YUV -D STEP_CELL=step_cell_render(aux_args,data_ptr,llid,d*linfo->block_len)";
 
     //have kernel construct itself using the context and device
-    bocl_kernel * ray_trace_kernel=new bocl_kernel();
+    auto * ray_trace_kernel=new bocl_kernel();
     ray_trace_kernel->create_kernel( &device->context(),
                                      device->device_id(),
                                      src_paths,
@@ -70,7 +72,7 @@ namespace boxm2_ocl_render_expected_color_process_globals
     std::vector<std::string> norm_src_paths;
     norm_src_paths.push_back(source_dir + "pixel_conversion.cl");
     norm_src_paths.push_back(source_dir + "bit/normalize_kernels.cl");
-    bocl_kernel * normalize_render_kernel=new bocl_kernel();
+    auto * normalize_render_kernel=new bocl_kernel();
 
     normalize_render_kernel->create_kernel( &device->context(),
                                             device->device_id(),
@@ -97,8 +99,8 @@ bool boxm2_ocl_render_expected_color_process_cons(bprb_func_process& pro)
   input_types_[6] = "float";                        // near factor ( maximum # of pixels should map to the finest voxel )
   input_types_[7] = "float";                        // far factor ( minimum # of pixels should map to the finest voxel )
 
-  brdb_value_sptr tnearfactor   = new brdb_value_t<float>(100000.0f);  //by default update alpha
-  brdb_value_sptr tfarfactor   = new brdb_value_t<float>(100000.0f);  //by default update alpha
+  brdb_value_sptr tnearfactor = new brdb_value_t<float>(100000.0f);  //by default update alpha
+  brdb_value_sptr tfarfactor = new brdb_value_t<float>(100000.0f);  //by default update alpha
 
   pro.set_input(6, tnearfactor);
   pro.set_input(7, tfarfactor);
@@ -125,19 +127,19 @@ bool boxm2_ocl_render_expected_color_process(bprb_func_process& pro)
   boxm2_scene_sptr scene =pro.get_input<boxm2_scene_sptr>(argIdx++);
   boxm2_opencl_cache_sptr opencl_cache= pro.get_input<boxm2_opencl_cache_sptr>(argIdx++);
   vpgl_camera_double_sptr cam= pro.get_input<vpgl_camera_double_sptr>(argIdx++);
-  unsigned ni=pro.get_input<unsigned>(argIdx++);
-  unsigned nj=pro.get_input<unsigned>(argIdx++);
-  float   nearfactor   = pro.get_input<float>(argIdx++);
-  float   farfactor    = pro.get_input<float>(argIdx++);
+  auto ni=pro.get_input<unsigned>(argIdx++);
+  auto nj=pro.get_input<unsigned>(argIdx++);
+  auto   nearfactor = pro.get_input<float>(argIdx++);
+  auto   farfactor = pro.get_input<float>(argIdx++);
   //make sure the data types match the scene
   bool foundDataType = false;
   std::string data_type,options;
   std::vector<std::string> apps = scene->appearances();
   int apptypesize = 0;
-  for (unsigned int i=0; i<apps.size(); ++i) {
-    if ( apps[i] == boxm2_data_traits<BOXM2_GAUSS_RGB>::prefix() )
+  for (const auto & app : apps) {
+    if ( app == boxm2_data_traits<BOXM2_GAUSS_RGB>::prefix() )
     {
-      data_type = apps[i];
+      data_type = app;
       foundDataType = true;
       options=" -D MOG_TYPE_8 ";
       apptypesize= boxm2_data_traits<BOXM2_GAUSS_RGB>::datasize();
@@ -167,13 +169,13 @@ bool boxm2_ocl_render_expected_color_process(bprb_func_process& pro)
   unsigned cl_nj=RoundUp(nj,lthreads[1]);
 
   //create color buffer
-  float* buff = new float[4*cl_ni*cl_nj];
+  auto* buff = new float[4*cl_ni*cl_nj];
   std::fill(buff, buff + 4*cl_ni*cl_nj, 0.0f);
   bocl_mem_sptr exp_image = opencl_cache->alloc_mem(cl_ni*cl_nj*sizeof(cl_float4),buff,  "exp color image (float4) buffer");
   exp_image->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
 
   // visibility image
-  float* vis_buff = new float[cl_ni*cl_nj];
+  auto* vis_buff = new float[cl_ni*cl_nj];
   std::fill(vis_buff, vis_buff + cl_ni*cl_nj, 1.0f);
   bocl_mem_sptr vis_image = opencl_cache->alloc_mem( cl_ni*cl_nj*sizeof(cl_float), vis_buff, "vis image (single float) buffer");
   vis_image->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
@@ -190,7 +192,7 @@ bool boxm2_ocl_render_expected_color_process(bprb_func_process& pro)
   if(cam->type_name() == "vpgl_perspective_camera")
   {
 
-      float f  = ((vpgl_perspective_camera<double> *)cam.ptr())->get_calibration().focal_length()*((vpgl_perspective_camera<double> *)cam.ptr())->get_calibration().x_scale();
+      float f = ((vpgl_perspective_camera<double> *)cam.ptr())->get_calibration().focal_length()*((vpgl_perspective_camera<double> *)cam.ptr())->get_calibration().x_scale();
       std::cout<<"Focal Length " << f<<std::endl;
       tnearfar[0] = f* scene->finest_resolution()/nearfactor ;
       tnearfar[1] = f* scene->finest_resolution()*farfactor ;
@@ -200,7 +202,7 @@ bool boxm2_ocl_render_expected_color_process(bprb_func_process& pro)
   bocl_mem_sptr tnearfar_mem_ptr = opencl_cache->alloc_mem(2*sizeof(float), tnearfar, "tnearfar  buffer");
   tnearfar_mem_ptr->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
 
-  float* max_omega_buff = new float[cl_ni*cl_nj];
+  auto* max_omega_buff = new float[cl_ni*cl_nj];
   std::fill(max_omega_buff, max_omega_buff + cl_ni*cl_nj, 0.0f);
   bocl_mem_sptr max_omega_image = opencl_cache->alloc_mem(cl_ni*cl_nj*sizeof(float), max_omega_buff,"max omega image buffer");
   max_omega_image->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
@@ -228,7 +230,7 @@ bool boxm2_ocl_render_expected_color_process(bprb_func_process& pro)
   exp_image->read_to_buffer(queue);
   vis_image->read_to_buffer(queue);
   clFinish(queue);
-  vil_image_view<vil_rgba<vxl_byte> >* exp_img_out = new vil_image_view<vil_rgba<vxl_byte> >(ni,nj);
+  auto* exp_img_out = new vil_image_view<vil_rgba<vxl_byte> >(ni,nj);
   int numFloats = 4;
   int count = 0;
   for (unsigned c=0;c<nj;++c) {
@@ -244,7 +246,7 @@ bool boxm2_ocl_render_expected_color_process(bprb_func_process& pro)
                            (vxl_byte) 255 );
     }
   }
-  vil_image_view<float>* vis_img_out=new vil_image_view<float>(ni,nj);
+  auto* vis_img_out=new vil_image_view<float>(ni,nj);
   for (unsigned c=0;c<nj;c++)
     for (unsigned r=0;r<ni;r++)
       (*vis_img_out)(r,c)=vis_buff[c*cl_ni+r];

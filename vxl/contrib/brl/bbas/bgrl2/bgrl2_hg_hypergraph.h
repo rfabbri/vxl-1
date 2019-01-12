@@ -13,7 +13,9 @@
 
 #include <iostream>
 #include <map>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <bgrl2/bgrl2_hg_graph.h>
 #include <bgrl2/bgrl2_hg_hyperedge.h>
@@ -31,15 +33,15 @@ class bgrl2_hg_hypergraph : public bgrl2_hg_graph
   bgrl2_hg_hyperedge* hyperedges(const int i) {
     std::map<int, bgrl2_hg_hyperedge*>::iterator H_it = hyperedges_.find(i);
     if (H_it == hyperedges_.end())
-      return VXL_NULLPTR;
+      return nullptr;
 
     bgrl2_hg_hyperedge* hyperedge = (*H_it).second;
     return hyperedge;
   }
 
   //: ===== Internal Low-level Graph operation (without handling connectivity) =====
-  virtual bool _internal_del_vertex(bgrl2_hg_vertex* vertex);
-  virtual bool _internal_del_edge(bgrl2_hg_edge* edge);
+  bool _internal_del_vertex(bgrl2_hg_vertex* vertex) override;
+  bool _internal_del_edge(bgrl2_hg_edge* edge) override;
 
   void _internal_add_hyperedge(bgrl2_hg_hyperedge* hyperedge);
   bool _internal_del_hyperedge(bgrl2_hg_hyperedge* hyperedge);
@@ -66,8 +68,8 @@ class bgrl2_hg_hypergraph : public bgrl2_hg_graph
   }
 
   //: ===== High-level Graph operation for insert/remove/replace element =====
-  virtual bool remove_vertex(bgrl2_hg_vertex* vertex);
-  virtual bool remove_edge(bgrl2_hg_edge* edge);
+  bool remove_vertex(bgrl2_hg_vertex* vertex) override;
+  bool remove_edge(bgrl2_hg_edge* edge) override;
   virtual bool remove_hyperedge(bgrl2_hg_hyperedge* hyperedge);
 #if 0
   virtual bool remove_vertex(int id);
@@ -82,12 +84,12 @@ class bgrl2_hg_hypergraph : public bgrl2_hg_graph
   //  These operations are always topologically consistent,
   //  i.e. the resulting graph is always a geometric graph.
   //  (You will not have an edge that has no end nodes.)
-  virtual bool topo_remove_vertex(bgrl2_hg_vertex* vertex);
-  virtual bool topo_remove_edge(bgrl2_hg_edge* edge);
+  bool topo_remove_vertex(bgrl2_hg_vertex* vertex) override;
+  bool topo_remove_edge(bgrl2_hg_edge* edge) override;
   virtual bool topo_remove_hyperedge(bgrl2_hg_hyperedge* hyperedge);
 
   bgrl2_hg_hypergraph() : bgrl2_hg_graph() {}
-  virtual ~bgrl2_hg_hypergraph() {}
+  ~bgrl2_hg_hypergraph() override = default;
 };
 
 #endif // bgrl2_hypergraph_h_

@@ -9,7 +9,9 @@
 #include <string>
 #include <istream>
 #include <ostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //-----------------------------------------------------------------------------
 // NITF compound field types
@@ -34,7 +36,7 @@ public:
   // Returns true iff all members lie within their expected ranges
   virtual bool is_valid() const = 0;
 
-  virtual ~vil_nitf2_compound_field_value() {}
+  virtual ~vil_nitf2_compound_field_value() = default;
 };
 
 // A date and time, down to the second or decimal fraction thereof.
@@ -52,11 +54,11 @@ public:
   int sec_precision; // second's significant decimal places
   vil_nitf2_date_time() : year(0), month(0), day(0), hour(0), minute(0), second(0), sec_precision(0) {}
   vil_nitf2_date_time(std::string format);
-  virtual ~vil_nitf2_date_time() {}
-  bool is_valid() const;
+  ~vil_nitf2_date_time() override = default;
+  bool is_valid() const override;
   bool read(std::istream& input, int field_width, bool& out_blank);
   bool write(std::ostream& output, int field_width) const;
-  std::ostream& output(std::ostream& os) const;
+  std::ostream& output(std::ostream& os) const override;
 };
 
 std::ostream& operator << (std::ostream& os, const vil_nitf2_date_time& dateTime);
@@ -70,7 +72,7 @@ public:
   enum format_type { format_degrees, format_dmsh };
   format_type format;
   vil_nitf2_location(format_type format) : format(format) {}
-  virtual ~vil_nitf2_location() {}
+  ~vil_nitf2_location() override = default;
   virtual bool read(std::istream& input, int field_width, bool& out_blank) = 0;
   virtual bool write(std::ostream& output, int field_width) = 0;
 };
@@ -83,13 +85,13 @@ struct vil_nitf2_location_degrees : public vil_nitf2_location
 public:
   vil_nitf2_location_degrees(int precision)
     : vil_nitf2_location(format_degrees), precision(precision) {}
-  bool read(std::istream& input, int field_width, bool& out_blank);
-  bool write(std::ostream& output, int field_width);
+  bool read(std::istream& input, int field_width, bool& out_blank) override;
+  bool write(std::ostream& output, int field_width) override;
   double lat_degrees;
   double lon_degrees;
   int precision;
-  std::ostream& output(std::ostream&) const;
-  bool is_valid() const;
+  std::ostream& output(std::ostream&) const override;
+  bool is_valid() const override;
 };
 
 std::ostream& operator << (std::ostream& os, const vil_nitf2_location& loc);
@@ -104,13 +106,13 @@ struct vil_nitf2_location_dmsh : public vil_nitf2_location
 public:
   vil_nitf2_location_dmsh(int sec_precision)
     : vil_nitf2_location(format_dmsh), sec_precision(sec_precision) {}
-  bool read(std::istream& input, int field_width, bool& out_blank);
-  bool write(std::ostream& output, int field_width);
+  bool read(std::istream& input, int field_width, bool& out_blank) override;
+  bool write(std::ostream& output, int field_width) override;
   int lat_degrees; int lat_minutes; double lat_seconds; char lat_hemisphere;
   int lon_degrees; int lon_minutes; double lon_seconds; char lon_hemisphere;
   int sec_precision; // second's significant decimal places
-  std::ostream& output(std::ostream&) const;
-  bool is_valid() const;
+  std::ostream& output(std::ostream&) const override;
+  bool is_valid() const override;
 };
 
 std::ostream& operator << (std::ostream& os, const vil_nitf2_location_dmsh& loc);

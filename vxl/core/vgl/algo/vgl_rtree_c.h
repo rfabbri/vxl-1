@@ -27,8 +27,8 @@ template <class T>
 class vgl_rtree_point_box_2d
 {
   // only static methods
-  vgl_rtree_point_box_2d();
-  ~vgl_rtree_point_box_2d();
+  vgl_rtree_point_box_2d() = delete;
+  ~vgl_rtree_point_box_2d() = delete;
 
  public:
   typedef vgl_point_2d<T> v_type;
@@ -73,7 +73,7 @@ class vgl_bbox_2d : public vgl_box_2d<Type>
 {
  public:
   //: Default constructor (creates empty box)
-  vgl_bbox_2d() {}
+  vgl_bbox_2d() = default;
 
   //: Construct using two corner points
   vgl_bbox_2d(Type const min_position[2],
@@ -102,8 +102,8 @@ template <class T>
 class vgl_rtree_box_box_2d
 {
   // only static methods
-  vgl_rtree_box_box_2d();
-  ~vgl_rtree_box_box_2d();
+  vgl_rtree_box_box_2d() = delete;
+  ~vgl_rtree_box_box_2d() = delete;
 
  public:
   typedef vgl_box_2d<T> v_type;
@@ -151,8 +151,8 @@ class vgl_rtree_polygon_probe : public vgl_rtree_probe<V, B, C>
   vgl_rtree_polygon_probe(vgl_polygon<T> const& poly): poly_(poly) {}
 
   //: return true if the probe "meets" the given object.
-  virtual bool meets(V const &v) const {return C::meets(v, poly_); }
-  virtual bool meets(B const &b) const {return C::meets(b, poly_); }
+  bool meets(V const &v) const override {return C::meets(v, poly_); }
+  bool meets(B const &b) const override {return C::meets(b, poly_); }
 };
 
 #endif // vgl_rtree_c_h_

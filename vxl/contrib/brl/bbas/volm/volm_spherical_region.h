@@ -18,7 +18,9 @@
 #include <string>
 #include <algorithm>
 #include <vsph/vsph_sph_box_2d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //const char* spherical_attributes_names[] = {"MIN_DEPTH","MAX_DEPTH","DEPTH_ORDER","DEPTH_INTERVAL","ORIENTATION","NLCD","SKY"};
 enum spherical_region_attributes
@@ -68,8 +70,8 @@ class volm_spherical_region
 class volm_spherical_regions_layer
 {
   public:
-    volm_spherical_regions_layer(){}
-    void add_region(volm_spherical_region region);
+    volm_spherical_regions_layer()= default;
+    void add_region(const volm_spherical_region& region);
     std::vector<volm_spherical_region> & regions(){return regions_;}
     int size(){return regions_.size();}
     //std::vector<unsigned int>  attributed_regions(spherical_region_attributes att, unsigned char value);

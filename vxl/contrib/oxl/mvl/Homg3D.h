@@ -22,7 +22,10 @@
 #include <mvl/Homg.h>
 #include <vnl/vnl_double_4.h>
 #include <vnl/vnl_vector.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class Homg3D : public Homg
 {
@@ -30,18 +33,18 @@ class Homg3D : public Homg
 
   // Constructors/Initializers/Destructors-------------------------------------
 
-  Homg3D() {}
+  Homg3D() = default;
   Homg3D(const Homg3D& that):homg_vector_(that.homg_vector_) {}
   Homg3D(double px, double py, double pz, double pw = 1): homg_vector_(px,py,pz,pw) {}
   Homg3D(const vnl_vector<double>& v): homg_vector_(v) { }
   Homg3D(const vnl_vector_fixed<double,4>& v): homg_vector_(v) { }
- ~Homg3D() {}
+ ~Homg3D() = default;
 
   Homg3D& operator=(const Homg3D& that) { homg_vector_ = that.homg_vector_; return *this; }
 
   // Data Access---------------------------------------------------------------
 
-  vnl_double_4 get_vector() const { return vnl_double_4(x(),y(),z(),w()); }
+  vnl_double_4 get_vector() const { return {x(),y(),z(),w()}; }
   vnl_double_4& asVector() { return homg_vector_; }
 
   // get x,y,z,w.  Do not try to fill null pointers.

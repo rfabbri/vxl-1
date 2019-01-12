@@ -8,7 +8,10 @@
 
 #include <iostream>
 #include <iterator>
-#include <vcl_compiler.h>
+#include <vcl_compiler_detection.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: \brief Compute the median absolute deviation (MAD) scale estimate of the residuals.
 //
@@ -36,7 +39,7 @@ template <class T>
 double
 rrel_util_median_abs_dev_scale( const T& begin,  const T& end, int dof=1 )
 {
-  return rrel_util_median_abs_dev_scale( begin,  end, dof, (double*)VXL_NULLPTR );
+  return rrel_util_median_abs_dev_scale( begin,  end, dof, (double*)nullptr );
 }
 
 //: \brief Compute the scale using robustly weighted residuals.
@@ -57,8 +60,6 @@ O
 rrel_util_weighted_scale( const InpIter& residuals_first, const InpIter& residuals_end,
                           const InpIter& weights_first, int dof, O* );
 
-#if !VCL_TEMPLATE_MATCHES_TOO_OFTEN // not for compilers with overload problems
-
 //: Convenience function.
 // Calls the other rrel_util_weighted_scale() with a return type of
 // double.
@@ -69,10 +70,8 @@ rrel_util_weighted_scale( const InpIter& residuals_first, const InpIter& residua
                           const InpIter& weights_first, int dof=1 )
 {
   return rrel_util_weighted_scale( residuals_first, residuals_end,
-                                   weights_first, dof, (double*)VXL_NULLPTR );
+                                   weights_first, dof, (double*)nullptr );
 }
-
-#endif
 
 //: Compute the median and the scale (relative to the median).
 //
@@ -143,7 +142,7 @@ void rrel_util_intercept_adjust_stats_copy( InpIter first, InpIter last,
                                             T & robust_mean, T & robust_std, T & inlier_frac,
                                             int dof=1 );
 
-#if defined(VCL_GCC)
+#if defined(__GNUC__)
 # include "rrel_util.hxx"
 #endif
 

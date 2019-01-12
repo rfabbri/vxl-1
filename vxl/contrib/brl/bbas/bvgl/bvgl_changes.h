@@ -16,16 +16,18 @@
 #include <vbl/vbl_ref_count.h>
 #include <vil/vil_image_view_base.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_binary_io.h>
 #include "bvgl_change_obj_sptr.h"
 
 class bvgl_changes : public vbl_ref_count
 {
  public:
-  bvgl_changes() {}
+  bvgl_changes() = default;
 
-  ~bvgl_changes() {}
+  ~bvgl_changes() override = default;
 
   unsigned size() const { return objs_.size(); }
 
@@ -42,11 +44,11 @@ class bvgl_changes : public vbl_ref_count
   //void xml_read();
   //void xml_write();
 
-  vil_image_view_base_sptr create_mask_from_objs(unsigned ni, unsigned nj, std::string change_type);
+  vil_image_view_base_sptr create_mask_from_objs(unsigned ni, unsigned nj, const std::string& change_type);
   vil_image_view_base_sptr create_mask_from_objs_all_types(unsigned ni, unsigned nj);
 
-  void add_obj(bvgl_change_obj_sptr obj);
-  void remove_obj(bvgl_change_obj_sptr obj);
+  void add_obj(const bvgl_change_obj_sptr& obj);
+  void remove_obj(const bvgl_change_obj_sptr& obj);
 
  private:
   std::vector<bvgl_change_obj_sptr> objs_;

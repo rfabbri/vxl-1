@@ -6,7 +6,9 @@
 #include <exception>
 #include <iostream>
 #include <algorithm>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_arg.h>
 #include <mbl/mbl_log.h>
 #include <vimt3d/vimt3d_add_all_loaders.h>
@@ -50,8 +52,8 @@ int main2(int argc, char*argv[])
   );
 
   // Parse the program arguments
-  vul_arg<std::string> img_src(VXL_NULLPTR, "input image filename");
-  vul_arg<std::string> img_dst(VXL_NULLPTR, "output image filename");
+  vul_arg<std::string> img_src(nullptr, "input image filename");
+  vul_arg<std::string> img_dst(nullptr, "output image filename");
   vul_arg<std::vector<unsigned> > bbi("-bbi", "bounding box in image coords (i0,j0,k0,i1,j1,k1)");
   vul_arg<std::vector<double> > bbf("-bbf", "bounding box in image fraction e.g. 0.2,0.2,0.2,0.75,0.75,0.75");
   vul_arg<std::vector<double> > bbw("-bbw", "bounding box in world coords (x0,y0,z0,x1,y1,z1)");
@@ -225,9 +227,9 @@ int main2(int argc, char*argv[])
     j0 = static_cast<unsigned>(std::floor((ir->nj()-1)*fy0));
     k0 = static_cast<unsigned>(std::floor((ir->nk()-1)*fz0));
     // Round upper bounds up
-    unsigned i1 = static_cast<unsigned>(std::ceil((ir->ni()-1)*fx1));
-    unsigned j1 = static_cast<unsigned>(std::ceil((ir->nj()-1)*fy1));
-    unsigned k1 = static_cast<unsigned>(std::ceil((ir->nk()-1)*fz1));
+    auto i1 = static_cast<unsigned>(std::ceil((ir->ni()-1)*fx1));
+    auto j1 = static_cast<unsigned>(std::ceil((ir->nj()-1)*fy1));
+    auto k1 = static_cast<unsigned>(std::ceil((ir->nk()-1)*fz1));
     ni = i1 - i0 + 1;
     nj = j1 - j0 + 1;
     nk = k1 - k0 + 1;
@@ -252,9 +254,9 @@ int main2(int argc, char*argv[])
     j0 = static_cast<unsigned>(std::floor(imlo.y()));
     k0 = static_cast<unsigned>(std::floor(imlo.z()));
     // Round upper bounds up
-    unsigned i1 = static_cast<unsigned>(std::ceil(imhi.x()));
-    unsigned j1 = static_cast<unsigned>(std::ceil(imhi.y()));
-    unsigned k1 = static_cast<unsigned>(std::ceil(imhi.z()));
+    auto i1 = static_cast<unsigned>(std::ceil(imhi.x()));
+    auto j1 = static_cast<unsigned>(std::ceil(imhi.y()));
+    auto k1 = static_cast<unsigned>(std::ceil(imhi.z()));
 
 
     ni = i1 - i0 + 1;
@@ -291,9 +293,9 @@ int main2(int argc, char*argv[])
     j0 = static_cast<unsigned>(std::max(0.0,std::floor(imlo.y())));
     k0 = static_cast<unsigned>(std::max(0.0,std::floor(imlo.z())));
     // Round upper bounds up
-    unsigned i1 = static_cast<unsigned>(std::ceil(imhi.x()));
-    unsigned j1 = static_cast<unsigned>(std::ceil(imhi.y()));
-    unsigned k1 = static_cast<unsigned>(std::ceil(imhi.z()));
+    auto i1 = static_cast<unsigned>(std::ceil(imhi.x()));
+    auto j1 = static_cast<unsigned>(std::ceil(imhi.y()));
+    auto k1 = static_cast<unsigned>(std::ceil(imhi.z()));
 
 
     ni = i1 - i0;

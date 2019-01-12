@@ -9,7 +9,9 @@
 #include <vdtop/vdtop_8_neighborhood_mask.h>
 #include <vmap/vmap_types.h> // for vmap_2_map_tag
 #include <vil/vil_image_view.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: The 3 in 1 function.
 // It computes upper masks, removes non maximal directions, and compute the down-left version of the symmetric
@@ -514,7 +516,7 @@ void vdtop_set_veinerization_structure(TMap & res, const vil_image_view<T> & arg
 template <class T, class TMap>
 void vdtop_set_structure_from_masks(TMap & res, const vil_image_view<vdtop_8_neighborhood_mask> & mask,int plane, vmap_2_map_tag)
 {
-  unsigned ni = mask.ni(),nj = mask.nj(),np = mask.nplanes(), nil=ni-1, njl=nj-1;
+  unsigned ni = mask.ni(),nj = mask.nj();
   // Precompute steps
   std::ptrdiff_t istepM=mask.istep(),jstepM=mask.jstep(),pstepM = mask.planestep();
   std::ptrdiff_t movesM[8] ;

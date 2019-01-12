@@ -14,7 +14,9 @@
 
 #include <iostream>
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include "vpyr_2_tpyramid_level.h"
 #include "vpyr_2_pyramid.h"
 
@@ -99,14 +101,14 @@ class vpyr_2_tpyramid : public vpyr_2_pyramid<TLevel>
 #endif // 0
 
   //:
-  virtual ~vpyr_2_tpyramid();
+  ~vpyr_2_tpyramid() override;
 
   //: Returns true if all the permutations are valid, false otherwise.
   // May be useful for testing permutations set by hand...
-  virtual bool valid() ;
+  bool valid() override ;
 
   //: Deletes everything.
-  virtual void clear() ;
+  void clear() override ;
 
   //: Returns "true" if the map empty.
   bool empty() const

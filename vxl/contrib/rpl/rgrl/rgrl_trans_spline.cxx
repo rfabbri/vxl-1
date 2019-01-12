@@ -4,11 +4,14 @@
 // \date  Sept 2003
 
 #include <iostream>
+#include <utility>
 #include "rgrl_trans_spline.h"
-#include <rgrl/rgrl_util.h>
 #include <rgrl/rgrl_trans_reader.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#include <rgrl/rgrl_util.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 rgrl_trans_spline::
 rgrl_trans_spline( unsigned int dim )
@@ -17,10 +20,10 @@ rgrl_trans_spline( unsigned int dim )
 }
 
 rgrl_trans_spline::
-rgrl_trans_spline( std::vector<rgrl_spline_sptr> const& splines,
+rgrl_trans_spline( std::vector<rgrl_spline_sptr>  splines,
                    vnl_vector< double > const& x0, vnl_vector< double > const& delta,
-                   rgrl_transformation_sptr xform )
-  : xform_( xform ), splines_( splines ),
+                   const rgrl_transformation_sptr& xform )
+  : xform_( xform ), splines_(std::move( splines )),
     x0_( x0 ), delta_( delta )
 {
   assert( x0_.size() == delta_.size() );
@@ -28,12 +31,12 @@ rgrl_trans_spline( std::vector<rgrl_spline_sptr> const& splines,
 }
 
 rgrl_trans_spline::
-rgrl_trans_spline( std::vector<rgrl_spline_sptr> const& splines,
+rgrl_trans_spline( std::vector<rgrl_spline_sptr>  splines,
                    vnl_vector< double > const& x0, vnl_vector< double > const& delta,
                    vnl_matrix< double > const& covar,
-                   rgrl_transformation_sptr xform )
+                   const rgrl_transformation_sptr& xform )
   : rgrl_transformation( covar ),
-    xform_( xform ), splines_( splines ), x0_( x0 ), delta_( delta )
+    xform_( xform ), splines_(std::move( splines )), x0_( x0 ), delta_( delta )
 {
   assert( x0_.size() == delta_.size() );
 }
@@ -163,8 +166,8 @@ write( std::ostream& os ) const
   os << delta_ << std::endl;
   // output the spline
   assert( splines_.size() == dim );
-  for (unsigned int i=0; i<splines_.size(); ++i)
-    os << *splines_[i] << std::endl;
+  for (const auto & spline : splines_)
+    os << *spline << std::endl;
 
   // parent
   rgrl_transformation::write( os );
@@ -236,7 +239,7 @@ rgrl_trans_spline::
 inverse_transform( ) const
 {
   assert ( ! "rgrl_trans_spline::inverse_transform() is not defined" );
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 rgrl_transformation_sptr
@@ -244,7 +247,7 @@ rgrl_trans_spline::
 scale_by( double /*scale*/ ) const
 {
   assert ( ! "rgrl_trans_spline::scale_by() is not defined" );
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 //: make a clone copy

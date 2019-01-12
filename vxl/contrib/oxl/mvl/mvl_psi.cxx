@@ -1,7 +1,4 @@
 // This is oxl/mvl/mvl_psi.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
@@ -11,8 +8,10 @@
 #include <cstdlib>
 #include "mvl_psi.h"
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #if 0
 # define mvl_psi_temp_name(l, r) U l = r

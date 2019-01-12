@@ -6,11 +6,11 @@
 #include <iostream>
 #include <cstdlib>
 #include "mbl_random_n_from_m.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
-mbl_random_n_from_m::mbl_random_n_from_m()
-{
-}
+mbl_random_n_from_m::mbl_random_n_from_m() = default;
 
 void mbl_random_n_from_m::reseed(long new_seed)
 {
@@ -120,4 +120,3 @@ void mbl_random_n_from_m::choose_n_from_m(std::vector<int>& chosen,
     if (!used_[i])
       not_chosen[j++]=i;
 }
-

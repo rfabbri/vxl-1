@@ -3,7 +3,9 @@
 //
 #include <vnl/algo/vnl_levenberg_marquardt.h>
 #include <vnl/vnl_math.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 float boxm2_phongs_model_processor::expected_color(brad_phongs_model & pmodel,
                                                    vnl_double_3 view_dir,
@@ -70,4 +72,3 @@ brad_phongs_model boxm2_phongs_model_processor::compute_phongs_model(float & var
     }
     return brad_phongs_model(float(x[0]),float(x[1]),float(x[2]),float(x[3]),float(x[4]));
 }
-

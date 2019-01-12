@@ -1,7 +1,4 @@
 // This is gel/octree/Voxel.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Geoffrey Cross, Oxford RRG
@@ -14,8 +11,10 @@
 
 #include <iostream>
 #include "Voxel.h"
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #if 0
 bool operator==( const Voxel &a, const Voxel &b)

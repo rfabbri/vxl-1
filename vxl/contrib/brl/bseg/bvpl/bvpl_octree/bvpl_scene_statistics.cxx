@@ -6,11 +6,11 @@
 #include "bvpl_scene_statistics.h"
 
 
-double bvpl_average_value(boxm_scene_base_sptr scene_base, int block_i, int block_j, int block_k, unsigned long tree_nsamples)
+double bvpl_average_value(const boxm_scene_base_sptr& scene_base, int block_i, int block_j, int block_k, unsigned long tree_nsamples)
 {
   typedef boct_tree<short,float> float_tree_type;
   typedef boct_tree_cell<short,float> float_cell_type;
-  boxm_scene<float_tree_type> * scene = dynamic_cast<boxm_scene<float_tree_type>* > (scene_base.as_pointer());
+  auto * scene = dynamic_cast<boxm_scene<float_tree_type>* > (scene_base.as_pointer());
 
   scene->load_block(block_i, block_j, block_k);
 
@@ -43,11 +43,11 @@ double bvpl_average_value(boxm_scene_base_sptr scene_base, int block_i, int bloc
   return avg_val/tree_nsamples;
 }
 
-double bvpl_average_value(boxm_scene_base_sptr scene_base, int block_i, int block_j, int block_k)
+double bvpl_average_value(const boxm_scene_base_sptr& scene_base, int block_i, int block_j, int block_k)
 {
   typedef boct_tree<short,float> float_tree_type;
   typedef boct_tree_cell<short,float> float_cell_type;
-  boxm_scene<float_tree_type> * scene = dynamic_cast<boxm_scene<float_tree_type>* > (scene_base.as_pointer());
+  auto * scene = dynamic_cast<boxm_scene<float_tree_type>* > (scene_base.as_pointer());
   if (!scene) {
     std::cerr << "Error in bvpl_average_value: Error scene is of incorrect type\n";
     return false;
@@ -60,9 +60,8 @@ double bvpl_average_value(boxm_scene_base_sptr scene_base, int block_i, int bloc
 
   double actual_samples = 0.0;
   double avg_val = 0.0;
-  for (unsigned i=0; i<leaves.size(); i++)
+  for (auto center_cell : leaves)
   {
-    boct_tree_cell<short, float> *center_cell = leaves[i];
     // vgl_point_3d<double> center_cell_centroid = tree->global_centroid(center_cell);
 
     //if neighborhood is not inclusive we would have missing features

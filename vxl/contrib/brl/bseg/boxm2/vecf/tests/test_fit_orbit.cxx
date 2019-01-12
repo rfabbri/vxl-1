@@ -7,10 +7,11 @@
 #include <iostream>
 #include <fstream>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_timer.h>
 #include <vul/vul_file.h>
-#include <vul/vul_timer.h>
 #include "../boxm2_vecf_orbit_params.h"
 #include "../boxm2_vecf_fit_orbit.h"
 #include <vgl/vgl_sphere_3d.h>
@@ -294,4 +295,3 @@ bool good = false;
 #endif //BUILD_FIT_ORBIT
 }
 TESTMAIN( test_fit_orbit );
-

@@ -2,7 +2,9 @@
 #include <iostream>
 #include <string>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpl/vpl.h> // vpl_unlink()
 #include <vil/vil_image_resource.h>
 #include <vil/vil_image_view.h>
@@ -20,8 +22,8 @@ static void test_image_list()
            << "************************\n";
   // Test image list by saving three resource files and then
   // retrieving them using image_list.
-  const unsigned int ni = 73;
-  const unsigned int nj = 43;
+  constexpr unsigned int ni = 73;
+  constexpr unsigned int nj = 43;
   vil_image_view<unsigned short> image;
   image.set_size(ni,nj);
   for (unsigned i = 0; i<ni; ++i)

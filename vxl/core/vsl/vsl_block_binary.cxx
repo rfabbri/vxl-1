@@ -9,8 +9,10 @@
 #include <algorithm>
 #include <cstdlib>
 #include "vsl_block_binary.h"
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 struct vsl_block_t
 {
@@ -20,10 +22,9 @@ struct vsl_block_t
 
 vsl_block_t allocate_up_to(std::size_t nbytes)
 {
-  vsl_block_t block = {VXL_NULLPTR, nbytes};
+  vsl_block_t block = {nullptr, nbytes};
   while (true)
   {
-#if VCL_HAS_EXCEPTIONS
     try
     {
       block.ptr = new char[block.size];
@@ -31,10 +32,6 @@ vsl_block_t allocate_up_to(std::size_t nbytes)
     catch (const std::bad_alloc& )
     {
     }
-#else
-    //use malloc because gcc's new still tries to throw a bad alloc even with -fno_exceptions
-    block.ptr = (char *)std::malloc(block.size);
-#endif
     if (block.ptr)
       return block;
     block.size /= 2;
@@ -87,11 +84,7 @@ void vsl_block_binary_write_float_impl(vsl_b_ostream &os, const T* begin, std::s
     begin += items;
     nelems -= items;
   }
-#if VCL_HAS_EXCEPTIONS
    delete [] block.ptr;
-#else
-  std::free(block.ptr);
-#endif
 }
 
 //: Read a block of floats from a vsl_b_ostream
@@ -158,11 +151,7 @@ void vsl_block_binary_write_int_impl(vsl_b_ostream &os, const T* begin, std::siz
       n -= items;
     }
   }
-#if VCL_HAS_EXCEPTIONS
    delete [] block.ptr;
-#else
-  std::free(block.ptr);
-#endif
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -243,11 +232,7 @@ void vsl_block_binary_read_int_impl(vsl_b_istream &is, T* begin, std::size_t nel
              << " Corrupted data stream\n";
     is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
   }
-#if VCL_HAS_EXCEPTIONS
    delete [] block.ptr;
-#else
-  std::free(block.ptr);
-#endif
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -300,7 +285,7 @@ template void vsl_block_binary_write_byte_impl(vsl_b_ostream &, const unsigned c
 template void vsl_block_binary_read_byte_impl(vsl_b_istream &, signed char*, std::size_t);
 template void vsl_block_binary_read_byte_impl(vsl_b_istream &, unsigned char*, std::size_t);
 
-#if VXL_HAS_INT_64 && !VXL_INT_64_IS_LONG
+#if VXL_INT_64_IS_LONGLONG
 template void vsl_block_binary_write_int_impl(vsl_b_ostream &, const vxl_int_64*, std::size_t);
 template void vsl_block_binary_write_int_impl(vsl_b_ostream &, const vxl_uint_64*, std::size_t);
 template void vsl_block_binary_read_int_impl(vsl_b_istream &, vxl_int_64*, std::size_t);

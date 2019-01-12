@@ -7,7 +7,9 @@
 #include <vector>
 #include <iostream>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_vector_2d.h>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_conic.h>
@@ -143,9 +145,8 @@ static void test_fit_simple_chain()
   fitter.fit();
   std::vector<vgl_conic_segment_2d<double> >& segs = fitter.get_conic_segs();
   std::cout << "\nCurve fit Produced the following conic segments\n";
-  for (std::vector<vgl_conic_segment_2d<double> >::iterator sit = segs.begin();
-       sit != segs.end(); sit++)
-    std::cout << *sit << '\n';
+  for (auto & seg : segs)
+    std::cout << seg << '\n';
 
   TEST("Number of conic segments ", segs.size(), 2);
 
@@ -675,8 +676,8 @@ static void test_fit_simple_chain()
   f.fit();
   std::vector<vgl_conic_segment_2d<double > > temp = f.get_conic_segs();
 
-  for (std::vector<vgl_conic_segment_2d<double > >::iterator cit = temp.begin(); cit != temp.end(); ++cit)
-    std::cout << *cit << '\n';
+  for (auto & cit : temp)
+    std::cout << cit << '\n';
   TEST("Number of conic segments ", temp.size(), 1);
 
 
@@ -1052,8 +1053,8 @@ static void test_fit_simple_chain()
   f1.add_point(vgl_point_2d<double>(41.9457, 138.862));
   f1.fit();
   std::vector<vgl_conic_segment_2d<double > > temp1 = f1.get_conic_segs();
-  for (std::vector<vgl_conic_segment_2d<double > >::iterator cit = temp1.begin(); cit != temp1.end(); ++cit)
-    std::cout << *cit << '\n';
+  for (auto & cit : temp1)
+    std::cout << cit << '\n';
   TEST("Number of conic segments ", temp1.size(), 2);
 }
 

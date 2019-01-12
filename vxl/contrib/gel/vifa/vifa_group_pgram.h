@@ -21,7 +21,9 @@
 
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vifa/vifa_bbox.h>
 #include <vifa/vifa_group_pgram_params.h>
 #include <vifa/vifa_histogram.h>
@@ -47,10 +49,10 @@ class vifa_group_pgram : public vifa_group_pgram_params
                    const vifa_group_pgram_params& old_params,
                    double                         angle_range = 180.0
                   );
-  ~vifa_group_pgram();
+  ~vifa_group_pgram() override;
 
   // Index insertion
-  void    Index(imp_line_sptr    il);
+  void    Index(const imp_line_sptr&    il);
   void    Index(imp_line_list&  lg);
   void    Clear();
 
@@ -67,7 +69,7 @@ class vifa_group_pgram : public vifa_group_pgram_params
   double         norm_parallel_line_length(void);
 
  protected:
-  int            AngleLoc(imp_line_sptr  il);
+  int            AngleLoc(const imp_line_sptr&  il);
   imp_line_sptr  LineAtAngle(int  angle_bin);
   void           CheckUpdateBoundingBox(void);
   void           ComputeBoundingBox(void);

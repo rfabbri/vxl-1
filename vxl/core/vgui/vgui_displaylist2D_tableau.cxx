@@ -1,7 +1,4 @@
 // This is core/vgui/vgui_displaylist2D_tableau.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Philip C. Pritchett, RRG, University of Oxford
@@ -12,8 +9,10 @@
 #include <vector>
 #include "vgui_displaylist2D_tableau.h"
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <vgui/vgui_gl.h>
 #include <vgui/vgui_glu.h>

@@ -9,7 +9,9 @@
 // \author Vishal Jain
 // \date Mar 10, 2011
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/ocl/boxm2_opencl_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -22,7 +24,7 @@
 #include <vul/vul_timer.h>
 #include <boct/boct_bit_tree.h>
 
-void boxm2_ocl_filter_process_globals::compile_filter_kernel(bocl_device_sptr device,bocl_kernel * refine_data_kernel)
+void boxm2_ocl_filter_process_globals::compile_filter_kernel(const bocl_device_sptr& device,bocl_kernel * refine_data_kernel)
 {
   std::vector<std::string> src_paths;
   std::string source_dir = boxm2_ocl_util::ocl_src_root();
@@ -86,7 +88,7 @@ bool boxm2_ocl_filter_process(bprb_func_process& pro)
     if (kernels.find(identifier)==kernels.end())
     {
         std::cout<<"===========Compiling kernels==========="<<std::endl;
-        bocl_kernel* filter_kernel = new bocl_kernel();
+        auto* filter_kernel = new bocl_kernel();
         compile_filter_kernel(device,filter_kernel);
         kernels[identifier]=filter_kernel;
     }
@@ -129,7 +131,7 @@ bool boxm2_ocl_filter_process(bprb_func_process& pro)
         bocl_mem* alphas = opencl_cache->get_data<BOXM2_ALPHA>(scene,id, 0, false);
         std::size_t dataSize = alphas->num_bytes();
 
-        bocl_mem* new_alphas = new bocl_mem(device->context(), VXL_NULLPTR, dataSize, "new alpha buffer ");
+        bocl_mem* new_alphas = new bocl_mem(device->context(), nullptr, dataSize, "new alpha buffer ");
         new_alphas->create_buffer(CL_MEM_READ_WRITE, queue);
 
         //grab the block out of the cache as well
@@ -172,4 +174,3 @@ bool boxm2_ocl_filter_process(bprb_func_process& pro)
 
     return true;
 }
-

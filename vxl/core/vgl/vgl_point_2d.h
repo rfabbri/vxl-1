@@ -1,9 +1,6 @@
 // This is core/vgl/vgl_point_2d.h
 #ifndef vgl_point_2d_h
 #define vgl_point_2d_h
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief a point in 2D nonhomogeneous space
@@ -18,10 +15,12 @@
 
 #include <iosfwd>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_fwd.h> // declare vgl_homg_point_2d and vgl_line_2d
 #include <vgl/vgl_vector_2d.h>
-#include <vcl_cassert.h>
+#include <cassert>
 
 //: Represents a cartesian 2D point
 template <class Type>
@@ -36,7 +35,7 @@ class vgl_point_2d
   // Constructors/Initializers/Destructor------------------------------------
 
   //: Default constructor
-  inline vgl_point_2d () {}
+  inline vgl_point_2d () = default;
 
   //: Construct from two Types.
   inline vgl_point_2d (Type px, Type py) : x_(px), y_(py) {}

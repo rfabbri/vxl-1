@@ -8,14 +8,16 @@
 //
 
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <betr/betr_site.h>
 #include <vgl/vgl_point_3d.h>
 
 namespace betr_create_site_process_globals
 {
-  const unsigned n_inputs_  = 3;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 3;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 bool betr_create_site_process_cons(bprb_func_process& pro)
@@ -24,9 +26,9 @@ bool betr_create_site_process_cons(bprb_func_process& pro)
 
   //process takes 1 input
   std::vector<std::string> input_types_(n_inputs_);
-  input_types_[0]  = "float";
-  input_types_[1]  = "float";
-  input_types_[2]  = "float";
+  input_types_[0] = "float";
+  input_types_[1] = "float";
+  input_types_[2] = "float";
 
   // process has 1 output
   std::vector<std::string> output_types_(n_outputs_);
@@ -44,9 +46,9 @@ bool betr_create_site_process(bprb_func_process& pro)
   }
   //get the inputs
   unsigned i = 0;
-  float org_x = pro.get_input<float>(i++);
-  float org_y = pro.get_input<float>(i++);
-  float org_z = pro.get_input<float>(i);
+  auto org_x = pro.get_input<float>(i++);
+  auto org_y = pro.get_input<float>(i++);
+  auto org_z = pro.get_input<float>(i);
   vgl_point_3d<double> origin(org_x, org_y, org_z);
   betr_site_sptr site = new betr_site(origin);
   pro.set_output_val<betr_site_sptr>(0, site);

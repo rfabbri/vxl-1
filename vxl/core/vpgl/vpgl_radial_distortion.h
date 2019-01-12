@@ -33,14 +33,14 @@ class vpgl_radial_distortion : public vpgl_lens_distortion<T>
 
   //: Distort a projected point on the image plane
   //  Calls the pure virtual radial distortion function
-  virtual vgl_homg_point_2d<T> distort( const vgl_homg_point_2d<T>& point ) const;
+  vgl_homg_point_2d<T> distort( const vgl_homg_point_2d<T>& point ) const override;
 
   //: Return the original point that was distorted to this location (inverse of distort)
   // \param init is an initial guess at the solution for the iterative solver
   // if \p init is NULL then \p point is used as the initial guess
   // calls the radial undistortion function
-  virtual vgl_homg_point_2d<T> undistort( const vgl_homg_point_2d<T>& point,
-                                          const vgl_homg_point_2d<T>* init=VXL_NULLPTR) const;
+  vgl_homg_point_2d<T> undistort( const vgl_homg_point_2d<T>& point,
+                                          const vgl_homg_point_2d<T>* init=nullptr) const override;
 
   //: Distort a radial length
   // \retval a scale factor such that
@@ -52,7 +52,7 @@ class vpgl_radial_distortion : public vpgl_lens_distortion<T>
   //: Return the inverse of distort function
   // \param init is an initial guess at the solution for the iterative solver
   // if \p init is NULL then \p radius is used as the initial guess
-  virtual T undistort_radius( T radius, const T* init=VXL_NULLPTR) const;
+  virtual T undistort_radius( T radius, const T* init=nullptr) const;
 
   //: Compute the derivative of the distort_radius function
   // \note implementing this function is optional but it may improve the convergence
@@ -67,7 +67,7 @@ class vpgl_radial_distortion : public vpgl_lens_distortion<T>
   //: Set a translation to apply before of after distortion
   // This is needed when distorting an image to translate the resulting image
   // such that all points have positive indices
-  virtual void set_translation(const vgl_vector_2d<T>& offset, bool after = true)
+  void set_translation(const vgl_vector_2d<T>& offset, bool after = true) override
   {
     if (after)
       distorted_center_ += offset;

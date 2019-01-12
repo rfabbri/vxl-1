@@ -12,8 +12,10 @@
 #include <vnl/algo/vnl_cholesky.h>
 #include <vnl/algo/vnl_svd.h>
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <msm/msm_ref_shape_model.h>
 #include <msm/msm_no_limiter.h>
@@ -25,7 +27,7 @@
 //=======================================================================
 
 msm_ref_shape_instance::msm_ref_shape_instance()
-  : model_(VXL_NULLPTR),use_prior_(false)
+  : model_(nullptr),use_prior_(false)
 {
   param_limiter_ = msm_no_limiter();
 }
@@ -34,9 +36,7 @@ msm_ref_shape_instance::msm_ref_shape_instance()
 // Destructor
 //=======================================================================
 
-msm_ref_shape_instance::~msm_ref_shape_instance()
-{
-}
+msm_ref_shape_instance::~msm_ref_shape_instance() = default;
 
 //: Set up model (retains pointer to model)
 void msm_ref_shape_instance::set_shape_model(const msm_ref_shape_model& model)
@@ -167,7 +167,7 @@ void msm_calc_WP(const vnl_matrix<double>& P,
 
   double const*const* PData = P.data_array();
   double ** WPData = WP.data_array();
-  std::vector<msm_wt_mat_2d>::const_iterator w=wt_mat.begin();
+  auto w=wt_mat.begin();
 
   for (unsigned i=0;i<nr;i+=2,++w)
   {

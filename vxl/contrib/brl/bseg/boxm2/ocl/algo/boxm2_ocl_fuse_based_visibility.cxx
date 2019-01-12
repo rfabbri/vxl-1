@@ -10,7 +10,9 @@
 // \author Vishal Jain
 // \date Nov 13, 2013
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/boxm2_data_base.h>
 #include <boxm2/ocl/boxm2_ocl_util.h>
 #include <boxm2/boxm2_util.h>
@@ -30,9 +32,9 @@ std::map<std::string,std::vector<bocl_kernel*> > boxm2_ocl_fuse_based_visibility
 
 //Main public method, updates color model
 bool boxm2_ocl_fuse_based_visibility::fuse_based_visibility(boxm2_scene_sptr         sceneA,
-                                                            boxm2_scene_sptr         sceneB,
-                                                            bocl_device_sptr         device,
-                                                            boxm2_opencl_cache_sptr  opencl_cache)
+                                                            const boxm2_scene_sptr&         sceneB,
+                                                            const bocl_device_sptr&         device,
+                                                            const boxm2_opencl_cache_sptr&  opencl_cache)
 {
 
 
@@ -68,8 +70,8 @@ bool boxm2_ocl_fuse_based_visibility::fuse_based_visibility(boxm2_scene_sptr    
   std::vector<boxm2_block_id> blocks_A = sceneA->get_block_ids();
   std::vector<boxm2_block_id> blocks_B = sceneB->get_block_ids();
   std::cout<<sceneA->data_path()<<" "<<sceneB->data_path()<<std::endl;
-  std::vector<boxm2_block_id>::iterator iter_blks_A = blocks_A.begin();
-  std::vector<boxm2_block_id>::iterator iter_blks_B = blocks_B.begin();
+  auto iter_blks_A = blocks_A.begin();
+  auto iter_blks_B = blocks_B.begin();
 
   int alphaTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_ALPHA>::prefix());
 
@@ -150,7 +152,7 @@ bool boxm2_ocl_fuse_based_visibility::fuse_based_visibility(boxm2_scene_sptr    
 
 
 //Returns vector of color update kernels (and caches them per device
-std::vector<bocl_kernel*>& boxm2_ocl_fuse_based_visibility::get_kernels(bocl_device_sptr device, std::string opts)
+std::vector<bocl_kernel*>& boxm2_ocl_fuse_based_visibility::get_kernels(const bocl_device_sptr& device, const std::string& opts)
 {
   // compile kernels if not already compiled
   std::string identifier = device->device_identifier() + opts;
@@ -170,11 +172,11 @@ std::vector<bocl_kernel*>& boxm2_ocl_fuse_based_visibility::get_kernels(bocl_dev
   src_paths.push_back(source_dir + "ray_bundle_library_opt.cl");
   src_paths.push_back(source_dir + "fusion/fusion_kernels.cl");
   //compilation options
-  std::string options = opts;
+  const std::string& options = opts;
   //populate vector of kernels
   std::vector<bocl_kernel*> vec_kernels;
   //may need DIFF LIST OF SOURCES FOR
-  bocl_kernel* fuse = new bocl_kernel();
+  auto* fuse = new bocl_kernel();
   std::string update_opts = options + " -D VISIBILITY_BASED";
   fuse->create_kernel(&device->context(), device->device_id(), src_paths, "fuse_blockwise_based_visibility", update_opts, "fusion::fuse_blockwise_based_visibility");
   vec_kernels.push_back(fuse);
@@ -189,9 +191,9 @@ std::map<std::string,std::vector<bocl_kernel*> > boxm2_ocl_fuse_based_orientatio
 
 //Main public method, updates color model
 bool boxm2_ocl_fuse_based_orientation::fuse_based_orientation(boxm2_scene_sptr         sceneA,
-                                                                            boxm2_scene_sptr         sceneB,
-                                                                            bocl_device_sptr         device,
-                                                                            boxm2_opencl_cache_sptr  opencl_cache)
+                                                                            const boxm2_scene_sptr&         sceneB,
+                                                                            const bocl_device_sptr&         device,
+                                                                            const boxm2_opencl_cache_sptr&  opencl_cache)
 {
 
 
@@ -227,8 +229,8 @@ bool boxm2_ocl_fuse_based_orientation::fuse_based_orientation(boxm2_scene_sptr  
   std::vector<boxm2_block_id> blocks_A = sceneA->get_block_ids();
   std::vector<boxm2_block_id> blocks_B = sceneB->get_block_ids();
   std::cout<<sceneA->data_path()<<" "<<sceneB->data_path()<<std::endl;
-  std::vector<boxm2_block_id>::iterator iter_blks_A = blocks_A.begin();
-  std::vector<boxm2_block_id>::iterator iter_blks_B = blocks_B.begin();
+  auto iter_blks_A = blocks_A.begin();
+  auto iter_blks_B = blocks_B.begin();
 
   int alphaTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_ALPHA>::prefix());
 
@@ -313,7 +315,7 @@ bool boxm2_ocl_fuse_based_orientation::fuse_based_orientation(boxm2_scene_sptr  
 
 
 //Returns vector of color update kernels (and caches them per device
-std::vector<bocl_kernel*>& boxm2_ocl_fuse_based_orientation::get_kernels(bocl_device_sptr device, std::string opts)
+std::vector<bocl_kernel*>& boxm2_ocl_fuse_based_orientation::get_kernels(const bocl_device_sptr& device, const std::string& opts)
 {
   // compile kernels if not already compiled
   std::string identifier = device->device_identifier() + opts;
@@ -333,11 +335,11 @@ std::vector<bocl_kernel*>& boxm2_ocl_fuse_based_orientation::get_kernels(bocl_de
   src_paths.push_back(source_dir + "ray_bundle_library_opt.cl");
   src_paths.push_back(source_dir + "fusion/fusion_kernels.cl");
   //compilation options
-  std::string options = opts;
+  const std::string& options = opts;
   //populate vector of kernels
   std::vector<bocl_kernel*> vec_kernels;
   //may need DIFF LIST OF SOURCES FOR
-  bocl_kernel* fuse = new bocl_kernel();
+  auto* fuse = new bocl_kernel();
   std::string update_opts = options + " -D ORIENTATION_BASED";
   fuse->create_kernel(&device->context(), device->device_id(), src_paths, "fuse_blockwise_based_orientation", update_opts, "fusion::fuse_blockwise_based_orientation");
   vec_kernels.push_back(fuse);
@@ -354,9 +356,9 @@ std::map<std::string,std::vector<bocl_kernel*> > boxm2_ocl_fuse_surface_density:
 
 //Main public method, updates color model
 bool boxm2_ocl_fuse_surface_density::fuse_surface_density(boxm2_scene_sptr         sceneA,
-                                                          boxm2_scene_sptr         sceneB,
-                                                          bocl_device_sptr         device,
-                                                          boxm2_opencl_cache_sptr  opencl_cache)
+                                                          const boxm2_scene_sptr&         sceneB,
+                                                          const bocl_device_sptr&         device,
+                                                          const boxm2_opencl_cache_sptr&  opencl_cache)
 {
 
 
@@ -392,8 +394,8 @@ bool boxm2_ocl_fuse_surface_density::fuse_surface_density(boxm2_scene_sptr      
   std::vector<boxm2_block_id> blocks_A = sceneA->get_block_ids();
   std::vector<boxm2_block_id> blocks_B = sceneB->get_block_ids();
   std::cout<<sceneA->data_path()<<" "<<sceneB->data_path()<<std::endl;
-  std::vector<boxm2_block_id>::iterator iter_blks_A = blocks_A.begin();
-  std::vector<boxm2_block_id>::iterator iter_blks_B = blocks_B.begin();
+  auto iter_blks_A = blocks_A.begin();
+  auto iter_blks_B = blocks_B.begin();
 
   int alphaTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_ALPHA>::prefix());
 
@@ -478,7 +480,7 @@ bool boxm2_ocl_fuse_surface_density::fuse_surface_density(boxm2_scene_sptr      
 
 
 //Returns vector of color update kernels (and caches them per device
-std::vector<bocl_kernel*>& boxm2_ocl_fuse_surface_density::get_kernels(bocl_device_sptr device, std::string opts)
+std::vector<bocl_kernel*>& boxm2_ocl_fuse_surface_density::get_kernels(const bocl_device_sptr& device, const std::string& opts)
 {
   // compile kernels if not already compiled
   std::string identifier = device->device_identifier() + opts;
@@ -498,11 +500,11 @@ std::vector<bocl_kernel*>& boxm2_ocl_fuse_surface_density::get_kernels(bocl_devi
   src_paths.push_back(source_dir + "ray_bundle_library_opt.cl");
   src_paths.push_back(source_dir + "fusion/fusion_kernels.cl");
   //compilation options
-  std::string options = opts;
+  const std::string& options = opts;
   //populate vector of kernels
   std::vector<bocl_kernel*> vec_kernels;
   //may need DIFF LIST OF SOURCES FOR
-  bocl_kernel* fuse = new bocl_kernel();
+  auto* fuse = new bocl_kernel();
   std::string update_opts = options + " -D SURFACE_DENSITY_BASED";
   fuse->create_kernel(&device->context(), device->device_id(), src_paths, "fuse_blockwise_based_surface_density", update_opts, "fusion::fuse_blockwise_based_surface_density");
   vec_kernels.push_back(fuse);

@@ -1,9 +1,6 @@
 // This is core/vgui/vgui_section_buffer.h
 #ifndef vgui_section_buffer_h_
 #define vgui_section_buffer_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author fsm
@@ -107,8 +104,7 @@ class vgui_section_buffer
   unsigned height() const { return h_; }
 
  private:
-  // fsm: I want these to be GLenums as gcc 2.95 will not implicitly
-  // cast ints to enums. Please don't make them ints.
+  // fsm: I want these to be GLenums. Please don't make them ints.
   GLenum format_;
   GLenum type_;
 

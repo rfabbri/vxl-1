@@ -15,7 +15,9 @@
 #include <vector>
 #include <iostream>
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_ref_count.h>
 #include <vpgl/vpgl_perspective_camera.h>
 #include <vsl/vsl_binary_io.h>
@@ -54,7 +56,7 @@ class volm_camera_space : public vbl_ref_count
     head_radius_(0.0), head_inc_(0.0),tilt_mid_(0.0), tilt_radius_(0.0),
     tilt_inc_(0.0), roll_mid_(0.0),roll_radius_(0.0), roll_inc_(0.0) {}
   // angle units in degrees
-  volm_camera_space(std::vector<double> const& top_fov, double altitude,
+  volm_camera_space(std::vector<double>  top_fov, double altitude,
                     unsigned ni, unsigned nj,
                     double head_mid=0.0,  double head_radius=180.0, double head_inc=2.0,
                     double tilt_mid=90.0, double tilt_radius=20.0,  double tilt_inc=2.0,
@@ -226,10 +228,10 @@ class volm_camera_space : public vbl_ref_count
 class camera_space_iterator
 {
  public:
- camera_space_iterator(volm_camera_space* cam_space = VXL_NULLPTR)
+ camera_space_iterator(volm_camera_space* cam_space = nullptr)
    : end_(false), cam_space_(cam_space) {}
 
-  ~camera_space_iterator() {}
+  ~camera_space_iterator() = default;
 
   //: returns a reference to the scene to enable access to scene methods
   volm_camera_space& operator*() {

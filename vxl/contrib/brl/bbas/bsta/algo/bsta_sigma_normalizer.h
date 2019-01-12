@@ -14,7 +14,9 @@
 
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_ref_count.h>
 #include <vbl/vbl_smart_ptr.h>
 #include <vsl/vsl_binary_io.h>
@@ -35,7 +37,7 @@ class bsta_sigma_normalizer : public vbl_ref_count
 
  private:
   // do not allow default constructor - under-estimation param is necessary
-  bsta_sigma_normalizer(){}
+  bsta_sigma_normalizer()= default;
 
   unsigned int N_PRECOMPUTED_;
   std::vector<float> unbias_const_;

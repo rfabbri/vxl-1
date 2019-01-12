@@ -10,7 +10,9 @@
 #include <pdf1d/pdf1d_weighted_epanech_kernel_pdf.h>
 #include <pdf1d/pdf1d_epanech_kernel_pdf_builder.h>
 #include <pdf1d/pdf1d_weighted_epanech_kernel_sampler.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpl/vpl.h> // vpl_unlink()
 #include <vsl/vsl_binary_loader.h>
 #include <vnl/vnl_math.h>
@@ -39,7 +41,7 @@ void test_weighted_epanech_kernel_pdf()
     p1.set_weight(vnl_vector<double>(2, 2, d1));
     pdf1d_weighted_epanech_kernel_sampler s1;
     s1.set_model(p1);
-    const unsigned ns = 10000;
+    constexpr unsigned ns = 10000;
     vnl_vector<double> x(ns), p(ns), ks1(ns);
     s1.regular_samples(x);
     for (unsigned i=0; i<ns; ++i)
@@ -61,7 +63,7 @@ void test_weighted_epanech_kernel_pdf()
     p1.set_weight(vnl_vector<double>(4, 4, d1));
     pdf1d_weighted_epanech_kernel_sampler s1;
     s1.set_model(p1);
-    const unsigned ns = 10000;
+    constexpr unsigned ns = 10000;
     vnl_vector<double> x(ns), p(ns), ks1(ns);
     s1.get_samples(x);
     for (unsigned i=0; i<ns; ++i)
@@ -119,8 +121,8 @@ void test_weighted_epanech_kernel_pdf()
   vsl_b_write(bfs_out,p_pdf_built);
   bfs_out.close();
 
-  pdf1d_pdf*         p_pdf_in = VXL_NULLPTR;
-  pdf1d_builder*     p_builder_in = VXL_NULLPTR;
+  pdf1d_pdf*         p_pdf_in = nullptr;
+  pdf1d_builder*     p_builder_in = nullptr;
 
   vsl_b_ifstream bfs_in("test_gaussian_kernel_pdf.bvl.tmp");
   TEST("Opened test_gaussian_kernel_pdf.bvl.tmp for reading", (!bfs_in), false);

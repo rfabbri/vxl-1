@@ -12,7 +12,9 @@
 #include <rgrl/rgrl_transformation.h>
 #include <rgrl/rgrl_view.h>
 #include <rgrl/rgrl_match_set.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 rgrl_matcher_k_nearest_pick_one::
@@ -193,7 +195,7 @@ add_one_flipped_match( rgrl_match_set_sptr&      inv_set,
                        nodes_vec_iterator const& begin_iter,
                        nodes_vec_iterator const& end_iter )
 {
-  const unsigned int size = unsigned( end_iter - begin_iter );
+  const auto size = unsigned( end_iter - begin_iter );
   rgrl_transformation_sptr const& inverse_xform = current_view.inverse_xform_estimate();
 
   // create from feature and map it via inverse transformation

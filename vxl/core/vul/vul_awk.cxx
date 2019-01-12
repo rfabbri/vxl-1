@@ -1,7 +1,4 @@
 // This is core/vul/vul_awk.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Andrew W. Fitzgibbon, Oxford RRG
@@ -20,7 +17,9 @@
 #include <cstdio>
 #include "vul_awk.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Construct from input stream
 vul_awk::vul_awk(std::istream& s, ModeFlags mode):
@@ -29,7 +28,7 @@ vul_awk::vul_awk(std::istream& s, ModeFlags mode):
 {
   done_ = false;
   line_number_ = 0;
-  split_line_ = VXL_NULLPTR;
+  split_line_ = nullptr;
 
   next();
 }

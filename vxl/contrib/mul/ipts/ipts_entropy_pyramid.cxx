@@ -7,7 +7,10 @@
 
 #include "ipts_local_entropy.h"
 #include <vimt/vimt_scale_pyramid_builder_2d.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Compute local entropy at each level of a scale space pyramid
 //  Build smooth gaussian pyramid from the image.
@@ -49,7 +52,7 @@ void ipts_entropy_pyramid(const vimt_image_pyramid& smooth_pyramid,
   int n_levels = 0;
   for (int i=0;i<smooth_pyramid.n_levels();++i)
   {
-    const vimt_image_2d_of<vxl_byte>& smooth_im
+    const auto& smooth_im
             = static_cast<const vimt_image_2d_of<vxl_byte>&>(smooth_pyramid(i));
      if (smooth_im.image().ni()>2*half_width+1 &&
          smooth_im.image().nj()>2*half_width+1)  n_levels++;
@@ -59,9 +62,9 @@ void ipts_entropy_pyramid(const vimt_image_pyramid& smooth_pyramid,
   entropy_pyramid.resize(n_levels,vimt_image_2d_of<float>());
   for (int i=0;i<n_levels;++i)
   {
-    const vimt_image_2d_of<vxl_byte>& smooth_im
+    const auto& smooth_im
             = static_cast<const vimt_image_2d_of<vxl_byte>&>(smooth_pyramid(i));
-    vimt_image_2d_of<float>& entropy_im
+    auto& entropy_im
             = static_cast<vimt_image_2d_of<float>&>(entropy_pyramid(i));
     ipts_local_entropy(smooth_im.image(),entropy_im.image(),half_width,min_v,max_v);
 

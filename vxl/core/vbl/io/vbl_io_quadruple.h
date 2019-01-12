@@ -9,7 +9,9 @@
 #include <iosfwd>
 #include <vsl/vsl_fwd.h>
 #include <vbl/vbl_quadruple.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Write pair to binary stream
 template <class S, class T, class U, class V>

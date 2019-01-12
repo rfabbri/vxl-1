@@ -19,7 +19,9 @@
 #include <vector>
 #include <iostream>
 #include <vbl/vbl_array_2d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bsta/bsta_joint_histogram_base.h>
 
 template <class T> class bsta_joint_histogram : public bsta_joint_histogram_base
@@ -40,7 +42,7 @@ template <class T> class bsta_joint_histogram : public bsta_joint_histogram_base
                        const unsigned int nbins_b,
                        const T min_prob = 0.0);
 
-  ~bsta_joint_histogram() {}
+  ~bsta_joint_histogram() override = default;
 
   //: legacy use where a and b have the same bin granularity
   unsigned int nbins() const { return nbins_a_; }

@@ -4,8 +4,10 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vgui/vgui_gl.h>
 #include <vgui/vgui_glu.h>
 #include <vgui/vgui_menu.h>
@@ -160,7 +162,7 @@ bgui3d_project2d_tableau::set_camera(const vpgl_proj_camera<double>& cam)
 
 //: Get the scene camera
 // creates a vpgl camera (either perspective or affine) from the graphics camera
-vcl_unique_ptr<vpgl_proj_camera<double> >
+std::unique_ptr<vpgl_proj_camera<double> >
 bgui3d_project2d_tableau::camera() const
 {
   vnl_matrix<double> mm(4,4,16,model_matrix_);
@@ -169,12 +171,12 @@ bgui3d_project2d_tableau::camera() const
   t = R.inverse()*t;
   if (camera_z_[2][2] != 0) {
     vpgl_calibration_matrix<double> K(camera_z_.extract(3,3));
-    return vcl_unique_ptr<vpgl_proj_camera<double> >
+    return std::unique_ptr<vpgl_proj_camera<double> >
         ( new vpgl_perspective_camera<double>(K,t,R) );
   }
   else
     // FIXME - construct a vpgl_affine_camera
-    return vcl_unique_ptr<vpgl_proj_camera<double> >
+    return std::unique_ptr<vpgl_proj_camera<double> >
       ( new vpgl_proj_camera<double>(camera_z_*mm.transpose()) );
 }
 

@@ -11,14 +11,16 @@
 #include "vil_nitf2_array_field.h"
 #include "vil_nitf2_compound_field_value.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 vil_nitf2_field::field_tree*
 vil_nitf2_field_sequence::get_tree( vil_nitf2_field::field_tree* tr ) const
 {
   vil_nitf2_field::field_tree* t = tr ? tr : new vil_nitf2_field::field_tree;
-  for ( unsigned int i = 0 ; i < fields_vector.size() ; i++ ) {
-    t->children.push_back( fields_vector[i]->get_tree() );
+  for (auto i : fields_vector) {
+    t->children.push_back( i->get_tree() );
   }
   return t;
 }
@@ -33,11 +35,10 @@ bool vil_nitf2_field_sequence::
 create_array_fields(const vil_nitf2_field_definitions* field_defs,
                     int num_dimensions)
 {
-  for (vil_nitf2_field_definitions::const_iterator node = field_defs->begin();
-       node != field_defs->end(); ++node)
+  for (auto node : *field_defs)
   {
-    if ((*node) && (*node)->is_field_definition()) {
-      vil_nitf2_field_definition* field_def = (*node)->field_definition();
+    if (node && node->is_field_definition()) {
+      vil_nitf2_field_definition* field_def = node->field_definition();
       vil_nitf2_array_field* field = field_def->formatter->create_array_field(num_dimensions, field_def);
       if (field) {
         insert_field(field_def->tag, field);
@@ -46,9 +47,9 @@ create_array_fields(const vil_nitf2_field_definitions* field_defs,
                  << field_def->tag << "; bailing out.\n";
         return false;
       }
-    } else if ((*node) && (*node)->is_repeat_node()) {
+    } else if (node && node->is_repeat_node()) {
       // recursively create nested vector fields
-      vil_nitf2_field_definition_repeat_node* repeat_node = (*node)->repeat_node();
+      vil_nitf2_field_definition_repeat_node* repeat_node = node->repeat_node();
       if (!create_array_fields(repeat_node->field_definitions, num_dimensions+1)) {
         return false;
       }
@@ -64,11 +65,10 @@ void vil_nitf2_field_sequence::set_array_fields_dimension(
   const vil_nitf2_field_definitions* field_defs,
   const vil_nitf2_index_vector& index, int repeat_count)
 {
-  for (vil_nitf2_field_definitions::const_iterator node = field_defs->begin();
-       node != field_defs->end(); ++node)
+  for (auto node : *field_defs)
   {
-    if ((*node) && (*node)->is_field_definition()) {
-      vil_nitf2_field_definition* field_def = (*node)->field_definition();
+    if (node && node->is_field_definition()) {
+      vil_nitf2_field_definition* field_def = node->field_definition();
       vil_nitf2_array_field* field = get_field(field_def->tag)->array_field();
       if (field) {
         VIL_NITF2_LOG(log_debug) << "  (Setting tag " << field_def->tag << " dimension "
@@ -78,9 +78,9 @@ void vil_nitf2_field_sequence::set_array_fields_dimension(
         std::cerr << "vil_nitf2_field_sequence:set_array_field_dimension(): array field "
                  << field_def->tag << " not found!\n";
       }
-    } else if ((*node) && (*node)->is_repeat_node()) {
+    } else if (node && node->is_repeat_node()) {
       // recursively set dimension vector fields
-      vil_nitf2_field_definition_repeat_node* repeat_node = (*node)->repeat_node();
+      vil_nitf2_field_definition_repeat_node* repeat_node = node->repeat_node();
       set_array_fields_dimension(repeat_node->field_definitions, index, repeat_count);
     } else {
       std::cerr << "vil_nitf2_field_sequence::set_array_fields_dimension(): unsupported node type!\n";
@@ -90,19 +90,18 @@ void vil_nitf2_field_sequence::set_array_fields_dimension(
 
 bool vil_nitf2_field_sequence::read(vil_nitf2_istream& input,
                                     const vil_nitf2_field_definitions* field_defs,
-                                    vil_nitf2_index_vector indexes)
+                                    const vil_nitf2_index_vector& indexes)
 {
   if (!field_defs)
     field_defs = m_field_definitions;
   if (!field_defs)
     std::cerr << "vil_nitf2_field_sequence::read() missing field definitions!\n";
   bool error = false;
-  for (vil_nitf2_field_definitions::const_iterator node = field_defs->begin();
-       node != field_defs->end(); ++node)
+  for (auto node : *field_defs)
   {
-    if ((*node) && (*node)->is_field_definition())
+    if (node && node->is_field_definition())
     {
-      vil_nitf2_field_definition* field_def = (*node)->field_definition();
+      vil_nitf2_field_definition* field_def = node->field_definition();
       // The field exists if it is required, or if it is conditional and
       // the condition is true.
       bool field_exists;
@@ -125,7 +124,7 @@ bool vil_nitf2_field_sequence::read(vil_nitf2_istream& input,
       {
         // Evaluate its width functor, if any.
         int variable_width = -1;
-        if (field_def->width_functor != VXL_NULLPTR) {
+        if (field_def->width_functor != nullptr) {
           bool computed_width = (*(field_def->width_functor))(this, indexes, variable_width);
           if (!computed_width) {
             // Cannot evaluate width functor; therefore I don't know the length
@@ -157,7 +156,7 @@ bool vil_nitf2_field_sequence::read(vil_nitf2_istream& input,
           } else {
             // read vector field element
             bool read_error = true;
-            vil_nitf2_field_definition* field_def = (*node)->field_definition();
+            vil_nitf2_field_definition* field_def = node->field_definition();
             if (field_def) {
               vil_nitf2_array_field* field = get_field(field_def->tag)->array_field();
               if (field) {
@@ -176,14 +175,14 @@ bool vil_nitf2_field_sequence::read(vil_nitf2_istream& input,
         // try to recover.
       }
     }
-    else if ((*node) && (*node)->is_repeat_node())
+    else if (node && node->is_repeat_node())
     {
-      vil_nitf2_field_definition_repeat_node* repeat_node = (*node)->repeat_node();
+      vil_nitf2_field_definition_repeat_node* repeat_node = node->repeat_node();
 
       // Compute how many times it repeats
       int repeat_count = 0;
       bool computed_repeat = false;
-      if (repeat_node->repeat_functor != VXL_NULLPTR) {
+      if (repeat_node->repeat_functor != nullptr) {
         computed_repeat = (*(repeat_node->repeat_functor))(this, indexes, repeat_count);
       }
       if (!computed_repeat) {
@@ -257,12 +256,11 @@ bool vil_nitf2_field_sequence::write(vil_nitf2_ostream& output,
     field_defs = m_field_definitions;
   if (!field_defs)
     std::cerr << "vil_nitf2_field_sequence::write(): Missing field definitions!\n";
-  for (vil_nitf2_field_definitions::const_iterator node = field_defs->begin();
-       node != field_defs->end(); ++node)
+  for (auto node : *field_defs)
   {
-    if ((*node) && (*node)->is_field_definition())
+    if (node && node->is_field_definition())
     {
-      vil_nitf2_field_definition* field_def = (*node)->field_definition();
+      vil_nitf2_field_definition* field_def = node->field_definition();
       if (!field_def) {
         std::cerr << "vil_nitf2_field_sequence::write(): Missing field definition!\n";
         return false;
@@ -292,7 +290,7 @@ bool vil_nitf2_field_sequence::write(vil_nitf2_ostream& output,
       {
         // Will emit field. Evaluate its width functor, if any.
         int variable_width = -1;
-        if (field_def->width_functor != VXL_NULLPTR) {
+        if (field_def->width_functor != nullptr) {
           bool computed_width = (*(field_def->width_functor))(this, indexes, variable_width);
           if (!computed_width) {
             // Cannot evaluate width functor; therefore I don't know the length
@@ -324,13 +322,13 @@ bool vil_nitf2_field_sequence::write(vil_nitf2_ostream& output,
         }
       }
     }
-    else if ((*node) && (*node)->is_repeat_node())
+    else if (node && node->is_repeat_node())
     {
-      vil_nitf2_field_definition_repeat_node* repeat_node = (*node)->repeat_node();
+      vil_nitf2_field_definition_repeat_node* repeat_node = node->repeat_node();
       // Compute how many times it repeats
       int repeat_count = 0;
       bool computed_repeat = false;
-      if (repeat_node->repeat_functor != VXL_NULLPTR) {
+      if (repeat_node->repeat_functor != nullptr) {
         computed_repeat = (*(repeat_node->repeat_functor))(this, indexes, repeat_count);
       }
       if (!computed_repeat) {
@@ -356,19 +354,18 @@ bool vil_nitf2_field_sequence::write(vil_nitf2_ostream& output,
 vil_nitf2_field_sequence::~vil_nitf2_field_sequence()
 {
   // Delete fields, which I own
-  for (field_map::iterator field_map_entry = fields.begin();
-       field_map_entry != fields.end(); ++field_map_entry)
+  for (auto & field_map_entry : fields)
   {
-    vil_nitf2_field* field = field_map_entry->second;
+    vil_nitf2_field* field = field_map_entry.second;
     delete field;
   }
 }
 
-vil_nitf2_field* vil_nitf2_field_sequence::get_field(std::string tag) const
+vil_nitf2_field* vil_nitf2_field_sequence::get_field(const std::string& tag) const
 {
-  std::map<std::string, vil_nitf2_field*>::const_iterator field_map_entry = fields.find(tag);
+  auto field_map_entry = fields.find(tag);
   if (field_map_entry == fields.end())
-    return VXL_NULLPTR;
+    return nullptr;
   return field_map_entry->second;
 }
 

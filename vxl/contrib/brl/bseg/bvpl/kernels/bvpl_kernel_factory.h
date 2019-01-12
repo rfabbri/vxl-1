@@ -35,7 +35,9 @@
 #include <utility>
 #include "bvpl_kernel.h"
 #include "bvpl_kernel_iterator.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_float_3.h>
 #include <vgl/algo/vgl_rotation_3d.h>
 #include <vbl/vbl_ref_count.h>
@@ -51,7 +53,7 @@ class bvpl_kernel_factory: public vbl_ref_count
   //Default constructor. Initialize constant member variables
   bvpl_kernel_factory(): canonical_rotation_axis_(vnl_float_3(1,0,0)), canonical_parallel_axis_(vnl_float_3(0,1,0)){}
 
-  virtual ~bvpl_kernel_factory() {}
+  ~bvpl_kernel_factory() override = default;
 
   //: Returns a kernel described by class variables rotation_axis_, \p angle_
   //  The user can modified the axis and angle using set_rotation_axis() and set_angle()
@@ -92,7 +94,7 @@ class bvpl_kernel_factory: public vbl_ref_count
   virtual bxml_data_sptr xml_element()
   {
     std::cout << "Calling xml write in parent class, xml data will be NULL" << std::endl;
-    return VXL_NULLPTR;
+    return nullptr;
   }
 
   virtual bvpl_kernel_factory_sptr self(){return this;}
@@ -150,7 +152,7 @@ class bvpl_kernel_factory: public vbl_ref_count
   kernel_type rotate(float angle);
 
   //: Rotates "class-kernel_" using the given rotation matrix
-  kernel_type rotate(vgl_rotation_3d<float> R);
+  kernel_type rotate(const vgl_rotation_3d<float>& R);
 };
 
 

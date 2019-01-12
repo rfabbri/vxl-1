@@ -9,7 +9,10 @@
 #include "vil_checker_board.h"
 
 #include <vil/vil_image_view.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 template< typename DEST, typename SRC >
 void

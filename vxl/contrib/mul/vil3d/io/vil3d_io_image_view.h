@@ -7,7 +7,9 @@
 
 #include <iostream>
 #include <cstddef>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil3d/vil3d_image_view.h>
 #include <vil/io/vil_io_memory_chunk.h>
 #include <vil/io/vil_io_smart_ptr.h>
@@ -16,7 +18,7 @@
 template<class T>
 inline void vsl_b_write(vsl_b_ostream &os, const vil3d_image_view<T>& image)
 {
-  const short io_version_no = 1;
+  constexpr short io_version_no = 1;
   vsl_b_write(os, io_version_no);
   vsl_b_write(os, image.ni());
   vsl_b_write(os, image.nj());

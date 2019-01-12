@@ -1,4 +1,6 @@
 // This is core/vpgl/algo/vpgl_backproject_dem.cxx
+#include <limits>
+#include <algorithm>
 #include "vpgl_backproject.h"
 #include "vpgl_backproject_dem.h"
 #include <vpgl/file_formats/vpgl_geo_camera.h>
@@ -11,14 +13,12 @@
 #include <vil/vil_math.h>
 #include <vnl/vnl_cost_function.h>
 #include <vnl/algo/vnl_brent_minimizer.h>
-#include <limits>
-#include <algorithm>
 class dem_bproj_cost_function : public vnl_cost_function{
 public:
   dem_bproj_cost_function(vil_image_view<float> const& dem_view, vpgl_geo_camera* geo_cam, vgl_ray_3d<double> const& ray, bool verbose=false) :
     vnl_cost_function(1), ray_(ray), geo_cam_(geo_cam), dview_(&dem_view), verbose_(verbose){}
   //: x is the parameter that runs along the ray, with x=0 at the ray origin
-  virtual double f(vnl_vector<double> const& x){
+  double f(vnl_vector<double> const& x) override{
     //get the lon and lat values for a given parameter value
     vgl_point_3d<double> org = ray_.origin(), rayp;
     vgl_vector_3d<double> dir = ray_.direction();
@@ -66,19 +66,19 @@ vpgl_backproject_dem::vpgl_backproject_dem( vil_image_resource_sptr const& dem, 
   // get the corners of the dem
   geo_cam_->img_to_global(0, 0, lon, lat);
   elev = dem_view_(0, 0);
-  dem_corners_.push_back(vgl_point_3d<double>(lon, lat, elev));
+  dem_corners_.emplace_back(lon, lat, elev);
 
   geo_cam_->img_to_global(ni-1, 0, lon, lat);
   elev = dem_view_(ni-1, 0);
-  dem_corners_.push_back(vgl_point_3d<double>(lon, lat, elev));
+  dem_corners_.emplace_back(lon, lat, elev);
 
   geo_cam_->img_to_global(ni-1, nj-1, lon, lat);
   elev = dem_view_(ni-1, nj-1);
-  dem_corners_.push_back(vgl_point_3d<double>(lon, lat, elev));
+  dem_corners_.emplace_back(lon, lat, elev);
 
   geo_cam_->img_to_global(0, nj-1, lon, lat);
   elev = dem_view_(0, nj-1);
-  dem_corners_.push_back(vgl_point_3d<double>(lon, lat, elev));
+  dem_corners_.emplace_back(lon, lat, elev);
 
   // check for appropriate zmin/zmax inputs
   if (zmax > zmin) {
@@ -91,7 +91,7 @@ vpgl_backproject_dem::vpgl_backproject_dem( vil_image_resource_sptr const& dem, 
     //compute the pixel interval (stride) for sampling the fraction
     double area = ni*nj;
     double stride_area = area/min_samples_;
-    unsigned stride_interval = static_cast<unsigned>(std::sqrt(stride_area));
+    auto stride_interval = static_cast<unsigned>(std::sqrt(stride_area));
 
     // sample elevations
     std::vector<double> z_samples;
@@ -106,11 +106,11 @@ vpgl_backproject_dem::vpgl_backproject_dem( vil_image_resource_sptr const& dem, 
     // sort the samples to remove tails due to DEM errors
     std::sort(z_samples.begin(), z_samples.end());
     // remove the tails and compute min max elevations
-    double ns = static_cast<double>(z_samples.size());
-    unsigned band_size = static_cast<unsigned>(ns*tail_fract_);
+    auto ns = static_cast<double>(z_samples.size());
+    auto band_size = static_cast<unsigned>(ns*tail_fract_);
     for(unsigned k = band_size; k<(ns-band_size); ++k){
       double z = z_samples[k];
-      if(z<zmin_calc) zmin_calc = z;
+      if(z<zmin_calc) zmin_calc = static_cast<float>(z);
       if(z>zmax_calc) zmax_calc = z;
     }
     //the final elevation bounds
@@ -123,7 +123,7 @@ vpgl_backproject_dem::vpgl_backproject_dem( vil_image_resource_sptr const& dem, 
 vpgl_backproject_dem::~vpgl_backproject_dem(){
   if(geo_cam_)
     delete geo_cam_;
-  geo_cam_ = VXL_NULLPTR;
+  geo_cam_ = nullptr;
 }
 // the function to backproject onto the dem using vgl objects
 bool vpgl_backproject_dem::bproj_dem(const vpgl_camera<double>* cam,
@@ -199,13 +199,13 @@ bool vpgl_backproject_dem::bproj_dem(const vpgl_camera<double>* cam, vnl_double_
 bool vpgl_backproject_dem::bproj_dem(vpgl_rational_camera<double> const& rcam, vnl_double_2 const& image_point, double max_z, double min_z,
                                      vnl_double_3 const& initial_guess, vnl_double_3& world_point, double error_tol){
 
-  const vpgl_camera<double>* cam = dynamic_cast<const vpgl_camera<double>* >(&rcam);
+  const auto* cam = dynamic_cast<const vpgl_camera<double>* >(&rcam);
   return this->bproj_dem(cam, image_point, max_z, min_z, initial_guess, world_point, error_tol);
 }
 
 bool vpgl_backproject_dem::bproj_dem(vpgl_rational_camera<double> const& rcam, vgl_point_2d<double> const& image_point, double max_z, double min_z,
                                      vgl_point_3d<double> const& initial_guess, vgl_point_3d<double>& world_point, double error_tol){
 
-  const vpgl_camera<double>* cam = dynamic_cast<const vpgl_camera<double>* >(&rcam);
+  const auto* cam = dynamic_cast<const vpgl_camera<double>* >(&rcam);
   return this->bproj_dem(cam, image_point, max_z, min_z, initial_guess, world_point, error_tol);
 }

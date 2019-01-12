@@ -6,7 +6,10 @@
 // \author Chuck Stewart
 // \date   25 Nov 2002
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include "rgrl_scale_sptr.h"
 #include "rgrl_match_set_sptr.h"
 #include "rgrl_object.h"
@@ -19,7 +22,7 @@ class rgrl_weighter
   : public rgrl_object
 {
  public:
-  virtual ~rgrl_weighter();
+  ~rgrl_weighter() override;
 
   //:  based on the scales, compute the weights for the matches.
   //

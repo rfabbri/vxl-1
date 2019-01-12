@@ -40,26 +40,23 @@ space_tree_b *bstm_multi_block::get_space_data(int level, std::nothrow_t) {
   case STE_SPACE:
     return reinterpret_cast<space_tree_b *>(this->get_data(level));
   case STE_TIME:
-    return VXL_NULLPTR;
+    return nullptr;
   }
 }
 
 time_tree_b *bstm_multi_block::get_time_data(int level, std::nothrow_t) {
   switch (this->metadata().subdivisions_[level]) {
   case STE_SPACE:
-    return VXL_NULLPTR;
+    return nullptr;
   case STE_TIME:
     return reinterpret_cast<time_tree_b *>(this->get_data(level));
   }
 }
 
-vcl_size_t bstm_multi_block::byte_count() const {
-  vcl_size_t total_bytes = 0;
-  for (vcl_vector<vcl_vector<unsigned char> >::const_iterator iter =
-           buffers_.begin();
-       iter != buffers_.end();
-       ++iter) {
-    total_bytes += iter->size();
+std::size_t bstm_multi_block::byte_count() const {
+  std::size_t total_bytes = 0;
+  for (const auto & buffer : buffers_) {
+    total_bytes += buffer.size();
   }
   return total_bytes;
 }

@@ -1,9 +1,6 @@
 // This is core/vgui/vgui.h
 #ifndef vgui_h_
 #define vgui_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author Philip C. Pritchett, Robotics Research Group, University of Oxford
@@ -22,7 +19,9 @@
 #include <string>
 #include <iosfwd>
 #include "dll.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class vgui_window;
 class vgui_adaptor;

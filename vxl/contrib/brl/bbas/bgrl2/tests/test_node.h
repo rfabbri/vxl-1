@@ -9,7 +9,9 @@
 
 #include <iostream>
 #include <bgrl2/bgrl2_vertex.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class test_edge;
 
@@ -22,13 +24,13 @@ class test_node : public bgrl2_vertex<test_edge>
  public:
   test_node(): bgrl2_vertex<test_edge>(), id_(0) {}
   test_node(int id): bgrl2_vertex<test_edge>(), id_(id) {}
-  virtual ~test_node(){}
+  ~test_node() override= default;
 
   int id() const {return id_;}
   void set_id(int id){id_ = id;}
 
   //: Print an ascii summary to the stream
-  virtual void print_summary(std::ostream &os) const
+  void print_summary(std::ostream &os) const override
   {
     os << id_ << ": [" << this->degree() << ']' << std::endl;
   }

@@ -1,7 +1,4 @@
 // This is core/vil1/vil1_image_as.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
@@ -11,8 +8,10 @@
 #include <string>
 #include "vil1_image_as.h"
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vil1/vil1_pixel.h>
 #include <vil1/vil1_memory_image_of_format.hxx>
@@ -26,13 +25,13 @@ struct vil1_image_as_impl : public vil1_image_impl, public vil1_memory_image_of_
   typedef vil1_memory_image_of_format<T> format;
   vil1_image image;
   vil1_image_as_impl(vil1_image const &underlying) : image(underlying) { }
-  int planes() const { return 1; }
-  int width() const { return image.width(); }
-  int height() const { return image.height(); }
-  int components() const { return format::components; }
-  int bits_per_component() const { return format::bits_per_component; }
-  vil1_component_format component_format() const { return format::component_format; }
-  vil1_image get_plane(unsigned int p) const { assert(p==0); return const_cast<vil1_image_as_impl*>(this); }
+  int planes() const override { return 1; }
+  int width() const override { return image.width(); }
+  int height() const override { return image.height(); }
+  int components() const override { return format::components; }
+  int bits_per_component() const override { return format::bits_per_component; }
+  vil1_component_format component_format() const override { return format::component_format; }
+  vil1_image get_plane(unsigned int p) const override { assert(p==0); return const_cast<vil1_image_as_impl*>(this); }
 
 #if 0
   char const* file_format() const { return 0; }
@@ -41,16 +40,16 @@ struct vil1_image_as_impl : public vil1_image_impl, public vil1_memory_image_of_
 
   // There is no default implementation of this method. It must be
   // specialized by hand for each T.
-  bool get_section(void *buf, int x0, int y0, int width, int height) const;
+  bool get_section(void *buf, int x0, int y0, int width, int height) const override;
 
   // This always fails, even if the underlying image is an image-of-T
-  bool put_section(void const *, int, int, int, int) { return false; }
+  bool put_section(void const *, int, int, int, int) override { return false; }
 
   //: Return the name of the class;
-  virtual std::string is_a() const;
+  std::string is_a() const override;
 
   //: Return true if the name of the class matches the argument
-  virtual bool is_class(std::string const&) const;
+  bool is_class(std::string const&) const override;
 };
 
 //--------------------------------------------------------------------------------
@@ -264,23 +263,23 @@ bool vil1_image_as_impl<vxl_byte>::get_section(void *buf, int x0, int y0, int wi
    case VIL1_BYTE:
     return image.get_section( buf, x0, y0, width, height );
    case VIL1_UINT16:
-    return convert_grey_to_grey( image, buf, x0, y0, width, height, (vxl_uint_16*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_grey_to_grey( image, buf, x0, y0, width, height, (vxl_uint_16*)nullptr,(Outtype*)nullptr);
    case VIL1_UINT32:
-    return convert_grey_to_grey( image, buf, x0, y0, width, height, (vxl_uint_32*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_grey_to_grey( image, buf, x0, y0, width, height, (vxl_uint_32*)nullptr,(Outtype*)nullptr);
    case VIL1_FLOAT:
-    return convert_grey_to_grey( image, buf, x0, y0, width, height, (float*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_grey_to_grey( image, buf, x0, y0, width, height, (float*)nullptr,(Outtype*)nullptr);
    case VIL1_DOUBLE:
-    return convert_grey_to_grey( image, buf, x0, y0, width, height, (double*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_grey_to_grey( image, buf, x0, y0, width, height, (double*)nullptr,(Outtype*)nullptr);
    case VIL1_RGB_BYTE:
-    return convert_rgb_to_grey( image, buf, x0, y0, width, height, (vxl_byte*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_rgb_to_grey( image, buf, x0, y0, width, height, (vxl_byte*)nullptr,(Outtype*)nullptr);
    case VIL1_RGB_UINT16:
-    return convert_rgb_to_grey( image, buf, x0, y0, width, height, (vxl_uint_16*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_rgb_to_grey( image, buf, x0, y0, width, height, (vxl_uint_16*)nullptr,(Outtype*)nullptr);
    case VIL1_RGB_FLOAT:
-    return convert_rgb_to_grey( image, buf, x0, y0, width, height, (float*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_rgb_to_grey( image, buf, x0, y0, width, height, (float*)nullptr,(Outtype*)nullptr);
    case VIL1_RGB_DOUBLE:
-    return convert_rgb_to_grey( image, buf, x0, y0, width, height, (double*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_rgb_to_grey( image, buf, x0, y0, width, height, (double*)nullptr,(Outtype*)nullptr);
    case VIL1_RGBA_BYTE:
-    return convert_rgba_to_grey( image, buf, x0, y0, width, height, (vxl_byte*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_rgba_to_grey( image, buf, x0, y0, width, height, (vxl_byte*)nullptr,(Outtype*)nullptr);
    default:
     std::cerr << __FILE__ ": get_section() not implemented for " << image << std::endl;
     assert(false/* implement for your image type as needed */);
@@ -325,23 +324,23 @@ bool vil1_image_as_impl<vxl_uint_16>::get_section(void *buf, int x0, int y0, int
   switch ( vil1_pixel_format(image) )
   {
    case VIL1_BYTE:
-    return convert_grey_to_grey( image, buf, x0, y0, width, height, (vxl_byte*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_grey_to_grey( image, buf, x0, y0, width, height, (vxl_byte*)nullptr,(Outtype*)nullptr);
    case VIL1_UINT16:
     return image.get_section( buf, x0, y0, width, height );
    case VIL1_UINT32:
-    return convert_grey_to_grey( image, buf, x0, y0, width, height, (vxl_uint_32*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_grey_to_grey( image, buf, x0, y0, width, height, (vxl_uint_32*)nullptr,(Outtype*)nullptr);
    case VIL1_FLOAT:
-    return convert_grey_to_grey( image, buf, x0, y0, width, height, (float*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_grey_to_grey( image, buf, x0, y0, width, height, (float*)nullptr,(Outtype*)nullptr);
    case VIL1_DOUBLE:
-    return convert_grey_to_grey( image, buf, x0, y0, width, height, (double*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_grey_to_grey( image, buf, x0, y0, width, height, (double*)nullptr,(Outtype*)nullptr);
    case VIL1_RGB_BYTE:
-    return convert_rgb_to_grey( image, buf, x0, y0, width, height, (vxl_byte*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_rgb_to_grey( image, buf, x0, y0, width, height, (vxl_byte*)nullptr,(Outtype*)nullptr);
    case VIL1_RGB_UINT16:
-    return convert_rgb_to_grey( image, buf, x0, y0, width, height, (vxl_uint_16*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_rgb_to_grey( image, buf, x0, y0, width, height, (vxl_uint_16*)nullptr,(Outtype*)nullptr);
    case VIL1_RGB_FLOAT:
-    return convert_rgb_to_grey( image, buf, x0, y0, width, height, (float*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_rgb_to_grey( image, buf, x0, y0, width, height, (float*)nullptr,(Outtype*)nullptr);
    case VIL1_RGB_DOUBLE:
-    return convert_rgb_to_grey( image, buf, x0, y0, width, height, (double*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_rgb_to_grey( image, buf, x0, y0, width, height, (double*)nullptr,(Outtype*)nullptr);
    default:
     std::cerr << __FILE__ ": get_section() not implemented for " << image << std::endl;
     assert(false/* implement for your image type as needed */);
@@ -387,23 +386,23 @@ bool vil1_image_as_impl<int>::get_section(void *buf, int x0, int y0, int width, 
   switch ( vil1_pixel_format(image) )
   {
    case VIL1_BYTE:
-    return convert_grey_to_grey( image, buf, x0, y0, width, height, (vxl_byte*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_grey_to_grey( image, buf, x0, y0, width, height, (vxl_byte*)nullptr,(Outtype*)nullptr);
    case VIL1_UINT16:
-    return convert_grey_to_grey( image, buf, x0, y0, width, height, (vxl_uint_16*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_grey_to_grey( image, buf, x0, y0, width, height, (vxl_uint_16*)nullptr,(Outtype*)nullptr);
    case VIL1_UINT32:
     return image.get_section( buf, x0, y0, width, height );
    case VIL1_FLOAT:
-    return convert_grey_to_grey( image, buf, x0, y0, width, height, (float*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_grey_to_grey( image, buf, x0, y0, width, height, (float*)nullptr,(Outtype*)nullptr);
    case VIL1_DOUBLE:
-    return convert_grey_to_grey( image, buf, x0, y0, width, height, (double*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_grey_to_grey( image, buf, x0, y0, width, height, (double*)nullptr,(Outtype*)nullptr);
    case VIL1_RGB_BYTE:
-    return convert_rgb_to_grey( image, buf, x0, y0, width, height, (vxl_byte*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_rgb_to_grey( image, buf, x0, y0, width, height, (vxl_byte*)nullptr,(Outtype*)nullptr);
    case VIL1_RGB_UINT16:
-    return convert_rgb_to_grey( image, buf, x0, y0, width, height, (vxl_uint_16*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_rgb_to_grey( image, buf, x0, y0, width, height, (vxl_uint_16*)nullptr,(Outtype*)nullptr);
    case VIL1_RGB_FLOAT:
-    return convert_rgb_to_grey( image, buf, x0, y0, width, height, (float*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_rgb_to_grey( image, buf, x0, y0, width, height, (float*)nullptr,(Outtype*)nullptr);
    case VIL1_RGB_DOUBLE:
-    return convert_rgb_to_grey( image, buf, x0, y0, width, height, (double*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_rgb_to_grey( image, buf, x0, y0, width, height, (double*)nullptr,(Outtype*)nullptr);
    default:
     std::cerr << __FILE__ ": get_section() not implemented for " << image << std::endl;
     assert(false/* implement for your image type as needed */);
@@ -448,23 +447,23 @@ bool vil1_image_as_impl<float>::get_section(void *buf, int x0, int y0, int width
   switch ( vil1_pixel_format(image) )
   {
    case VIL1_BYTE:
-    return convert_grey_to_grey( image, buf, x0, y0, width, height, (vxl_byte*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_grey_to_grey( image, buf, x0, y0, width, height, (vxl_byte*)nullptr,(Outtype*)nullptr);
    case VIL1_UINT16:
-    return convert_grey_to_grey( image, buf, x0, y0, width, height, (vxl_uint_16*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_grey_to_grey( image, buf, x0, y0, width, height, (vxl_uint_16*)nullptr,(Outtype*)nullptr);
    case VIL1_UINT32:
-    return convert_grey_to_grey( image, buf, x0, y0, width, height, (vxl_uint_32*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_grey_to_grey( image, buf, x0, y0, width, height, (vxl_uint_32*)nullptr,(Outtype*)nullptr);
    case VIL1_FLOAT:
     return image.get_section( buf, x0, y0, width, height );
    case VIL1_DOUBLE:
-    return convert_grey_to_grey( image, buf, x0, y0, width, height, (double*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_grey_to_grey( image, buf, x0, y0, width, height, (double*)nullptr,(Outtype*)nullptr);
    case VIL1_RGB_BYTE:
-    return convert_rgb_to_grey( image, buf, x0, y0, width, height, (vxl_byte*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_rgb_to_grey( image, buf, x0, y0, width, height, (vxl_byte*)nullptr,(Outtype*)nullptr);
    case VIL1_RGB_UINT16:
-    return convert_rgb_to_grey( image, buf, x0, y0, width, height, (vxl_uint_16*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_rgb_to_grey( image, buf, x0, y0, width, height, (vxl_uint_16*)nullptr,(Outtype*)nullptr);
    case VIL1_RGB_FLOAT:
-    return convert_rgb_to_grey( image, buf, x0, y0, width, height, (float*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_rgb_to_grey( image, buf, x0, y0, width, height, (float*)nullptr,(Outtype*)nullptr);
    case VIL1_RGB_DOUBLE:
-    return convert_rgb_to_grey( image, buf, x0, y0, width, height, (double*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_rgb_to_grey( image, buf, x0, y0, width, height, (double*)nullptr,(Outtype*)nullptr);
    default:
     std::cerr << __FILE__ ": get_section() not implemented for " << image << std::endl;
     assert(false/* implement for your image type as needed */);
@@ -509,23 +508,23 @@ bool vil1_image_as_impl<double>::get_section(void *buf, int x0, int y0, int widt
   switch ( vil1_pixel_format(image) )
   {
    case VIL1_BYTE:
-    return convert_grey_to_grey( image, buf, x0, y0, width, height, (vxl_byte*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_grey_to_grey( image, buf, x0, y0, width, height, (vxl_byte*)nullptr,(Outtype*)nullptr);
    case VIL1_UINT16:
-    return convert_grey_to_grey( image, buf, x0, y0, width, height, (vxl_uint_16*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_grey_to_grey( image, buf, x0, y0, width, height, (vxl_uint_16*)nullptr,(Outtype*)nullptr);
    case VIL1_UINT32:
-    return convert_grey_to_grey( image, buf, x0, y0, width, height, (vxl_uint_32*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_grey_to_grey( image, buf, x0, y0, width, height, (vxl_uint_32*)nullptr,(Outtype*)nullptr);
    case VIL1_FLOAT:
-    return convert_grey_to_grey( image, buf, x0, y0, width, height, (float*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_grey_to_grey( image, buf, x0, y0, width, height, (float*)nullptr,(Outtype*)nullptr);
    case VIL1_DOUBLE:
     return image.get_section( buf, x0, y0, width, height );
    case VIL1_RGB_BYTE:
-    return convert_rgb_to_grey( image, buf, x0, y0, width, height, (vxl_byte*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_rgb_to_grey( image, buf, x0, y0, width, height, (vxl_byte*)nullptr,(Outtype*)nullptr);
    case VIL1_RGB_UINT16:
-    return convert_rgb_to_grey( image, buf, x0, y0, width, height, (vxl_uint_16*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_rgb_to_grey( image, buf, x0, y0, width, height, (vxl_uint_16*)nullptr,(Outtype*)nullptr);
    case VIL1_RGB_FLOAT:
-    return convert_rgb_to_grey( image, buf, x0, y0, width, height, (float*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_rgb_to_grey( image, buf, x0, y0, width, height, (float*)nullptr,(Outtype*)nullptr);
    case VIL1_RGB_DOUBLE:
-    return convert_rgb_to_grey( image, buf, x0, y0, width, height, (double*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_rgb_to_grey( image, buf, x0, y0, width, height, (double*)nullptr,(Outtype*)nullptr);
    default:
     std::cerr << __FILE__ ": get_section() not implemented for " << image << std::endl;
     assert(false/* implement for your image type as needed */);
@@ -572,25 +571,25 @@ bool vil1_image_as_impl<vil1_rgb<unsigned char> >::get_section(void *buf,
   switch ( vil1_pixel_format(image) )
   {
    case VIL1_BYTE:
-    return convert_grey_to_rgb( image, buf, x0, y0, width, height, (vxl_byte*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR );
+    return convert_grey_to_rgb( image, buf, x0, y0, width, height, (vxl_byte*)nullptr,(Outtype*)nullptr );
    case VIL1_UINT16:
-    return convert_grey_to_rgb( image, buf, x0, y0, width, height, (vxl_uint_16*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR );
+    return convert_grey_to_rgb( image, buf, x0, y0, width, height, (vxl_uint_16*)nullptr,(Outtype*)nullptr );
    case VIL1_UINT32:
-    return convert_grey_to_rgb( image, buf, x0, y0, width, height, (vxl_uint_32*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR );
+    return convert_grey_to_rgb( image, buf, x0, y0, width, height, (vxl_uint_32*)nullptr,(Outtype*)nullptr );
    case VIL1_FLOAT:
-    return convert_grey_to_rgb( image, buf, x0, y0, width, height, (float*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR );
+    return convert_grey_to_rgb( image, buf, x0, y0, width, height, (float*)nullptr,(Outtype*)nullptr );
    case VIL1_DOUBLE:
-    return convert_grey_to_rgb( image, buf, x0, y0, width, height, (double*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR );
+    return convert_grey_to_rgb( image, buf, x0, y0, width, height, (double*)nullptr,(Outtype*)nullptr );
    case VIL1_RGB_BYTE:
     return image.get_section( buf, x0, y0, width, height );
    case VIL1_RGB_UINT16:
-    return convert_rgb_to_rgb( image, buf, x0, y0, width, height, (vxl_uint_16*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR );
+    return convert_rgb_to_rgb( image, buf, x0, y0, width, height, (vxl_uint_16*)nullptr,(Outtype*)nullptr );
    case VIL1_RGB_FLOAT:
-    return convert_rgb_to_rgb( image, buf, x0, y0, width, height, (float*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR );
+    return convert_rgb_to_rgb( image, buf, x0, y0, width, height, (float*)nullptr,(Outtype*)nullptr );
    case VIL1_RGB_DOUBLE:
-    return convert_rgb_to_rgb( image, buf, x0, y0, width, height, (double*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR );
+    return convert_rgb_to_rgb( image, buf, x0, y0, width, height, (double*)nullptr,(Outtype*)nullptr );
    case VIL1_RGBA_BYTE:
-    return convert_rgba_to_rgb( image, buf, x0, y0, width, height, (vxl_byte*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR );
+    return convert_rgba_to_rgb( image, buf, x0, y0, width, height, (vxl_byte*)nullptr,(Outtype*)nullptr );
    default:
     std::cerr << __FILE__ ": get_section() not implemented for " << image << std::endl;
     assert(false/* implement for your image type as needed */);
@@ -637,25 +636,25 @@ bool vil1_image_as_impl<vil1_rgb<float> >::get_section(void *buf,
   switch ( vil1_pixel_format(image) )
   {
    case VIL1_BYTE:
-    return convert_grey_to_rgb( image, buf, x0, y0, width, height, (vxl_byte*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_grey_to_rgb( image, buf, x0, y0, width, height, (vxl_byte*)nullptr,(Outtype*)nullptr);
    case VIL1_UINT16:
-    return convert_grey_to_rgb( image, buf, x0, y0, width, height, (vxl_uint_16*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_grey_to_rgb( image, buf, x0, y0, width, height, (vxl_uint_16*)nullptr,(Outtype*)nullptr);
    case VIL1_UINT32:
-    return convert_grey_to_rgb( image, buf, x0, y0, width, height, (vxl_uint_32*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_grey_to_rgb( image, buf, x0, y0, width, height, (vxl_uint_32*)nullptr,(Outtype*)nullptr);
    case VIL1_FLOAT:
-    return convert_grey_to_rgb( image, buf, x0, y0, width, height, (float*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_grey_to_rgb( image, buf, x0, y0, width, height, (float*)nullptr,(Outtype*)nullptr);
    case VIL1_DOUBLE:
-    return convert_grey_to_rgb( image, buf, x0, y0, width, height, (double*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_grey_to_rgb( image, buf, x0, y0, width, height, (double*)nullptr,(Outtype*)nullptr);
    case VIL1_RGB_BYTE:
-    return convert_rgb_to_rgb( image, buf, x0, y0, width, height, (vxl_byte*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_rgb_to_rgb( image, buf, x0, y0, width, height, (vxl_byte*)nullptr,(Outtype*)nullptr);
    case VIL1_RGB_UINT16:
-    return convert_rgb_to_rgb( image, buf, x0, y0, width, height, (vxl_uint_16*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_rgb_to_rgb( image, buf, x0, y0, width, height, (vxl_uint_16*)nullptr,(Outtype*)nullptr);
    case VIL1_RGB_FLOAT:
     return image.get_section( buf, x0, y0, width, height );
    case VIL1_RGB_DOUBLE:
-    return convert_rgb_to_rgb( image, buf, x0, y0, width, height, (double*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_rgb_to_rgb( image, buf, x0, y0, width, height, (double*)nullptr,(Outtype*)nullptr);
    case VIL1_RGBA_BYTE:
-    return convert_rgba_to_rgb( image, buf, x0, y0, width, height, (vxl_byte*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_rgba_to_rgb( image, buf, x0, y0, width, height, (vxl_byte*)nullptr,(Outtype*)nullptr);
    default:
     std::cerr << __FILE__ ": get_section() not implemented for " << image << std::endl;
     assert(false/* implement for your image type as needed */);
@@ -703,25 +702,25 @@ bool vil1_image_as_impl<vil1_rgb<vxl_uint_16> >::get_section(void *buf,
   switch ( vil1_pixel_format(image) )
   {
    case VIL1_BYTE:
-    return convert_grey_to_rgb( image, buf, x0, y0, width, height, (vxl_byte*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_grey_to_rgb( image, buf, x0, y0, width, height, (vxl_byte*)nullptr,(Outtype*)nullptr);
    case VIL1_UINT16:
-    return convert_grey_to_rgb( image, buf, x0, y0, width, height, (vxl_uint_16*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_grey_to_rgb( image, buf, x0, y0, width, height, (vxl_uint_16*)nullptr,(Outtype*)nullptr);
    case VIL1_UINT32:
-    return convert_grey_to_rgb( image, buf, x0, y0, width, height, (vxl_uint_32*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_grey_to_rgb( image, buf, x0, y0, width, height, (vxl_uint_32*)nullptr,(Outtype*)nullptr);
    case VIL1_FLOAT:
-    return convert_grey_to_rgb( image, buf, x0, y0, width, height, (float*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_grey_to_rgb( image, buf, x0, y0, width, height, (float*)nullptr,(Outtype*)nullptr);
    case VIL1_DOUBLE:
-    return convert_grey_to_rgb( image, buf, x0, y0, width, height, (double*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_grey_to_rgb( image, buf, x0, y0, width, height, (double*)nullptr,(Outtype*)nullptr);
    case VIL1_RGB_BYTE:
-    return convert_rgb_to_rgb( image, buf, x0, y0, width, height, (vxl_byte*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_rgb_to_rgb( image, buf, x0, y0, width, height, (vxl_byte*)nullptr,(Outtype*)nullptr);
    case VIL1_RGB_UINT16:
     return image.get_section( buf, x0, y0, width, height );
    case VIL1_RGB_FLOAT:
-    return convert_rgb_to_rgb( image, buf, x0, y0, width, height, (float*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_rgb_to_rgb( image, buf, x0, y0, width, height, (float*)nullptr,(Outtype*)nullptr);
    case VIL1_RGB_DOUBLE:
-    return convert_rgb_to_rgb( image, buf, x0, y0, width, height, (double*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_rgb_to_rgb( image, buf, x0, y0, width, height, (double*)nullptr,(Outtype*)nullptr);
    case VIL1_RGBA_BYTE:
-    return convert_rgba_to_rgb( image, buf, x0, y0, width, height, (vxl_byte*)VXL_NULLPTR,(Outtype*)VXL_NULLPTR);
+    return convert_rgba_to_rgb( image, buf, x0, y0, width, height, (vxl_byte*)nullptr,(Outtype*)nullptr);
    default:
     std::cerr << __FILE__ ": get_section() not implemented for " << image << std::endl;
     assert(false/* implement for your image type as needed */);

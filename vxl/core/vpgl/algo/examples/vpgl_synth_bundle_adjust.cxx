@@ -20,15 +20,16 @@ int main(int argc, char** argv)
   vul_arg<bool>   a_no_gradient("-no_grad", "use numeric differencing instead of gradients", false);
   vul_arg_parse(argc, argv);
 
-  const double max_p_err = 1.0; // maximum image error to introduce (pixels)
+  constexpr double max_p_err = 1.0; // maximum image error to introduce (pixels)
 
   // deterministic random number generator -- random but repeatable
   long int seed = 0;
   vnl_random rnd(seed);
 
   std::vector<vgl_point_3d<double> > world;
-  for (int i=0; i<a_num_cameras(); ++i)
-    world.push_back(vgl_point_3d<double>(rnd.drand32(-1,1), rnd.drand32(-1,1), rnd.drand32(-1,1)));
+  world.reserve(a_num_cameras());
+for (int i=0; i<a_num_cameras(); ++i)
+    world.emplace_back(rnd.drand32(-1,1), rnd.drand32(-1,1), rnd.drand32(-1,1));
 
   // our known internal calibration
   vpgl_calibration_matrix<double> K(2000.0,vgl_homg_point_2d<double>(500,500));
@@ -44,25 +45,25 @@ int main(int argc, char** argv)
     p.normalize();
     p *= 10.0;
     vgl_homg_point_3d<double> c(p[0], p[1], p[2]);
-    cameras.push_back(vpgl_perspective_camera<double>(K,c,I));
+    cameras.emplace_back(K,c,I);
     cameras.back().look_at(vgl_homg_point_3d<double>(0.0, 0.0, 0.0));
   }
 
 
   // project all points in all images
   std::vector<vgl_point_2d<double> > image_points;
-  for (unsigned int i=0; i<cameras.size(); ++i) {
-    for (unsigned int j=0; j<world.size(); ++j) {
-      image_points.push_back(cameras[i](vgl_homg_point_3d<double>(world[j])));
+  for (auto & camera : cameras) {
+    for (const auto & j : world) {
+      image_points.emplace_back(camera(vgl_homg_point_3d<double>(j)));
     }
   }
 
 
   // project each point adding uniform noise in a [-max_p_err/2, max_p_err/2] pixel window
   std::vector<vgl_point_2d<double> > noisy_image_points(image_points);
-  for (unsigned int i=0; i<noisy_image_points.size(); ++i) {
+  for (auto & noisy_image_point : noisy_image_points) {
     vgl_vector_2d<double> noise(rnd.drand32()-0.5, rnd.drand32()-0.5);
-    noisy_image_points[i] += max_p_err * noise;
+    noisy_image_point += max_p_err * noise;
   }
 
 
@@ -112,4 +113,3 @@ int main(int argc, char** argv)
 
   vpgl_bundle_adjust::write_vrml("results.wrl",unknown_cameras,unknown_world);
 }
-

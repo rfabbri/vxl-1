@@ -1,9 +1,6 @@
 // This is core/vbl/vbl_bit_array_2d.h
 #ifndef vbl_bit_array_2d_h_
 #define vbl_bit_array_2d_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Contains class for a 2d bit array; interface as vbl_array_2d<T>
@@ -17,7 +14,9 @@
 //-----------------------------------------------------------------------------
 
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: simple 2D bit array
 // essentially identical to vbl_array_2d<bool> but more efficiently stored
@@ -25,7 +24,7 @@ class vbl_bit_array_2d
 {
  public:
   // Default constructor
-  vbl_bit_array_2d() : data_(VXL_NULLPTR), num_rows_(0), num_cols_(0) {}
+  vbl_bit_array_2d() : data_(nullptr), num_rows_(0), num_cols_(0) {}
   //: Construct num_rows x num_cols array and leave data uninitialised
   vbl_bit_array_2d(unsigned int m, unsigned int n) { construct(m,n); }
   //: Construct num_rows x num_cols array and fill all cells with v
@@ -78,7 +77,7 @@ class vbl_bit_array_2d
   unsigned int num_rows_;
   unsigned int num_cols_;
 
-  void destruct() { delete[] data_; data_=VXL_NULLPTR; }
+  void destruct() { delete[] data_; data_=nullptr; }
   void construct(unsigned int m, unsigned int n);
 
   //helper

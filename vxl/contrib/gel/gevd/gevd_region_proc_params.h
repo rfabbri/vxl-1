@@ -13,7 +13,9 @@
 #include <iosfwd>
 #include <gevd/gevd_param_mixin.h>
 #include <gevd/gevd_detector_params.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class gevd_region_proc_params;
 std::ostream& operator<<(std::ostream& os, const gevd_region_proc_params& rpp);
@@ -28,9 +30,9 @@ class gevd_region_proc_params : public gevd_param_mixin
                           gevd_detector_params const& = gevd_detector_params());
 
   gevd_region_proc_params(const gevd_region_proc_params& old_params);
-  ~gevd_region_proc_params(){}
+  ~gevd_region_proc_params() override = default;
 
-  bool SanityCheck();
+  bool SanityCheck() override;
   friend
     std::ostream& operator<<(std::ostream&, const gevd_region_proc_params& rpp);
  protected:

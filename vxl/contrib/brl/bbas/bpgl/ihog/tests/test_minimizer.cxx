@@ -3,7 +3,9 @@
 #include <vector>
 #include <testlib/testlib_test.h>
 #include <testlib/testlib_root_dir.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_file.h>
 #include <vgl/vgl_vector_2d.h>
 #include <vgl/vgl_point_2d.h>
@@ -29,7 +31,7 @@ static void test_minimizer()
   std::string image_file =
     root_dir + "/contrib/brl/bbas/bpgl/ihog/tests/dalmation.tif";
   bool exists = vul_file::exists(image_file);
-  vil_image_view_base_sptr img0_base = VXL_NULLPTR;
+  vil_image_view_base_sptr img0_base = nullptr;
   if(exists){
     std::cout << "File " << image_file << " exists\n";
     img0_base = vil_load(image_file.c_str());
@@ -39,7 +41,7 @@ static void test_minimizer()
     TEST("FAILED TO LOAD TEST IMAGE",false,true);
     return;
   }
-  vil_image_view<vxl_byte> *img0_byte = dynamic_cast<vil_image_view<vxl_byte>*>(img0_base.ptr());
+  auto *img0_byte = dynamic_cast<vil_image_view<vxl_byte>*>(img0_base.ptr());
   unsigned ni = img0_byte->ni(), nj = img0_byte->nj();
   vil_image_view<float> img0(ni,nj);
   vil_convert_cast(*img0_byte,img0);

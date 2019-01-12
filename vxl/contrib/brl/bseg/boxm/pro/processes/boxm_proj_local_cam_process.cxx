@@ -33,8 +33,8 @@
 //: globals variables and functions
 namespace boxm_proj_local_cam_process_globals
 {
-  const unsigned n_inputs_ = 4;
-  const unsigned n_outputs_ = 2;
+  constexpr unsigned n_inputs_ = 4;
+  constexpr unsigned n_outputs_ = 2;
 }
 
 //: set input and output types
@@ -83,7 +83,7 @@ bool boxm_proj_local_cam_process(bprb_func_process& pro)
   Y = pro.get_input<float>(i++);
   Z = pro.get_input<float>(i++);
 
-  vpgl_local_rational_camera<double>* rat_camera =
+  auto* rat_camera =
     dynamic_cast<vpgl_local_rational_camera<double>*> (camera.as_pointer());
   if (!rat_camera) {
     std::cerr << "The camera input is not a rational camera\n";
@@ -101,4 +101,3 @@ bool boxm_proj_local_cam_process(bprb_func_process& pro)
   std::cout<<"(u,v):"<<u<<','<<v<<std::endl;
   return true;
 }
-

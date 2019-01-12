@@ -9,7 +9,9 @@
 // \author Vishal Jain
 // \date Mar 10, 2011
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/ocl/boxm2_opencl_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -26,9 +28,9 @@
 
 namespace boxm2_ocl_batch_probability_process_globals
 {
-  const unsigned n_inputs_ =  3;
-  const unsigned n_outputs_ = 0;
-  void compile_kernel(bocl_device_sptr device,std::vector<bocl_kernel*> & vec_kernels)
+  constexpr unsigned n_inputs_ = 3;
+  constexpr unsigned n_outputs_ = 0;
+  void compile_kernel(const bocl_device_sptr& device,std::vector<bocl_kernel*> & vec_kernels)
   {
     std::vector<std::string> src_paths;
     std::string source_dir = boxm2_ocl_util::ocl_src_root();
@@ -41,7 +43,7 @@ namespace boxm2_ocl_batch_probability_process_globals
 
     //compilation options
 
-    bocl_kernel* update_prob = new bocl_kernel();
+    auto* update_prob = new bocl_kernel();
     std::string prob_opts = " -D UPDATE_PROB ";
 
     update_prob->create_kernel(&device->context(), device->device_id(), src_paths, "update_prob_main", prob_opts, "update::update_prob");
@@ -99,7 +101,7 @@ bool boxm2_ocl_batch_probability_process(bprb_func_process& pro)
   // create all buffers
   // Output Array
   float output_arr[100];
-  for (int i=0; i<100; ++i) output_arr[i] = 0.0f;
+  for (float & i : output_arr) i = 0.0f;
   bocl_mem_sptr  cl_output=new bocl_mem(device->context(), output_arr, sizeof(float)*100, "output buffer");
   cl_output->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
 
@@ -121,12 +123,12 @@ bool boxm2_ocl_batch_probability_process(bprb_func_process& pro)
     bocl_kernel* kern =  kernels[(device->device_id())][0];
     //write the image values to the buffer
     vul_timer transfer;
-    bocl_mem * blk       = opencl_cache->get_block(scene,*id);
+    bocl_mem * blk = opencl_cache->get_block(scene,*id);
     std::cout<<" Block Num: "<<(*id)<<std::endl;
     std::cout.flush();
-    bocl_mem * blk_info  = opencl_cache->loaded_block_info();
-    bocl_mem * alpha     = opencl_cache->get_data<BOXM2_ALPHA>(scene,*id);
-    bocl_mem * hist      = opencl_cache->get_data<BOXM2_BATCH_HISTOGRAM>(scene,*id);
+    bocl_mem * blk_info = opencl_cache->loaded_block_info();
+    bocl_mem * alpha = opencl_cache->get_data<BOXM2_ALPHA>(scene,*id);
+    bocl_mem * hist = opencl_cache->get_data<BOXM2_BATCH_HISTOGRAM>(scene,*id);
     bocl_mem * intensity = opencl_cache->get_data<BOXM2_MOG3_GREY>(scene,*id);
 
     transfer_time += (float) transfer.all();
@@ -146,7 +148,7 @@ bool boxm2_ocl_batch_probability_process(bprb_func_process& pro)
     kern->set_local_arg( lThreads[0]*lThreads[1]*10*sizeof(cl_uchar) );
 
     // TOFIX:::note that this for fixed grid.
-    boxm2_scene_info* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
+    auto* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
 
     std::size_t numtrees = info_buffer->scene_dims[0]*
                           info_buffer->scene_dims[1]*

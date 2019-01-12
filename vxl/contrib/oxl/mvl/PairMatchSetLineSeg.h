@@ -1,9 +1,6 @@
 // This is oxl/mvl/PairMatchSetLineSeg.h
 #ifndef PairMatchSetLineSeg_h_
 #define PairMatchSetLineSeg_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Matches between homogeneous line segments
@@ -30,7 +27,7 @@ class PairMatchSetLineSeg : public PairMatchSet
   // Constructors/Destructors--------------------------------------------------
   PairMatchSetLineSeg();
   PairMatchSetLineSeg(LineSegSet& corners1, LineSegSet& corners2);
-  ~PairMatchSetLineSeg();
+  ~PairMatchSetLineSeg() override;
 
   // Data Access---------------------------------------------------------------
   LineSegSet* get_linesegs1() const { return linesegs1_; }

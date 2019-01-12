@@ -7,7 +7,9 @@
 #include <vgl/vgl_closest_point.h>
 #include <vgl/vgl_plane_3d.h>
 #include <vgl/vgl_intersection.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h>
 
 principal_ray_scan::principal_ray_scan(double cone_half_angle,
@@ -20,12 +22,12 @@ principal_ray_scan::principal_ray_scan(double cone_half_angle,
   double cone_solid_angle = vnl_math::twopi*(1.0-std::cos(cone_half_angle));
   double fraction_of_sphere = cone_solid_angle/(4.0*vnl_math::pi);
   //number of points that would cover the entire sphere
-  unsigned limit = static_cast<unsigned>(n_samples/fraction_of_sphere);
+  auto limit = static_cast<unsigned>(n_samples/fraction_of_sphere);
   //the following algorithm assumes that the entire sphere is uniformly
   //sampled
   // ======   sphere sampling with the spiral algorithm =======
   double p = 0.5;
-  double ns = static_cast<double>(limit);
+  auto ns = static_cast<double>(limit);
   double a = 1.0 - 2.0*p/(limit-3);
   double b = p*(limit+1)/(limit-3);
   double rkm1 = 0;
@@ -74,7 +76,7 @@ vgl_point_3d<double> principal_ray_scan::pt_on_unit_sphere(unsigned i) const
   double th = theta_[i], ph = phi_[i];
   double st = std::sin(th), ct = std::cos(th);
   double x = st*std::cos(ph), y = st*std::sin(ph), z = ct;
-  return vgl_point_3d<double>(x, y, z);
+  return {x, y, z};
 }
 
 vgl_rotation_3d<double> principal_ray_scan::rot(unsigned i, double alpha) const
@@ -128,7 +130,7 @@ pixel_solid_angle(vpgl_perspective_camera<double> const& cam,
                   double& solid_angle)
 {
   vgl_point_2d<double> pp = cam.get_calibration().principal_point();
-  unsigned u = static_cast<unsigned>(pp.x()),
+  auto u = static_cast<unsigned>(pp.x()),
            v = static_cast<unsigned>(pp.y());
   vgl_ray_3d<double> ray;
   vsph_camera_bounds::pixel_solid_angle(cam, u, v, ray, cone_half_angle,
@@ -207,8 +209,8 @@ relative_transf(vpgl_perspective_camera<double> const& c0,
 {
   vgl_vector_3d<double> t0 = c0.get_translation();
   vgl_vector_3d<double> t1 = c1.get_translation();
-  vgl_rotation_3d<double> R0 = c0.get_rotation();
-  vgl_rotation_3d<double> R1 = c1.get_rotation();
+  const vgl_rotation_3d<double>& R0 = c0.get_rotation();
+  const vgl_rotation_3d<double>& R1 = c1.get_rotation();
   rel_rot = R1*(R0.transpose());
   vgl_vector_3d<double> td = rel_rot*t0;
   rel_trans = -td + t1;
@@ -280,13 +282,12 @@ bool vsph_camera_bounds::planar_bounding_box(std::vector<vpgl_perspective_camera
                                              double z_plane)
 {
   bool good = true;
-  for (unsigned int i=0; i<cams.size(); ++i) {
+  for (const auto & cam : cams) {
     vgl_box_2d<double> b;
-    if ( planar_bounding_box( cams[i], b, z_plane ) )
+    if ( planar_bounding_box( cam, b, z_plane ) )
       bbox.add(b);
     else
       good = false;
   }
   return good;
 }
-

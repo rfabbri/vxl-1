@@ -1,9 +1,6 @@
 // This is core/vgl/algo/vgl_homg_operators_2d.h
 #ifndef vgl_homg_operators_2d_h_
 #define vgl_homg_operators_2d_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief 2D homogeneous operations
@@ -24,7 +21,9 @@
 
 #include <list>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_fwd.h>
 #include <vgl/vgl_fwd.h>
 

@@ -15,7 +15,9 @@
 #include <vector>
 #include <iostream>
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include "rgrl_feature.h"
 #include "rgrl_object.h"
@@ -36,7 +38,7 @@ class rgrl_feature_set_label
 {
  public:
   //:
-  rgrl_feature_set_label( const std::string& name = std::string() );
+  rgrl_feature_set_label( std::string  name = std::string() );
 
   //: return name
   std::string const& name() const
@@ -66,9 +68,9 @@ class rgrl_feature_set
   typedef std::vector<rgrl_feature_sptr>  feature_vector;
 
  public:
-  rgrl_feature_set( feature_vector const& fea_vec, rgrl_feature_set_label const& label = rgrl_feature_set_label() );
+  rgrl_feature_set( feature_vector  fea_vec, rgrl_feature_set_label  label = rgrl_feature_set_label() );
 
-  virtual ~rgrl_feature_set();
+  ~rgrl_feature_set() override;
 
   //: set label
   void set_label( rgrl_feature_set_label const& label )
@@ -144,8 +146,8 @@ class rgrl_feature_set
 
  private:
   //disabled
-  rgrl_feature_set( rgrl_feature_set const& other );
-  rgrl_feature_set& operator=( rgrl_feature_set const& other );
+  rgrl_feature_set( rgrl_feature_set const& other ) = delete;
+  rgrl_feature_set& operator=( rgrl_feature_set const& other ) = delete;
 
  protected:
   rgrl_feature_set_label label_;

@@ -1,5 +1,6 @@
-#include <iostream>
 #include <cstdlib>
+#include <iostream>
+#include <utility>
 #include "rgrl_view.h"
 //:
 // \file
@@ -10,13 +11,15 @@
 #include <rgrl/rgrl_estimator.h>
 #include <rgrl/rgrl_feature_set.h>
 // not used? #include <vector>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 rgrl_view::
 rgrl_view()
-  : from_image_roi_(VXL_NULLPTR),
-    to_image_roi_(VXL_NULLPTR),
+  : from_image_roi_(nullptr),
+    to_image_roi_(nullptr),
     current_region_(0),
     global_region_(0),
     current_resolution_(0),
@@ -27,16 +30,16 @@ rgrl_view()
 rgrl_view::
 rgrl_view( rgrl_mask_sptr          const& from_image_roi,
            rgrl_mask_sptr          const& to_image_roi,
-           rgrl_mask_box           const& region,
-           rgrl_mask_box           const& global_region,
-           rgrl_estimator_sptr       xform_estimator,
-           rgrl_transformation_sptr  xform_estimate,
+           rgrl_mask_box  region,
+           rgrl_mask_box  global_region,
+           const rgrl_estimator_sptr&       xform_estimator,
+           const rgrl_transformation_sptr&  xform_estimate,
            unsigned                  resolution,
-           rgrl_transformation_sptr  inverse_estimate )
+           const rgrl_transformation_sptr&  inverse_estimate )
   : from_image_roi_( from_image_roi ),
     to_image_roi_( to_image_roi ),
-    current_region_( region ),
-    global_region_( global_region ),
+    current_region_(std::move( region )),
+    global_region_(std::move( global_region )),
     xform_estimator_( xform_estimator ),
     xform_estimate_( xform_estimate ),
     inverse_estimate_( inverse_estimate ),

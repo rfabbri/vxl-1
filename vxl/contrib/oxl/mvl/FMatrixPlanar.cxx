@@ -1,7 +1,4 @@
 // This is oxl/mvl/FMatrixPlanar.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 
@@ -9,8 +6,10 @@
 #include <cmath>
 #include "FMatrixPlanar.h"
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_double_3.h>
 
 #include <vnl/algo/vnl_svd.h>
@@ -53,9 +52,7 @@ FMatrixPlanar::FMatrixPlanar(const vnl_double_3x3& f_matrix)
 //
 //: Destructor.
 
-FMatrixPlanar::~FMatrixPlanar()
-{
-}
+FMatrixPlanar::~FMatrixPlanar() = default;
 
 //--------------------------------------------------------------
 //

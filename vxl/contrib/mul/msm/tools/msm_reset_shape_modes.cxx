@@ -8,6 +8,7 @@
 #include <iostream>
 #include <iterator>
 #include <limits>
+#include <climits>
 #include <mbl/mbl_read_props.h>
 #include <mbl/mbl_exception.h>
 #include <mbl/mbl_parse_int_list.h>
@@ -15,11 +16,12 @@
 #include <vul/vul_arg.h>
 #include <vul/vul_string.h>
 #include <vul/vul_file.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_quick_file.h>
 #include <msm/msm_shape_instance.h>
 #include <msm/msm_add_all_loaders.h>
-#include <climits>
 
 /*
 Parameter file format:
@@ -162,10 +164,10 @@ int main(int argc, char** argv)
   // check for valid modes
   unsigned int min = std::numeric_limits<unsigned int>::max();
   unsigned int max = std::numeric_limits<unsigned int>::min();
-  for (unsigned k=0; k<params.modes_to_reset.size(); ++k)
+  for (unsigned int k : params.modes_to_reset)
   {
-    if (min > params.modes_to_reset[k]) min = params.modes_to_reset[k];
-    if (max < params.modes_to_reset[k]) max = params.modes_to_reset[k];
+    if (min > k) min = k;
+    if (max < k) max = k;
   }
   if ((min <= 0) || (max > sm_inst.params().size()))
   {
@@ -222,8 +224,8 @@ int main(int argc, char** argv)
 
     // zero selected shape model modes
     vnl_vector<double> b = sm_inst.params();
-    for (unsigned k=0; k<params.modes_to_reset.size(); ++k)
-    { b[params.modes_to_reset[k]-1]=0; }
+    for (unsigned int k : params.modes_to_reset)
+    { b[k-1]=0; }
     sm_inst.set_params(b);
 
     // get modified shape and put residuals back in

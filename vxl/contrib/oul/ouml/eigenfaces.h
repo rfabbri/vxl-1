@@ -12,8 +12,10 @@
 
 #include <iostream>
 #include <vector>
-#include <vcl_cfloat.h> // for DBL_MAX
-#include <vcl_compiler.h>
+#include <cfloat>// for DBL_MAX
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_vector.h>
 #include <vil1/vil1_memory_image_of.h>
 #include "inlines.h"
@@ -45,7 +47,7 @@ class EigenFace
     bool operator<(const LabelDist &x) const {return dist>x.dist;}
   };
 
-  EigenFace(): image_size(0), average_training_image(VXL_NULLPTR){}
+  EigenFace(): image_size(0), average_training_image(nullptr){}
   ~EigenFace();
   bool add_training_image(Image *im, const char * label);
   bool calculate_eigenfaces();
@@ -53,7 +55,7 @@ class EigenFace
   double get_eigenvalue(int i);
   inline char *get_label(unsigned int i){
     if (i<training_labels.size()) return training_labels[i];
-    else return VXL_NULLPTR;}
+    else return nullptr;}
   bool check_eigenvectors();
   void save_as_images(int width, int height);
   vnl_vector<double>* encode(Image *im);

@@ -5,9 +5,12 @@
 
 #include <string>
 #include <iostream>
+#include <utility>
 #include "bvxm_voxel_storage_disk.h"
 //
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #ifdef BVXM_USE_FSTREAM64
 #include <vil/vil_stream_fstream64.h>
 #else
@@ -20,7 +23,7 @@
 
 template <class T>
 bvxm_voxel_storage_disk<T>::bvxm_voxel_storage_disk(std::string storage_filename)
-: bvxm_voxel_storage<T>(), storage_fname_(storage_filename), fio_(VXL_NULLPTR), active_slab_start_(-1)
+: bvxm_voxel_storage<T>(), storage_fname_(std::move(storage_filename)), fio_(nullptr), active_slab_start_(-1)
 {
   // check if file exsist already or not
   if (vul_file::exists(storage_fname_))  {
@@ -61,7 +64,7 @@ bvxm_voxel_storage_disk<T>::bvxm_voxel_storage_disk(std::string storage_filename
 
 template <class T>
 bvxm_voxel_storage_disk<T>::bvxm_voxel_storage_disk(std::string storage_filename, vgl_vector_3d<unsigned int> grid_size)
-: bvxm_voxel_storage<T>(grid_size), storage_fname_(storage_filename), fio_(VXL_NULLPTR), active_slab_start_(-1)
+: bvxm_voxel_storage<T>(grid_size), storage_fname_(std::move(storage_filename)), fio_(nullptr), active_slab_start_(-1)
 {
   // assumes desired slab thickness is 1
   slab_buffer_ = new bvxm_memory_chunk(grid_size.x()*grid_size.y()*sizeof(T));
@@ -120,7 +123,7 @@ bvxm_voxel_storage_disk<T>::bvxm_voxel_storage_disk(std::string storage_filename
     // this will delete the stream object.
     fio_->ref();
     fio_->unref();
-    fio_ = VXL_NULLPTR;
+    fio_ = nullptr;
 
     return;
   }
@@ -134,7 +137,7 @@ bvxm_voxel_storage_disk<T>::~bvxm_voxel_storage_disk()
   if (fio_) {
     fio_->ref();
     fio_->unref();
-    fio_ = VXL_NULLPTR;
+    fio_ = nullptr;
   }
 }
 
@@ -190,7 +193,7 @@ bool bvxm_voxel_storage_disk<T>::initialize_data(T const& value)
   // this will delete the stream object.
   fio_->ref();
   fio_->unref();
-  fio_ = VXL_NULLPTR;
+  fio_ = nullptr;
 
   return true;
 }

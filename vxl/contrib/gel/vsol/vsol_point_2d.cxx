@@ -11,9 +11,7 @@
 //---------------------------------------------------------------------------
 // Destructor
 //---------------------------------------------------------------------------
-vsol_point_2d::~vsol_point_2d()
-{
-}
+vsol_point_2d::~vsol_point_2d() = default;
 
 //---------------------------------------------------------------------------
 //: Clone `this': creation of a new object and initialization
@@ -132,7 +130,7 @@ vsol_point_2d::plus_vector(vgl_vector_2d<double> const& v) const
 vgl_vector_2d<double>
 vsol_point_2d::to_vector(const vsol_point_2d &other) const
 {
-  return vgl_vector_2d<double>(other.x() - x(), other.y() - y());
+  return {other.x() - x(), other.y() - y()};
 }
 
 //----------------------------------------------------------------
@@ -190,7 +188,7 @@ void vsol_point_2d::print_summary(std::ostream &os) const
 void
 vsl_b_write(vsl_b_ostream &os, const vsol_point_2d* p)
 {
-  if (p==VXL_NULLPTR) {
+  if (p==nullptr) {
     vsl_b_write(os, false); // Indicate null pointer stored
   }
   else{
@@ -212,5 +210,5 @@ vsl_b_read(vsl_b_istream &is, vsol_point_2d* &p)
     p->b_read(is);
   }
   else
-    p = VXL_NULLPTR;
+    p = nullptr;
 }

@@ -1,9 +1,6 @@
 // This is core/vul/vul_printf.h
 #ifndef vul_printf_h_
 #define vul_printf_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Contains vul_printf function
@@ -21,7 +18,9 @@
 // \endverbatim
 
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Print using printf format specifiers to an ostream.
 // E.g.

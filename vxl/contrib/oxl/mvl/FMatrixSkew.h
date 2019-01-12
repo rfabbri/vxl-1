@@ -1,9 +1,6 @@
 // This is oxl/mvl/FMatrixSkew.h
 #ifndef FMatrixSkew_h_
 #define FMatrixSkew_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //--------------------------------------------------------------
 //:
 // \file
@@ -33,7 +30,7 @@ class FMatrixSkew : public FMatrix
   FMatrixSkew();
   FMatrixSkew(const double* f_matrix);
   FMatrixSkew(const vnl_matrix<double>& f_matrix);
-  ~FMatrixSkew();
+  ~FMatrixSkew() override;
 
   // Computations
 
@@ -53,10 +50,10 @@ class FMatrixSkew : public FMatrix
 
   // Data Access------------------------------------------------------------
 
-  bool set (const double* f_matrix );
-  inline bool set (const vnl_matrix<double>& f_matrix );
-  inline bool get_rank2_flag (void) const;
-  inline void set_rank2_flag (bool rank2_flag);
+  bool set (const double* f_matrix ) override;
+  bool set (const vnl_matrix<double>& f_matrix );
+  bool get_rank2_flag (void) const;
+  void set_rank2_flag (bool rank2_flag);
 };
 
 #endif // FMatrixSkew_h_

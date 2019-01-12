@@ -1,14 +1,13 @@
 // This is oxl/mvl/FMatrixComputeNonLinear.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 
 #include <iostream>
 #include "FMatrixComputeNonLinear.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vnl/vnl_matrix.h>
 #include <vnl/algo/vnl_levenberg_marquardt.h>
@@ -25,7 +24,7 @@
 
 
 // Seven parameters for a minimal parametrization of the F matrix
-const int FMatrixComputeNonLinear_nparams = 7;
+constexpr int FMatrixComputeNonLinear_nparams = 7;
 
 //-----------------------------------------------------------------------------
 //: Constructor
@@ -371,8 +370,8 @@ FMatrix FMatrixComputeNonLinear::params_to_fmatrix(const vnl_vector<double>& par
     for (unsigned int l = 0; l < ref.size(); l++) {
       vnl_vector<double> res = calculate_residuals(ref[l]);
       double so_far = 0.0;
-      for (unsigned int m = 0; m < res.size(); m++)
-        so_far += res[m];
+      for (double re : res)
+        so_far += re;
 //      std::cerr << "so_far : " << so_far << std::endl;
       if (so_far < final) {
         final = so_far;
@@ -381,8 +380,8 @@ FMatrix FMatrixComputeNonLinear::params_to_fmatrix(const vnl_vector<double>& par
     }
     ret = *ref[num];
 
-    for (unsigned int l = 0; l < ref.size(); l++)
-      delete ref[l];
+    for (auto & l : ref)
+      delete l;
 
     return ret;
   }

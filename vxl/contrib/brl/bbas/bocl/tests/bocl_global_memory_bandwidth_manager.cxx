@@ -1,14 +1,16 @@
-#include <iostream>
-#include <cstdio>
 #include "bocl_global_memory_bandwidth_manager.h"
+#include <cstdio>
+#include <iostream>
+#include <utility>
 //
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #define local_workgroup_size 32
 
 bocl_global_memory_bandwidth_manager::~bocl_global_memory_bandwidth_manager()
-{
-}
+= default;
 
 bool bocl_global_memory_bandwidth_manager::setup_array(unsigned len)
 {
@@ -97,14 +99,14 @@ bool bocl_global_memory_bandwidth_manager::run_kernel()
 
   cl_ulong used_local_memory;
   status = clGetKernelWorkGroupInfo(kernel_.kernel(),this->devices()[0],CL_KERNEL_LOCAL_MEM_SIZE,
-                                    sizeof(cl_ulong),&used_local_memory,VXL_NULLPTR);
+                                    sizeof(cl_ulong),&used_local_memory,nullptr);
   if (!check_val(status,CL_SUCCESS,"clGetKernelWorkGroupInfo CL_KERNEL_LOCAL_MEM_SIZE failed."))
     return SDK_FAILURE;
 
   // determine the work group size
   cl_ulong kernel_work_group_size;
   status = clGetKernelWorkGroupInfo(kernel_.kernel(),this->devices()[0],CL_KERNEL_WORK_GROUP_SIZE,
-                                    sizeof(cl_ulong),&kernel_work_group_size,VXL_NULLPTR);
+                                    sizeof(cl_ulong),&kernel_work_group_size,nullptr);
   if (!check_val(status,CL_SUCCESS,"clGetKernelWorkGroupInfo CL_KERNEL_WORK_GROUP_SIZE, failed."))
     return SDK_FAILURE;
 
@@ -157,14 +159,14 @@ bool bocl_global_memory_bandwidth_manager::run_kernel_prefetch()
 
   cl_ulong used_local_memory;
   status = clGetKernelWorkGroupInfo(kernel_.kernel(),this->devices()[0],CL_KERNEL_LOCAL_MEM_SIZE,
-                                    sizeof(cl_ulong),&used_local_memory,VXL_NULLPTR);
+                                    sizeof(cl_ulong),&used_local_memory,nullptr);
   if (!check_val(status,CL_SUCCESS,"clGetKernelWorkGroupInfo CL_KERNEL_LOCAL_MEM_SIZE failed."))
     return SDK_FAILURE;
 
   // determine the work group size
   cl_ulong kernel_work_group_size;
   status = clGetKernelWorkGroupInfo(kernel_.kernel(),this->devices()[0],CL_KERNEL_WORK_GROUP_SIZE,
-                                    sizeof(cl_ulong),&kernel_work_group_size,VXL_NULLPTR);
+                                    sizeof(cl_ulong),&kernel_work_group_size,nullptr);
   if (!check_val(status,CL_SUCCESS,"clGetKernelWorkGroupInfo CL_KERNEL_WORK_GROUP_SIZE, failed."))
     return SDK_FAILURE;
 
@@ -230,14 +232,14 @@ bool bocl_global_memory_bandwidth_manager::run_kernel_using_image()
 
   cl_ulong used_local_memory;
   status = clGetKernelWorkGroupInfo(kernel_.kernel(),this->devices()[0],CL_KERNEL_LOCAL_MEM_SIZE,
-                                    sizeof(cl_ulong),&used_local_memory,VXL_NULLPTR);
+                                    sizeof(cl_ulong),&used_local_memory,nullptr);
   if (!check_val(status,CL_SUCCESS,"clGetKernelWorkGroupInfo CL_KERNEL_LOCAL_MEM_SIZE failed."))
     return SDK_FAILURE;
 
   // determine the work group size
   cl_ulong kernel_work_group_size;
   status = clGetKernelWorkGroupInfo(kernel_.kernel(),this->devices()[0],CL_KERNEL_WORK_GROUP_SIZE,
-                                    sizeof(cl_ulong),&kernel_work_group_size,VXL_NULLPTR);
+                                    sizeof(cl_ulong),&kernel_work_group_size,nullptr);
   if (!check_val(status,CL_SUCCESS,"clGetKernelWorkGroupInfo CL_KERNEL_WORK_GROUP_SIZE, failed."))
     return SDK_FAILURE;
 
@@ -274,11 +276,11 @@ bool bocl_global_memory_bandwidth_manager::run_kernel_using_image()
 }
 
 int bocl_global_memory_bandwidth_manager::create_kernel(std::string const& kernel_name,
-                                                        std::string src_path,
+                                                        const std::string& src_path,
                                                         std::string options)
 {
   std::vector<std::string> src_paths;
   src_paths.push_back(src_path);
   return kernel_.create_kernel(&this->context(),&this->devices()[0],
-                               src_paths, kernel_name, options, "the kernel");
+                               src_paths, kernel_name, std::move(options), "the kernel");
 }

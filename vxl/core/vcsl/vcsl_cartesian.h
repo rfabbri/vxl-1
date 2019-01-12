@@ -29,7 +29,7 @@ class vcsl_cartesian
 
  public:
   // Destructor
-  virtual ~vcsl_cartesian() {}
+  ~vcsl_cartesian() override = default;
 
   //***************************************************************************
   // Status report

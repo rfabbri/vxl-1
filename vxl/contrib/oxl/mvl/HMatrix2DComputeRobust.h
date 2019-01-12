@@ -16,7 +16,9 @@
 #include <mvl/HMatrix2D.h>
 #include <mvl/AffineMetric.h>
 #include <mvl/HomgPoint2D.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class HMatrix2DComputeRobust
 {

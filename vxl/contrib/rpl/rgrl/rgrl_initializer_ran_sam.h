@@ -15,7 +15,9 @@
 #include "rgrl_scale_estimator_sptr.h"
 #include "rgrl_mask.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class vnl_random;
 
@@ -34,8 +36,8 @@ class rgrl_initializer_ran_sam
   //: Constructor using a given random-sampling seed.
   rgrl_initializer_ran_sam( int seed );
 
-  virtual
-  ~rgrl_initializer_ran_sam();
+
+  ~rgrl_initializer_ran_sam() override;
 
   //  Parameters to control the search technique.  The default set
   //  when the constructor is called is to sample as in generate
@@ -56,41 +58,41 @@ class rgrl_initializer_ran_sam
   // from_image_roi will be re-estimated/updated based on the
   // transform estimate computed by the random sampling process.
   //
-  void set_data(rgrl_match_set_sptr                init_match_set,
-                rgrl_scale_estimator_unwgted_sptr  scale_est,
-                rgrl_view_sptr                     prior_view,
+  void set_data(const rgrl_match_set_sptr&                init_match_set,
+                const rgrl_scale_estimator_unwgted_sptr&  scale_est,
+                const rgrl_view_sptr&                     prior_view,
                 bool should_estimate_global_region = true);
 
   //: Initialize with a set of information without packing everything into a vie
-  void set_data(rgrl_match_set_sptr                init_match_set,
-                rgrl_scale_estimator_unwgted_sptr  scale_est,
+  void set_data(const rgrl_match_set_sptr&                init_match_set,
+                const rgrl_scale_estimator_unwgted_sptr&  scale_est,
                 rgrl_mask_sptr      const&         from_image_roi,
                 rgrl_mask_sptr      const&         to_image_roi,
                 rgrl_mask_box       const&         initial_from_image_roi,
-                rgrl_estimator_sptr                xform_estimator,
+                const rgrl_estimator_sptr&                xform_estimator,
                 unsigned                           initial_resolution = 0,
                 bool should_estimate_global_region = true);
 
   //: Initialize with a set of information, assuming that registration applies to \a from_image_roi always.
-  void set_data(rgrl_match_set_sptr                init_match_set,
-                rgrl_scale_estimator_unwgted_sptr  scale_est,
+  void set_data(const rgrl_match_set_sptr&                init_match_set,
+                const rgrl_scale_estimator_unwgted_sptr&  scale_est,
                 rgrl_mask_sptr      const&         from_image_roi,
                 rgrl_mask_sptr      const&         to_image_roi,
-                rgrl_estimator_sptr                xform_estimator,
+                const rgrl_estimator_sptr&                xform_estimator,
                 unsigned                           initial_resolution = 0);
 
   //: Initialize with a set of information, assuming that registration applies to \a from_image_roi always;
   //  And \a from_image_roi and \a to_image_roi are the same
-  void set_data(rgrl_match_set_sptr                init_match_set,
-                rgrl_scale_estimator_unwgted_sptr  scale_est,
+  void set_data(const rgrl_match_set_sptr&                init_match_set,
+                const rgrl_scale_estimator_unwgted_sptr&  scale_est,
                 rgrl_mask_sptr      const&         from_image_roi,
-                rgrl_estimator_sptr                xform_estimator,
+                const rgrl_estimator_sptr&                xform_estimator,
                 unsigned                           initial_resolution = 0);
 
 
   //: Get next initial estimate when first called, but return false thereafter.
   bool next_initial( rgrl_view_sptr           & view,
-                     rgrl_scale_sptr          & prior_scale);
+                     rgrl_scale_sptr          & prior_scale) override;
 
   //:  Get the scale estimate.
   rgrl_scale_sptr scale() const { return scale_; }
@@ -125,7 +127,7 @@ class rgrl_initializer_ran_sam
 
   //: return number of initializations
   //  -1 stands for unknown
-  virtual int size() const
+  int size() const override
   { return -1;}
 
  protected:

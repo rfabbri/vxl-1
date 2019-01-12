@@ -4,8 +4,10 @@
 #include "vgui_win32.h"
 
 #include <vgui/vgui_gl.h> // for glFlush()
-#include <vcl_compiler.h>
-#include <vcl_cassert.h> // for assert
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>// for assert
 #include "vgui_win32_window.h"
 #include "vgui_win32_dialog_impl.h"
 

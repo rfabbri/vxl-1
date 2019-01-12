@@ -9,7 +9,9 @@
 // \author Ali Osman Ulusoy
 // \date June 06, 2013
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bstm/io/bstm_cache.h>
 #include <bstm/io/bstm_lru_cache.h>
 #include <bstm/bstm_scene.h>
@@ -23,8 +25,8 @@
 
 namespace bstm_cpp_refine_tt_process_globals
 {
-  const unsigned n_inputs_ =  4;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 4;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool bstm_cpp_refine_tt_process_cons(bprb_func_process& pro)
@@ -62,8 +64,8 @@ bool bstm_cpp_refine_tt_process(bprb_func_process& pro)
   unsigned i = 0;
   bstm_scene_sptr scene =pro.get_input<bstm_scene_sptr>(i++);
   bstm_cache_sptr cache= pro.get_input<bstm_cache_sptr>(i++);
-  float change_prob_t =pro.get_input<float>(i++);
-  float time =pro.get_input<float>(i++);
+  auto change_prob_t =pro.get_input<float>(i++);
+  auto time =pro.get_input<float>(i++);
 
 
   //bstm app query
@@ -106,11 +108,11 @@ bool bstm_cpp_refine_tt_process(bprb_func_process& pro)
       continue;
     std::cout<<"Refining Block: "<<id<<std::endl;
 
-    bstm_block     * blk     = cache->get_block(id);
-    bstm_time_block* blk_t   = cache->get_time_block(id);
-    bstm_data_base * alph    = cache->get_data_base(id,bstm_data_traits<BSTM_ALPHA>::prefix());
+    bstm_block     * blk = cache->get_block(id);
+    bstm_time_block* blk_t = cache->get_time_block(id);
+    bstm_data_base * alph = cache->get_data_base(id,bstm_data_traits<BSTM_ALPHA>::prefix());
     int num_el = alph->buffer_length() / bstm_data_traits<BSTM_ALPHA>::datasize();
-    bstm_data_base * mog     = cache->get_data_base(id, app_data_type, apptypesize * num_el);
+    bstm_data_base * mog = cache->get_data_base(id, app_data_type, apptypesize * num_el);
     bstm_data_base * num_obs = cache->get_data_base(id, nobs_data_type,nobstypesize * num_el );
     bstm_data_base * change = cache->get_data_base(id,bstm_data_traits<BSTM_CHANGE>::prefix() );
 

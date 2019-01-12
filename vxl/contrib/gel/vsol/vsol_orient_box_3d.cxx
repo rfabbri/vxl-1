@@ -6,7 +6,10 @@
 #include <vsol/vsol_point_3d.h>
 #include <vsol/vsol_box_3d.h>
 #include <vgl/vgl_point_3d.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 vsol_orient_box_3d::vsol_orient_box_3d(vgl_orient_box_3d<double> const& orient_box)
  : orient_box_(orient_box)
@@ -15,8 +18,7 @@ vsol_orient_box_3d::vsol_orient_box_3d(vgl_orient_box_3d<double> const& orient_b
   std::vector<vgl_point_3d<double> > corners = orient_box_.corners();
   assert (corners.size() == 8);
 
-  for (unsigned int i=0; i < corners.size(); i++) {
-    vgl_point_3d<double> corner = corners[i];
+  for (auto corner : corners) {
     box_.update(corner.x(), corner.y(), corner.z());
   }
   this->set_bounding_box(new vsol_box_3d(box_));

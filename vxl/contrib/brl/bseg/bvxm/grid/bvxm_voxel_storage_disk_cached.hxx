@@ -5,9 +5,12 @@
 
 #include <string>
 #include <iostream>
+#include <utility>
 #include "bvxm_voxel_storage_disk_cached.h"
 //
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #ifdef BVXM_USE_FSTREAM64
 #include <vil/vil_stream_fstream64.h>
 #else
@@ -22,7 +25,7 @@
 
 template <class T>
 bvxm_voxel_storage_disk_cached<T>::bvxm_voxel_storage_disk_cached(std::string storage_filename, vgl_vector_3d<unsigned int> grid_size, vxl_int_64 max_cache_size)
-:  bvxm_voxel_storage<T>(grid_size), first_cache_slice_(-1), last_cache_slice_(-1), storage_fname_(storage_filename), fio_(VXL_NULLPTR)
+:  bvxm_voxel_storage<T>(grid_size), first_cache_slice_(-1), last_cache_slice_(-1), storage_fname_(std::move(storage_filename)), fio_(nullptr)
 {
   //set up cache
   vxl_int_64 slice_size = sizeof(T)*grid_size.x()*grid_size.y();
@@ -86,10 +89,10 @@ bvxm_voxel_storage_disk_cached<T>::~bvxm_voxel_storage_disk_cached()
   if (fio_) {
     fio_->ref();
     fio_->unref();
-    fio_ = VXL_NULLPTR;
+    fio_ = nullptr;
   }
 
-  cache_mem_ = VXL_NULLPTR;
+  cache_mem_ = nullptr;
 }
 
 
@@ -146,7 +149,7 @@ bool bvxm_voxel_storage_disk_cached<T>::initialize_data(T const& value)
   // this will delete the stream object.
   fio_->ref();
   fio_->unref();
-  fio_ = VXL_NULLPTR;
+  fio_ = nullptr;
 
   return true;
 }
@@ -172,7 +175,7 @@ bvxm_voxel_slab<T> bvxm_voxel_storage_disk_cached<T>::get_slab(unsigned slice_id
   unsigned last_slice_idx = slice_idx + slab_thickness - 1;
 
   // check to see if slab is already in cache
-  T* first_voxel = VXL_NULLPTR;
+  T* first_voxel = nullptr;
   if ( ((int)slice_idx < first_cache_slice_ ) || ((int)slice_idx > last_cache_slice_) ){
     // slab is not in cache
     purge_cache();

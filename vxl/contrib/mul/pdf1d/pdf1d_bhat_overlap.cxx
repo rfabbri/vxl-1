@@ -8,7 +8,9 @@
 // \brief Functions to calculate Bhattacharyya overlap.
 
 #include <pdf1d/pdf1d_sampler.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_math.h>
 
@@ -120,4 +122,3 @@ double pdf1d_bhat_overlap_gaussian_with_pdf(const pdf1d_pdf& g, const pdf1d_pdf&
 {
   return pdf1d_bhat_overlap_gaussian_with_pdf(g.mean(),g.variance(),pdf,n);
 }
-

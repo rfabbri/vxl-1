@@ -1,5 +1,6 @@
 #include <iostream>
 #include <algorithm>
+#include <utility>
 #include "bstm_ocl_particle_filter.h"
 
 #include <vcl_where_root_dir.h>
@@ -9,19 +10,21 @@
 #include <boxm2/ocl/boxm2_ocl_util.h>
 #include <vul/vul_timer.h>
 #include <bstm/cpp/algo/bstm_label_bb_function.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_sphere_3d.h>
 #include <vnl/algo/vnl_svd.h>
 #include <vnl/vnl_det.h>
 
 #define ENABLE_ROT
 
-bstm_ocl_particle_filter::bstm_ocl_particle_filter(bocl_device_sptr device, bstm_scene_sptr scene, bstm_cache_sptr cache, bstm_opencl_cache_sptr opencl_cache,
+bstm_ocl_particle_filter::bstm_ocl_particle_filter(const bocl_device_sptr& device, const bstm_scene_sptr& scene, const bstm_cache_sptr& cache, const bstm_opencl_cache_sptr& opencl_cache,
                         unsigned start_t, unsigned end_t, vgl_box_3d<double> initial_bb, int num_particles, double t_sigma, double w_sigma,
                         std::string kernel_opt,int nbins, int track_label, double radius ):
                         device_(device), scene_(scene), cache_(cache), opencl_cache_(opencl_cache),num_particles_(num_particles), initial_bb_(initial_bb),
                         t_sigma_(t_sigma), w_sigma_(w_sigma), start_t_(start_t), end_t_(end_t), track_label_(track_label), radius_(radius),
-                        kernel_opt_(kernel_opt), app_nbins_(nbins), app_view_dir_num_(4), surf_nbins_(2), rand_(9667566)
+                        kernel_opt_(std::move(kernel_opt)), app_nbins_(nbins), app_view_dir_num_(4), surf_nbins_(2), rand_(9667566)
 {
   //get blocks that intersect the provided bounding box.
   //std::vector<bstm_block_id> relevant_blocks = scene_->get_block_ids(initial_bb, start_t);
@@ -35,10 +38,10 @@ bstm_ocl_particle_filter::bstm_ocl_particle_filter(bocl_device_sptr device, bstm
   std::vector< std::map<bstm_block_id, std::vector<bstm_block_id> > > empty_blk_map;
   std::vector< double > initial_mi;
   for(unsigned i = 0; i < num_particles_;i++) {
-    initial_bbs.push_back( vgl_orient_box_3d<double>(initial_bb ) );
+    initial_bbs.emplace_back(initial_bb );
     initial_mi.push_back(1.0f);
-    empty_t.push_back( vgl_vector_3d<double>(0,0,0) );
-    empty_r.push_back( vgl_rotation_3d<double>() );
+    empty_t.emplace_back(0,0,0 );
+    empty_r.emplace_back( );
   }
   bb_.push_back(initial_bbs);
   R_.push_back(empty_r);
@@ -381,7 +384,7 @@ void bstm_ocl_particle_filter::write_particle_ocl_info(unsigned prev_time,unsign
   //output_->zero_gpu_buffer(queue_,true);
 }
 
-vgl_rotation_3d<double> bstm_ocl_particle_filter::sample_rot(vgl_rotation_3d<double> rot, double kappa, double w_sigma )
+vgl_rotation_3d<double> bstm_ocl_particle_filter::sample_rot(const vgl_rotation_3d<double>& rot, double kappa, double w_sigma )
 {
 
   //first construct a random sample from a von-mises fisher distribution with mean [0,0,1] and concentration parameter kappa
@@ -409,7 +412,7 @@ vgl_rotation_3d<double> bstm_ocl_particle_filter::sample_rot(vgl_rotation_3d<dou
 
 }
 
-void bstm_ocl_particle_filter::resample(unsigned prev_time, unsigned cur_time)
+void bstm_ocl_particle_filter::resample(unsigned  /*prev_time*/, unsigned cur_time)
 {
 
   //resampled vectors to replace current ones
@@ -516,10 +519,10 @@ vgl_box_3d<double> bstm_ocl_particle_filter::w_mean_bb( std::vector<vgl_orient_b
 
 
 
-vgl_vector_3d<double> bstm_ocl_particle_filter::velocity_estimate(unsigned prev2_time, unsigned prev_time)
+vgl_vector_3d<double> bstm_ocl_particle_filter::velocity_estimate(unsigned  /*prev2_time*/, unsigned prev_time)
 {
   if(prev_time == start_t_)
-    return vgl_vector_3d<double>(0,0,0);
+    return {0,0,0};
 
 /*
   vgl_box_3d<double> box_prev2 = w_mean_bb(bb_[prev2_time - start_t_],  mi_[prev2_time - start_t_]);
@@ -574,7 +577,7 @@ vgl_rotation_3d<double> bstm_ocl_particle_filter::angular_velocity_estimate(unsi
   */
 }
 
-std::vector<double> bstm_ocl_particle_filter::eval_mi(unsigned prev_time, unsigned cur_time)
+std::vector<double> bstm_ocl_particle_filter::eval_mi(unsigned  /*prev_time*/, unsigned cur_time)
 {
   std::size_t local_threads[1]={128};
   std::size_t global_threads[1]={1};
@@ -598,7 +601,7 @@ std::vector<double> bstm_ocl_particle_filter::eval_mi(unsigned prev_time, unsign
 
     //load blk info and write appropriate info to several buffers
     bocl_mem* blk_info = opencl_cache_->loaded_block_info();
-    bstm_scene_info* info_buffer = (bstm_scene_info*) blk_info->cpu_buffer();
+    auto* info_buffer = (bstm_scene_info*) blk_info->cpu_buffer();
     info_buffer->data_buffer_length = (int) (target_blk_t->num_bytes()/8);
     int target_time_tree_len = info_buffer->data_buffer_length;
 
@@ -641,7 +644,7 @@ std::vector<double> bstm_ocl_particle_filter::eval_mi(unsigned prev_time, unsign
     {
       //first check if the particle needs this blk pair
       std::vector<bstm_block_id> particle_target_blks = blk_map_[cur_time  - start_t_][particle_no][relevant_blk_id] ;
-      std::vector<bstm_block_id>::iterator found = std::find(particle_target_blks.begin(), particle_target_blks.end(), target_blk_id);
+      auto found = std::find(particle_target_blks.begin(), particle_target_blks.end(), target_blk_id);
       if(found != particle_target_blks.end())  //particle needs this blk mapping!
       {
         kern_->set_arg(blk_info);
@@ -761,7 +764,7 @@ void bstm_ocl_particle_filter::init_ocl_minfo()
   lookup_->create_buffer(CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR);
 
   // output buffer for debugging
-  for(unsigned i = 0; i < 1000;i ++) output_buff[i] = 0;
+  for(float & i : output_buff) i = 0;
   output_ = new bocl_mem(device_->context(), output_buff, sizeof(cl_float)*1000, "output" );
   output_->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR );
 
@@ -920,8 +923,8 @@ void bstm_ocl_particle_filter::label(unsigned t)
         bstm_data_base * label_data_base = cache_->get_data_base(bstm_metadata.id_, bstm_data_traits<BSTM_LABEL>::prefix(),
                                         alph->buffer_length() / bstm_data_traits<BSTM_ALPHA>::datasize() * bstm_data_traits<BSTM_LABEL>::datasize() );
 
-        bstm_data_traits<BSTM_ALPHA>::datatype * alpha_data = (bstm_data_traits<BSTM_ALPHA>::datatype*) alph->data_buffer();
-        bstm_data_traits<BSTM_LABEL>::datatype * label_data = (bstm_data_traits<BSTM_LABEL>::datatype*) label_data_base->data_buffer();
+        auto * alpha_data = (bstm_data_traits<BSTM_ALPHA>::datatype*) alph->data_buffer();
+        auto * label_data = (bstm_data_traits<BSTM_LABEL>::datatype*) label_data_base->data_buffer();
 
         //if(radius_ > 0) { //if labeling a ball
         //  vgl_sphere_3d<double> sphere(aabb.centroid(), radius_);

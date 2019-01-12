@@ -17,8 +17,10 @@
 #include <vnl/vnl_vector.h>
 #include <vnl/io/vnl_io_vector.h>
 #include <vnl/io/vnl_io_matrix.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 //=======================================================================
 // Dflt ctor
@@ -74,7 +76,7 @@ void mfpf_pose_predictor::set_as_ellipse(double ri, double rj,
   {
     // Find start and end of line of pixels inside disk
     int x = int(ri*std::sqrt(1.0-j*j/(rj*rj)));
-    roi.push_back(mbl_chord(ni-x,ni+x,nj+j));
+    roi.emplace_back(ni-x,ni+x,nj+j);
   }
 
   set(roi,ni,nj,norm_method);
@@ -88,9 +90,7 @@ void mfpf_pose_predictor::set_pose_type(const mfpf_pose_type& pt)
 // Destructor
 //=======================================================================
 
-mfpf_pose_predictor::~mfpf_pose_predictor()
-{
-}
+mfpf_pose_predictor::~mfpf_pose_predictor() = default;
 
 //: Define region and cost of region
 void mfpf_pose_predictor::set(const std::vector<mbl_chord>& roi,
@@ -279,9 +279,9 @@ void mfpf_pose_predictor::print_shape(std::ostream& os) const
 {
   vil_image_view<vxl_byte> im(roi_ni_,roi_nj_);
   im.fill(0);
-  for (unsigned k=0;k<roi_.size();++k)
-    for (int i=roi_[k].start_x();i<=roi_[k].end_x();++i)
-      im(i,roi_[k].y())=1;
+  for (auto k : roi_)
+    for (int i=k.start_x();i<=k.end_x();++i)
+      im(i,k.y())=1;
   for (unsigned j=0;j<im.nj();++j)
   {
     for (unsigned i=0;i<im.ni();++i)
@@ -403,4 +403,3 @@ std::ostream& operator<<(std::ostream& os ,const mfpf_pose_type& pt)
   }
   return os;
 }
-

@@ -9,8 +9,10 @@
 #include <cmath>
 #include "pdf1d_exponential_sampler.h"
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <pdf1d/pdf1d_exponential.h>
 
 //=======================================================================
@@ -26,9 +28,7 @@ pdf1d_exponential_sampler::pdf1d_exponential_sampler():
 // Destructor
 //=======================================================================
 
-pdf1d_exponential_sampler::~pdf1d_exponential_sampler()
-{
-}
+pdf1d_exponential_sampler::~pdf1d_exponential_sampler() = default;
 
 
 //=======================================================================
@@ -79,7 +79,7 @@ void pdf1d_exponential_sampler::set_model(const pdf1d_pdf& model)
 
 double pdf1d_exponential_sampler::sample()
 {
-  const pdf1d_exponential & exponential = static_cast<const pdf1d_exponential &>(model());
+  const auto & exponential = static_cast<const pdf1d_exponential &>(model());
   double L = exponential.lambda();
 
   return  -1.0*std::log(rng_.drand64(0,1))/L;
@@ -90,7 +90,7 @@ double pdf1d_exponential_sampler::sample()
 void pdf1d_exponential_sampler::regular_samples(vnl_vector<double>& x)
 {
   int n = x.size();
-  const pdf1d_exponential & exponential = static_cast<const pdf1d_exponential &>(model());
+  const auto & exponential = static_cast<const pdf1d_exponential &>(model());
   double L = exponential.lambda();
 
   // CDF = 1-exp(-Lx)
@@ -110,4 +110,3 @@ const pdf1d_exponential& pdf1d_exponential_sampler::exponential() const
 {
   return static_cast<const pdf1d_exponential&>(model());
 }
-

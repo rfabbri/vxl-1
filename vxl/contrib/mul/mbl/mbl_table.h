@@ -11,7 +11,9 @@
 #include <iosfwd>
 #include <vector>
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Container for tabulated data suitable for reading/writing to delimited text files.
 //
@@ -126,7 +128,7 @@ public:
   // \note It is recommended that you provide and check the parameter success.
   double get_element(const std::string& header,
                      const unsigned r,
-                     bool* success=VXL_NULLPTR) const;
+                     bool* success=nullptr) const;
 
 
   //: Load this table's data from specified text stream.

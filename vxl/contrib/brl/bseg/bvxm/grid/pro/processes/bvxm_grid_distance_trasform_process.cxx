@@ -15,7 +15,9 @@
 //   <none yet>
 // \endverbatim
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bprb/bprb_parameters.h>
 #include <bvxm/grid/bvxm_voxel_grid_base.h>
 #include <bvxm/grid/bvxm_voxel_grid.h>
@@ -23,8 +25,8 @@
 
 namespace bvxm_grid_distance_transform_process_globals
 {
-  const unsigned n_inputs_ = 3;
-  const unsigned n_outputs_ = 2;
+  constexpr unsigned n_inputs_ = 3;
+  constexpr unsigned n_outputs_ = 2;
 }
 
 
@@ -75,7 +77,7 @@ bool bvxm_grid_distance_transform_process(bprb_func_process& pro)
   bvxm_voxel_grid<float>* mag = new bvxm_voxel_grid<float>(mag_path,grid->grid_size());
 
   dir->initialize_data(vnl_vector_fixed<float,3>(0,0,0));
-  bvxm_voxel_grid<float>* g = static_cast<bvxm_voxel_grid<float>*>(grid.as_pointer());
+  auto* g = static_cast<bvxm_voxel_grid<float>*>(grid.as_pointer());
   bvxm_grid_dist_transform<float>(g,dir,mag);
 
   pro.set_output_val<bvxm_voxel_grid_base_sptr>(0, dir);

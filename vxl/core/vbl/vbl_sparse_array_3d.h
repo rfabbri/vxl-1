@@ -1,9 +1,6 @@
 // This is core/vbl/vbl_sparse_array_3d.h
 #ifndef vbl_sparse_array_3d_h_
 #define vbl_sparse_array_3d_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief a space efficient 3d array
@@ -24,7 +21,9 @@
 
 
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_sparse_array_base.h>
 #include <vbl/vbl_triple.h>
 

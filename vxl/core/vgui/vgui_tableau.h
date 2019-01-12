@@ -1,9 +1,6 @@
 // This is core/vgui/vgui_tableau.h
 #ifndef vgui_tableau_h_
 #define vgui_tableau_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author Philip C. Pritchett, Robotics Research Group, University of Oxford
@@ -30,7 +27,9 @@
 #include <string>
 #include <vector>
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vgui/vgui_event.h>
 #include <vgui/internals/vgui_parent_child_link_data.h>

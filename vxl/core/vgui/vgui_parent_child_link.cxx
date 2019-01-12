@@ -8,8 +8,10 @@
 // \author fsm
 // \brief  See vgui_parent_child_link.h for a description of this file.
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vgui/vgui_event.h>
 #include <vgui/vgui_tableau.h>
@@ -91,7 +93,7 @@ struct vgui_parent_child_link_impl
 };
 
 // static data for impl class :
-std::set<void*>* vgui_parent_child_link_impl::all = VXL_NULLPTR;
+std::set<void*>* vgui_parent_child_link_impl::all = nullptr;
 int vgui_parent_child_link_impl::all_refs = -1;
 
 void vgui_parent_child_link_impl::acquire()
@@ -144,7 +146,7 @@ vgui_parent_child_link_impl::vgui_parent_child_link_impl(vgui_tableau *p_, vgui_
     c->ref();
 
   // register.
-  if (all == VXL_NULLPTR) {
+  if (all == nullptr) {
 #ifdef DEBUG
     std::cerr << __FILE__ " : CREATING parent_child_link cache\n";
 #endif
@@ -179,7 +181,7 @@ vgui_parent_child_link_impl::~vgui_parent_child_link_impl()
     std::cerr << __FILE__ " : DELETING parent_child_link cache\n";
 #endif
     delete all;
-    all = VXL_NULLPTR;
+    all = nullptr;
   }
 }
 
@@ -216,7 +218,7 @@ void vgui_parent_child_link_impl::assign(vgui_tableau *t)
 
 vgui_parent_child_link::vgui_parent_child_link(vgui_tableau *p)
 {
-  pimpl = new vgui_parent_child_link_impl(p, VXL_NULLPTR);
+  pimpl = new vgui_parent_child_link_impl(p, nullptr);
   pimpl->acquire();
 }
 
@@ -240,7 +242,7 @@ vgui_parent_child_link::~vgui_parent_child_link()
   if (pimpl)
     pimpl->release();
 
-  pimpl = VXL_NULLPTR;
+  pimpl = nullptr;
 }
 
 vgui_parent_child_link &vgui_parent_child_link::operator=(vgui_parent_child_link const &that)
@@ -260,12 +262,12 @@ vgui_parent_child_link &vgui_parent_child_link::operator=(vgui_parent_child_link
 
 vgui_tableau_sptr vgui_parent_child_link::parent() const
 {
-  return pimpl ? pimpl->parent() : VXL_NULLPTR;
+  return pimpl ? pimpl->parent() : nullptr;
 }
 
 vgui_tableau_sptr vgui_parent_child_link::child()  const
 {
-  return pimpl ? pimpl->child () : VXL_NULLPTR;
+  return pimpl ? pimpl->child () : nullptr;
 }
 
 bool vgui_parent_child_link::operator==(vgui_tableau_sptr const &t) const
@@ -294,24 +296,24 @@ bool vgui_parent_child_link::handle(vgui_event const &e)
   return c->handle(e);
 }
 
-vgui_parent_child_link::operator vgui_parent_child_link::safe_bool() const
+vgui_parent_child_link::operator bool() const
 {
-  return (pimpl && (pimpl->child() != VXL_NULLPTR))? VCL_SAFE_BOOL_TRUE : VXL_NULLPTR;
+  return (pimpl && (pimpl->child() != nullptr))? true : false;
 }
 
 bool vgui_parent_child_link::operator!() const
 {
-  return (pimpl && (pimpl->child() != VXL_NULLPTR))? false : true;
+  return (pimpl && (pimpl->child() != nullptr))? false : true;
 }
 
 vgui_parent_child_link::operator vgui_tableau_sptr() const
 {
-  return pimpl ? pimpl->child() : VXL_NULLPTR;
+  return pimpl ? pimpl->child() : nullptr;
 }
 
 vgui_tableau *vgui_parent_child_link::operator->() const
 {
-  return pimpl ? pimpl->child() : VXL_NULLPTR;
+  return pimpl ? pimpl->child() : nullptr;
 }
 
 std::ostream & operator<<(std::ostream &os, vgui_parent_child_link const &s)

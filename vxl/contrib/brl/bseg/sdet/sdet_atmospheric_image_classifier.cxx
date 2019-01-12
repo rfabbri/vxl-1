@@ -4,15 +4,16 @@
 #include <vnl/vnl_numeric_traits.h>
 #include <vul/vul_timer.h>
 #include <vbl/io/vbl_io_smart_ptr.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vil/vil_load.h>
 // test if a given texture category is an atmospheric effect
 bool sdet_atmospheric_image_classifier::atmos_cat(std::string const& cat)
 {
-  for (std::vector<std::string>::iterator cit = atmos_categories_.begin();
-       cit != atmos_categories_.end(); ++cit)
-    if (cat == *cit)
+  for (auto & atmos_categorie : atmos_categories_)
+    if (cat == atmos_categorie)
       return true;
   return false;
 }
@@ -31,7 +32,7 @@ category_quality_color_mix(std::map<std::string, float>& probs,
                            vnl_vector_fixed<float, 3>& color_mix)
 {
   //start with max prob color
-  std::map<std::string, std::vector<float> >::iterator hit = category_histograms_.begin();
+  auto hit = category_histograms_.begin();
   // accumulate p_atmos, p_no_atmos, and p_haze
   float atmos_sum = 0.0f;
   float no_atmos_sum = 0.0f;
@@ -179,8 +180,8 @@ sdet_atmospheric_image_classifier::classify_image_blocks_qual2(vil_image_view<fl
   unsigned block_area = block_size_*block_size_;
   float weight = 1.0f/static_cast<float>(block_area);
 
-  for (std::map<std::string, unsigned char>::iterator iter = cat_id_map.begin(); iter != cat_id_map.end(); iter++)
-    cat_percentage_map[iter->first] = 0.0f;
+  for (auto & iter : cat_id_map)
+    cat_percentage_map[iter.first] = 0.0f;
 
   int max_j = margin > block_size_ ? nj-margin : nj-block_size_;
   int max_i = margin > block_size_ ? ni-margin : ni-block_size_;
@@ -214,9 +215,9 @@ sdet_atmospheric_image_classifier::classify_image_blocks_qual2(vil_image_view<fl
     }
     std::cout << j << "," << std::flush;
   }
-  for (std::map<std::string, float>::iterator iter = cat_percentage_map.begin(); iter != cat_percentage_map.end(); iter++) {
-    iter->second /= pix_count;
-    iter->second *= 100.0;
+  for (auto & iter : cat_percentage_map) {
+    iter.second /= pix_count;
+    iter.second *= 100.0;
   }
 
   return prob;

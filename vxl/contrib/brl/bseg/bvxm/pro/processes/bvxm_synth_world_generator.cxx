@@ -3,8 +3,10 @@
 #include "bvxm_synth_world_generator.h"
 //
 #include <vul/vul_file.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 // Default constructor
 bvxm_synth_world_generator::bvxm_synth_world_generator()
@@ -47,7 +49,7 @@ int bvxm_synth_world_generator::on_box_surface(vgl_box_3d<double> box, vgl_point
 {
   // create a box a size smaller
   vgl_box_3d<double> in_box;
-  const int thickness = 1;
+  constexpr int thickness = 1;
   in_box.set_min_point(vgl_point_3d<double>(box.min_x()+thickness, box.min_y()+thickness, box.min_z()+thickness));
   in_box.set_max_point(vgl_point_3d<double>(box.max_x()-thickness, box.max_y()-thickness, box.max_z()-thickness));
 
@@ -142,25 +144,23 @@ bvxm_synth_world_generator::generate_cameras_z(vgl_box_3d<double>& world)
   for (unsigned i=0; i<11; i++) {
     x = camera_dist*std::cos(alpha);
     z = camera_dist*std::sin(alpha);
-    centers.push_back(vgl_point_3d<double> (centroid.x()+x, centroid.y(), centroid.z()+z));
+    centers.emplace_back(centroid.x()+x, centroid.y(), centroid.z()+z);
     std::cout << centers[i] << std::endl;
     alpha += delta_alpha;
   }
 
   vgl_box_2d<double> bb;
   std::vector<vpgl_camera_double_sptr> rat_cameras;
-  for (unsigned i=0; i<centers.size(); i++)
+  for (auto camera_center : centers)
   {
-    vgl_point_3d<double> camera_center  = centers[i];
     vpgl_perspective_camera<double> persp_cam;
     generate_persp_camera(focal_length,principal_point, x_scale, y_scale, camera_center, persp_cam);
     persp_cam.look_at(vgl_homg_point_3d<double>(centroid));
     vpgl_rational_camera<double>* rat_cam = new vpgl_rational_camera<double>(perspective_to_rational(persp_cam));
-    rat_cameras.push_back(rat_cam);
+    rat_cameras.emplace_back(rat_cam);
 
     std::vector<vgl_point_3d<double> > corners = bvxm_util::corners_of_box_3d(world);
-    for (unsigned i=0; i<corners.size(); i++) {
-      vgl_point_3d<double> c = corners[i];
+    for (auto c : corners) {
       double u,v, u2, v2;
       persp_cam.project(c.x(), c.y() ,c.z(), u, v);
       rat_cam->project(c.x(), c.y() ,c.z(), u2, v2);
@@ -192,7 +192,7 @@ bvxm_synth_world_generator::generate_cameras_yz(vgl_box_3d<double>& world)
   for (unsigned i=0; i<num_train_images_; i++) {
     x = camera_dist*std::cos(alpha);
     y = camera_dist*std::sin(alpha);
-    centers.push_back(vgl_point_3d<double> (x+centroid.x(), y+centroid.y(), 450+centroid.z()));
+    centers.emplace_back(x+centroid.x(), y+centroid.y(), 450+centroid.z());
   if (verbose)
     std::cout << centers[i] << std::endl;
 
@@ -218,8 +218,7 @@ bvxm_synth_world_generator::generate_cameras_yz(vgl_box_3d<double>& world)
 
     if (verbose) {
       std::vector<vgl_point_3d<double> > corners = bvxm_util::corners_of_box_3d<double>(world);
-      for (unsigned i=0; i<corners.size(); i++) {
-        vgl_point_3d<double> c = corners[i];
+      for (auto c : corners) {
         double u,v;
         persp_cam.project(c.x(), c.y() ,c.z(), u, v);
         bb.add(vgl_point_2d<double> (u,v));
@@ -232,9 +231,9 @@ bvxm_synth_world_generator::generate_cameras_yz(vgl_box_3d<double>& world)
 }
 
 bool bvxm_synth_world_generator::update(vgl_vector_3d<unsigned> grid_size,
-                                        bvxm_voxel_world_sptr world,
+                                        const bvxm_voxel_world_sptr& world,
                                         bvxm_voxel_grid<float>* intensity_grid,
-                                        bvxm_voxel_grid<float>* ocp_grid, // FIXME - unused parameter
+                                        bvxm_voxel_grid<float>*  /*ocp_grid*/, // FIXME - unused parameter
                                         bvxm_voxel_grid<apm_datatype>* apm_grid,
                                         std::vector<vpgl_camera_double_sptr>& cameras,
                                         std::vector <vil_image_view_base_sptr>& image_set,
@@ -246,7 +245,7 @@ bool bvxm_synth_world_generator::update(vgl_vector_3d<unsigned> grid_size,
   bvxm_voxel_grid<apm_datatype>::iterator apm_slab_it;
   bvxm_voxel_grid<float>::iterator obs_it = intensity_grid->begin();
   //slab thickness is 1
-  bvxm_voxel_slab<float>* weight = new bvxm_voxel_slab<float>(grid_size.x(),grid_size.y(),1);
+  auto* weight = new bvxm_voxel_slab<float>(grid_size.x(),grid_size.y(),1);
   weight->fill(1);
 
   for (apm_slab_it = apm_grid->begin(); apm_slab_it != apm_grid->end(); ++apm_slab_it,++obs_it) {
@@ -259,7 +258,7 @@ bool bvxm_synth_world_generator::update(vgl_vector_3d<unsigned> grid_size,
   if (gen_images_) {
     for (unsigned i=0; i<cameras.size(); i++) {
       vil_image_view_base_sptr img_arg;
-      vil_image_view<float>* mask = new vil_image_view<float>(IMAGE_U, IMAGE_V);
+      auto* mask = new vil_image_view<float>(IMAGE_U, IMAGE_V);
       vil_image_view_base_sptr expected = new vil_image_view<unsigned char>(IMAGE_U, IMAGE_V);
       bvxm_image_metadata camera(img_arg, cameras[i]);
 
@@ -498,14 +497,13 @@ void bvxm_synth_world_generator::gen_voxel_world_plane(vgl_vector_3d<unsigned> /
 
 bool
 bvxm_synth_world_generator::gen_lidar_2box(vgl_vector_3d<unsigned> grid_size,
-                                           bvxm_voxel_world_sptr /*world*/)
+                                           const bvxm_voxel_world_sptr& /*world*/)
 {
   vil_image_view<unsigned char> lidar(grid_size.x(), grid_size.y());
   lidar.fill((unsigned char)0);
 
   // Generate the bottom one
-  for (unsigned int b=0; b<boxes_vector.size(); b++) {
-    vgl_box_3d<double> box = boxes_vector[b];
+  for (auto box : boxes_vector) {
     double z = box.max_z();
 
     for (unsigned i=0; i<grid_size.x(); i++)
@@ -554,7 +552,7 @@ bvxm_voxel_world_sptr bvxm_synth_world_generator::generate_world()
 
   bvxm_voxel_grid_base_sptr apm_grid_base = world->get_grid<APM_MOG_GREY>(bin,scale);
 
-  bvxm_voxel_grid<apm_datatype> *apm_grid = static_cast<bvxm_voxel_grid<apm_datatype>*>(apm_grid_base.ptr());
+  auto *apm_grid = static_cast<bvxm_voxel_grid<apm_datatype>*>(apm_grid_base.ptr());
 
   bvxm_voxel_grid<float>* intensity_grid = new bvxm_voxel_grid<float>
       (world_dir_ + "/intensity.vox",grid_size);
@@ -571,4 +569,3 @@ bvxm_voxel_world_sptr bvxm_synth_world_generator::generate_world()
 
   return world;
 }
-

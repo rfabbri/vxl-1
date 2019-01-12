@@ -21,8 +21,10 @@
 #include <bmsh3d/algo/bmsh3d_fileio.h>
 #include <boct/boct_bit_tree.h>
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 
 
@@ -37,7 +39,7 @@ void readPointsFromXYZ(const std::string& filename, std::vector<vgl_point_3d<dou
           std::istringstream iss(line);
           vnl_vector<double> x;
           iss>>x;
-          pts.push_back(vgl_point_3d<double>(x[0],x[1],x[2]) );
+          pts.emplace_back(x[0],x[1],x[2] );
       }
       ifile.close();
   }
@@ -50,8 +52,8 @@ void readPointsFromXYZ(const std::string& filename, std::vector<vgl_point_3d<dou
 
 namespace boxm2_import_point_cloud_process_globals
 {
-  const unsigned n_inputs_ = 4;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 4;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool boxm2_import_point_cloud_process_cons(bprb_func_process& pro)
@@ -93,9 +95,9 @@ bool boxm2_import_point_cloud_process(bprb_func_process& pro)
   readPointsFromXYZ(input_mesh_filename, all_points);
   vgl_point_3d<double> local;
   boxm2_block_id id;
-  for (unsigned  i = 0; i < all_points.size(); i++) {
-    if (!scene->contains(all_points[i], id, local)) {
-      std::cout << "ERROR: point: " << all_points[i] << " isn't in scene. Exiting...." << std::endl;
+  for (const auto & all_point : all_points) {
+    if (!scene->contains(all_point, id, local)) {
+      std::cout << "ERROR: point: " << all_point << " isn't in scene. Exiting...." << std::endl;
       return false;
     }
     else
@@ -112,7 +114,7 @@ bool boxm2_import_point_cloud_process(bprb_func_process& pro)
       if(depth >= (int)min_depth )
       {
         int data_offset=tree.get_data_index(bit_index,false);
-        boxm2_data_base *  alpha_base  = cache->get_data_base(scene,id,boxm2_data_traits<BOXM2_ALPHA>::prefix());
+        boxm2_data_base *  alpha_base = cache->get_data_base(scene,id,boxm2_data_traits<BOXM2_ALPHA>::prefix());
         alpha_base->enable_write();
         boxm2_data<BOXM2_ALPHA> *alpha_data=new boxm2_data<BOXM2_ALPHA>(alpha_base->data_buffer(),alpha_base->buffer_length(),alpha_base->block_id());
         double side_len = 1.0 / (double) (1 << depth);

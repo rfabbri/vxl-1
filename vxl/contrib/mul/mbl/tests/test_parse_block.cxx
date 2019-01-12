@@ -1,7 +1,9 @@
 // This is mul/mbl/tests/test_parse_block.cxx
 #include <iostream>
 #include <sstream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <mbl/mbl_parse_block.h>
 #include <testlib/testlib_test.h>
@@ -12,7 +14,6 @@ void test_parse_block()
            <<   " Testing mbl_parse_block\n"
            <<   "*************************\n";
 
-#if VCL_HAS_WORKING_STRINGSTREAM
   {
     std::istringstream ss("{}");
     TEST("Trivial case 1", mbl_parse_block(ss) == "{}" && !ss.fail(), true);
@@ -58,9 +59,6 @@ void test_parse_block()
   }
 
   std::cout << "\n\n";
-#else // VCL_HAS_WORKING_STRINGSTREAM
-  std::cout << "\nTests not run since this compiler has no fully functional std:stringstream\n\n";
-#endif // VCL_HAS_WORKING_STRINGSTREAM
 }
 
 TESTMAIN(test_parse_block);

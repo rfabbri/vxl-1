@@ -1,9 +1,6 @@
 // This is core/vil/vil_new.h
 #ifndef vil_new_h_
 #define vil_new_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Make a new image.
@@ -29,6 +26,7 @@
 #include <vil/vil_pyramid_image_resource.h>
 #include <vil/vil_image_view.h>
 #include <vxl_config.h>
+#include <vcl_compiler_detection.h>
 
 //: Make a new image of given format.
 // If the format is not scalar, the number of planes must be 1. When you create
@@ -68,7 +66,7 @@ vil_image_resource_sptr vil_new_image_resource(vil_stream* os,
                                                unsigned ni, unsigned nj,
                                                unsigned nplanes,
                                                vil_pixel_format format,
-                                               char const* file_format = VXL_NULLPTR);
+                                               char const* file_format = nullptr);
 
 //: Make a new image.
 // \relatesalso vil_image_resource
@@ -76,7 +74,7 @@ vil_image_resource_sptr vil_new_image_resource(char const* filename,
                                                unsigned ni, unsigned nj,
                                                unsigned nplanes,
                                                vil_pixel_format format,
-                                               char const* file_format = VXL_NULLPTR);
+                                               char const* file_format = nullptr);
 
 //: Make a new vil_image_resource, writing to file "filename", size ni x nj, copying pixel format etc from "prototype".
 // \relatesalso vil_image_resource
@@ -84,7 +82,7 @@ vil_image_resource_sptr vil_new_image_resource(char const* filename,
                                                unsigned ni, unsigned nj,
                                                unsigned nplanes,
                                                vil_image_resource_sptr const &prototype,
-                                               char const* format = VXL_NULLPTR);
+                                               char const* format = nullptr);
 
 //: Make a new vil_image_resource, writing to stream "os", size ni x nj, copying pixel format etc from "prototype".
 // \relatesalso vil_image_resource
@@ -92,20 +90,20 @@ vil_image_resource_sptr vil_new_image_resource(vil_stream* os,
                                                unsigned ni, unsigned nj,
                                                unsigned nplanes,
                                                vil_image_resource_sptr const& prototype,
-                                               char const* file_format = VXL_NULLPTR);
+                                               char const* file_format = nullptr);
 //: Make a new blocked resource file
 vil_blocked_image_resource_sptr
 vil_new_blocked_image_resource(vil_stream* os, unsigned ni, unsigned nj,
                                unsigned nplanes, vil_pixel_format format,
                                unsigned size_block_i, unsigned size_block_j,
-                               char const* file_format = VXL_NULLPTR);
+                               char const* file_format = nullptr);
 
 //: Make a new blocked resource file
 vil_blocked_image_resource_sptr
 vil_new_blocked_image_resource(char const* filename, unsigned ni, unsigned nj,
                                unsigned nplanes, vil_pixel_format format,
                                unsigned size_block_i, unsigned size_block_j,
-                               char const* file_format = VXL_NULLPTR);
+                               char const* file_format = nullptr);
 
 //: create a blocked interface around any image resource
 // For zero size blocks, appropriate default blocking is created
@@ -207,7 +205,7 @@ vil_image_view<T> vil_new_image_view_i_j_plane(unsigned ni, unsigned nj, unsigne
 vil_image_view_base_sptr vil_new_image_view_base_sptr(const vil_image_view_base&);
 
 
-#if defined(VCL_WIN32) && VXL_USE_WIN_WCHAR_T
+#if defined(_WIN32) && VXL_USE_WIN_WCHAR_T
 //: Make a new image.
 // \relatesalso vil_image_resource
 vil_image_resource_sptr vil_new_image_resource(vil_stream* os,
@@ -231,7 +229,7 @@ vil_image_resource_sptr vil_new_image_resource(wchar_t const* filename,
                                                vil_image_resource_sptr const &prototype,
                                                wchar_t const* format = 0);
 
-#endif //defined(VCL_WIN32) && VXL_USE_WIN_WCHAR_T
+#endif //defined(_WIN32) && VXL_USE_WIN_WCHAR_T
 
 
 #endif // vil_new_h_

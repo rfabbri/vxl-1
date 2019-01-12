@@ -3,11 +3,13 @@
 
 #include <vector>
 #include <iostream>
-#include <vcl_memory.h>
+#include <memory>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <mvl/PairMatchSetCorner.h>
 #include <mvl/FMatrix.h>
 #include <mvl/HMatrix2D.h>
-#include <vcl_compiler.h>
 
 class ComputeGRIC
 {
@@ -37,8 +39,8 @@ class ComputeGRIC
 
  protected:
   double std_;
-  vcl_unique_ptr<FMatrix> F_;
-  vcl_unique_ptr<HMatrix2D> H_;
+  std::unique_ptr<FMatrix> F_;
+  std::unique_ptr<HMatrix2D> H_;
   std::vector<double> residualsF_;
   std::vector<double> residualsH_;
   std::vector<bool> inliersF_;

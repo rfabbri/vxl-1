@@ -18,8 +18,10 @@
 #include <volm/conf/volm_conf_2d_indexer.h>
 #include <volm/conf/volm_conf_indexer.h>
 
-static void error(std::string log_file, std::string msg)
-{  std::cerr << msg;  volm_io::write_post_processing_log(log_file, msg);  }
+#include <utility>
+
+static void error(std::string log_file, const std::string& msg)
+{  std::cerr << msg;  volm_io::write_post_processing_log(std::move(log_file), msg);  }
 
 int main(int argc, char** argv)
 {
@@ -55,8 +57,8 @@ int main(int argc, char** argv)
   std::cout << "\t create index from leaf " << min_leaf_id() << " to " << max_leaf_id() << std::endl;
 
   unsigned num_locs = 0;
-  for (unsigned i = 0; i < indexer->loc_leaves().size(); i++)
-    num_locs += indexer->loc_leaves()[i]->hyps_->locs_.size();
+  for (auto & i : indexer->loc_leaves())
+    num_locs += i->hyps_->locs_.size();
 
   vul_timer t;
   if (!indexer->index(buffer_capacity(), min_leaf_id(), max_leaf_id()))

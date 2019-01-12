@@ -3,11 +3,14 @@
 #define bpgl_segmented_rolling_shutter_camera_hxx_
 //:
 // \file
+#include <utility>
 #include <vector>
 #include <iostream>
 #include <fstream>
 #include "bpgl_segmented_rolling_shutter_camera.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_point_3d.h>
 //--------------------------------------
@@ -25,7 +28,7 @@ bpgl_segmented_rolling_shutter_camera<T>::bpgl_segmented_rolling_shutter_camera(
 //: Constructor from a rational camera and an affine matrix
 template <class T>
 bpgl_segmented_rolling_shutter_camera<T>::bpgl_segmented_rolling_shutter_camera(maptype camera_segments):
-cam_map_(camera_segments)
+cam_map_(std::move(camera_segments))
 {
 }
 

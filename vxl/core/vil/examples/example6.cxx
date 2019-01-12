@@ -4,8 +4,10 @@
 // \author Tim Cootes - Manchester
 
 #include <iostream>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vxl_config.h> // for vxl_byte
 #include <vil/vil_rgb.h>
 #include <vil/vil_image_view.h>

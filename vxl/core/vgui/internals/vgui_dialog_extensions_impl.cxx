@@ -1,7 +1,4 @@
 // This is core/vgui/internals/vgui_dialog_extensions_impl.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Gamze Tunali, LEMS, Brown University
@@ -40,5 +37,4 @@ void vgui_dialog_extensions_impl::line_break()
   elements.push_back(l);
 }
 
-void* vgui_dialog_extensions_impl::dir_browser_widget(const char*, std::string&, std::string&) { return VXL_NULLPTR; }
-
+void* vgui_dialog_extensions_impl::dir_browser_widget(const char*, std::string&, std::string&) { return nullptr; }

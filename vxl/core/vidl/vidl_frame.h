@@ -1,9 +1,6 @@
 // This is core/vidl/vidl_frame.h
 #ifndef vidl_frame_h_
 #define vidl_frame_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief A ref counted video frame
@@ -27,7 +24,7 @@ class VIDL_EXPORT vidl_frame
 {
   public:
     //: Destructor
-    virtual ~vidl_frame() {}
+    virtual ~vidl_frame() = default;
 
     //: Make the buffer invalid (data()==0 and size()==0)
     virtual void invalidate() { ni_=0; nj_=0; format_=VIDL_PIXEL_FORMAT_UNKNOWN; }
@@ -88,24 +85,24 @@ class VIDL_EXPORT vidl_shared_frame : public vidl_frame
   public:
     //: Constructor
     vidl_shared_frame():
-      vidl_frame(), buffer_(VXL_NULLPTR) {}
+      vidl_frame(), buffer_(nullptr) {}
 
     //: Constructor
     vidl_shared_frame(void * buffer, unsigned ni, unsigned nj, vidl_pixel_format fmt):
       vidl_frame(ni,nj,fmt), buffer_(buffer) {}
 
     //: Destructor
-    virtual ~vidl_shared_frame() {}
+    ~vidl_shared_frame() override = default;
 
     //: Make the buffer invalid (data()==0 and size()==0)
-    virtual void invalidate() { buffer_ = VXL_NULLPTR; vidl_frame::invalidate(); }
+    void invalidate() override { buffer_ = nullptr; vidl_frame::invalidate(); }
 
     //: Return a pointer to the first element of data
-    virtual void * data() { return buffer_; }
-    virtual const void * data() const { return buffer_; }
+    void * data() override { return buffer_; }
+    const void * data() const override { return buffer_; }
 
     //: The size of the buffer in bytes
-    virtual unsigned long size() const { return vidl_pixel_format_buffer_size(ni_,nj_,format_); }
+    unsigned long size() const override { return vidl_pixel_format_buffer_size(ni_,nj_,format_); }
 
   private:
     void * buffer_;
@@ -118,7 +115,7 @@ class VIDL_EXPORT vidl_memory_chunk_frame : public vidl_frame
 {
   public:
     //: Constructor
-    vidl_memory_chunk_frame() : memory_(VXL_NULLPTR) {}
+    vidl_memory_chunk_frame() : memory_(nullptr) {}
 
     //: Constructor - from a vil_memory_chunk_sptr
     vidl_memory_chunk_frame(unsigned ni, unsigned nj, vidl_pixel_format fmt,
@@ -136,17 +133,17 @@ class VIDL_EXPORT vidl_memory_chunk_frame : public vidl_frame
     inline const vil_memory_chunk_sptr& memory_chunk() const { return memory_; }
 
     //: Destructor
-    virtual ~vidl_memory_chunk_frame() {}
+    ~vidl_memory_chunk_frame() override = default;
 
     //: Make the buffer invalid (data()==0 and size()==0)
-    virtual void invalidate() { memory_ = VXL_NULLPTR;  vidl_frame::invalidate(); }
+    void invalidate() override { memory_ = nullptr;  vidl_frame::invalidate(); }
 
     //: Return a pointer to the first element of data
-    virtual void * data () { return memory_?memory_->data():VXL_NULLPTR; }
-    virtual const void * data () const { return memory_?memory_->data():VXL_NULLPTR; }
+    void * data () override { return memory_?memory_->data():nullptr; }
+    const void * data () const override { return memory_?memory_->data():nullptr; }
 
     //: The size of the buffer in bytes
-    virtual unsigned long size() const { return (unsigned long)(memory_?memory_->size():0L); }
+    unsigned long size() const override { return (unsigned long)(memory_?memory_->size():0L); }
 
   private:
     vil_memory_chunk_sptr memory_;

@@ -23,11 +23,11 @@ class rgrl_invariant_match
 {
  public:
   //: Constructor
-  rgrl_invariant_match(rgrl_invariant_sptr from,
-                       rgrl_invariant_sptr to);
+  rgrl_invariant_match(const rgrl_invariant_sptr& from,
+                       const rgrl_invariant_sptr& to);
 
   //: Destructor
-  ~rgrl_invariant_match(){}
+  ~rgrl_invariant_match() override = default;
 
   //: Returns a smart pointer to the "from" invariant
   rgrl_invariant_sptr from() const {return from_;}

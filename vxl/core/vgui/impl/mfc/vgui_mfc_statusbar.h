@@ -1,9 +1,6 @@
 // This is core/vgui/impl/mfc/vgui_mfc_statusbar.h
 #ifndef vgui_mfc_statusbar_h_
 #define vgui_mfc_statusbar_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief    The MFC implementation of vgui_statusbar.
@@ -19,7 +16,9 @@
 
 #include <string>
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgui/vgui_statusbuf.h>
 #include <vgui/vgui_statusbar.h>
 #include "StdAfx.h"

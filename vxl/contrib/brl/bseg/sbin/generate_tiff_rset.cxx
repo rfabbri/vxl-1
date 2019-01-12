@@ -1,7 +1,9 @@
 #include <string>
 #include <iostream>
 #include <cstdlib>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_file.h>
 #include <vil/vil_load.h>
 #include <vil/vil_image_resource.h>
@@ -15,7 +17,7 @@ static bool generate_rset(std::string const& dirpath,
 {
   std::string slash;
   //generate the temporary dir
-#ifdef VCL_WIN32
+#ifdef _WIN32
   slash =  "\\";
 #else
   slash = "/";

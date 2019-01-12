@@ -53,7 +53,9 @@
 #error Your system does not support POSIX asynchronous I/O
 #endif
 #include <aio.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class AsyncIO_Shared_State
 {
@@ -104,4 +106,3 @@ class AsyncIO : protected AsyncIO_Shared_State
 };
 
 #endif // OTAGO_Asyncio_IO__h_INCLUDED
-

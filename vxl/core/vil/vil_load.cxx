@@ -1,13 +1,12 @@
 // This is core/vil/vil_load.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 
 #include <iostream>
 #include "vil_load.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_open.h>
 #include <vil/vil_new.h>
 #include <vil/vil_file_format.h>
@@ -21,12 +20,12 @@ vil_image_resource_sptr vil_load_image_resource_raw(vil_stream *is,
                                                     bool verbose)
 {
   std::list<vil_file_format*>& l = vil_file_format::all();
-  for (vil_file_format::iterator p = l.begin(); p != l.end(); ++p) {
+  for (auto & p : l) {
 #if 0 // debugging
     std::cerr << __FILE__ " : trying \'" << (*p)->tag() << "\'\n";
 #endif
     is->seek(0);
-    vil_image_resource_sptr im = (*p)->make_input_image(is);
+    vil_image_resource_sptr im = p->make_input_image(is);
     if (im)
       return im;
   }
@@ -34,24 +33,23 @@ vil_image_resource_sptr vil_load_image_resource_raw(vil_stream *is,
   // failed.
   if (verbose) {
     std::cerr << __FILE__ ": Unable to load image;\ntried";
-    for (vil_file_format::iterator p = l.begin(); p != l.end(); ++p)
+    for (auto & p : l)
       // 'flush' in case of segfault next time through loop. Else, we
       // will not see those printed tags still in the stream buffer.
-      std::cerr << " \'" << (*p)->tag() << "\'" << std::flush;
+      std::cerr << " \'" << p->tag() << "\'" << std::flush;
     std::cerr << std::endl;
   }
 
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 vil_image_resource_sptr vil_load_image_resource_raw(char const* filename,
                                                     bool verbose)
 {
   vil_smart_ptr<vil_stream> is = vil_open(filename, "r");
-  vil_image_resource_sptr isp = VXL_NULLPTR;
+  vil_image_resource_sptr isp = nullptr;
   if (is)
   {
-#ifdef VCL_HAS_EXCEPTIONS
     try
     {
       isp = vil_load_image_resource_raw(is.as_pointer(), verbose);
@@ -60,9 +58,6 @@ vil_image_resource_sptr vil_load_image_resource_raw(char const* filename,
     {
       throw vil_exception_corrupt_image_file(e.function_name, e.file_type, filename, e.details);
     }
-#else
-    isp = vil_load_image_resource_raw(is.as_pointer(), verbose);
-#endif
   }
 
   if (!isp && verbose)
@@ -98,14 +93,14 @@ vil_image_resource_sptr vil_load_image_resource_plugin(char const* filename)
         return im;
     }
   }
-  return vil_image_resource_sptr(VXL_NULLPTR);
+  return vil_image_resource_sptr(nullptr);
 }
 
 vil_pyramid_image_resource_sptr
 vil_load_pyramid_resource(char const* directory_or_file, bool verbose)
 {
   std::list<vil_file_format*>& l = vil_file_format::all();
-  for (vil_file_format::iterator p = l.begin(); p != l.end(); ++p) {
+  for (auto & p : l) {
 #if 0 // debugging
     std::cerr << __FILE__ " : trying \'" << (*p)->tag() << "\'\n";
 
@@ -113,32 +108,32 @@ vil_load_pyramid_resource(char const* directory_or_file, bool verbose)
     std::cerr << "make_input_pyramid_image(" << directory_or_file << ")\n";
 #endif
     vil_pyramid_image_resource_sptr pir =
-      (*p)->make_input_pyramid_image(directory_or_file);
+      p->make_input_pyramid_image(directory_or_file);
     if (pir)
       return pir;
   }
   // failed.
   if (verbose) {
     std::cerr << __FILE__ ": Unable to load pyramid image;\ntried";
-    for (vil_file_format::iterator p = l.begin(); p != l.end(); ++p)
+    for (auto & p : l)
       // 'flush' in case of segfault next time through loop. Else, we
       // will not see those printed tags still in the stream buffer.
-      std::cerr << " \'" << (*p)->tag() << "\'" << std::flush;
+      std::cerr << " \'" << p->tag() << "\'" << std::flush;
     std::cerr << std::endl;
   }
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 //: Convenience function for loading an image into an image view.
 vil_image_view_base_sptr vil_load(const char *file, bool verbose)
 {
   vil_image_resource_sptr data = vil_load_image_resource(file, verbose);
-  if (!data) return VXL_NULLPTR;
+  if (!data) return nullptr;
   return data -> get_view();
 }
 
 
-#if defined(VCL_WIN32) && VXL_USE_WIN_WCHAR_T
+#if defined(_WIN32) && VXL_USE_WIN_WCHAR_T
 //  --------------------------------------------------------------------------------
 //  Windows' wchar_t overloading version
 //
@@ -172,4 +167,4 @@ vil_image_view_base_sptr vil_load(const wchar_t *file, bool verbose)
   return data -> get_view();
 }
 
-#endif //defined(VCL_WIN32) && VXL_USE_WIN_WCHAR_T
+#endif //defined(_WIN32) && VXL_USE_WIN_WCHAR_T

@@ -1,7 +1,4 @@
 // This is mul/vpdfl/vpdfl_gaussian_kernel_pdf_sampler.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Tim Cootes
@@ -9,7 +6,10 @@
 
 #include "vpdfl_gaussian_kernel_pdf_sampler.h"
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpdfl/vpdfl_gaussian_kernel_pdf.h>
 
 //=======================================================================
@@ -25,9 +25,7 @@ vpdfl_gaussian_kernel_pdf_sampler::vpdfl_gaussian_kernel_pdf_sampler():
 // Destructor
 //=======================================================================
 
-vpdfl_gaussian_kernel_pdf_sampler::~vpdfl_gaussian_kernel_pdf_sampler()
-{
-}
+vpdfl_gaussian_kernel_pdf_sampler::~vpdfl_gaussian_kernel_pdf_sampler() = default;
 
 
 //=======================================================================
@@ -77,7 +75,7 @@ void vpdfl_gaussian_kernel_pdf_sampler::set_model(const vpdfl_pdf_base& model)
 void vpdfl_gaussian_kernel_pdf_sampler::sample_component(vnl_vector<double>& x,
                                                          int j)
 {
-  const vpdfl_gaussian_kernel_pdf & kpdf = static_cast<const vpdfl_gaussian_kernel_pdf &>(model());
+  const auto & kpdf = static_cast<const vpdfl_gaussian_kernel_pdf &>(model());
 
   int n_dims = kpdf.n_dims();
   x.set_size(n_dims);
@@ -95,7 +93,7 @@ void vpdfl_gaussian_kernel_pdf_sampler::sample_component(vnl_vector<double>& x,
 
 void vpdfl_gaussian_kernel_pdf_sampler::sample(vnl_vector<double>& x)
 {
-  const vpdfl_gaussian_kernel_pdf & kpdf = static_cast<const vpdfl_gaussian_kernel_pdf &>(model());
+  const auto & kpdf = static_cast<const vpdfl_gaussian_kernel_pdf &>(model());
   int n = kpdf.centre().size();
 
   // Select component
@@ -110,7 +108,7 @@ void vpdfl_gaussian_kernel_pdf_sampler::sample(vnl_vector<double>& x)
 void vpdfl_gaussian_kernel_pdf_sampler::regular_samples(
                        std::vector<vnl_vector<double> >& x)
 {
-  const vpdfl_gaussian_kernel_pdf & kpdf = static_cast<const vpdfl_gaussian_kernel_pdf &>(model());
+  const auto & kpdf = static_cast<const vpdfl_gaussian_kernel_pdf &>(model());
   int n_k = kpdf.centre().size();
 
   int n_samples = x.size();
@@ -134,4 +132,3 @@ const vpdfl_gaussian_kernel_pdf& vpdfl_gaussian_kernel_pdf_sampler::gaussian_ker
 {
   return static_cast<const vpdfl_gaussian_kernel_pdf&>( model());
 }
-

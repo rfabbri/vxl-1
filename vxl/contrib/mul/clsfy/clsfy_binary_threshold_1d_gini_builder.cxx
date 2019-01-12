@@ -7,12 +7,14 @@
 // \file
 // \author Martin Roberts
 
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vsl/vsl_binary_loader.h>
 #include <vnl/vnl_double_2.h>
 #include <clsfy/clsfy_builder_1d.h>
 #include <clsfy/clsfy_binary_threshold_1d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 // Note this is used by clsfy_binary_tree_builder
 // Derived from clsfy_binary_threshold_1d_builder but uses a slightly different
@@ -21,15 +23,11 @@
 
 //=======================================================================
 
-clsfy_binary_threshold_1d_gini_builder::clsfy_binary_threshold_1d_gini_builder()
-{
-}
+clsfy_binary_threshold_1d_gini_builder::clsfy_binary_threshold_1d_gini_builder() = default;
 
 //=======================================================================
 
-clsfy_binary_threshold_1d_gini_builder::~clsfy_binary_threshold_1d_gini_builder()
-{
-}
+clsfy_binary_threshold_1d_gini_builder::~clsfy_binary_threshold_1d_gini_builder() = default;
 
 //=======================================================================
 
@@ -67,7 +65,7 @@ double clsfy_binary_threshold_1d_gini_builder::build_gini(clsfy_classifier_1d& c
     data.reserve(n);
 
     //First just create sorted data
-    std::vector<unsigned >::const_iterator classIter=outputs.begin();
+    auto classIter=outputs.begin();
     vnl_vector<double  >::const_iterator inputIter=inputs.begin();
     vnl_vector<double  >::const_iterator inputIterEnd=inputs.end();
     vbl_triple<double,int,int> t;
@@ -113,9 +111,9 @@ double clsfy_binary_threshold_1d_gini_builder::build_gini_from_sorted_data(
     }
 
     unsigned int ntot=data.size();
-    double dntot=double (ntot);
-    std::vector<vbl_triple<double,int,int> >::const_iterator dataIter=data.begin();
-    std::vector<vbl_triple<double,int,int> >::const_iterator dataIterEnd=data.end();
+    auto dntot=double (ntot);
+    auto dataIter=data.begin();
+    auto dataIterEnd=data.end();
     unsigned n0Tot=0;
     unsigned n1Tot=0;
     while (dataIter != dataIterEnd)
@@ -146,7 +144,7 @@ double clsfy_binary_threshold_1d_gini_builder::build_gini_from_sorted_data(
     while (dataIter != dataIterEnd)
     {
         s=dataIter->first;
-        std::vector<vbl_triple<double,int,int> >::const_iterator dataIterNext=dataIter;
+        auto dataIterNext=dataIter;
 
         //Increment till threshold increases (may have some same data values)
         while (dataIterNext != dataIterEnd && (dataIterNext->first-s)<epsilon)

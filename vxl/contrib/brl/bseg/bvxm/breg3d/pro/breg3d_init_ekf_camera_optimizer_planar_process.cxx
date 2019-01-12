@@ -23,7 +23,7 @@ breg3d_init_ekf_camera_optimizer_planar_process::breg3d_init_ekf_camera_optimize
   //input[1]: The first frame
   //input[2]: The second frame
   //input[3]: The voxel world
-  input_data_.resize(4,brdb_value_sptr(VXL_NULLPTR));
+  input_data_.resize(4,brdb_value_sptr(nullptr));
   input_types_.resize(4);
   input_types_[0] = "vpgl_camera_double_sptr";
   input_types_[1] = "vil_image_view_base_sptr";
@@ -34,7 +34,7 @@ breg3d_init_ekf_camera_optimizer_planar_process::breg3d_init_ekf_camera_optimize
   // output[0]: The initial state estimate for the kalman filter
   // output[1]: The second camera's estimated position
   // outputs[2-5]: The plane parameters a,b,c,d  (ax + by + cz + d = 0)
-  output_data_.resize(6,brdb_value_sptr(VXL_NULLPTR));
+  output_data_.resize(6,brdb_value_sptr(nullptr));
   output_types_.resize(6);
   output_types_[0] = "breg3d_ekf_camera_optimizer_state";
   output_types_[1] = "vpgl_camera_double_sptr";
@@ -64,16 +64,16 @@ bool breg3d_init_ekf_camera_optimizer_planar_process::execute()
   if (!this->verify_inputs())
     return false;
 
-  brdb_value_t<vpgl_camera_double_sptr>* input0 =
+  auto* input0 =
     static_cast<brdb_value_t<vpgl_camera_double_sptr>* >(input_data_[0].ptr());
 
-  brdb_value_t<vil_image_view_base_sptr>* input1 =
+  auto* input1 =
     static_cast<brdb_value_t<vil_image_view_base_sptr>* >(input_data_[1].ptr());
 
-  brdb_value_t<vil_image_view_base_sptr>* input2 =
+  auto* input2 =
     static_cast<brdb_value_t<vil_image_view_base_sptr>* >(input_data_[2].ptr());
 
-  brdb_value_t<bvxm_voxel_world_sptr>* input3 =
+  auto* input3 =
     static_cast<brdb_value_t<bvxm_voxel_world_sptr>* >(input_data_[3].ptr());
 
   // get first camera
@@ -110,8 +110,8 @@ bool breg3d_init_ekf_camera_optimizer_planar_process::execute()
   float dummy = 0.0f;
   vil_image_view_base_sptr img0_float_sptr = vil_convert_cast(dummy,img0);
   vil_image_view_base_sptr img1_float_sptr = vil_convert_cast(dummy,img1);
-  vil_image_view<float>* img0_float = dynamic_cast<vil_image_view<float>*>(img0_float_sptr.ptr());
-  vil_image_view<float>* img1_float = dynamic_cast<vil_image_view<float>*>(img1_float_sptr.ptr());
+  auto* img0_float = dynamic_cast<vil_image_view<float>*>(img0_float_sptr.ptr());
+  auto* img1_float = dynamic_cast<vil_image_view<float>*>(img1_float_sptr.ptr());
 
   h_gen->set_image0(img0_float);
   h_gen->set_image1(img1_float);
@@ -120,7 +120,7 @@ bool breg3d_init_ekf_camera_optimizer_planar_process::execute()
   std::cout << "H =\n" << H.get_matrix() << std::endl;
 
   // TEMP
-  vpgl_perspective_camera<double> *cam1 = new vpgl_perspective_camera<double>(cam0->get_calibration(),cam0->get_camera_center(),cam0->get_rotation());
+  auto *cam1 = new vpgl_perspective_camera<double>(cam0->get_calibration(),cam0->get_camera_center(),cam0->get_rotation());
 
   // compute position of plane and camera1
   vgl_plane_3d<double> plane_est = vox_world->fit_plane();
@@ -156,4 +156,3 @@ bool breg3d_init_ekf_camera_optimizer_planar_process::execute()
 
   return true;
 }
-

@@ -16,15 +16,16 @@
 //
 //-------------------------------------------------------------------------
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_printf.h>
 
 bool bmsh3d_bnd_chain::is_V_incident_via_HE (const bmsh3d_vertex* V)
 {
   //Loop through all halfedges and check if V is on the bnd_chain.
-  for (unsigned int i=0; i<HE_list_.size(); i++) {
-    bmsh3d_halfedge* he = HE_list_[i];
+  for (auto he : HE_list_) {
     if (he->edge()->is_V_incident (V))
       return true;
   }
@@ -53,7 +54,7 @@ void bmsh3d_bnd_chain::trace_polyline (std::vector<vgl_point_3d<double> >& polyl
   Vo = HE0->edge()->other_V (V);
   polyline_vertices.push_back (Vo->pt());
 
-  std::vector<bmsh3d_halfedge*>::iterator it = HE_list_.begin();
+  auto it = HE_list_.begin();
   for (; it != HE_list_.end(); ) {
     HE0 = *it;
     HE1 = *++it;
@@ -97,7 +98,7 @@ void bmsh3d_bnd_chain_set::detect_bnd_chains ()
   mesh_->reset_traverse_f ();
 
   //Loop through all mesh faces and trace mesh boundary edges.
-  std::map<int, bmsh3d_face*>::iterator it = mesh_->facemap().begin();
+  auto it = mesh_->facemap().begin();
   for (; it != mesh_->facemap().end(); it++) {
     bmsh3d_face* F = (*it).second;
     if (F->b_visited())
@@ -132,7 +133,7 @@ void bmsh3d_bnd_chain_set::detect_bnd_chains ()
 //: remove bnd_chain larger than n edges.
 void bmsh3d_bnd_chain_set::remove_large_bnd_chain (unsigned int th)
 {
-  std::vector<bmsh3d_bnd_chain*>::iterator it = chainset_.begin();
+  auto it = chainset_.begin();
   while (it != chainset_.end()) {
     bmsh3d_bnd_chain* BC = (*it);
     if (BC->num_edges() <= th) {
@@ -145,7 +146,7 @@ void bmsh3d_bnd_chain_set::remove_large_bnd_chain (unsigned int th)
         it = chainset_.begin();
       }
       else {
-        std::vector<bmsh3d_bnd_chain*>::iterator next = it;
+        auto next = it;
         next--;
         chainset_.erase (it);
         it = ++next;

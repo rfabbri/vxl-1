@@ -19,7 +19,9 @@
 #include <vector>
 #include <iostream>
 #include <map>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_array_2d.h>
 #include <vil1/vil1_memory_image_of.h>
 #include <vil1/vil1_image.h>
@@ -36,7 +38,7 @@ class sdet_watershed_region_proc : public sdet_watershed_region_proc_params
   //Constructors/destructor
   sdet_watershed_region_proc(sdet_watershed_region_proc_params& wrpp);
 
-  ~sdet_watershed_region_proc();
+  ~sdet_watershed_region_proc() override;
   //Accessors
   //:set image and potentially clip
   void set_image(vil1_image const& image,

@@ -10,7 +10,9 @@
 #include <cmath>
 #include "pdf1d_compare_to_pdf_ks.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_qsort.h>
 #include <vnl/vnl_vector.h>
 
@@ -20,17 +22,13 @@
 // Dflt ctor
 //=======================================================================
 
-pdf1d_compare_to_pdf_ks::pdf1d_compare_to_pdf_ks()
-{
-}
+pdf1d_compare_to_pdf_ks::pdf1d_compare_to_pdf_ks() = default;
 
 //=======================================================================
 // Destructor
 //=======================================================================
 
-pdf1d_compare_to_pdf_ks::~pdf1d_compare_to_pdf_ks()
-{
-}
+pdf1d_compare_to_pdf_ks::~pdf1d_compare_to_pdf_ks() = default;
 
 //=======================================================================
 
@@ -147,4 +145,3 @@ void pdf1d_compare_to_pdf_ks::b_read(vsl_b_istream& bfs)
       return;
   }
 }
-

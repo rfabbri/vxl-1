@@ -1,9 +1,6 @@
 // This is gel/vdgl/vdgl_edgel.h
 #ifndef vdgl_edgel_h
 #define vdgl_edgel_h
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Represents a 2D image edgel
@@ -13,7 +10,9 @@
 
 #include <iostream>
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_point_2d.h>
 
 class vdgl_edgel
@@ -21,9 +20,9 @@ class vdgl_edgel
  public:
 
   // Constructors/Destructor---------------------------------------------------
-  vdgl_edgel() {}
+  vdgl_edgel() = default;
   vdgl_edgel( const double x, const double y, const double grad= -1, const double theta= 0 );
-  ~vdgl_edgel() {}
+  ~vdgl_edgel() = default;
 
   // Operators-----------------------------------------------------------------
 

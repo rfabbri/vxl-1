@@ -14,7 +14,9 @@
 //  Modifications
 //   <none yet>
 // \endverbatim
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_file.h>
 #include <boxm2/boxm2_scene.h>
 #include <bkml/bkml_parser.h>
@@ -25,8 +27,8 @@
 
 namespace boxm2_create_camera_from_kml_path_process_globals
 {
-  const unsigned n_inputs_ = 4;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 4;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool boxm2_create_camera_from_kml_path_process_cons(bprb_func_process& pro)
@@ -56,11 +58,11 @@ bool boxm2_create_camera_from_kml_path_process(bprb_func_process& pro)
   unsigned i = 0;
   std::string cam_path = pro.get_input<std::string>(i++);
   vpgl_lvcs_sptr lvcs = pro.get_input<vpgl_lvcs_sptr>(i++);
-     unsigned cam_num = pro.get_input<unsigned>(i++);
+     auto cam_num = pro.get_input<unsigned>(i++);
   std::string out_path = pro.get_input<std::string>(i++);
 
   // read the path from kml file
-  bkml_parser* parser = new bkml_parser();
+  auto* parser = new bkml_parser();
   std::FILE* kmlFile = std::fopen(cam_path.c_str(), "r");
   if(!kmlFile){
     std::cerr << cam_path.c_str() << " error on opening the input kml file\n";
@@ -81,12 +83,12 @@ bool boxm2_create_camera_from_kml_path_process(bprb_func_process& pro)
   // transfer from global wgs84 to local lvcs
   std::vector<vgl_point_2d<double> > vp;
 
-  for(unsigned i=0; i<(unsigned)parser->linecord_[0].size(); i++){
+  for(auto & i : parser->linecord_[0]){
     double local_x, local_y, local_z;
-    std::cout << " geo_coord = " << parser->linecord_[0][i] << std::endl;
-    lvcs->global_to_local(parser->linecord_[0][i].x(),parser->linecord_[0][i].y(), parser->linecord_[0][i].z(),
+    std::cout << " geo_coord = " << i << std::endl;
+    lvcs->global_to_local(i.x(),i.y(), i.z(),
       vpgl_lvcs::wgs84, local_x, local_y, local_z);
-    vp.push_back(vgl_point_2d<double>(local_x, local_y));
+    vp.emplace_back(local_x, local_y);
   }
 
   // calculate the camera position along the path
@@ -105,8 +107,8 @@ bool boxm2_create_camera_from_kml_path_process(bprb_func_process& pro)
 
   // write it into the txt file
   std::ofstream ofs(out_path.c_str());
-  for(unsigned int i=0; i<(unsigned int)cam_pos.size(); i++){
-    ofs << std::setprecision(10) << std::setw(15) << cam_pos[i].x() << "     " << cam_pos[i].y() << std::endl;
+  for(auto & cam_po : cam_pos){
+    ofs << std::setprecision(10) << std::setw(15) << cam_po.x() << "     " << cam_po.y() << std::endl;
   }
 
   ofs.close();

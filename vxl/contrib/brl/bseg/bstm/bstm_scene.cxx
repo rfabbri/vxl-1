@@ -1,12 +1,15 @@
 
-#include <iostream>
-#include <string>
-#include <algorithm>
-#include <limits>
 #include "bstm_scene.h"
+#include <algorithm>
+#include <iostream>
+#include <limits>
+#include <string>
+#include <utility>
 //:
 // \file
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 /* xml includes */
 #include <vsl/vsl_basic_xml_element.h>
@@ -27,13 +30,13 @@
 bstm_scene::bstm_scene(std::string data_path, vgl_point_3d<double> const& origin, int version)
 {
     local_origin_=origin;
-    data_path_   = data_path;
+    data_path_   = std::move(data_path);
     xml_path_  = data_path_ + "/scene.xml";
     version_ = version;
 }
 
 //: initializes Scene from XML file
-bstm_scene::bstm_scene(std::string filename)
+bstm_scene::bstm_scene(const std::string& filename)
 {
     //xml parser
     xml_path_ = filename;
@@ -114,7 +117,7 @@ std::vector<bstm_block_id> bstm_scene::get_block_ids(vgl_box_3d<double> bb, floa
 }
 
 bstm_block_metadata bstm_scene::
-get_block_metadata_const(bstm_block_id id) const
+get_block_metadata_const(const bstm_block_id& id) const
 {
   std::map<bstm_block_id, bstm_block_metadata>::const_iterator iter;
   for (iter = blocks_.begin(); iter != blocks_.end(); ++iter)
@@ -160,7 +163,7 @@ std::vector<bstm_block_id> bstm_scene::get_vis_blocks(vpgl_generic_camera<double
                 }
             }
             if (min_depth <1e10)
-                distances.push_back( bstm_dist_id_pair(min_depth, iter->first) );
+                distances.emplace_back(min_depth, iter->first );
 
   }
 
@@ -226,7 +229,7 @@ bstm_scene::get_vis_order_from_pt(vgl_point_3d<double> const& pt,
       vgl_point_3d<double> blk_center = blk_o + length/2.0;
 
       double dist = vgl_distance( blk_center, pt);
-      distances.push_back( bstm_dist_id_pair(dist, iter->first) );
+      distances.emplace_back(dist, iter->first );
 
   }
 
@@ -247,10 +250,9 @@ bool bstm_scene::contains(vgl_point_3d<double> const& p, bstm_block_id& bid,
                           vgl_point_3d<double>& local_coords, double const t, double& local_time) const
 {
     std::vector<bstm_block_id> block_ids = this->get_block_ids();
-    for (std::vector<bstm_block_id>::iterator id = block_ids.begin();
-         id != block_ids.end(); ++id)
+    for (auto & block_id : block_ids)
     {
-      bstm_block_metadata md = this->get_block_metadata_const(*id);
+      bstm_block_metadata md = this->get_block_metadata_const(block_id);
       vgl_vector_3d<double> dims(md.sub_block_dim_.x()*md.sub_block_num_.x(),
                                  md.sub_block_dim_.y()*md.sub_block_num_.y(),
                                  md.sub_block_dim_.z()*md.sub_block_num_.z());
@@ -262,7 +264,7 @@ bool bstm_scene::contains(vgl_point_3d<double> const& p, bstm_block_id& bid,
         //now check for time
         if (md.contains_t(t,local_time))
         {
-          bid = (*id);
+          bid = block_id;
           double local_x=(p.x()-md.local_origin_.x())/md.sub_block_dim_.x();
           double local_y=(p.y()-md.local_origin_.y())/md.sub_block_dim_.y();
           double local_z=(p.z()-md.local_origin_.z())/md.sub_block_dim_.z();
@@ -365,8 +367,8 @@ vgl_box_3d<double> bstm_scene::bounding_box() const
   //  The \a x range is given by the 1st and 4th coordinates,
   //  the \a y range is given by the 2nd and 5th coordinates,
   //  the \a z range is given by the 3rd and 6th coordinates.
-  return vgl_box_3d<double>(xmin, ymin, zmin,
-                            xmax, ymax, zmax);
+  return {xmin, ymin, zmin,
+                            xmax, ymax, zmax};
 }
 
 vgl_box_3d<int> bstm_scene::bounding_box_blk_ids() const
@@ -385,36 +387,36 @@ vgl_vector_3d<unsigned int>  bstm_scene::scene_dimensions() const
   std::vector<bstm_block_id> ids = this->get_block_ids();
 
   if (ids.empty())
-    return vgl_vector_3d<unsigned int>(0,0,0);
+    return {0,0,0};
 
   int max_i=ids[0].i(),max_j=ids[0].j(),max_k=ids[0].k();
   int min_i=ids[0].i(),min_j=ids[0].j(),min_k=ids[0].k();
 
-  for (unsigned n=0; n<ids.size(); n++) {
-    if (ids[n].i() > max_i)
-      max_i=ids[n].i();
-    if (ids[n].j() > max_j)
-      max_j=ids[n].j();
-    if (ids[n].k() > max_k)
-      max_k=ids[n].k();
+  for (auto & id : ids) {
+    if (id.i() > max_i)
+      max_i=id.i();
+    if (id.j() > max_j)
+      max_j=id.j();
+    if (id.k() > max_k)
+      max_k=id.k();
 
-    if (ids[n].i() < min_i)
-      min_i=ids[n].i();
-    if (ids[n].j() < min_j)
-      min_j=ids[n].j();
-    if (ids[n].k() < min_k)
-      min_k=ids[n].k();
+    if (id.i() < min_i)
+      min_i=id.i();
+    if (id.j() < min_j)
+      min_j=id.j();
+    if (id.k() < min_k)
+      min_k=id.k();
   }
   max_i++; max_j++; max_k++;
 
-  return vgl_vector_3d<unsigned int>((max_i-min_i),(max_j - min_j),(max_k-min_k));
+  return {static_cast<unsigned int>((max_i-min_i)),static_cast<unsigned int>((max_j - min_j)),static_cast<unsigned int>((max_k-min_k))};
 }
 
 //: returns true if the scene has specified data type (simple linear search)
-bool bstm_scene::has_data_type(std::string data_type)
+bool bstm_scene::has_data_type(const std::string& data_type)
 {
-  for (unsigned int i=0; i<appearances_.size(); ++i)
-    if ( appearances_[i] == data_type )
+  for (const auto & appearance : appearances_)
+    if ( appearance == data_type )
       return true;
   return false;
 }
@@ -426,7 +428,7 @@ bool bstm_scene::has_data_type(std::string data_type)
 void x_write(std::ostream &os, bstm_scene& scene, std::string name)
 {
   //open root tag
-  vsl_basic_xml_element scene_elm(name);
+  vsl_basic_xml_element scene_elm(std::move(name));
   scene_elm.x_write_open(os);
 
   //write lvcs information
@@ -447,10 +449,10 @@ void x_write(std::ostream &os, bstm_scene& scene, std::string name)
   //write list of appearance models
 
   std::vector<std::string> apps = scene.appearances();
-  for (unsigned int i=0; i<apps.size(); ++i)
+  for (const auto & app : apps)
   {
     vsl_basic_xml_element apms(APM_TAG);
-    apms.add_attribute("apm", apps[i]);
+    apms.add_attribute("apm", app);
     apms.x_write(os);
   }
 
@@ -522,8 +524,8 @@ std::ostream& operator <<(std::ostream &s, bstm_scene& scene)
 
   //list appearance models for this scene
   std::vector<std::string> apps = scene.appearances();
-  for (unsigned int i=0; i<apps.size(); ++i)
-    s << "    " << apps[i] << ", ";
+  for (const auto & app : apps)
+    s << "    " << app << ", ";
   s << '\n';
   vpgl_lvcs lvcs = scene.lvcs();
   s << lvcs << '\n';
@@ -539,14 +541,14 @@ std::ostream& operator <<(std::ostream &s, bstm_scene& scene)
   s << "block array dims(" << dims.x() << ' ' << dims.y() << ' ' << dims.z() << ")\n";
   std::map<bstm_block_id, bstm_block_metadata>& blk = scene.blocks();
   s << " blocks:==>\n";
-  for (std::map<bstm_block_id, bstm_block_metadata>::iterator bit=blk.begin(); bit != blk.end(); ++bit) {
-    s << (*bit).second.id_ << ' ';
-    vgl_point_3d<double> org = (*bit).second.local_origin_;
-    s << ", org( " << org.x() << ' ' << org.y() << ' ' << org.z() << ' ' << (*bit).second.local_origin_t_  << ") ";
-    vgl_vector_3d<double> dim = (*bit).second.sub_block_dim_;
-    s << ", dim( " << dim.x() << ' ' << dim.y() << ' ' << dim.z() << ' ' << (*bit).second.sub_block_dim_t_ << ") ";
-    vgl_vector_3d<unsigned> num = (*bit).second.sub_block_num_;
-    s << ", num( " << num.x() << ' ' << num.y() << ' ' << num.z()  << ' ' << (*bit).second.sub_block_num_t_ << ")\n";
+  for (auto & bit : blk) {
+    s << bit.second.id_ << ' ';
+    vgl_point_3d<double> org = bit.second.local_origin_;
+    s << ", org( " << org.x() << ' ' << org.y() << ' ' << org.z() << ' ' << bit.second.local_origin_t_  << ") ";
+    vgl_vector_3d<double> dim = bit.second.sub_block_dim_;
+    s << ", dim( " << dim.x() << ' ' << dim.y() << ' ' << dim.z() << ' ' << bit.second.sub_block_dim_t_ << ") ";
+    vgl_vector_3d<unsigned> num = bit.second.sub_block_num_;
+    s << ", num( " << num.x() << ' ' << num.y() << ' ' << num.z()  << ' ' << bit.second.sub_block_num_t_ << ")\n";
   }
   s << "<=====:end blocks\n";
   return s;
@@ -570,6 +572,3 @@ void vsl_b_read(vsl_b_istream& /*is*/, bstm_scene* /*ph*/) {}
 void vsl_b_read(vsl_b_istream& /*is*/, bstm_scene_sptr&) {}
 //: Binary load boxm scene smart pointer from stream.
 void vsl_b_read(vsl_b_istream& /*is*/, bstm_scene_sptr const&) {}
-
-
-

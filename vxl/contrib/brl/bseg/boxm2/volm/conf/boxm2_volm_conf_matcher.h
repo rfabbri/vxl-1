@@ -31,25 +31,25 @@ public:
   // =============== constructor ======================
 
   //: default constructor
-  boxm2_volm_conf_matcher() {}
+  boxm2_volm_conf_matcher() = default;
   boxm2_volm_conf_matcher(volm_conf_query_sptr const& query,
                           unsigned const& tile_id,
-                          std::vector<volm_geo_index_node_sptr> const& loc_leaves,
-                          std::string const& index_folder,
-                          std::string const& out_folder,
-                          std::string const& cand_folder,
+                          std::vector<volm_geo_index_node_sptr>  loc_leaves,
+                          std::string  index_folder,
+                          std::string  out_folder,
+                          std::string  cand_folder,
                           float const& buffer_capacity = 2.0);
   //: constructor to create query online
   boxm2_volm_conf_matcher(volm_camera_space_sptr const& cam_space, depth_map_scene_sptr const& depth_scene,
                           unsigned const& tile_id,
-                          std::vector<volm_geo_index_node_sptr> const& loc_leaves,
-                          std::string const& index_folder,
-                          std::string const& out_folder,
-                          std::string const& cand_folder,
+                          std::vector<volm_geo_index_node_sptr>  loc_leaves,
+                          std::string  index_folder,
+                          std::string  out_folder,
+                          std::string  cand_folder,
                           float const& buffer_capacity = 2.0,
                           unsigned tol_in_pixel = 25);
 
-  ~boxm2_volm_conf_matcher() {}
+  ~boxm2_volm_conf_matcher() = default;
 
   // =================== access =======================
   volm_conf_query_sptr query()    const { return query_; }

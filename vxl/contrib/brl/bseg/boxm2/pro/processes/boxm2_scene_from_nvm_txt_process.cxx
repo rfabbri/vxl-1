@@ -17,14 +17,16 @@
 #include <vil/vil_save.h>
 #include <vul/vul_file.h>
 #include <vul/vul_file_iterator.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 
 namespace boxm2_scene_from_nvm_txt_process_globals
 {
-  const unsigned n_inputs_ = 9;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 9;
+  constexpr unsigned n_outputs_ = 0;
 }
 bool boxm2_scene_from_nvm_txt_process_cons(bprb_func_process& pro)
 {
@@ -59,14 +61,14 @@ bool boxm2_scene_from_nvm_txt_process(bprb_func_process& pro)
     return false;
   }
   //get the inputs
-  std::string nvm_filename  = pro.get_input<std::string>(0);
-  std::string input_img_folder  = pro.get_input<std::string>(1);
-  float x_center         = pro.get_input<float>(2);
-  float y_center        = pro.get_input<float>(3);
-  float z_center         = pro.get_input<float>(4);
-  float width        = pro.get_input<float>(5);
-  float height       = pro.get_input<float>(6);
-  float depth        = pro.get_input<float>(7);
+  std::string nvm_filename = pro.get_input<std::string>(0);
+  std::string input_img_folder = pro.get_input<std::string>(1);
+  auto x_center = pro.get_input<float>(2);
+  auto y_center = pro.get_input<float>(3);
+  auto z_center = pro.get_input<float>(4);
+  auto width = pro.get_input<float>(5);
+  auto height = pro.get_input<float>(6);
+  auto depth = pro.get_input<float>(7);
   std::string modeldir= pro.get_input<std::string>(8);
 
   // get the scene bounding box
@@ -81,10 +83,10 @@ bool boxm2_scene_from_nvm_txt_process(bprb_func_process& pro)
     boxm2_util_convert_nvm_txt(nvm_filename, input_img_folder, cams,img_name_mapping);
 
   std::vector<std::string> appearance;
-  appearance.push_back("boxm2_mog3_grey");
-  appearance.push_back("boxm2_num_obs");
+  appearance.emplace_back("boxm2_mog3_grey");
+  appearance.emplace_back("boxm2_num_obs");
 
-  std::string scene_dir = modeldir;
+  const std::string& scene_dir = modeldir;
   if (!vul_file::make_directory_path( scene_dir.c_str()))
     return false;
   boxm2_scene_sptr uscene = new boxm2_scene(scene_dir, box.min_point());
@@ -93,8 +95,9 @@ bool boxm2_scene_from_nvm_txt_process(bprb_func_process& pro)
 
   //build the two scenes
   std::vector<vpgl_perspective_camera<double> > cs;
-  for (std::map<std::string, vpgl_perspective_camera<double>* >::iterator iter=cams.begin(); iter!=cams.end(); ++iter)
-    cs.push_back(* iter->second);
+  cs.reserve(cams.size());
+for (auto & cam : cams)
+    cs.push_back(* cam.second);
 
   boxm2_util_cams_and_box_to_scene(cs, box, *uscene);
   uscene->set_xml_path(scene_dir+"/uscene.xml");
@@ -118,11 +121,11 @@ bool boxm2_scene_from_nvm_txt_process(bprb_func_process& pro)
       {
         //image basename
         std::string full_img_name = iter->first;
-        std::string img_name      = vul_file::basename(full_img_name);
+        std::string img_name = vul_file::basename(full_img_name);
         std::string stripped_name = vul_file::strip_extension(img_name);
 
         //good camera
-        CamType    cam      = *iter->second;
+        CamType    cam = *iter->second;
 
         //save cam file
         char filename[1024];

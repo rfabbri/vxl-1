@@ -23,7 +23,7 @@ bool vil_truncate_image_process_cons(bprb_func_process& pro)
 
   //output
   std::vector<std::string> output_types;
-  output_types.push_back("vil_image_view_base_sptr");  // returns a truncated float image!!
+  output_types.emplace_back("vil_image_view_base_sptr");  // returns a truncated float image!!
   ok = pro.set_output_types(output_types);
   if (!ok) return ok;
   return true;
@@ -43,8 +43,8 @@ bool vil_truncate_image_process(bprb_func_process& pro)
   vil_image_view_base_sptr image = pro.get_input<vil_image_view_base_sptr>(0);
 
   //Retrieve limits
-  float min_value = pro.get_input<float>(1);
-  float max_value = pro.get_input<float>(2);
+  auto min_value = pro.get_input<float>(1);
+  auto max_value = pro.get_input<float>(2);
   if(min_value>=max_value){
     std::cerr << "vil_truncate_image_process: invalid truncate limits\n";
       return false;

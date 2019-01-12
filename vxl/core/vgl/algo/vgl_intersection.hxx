@@ -20,7 +20,10 @@
 #include <vnl/algo/vnl_matrix_inverse.h>
 #include <vnl/algo/vnl_svd.h>
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 template <class T>
 vgl_point_3d<T> vgl_intersection(std::vector<vgl_plane_3d<T> > const& p)

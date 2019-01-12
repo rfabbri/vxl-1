@@ -1,7 +1,4 @@
 // This is oxl/osl/osl_topology.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
@@ -10,7 +7,9 @@
 #include <iostream>
 #include <cstring>
 #include "osl_topology.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <osl/osl_hacks.h>
 
 // Set this to 1 if you think it can avoid heap corruption, and
@@ -31,12 +30,12 @@ struct osl_stash_link {
   osl_stash_link *next;
 };
 
-osl_topology_base::osl_topology_base() : id(0), stash_head(VXL_NULLPTR) { }
+osl_topology_base::osl_topology_base() : id(0), stash_head(nullptr) { }
 void  osl_topology_base::stash_add(char const *name,
                                    void const *data,
                                    void (*dtor)(void *))
 {
-  osl_stash_link *l = new osl_stash_link(name, data, dtor, stash_head);
+  auto *l = new osl_stash_link(name, data, dtor, stash_head);
   stash_head = l;
 }
 
@@ -61,11 +60,11 @@ void *osl_topology_base::stash_retrieve(char const *name) const {
     if (std::strcmp(l->name, name) == 0)
       return l->data;
   // not found
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 void *osl_topology_base::stash_remove(char const *name) {
-  for (osl_stash_link *p = VXL_NULLPTR, *l = stash_head; l; p=l, l=p->next) {
+  for (osl_stash_link *p = nullptr, *l = stash_head; l; p=l, l=p->next) {
     if (std::strcmp(l->name, name) == 0) {
       if (p)
         p->next = l->next;
@@ -75,7 +74,7 @@ void *osl_topology_base::stash_remove(char const *name) {
     }
   }
   // not found
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 osl_topology_base::~osl_topology_base() {

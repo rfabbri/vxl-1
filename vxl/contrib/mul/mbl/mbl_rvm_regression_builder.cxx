@@ -8,11 +8,13 @@
 // \brief Object to train Relevance Vector Machines for regression
 // \author Tim Cootes
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/algo/vnl_svd.h>
 #include <mbl/mbl_matxvec.h>
 #include <mbl/mbl_matrix_products.h>
-#include <vcl_cassert.h>
+#include <cassert>
 
 //=======================================================================
 // Note on indexing
@@ -23,17 +25,13 @@
 // Dflt ctor
 //=======================================================================
 
-mbl_rvm_regression_builder::mbl_rvm_regression_builder()
-{
-}
+mbl_rvm_regression_builder::mbl_rvm_regression_builder() = default;
 
 //=======================================================================
 // Destructor
 //=======================================================================
 
-mbl_rvm_regression_builder::~mbl_rvm_regression_builder()
-{
-}
+mbl_rvm_regression_builder::~mbl_rvm_regression_builder() = default;
 
 //: Compute design matrix F from subset of elements in kernel matrix
 void mbl_rvm_regression_builder::design_matrix(const vnl_matrix<double>& K,

@@ -15,7 +15,9 @@
 #include <testlib/testlib_test.h>
 #include <vgl/algo/vgl_p_matrix.h>
 #include <vgl/algo/vgl_h_matrix_3d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_homg_point_2d.h>
 #include <vgl/vgl_homg_point_3d.h>
 #include <vgl/vgl_distance.h>
@@ -47,7 +49,7 @@ static void test_constructors()
   {
     double gold[] = {1,2,3,4, 5,6,7,8, 9,10,11,12}; // the "ground truth"
     vgl_p_matrix<double> P0(gold);
-    vgl_p_matrix<double> P(P0); P.get(data);
+    const vgl_p_matrix<double>& P(P0); P.get(data);
     TEST( "Copy constructor", equals(data, gold), true );
   }
   {

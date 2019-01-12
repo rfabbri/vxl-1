@@ -1,9 +1,6 @@
 // This is core/vgl/algo/vgl_fit_quadric_3d.h
 #ifndef vgl_fit_quadric_3d_h_
 #define vgl_fit_quadric_3d_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Fits a quadric surface to a set of 3D points
@@ -34,7 +31,9 @@
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_homg_point_3d.h>
 #include <vgl/vgl_quadric_3d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 template <class T>
 class vgl_fit_quadric_3d
@@ -51,11 +50,11 @@ class vgl_fit_quadric_3d
 
   // Constructors/Initializers/Destructors-------------------------------------
 
-   vgl_fit_quadric_3d() {}
+   vgl_fit_quadric_3d() = default;
 
    vgl_fit_quadric_3d(std::vector<vgl_point_3d<T> > points);
 
-  ~vgl_fit_quadric_3d() {}
+  ~vgl_fit_quadric_3d() = default;
 
   // Operations---------------------------------------------------------------
 
@@ -70,19 +69,19 @@ class vgl_fit_quadric_3d
   // No restriction on type.
   // returns the average distance from the points to the quadric.
   // error conditions are reported on outstream, if defined.
-  T fit_linear_Taubin(std::ostream* outstream=VXL_NULLPTR);
+  T fit_linear_Taubin(std::ostream* outstream=nullptr);
 
   //: fit an ellipsoid using the linear Allaire method
   // returns the average distance from the points to the ellipsoid
   // error conditions are reported on outstream, if defined.
-  T fit_ellipsoid_linear_Allaire(std::ostream* outstream=VXL_NULLPTR);
+  T fit_ellipsoid_linear_Allaire(std::ostream* outstream=nullptr);
 
   //: fit a quadric class from the set{ hyperboloid_of_one_sheets,
   //  hyperboloid_of_two_sheets, real_elliptic_cone,
   //  hyperbolic_paraboloid, hyperbolic_cylinder}
   // returns the average distance from the points to the ellipsoid
   // error conditions are reported on outstream, if defined.
-  T fit_saddle_shaped_quadric_linear_Allaire(std::ostream* outstream=VXL_NULLPTR);
+  T fit_saddle_shaped_quadric_linear_Allaire(std::ostream* outstream=nullptr);
 
   // Data Access---------------------------------------------------------------
 

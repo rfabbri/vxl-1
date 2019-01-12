@@ -28,7 +28,9 @@
 
 #include <vsl/vsl_binary_io.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //:
 // Ignores Scale and Orientation computations and produces a sift descriptor at the scale of the image,
@@ -39,7 +41,7 @@ class bapl_dsift: public vbl_ref_count
   bapl_dsift() : grad_valid_(false) {}
   bapl_dsift( vil_image_view<float> const& img );
   bapl_dsift( vil_image_view<vxl_byte> const& img);
-   ~bapl_dsift() {}
+   ~bapl_dsift() override = default;
 
   bool set_img( vil_image_view<float> const& img );
   bool set_img( vil_image_view<vxl_byte> const& img );

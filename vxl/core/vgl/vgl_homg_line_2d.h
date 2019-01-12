@@ -1,9 +1,6 @@
 // This is core/vgl/vgl_homg_line_2d.h
 #ifndef vgl_homg_line_2d_h
 #define  vgl_homg_line_2d_h
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief line in projective 2D space
@@ -17,9 +14,11 @@
 // \endverbatim
 
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_fwd.h> // forward declare vgl_homg_point_2d and vgl_line_2d
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vgl/vgl_vector_2d.h>
 
 //: Represents a homogeneous 2D line.

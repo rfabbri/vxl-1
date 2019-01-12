@@ -1,9 +1,6 @@
 // This is oxl/mvl/HomgMetric.h
 #ifndef HomgMetric_h_
 #define HomgMetric_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Measurements on homogeneous coordinates
@@ -30,7 +27,9 @@
 #include <iosfwd>
 #include <vnl/vnl_fwd.h>
 #include <vgl/vgl_fwd.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class ImageMetric;
 class HomgPoint2D;
@@ -48,7 +47,7 @@ class HomgMetric
  public:
   // Constructors/Destructors--------------------------------------------------
 
-  HomgMetric() : metric_(VXL_NULLPTR) {}
+  HomgMetric() : metric_(nullptr) {}
   HomgMetric(const ImageMetric* metric);
 
   // HomgMetric(const HomgMetric& that); - use default

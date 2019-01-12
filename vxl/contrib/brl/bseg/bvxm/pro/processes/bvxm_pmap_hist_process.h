@@ -20,16 +20,18 @@
 #include <iostream>
 #include <string>
 #include <bprb/bprb_func_process.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: globals
 namespace bvxm_pmap_hist_process_globals
 {
-  const unsigned n_inputs_ = 2;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 2;
+  constexpr unsigned n_outputs_ = 0;
 
   // functions
-  bool compute(std::string pmap, std::string path);
+  bool compute(const std::string& pmap, const std::string& path);
 }
 
 //: set input and output types

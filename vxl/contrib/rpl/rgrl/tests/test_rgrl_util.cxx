@@ -3,8 +3,10 @@
 #include <cmath>
 #include <testlib/testlib_test.h>
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <rgrl/rgrl_util.h>
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_math.h>
@@ -74,12 +76,12 @@ get_region( vnl_vector< double > const & center,
   x0.set_size( dimension ); x0.fill( 0.0 );
   x1.set_size( dimension ); x1.fill( 0.0 );
 
-  for ( unsigned int i=0; i<corner_points.size(); ++i ) {
+  for (auto & corner_point : corner_points) {
     for ( unsigned int j=0; j<dimension; ++j )  {
-      if ( x0[j] > corner_points[i][j] )
-        x0[j] = corner_points[i][j];
-      if ( x1[j] < corner_points[i][j] )
-        x1[j] = corner_points[i][j];
+      if ( x0[j] > corner_point[j] )
+        x0[j] = corner_point[j];
+      if ( x1[j] < corner_point[j] )
+        x1[j] = corner_point[j];
     }
   }
   x0 += center;
@@ -124,8 +126,8 @@ generate_random_data( unsigned dim,
     vnl_vector< double > normal = normal_space( dirs ).get_column( 0 );
     if ( mz_random.drand32( -1.0, 1.0 ) < 0 )
       normal /= normal[ dim - 1 ];
-    for ( unsigned i = 0; i < basis_dirs.size(); ++i )
-      assert ( inner_product( normal, basis_dirs[ i ] ) < 10e-3 );
+    for (const auto & basis_dir : basis_dirs)
+      assert ( inner_product( normal, basis_dir ) < 10e-3 );
     basis_dirs.push_back( normal );
   }
 //    }
@@ -183,9 +185,9 @@ test_util_extract_region_locations()
     if ( true_locations.size() != pixel_locations.size() )
       test_pass = false;
     else {
-      for ( unsigned i = 0; i < true_locations.size(); ++i ) {
-        if ( std::find( pixel_locations.begin(), pixel_locations.end(), true_locations[ i ] ) == pixel_locations.end() ) {
-          std::cout << " point " << true_locations[ i ] << " is not extracted" << std::endl;
+      for (const auto & true_location : true_locations) {
+        if ( std::find( pixel_locations.begin(), pixel_locations.end(), true_location ) == pixel_locations.end() ) {
+          std::cout << " point " << true_location << " is not extracted" << std::endl;
           test_pass = false;
           break;
         }
@@ -236,9 +238,9 @@ test_util_extract_region_locations()
     if ( true_locations.size() != pixel_locations.size() )
       test_pass = false;
     else {
-      for ( unsigned i = 0; i < true_locations.size(); ++i ) {
-        if ( std::find( pixel_locations.begin(), pixel_locations.end(), true_locations[ i ] ) == pixel_locations.end() ) {
-          std::cout << " point " << true_locations[ i ] << " is not extracted" << std::endl;
+      for (const auto & true_location : true_locations) {
+        if ( std::find( pixel_locations.begin(), pixel_locations.end(), true_location ) == pixel_locations.end() ) {
+          std::cout << " point " << true_location << " is not extracted" << std::endl;
           test_pass = false;
           break;
         }
@@ -292,9 +294,9 @@ test_util_extract_region_locations()
     if ( true_locations.size() != pixel_locations.size() )
       test_pass = false;
     else {
-      for ( unsigned i = 0; i < true_locations.size(); ++i ) {
-        if ( std::find( pixel_locations.begin(), pixel_locations.end(), true_locations[ i ] ) == pixel_locations.end() ) {
-          std::cout << " point " << true_locations[ i ] << " is not extracted" << std::endl;
+      for (const auto & true_location : true_locations) {
+        if ( std::find( pixel_locations.begin(), pixel_locations.end(), true_location ) == pixel_locations.end() ) {
+          std::cout << " point " << true_location << " is not extracted" << std::endl;
           test_pass = false;
           break;
         }

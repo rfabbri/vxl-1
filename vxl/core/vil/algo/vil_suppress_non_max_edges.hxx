@@ -10,8 +10,10 @@
 #include "vil_suppress_non_max_edges.h"
 #include <vil/vil_bilin_interp.h>
 #include <vil/vil_fill.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 //: Given gradient images, computes magnitude image containing maximal edges
 //  Computes magnitude image.  Zeros any below a threshold.

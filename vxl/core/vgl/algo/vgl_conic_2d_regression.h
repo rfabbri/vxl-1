@@ -1,9 +1,6 @@
 // This is core/vgl/algo/vgl_conic_2d_regression.h
 #ifndef vgl_conic_2d_regression_h_
 #define vgl_conic_2d_regression_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Fits a conic to a set of points using linear regression
@@ -60,7 +57,9 @@
 
 #include <vector>
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_matrix_fixed.h>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_homg_point_2d.h>
@@ -76,7 +75,7 @@ class vgl_conic_2d_regression
 
   vgl_conic_2d_regression();
 
-  ~vgl_conic_2d_regression(){}
+  ~vgl_conic_2d_regression()= default;
 
   // Operations----------------------------------------------------------------
 

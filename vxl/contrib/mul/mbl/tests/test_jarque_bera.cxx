@@ -1,7 +1,9 @@
 // This is mul/mbl/tests/test_jarque_bera.cxx
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <mbl/mbl_jarque_bera.h>
 #include <vnl/vnl_random.h>
 #include <testlib/testlib_test.h>
@@ -12,7 +14,7 @@ void test_jarque_bera()
            << " Testing mbl_jarque_bera\n"
            << "*************************\n";
 
-  const unsigned n = 200;
+  constexpr unsigned n = 200;
   vnl_random rng(9667566ul);
   std::vector<double> x(n);
   for (unsigned i=0; i!=n; ++i)

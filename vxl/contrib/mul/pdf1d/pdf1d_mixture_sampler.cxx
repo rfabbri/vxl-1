@@ -11,7 +11,9 @@
 
 #include "pdf1d_sampler.h"
 #include "pdf1d_mixture.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //=======================================================================
 
@@ -112,8 +114,8 @@ double pdf1d_mixture_sampler::sample()
 void pdf1d_mixture_sampler::reseed(unsigned long seed)
 {
   rng_.reseed(seed);
-  for (unsigned int i=0; i<inst_.size(); ++i)
-    inst_[i]->reseed(rng_.lrand32());
+  for (auto & i : inst_)
+    i->reseed(rng_.lrand32());
 }
 
 

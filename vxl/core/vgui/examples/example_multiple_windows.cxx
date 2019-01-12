@@ -11,7 +11,9 @@
 #include <cstdlib>
 #include <iostream>
 #include <sstream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil1/vil1_load.h>
 #include <vgui/vgui.h>
 #include <vgui/vgui_text_tableau.h>

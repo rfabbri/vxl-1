@@ -1,7 +1,4 @@
 // This is core/vil/vil_image_resource.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Ian Scott  ISBE Manchester
@@ -17,7 +14,7 @@
 //: the reference count starts at 0.
 vil_image_resource::vil_image_resource() : reference_count_(0) { }
 
-vil_image_resource::~vil_image_resource() { }
+vil_image_resource::~vil_image_resource() = default;
 
 
 bool vil_image_resource::get_property(char const *, void *) const
@@ -35,4 +32,3 @@ bool vil_image_resource::view_fits(const vil_image_view_base& im, unsigned i0, u
          im.nplanes() == nplanes() &&
          vil_pixel_format_num_components(im.pixel_format()) == 1;
 }
-

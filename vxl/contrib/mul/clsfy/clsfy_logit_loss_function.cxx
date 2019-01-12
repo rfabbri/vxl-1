@@ -5,7 +5,10 @@
 // \author TFC
 
 #include "clsfy_logit_loss_function.h"
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 clsfy_logit_loss_function::clsfy_logit_loss_function(
             mbl_data_wrapper<vnl_vector<double> >& x,
@@ -139,5 +142,3 @@ void clsfy_quad_regulariser::gradf(vnl_vector<double> const& v,
   gradient = (2*alpha_)*v;
   gradient[0]=0.0;  // Function independent of first element
 }
-
-

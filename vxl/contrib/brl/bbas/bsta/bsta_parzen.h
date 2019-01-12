@@ -16,10 +16,13 @@
 // Approved for Public Release, Distribution Unlimited (DISTAR Case 12529)
 //
 
+#include <utility>
 #include <vector>
 #include <iostream>
 #include "bsta_distribution.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: forward declare vnl_vector_fixed
 template<class T, unsigned n> class vnl_vector_fixed;
@@ -70,11 +73,11 @@ class bsta_parzen : public bsta_distribution<T,n>
 
  public:
 
-  bsta_parzen() {}
-  virtual ~bsta_parzen() {}
+  bsta_parzen() = default;
+  virtual ~bsta_parzen() = default;
 
-  bsta_parzen(sample_vector const& samples)
-  : samples_(samples) {}
+  bsta_parzen(sample_vector  samples)
+  : samples_(std::move(samples)) {}
 
   //: Insert a new sample into the distribution
   void insert_sample(const vect_t& sample)

@@ -1,7 +1,4 @@
 // This is core/vgui/vgui_roi_tableau.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Marko Bacic, RRG, University of Oxford
@@ -10,7 +7,9 @@
 
 #include <string>
 #include "vgui_roi_tableau.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vil1/vil1_load.h>
 #include <vil1/vil1_crop.h>
@@ -25,7 +24,7 @@
 vgui_roi_tableau::vgui_roi_tableau()
   : vgui_tableau()
 {
-  cropped_image_ = VXL_NULLPTR;
+  cropped_image_ = nullptr;
 }
 
 vgui_roi_tableau::vgui_roi_tableau(vil1_image const &I,char const *t_name,

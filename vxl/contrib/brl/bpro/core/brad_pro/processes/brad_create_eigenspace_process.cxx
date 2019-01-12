@@ -6,7 +6,9 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Constructor
 bool brad_create_eigenspace_process_cons(bprb_func_process& pro)
@@ -25,7 +27,7 @@ bool brad_create_eigenspace_process_cons(bprb_func_process& pro)
 
   //output
   std::vector<std::string> output_types;
-  output_types.push_back("brad_eigenspace_sptr"); //eigenspace
+  output_types.emplace_back("brad_eigenspace_sptr"); //eigenspace
   ok = pro.set_output_types(output_types);
   if (!ok) return ok;
   return true;
@@ -43,15 +45,14 @@ bool brad_create_eigenspace_process(bprb_func_process& pro)
 #endif
   int i = 0;
   std::string feature_vector_type = pro.get_input<std::string>(i++);
-  float max_int = pro.get_input<float>(i++);
-  float max_grad = pro.get_input<float>(i++);
-  unsigned nbins = pro.get_input<unsigned>(i++);
-  unsigned nib = pro.get_input<unsigned>(i++);
-  unsigned njb = pro.get_input<unsigned>(i++);
+  auto max_int = pro.get_input<float>(i++);
+  auto max_grad = pro.get_input<float>(i++);
+  auto nbins = pro.get_input<unsigned>(i++);
+  auto nib = pro.get_input<unsigned>(i++);
+  auto njb = pro.get_input<unsigned>(i++);
 
-  brad_eigenspace_sptr eptr = VXL_NULLPTR;
+  brad_eigenspace_sptr eptr = nullptr;
   CAST_CREATE_EIGENSPACE(feature_vector_type, nbins, max_int, max_grad)
   pro.set_output_val<brad_eigenspace_sptr>(0, eptr);
   return true;
 }
-

@@ -7,8 +7,10 @@
 //  \file
 
 #include <osl/osl_canny_port.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 //--------------------------------------------------------------
 
@@ -16,23 +18,23 @@ osl_canny_base::osl_canny_base(float sigma, float low, float high, bool v)
   : xstart_(0), ystart_(0)
   , xsize_(0), ysize_(0)
 
-  , smooth_(VXL_NULLPTR)
-  , dx_(VXL_NULLPTR)
-  , dy_(VXL_NULLPTR)
-  , grad_(VXL_NULLPTR)
+  , smooth_(nullptr)
+  , dx_(nullptr)
+  , dy_(nullptr)
+  , grad_(nullptr)
 
-  , thick_(VXL_NULLPTR)
-  , thin_(VXL_NULLPTR)
-  , theta_(VXL_NULLPTR)
+  , thick_(nullptr)
+  , thin_(nullptr)
+  , theta_(nullptr)
 
-  , junction_(VXL_NULLPTR)
-  , jx_(VXL_NULLPTR)
-  , jy_(VXL_NULLPTR)
-  , xjunc_(VXL_NULLPTR)
-  , yjunc_(VXL_NULLPTR)
-  , vlist_(VXL_NULLPTR)
+  , junction_(nullptr)
+  , jx_(nullptr)
+  , jy_(nullptr)
+  , xjunc_(nullptr)
+  , yjunc_(nullptr)
+  , vlist_(nullptr)
 
-  , kernel_(VXL_NULLPTR)
+  , kernel_(nullptr)
 {
   verbose =v;
   sigma_ = sigma;
@@ -41,7 +43,7 @@ osl_canny_base::osl_canny_base(float sigma, float low, float high, bool v)
 }
 
 //: Destructor does nothing at all.
-osl_canny_base::~osl_canny_base() {  }
+osl_canny_base::~osl_canny_base() = default;
 
 
 //-----------------------------------------------------------------------------
@@ -210,14 +212,13 @@ void osl_canny_base::Cluster_centre_of_gravity(int * const *jx, int * const *jy,
                                                std::list<int> &yc,
                                                int &x0, int &y0)
 {
-  typedef std::list<int>::iterator it;
 
   if ( xc.empty() )
     return;
 
   // First find the CofG
   double x=0.0,y=0.0;
-  for (it i=xc.begin(),j=yc.begin(); i!=xc.end() && j!=yc.end(); ++i, ++j) {
+  for (auto i=xc.begin(),j=yc.begin(); i!=xc.end() && j!=yc.end(); ++i, ++j) {
     //for (xc.reset(),yc.reset(); xc.next(),yc.next(); )
     x += *i;//xc.value();
     y += *j;//yc.value();
@@ -226,7 +227,7 @@ void osl_canny_base::Cluster_centre_of_gravity(int * const *jx, int * const *jy,
 
   // Now find the point closest to the CofG
   double dist = -1; // an invalid number
-  for (it i=xc.begin(),j=yc.begin(); i!=xc.end() && j!=yc.end(); ++i, ++j) {
+  for (auto i=xc.begin(),j=yc.begin(); i!=xc.end() && j!=yc.end(); ++i, ++j) {
     //xc.reset(),yc.reset();xc.next(),yc.next();)
     //float newdist = hypot(x- *i/*xc.value()*/,y- *j/*yc.value()*/);
     double newdist;
@@ -239,7 +240,7 @@ void osl_canny_base::Cluster_centre_of_gravity(int * const *jx, int * const *jy,
   }
 
   // Set up the (jx,jy) arrays to point to the cluster centre
-  for (it i=xc.begin(),j=yc.begin(); i!=xc.end() && j!=yc.end(); ++i,++j) {
+  for (auto i=xc.begin(),j=yc.begin(); i!=xc.end() && j!=yc.end(); ++i,++j) {
     //xc.reset(),yc.reset();xc.next(),yc.next();)
     jx[*i/*xc.value()*/][*j/*yc.value()*/] = x0;
     jy[*i/*xc.value()*/][*j/*yc.value()*/] = y0;

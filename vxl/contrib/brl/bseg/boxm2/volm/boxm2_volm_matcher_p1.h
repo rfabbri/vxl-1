@@ -16,6 +16,7 @@
 // \endverbatim
 //
 
+#include <utility>
 #include "boxm2_volm_wr3db_index_sptr.h"
 #include "boxm2_volm_wr3db_index.h"
 #include <volm/volm_camera_space.h>
@@ -32,26 +33,27 @@
 #include <bocl/bocl_kernel.h>
 #include <bocl/bocl_mem.h>
 
+
 class boxm2_volm_score_out;
 
 class boxm2_volm_matcher_p1
 {
  public:
   //: default constructor
-  boxm2_volm_matcher_p1() {}
+  boxm2_volm_matcher_p1() = default;
   //: constructor
   boxm2_volm_matcher_p1(volm_camera_space_sptr const& cam_space,
                         volm_query_sptr const& query,
-                        std::vector<volm_geo_index_node_sptr> const& leaves,
+                        std::vector<volm_geo_index_node_sptr>  leaves,
                         float const& buffer_capacity,
                         std::string const& geo_index_folder,
                         unsigned const& tile_id,
-                        std::vector<float> const& depth_interval,
+                        std::vector<float>  depth_interval,
                         vgl_polygon<double> const& cand_poly,
-                        bocl_device_sptr gpu,
+                        const bocl_device_sptr& gpu,
                         bool const& is_candidate,
                         bool const& is_last_pass,
-                        std::string const& out_folder,
+                        std::string  out_folder,
                         float const& threshold,
                         unsigned const& max_cam_per_loc,
                         std::vector<volm_weight> weights);
@@ -217,7 +219,7 @@ class boxm2_volm_matcher_p1
 #endif
 
   // kernel execution function with orientation
-  bool execute_matcher_kernel_orient(bocl_device_sptr                  device,
+  bool execute_matcher_kernel_orient(const bocl_device_sptr&                  device,
                                      cl_command_queue&                  queue,
                                      std::vector<bocl_kernel*>        kern_vec,
                                      bocl_mem*                  n_ind_cl_mem_,
@@ -239,12 +241,12 @@ class boxm2_volm_matcher_p1
 class boxm2_volm_score_out
 {
  public:
-  boxm2_volm_score_out() {}
+  boxm2_volm_score_out() = default;
   boxm2_volm_score_out(unsigned const& leaf_id, unsigned const& hypo_id,
-                       std::vector<unsigned> const& cam_id,
-                       std::vector<float> const& cam_score)
-  : l_id_(leaf_id), h_id_(hypo_id), cam_id_(cam_id), cam_score_(cam_score) {}
-  ~boxm2_volm_score_out() {}
+                       std::vector<unsigned>  cam_id,
+                       std::vector<float>  cam_score)
+  : l_id_(leaf_id), h_id_(hypo_id), cam_id_(std::move(cam_id)), cam_score_(std::move(cam_score)) {}
+  ~boxm2_volm_score_out() = default;
 
   unsigned l_id_;
   unsigned h_id_;

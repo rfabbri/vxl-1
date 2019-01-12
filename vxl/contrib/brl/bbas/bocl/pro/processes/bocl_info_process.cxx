@@ -12,15 +12,17 @@
 
 #include <brdb/brdb_value.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bocl/bocl_manager.h>
 
 
 //:global variables
 namespace bocl_info_process_globals
 {
-  const unsigned n_inputs_ = 0;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 0;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 
@@ -37,7 +39,7 @@ bool bocl_info_process_cons(bprb_func_process& pro)
 
 
 //:the process
-bool bocl_info_process(bprb_func_process& pro)
+bool bocl_info_process(bprb_func_process&  /*pro*/)
 {
   using namespace bocl_info_process_globals ;
 
@@ -58,4 +60,3 @@ bool bocl_info_process(bprb_func_process& pro)
   std::cout<<std::endl;
   return true;
 }
-

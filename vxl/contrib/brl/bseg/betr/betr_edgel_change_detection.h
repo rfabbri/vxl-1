@@ -13,29 +13,29 @@ class betr_edgel_change_detection : public betr_algorithm
 {
  public:
 
- betr_edgel_change_detection(): betr_algorithm("edgel_change_detection"),js_div_(0.0), i_offset_(0), j_offset_(0), change_img_(VXL_NULLPTR){
+ betr_edgel_change_detection(): betr_algorithm("edgel_change_detection"),js_div_(0.0), i_offset_(0), j_offset_(0), change_img_(nullptr){
    multiple_ref_ = false;
          params_ =  new betr_edgel_change_detection_params();}
 
 
  betr_edgel_change_detection(betr_edgel_change_detection_params const& params): betr_algorithm("edgel_change_detection"),
-    js_div_(0.0), i_offset_(0), j_offset_(0), change_img_(VXL_NULLPTR){
+    js_div_(0.0), i_offset_(0), j_offset_(0), change_img_(nullptr){
    multiple_ref_ = false;
                 params_ =  new betr_edgel_change_detection_params();}
 
   // offset and alpha are  sigmoid parameters to convert js_divergence to a change probability
  betr_edgel_change_detection(betr_edgel_change_detection_params const& params, double offset, double alpha): betr_algorithm("edgel_change_detection", offset, alpha), js_div_(0.0),
-         i_offset_(0), j_offset_(0), change_img_(VXL_NULLPTR){
+         i_offset_(0), j_offset_(0), change_img_(nullptr){
    multiple_ref_ = false;
                  params_ =  new betr_edgel_change_detection_params();}
   //: process change
-  virtual bool process();
+  bool process() override;
 
   //: resulting change probability
-  virtual double prob_change() const{return js_div_;} //for now not really a probability
+  double prob_change() const override{return js_div_;} //for now not really a probability
 
   //: image of edgel gradient magnitudes
-  virtual vil_image_resource_sptr change_image(unsigned& i_offset, unsigned& j_offset) const{
+  vil_image_resource_sptr change_image(unsigned& i_offset, unsigned& j_offset) const override{
     i_offset = i_offset_; j_offset = j_offset_; return change_img_;}
 
  private:

@@ -7,7 +7,9 @@
 #include <volm/conf/volm_conf_object.h>
 #include <vnl/vnl_random.h>
 #include <vnl/vnl_math.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #define EPISLON 1E-5
 
@@ -15,13 +17,13 @@ static void test_volm_conf_score()
 {
   std::vector<volm_conf_object> landmarks;
   for (unsigned i = 0; i < 5; i++) {
-    landmarks.push_back(volm_conf_object(i*0.1f, i*0.2f, i*0.3f, i));
+    landmarks.emplace_back(i*0.1f, i*0.2f, i*0.3f, i);
   }
   volm_conf_score_sptr score_sptr = new volm_conf_score(0.12, -vnl_math::pi, landmarks);
   score_sptr->print(std::cout);
   std::cout << score_sptr->landmarks().size() << " landmarks in score:" << std::endl;
-  for (unsigned i = 0; i < score_sptr->landmarks().size(); i++)
-    score_sptr->landmarks()[i].print(std::cout);
+  for (auto & i : score_sptr->landmarks())
+    i.print(std::cout);
   std::cout << "direction relative to north: " << score_sptr->theta_to_north() << std::endl;
   TEST_NEAR("Testing score value", score_sptr->score(), 0.12, EPISLON);
   TEST_NEAR("Testing angular value", score_sptr->theta_in_deg(), vnl_math::pi / vnl_math::pi_over_180, EPISLON);
@@ -57,7 +59,7 @@ static void test_volm_conf_score()
     std::vector<volm_conf_object> landmarks;
     unsigned size = rnd.lrand32(0,10);
     for (unsigned i = 0; i < size; i++)
-      landmarks.push_back(volm_conf_object(rnd.drand32(0.0f, vnl_math::twopi), rnd.drand32(0.0f, 200.0f), rnd.drand32(0.0f, 32.f), rnd.lrand32(0,255)));
+      landmarks.emplace_back(rnd.drand32(0.0f, vnl_math::twopi), rnd.drand32(0.0f, 200.0f), rnd.drand32(0.0f, 32.f), rnd.lrand32(0,255));
     volm_conf_score value(rnd.drand32(0.0f, 1.0f), rnd.drand32(0, 2*vnl_math::twopi), landmarks);
     scores.push_back(value);
   }

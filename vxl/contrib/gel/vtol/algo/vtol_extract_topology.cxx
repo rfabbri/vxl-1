@@ -59,7 +59,7 @@ vtol_extract_topology_vertex_node( unsigned in_i, unsigned in_j )
 
 void
 vtol_extract_topology_region_type::
-push_back( edgel_chain_sptr chain )
+push_back( const edgel_chain_sptr& chain )
 {
   list_.push_back( chain );
 }
@@ -96,8 +96,8 @@ make_one_chain( ) const
 {
   std::vector< vtol_edge_sptr > edges;
 
-  for ( unsigned i = 0; i < list_.size(); ++i ) {
-    edges.push_back( &*list_[i]->edge );
+  for (const auto & i : list_) {
+    edges.emplace_back(&*i->edge );
   }
 
   return new vtol_one_chain( edges, /*is_cycle=*/ true );
@@ -107,4 +107,3 @@ make_one_chain( ) const
 // =============================================================================
 //                                                          NON-MEMBER FUNCTIONS
 // =============================================================================
-

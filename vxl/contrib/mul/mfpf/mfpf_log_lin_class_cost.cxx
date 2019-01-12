@@ -5,7 +5,10 @@
 // \author Tim Cootes
 
 #include <vsl/vsl_binary_loader.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vnl/io/vnl_io_vector.h>
 
@@ -13,17 +16,13 @@
 // Dflt ctor
 //=======================================================================
 
-mfpf_log_lin_class_cost::mfpf_log_lin_class_cost()
-{
-}
+mfpf_log_lin_class_cost::mfpf_log_lin_class_cost() = default;
 
 //=======================================================================
 // Destructor
 //=======================================================================
 
-mfpf_log_lin_class_cost::~mfpf_log_lin_class_cost()
-{
-}
+mfpf_log_lin_class_cost::~mfpf_log_lin_class_cost() = default;
 
 //: Define weights, bias and minp
 void mfpf_log_lin_class_cost::set(const vnl_vector<double>& wts,

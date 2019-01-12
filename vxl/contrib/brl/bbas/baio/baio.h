@@ -3,7 +3,9 @@
 #define baio_h
 #include <iostream>
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 //-----------------------------------------------------------------------------
 //:
 // \file
@@ -51,9 +53,9 @@ class baio
     ~baio();
 
     //: read bytes from file
-    bool read(std::string filename, char* buff, long BUFSIZE);
+    bool read(const std::string& filename, char* buff, long BUFSIZE);
 
-    bool write(std::string filename, char* buff, long BUFSIZE);
+    bool write(const std::string& filename, char* buff, long BUFSIZE);
 
     void close_file();
 

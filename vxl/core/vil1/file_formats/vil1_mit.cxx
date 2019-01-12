@@ -1,7 +1,4 @@
 // This is core/vil1/file_formats/vil1_mit.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //
 // Author: Joris Schouteden
 // Created: 18 Feb 2000
@@ -12,8 +9,10 @@
 #include <cstring>
 #include "vil1_mit.h"
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <vil1/vil1_stream.h>
 #include <vil1/vil1_image_impl.h>
@@ -71,12 +70,12 @@ vil1_image_impl* vil1_mit_file_format::make_input_image(vil1_stream* is)
         type == MIT_SIGNED   ||
         type == MIT_FLOAT    ||
         type == MIT_EDGE      ))
-    return VXL_NULLPTR;
+    return nullptr;
 
   int bits_per_pixel = vil1_16bit_read_little_endian(is);
   if (bits_per_pixel > 32) {
     std::cerr << "vil1_mit_file_format:: Thought it was MIT, but bpp = " << bits_per_pixel << std::endl;
-    return VXL_NULLPTR;
+    return nullptr;
   }
 
   /*int width =*/ vil1_16bit_read_little_endian(is);
@@ -199,13 +198,13 @@ bool vil1_mit_generic_image::write_header()
 
 bool vil1_mit_generic_image::get_section(void* buf, int x0, int y0, int xs, int ys) const
 {
-  assert(buf != VXL_NULLPTR);
+  assert(buf != nullptr);
 
   vil1_streampos offset = 8; // fsm: was 4
 
   int skip = bytes_per_pixel() * (width_ - xs);
 
-  unsigned char *point = (unsigned char*)buf;
+  auto *point = (unsigned char*)buf;
 
   is_->seek(offset + (width_*y0*bytes_per_pixel()) + (x0*bytes_per_pixel()));
 
@@ -223,14 +222,14 @@ bool vil1_mit_generic_image::get_section(void* buf, int x0, int y0, int xs, int 
 
 bool vil1_mit_generic_image::put_section(void const* buf, int x0, int y0, int xs, int ys)
 {
-  assert(buf != VXL_NULLPTR);
+  assert(buf != nullptr);
 
   int skip = bytes_per_pixel() * (width_ - xs);
 
   vil1_streampos offset = 8;
   is_->seek(offset + (width_*y0*bytes_per_pixel()) + (x0*bytes_per_pixel()));
 
-  const unsigned char* point = (const unsigned char*)buf;
+  const auto* point = (const unsigned char*)buf;
 
   // FIXME: store as BGR
   for (int tely = 0; tely < ys; tely++)

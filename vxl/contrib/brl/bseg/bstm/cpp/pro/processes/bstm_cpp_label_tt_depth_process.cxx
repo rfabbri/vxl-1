@@ -9,7 +9,9 @@
 // \author Ali Osman Ulusoy
 // \date Jan 28, 2013
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bstm/io/bstm_cache.h>
 #include <bstm/io/bstm_lru_cache.h>
 #include <bstm/bstm_scene.h>
@@ -26,8 +28,8 @@
 
 namespace bstm_cpp_label_tt_depth_process_globals
 {
-  const unsigned n_inputs_ =  2;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 2;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool bstm_cpp_label_tt_depth_process_cons(bprb_func_process& pro)
@@ -73,11 +75,11 @@ bool bstm_cpp_label_tt_depth_process(bprb_func_process& pro)
     bstm_block_metadata bstm_metadata = bstm_iter->second;
     bstm_block* blk = cache->get_block(bstm_metadata.id_);
     bstm_time_block* blk_t = cache->get_time_block(bstm_metadata.id_);
-    bstm_data_base * alph    = cache->get_data_base(bstm_metadata.id_, bstm_data_traits<BSTM_ALPHA>::prefix());
+    bstm_data_base * alph = cache->get_data_base(bstm_metadata.id_, bstm_data_traits<BSTM_ALPHA>::prefix());
     bstm_data_base * label_data_base = cache->get_data_base(bstm_metadata.id_, bstm_data_traits<BSTM_LABEL>::prefix(),
                                     alph->buffer_length() / bstm_data_traits<BSTM_ALPHA>::datasize() * bstm_data_traits<BSTM_LABEL>::datasize() );
 
-    bstm_data_traits<BSTM_LABEL>::datatype * label_data = (bstm_data_traits<BSTM_LABEL>::datatype*) label_data_base->data_buffer();
+    auto * label_data = (bstm_data_traits<BSTM_LABEL>::datatype*) label_data_base->data_buffer();
 
     boxm2_array_1d<vnl_vector_fixed<unsigned char, 8> > &  time_trees = blk_t->time_trees();
 
@@ -86,12 +88,12 @@ bool bstm_cpp_label_tt_depth_process(bprb_func_process& pro)
     {
       bstm_time_tree tt ((unsigned char*) (*time_trees_iter).data_block(), bstm_metadata.max_level_t_);
       std::vector<int> leaves = tt.get_leaf_bits();
-      for(int i = 0; i < leaves.size(); i++) {
-        label_data[tt.get_data_index( leaves[i] ) ] = (bstm_data_traits<BSTM_LABEL>::datatype) tt.depth_at( leaves[i] ) + 1;
-        if( tt.depth_at( leaves[i] ) > max_depth)
-          max_depth = tt.depth_at( leaves[i] ) ;
-        if (tt.depth_at( leaves[i] ) < min_depth)
-          min_depth = tt.depth_at( leaves[i] ) ;
+      for(int leave : leaves) {
+        label_data[tt.get_data_index( leave ) ] = (bstm_data_traits<BSTM_LABEL>::datatype) tt.depth_at( leave ) + 1;
+        if( tt.depth_at( leave ) > max_depth)
+          max_depth = tt.depth_at( leave ) ;
+        if (tt.depth_at( leave ) < min_depth)
+          min_depth = tt.depth_at( leave ) ;
       }
     }
   }

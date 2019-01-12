@@ -1,9 +1,6 @@
 // This is mul/vpdfl/vpdfl_builder_base.h
 #ifndef vpdfl_builder_base_h
 #define vpdfl_builder_base_h
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author Tim Cootes
@@ -13,13 +10,15 @@
 
 #include <vector>
 #include <string>
-#include <vcl_memory.h>
 #include <iostream>
+#include <memory>
 #include <iosfwd>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_vector.h>
 #include <mbl/mbl_data_wrapper.h>
 #include <vsl/vsl_binary_io.h>
-#include <vcl_compiler.h>
 
 //=======================================================================
 
@@ -38,10 +37,10 @@ class vpdfl_builder_base
 {
  public:
   //: Dflt ctor
-  vpdfl_builder_base() {}
+  vpdfl_builder_base() = default;
 
   //: Destructor
-  virtual ~vpdfl_builder_base() {}
+  virtual ~vpdfl_builder_base() = default;
 
   //: Create empty model
   virtual vpdfl_pdf_base* new_model() const = 0;
@@ -88,7 +87,7 @@ class vpdfl_builder_base
 
   //: Create a vpdfl_builder_base object given a config stream
   // \throw mbl_exception if parse error.
-  static vcl_unique_ptr<vpdfl_builder_base> new_builder_from_stream(std::istream &is);
+  static std::unique_ptr<vpdfl_builder_base> new_builder_from_stream(std::istream &is);
 
   //: Read initialisation settings from a stream.
   // \throw mbl_exception_parse_error if the parse fails.
@@ -97,7 +96,7 @@ class vpdfl_builder_base
   //: Create a vpdfl_builder_base object given a config stream (recursive style)
   //  Creates object, then uses config_from_stream(is) to set up internals
   // \throw vcl_runtime_exception if parse error.
-  static vcl_unique_ptr<vpdfl_builder_base> new_pdf_builder_from_stream(std::istream &);
+  static std::unique_ptr<vpdfl_builder_base> new_pdf_builder_from_stream(std::istream &);
 };
 
 //: Allows derived class to be loaded by base-class pointer

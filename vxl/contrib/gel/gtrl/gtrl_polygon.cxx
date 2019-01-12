@@ -1,14 +1,11 @@
 // This is gel/gtrl/gtrl_polygon.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author crossge@crd.ge.com
 
 #include "gtrl_polygon.h"
 
-gtrl_polygon::gtrl_polygon( const std::vector<gtrl_vertex_sptr> ps)
+gtrl_polygon::gtrl_polygon( const std::vector<gtrl_vertex_sptr>& ps)
   : ps_(ps)
 {
 }
@@ -16,7 +13,7 @@ gtrl_polygon::gtrl_polygon( const std::vector<gtrl_vertex_sptr> ps)
 
 // simple and efficient point in polygon test.
 //   from comp.graphics.algorithms faq
-bool gtrl_polygon::inside( const gtrl_vertex_sptr point) const
+bool gtrl_polygon::inside( const gtrl_vertex_sptr& point) const
 {
     bool c = false;
 

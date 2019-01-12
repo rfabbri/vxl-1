@@ -18,7 +18,9 @@
 // \endverbatim
 
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: A templated smart pointer class
 // This class requires that the class being templated over has
@@ -59,10 +61,9 @@ class vbl_smart_ptr
   //: Pointer to object, or 0.
   T *ptr_;
 
-  VCL_SAFE_BOOL_DEFINE;
  public:
   vbl_smart_ptr ()
-    : protected_(true), ptr_(VXL_NULLPTR) { }
+    : protected_(true), ptr_(nullptr) { }
 
   template<class Y>
   vbl_smart_ptr (vbl_smart_ptr<Y> const &p)
@@ -81,12 +82,12 @@ class vbl_smart_ptr
     if (protected_)
     {
       T *old_ptr = ptr_;
-      ptr_ = VXL_NULLPTR;
+      ptr_ = nullptr;
       if (old_ptr)
         unref(old_ptr);
     }
     else
-      ptr_ = VXL_NULLPTR;
+      ptr_ = nullptr;
   }
 
   //: Assignment
@@ -118,7 +119,8 @@ class vbl_smart_ptr
   }
 
   //: Cast to bool
-   operator safe_bool () const { return ptr_? VCL_SAFE_BOOL_TRUE : VXL_NULLPTR; }
+  /* The old 'safe_bool' did implicit conversions, best practice would be to use explicit operator bool */
+  operator bool () const { return ptr_? true : false; }
 
   //: Inverse boolean value
   bool operator!() const { return ptr_? false : true; }

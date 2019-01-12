@@ -1,4 +1,5 @@
 // This is bbas/bpgl/ihog/ihog_cost_func.cxx
+#include <utility>
 #include "ihog_cost_func.h"
 //:
 // \file
@@ -6,15 +7,16 @@
 #include <vil/algo/vil_gauss_filter.h>
 #include <vil/vil_math.h>
 
+
 //: Constructor
 ihog_cost_func::ihog_cost_func( const vil_image_view<float>& image1,
                                 const vil_image_view<float>& image2,
-                                const ihog_world_roi& roi,
+                                ihog_world_roi  roi,
                                 const ihog_transform_2d& init_xform )
  : vnl_cost_function(1),
    from_image_(image1, ihog_transform_2d()),
    to_image_(image2, init_xform),
-   roi_(roi),
+   roi_(std::move(roi)),
    form_(init_xform.form())
 {
   vnl_vector<double> params;
@@ -28,18 +30,18 @@ ihog_cost_func::ihog_cost_func( const vil_image_view<float>& image1,
 
   // make a dummy mask
   mask_image_.set_size(image1.ni(),image1.nj());
-  mask_image_.fill(1);
+  mask_image_.fill(true);
 }
 
 ihog_cost_func::ihog_cost_func( const vil_image_view<float>& image1,
                                 const vil_image_view<float>& image2,
                                 const vil_image_view<float>& maskimage,
-                                const ihog_world_roi& roi,
+                                ihog_world_roi  roi,
                                 const ihog_transform_2d& init_xform )
  : vnl_cost_function(1),
    from_image_(image1, ihog_transform_2d()),
    to_image_(image2, init_xform),
-   roi_(roi),
+   roi_(std::move(roi)),
    form_(init_xform.form())
 {
   vnl_vector<double> params;
@@ -101,4 +103,3 @@ ihog_cost_func::last_xformed_image()
 {
   return roi_.resample(to_image_);
 }
-

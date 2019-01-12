@@ -9,7 +9,9 @@
 #include <boxm2/basic/boxm2_block_id.h>
 #include <boxm2/boxm2_block_metadata.h>
 #include <vgl/vgl_point_3d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //block level metadata
 #define DATASET_TAG "dataSet"
@@ -21,7 +23,7 @@ class boxm2_bounding_box_parser : public expatpp
 {
  public:
   boxm2_bounding_box_parser();
-  ~boxm2_bounding_box_parser(void) {}
+  ~boxm2_bounding_box_parser(void) override = default;
 
    // ACCESSORS for parser info
    std::string dataset() const { return dataset_; }
@@ -34,9 +36,9 @@ class boxm2_bounding_box_parser : public expatpp
   std::map<int, std::map<int, std::vector< vgl_point_3d<double> > > > verts_;
   std::map<int, std::map<int,double> > heights_;
  private:
-  virtual void startElement(const XML_Char* name, const XML_Char** atts);
-  virtual void endElement(const XML_Char* /*name*/) {}
-  virtual void charData(const XML_Char* /*s*/, int /*len*/) {}
+  void startElement(const XML_Char* name, const XML_Char** atts) override;
+  void endElement(const XML_Char* /*name*/) override {}
+  void charData(const XML_Char* /*s*/, int /*len*/) override {}
 
   void init_params();
 

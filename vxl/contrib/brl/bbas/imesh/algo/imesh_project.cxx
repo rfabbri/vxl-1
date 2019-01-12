@@ -20,8 +20,10 @@
 #include <vgl/vgl_intersection.h>
 #include <vgl/vgl_distance.h>
 #include <vgl/vgl_triangle_scan_iterator.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 
 void
@@ -170,7 +172,7 @@ imesh_render_faces(const imesh_mesh& mesh,
                    vil_image_view<bool>& image)
 {
   const imesh_face_array_base& faces = mesh.faces();
-  vcl_unique_ptr<imesh_regular_face_array<3> > tri_data;
+  std::unique_ptr<imesh_regular_face_array<3> > tri_data;
   const imesh_regular_face_array<3>* tris;
   if (faces.regularity() != 3) {
     tri_data = imesh_triangulate(faces);
@@ -189,8 +191,7 @@ imesh_render_triangles_interp(const imesh_regular_face_array<3>& tris,
                               const std::vector<double>& vals,
                               vil_image_view<double>& image)
 {
-  for (unsigned i=0; i<tris.size(); ++i) {
-    const imesh_regular_face<3>& tri = tris[i];
+  for (auto tri : tris) {
     imesh_render_triangle_interp(img_verts[tri[0]],
                                  img_verts[tri[1]],
                                  img_verts[tri[2]],
@@ -208,7 +209,7 @@ imesh_render_faces_interp(const imesh_mesh& mesh,
                           vil_image_view<double>& image)
 {
   const imesh_face_array_base& faces = mesh.faces();
-  vcl_unique_ptr<imesh_regular_face_array<3> > tri_data;
+  std::unique_ptr<imesh_regular_face_array<3> > tri_data;
   const imesh_regular_face_array<3>* tris;
   if (faces.regularity() != 3) {
     tri_data = imesh_triangulate(faces);
@@ -229,7 +230,7 @@ void imesh_project(const imesh_mesh& mesh,
                    vil_image_view<bool>& image)
 {
   assert(mesh.vertices().dim() == 3);
-  const imesh_vertex_array<3>& verts3d =
+  const auto& verts3d =
       static_cast<const imesh_vertex_array<3>&>(mesh.vertices());
   std::vector<vgl_point_2d<double> > verts2d;
   imesh_project_verts(verts3d, camera, verts2d);
@@ -249,7 +250,7 @@ void imesh_project(const imesh_mesh& mesh,
                    vgl_box_2d<unsigned int>* bbox)
 {
   const imesh_face_array_base& faces = mesh.faces();
-  vcl_unique_ptr<imesh_regular_face_array<3> > tri_data;
+  std::unique_ptr<imesh_regular_face_array<3> > tri_data;
   const imesh_regular_face_array<3>* tri_ptr;
   if (faces.regularity() != 3) {
     tri_data = imesh_triangulate(faces);
@@ -275,8 +276,7 @@ void imesh_project(const imesh_mesh& mesh,
   if (c.w() < 0.0)
     c.rescale_w(-c.w());
 
-  typedef std::vector<vgl_vector_3d<double> >::const_iterator itr_n;
-  itr_n n = normals.begin();
+  auto n = normals.begin();
   for (unsigned int i=0; i<tris.size(); ++i, ++n) {
     const vgl_point_3d<double>& v1 = verts3d[tris(i,0)];
     vgl_vector_3d<double> d(c.x()-v1.x()*c.w(),
@@ -327,12 +327,11 @@ void imesh_projection_bounds(const std::vector<vgl_point_2d<double> >& img_pts,
                              vgl_box_2d<unsigned int>& bbox)
 {
   assert(!img_pts.empty());
-  typedef std::vector<vgl_point_2d<double> >::const_iterator itr_p;
 
   int i0 = bbox.max_x(), i1 = bbox.min_x(),
       j0 = bbox.max_y(), j1 = bbox.min_y();
-  for (itr_p p = img_pts.begin(); p != img_pts.end(); ++p) {
-    double x = p->x(), y = p->y();
+  for (auto img_pt : img_pts) {
+    double x = img_pt.x(), y = img_pt.y();
     int v = static_cast<int>(std::ceil(x))-1;
     if (v < i0) i0 = v;
     v = static_cast<int>(std::floor(x))+1;
@@ -369,18 +368,16 @@ int imesh_project_onto_mesh(const imesh_mesh& mesh,
 
   // get mesh faces as triangles
   assert(mesh.faces().regularity() == 3);
-  const imesh_regular_face_array<3>& tris =
+  const auto& tris =
       static_cast<const imesh_regular_face_array<3>&>(mesh.faces());
 
   assert(mesh.vertices().dim() == 3);
   const imesh_vertex_array<3>& verts3d = mesh.vertices<3>();
 
-  typedef imesh_regular_face_array<3>::const_iterator itr_t;
-  typedef std::vector<vgl_vector_3d<double> >::const_iterator itr_n;
-  itr_n n = normals.begin();
+  auto n = normals.begin();
   double depth = std::numeric_limits<double>::infinity();
   int i = 0;
-  for (itr_t itr = tris.begin(); itr != tris.end(); ++itr, ++n, ++i) {
+  for (auto itr = tris.begin(); itr != tris.end(); ++itr, ++n, ++i) {
     if (dot_product(*n,d) > 0.0)
       continue;
     const vgl_point_2d<double>& a = verts2d[(*itr)[0]];
@@ -475,7 +472,7 @@ int imesh_project_onto_mesh_barycentric(const imesh_mesh& mesh,
 
   // get mesh faces as triangles
   assert(mesh.faces().regularity() == 3);
-  const imesh_regular_face_array<3>& tris =
+  const auto& tris =
       static_cast<const imesh_regular_face_array<3>&>(mesh.faces());
 
   int tri_idx = imesh_project_onto_mesh(mesh, normals, verts2d, camera, pt_img, pt_3d);
@@ -505,7 +502,7 @@ int imesh_project_onto_mesh_texture(const imesh_mesh& mesh,
 
   // get mesh faces as triangles
   assert(mesh.faces().regularity() == 3);
-  const imesh_regular_face_array<3>& tris =
+  const auto& tris =
       static_cast<const imesh_regular_face_array<3>&>(mesh.faces());
 
   const std::vector<vgl_point_2d<double> >& tex_coords = mesh.tex_coords();
@@ -547,9 +544,8 @@ int imesh_project_texture_to_barycentric(const imesh_mesh& mesh,
 {
   // get mesh faces as triangles
   assert(mesh.faces().regularity() == 3);
-  const imesh_regular_face_array<3>& tris =
+  const auto& tris =
       static_cast<const imesh_regular_face_array<3>&>(mesh.faces());
-  typedef imesh_regular_face_array<3>::const_iterator itr_t;
 
   if (!mesh.has_tex_coords())
     return imesh_invalid_idx;
@@ -559,7 +555,7 @@ int imesh_project_texture_to_barycentric(const imesh_mesh& mesh,
   if (mesh.has_tex_coords() == imesh_mesh::TEX_COORD_ON_VERT)
   {
     int i = 0;
-    for (itr_t itr = tris.begin(); itr != tris.end(); ++itr, ++i) {
+    for (auto itr = tris.begin(); itr != tris.end(); ++itr, ++i) {
       const vgl_point_2d<double>& a = tc[(*itr)[0]];
       const vgl_point_2d<double>& b = tc[(*itr)[1]];
       const vgl_point_2d<double>& c = tc[(*itr)[2]];
@@ -588,7 +584,7 @@ bool trace_texture(const imesh_mesh& mesh,
 {
   const std::vector<vgl_point_2d<double> >& tc = mesh.tex_coords();
   assert(mesh.faces().regularity() == 3);
-  const imesh_regular_face_array<3>& tris =
+  const auto& tris =
       static_cast<const imesh_regular_face_array<3>&>(mesh.faces());
   assert(mesh.has_half_edges());
   const imesh_half_edge_set& he = mesh.half_edges();
@@ -888,7 +884,7 @@ vnl_matrix_fixed<double,3,3>
 imesh_project_texture_to_3d_map(const imesh_mesh& mesh, unsigned int tidx)
 {
   assert(mesh.has_tex_coords());
-  const imesh_regular_face_array<3>& triangles =
+  const auto& triangles =
       static_cast<const imesh_regular_face_array<3>&>(mesh.faces());
   const imesh_regular_face<3>& tri = triangles[tidx];
   const std::vector<vgl_point_2d<double> >& tex = mesh.tex_coords();

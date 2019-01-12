@@ -7,8 +7,10 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #define RANGE(a,b,c) { if ((a) < (b)) (a) = b;  if ((a) > (c)) (a) = c; }
 #define in_range(a) ((a) < 0x100)
@@ -264,7 +266,7 @@ void vul_psfile::print_greyscale_image(const unsigned char* buffer, int sizex, i
     << new_width << ' ' << new_height << " 8             % dimensions of data\n"
     << '[' << new_width << " 0 0 -" << new_height << " 0 " << new_height
     << "]  % mapping matrix\n{currentfile pix readhexstring pop}\nimage\n\n";
-  const int linesize = 72;
+  constexpr int linesize = 72;
 
   // write image data to output PostScript file
   for (int j=0; j<new_height; j++)
@@ -300,8 +302,8 @@ void vul_psfile::print_greyscale_image(const unsigned char* buffer, int sizex, i
       if (in_range(index))
       {
         char pixel[3];
-        unsigned char low4 = (unsigned char)  (index & 0x000f);
-        unsigned char high4 = (unsigned char) ((index & 0x00f0) >> 4);
+        auto low4 = (unsigned char)  (index & 0x000f);
+        auto high4 = (unsigned char) ((index & 0x00f0) >> 4);
         pixel[0] = Hex4bit(high4);
         pixel[1] = Hex4bit(low4);
         pixel[2] = '\0';
@@ -333,7 +335,7 @@ void vul_psfile::print_color_image(const unsigned char* data, int sizex, int siz
              << ", height = " << sizey  << ", reduction_factor = "
              << reduction_factor << '\n';
 
-  const int bytes_per_pixel = 3;
+  constexpr int bytes_per_pixel = 3;
   exist_image = true;
   width = sizex;
   height = sizey;
@@ -422,7 +424,7 @@ void vul_psfile::print_color_image(const unsigned char* data, int sizex, int siz
     << "false 3 colorimage\n\n";
 
   // write image data into PostScript file.
-  const int linesize = 72;
+  constexpr int linesize = 72;
 
   // extract RGB data from pixel value and write it to output file
   for (int j = 0; j < new_height;j++)
@@ -461,8 +463,8 @@ void vul_psfile::print_color_image(const unsigned char* data, int sizex, int siz
         if (in_range(index))
         {
           char pixel[3];
-          unsigned char low4 = (unsigned char)  (index & 0x000f);
-          unsigned char high4 = (unsigned char) ((index & 0x00f0) >> 4);
+          auto low4 = (unsigned char)  (index & 0x000f);
+          auto high4 = (unsigned char) ((index & 0x00f0) >> 4);
           pixel[0] = Hex4bit(high4);
           pixel[1] = Hex4bit(low4);
           pixel[2] = '\0';

@@ -7,7 +7,9 @@
 // \author Tim Cootes
 
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_random.h>
 #include <pdf1d/pdf1d_flat.h>

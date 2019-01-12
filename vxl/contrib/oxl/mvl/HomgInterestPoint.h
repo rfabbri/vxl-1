@@ -1,9 +1,6 @@
 // This is oxl/mvl/HomgInterestPoint.h
 #ifndef HomgInterestPoint_h_
 #define HomgInterestPoint_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Homogeneous interest point/corner
@@ -23,7 +20,9 @@
 
 #include <iostream>
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_int_2.h>
 #include <mvl/HomgPoint2D.h>
 #include <vgl/vgl_homg_point_2d.h>

@@ -1,7 +1,4 @@
 // This is core/vgui/internals/vgui_rasterpos.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
@@ -44,7 +41,7 @@ void vgui_rasterpos4dv(double const X[4])
   glBitmap(0,0,
            0,0,
            float(rx*vp[2]/2), float(ry*vp[3]/2),
-           VXL_NULLPTR);
+           nullptr);
 }
 
 

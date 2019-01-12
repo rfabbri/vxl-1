@@ -9,7 +9,9 @@
 #include <iostream>
 #include <algorithm>
 #include <cstdlib>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vnl/vnl_double_2.h>
 
@@ -57,14 +59,14 @@ typedef vxl_byte pixel_type;
 class command_iteration_update: public rgrl_command
 {
  public:
-  void execute(rgrl_object* caller, const rgrl_event & event )
+  void execute(rgrl_object* caller, const rgrl_event & event ) override
   {
     execute( (const rgrl_object*) caller, event );
   }
 
-  void execute(const rgrl_object* caller, const rgrl_event & /*event*/ )
+  void execute(const rgrl_object* caller, const rgrl_event & /*event*/ ) override
   {
-    const rgrl_feature_based_registration* reg_engine =
+    const auto* reg_engine =
       dynamic_cast<const rgrl_feature_based_registration*>(caller);
     std::cout <<"Current stage = " << reg_engine->current_stage() << std::endl;
     rgrl_transformation_sptr trans = reg_engine->current_transformation();
@@ -128,8 +130,8 @@ read_feature_file( char const* filename,
     std::exit(3);
   }
 
-  const double min_sigma=1.3; // don't want to take the lowest sigma=1
-  const double max_sigma=6;   // stop after the 5th resolution
+  constexpr double min_sigma = 1.3; // don't want to take the lowest sigma=1
+  constexpr double max_sigma = 6;   // stop after the 5th resolution
   std::string type_str;
   std::getline( istr, type_str );
   vbl_bounding_box<double, 2> box;
@@ -232,12 +234,12 @@ read_affine_trans_2d( const char* trans_file, vnl_matrix< double > & A, vnl_vect
 int
 main( int argc, char* argv[] )
 {
-  vul_arg< unsigned > spacing( VXL_NULLPTR, "spacing for fewer features" );
-  vul_arg< const char* > feature_file( VXL_NULLPTR, "the feature file" );
-  vul_arg< const char* > from_files( VXL_NULLPTR, "from image file" );
-  vul_arg< const char* > to_files( VXL_NULLPTR, "to image file" );
-  vul_arg< const char* > output_xform( "-o", "output xformation file", VXL_NULLPTR );
-  vul_arg< const char* > mask_file( "-mask", "mask file", VXL_NULLPTR );
+  vul_arg< unsigned > spacing( nullptr, "spacing for fewer features" );
+  vul_arg< const char* > feature_file( nullptr, "the feature file" );
+  vul_arg< const char* > from_files( nullptr, "from image file" );
+  vul_arg< const char* > to_files( nullptr, "to image file" );
+  vul_arg< const char* > output_xform( "-o", "output xformation file", nullptr );
+  vul_arg< const char* > mask_file( "-mask", "mask file", nullptr );
   vul_arg< const char* > trans_file( "-init", "the initialization" );
   vul_arg< const char* > model( "-model", "Final model (affine, quadratic)", "quadratic" );
 
@@ -370,8 +372,8 @@ main( int argc, char* argv[] )
   //
   rgrl_weighter_sptr wgter;
   {
-    vcl_unique_ptr< rrel_m_est_obj > m_est_obj( new rrel_tukey_obj(4) );
-    wgter = new rgrl_weighter_m_est( vcl_move(m_est_obj), true, true) ;
+    std::unique_ptr< rrel_m_est_obj > m_est_obj( new rrel_tukey_obj(4) );
+    wgter = new rgrl_weighter_m_est( std::move(m_est_obj), true, true) ;
   }
 
   // 5. Scale estimator
@@ -382,8 +384,8 @@ main( int argc, char* argv[] )
   rgrl_scale_estimator_wgted_sptr wgted_scale_est;
   {
     // muse and unwgted_scale_est are not used
-    vcl_unique_ptr<rrel_objective> obj( new rrel_muset_obj( 1 ) );
-    unwgted_scale_est = new rgrl_scale_est_closest( vcl_move(obj) );
+    std::unique_ptr<rrel_objective> obj( new rrel_muset_obj( 1 ) );
+    unwgted_scale_est = new rgrl_scale_est_closest( std::move(obj) );
     wgted_scale_est = new rgrl_scale_est_all_weights( );
   }
 

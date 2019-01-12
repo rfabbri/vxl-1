@@ -13,8 +13,10 @@
 #include <vgl/vgl_vector_2d.h>
 #include <vgl/vgl_point_3d.h>
 #include <vimt/vimt_image_pyramid.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 //: True if value is strictly above *im and its 8 neighbours
 template <class T>
@@ -89,7 +91,7 @@ inline void ipts_scale_space_peaks_2d(std::vector<vgl_point_3d<double> >& peak_p
                                   im_above.istep(),im_above.jstep()))
             {
               vgl_point_2d<double> p = to_base(i,j);
-              peak_pts.push_back(vgl_point_3d<double>(p.x(),p.y(),scale));
+              peak_pts.emplace_back(p.x(),p.y(),scale);
             }
           }
         }
@@ -160,9 +162,9 @@ inline void ipts_scale_space_peaks_2d(std::vector<vgl_point_3d<double> >& peak_p
   dw = im0.world2im().delta(vgl_point_2d<double>(0,0),dx);
   double scale = 1.0/std::sqrt(dw.x()*dw.x()+dw.y()*dw.y());
 
-  for (unsigned i=0;i<peak_pts0.size();++i)
+  for (auto & i : peak_pts0)
   {
-    vgl_point_3d<double> p(peak_pts0[i].x(),peak_pts0[i].y(),scale);
+    vgl_point_3d<double> p(i.x(),i.y(),scale);
     peak_pts.push_back(p);
   }
 }

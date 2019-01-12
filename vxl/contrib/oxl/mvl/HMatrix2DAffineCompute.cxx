@@ -1,7 +1,4 @@
 // This is oxl/mvl/HMatrix2DAffineCompute.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 //  \file
 
@@ -9,8 +6,10 @@
 #include <vector>
 #include "HMatrix2DAffineCompute.h"
 //
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vnl/vnl_matrix.h>
 #include <mvl/HMatrix2D.h>
 #include <mvl/HomgPoint2D.h>

@@ -7,8 +7,10 @@
 #include <limits>
 #include "vpdl_distribution.h"
 #include <vpdl/vpdt/vpdt_access.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 //: Default implementation of numerical CDF inverse computation.
 // This function is called by the virtual function inverse_cdf() by default

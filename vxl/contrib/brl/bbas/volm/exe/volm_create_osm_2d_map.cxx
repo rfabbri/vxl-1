@@ -31,9 +31,11 @@
 #include <bkml/bkml_parser.h>
 #include <vul/vul_file_iterator.h>
 
-static void error(std::string log_file, std::string msg)
+#include <utility>
+
+static void error(std::string log_file, const std::string& msg)
 {
-  std::cerr << msg;  volm_io::write_post_processing_log(log_file, msg);
+  std::cerr << msg;  volm_io::write_post_processing_log(std::move(log_file), msg);
 }
 
 #if 0
@@ -1090,7 +1092,7 @@ int main(int argc, char** argv)
 
   // start to create 2d map
   volm_img_info nlcd_info = nlcd_infos[t_id];
-  vil_image_view<vxl_byte>* nlcd_img = dynamic_cast<vil_image_view<vxl_byte>*>(nlcd_info.img_r.ptr());
+  auto* nlcd_img = dynamic_cast<vil_image_view<vxl_byte>*>(nlcd_info.img_r.ptr());
   if (!nlcd_img) {
     log << "ERROR: unsupported NLCD image pixel format: " << nlcd_info.img_r->pixel_format() << '\n';  error(log_file, log.str());
     return -1;
@@ -1116,8 +1118,8 @@ int main(int argc, char** argv)
     vpgl_lvcs_sptr lvcs = new vpgl_lvcs(lat_min, lon_min, 0, vpgl_lvcs::wgs84, vpgl_lvcs::DEG, vpgl_lvcs::METERS);
     double box_lx, box_ly, box_lz;
     lvcs->global_to_local(lon_max, lat_max, 0, vpgl_lvcs::wgs84, box_lx, box_ly, box_lz);
-    unsigned ni = (unsigned)std::ceil(box_lx);
-    unsigned nj = (unsigned)std::ceil(box_ly);
+    auto ni = (unsigned)std::ceil(box_lx);
+    auto nj = (unsigned)std::ceil(box_ly);
     vgl_box_2d<double> leaf_bbox_geo = leaf->extent_;
     vgl_box_2d<double> leaf_bbox(0.0, box_lx, 0.0, box_ly);
     // create geo camera for output image
@@ -1144,15 +1146,15 @@ int main(int argc, char** argv)
 
     // obtain LIDAR images that intersect with current leaf
     std::vector<std::pair<vil_image_view<float>, vpgl_geo_camera*> > lidar_imgs;
-    for (std::vector<volm_img_info>::iterator vit = lidar_infos.begin(); vit != lidar_infos.end(); ++vit) {
-      if (vgl_area(vgl_intersection(vit->bbox, leaf_bbox_geo)) <= 0.0)
+    for (auto & lidar_info : lidar_infos) {
+      if (vgl_area(vgl_intersection(lidar_info.bbox, leaf_bbox_geo)) <= 0.0)
         continue;
-      if (vit->img_r->pixel_format() != VIL_PIXEL_FORMAT_FLOAT) {
-        log << "ERROR: unsupported LIDAR image pixel format: " << vit->img_r->pixel_format() << '\n';  error(log_file, log.str());
+      if (lidar_info.img_r->pixel_format() != VIL_PIXEL_FORMAT_FLOAT) {
+        log << "ERROR: unsupported LIDAR image pixel format: " << lidar_info.img_r->pixel_format() << '\n';  error(log_file, log.str());
         return -1;
       }
-      vil_image_view<float> img(vit->img_r);
-      lidar_imgs.push_back(std::pair<vil_image_view<float>, vpgl_geo_camera*>(img, vit->cam));
+      vil_image_view<float> img(lidar_info.img_r);
+      lidar_imgs.emplace_back(img, lidar_info.cam);
     }
     std::cout << lidar_imgs.size() << " LIDAR image intersect with the leaf " << l_idx << std::endl;
     // ingest NLCD image and refine the beach/water boundary by LIDAR elevation
@@ -1160,13 +1162,13 @@ int main(int argc, char** argv)
       for (unsigned j = 0; j < nj; j++) {
         // obtain global lon/lat
         double lon, lat, gz;
-        float local_x = (float)(i+0.5);  float local_y = (float)(box_ly-j+0.5);
+        auto local_x = (float)(i+0.5);  auto local_y = (float)(box_ly-j+0.5);
         lvcs->local_to_global(local_x, local_y, 0, vpgl_lvcs::wgs84, lon, lat, gz);
         // find NLCD pixel
         unsigned char label = volm_osm_category_io::volm_land_table_name["invalid"].id_;
         double u, v;
         nlcd_info.cam->global_to_img(lon, lat, gz, u, v);
-        unsigned uu = (unsigned)std::floor(u+0.5);  unsigned vv = (unsigned)std::floor(v+0.5);
+        auto uu = (unsigned)std::floor(u+0.5);  auto vv = (unsigned)std::floor(v+0.5);
         if (uu > 0 && vv > 0 && uu < nlcd_img->ni() && vv < nlcd_img->nj()) {
           label = (*nlcd_img)(uu, vv);
           unsigned char land_label = volm_osm_category_io::nlcd_land_table[label].id_;
@@ -1224,16 +1226,16 @@ int main(int argc, char** argv)
       for (unsigned j = 0; j < nj; j++) {
         // obtain global lon/lat
         double lon, lat, gz;
-        float local_x = (float)(i+0.5);  float local_y = (float)(box_ly-j+0.5);
+        auto local_x = (float)(i+0.5);  auto local_y = (float)(box_ly-j+0.5);
         lvcs->local_to_global(local_x, local_y, 0, vpgl_lvcs::wgs84, lon, lat, gz);
         float elev = 100.0f;
         bool found = false;
-        for (unsigned k = 0; k < lidar_imgs.size(); k++) {
+        for (auto & lidar_img : lidar_imgs) {
           double u, v;
-          lidar_imgs[k].second->global_to_img(lon, lat, gz, u, v);
-          unsigned uu = (unsigned)std::floor(u+0.5);  unsigned vv = (unsigned)std::floor(v+0.5);
-          if (uu > 0 && vv > 0 && uu < lidar_imgs[k].first.ni() && vv < lidar_imgs[k].first.nj()) {
-            elev = lidar_imgs[k].first(uu, vv);  found = true;
+          lidar_img.second->global_to_img(lon, lat, gz, u, v);
+          auto uu = (unsigned)std::floor(u+0.5);  auto vv = (unsigned)std::floor(v+0.5);
+          if (uu > 0 && vv > 0 && uu < lidar_img.first.ni() && vv < lidar_img.first.nj()) {
+            elev = lidar_img.first(uu, vv);  found = true;
             break;
           }
         }
@@ -1268,12 +1270,12 @@ int main(int argc, char** argv)
       unsigned char curr_level = osm.loc_lines()[r_idx]->prop().level_;
       unsigned char curr_id = osm.loc_lines()[r_idx]->prop().id_;
       double width = osm.loc_lines()[r_idx]->prop().width_;
-      for (unsigned pt_idx = 0; pt_idx < line_geo.size(); pt_idx++) {
+      for (auto & pt_idx : line_geo) {
         double lx, ly, lz;
-        lvcs->global_to_local(line_geo[pt_idx].x(), line_geo[pt_idx].y(), 0.0, vpgl_lvcs::wgs84, lx, ly, lz);
+        lvcs->global_to_local(pt_idx.x(), pt_idx.y(), 0.0, vpgl_lvcs::wgs84, lx, ly, lz);
         double i = lx - leaf_bbox.min_x();  double j = leaf_bbox.max_y() - ly;
         if (i>=0 && j>=0 && i<out_img.ni() && j<out_img.nj())
-          line_img.push_back(vgl_point_2d<double>(i,j));
+          line_img.emplace_back(i,j);
       }
       if (line_img.size() < 2)  continue;
       // record current line for later junction calculation
@@ -1368,12 +1370,12 @@ int main(int argc, char** argv)
     // ingest SME data -- forts only
     cnt = 0;
     double fort_rad = 200.0;
-    for (unsigned kk = 0; kk < sme_objects.size(); kk++)
+    for (auto & sme_object : sme_objects)
     {
-      if ( (unsigned char)sme_objects[kk].second != volm_osm_category_io::volm_land_table_name["forts"].id_)
+      if ( (unsigned char)sme_object.second != volm_osm_category_io::volm_land_table_name["forts"].id_)
         continue;
       double lx, ly, lz;
-      lvcs->global_to_local(sme_objects[kk].first.x(), sme_objects[kk].first.y(), 0.0, vpgl_lvcs::wgs84, lx, ly, lz);
+      lvcs->global_to_local(sme_object.first.x(), sme_object.first.y(), 0.0, vpgl_lvcs::wgs84, lx, ly, lz);
       double i = lx - leaf_bbox.min_x();  double j = leaf_bbox.max_y() - ly;
       int x = (int)i;  int y = (int)j;
       cnt++;
@@ -1395,9 +1397,9 @@ int main(int argc, char** argv)
       if (build_heights[ii] > 20)
         curr_id = volm_osm_category_io::volm_land_table_name["tall_building"].id_;
       // check if this is one of the sme objects
-      for (unsigned kk = 0; kk < sme_objects.size(); kk++) {
-        if (build_polys[ii].first.contains(sme_objects[kk].first.x(), sme_objects[kk].first.y())) {
-          curr_id = sme_objects[kk].second;
+      for (auto & sme_object : sme_objects) {
+        if (build_polys[ii].first.contains(sme_object.first.x(), sme_object.first.y())) {
+          curr_id = sme_object.second;
           break;
         }
       }
@@ -1437,11 +1439,11 @@ int main(int argc, char** argv)
     for (unsigned i = 0; i < ni; i++)
       for (unsigned j = 0; j < nj; j++)
         if (out_img(i,j) == volm_osm_category_io::volm_land_table_name["piers"].id_) {
-          pier_pixels.push_back(std::pair<unsigned, unsigned>(i,j));
+          pier_pixels.emplace_back(i,j);
         }
     std::cout << pier_pixels.size() << " piers exist in leaf " << l_idx << std::endl;
-    for (std::vector<std::pair<unsigned, unsigned> >::iterator vit = pier_pixels.begin();  vit != pier_pixels.end(); ++vit) {
-      unsigned i = vit->first;  unsigned j = vit->second;
+    for (auto & pier_pixel : pier_pixels) {
+      unsigned i = pier_pixel.first;  unsigned j = pier_pixel.second;
       for (int x=i-8; x<i+8; x++)
         for (int y=j-8; y<j+8; y++)
           if (x>=0 && y>=0 && x<ni && y<nj) {

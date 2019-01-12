@@ -1,9 +1,6 @@
 // This is oxl/mvl/FMPlanarNonLinFun.h
 #ifndef FMPlanarNonLinFun_h_
 #define FMPlanarNonLinFun_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief a class that contains the functions required for FMPlanarComputeLinear.
@@ -20,7 +17,9 @@
 
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_least_squares_function.h>
 #include <vnl/vnl_double_3x3.h>
 #include <vgl/vgl_homg_point_2d.h>
@@ -66,7 +65,7 @@ class FMPlanarNonLinFun : public vnl_least_squares_function
   bool compute(FMatrixPlanar* F);
 
   //: The virtual function from vnl_levenberg_marquardt
-  void f(vnl_vector<double> const& x, vnl_vector<double>& fx);
+  void f(vnl_vector<double> const& x, vnl_vector<double>& fx) override;
 
   // Helpers-------------------------------------------------------------------
  private:

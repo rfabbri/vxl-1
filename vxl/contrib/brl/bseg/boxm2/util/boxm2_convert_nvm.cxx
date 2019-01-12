@@ -2,14 +2,18 @@
 #include "boxm2_point_util.h"
 //:
 // \file
-#include <vsph/vsph_camera_bounds.h>
-#include <vidl/vidl_image_list_istream.h>
-#include <vgl/vgl_box_3d.h>
+#include <cassert>
+#include <utility>
 #include <vgl/algo/vgl_rotation_3d.h>
+#include <vgl/vgl_box_3d.h>
+#include <vidl/vidl_image_list_istream.h>
 #include <vnl/vnl_double_3.h>
 #include <vnl/vnl_matrix_fixed.h>
 #include <vnl/vnl_quaternion.h>
-#include <vcl_cassert.h>
+#include <vsph/vsph_camera_bounds.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_file.h>
 #include <vpgl/algo/vpgl_ortho_procrustes.h>
 
@@ -21,7 +25,7 @@ void boxm2_util_convert_nvm(std::string nvm_file,
                             vgl_box_3d<double>& bbox,
                             double& resolution,bool axis_align)
 {
-    boxm2_convert_nvm b2s(nvm_file, img_dir,axis_align);
+    boxm2_convert_nvm b2s(std::move(nvm_file), std::move(img_dir),axis_align);
     cams        = b2s.get_cams();
     bbox        = b2s.get_bbox();
     resolution  = b2s.get_resolution();
@@ -34,7 +38,7 @@ void boxm2_util_convert_nvm(std::string nvm_file,
 }
 
 // reads bundler file and populates list of cameras, and a scene bounding box
-boxm2_convert_nvm::boxm2_convert_nvm(std::string nvm_file, std::string img_dir,bool axis_align)
+boxm2_convert_nvm::boxm2_convert_nvm(const std::string& nvm_file, const std::string& img_dir,bool axis_align)
 {
     img_dir_ = img_dir;
     nvm_file_ = nvm_file;
@@ -80,9 +84,9 @@ boxm2_convert_nvm::boxm2_convert_nvm(std::string nvm_file, std::string img_dir,b
         if (!boxm2_point_util::axis_align_scene(corrs_,cams_))
             return;
         pts_3d_.clear() ;
-        for (unsigned i=0; i<corrs_.size(); ++i)
+        for (auto & corr : corrs_)
         {
-            pts_3d_.push_back(corrs_[i]->world_pt());
+            pts_3d_.push_back(corr->world_pt());
         }
 
     }
@@ -99,7 +103,7 @@ boxm2_convert_nvm::boxm2_convert_nvm(std::string nvm_file, std::string img_dir,b
         if ( !bad_cams_.count(i) ) {
             std::string path = img_dir + "/" + names_[i]; // was: +vul_file::strip_extension(names_[i])+".png";
             // was: imgstream.seek_frame(i); std::string path = imgstream.current_path();
-            CamType* cam = new CamType(cams_[i]);
+            auto* cam = new CamType(cams_[i]);
             final_cams_[path] = cam;
 #ifdef DEBUG
             std::cout<<"Final cam: "<<path<<std::endl;
@@ -113,10 +117,10 @@ boxm2_convert_nvm::boxm2_convert_nvm(std::string nvm_file, std::string img_dir,b
 
     vgl_box_3d<double> bounding_box;
     pts_3d_.clear() ;
-    for (unsigned i=0; i<corrs_.size(); ++i)
+    for (auto & corr : corrs_)
     {
-        bounding_box.add(corrs_[i]->world_pt());
-        pts_3d_.push_back(corrs_[i]->world_pt());
+        bounding_box.add(corr->world_pt());
+        pts_3d_.push_back(corr->world_pt());
     }
 
     // Dimensions of the World
@@ -220,7 +224,7 @@ bool boxm2_convert_nvm::read_cameras(std::ifstream& in, vgl_point_2d<double> ppo
 
         //scrub name
         std::size_t found = 0;
-        while ( (found=token.find("\\")) != std::string::npos )
+        while ( (found=token.find('\\')) != std::string::npos )
             token.replace(found, 1, "/");
 #ifdef DEBUG
         std::cout<<"Scrubbed filename: "<<token<<std::endl;

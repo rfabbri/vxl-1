@@ -1,9 +1,6 @@
 // This is tbl/vipl/filter/vipl_filter.h
 #ifndef vipl_filter_h_
 #define vipl_filter_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // Here is how the get/set macros are used.
@@ -27,8 +24,6 @@ template < class ImgIn, class ImgOut, class DataIn, class DataOut, int Arity, cl
 
 #include <vipl/section/vipl_section_descriptor.h>
 #include <vipl/section/vipl_section_container.h>
-
-#include <vcl_stlfwd.h> // forward declaration for std::vector
 
 #ifdef USE_NAMED_ACCESSORS // cannot have both set,
 #undef USE_OPERATOR_ACCESSORS // to be safe if we have named we undefine operator()
@@ -92,11 +87,10 @@ template < class ImgIn, class ImgOut, class DataIn, class DataOut, int Arity, cl
 class vipl_filter          : public vipl_filter_abs
 {
   // declare some static consts....
-  static VXL_CONSTEXPR_VAR VIPL_FILTER_STATE Not_Ready      VCL_STATIC_CONST_INIT_INT_DECL(0);
-  static VXL_CONSTEXPR_VAR VIPL_FILTER_STATE Ready          VCL_STATIC_CONST_INIT_INT_DECL(1);
-  static VXL_CONSTEXPR_VAR VIPL_FILTER_STATE Unchanged      VCL_STATIC_CONST_INIT_INT_DECL(2);
-  static VXL_CONSTEXPR_VAR VIPL_FILTER_STATE Filter_Owned   VCL_STATIC_CONST_INIT_INT_DECL(4);
-  // typedef iterators from our "iterator" class
+  static constexpr VIPL_FILTER_STATE Not_Ready = 0;
+  static constexpr VIPL_FILTER_STATE Ready = 1;
+  static constexpr VIPL_FILTER_STATE Unchanged = 2;
+  static constexpr VIPL_FILTER_STATE Filter_Owned = 4;
 
  public: typedef typename PixelItr::Titerator Titerator;
  public: typedef typename PixelItr::Yiterator Yiterator;

@@ -11,7 +11,9 @@
 //-----------------------------------------------------------------------------
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/algo/vgl_h_matrix_2d.h>
 #include <vsol/vsol_point_2d_sptr.h>
 #include <vsol/vsol_polyline_2d.h>
@@ -24,7 +26,7 @@ class bvgl_articulated_poly : public vsol_polyline_2d
   bvgl_articulated_poly(const unsigned n_joints);
   bvgl_articulated_poly(const unsigned n_joints, std::vector<double> const& link_lengths);
   bvgl_articulated_poly(const bvgl_articulated_poly& poly);
-  ~bvgl_articulated_poly() {}
+  ~bvgl_articulated_poly() override = default;
 
   vgl_h_matrix_2d<double> joint_transform(unsigned joint) const
     {return joint_transforms_[joint];}
@@ -60,7 +62,7 @@ class bvgl_articulated_poly : public vsol_polyline_2d
  private:
   //: called when the state of the polygon changes
   void update();
-  bvgl_articulated_poly() {} //not available
+  bvgl_articulated_poly() = default; //not available
   //:the inverse joint transforms for the current state of the articulation
   std::vector<vgl_h_matrix_2d<double> > joint_transforms_;
 };

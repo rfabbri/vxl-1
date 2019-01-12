@@ -1,7 +1,4 @@
 // This is oxl/osl/osl_load_topology.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
@@ -12,8 +9,10 @@
 #include <fstream>
 #include <vector>
 #include "osl_load_topology.h"
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 void osl_load_topology(char const *f, std::list<osl_edge*> &e, std::list<osl_vertex*> &v)
 {
@@ -53,7 +52,7 @@ void osl_load_topology(std::istream &f, std::list<osl_edge*> &es, std::list<osl_
   streamok;
   // read vertices :
   std::cerr << "reading " << numverts << " vertices...\n";
-  std::vector<osl_vertex*> vert(numverts+1, (osl_vertex*)VXL_NULLPTR);
+  std::vector<osl_vertex*> vert(numverts+1, (osl_vertex*)nullptr);
   for (int i=0; i<numverts; ++i) {
     unsigned int stashid;
     int id;
@@ -87,7 +86,7 @@ void osl_load_topology(std::istream &f, std::list<osl_edge*> &es, std::list<osl_
     int id; // edge id
     f >> std::ws >> id;
 
-    osl_edge *e = new osl_edge(2/*dummy*/, vert[stashid1], vert[stashid2]);
+    auto *e = new osl_edge(2/*dummy*/, vert[stashid1], vert[stashid2]);
     e->SetId(id);
 
     e->read_ascii(f);

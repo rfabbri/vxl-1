@@ -30,8 +30,10 @@
 #include <vsl/vsl_binary_io.h>
 #include <vpl/vpl.h>
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 template <class T_loc, class T_data>
 void boxm_save_scene_raw(boxm_scene<boct_tree<T_loc, T_data > > &scene,
@@ -76,11 +78,11 @@ void boxm_save_scene_raw(boxm_scene<boct_tree<T_loc, T_data > > &scene,
     vgl_point_3d<double> data_og(min.x() + (step_len/2.0), min.y() + (step_len/2.0), min.z() + (step_len/2.0));
 
     int data_size = ncells*ncells*ncells;
-    float *data = VXL_NULLPTR;
+    float *data = nullptr;
     std::cout << "Data Size=" << data_size << std::endl;
     data = new (std::nothrow)float[data_size];
 
-    if (data == VXL_NULLPTR) {
+    if (data == nullptr) {
       std::cout << "boxm_save_block_raw: Could not allocate data!" << std::endl;
       return;
     }
@@ -191,7 +193,7 @@ void boxm_save_scene_raw(boxm_scene<boct_tree<T_loc, T_data > > &scene,
   // we will read the data a column at a time and this is enough
   int row_data_size = ncells;
   char* byte_data = new (std::nothrow) char[row_data_size];
-  if (byte_data == VXL_NULLPTR) {
+  if (byte_data == nullptr) {
     std::cout << "boxm_save_block_raw: Could not allocate byte data!" << std::endl;
     return;
   }

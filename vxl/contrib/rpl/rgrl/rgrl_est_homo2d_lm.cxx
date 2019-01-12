@@ -19,7 +19,10 @@
 #include <vnl/algo/vnl_levenberg_marquardt.h>
 #include <vnl/algo/vnl_svd.h>
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 static
 inline
@@ -80,10 +83,10 @@ class rgrl_homo2d_func
   }
 
   //: obj func value
-  void f(vnl_vector<double> const& x, vnl_vector<double>& fx);
+  void f(vnl_vector<double> const& x, vnl_vector<double>& fx) override;
 
   //: Jacobian
-  void gradf(vnl_vector<double> const& x, vnl_matrix<double>& jacobian);
+  void gradf(vnl_vector<double> const& x, vnl_matrix<double>& jacobian) override;
 
  protected:
   typedef rgrl_match_set::const_from_iterator FIter;
@@ -101,7 +104,7 @@ f(vnl_vector<double> const& x, vnl_vector<double>& fx)
   vnl_matrix_fixed<double,2,2> error_proj_sqrt;
   unsigned int ind = 0;
   for ( unsigned ms = 0; ms<matches_ptr_->size(); ++ms )
-    if ( (*matches_ptr_)[ms] != VXL_NULLPTR ) { // if pointer is valid
+    if ( (*matches_ptr_)[ms] != nullptr ) { // if pointer is valid
       rgrl_match_set const& one_set = *((*matches_ptr_)[ms]);
       for ( FIter fi=one_set.from_begin(); fi!=one_set.from_end(); ++fi ) {
         // map from point
@@ -207,8 +210,8 @@ estimate( rgrl_set_of<rgrl_match_set_sptr> const& matches,
     rgrl_est_homography2d est_homo;
     rgrl_transformation_sptr tmp_trans= est_homo.estimate( matches, cur_transform );
     if ( !tmp_trans )
-      return VXL_NULLPTR;
-    rgrl_trans_homography2d const& trans = static_cast<rgrl_trans_homography2d const&>( *tmp_trans );
+      return nullptr;
+    auto const& trans = static_cast<rgrl_trans_homography2d const&>( *tmp_trans );
     init_H = trans.H();
   }
 
@@ -218,7 +221,7 @@ estimate( rgrl_set_of<rgrl_match_set_sptr> const& matches,
   vnl_vector<double> from_centre;
   vnl_vector<double> to_centre;
   if ( !rgrl_est_compute_weighted_centres( matches, from_centre, to_centre ) )
-    return VXL_NULLPTR;
+    return nullptr;
    DebugMacro( 3, "From center: " << from_centre
                <<"  To center: " << to_centre << std::endl );
 
@@ -263,7 +266,7 @@ estimate( rgrl_set_of<rgrl_match_set_sptr> const& matches,
     ret = lm.minimize_without_gradient(p);
   if ( !ret ) {
     WarningMacro( "Levenberg-Marquardt failed" );
-    return VXL_NULLPTR;
+    return nullptr;
   }
   // lm.diagnose_outcome(std::cout);
 
@@ -276,7 +279,7 @@ estimate( rgrl_set_of<rgrl_match_set_sptr> const& matches,
   // check rank of H
   vnl_double_3x3 tmpH(init_H);
   if ( std::abs(vnl_det(tmpH)) < 1e-8 )
-    return VXL_NULLPTR;
+    return nullptr;
 
   // compute covariance
   // JtJ is INVERSE of jacobian
@@ -302,7 +305,7 @@ estimate( rgrl_set_of<rgrl_match_set_sptr> const& matches,
   vnl_svd<double> svd( vnl_transpose(compliment) * jtj *compliment, 1e-6 );
   if ( svd.rank() < 8 ) {
     WarningMacro( "The covariance of homography ranks less than 8! ");
-    return VXL_NULLPTR;
+    return nullptr;
   }
 
   vnl_matrix<double>covar = compliment * svd.inverse() * compliment.transpose();

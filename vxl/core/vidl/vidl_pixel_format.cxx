@@ -5,7 +5,9 @@
 // \file
 // \author Matt Leotta
 //
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #define vidl_ppi_mac(FMT)\
 const std::ptrdiff_t vidl_pixel_pack_of<VIDL_PIXEL_FORMAT_##FMT>::offset[macro_pix_size][num_channels]

@@ -5,10 +5,12 @@
 #include <boxm2/ocl/boxm2_ocl_util.h>
 #include <boxm2/boxm2_block.h>
 #include <vul/vul_timer.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 boxm2_ocl_kernel_vector_filter::
-boxm2_ocl_kernel_vector_filter( bocl_device_sptr device,bool optimize_transfers) :
+boxm2_ocl_kernel_vector_filter( const bocl_device_sptr& device,bool optimize_transfers) :
   device_(device),optimize_transfers_(optimize_transfers)
 {
   compile_filter_kernel();
@@ -32,7 +34,7 @@ bool boxm2_ocl_kernel_vector_filter::compile_filter_kernel()
 }
 
 
-bool boxm2_ocl_kernel_vector_filter::run(boxm2_scene_sptr scene, boxm2_opencl_cache_sptr opencl_cache, bvpl_kernel_vector_sptr filter_vector)
+bool boxm2_ocl_kernel_vector_filter::run(const boxm2_scene_sptr& scene, const boxm2_opencl_cache_sptr& opencl_cache, const bvpl_kernel_vector_sptr& filter_vector)
 {
   float gpu_time=0.0f;
 
@@ -71,18 +73,16 @@ bool boxm2_ocl_kernel_vector_filter::run(boxm2_scene_sptr scene, boxm2_opencl_ca
 
   //iterate though the filters in the vector
 
-  for (unsigned k= 0; k< filter_vector->kernels_.size(); k++)
+  for (const auto& filter : filter_vector->kernels_)
   {
-    bvpl_kernel_sptr filter = filter_vector->kernels_[k];
-
     std::stringstream filter_ident; filter_ident << filter->name() << '_' << filter->id();
     std::cout<<"Computing Filter: " << filter_ident.str() << " of size: " << filter->float_kernel_.size() <<std::endl;
     //filter->print();
 
     //set up the filter, filter buffer and other related filter variables
-    std::vector<std::pair<vgl_point_3d<float>, bvpl_kernel_dispatch> >::iterator kit = filter->float_kernel_.begin();
+    auto kit = filter->float_kernel_.begin();
     unsigned ci=0;
-    cl_float4* filter_coeff = new cl_float4 [filter->float_kernel_.size()];
+    auto* filter_coeff = new cl_float4 [filter->float_kernel_.size()];
     for (; kit!= filter->float_kernel_.end(); kit++, ci++)
     {
       vgl_point_3d<float> loc = kit->first;
@@ -176,7 +176,7 @@ bool boxm2_ocl_kernel_vector_filter::run(boxm2_scene_sptr scene, boxm2_opencl_ca
         //shallow remove from ocl cache unnecessary items from ocl cache.
         opencl_cache->shallow_remove_data(scene,id,boxm2_data_traits<BOXM2_FLOAT>::prefix(filter_ident.str()));
       }
-      vcl_cout<<"Filtering: After execute MBs in cache: "<<binCache/(1024.0*1024.0)<<vcl_endl;
+      std::cout<<"Filtering: After execute MBs in cache: "<<binCache/(1024.0*1024.0)<<std::endl;
     }  //end block iter for
 
     delete [] filter_coeff;

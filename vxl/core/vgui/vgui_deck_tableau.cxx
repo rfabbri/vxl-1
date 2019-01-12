@@ -1,7 +1,4 @@
 // This is core/vgui/vgui_deck_tableau.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Philip C. Pritchett, RRG, University of Oxford
@@ -12,7 +9,9 @@
 #include <vector>
 #include "vgui_deck_tableau.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vgui/vgui_event.h>
 #include <vgui/vgui_menu.h>
@@ -159,7 +158,7 @@ vgui_tableau_sptr vgui_deck_tableau::current()
   if (index_ok(index_))
     return children[index_];
 
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 //----------------------------------------------------------------------------
@@ -168,7 +167,7 @@ vgui_tableau_sptr vgui_deck_tableau::get_tableau_at(int tab_pos)
 {
   if (index_ok(tab_pos))
     return children[tab_pos];
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 //----------------------------------------------------------------------------

@@ -3,10 +3,12 @@
 #include "vsol_rectangle_3d.h"
 //:
 // \file
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vgl/vgl_vector_3d.h>
 #include <vsol/vsol_point_3d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //***************************************************************************
 // Initialization
@@ -34,17 +36,12 @@ vsol_rectangle_3d::vsol_rectangle_3d(vsol_point_3d_sptr const& new_p0,
 //---------------------------------------------------------------------------
 // Copy constructor
 //---------------------------------------------------------------------------
-vsol_rectangle_3d::vsol_rectangle_3d(vsol_rectangle_3d const& other)
-  : vsol_polygon_3d(other)
-{
-}
+vsol_rectangle_3d::vsol_rectangle_3d(vsol_rectangle_3d const& other) = default;
 
 //---------------------------------------------------------------------------
 // Destructor
 //---------------------------------------------------------------------------
-vsol_rectangle_3d::~vsol_rectangle_3d()
-{
-}
+vsol_rectangle_3d::~vsol_rectangle_3d() = default;
 
 //---------------------------------------------------------------------------
 //: Clone `this': creation of a new object and initialization
@@ -282,5 +279,5 @@ vsl_b_read(vsl_b_istream &is, vsol_rectangle_3d* &r)
     r->b_read(is);
   }
   else
-    r = VXL_NULLPTR;
+    r = nullptr;
 }

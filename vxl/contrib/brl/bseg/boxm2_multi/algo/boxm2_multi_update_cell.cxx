@@ -3,7 +3,9 @@
 #include "boxm2_multi_update_cell.h"
 #include <boxm2_multi_util.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_util.h>
 #include <bocl/bocl_manager.h>
@@ -27,7 +29,7 @@ std::map<std::string, std::vector<bocl_kernel*> > boxm2_multi_update_cell::kerne
 //-------------------------------------------------------------
 float boxm2_multi_update_cell::update_cells(boxm2_multi_cache&           cache,
                                             const vil_image_view<float>& img,
-                                            vpgl_camera_double_sptr      cam,
+                                            const vpgl_camera_double_sptr&      cam,
                                             float*                       norm_image,
                                             boxm2_multi_update_helper&   helper)
 {
@@ -64,16 +66,15 @@ float boxm2_multi_update_cell::update_cells(boxm2_multi_cache&           cache,
   std::vector<boxm2_opencl_cache1*>& ocl_caches = helper.vis_caches_;
   std::vector<bocl_mem_sptr> vis_mems, pre_mems, norm_mems;
 
-  for (unsigned int i=0; i<ocl_caches.size(); ++i) {
+  for (auto ocl_cache : ocl_caches) {
     //grab sub scene and it's cache
-    boxm2_opencl_cache1* ocl_cache = ocl_caches[i];
     boxm2_scene_sptr    sub_scene = ocl_cache->get_scene();
     bocl_device_sptr    device    = ocl_cache->get_device();
 
     //grab vis and pre images that correspond
 
-    bocl_mem_sptr vis_mem  = ocl_cache->alloc_mem(sizeof(float)*cl_ni*cl_nj, VXL_NULLPTR /*vis_img*/, "vis image buff");
-    bocl_mem_sptr pre_mem  = ocl_cache->alloc_mem(sizeof(float)*cl_ni*cl_nj, VXL_NULLPTR /*pre_img*/, "pre image buff");
+    bocl_mem_sptr vis_mem  = ocl_cache->alloc_mem(sizeof(float)*cl_ni*cl_nj, nullptr /*vis_img*/, "vis image buff");
+    bocl_mem_sptr pre_mem  = ocl_cache->alloc_mem(sizeof(float)*cl_ni*cl_nj, nullptr /*pre_img*/, "pre image buff");
     bocl_mem_sptr norm_mem = ocl_cache->alloc_mem(sizeof(float)*cl_ni*cl_nj, norm_image, "norm image buff");
     vis_mem->create_buffer(CL_MEM_READ_WRITE); // | CL_MEM_COPY_HOST_PTR);
     pre_mem->create_buffer(CL_MEM_READ_WRITE); // | CL_MEM_COPY_HOST_PTR);
@@ -92,12 +93,11 @@ float boxm2_multi_update_cell::update_cells(boxm2_multi_cache&           cache,
   // Call per block/per scene update (to ensure cpu-> gpu cache works
   //---------------------------------------------------------------
   std::vector<boxm2_multi_cache_group*> grp = helper.group_orders_; //cache.get_vis_groups(cam);
-  for (unsigned int grpId=0; grpId<grp.size(); ++grpId) {
-    boxm2_multi_cache_group& group = *grp[grpId];
+  for (auto & grpId : grp) {
+    boxm2_multi_cache_group& group = *grpId;
     std::vector<boxm2_block_id>& ids = group.ids();
     std::vector<int> indices = group.order_from_cam(cam);
-    for (unsigned int idx=0; idx<indices.size(); ++idx) {
-      int i = indices[idx];
+    for (int i : indices) {
       //grab sub scene and it's cache
       boxm2_opencl_cache1* ocl_cache = ocl_caches[i];
       boxm2_scene_sptr    sub_scene = ocl_cache->get_scene();
@@ -116,8 +116,7 @@ float boxm2_multi_update_cell::update_cells(boxm2_multi_cache&           cache,
     }
 
     //finish queues before moving on (Maybe read in AUX 2 and 3 here)
-    for (unsigned int idx=0; idx<indices.size(); ++idx) {
-      int i = indices[idx];
+    for (int i : indices) {
       clFinish(queues[i]);
 
      // vul_timer ttime; ttime.mark();
@@ -163,10 +162,10 @@ float boxm2_multi_update_cell::update_cells(boxm2_multi_cache&           cache,
 
 //runs pre/vis on single block
 float boxm2_multi_update_cell::calc_beta_per_block(const boxm2_block_id&     id,
-                                                   boxm2_scene_sptr    scene,
+                                                   const boxm2_scene_sptr&     /*scene*/,
                                                    boxm2_opencl_cache1* opencl_cache,
                                                    cl_command_queue&   queue,
-                                                   std::string          data_type,
+                                                   const std::string&          data_type,
                                                    bocl_kernel*        kern,
                                                    bocl_mem_sptr&      vis_image,
                                                    bocl_mem_sptr&      pre_image,
@@ -189,10 +188,10 @@ float boxm2_multi_update_cell::calc_beta_per_block(const boxm2_block_id&     id,
   bocl_mem* alpha     = opencl_cache->get_data<BOXM2_ALPHA>(id,0,false);
 
   //num data in this block
-  std::size_t dataLen = (std::size_t) (alpha->num_bytes()/boxm2_data_traits<BOXM2_ALPHA>::datasize());
+  auto dataLen = (std::size_t) (alpha->num_bytes()/boxm2_data_traits<BOXM2_ALPHA>::datasize());
 
   //calc data buffer length
-  boxm2_scene_info* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
+  auto* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
   info_buffer->data_buffer_length = (int) dataLen;
   blk_info->write_to_buffer(queue);
 
@@ -254,7 +253,7 @@ float boxm2_multi_update_cell::calc_beta_per_block(const boxm2_block_id&     id,
 
 
 float boxm2_multi_update_cell::calc_beta_reduce( boxm2_multi_cache& mcache,
-                                                 vpgl_camera_double_sptr cam,
+                                                 const vpgl_camera_double_sptr& cam,
                                                  boxm2_multi_update_helper& helper )
 {
   vul_timer ttime; ttime.mark();
@@ -276,8 +275,8 @@ float boxm2_multi_update_cell::calc_beta_reduce( boxm2_multi_cache& mcache,
 
   //Only bother updating the visible groups
   std::vector<boxm2_multi_cache_group*> grp = mcache.get_vis_groups(cam);
-  for (unsigned int grpId=0; grpId<grp.size(); ++grpId) {
-    boxm2_multi_cache_group& group = *grp[grpId];
+  for (auto & grpId : grp) {
+    boxm2_multi_cache_group& group = *grpId;
     std::vector<boxm2_block_id>& ids = group.ids();
     for (unsigned int i=0; i<ids.size(); ++i) {
       ttime.mark();
@@ -294,7 +293,7 @@ float boxm2_multi_update_cell::calc_beta_reduce( boxm2_multi_cache& mcache,
       /*bocl_mem* blk= */  ocl_cache->get_block(id);
       bocl_mem* blk_info  = ocl_cache->loaded_block_info();
       bocl_mem* alpha     = ocl_cache->get_data<BOXM2_ALPHA>(id,0,false);
-      boxm2_scene_info* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
+      auto* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
 
       int alphaTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_ALPHA>::prefix());
       // check for invalid parameters
@@ -390,7 +389,7 @@ float boxm2_multi_update_cell::calc_beta_reduce( boxm2_multi_cache& mcache,
         throw 0;
       }
 
-      std::size_t dataLen = (std::size_t) (alpha->num_bytes()/alphaTypeSize);
+      auto dataLen = (std::size_t) (alpha->num_bytes()/alphaTypeSize);
       bocl_mem* mog       = ocl_cache->get_data(id,data_type,dataLen*apptypesize,false);
       //numobs
       std::string num_obs_type = boxm2_data_traits<BOXM2_NUM_OBS>::prefix();
@@ -413,7 +412,7 @@ float boxm2_multi_update_cell::calc_beta_reduce( boxm2_multi_cache& mcache,
 //-----------------------------------------------------------------
 // returns vector of bocl_kernels for this specific device
 //-----------------------------------------------------------------
-std::vector<bocl_kernel*>& boxm2_multi_update_cell::get_kernels(bocl_device_sptr device, std::string opts)
+std::vector<bocl_kernel*>& boxm2_multi_update_cell::get_kernels(const bocl_device_sptr& device, const std::string& opts)
 {
   // check to see if this device has compiled kernels already
   std::string identifier = device->device_identifier()+opts;
@@ -443,12 +442,12 @@ std::vector<bocl_kernel*>& boxm2_multi_update_cell::get_kernels(bocl_device_sptr
   std::string options = opts + "";
 
   //push back cast_ray_bit
-  bocl_kernel* bayes_main = new bocl_kernel();
+  auto* bayes_main = new bocl_kernel();
   std::string bayes_opt = options + " -D BAYES -D STEP_CELL=step_cell_bayes(aux_args,data_ptr,llid,d) ";
   bayes_main->create_kernel(&device->context(),device->device_id(), src_paths, "bayes_main", bayes_opt, "update::bayes_main");
 
   //may need DIFF LIST OF SOURCES FOR THSI GUY TOO
-  bocl_kernel* update = new bocl_kernel();
+  auto* update = new bocl_kernel();
   std::string main_opts = options + " -D UPDATE_BIT_SCENE_MAIN ";
   update->create_kernel(&device->context(),device->device_id(), non_ray_src, "update_bit_scene_main", main_opts, "update::update_main");
 
@@ -461,4 +460,3 @@ std::vector<bocl_kernel*>& boxm2_multi_update_cell::get_kernels(bocl_device_sptr
   kernels_[identifier] = kerns;
   return kernels_[identifier];
 }
-

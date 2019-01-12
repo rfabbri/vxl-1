@@ -20,7 +20,9 @@
 #include <bsta/bsta_gauss_sf1.h>
 #include <bsta/bsta_attributes.h>
 #ifdef DEBUG
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #endif
 
 template <class T>
@@ -31,7 +33,7 @@ class bvpl_local_max_functor
   bvpl_local_max_functor();
 
   //: Destructor
-  ~bvpl_local_max_functor() {}
+  ~bvpl_local_max_functor() = default;
 
   //: Apply a given operation to value val, depending on the dispatch character
   void apply(T& val, bvpl_kernel_dispatch& d);

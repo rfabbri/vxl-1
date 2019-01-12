@@ -1,5 +1,5 @@
 #include "betr_edgel_factory_params.h"
-bool betr_edgel_factory_params::sanity_check(std::string& errors) const{
+bool betr_edgel_factory_params::sanity_check(std::string&  /*errors*/) const{
   return true;
 }
 std::ostream&  operator<<(std::ostream& s, betr_edgel_factory_params const& efp){
@@ -10,7 +10,7 @@ std::ostream&  operator<<(std::ostream& s, betr_edgel_factory_params const& efp)
   return s;
 }
 std::istream&  operator>>(std::istream& s, betr_edgel_factory_params& efp){
-  betr_edgel_factory_params* cd_params = new betr_edgel_factory_params();
+  auto* cd_params = new betr_edgel_factory_params();
   betr_params_sptr params_ptr = cd_params;
   bool good = read_params_json(s, params_ptr);
   if(good)

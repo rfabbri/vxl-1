@@ -1,9 +1,6 @@
 // This is core/vgl/algo/boxm2_vecf_fit_margins.h
 #ifndef boxm2_vecf_fit_margins_h_
 #define boxm2_vecf_fit_margins_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Fits the inferior and superior margin models in the X-Y plane
@@ -15,7 +12,9 @@
 #include <iosfwd>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_point_3d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include "boxm2_vecf_orbit_params.h"
 
 class boxm2_vecf_fit_margins
@@ -45,19 +44,16 @@ class boxm2_vecf_fit_margins
                         bool is_right=false,
                         bool estimate_t = false):
    is_right_(is_right),dphi_rad_(0.0),estimate_t_(estimate_t){
-    for(std::vector<vgl_point_3d<double> >::const_iterator pit = inferior_margin_pts.begin();
-        pit != inferior_margin_pts.end(); ++pit)
-      inferior_margin_pts_.push_back(vgl_point_2d<double>(pit->x(), pit->y()));
-    for(std::vector<vgl_point_3d<double> >::const_iterator pit = superior_margin_pts.begin();
-        pit != superior_margin_pts.end(); ++pit)
-      superior_margin_pts_.push_back(vgl_point_2d<double>(pit->x(), pit->y()));
-    for(std::vector<vgl_point_3d<double> >::const_iterator pit = superior_crease_pts.begin();
-        pit != superior_crease_pts.end(); ++pit)
-      superior_crease_pts_.push_back(vgl_point_2d<double>(pit->x(), pit->y()));
+    for(const auto & inferior_margin_pt : inferior_margin_pts)
+      inferior_margin_pts_.emplace_back(inferior_margin_pt.x(), inferior_margin_pt.y());
+    for(const auto & superior_margin_pt : superior_margin_pts)
+      superior_margin_pts_.emplace_back(superior_margin_pt.x(), superior_margin_pt.y());
+    for(const auto & superior_crease_pt : superior_crease_pts)
+      superior_crease_pts_.emplace_back(superior_crease_pt.x(), superior_crease_pt.y());
     lateral_canthus_ = vgl_point_2d<double>(lateral_canthus.x(),lateral_canthus.y());
     medial_canthus_ = vgl_point_2d<double>(medial_canthus.x(),medial_canthus.y());
   }
-  ~boxm2_vecf_fit_margins() {}
+  ~boxm2_vecf_fit_margins() = default;
 
   // Operations---------------------------------------------------------------
 
@@ -72,7 +68,7 @@ class boxm2_vecf_fit_margins
   // respect to the margin points.
   // returns the average distance from the points to the margin curves
   // error conditions are reported on outstream
-  double fit(std::ostream* outstream=VXL_NULLPTR, bool verbose=false);
+  double fit(std::ostream* outstream=nullptr, bool verbose=false);
 
 // Data Access---------------------------------------------------------------
 

@@ -5,7 +5,9 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_arg.h>
 #include <mbl/mbl_log.h>
 #include <mbl/mbl_exception.h>
@@ -32,9 +34,9 @@ static void save_indices(const std::vector<unsigned>& indices,
   std::ofstream afs(path.c_str());
   if (!afs)
     mbl_exception_throw_os_error(path, "save_indices() could not open file");
-  for (std::vector<unsigned>::const_iterator it=indices.begin(), end=indices.end(); it!=end; ++it)
+  for (unsigned int index : indices)
   {
-    afs << *it << delim;
+    afs << index << delim;
   }
   afs.close();
 }
@@ -54,8 +56,8 @@ int main2(int argc, char *argv[])
   );
 
   // Parse command line arguments
-  vul_arg<std::string> mask_file(VXL_NULLPTR, "INPUT mask file");
-  vul_arg<std::string> inds_file(VXL_NULLPTR, "OUTPUT indices file");
+  vul_arg<std::string> mask_file(nullptr, "INPUT mask file");
+  vul_arg<std::string> inds_file(nullptr, "OUTPUT indices file");
   vul_arg_parse(argc, argv);
 
   mbl_mask mask;
@@ -104,4 +106,3 @@ int main(int argc, char *argv[])
 
   return retcode;
 }
-

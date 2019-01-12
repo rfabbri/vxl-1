@@ -5,7 +5,9 @@
 #include <vnl/vnl_double_3x3.h>
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_least_squares_function.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 brad_phongs_model::brad_phongs_model(float kd, float ks, float gamma, float normal_elev, float normal_azim)
 {
@@ -80,7 +82,7 @@ brad_phongs_model_approx::brad_phongs_model_approx(float kd, float ks, float gam
     normal_[2]=std::cos(normal_elev);
 }
 
-float brad_phongs_model_approx::val(float view_elev, float view_azim, float sun_elev, float sun_azim)
+float brad_phongs_model_approx::val(float  /*view_elev*/, float  /*view_azim*/, float sun_elev, float sun_azim)
 {
     vnl_double_3 sun_dir;
     sun_dir[0]=std::sin(sun_elev)*std::cos(sun_azim);
@@ -118,7 +120,6 @@ float brad_phongs_model_approx::val(vnl_double_3 view_dir, float sun_elev, float
     vnl_identity_3x3 I;
     vnl_double_3x3 normal_outer_product=outer_product<double,3,3>(normal_,normal_);
     normal_outer_product+=normal_outer_product; // multiply by 2
-    vnl_double_3x3 householder_xform= I-normal_outer_product;
 
     vnl_double_3 half_vector = sun_dir + view_dir;
 
@@ -147,12 +148,12 @@ brad_phongs_model_est::brad_phongs_model_est(double sun_elev,
     obs_weights_ = obs_weights;
     double total_weight=0.0;
 
-    for (unsigned i=0;i<obs_weights_.size();++i)
-        total_weight += obs_weights_[i];
-    for (unsigned i=0;i<obs_weights_.size();++i)
+    for (double obs_weight : obs_weights_)
+        total_weight += obs_weight;
+    for (double & obs_weight : obs_weights_)
     {
-        obs_weights_[i]/=total_weight;
-        obs_weights_[i]*=obs_weights_.size();
+        obs_weight/=total_weight;
+        obs_weight*=obs_weights_.size();
     }
 }
 
@@ -173,17 +174,17 @@ brad_phongs_model_est::brad_phongs_model_est(double sun_elev,
     obs_weights_ = obs_weights;
     double total_weight=0.0;
 
-    for (unsigned i=0;i<obs_weights_.size();++i)
-        total_weight += obs_weights_[i];
+    for (double obs_weight : obs_weights_)
+        total_weight += obs_weight;
 
     for (unsigned i=0;i<obs_weights_.size();++i)
     {
         obs_weights_[i]/=total_weight;
         obs_weights_[i]*=obs_weights_.size();
 
-        viewing_dirs_.push_back(vnl_double_3(std::sin(camera_elev_[i])*std::cos(camera_azim_[i]),
+        viewing_dirs_.emplace_back(std::sin(camera_elev_[i])*std::cos(camera_azim_[i]),
                                              std::sin(camera_elev_[i])*std::sin(camera_azim_[i]),
-                                             std::cos(camera_elev_[i])));
+                                             std::cos(camera_elev_[i]));
     }
 }
 
@@ -292,12 +293,12 @@ brad_phongs_model_approx_est::brad_phongs_model_approx_est(double sun_elev,
     obs_weights_ = obs_weights;
     double total_weight=0.0;
 
-    for (unsigned i=0;i<obs_weights_.size();++i)
-        total_weight += obs_weights_[i];
-    for (unsigned i=0;i<obs_weights_.size();++i)
+    for (double obs_weight : obs_weights_)
+        total_weight += obs_weight;
+    for (double & obs_weight : obs_weights_)
     {
-        obs_weights_[i]/=total_weight;
-        obs_weights_[i]*=obs_weights_.size();
+        obs_weight/=total_weight;
+        obs_weight*=obs_weights_.size();
     }
 }
 
@@ -318,17 +319,17 @@ brad_phongs_model_approx_est::brad_phongs_model_approx_est(double sun_elev,
     obs_weights_ = obs_weights;
     double total_weight=0.0;
 
-    for (unsigned i=0;i<obs_weights_.size();++i)
-        total_weight += obs_weights_[i];
+    for (double obs_weight : obs_weights_)
+        total_weight += obs_weight;
 
     for (unsigned i=0;i<obs_weights_.size();++i)
     {
         obs_weights_[i]/=total_weight;
         obs_weights_[i]*=obs_weights_.size();
 
-        viewing_dirs_.push_back(vnl_double_3(std::sin(camera_elev_[i])*std::cos(camera_azim_[i]),
+        viewing_dirs_.emplace_back(std::sin(camera_elev_[i])*std::cos(camera_azim_[i]),
                                              std::sin(camera_elev_[i])*std::sin(camera_azim_[i]),
-                                             std::cos(camera_elev_[i])));
+                                             std::cos(camera_elev_[i]));
     }
 }
 

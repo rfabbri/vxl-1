@@ -23,7 +23,7 @@ breg3d_ekf_camera_optimize_process::breg3d_ekf_camera_optimize_process()
   //input[4]: The voxel world
   //input[5]: The appearance model type to use for expected images
   //input[6]: The bin index to use for expected images
-  input_data_.resize(7,brdb_value_sptr(VXL_NULLPTR));
+  input_data_.resize(7,brdb_value_sptr(nullptr));
   input_types_.resize(7);
   input_types_[0] = "breg3d_ekf_camera_optimizer_state";
   input_types_[1] = "vil_image_view_base_sptr";
@@ -36,7 +36,7 @@ breg3d_ekf_camera_optimize_process::breg3d_ekf_camera_optimize_process()
   // process has 2 outputs:
   // output[0]: The estimate for the current state
   // output[1]: The optimized camera
-  output_data_.resize(2,brdb_value_sptr(VXL_NULLPTR));
+  output_data_.resize(2,brdb_value_sptr(nullptr));
   output_types_.resize(2);
   output_types_[0]= "breg3d_ekf_camera_optimizer_state";
   output_types_[1] = "vpgl_camera_double_sptr";
@@ -74,25 +74,25 @@ bool breg3d_ekf_camera_optimize_process::execute()
   if (!this->verify_inputs())
     return false;
 
-  brdb_value_t<breg3d_ekf_camera_optimizer_state>* input0 =
+  auto* input0 =
       static_cast<brdb_value_t<breg3d_ekf_camera_optimizer_state>* >(input_data_[0].ptr());
 
-  brdb_value_t<vil_image_view_base_sptr>* input1 =
+  auto* input1 =
       static_cast<brdb_value_t<vil_image_view_base_sptr>* >(input_data_[1].ptr());
 
-  brdb_value_t<vil_image_view_base_sptr>* input2 =
+  auto* input2 =
     static_cast<brdb_value_t<vil_image_view_base_sptr>* >(input_data_[2].ptr());
 
-  brdb_value_t<vpgl_camera_double_sptr>* input3 =
+  auto* input3 =
       static_cast<brdb_value_t<vpgl_camera_double_sptr>* >(input_data_[3].ptr());
 
-  brdb_value_t<bvxm_voxel_world_sptr>* input4 =
+  auto* input4 =
       static_cast<brdb_value_t<bvxm_voxel_world_sptr>* >(input_data_[4].ptr());
 
-  brdb_value_t<std::string>* input5 =
+  auto* input5 =
       static_cast<brdb_value_t<std::string>* >(input_data_[5].ptr());
 
-  brdb_value_t<unsigned>* input6 =
+  auto* input6 =
       static_cast<brdb_value_t<unsigned>* >(input_data_[6].ptr());
 
   // get previous state
@@ -160,5 +160,3 @@ bool breg3d_ekf_camera_optimize_process::execute()
 
   return true;
 }
-
-

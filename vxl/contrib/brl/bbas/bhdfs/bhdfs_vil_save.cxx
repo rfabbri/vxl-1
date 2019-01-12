@@ -1,7 +1,4 @@
 // This is brl/bbas/bhdfs/bhdfs_vil_save.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 #include <iostream>
 #include <cctype>
 #include <cstring>
@@ -15,7 +12,9 @@
 //
 // \endverbatim
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vxl_config.h> // for vxl_byte
 
 #include <vil/vil_open.h>
@@ -109,4 +108,3 @@ bool bhdfs_vil_save_image_resource(const vil_image_resource_sptr &ir, char const
 {
   return bhdfs_vil_save_image_resource(ir, filename, vil_save_guess_file_format(filename));
 }
-

@@ -32,9 +32,9 @@ bool classify(const vil_image_view<T>& lidar_first,
 }
 
 
-bool classify(vil_image_view_base_sptr lidar_first,
-              vil_image_view_base_sptr lidar_last,
-              vil_image_view_base_sptr ground,
+bool classify(const vil_image_view_base_sptr& lidar_first,
+              const vil_image_view_base_sptr& lidar_last,
+              const vil_image_view_base_sptr& ground,
               vil_image_view_base_sptr& label_img,
               vil_image_view_base_sptr& height_img,
               float gthresh, float vthresh, float athresh, float hres)
@@ -127,7 +127,7 @@ bool bmdl_classify_process(bprb_func_process& pro)
     return false;
   }
 
-  vil_image_view_base_sptr label_img=VXL_NULLPTR, height_img=VXL_NULLPTR;
+  vil_image_view_base_sptr label_img=nullptr, height_img=nullptr;
   if (!classify(first_ret, last_ret, ground, label_img, height_img, gthresh, vthresh, athresh, hres)) {
     std::cout << "bmdl_classify_process -- The process has failed!\n";
     return false;
@@ -142,15 +142,15 @@ bool bmdl_classify_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("vil_image_view_base_sptr");
-  input_types.push_back("vil_image_view_base_sptr");
-  input_types.push_back("vil_image_view_base_sptr");
+  input_types.emplace_back("vil_image_view_base_sptr");
+  input_types.emplace_back("vil_image_view_base_sptr");
+  input_types.emplace_back("vil_image_view_base_sptr");
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   std::vector<std::string> output_types;
-  output_types.push_back("vil_image_view_base_sptr");  // label image
-  output_types.push_back("vil_image_view_base_sptr");  // height image
+  output_types.emplace_back("vil_image_view_base_sptr");  // label image
+  output_types.emplace_back("vil_image_view_base_sptr");  // height image
   ok = pro.set_output_types(output_types);
   if (!ok) return ok;
 

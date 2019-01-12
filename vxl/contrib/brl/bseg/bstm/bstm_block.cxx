@@ -2,7 +2,7 @@
 //:
 // \file
 
-bstm_block::bstm_block(bstm_block_id id, bstm_block_metadata data, char* buffer)
+bstm_block::bstm_block(const bstm_block_id& id, bstm_block_metadata data, char* buffer)
 {
   init_level_ = data.init_level_;
   max_level_  = data.max_level_;
@@ -25,7 +25,7 @@ bstm_block::bstm_block(bstm_block_metadata data)
 
 bool bstm_block::b_read(char* buff)
 {
-  uchar16* treesBuff = (uchar16*) (buff);
+  auto* treesBuff = (uchar16*) (buff);
   byte_count_ = sizeof(uchar16)* sub_block_num_.x()*sub_block_num_.y()*sub_block_num_.z();
   trees_     = boxm2_array_3d<uchar16>( sub_block_num_.x(),
                                         sub_block_num_.y(),
@@ -39,7 +39,7 @@ bool bstm_block::b_read(char* buff)
 //  just needs to be returned and written to disk. The first few calls
 //  ensure the meta data is lined up correctly.  To use this, just pass in
 //  the bstm_block buffer.
-bool bstm_block::b_write(char* buff)
+bool bstm_block::b_write(char*  /*buff*/)
 {
   return true;
 }
@@ -78,7 +78,7 @@ bool bstm_block::init_empty_block(bstm_block_metadata data)
   sub_block_num_ = data.sub_block_num_;
 
   //4. setup big arrays (3d block of trees)
-  uchar16* treesBuff = (uchar16*) (buffer_+bytes_read);
+  auto* treesBuff = (uchar16*) (buffer_+bytes_read);
   trees_     = boxm2_array_3d<uchar16>( sub_block_num_.x(),
                                         sub_block_num_.y(),
                                         sub_block_num_.z(),
@@ -133,7 +133,7 @@ bool bstm_block::init_empty_block(bstm_block_metadata data)
 
 //: Given number of buffers, number of trees in each buffer, and number of total trees (x*y*z number)
 // \return size of byte stream
-long bstm_block::calc_byte_count(int num_buffers, int trees_per_buffer, int num_trees)
+long bstm_block::calc_byte_count(int  /*num_buffers*/, int  /*trees_per_buffer*/, int num_trees)
 {
   long toReturn = num_trees * sizeof(uchar16) ;
   return toReturn;
@@ -164,4 +164,3 @@ void vsl_b_read(vsl_b_istream&, bstm_block_sptr&) {}
 //: Binary load bstm_block from stream.
 // DUMMY IMPLEMENTATION: does nothing!
 void vsl_b_read(vsl_b_istream&, bstm_block_sptr const&) {}
-

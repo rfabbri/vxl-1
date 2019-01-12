@@ -9,7 +9,9 @@
 //
 // \author Andy Miller
 // \date Sep 16, 2011
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bstm/bstm_scene.h>
 #include <boxm2/boxm2_scene.h>
 #include <bstm/util/bstm_cams_and_box_to_scene.h>
@@ -21,8 +23,8 @@
 
 namespace bstm_boxm2_scene_to_bstm_process_globals
 {
-  const unsigned n_inputs_ = 3;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 3;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool bstm_boxm2_scene_to_bstm_process_cons(bprb_func_process& pro)
@@ -58,7 +60,7 @@ bool bstm_boxm2_scene_to_bstm_process(bprb_func_process& pro)
   unsigned i = 0;
   std::string boxm2_filename = pro.get_input<std::string>(i++);
   std::string bstm_scene_dir = pro.get_input<std::string>(i++);
-  unsigned time_steps   = pro.get_input<unsigned>(i++);
+  auto time_steps = pro.get_input<unsigned>(i++);
 
 
   if (!vul_file::make_directory_path( bstm_scene_dir.c_str()))
@@ -71,9 +73,8 @@ bool bstm_boxm2_scene_to_bstm_process(bprb_func_process& pro)
   //setup appearances
   std::vector<std::string> boxm2_apps = boxm2Scene->appearances();
   std::vector<std::string> apps;
-  for(std::vector<std::string>::iterator iter = boxm2_apps.begin(); iter != boxm2_apps.end(); iter++)
+  for(auto boxm2_app : boxm2_apps)
   {
-    std::string boxm2_app = *iter;
     boxm2_app.replace(boxm2_app.begin(), boxm2_app.begin() + 5, "bstm");
     apps.push_back(boxm2_app);
   }
@@ -108,9 +109,9 @@ bool bstm_boxm2_scene_to_bstm_process(bprb_func_process& pro)
         double bt = scene_origin_t + t*subBlockDim_t;
 
         ////get the inputs
-        unsigned max_num_lvls     = boxm2_mdata.max_level_;
-        float    max_data_size    = boxm2_mdata.max_mb_;
-        float    p_init           = boxm2_mdata.p_init_;
+        unsigned max_num_lvls = boxm2_mdata.max_level_;
+        float    max_data_size = boxm2_mdata.max_mb_;
+        float    p_init = boxm2_mdata.p_init_;
         bstm_block_metadata mdata(id,
                                     boxm2_mdata.local_origin_,
                                    bt,

@@ -1,9 +1,6 @@
 // This is core/vul/vul_user_info.h
 #ifndef vul_user_info_h_
 #define vul_user_info_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Reads information about a user from the password file.
@@ -18,7 +15,9 @@
 //-----------------------------------------------------------------------------
 
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Reads information about a user from the password file
 class vul_user_info

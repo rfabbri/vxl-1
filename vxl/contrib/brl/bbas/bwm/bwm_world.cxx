@@ -6,7 +6,9 @@
 #include "algo/bwm_algo.h"
 #include "algo/bwm_utils.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vul/vul_file.h>
 #include <vgl/vgl_vector_3d.h>
@@ -15,7 +17,7 @@
 #include "bwm_observable.h"
 #include "bwm_observable_textured_mesh.h"
 
-bwm_world* bwm_world::instance_ = VXL_NULLPTR;
+bwm_world* bwm_world::instance_ = nullptr;
 
 bwm_world* bwm_world::instance()
 {

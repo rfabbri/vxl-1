@@ -1,9 +1,6 @@
 // This is core/vgl/vgl_plane_3d.h
 #ifndef vgl_plane_3d_h
 #define vgl_plane_3d_h
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief a plane in 3D nonhomogeneous space
@@ -22,8 +19,10 @@
 // \endverbatim
 
 #include <iosfwd>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vgl/vgl_fwd.h> // forward declare vgl_homg_plane_3d, vgl_point_3d
 #include <vgl/vgl_vector_3d.h>
 

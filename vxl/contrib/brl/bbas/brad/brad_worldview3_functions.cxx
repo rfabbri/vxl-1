@@ -31,7 +31,7 @@ bool brad_compose_16band_wv3_img(
   const brad_image_metadata& mul_meta,
   const vil_image_view<float>& swir_img,
   const vpgl_rational_camera<double>& swir_rpc,
-  const brad_image_metadata& swir_meta,
+  const brad_image_metadata&  /*swir_meta*/,
   vil_image_view<float>& comp_img,
   float scale,
   vgl_box_2d<int> mul_region )
@@ -204,10 +204,8 @@ bool brad_compose_16band_wv3_img(
   vil_image_view<float>& comp_img,
   float scale,
   vgl_box_2d<int> mul_region,
-  bool calibrate_radiometrically )
+  bool  /*calibrate_radiometrically*/ )
 {
-  int num_bands = 8;
-
   // Load metadata
   brad_image_metadata mul_meta(vul_file::strip_extension(mul_file) + ".IMD");
   brad_image_metadata swir_meta(vul_file::strip_extension(swir_file) + ".IMD");
@@ -338,8 +336,8 @@ void brad_wv3_bands(
 };
 
 void save_corrected_wv3(
-  const vil_image_view<float> corr_img,
-  const std::string save_dir)
+  const vil_image_view<float>& corr_img,
+  const std::string& save_dir)
 {
   int np = corr_img.nplanes();
   vil_image_view<float> cur_plane;
@@ -353,7 +351,7 @@ void save_corrected_wv3(
 };
 
 void load_corrected_wv3(
-  const std::string img_dir,
+  const std::string& img_dir,
   vil_image_view<float>& cal_img) {
 
   // load first band to get the image size
@@ -380,4 +378,3 @@ void load_corrected_wv3(
     cur_plane.deep_copy(cal_rsc->get_view());
   }
 }
-

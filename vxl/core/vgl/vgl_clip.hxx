@@ -11,7 +11,9 @@
 #include <limits>
 #include <cmath>
 #include "vgl_clip.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 template <class T>
 bool vgl_clip_lineseg_to_line(T &x1, T &y1,
@@ -169,11 +171,11 @@ namespace {
   void
   add_clipper_to_vgl( vgl_polygon<T>& vgl_poly, const ClipperLib::Paths& clipper_poly, double scale )
   {
-    for ( size_t c=0; c < clipper_poly.size(); ++c ) {
+    for (const auto & c : clipper_poly) {
       vgl_poly.new_sheet();
-      for ( size_t p=0; p < clipper_poly[c].size(); ++p ) {
-        vgl_poly.push_back( T((double)clipper_poly[c][p].X/scale),
-                            T((double)clipper_poly[c][p].Y/scale) );
+      for ( size_t p=0; p < c.size(); ++p ) {
+        vgl_poly.push_back( T((double)c[p].X/scale),
+                            T((double)c[p].Y/scale) );
       }
     }
   }

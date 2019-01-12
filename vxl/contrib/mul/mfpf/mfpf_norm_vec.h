@@ -8,11 +8,13 @@
 #include <iostream>
 #include <algorithm>
 #include <vnl/vnl_vector.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Sets vec to have zero mean and unit length
 inline void mfpf_norm_vec(vnl_vector<double>& vec, double var_min=1.0E-6,
-                          double* pvar=VXL_NULLPTR)
+                          double* pvar=nullptr)
 {
   unsigned n=vec.size();
   double *v=vec.data_block();

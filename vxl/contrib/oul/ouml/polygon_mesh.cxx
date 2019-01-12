@@ -11,8 +11,10 @@
 // file.
 //----------------------------------------------------------------------
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vnl/vnl_cross.h>
 
 //----------------------------------------------------------------------
@@ -108,7 +110,7 @@ PolygonMesh::DPoint PolygonMesh::get_vertex(int index)
   if ((unsigned int)index>=vertex_list.size())
   {
     std::cerr << "Warning: vertex doesn't exist\n";
-    return DPoint();
+    return {};
   }
   return vertex_list[index];
 }
@@ -134,8 +136,8 @@ PolygonMesh::Polygon PolygonMesh::get_face(int index)
     return poly;
   }
   Face& face = face_list[index];
-  for (unsigned int i=0; i<face.size(); i++)
-    poly.push_back(vertex_list[face[i]]);
+  for (int i : face)
+    poly.push_back(vertex_list[i]);
   return poly;
 }
 

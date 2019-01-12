@@ -12,7 +12,9 @@
 #include <sstream>
 #include "bstm_ocl_change_detection.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bstm/ocl/bstm_opencl_cache.h>
 #include <bstm/bstm_scene.h>
 #include <bstm/bstm_block.h>
@@ -41,12 +43,12 @@ std::map<std::string, std::vector<bocl_kernel*> > bstm_ocl_change_detection::ker
 //main change detect function
 bool bstm_ocl_change_detection::change_detect( vil_image_view<float>&    change_img,
                                                 bocl_device_sptr          device,
-                                                bstm_scene_sptr          scene,
-                                                bstm_opencl_cache_sptr   opencl_cache,
+                                                const bstm_scene_sptr&          scene,
+                                                const bstm_opencl_cache_sptr&   opencl_cache,
                                                 vpgl_camera_double_sptr   cam,
-                                                vil_image_view_base_sptr  img,
-                                                vil_image_view_base_sptr  mask_sptr,
-                                                std::string                norm_type,
+                                                const vil_image_view_base_sptr&  img,
+                                                const vil_image_view_base_sptr&  mask_sptr,
+                                                const std::string&                 /*norm_type*/,
                                                 float                     time)
 {
     float transfer_time=0.0f;
@@ -88,7 +90,7 @@ bool bstm_ocl_change_detection::change_detect( vil_image_view<float>&    change_
       std::cout<<"Change detection using mask."<<std::endl;
       use_mask = true;
     }
-    vil_image_view<unsigned char >* mask_map = VXL_NULLPTR;
+    vil_image_view<unsigned char >* mask_map = nullptr;
     if (use_mask) {
       mask_map = dynamic_cast<vil_image_view<unsigned char> *>(mask_sptr.ptr());
       if (!mask_map) {
@@ -104,7 +106,7 @@ bool bstm_ocl_change_detection::change_detect( vil_image_view<float>&    change_
     unsigned char* mask_image_buff;
     if(!isColor){
       vil_image_view_base_sptr float_img     = bstm_util::prepare_input_image(img, true); //true for force gray scale
-      vil_image_view<float>* img_view = static_cast<vil_image_view<float>* >(float_img.ptr());
+      auto* img_view = static_cast<vil_image_view<float>* >(float_img.ptr());
 
       //prepare workspace size
       cl_ni    = RoundUp(img_view->ni(),local_threads[0]);
@@ -139,7 +141,7 @@ bool bstm_ocl_change_detection::change_detect( vil_image_view<float>&    change_
         std::cout<<"bstm_ocl_update_color_process::using a non RGBA image!!"<<std::endl;
         return false;
       }
-      vil_image_view<vil_rgba<vxl_byte> >* img_view = static_cast<vil_image_view<vil_rgba<vxl_byte> >* >(float_img.ptr());
+      auto* img_view = static_cast<vil_image_view<vil_rgba<vxl_byte> >* >(float_img.ptr());
 
       cl_ni=(unsigned)RoundUp(img_view->ni(),(int)local_threads[0]);
       cl_nj=(unsigned)RoundUp(img_view->nj(),(int)local_threads[1]);
@@ -176,15 +178,15 @@ bool bstm_ocl_change_detection::change_detect( vil_image_view<float>&    change_
     }
 
     // create all buffers
-    cl_float* ray_origins = new cl_float[4*cl_ni*cl_nj];
-    cl_float* ray_directions = new cl_float[4*cl_ni*cl_nj];
+    auto* ray_origins = new cl_float[4*cl_ni*cl_nj];
+    auto* ray_directions = new cl_float[4*cl_ni*cl_nj];
     bocl_mem_sptr ray_o_buff = opencl_cache->alloc_mem(cl_ni*cl_nj*sizeof(cl_float4), ray_origins, "ray_origins buffer");
     bocl_mem_sptr ray_d_buff = opencl_cache->alloc_mem(cl_ni*cl_nj*sizeof(cl_float4), ray_directions, "ray_directions buffer");
     boxm2_ocl_camera_converter::compute_ray_image( device, queue, cam, cl_ni, cl_nj, ray_o_buff, ray_d_buff);
 
     //prepare image buffers (cpu)
-    float* vis_buff               = new float[cl_ni*cl_nj];
-    float* change_image_buff      = new float[cl_ni*cl_nj];
+    auto* vis_buff               = new float[cl_ni*cl_nj];
+    auto* change_image_buff      = new float[cl_ni*cl_nj];
 
     for (unsigned i=0;i<cl_ni*cl_nj;i++) {
         vis_buff[i]=1.0f;
@@ -219,7 +221,7 @@ bool bstm_ocl_change_detection::change_detect( vil_image_view<float>&    change_
 
      //Output Array
     float output_arr[100];
-    for (int i=0; i<100; ++i) output_arr[i] = 0.0f;
+    for (float & i : output_arr) i = 0.0f;
     bocl_mem_sptr  cl_output=new bocl_mem(device->context(), output_arr, sizeof(float)*100, "output buffer");
     cl_output->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
 
@@ -350,7 +352,7 @@ bool bstm_ocl_change_detection::change_detect( vil_image_view<float>&    change_
 //---------------------------------------------------
 // compiles, caches and returns list of kernels
 //---------------------------------------------------
-std::vector<bocl_kernel*>& bstm_ocl_change_detection::get_kernels(bocl_device_sptr device, std::string opts, bool isColor)
+std::vector<bocl_kernel*>& bstm_ocl_change_detection::get_kernels(const bocl_device_sptr& device, std::string opts, bool isColor)
 {
     // check to see if this device has compiled kernels already
     std::string identifier = device->device_identifier() + opts;
@@ -383,7 +385,7 @@ std::vector<bocl_kernel*>& bstm_ocl_change_detection::get_kernels(bocl_device_sp
     opts += " -D STEP_CELL=step_cell_change(aux_args,data_ptr_tt,d*linfo->block_len) ";
 
     //have kernel construct itself using the context and device
-    bocl_kernel * ray_trace_kernel = new bocl_kernel();
+    auto * ray_trace_kernel = new bocl_kernel();
     ray_trace_kernel->create_kernel( &device->context(),
                                      device->device_id(),
                                      src_paths,
@@ -397,7 +399,7 @@ std::vector<bocl_kernel*>& bstm_ocl_change_detection::get_kernels(bocl_device_sp
     std::vector<std::string> norm_src_paths;
     norm_src_paths.push_back(source_dir + "pixel_conversion.cl");
     norm_src_paths.push_back(source_dir + "bit/normalize_kernels.cl");
-    bocl_kernel * normalize_render_kernel=new bocl_kernel();
+    auto * normalize_render_kernel=new bocl_kernel();
     normalize_render_kernel->create_kernel( &device->context(),
                                             device->device_id(),
                                             norm_src_paths,
@@ -419,11 +421,11 @@ std::map<std::string, std::vector<bocl_kernel*> > bstm_ocl_aux_pass_change::kern
 
 bool bstm_ocl_aux_pass_change::change_detect(vil_image_view<float>&    change_img,
                                               bocl_device_sptr          device,
-                                              bstm_scene_sptr           scene,
-                                              bstm_opencl_cache_sptr   opencl_cache,
+                                              const bstm_scene_sptr&           scene,
+                                              const bstm_opencl_cache_sptr&   opencl_cache,
                                               vpgl_camera_double_sptr   cam,
-                                              vil_image_view_base_sptr  img,
-                                              vil_image_view_base_sptr  mask_sptr,
+                                              const vil_image_view_base_sptr&  img,
+                                              const vil_image_view_base_sptr&  mask_sptr,
                                               float                     time)
 {
     float transfer_time=0.0f;
@@ -460,7 +462,7 @@ bool bstm_ocl_aux_pass_change::change_detect(vil_image_view<float>&    change_im
     //----- PREP INPUT BUFFERS -------------
     //prepare input images
     vil_image_view_base_sptr float_img     = bstm_util::prepare_input_image(img, true); //true for force gray scale
-    vil_image_view<float>*   img_view      = static_cast<vil_image_view<float>* >(float_img.ptr());
+    auto*   img_view      = static_cast<vil_image_view<float>* >(float_img.ptr());
 
     //catch a "null" mask (not really null because that throws an error)
     bool use_mask = false;
@@ -468,7 +470,7 @@ bool bstm_ocl_aux_pass_change::change_detect(vil_image_view<float>&    change_im
       std::cout<<"Change detection using mask."<<std::endl;
       use_mask = true;
     }
-    vil_image_view<unsigned char >* mask_map = VXL_NULLPTR;
+    vil_image_view<unsigned char >* mask_map = nullptr;
     if (use_mask) {
       mask_map = dynamic_cast<vil_image_view<unsigned char> *>(mask_sptr.ptr());
       if (!mask_map) {
@@ -485,18 +487,18 @@ bool bstm_ocl_aux_pass_change::change_detect(vil_image_view<float>&    change_im
     global_threads[1] = cl_nj;
 
     //set generic cam
-    cl_float* ray_origins    = new cl_float[4*cl_ni*cl_nj];
-    cl_float* ray_directions = new cl_float[4*cl_ni*cl_nj];
+    auto* ray_origins    = new cl_float[4*cl_ni*cl_nj];
+    auto* ray_directions = new cl_float[4*cl_ni*cl_nj];
     bocl_mem_sptr ray_o_buff = opencl_cache->alloc_mem(   cl_ni*cl_nj * sizeof(cl_float4),  ray_origins, "ray_origins buffer");
     bocl_mem_sptr ray_d_buff = opencl_cache->alloc_mem( cl_ni*cl_nj * sizeof(cl_float4),ray_directions, "ray_directions buffer");
     boxm2_ocl_camera_converter::compute_ray_image( device, queue, cam, cl_ni, cl_nj, ray_o_buff, ray_d_buff);
 
 
     //prepare image buffers (cpu)
-    float* vis_buff               = new float[cl_ni*cl_nj];
-    float* change_image_buff      = new float[cl_ni*cl_nj];
-    float* input_buff             = new float[cl_ni*cl_nj];
-    unsigned char* mask_image_buff   = new unsigned char[cl_ni*cl_nj];
+    auto* vis_buff               = new float[cl_ni*cl_nj];
+    auto* change_image_buff      = new float[cl_ni*cl_nj];
+    auto* input_buff             = new float[cl_ni*cl_nj];
+    auto* mask_image_buff   = new unsigned char[cl_ni*cl_nj];
 
     for (unsigned i=0;i<cl_ni*cl_nj;i++) {
         vis_buff[i]              = 1.0f;
@@ -537,7 +539,7 @@ bool bstm_ocl_aux_pass_change::change_detect(vil_image_view<float>&    change_im
     img_dim->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
 
     // Output Array
-    float* output_arr = new float[cl_ni*cl_nj];
+    auto* output_arr = new float[cl_ni*cl_nj];
     bocl_mem_sptr cl_output=new bocl_mem(device->context(), output_arr, sizeof(float)*cl_ni*cl_nj, "output buffer");
     cl_output->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
 
@@ -581,7 +583,7 @@ bool bstm_ocl_aux_pass_change::change_detect(vil_image_view<float>&    change_im
         bocl_mem* alpha     = opencl_cache->get_data<BSTM_ALPHA>(*id,0,false);
         bocl_mem* blk_info  = opencl_cache->loaded_block_info();
         bocl_mem* blk_t_info= opencl_cache->loaded_time_block_info();
-        bstm_scene_info* info_buffer_t = (bstm_scene_info*) blk_t_info->cpu_buffer();
+        auto* info_buffer_t = (bstm_scene_info*) blk_t_info->cpu_buffer();
 
         //figure out sizes
         int alphaTypeSize = (int)bstm_data_info::datasize(bstm_data_traits<BSTM_ALPHA>::prefix());
@@ -652,7 +654,7 @@ bool bstm_ocl_aux_pass_change::change_detect(vil_image_view<float>&    change_im
         bocl_mem* mog       = opencl_cache->get_data(*id,data_type);
         bocl_mem* blk_info  = opencl_cache->loaded_block_info();
         bocl_mem* blk_t_info= opencl_cache->loaded_time_block_info();
-        bstm_scene_info* info_buffer_t = (bstm_scene_info*) blk_t_info->cpu_buffer();
+        auto* info_buffer_t = (bstm_scene_info*) blk_t_info->cpu_buffer();
 
         //figure out sizes
         int alphaTypeSize = (int)bstm_data_info::datasize(bstm_data_traits<BSTM_ALPHA>::prefix());
@@ -748,7 +750,7 @@ bool bstm_ocl_aux_pass_change::change_detect(vil_image_view<float>&    change_im
     return true;
 }
 
-std::vector<bocl_kernel*>& bstm_ocl_aux_pass_change::get_kernels(bocl_device_sptr device, std::string opts)
+std::vector<bocl_kernel*>& bstm_ocl_aux_pass_change::get_kernels(const bocl_device_sptr& device, const std::string& opts)
 {
     // check to see if this device has compiled kernels already
     std::string identifier = device->device_identifier() + opts;
@@ -773,7 +775,7 @@ std::vector<bocl_kernel*>& bstm_ocl_aux_pass_change::get_kernels(bocl_device_spt
 
     //pass one, seglen
     std::string seg_options = opts + "  -D CHANGE_SEGLEN -D STEP_CELL=step_cell_seglen(aux_args,data_ptr,data_ptr_tt,d) ";
-    bocl_kernel* seg_len = new bocl_kernel();
+    auto* seg_len = new bocl_kernel();
     seg_len->create_kernel( &device->context(),
                             device->device_id(),
                             src_paths,
@@ -786,7 +788,7 @@ std::vector<bocl_kernel*>& bstm_ocl_aux_pass_change::get_kernels(bocl_device_spt
     change_options = opts + " -D AUX_CHANGE -D STEP_CELL=step_cell_change2(aux_args,data_ptr,data_ptr_tt,d) ";
 
     std::cout << "CHANGE OPTIONS: " << change_options << std::endl;
-    bocl_kernel* change_kernel = new bocl_kernel();
+    auto* change_kernel = new bocl_kernel();
     change_kernel->create_kernel( &device->context(),
                                   device->device_id(),
                                   src_paths,
@@ -799,7 +801,7 @@ std::vector<bocl_kernel*>& bstm_ocl_aux_pass_change::get_kernels(bocl_device_spt
     std::vector<std::string> norm_src_paths;
     norm_src_paths.push_back(source_dir + "pixel_conversion.cl");
     norm_src_paths.push_back(source_dir + "bit/normalize_kernels.cl");
-    bocl_kernel * normalize_render_kernel=new bocl_kernel();
+    auto * normalize_render_kernel=new bocl_kernel();
     normalize_render_kernel->create_kernel( &device->context(),
                                             device->device_id(),
                                             norm_src_paths,
@@ -828,11 +830,11 @@ std::map<std::string, std::vector<bocl_kernel*> > bstm_ocl_update_change::kernel
 //main change detect function
 bool bstm_ocl_update_change::update_change(vil_image_view<float>&    change_img,
                                                 bocl_device_sptr          device,
-                                                bstm_scene_sptr          scene,
-                                                bstm_opencl_cache_sptr   opencl_cache,
+                                                const bstm_scene_sptr&          scene,
+                                                const bstm_opencl_cache_sptr&   opencl_cache,
                                                 vpgl_camera_double_sptr   cam,
-                                                vil_image_view_base_sptr  img,
-                                                vil_image_view_base_sptr  mask_sptr,
+                                                const vil_image_view_base_sptr&  img,
+                                                const vil_image_view_base_sptr&  mask_sptr,
                                                 float                    time)
 {
     float transfer_time=0.0f;
@@ -874,7 +876,7 @@ bool bstm_ocl_update_change::update_change(vil_image_view<float>&    change_img,
       std::cout<<"Change detection using mask."<<std::endl;
       use_mask = true;
     }
-    vil_image_view<unsigned char >* mask_map = VXL_NULLPTR;
+    vil_image_view<unsigned char >* mask_map = nullptr;
     if (use_mask) {
       mask_map = dynamic_cast<vil_image_view<unsigned char> *>(mask_sptr.ptr());
       if (!mask_map) {
@@ -891,7 +893,7 @@ bool bstm_ocl_update_change::update_change(vil_image_view<float>&    change_img,
     unsigned char* mask_image_buff;
     if(!isColor){
       vil_image_view_base_sptr float_img     = bstm_util::prepare_input_image(img, true); //true for force gray scale
-      vil_image_view<float>* img_view = static_cast<vil_image_view<float>* >(float_img.ptr());
+      auto* img_view = static_cast<vil_image_view<float>* >(float_img.ptr());
 
       //prepare workspace size
       cl_ni    = RoundUp(img_view->ni(),local_threads[0]);
@@ -926,7 +928,7 @@ bool bstm_ocl_update_change::update_change(vil_image_view<float>&    change_img,
         std::cout<<"bstm_ocl_update_color_process::using a non RGBA image!!"<<std::endl;
         return false;
       }
-      vil_image_view<vil_rgba<vxl_byte> >* img_view = static_cast<vil_image_view<vil_rgba<vxl_byte> >* >(float_img.ptr());
+      auto* img_view = static_cast<vil_image_view<vil_rgba<vxl_byte> >* >(float_img.ptr());
 
       cl_ni=(unsigned)RoundUp(img_view->ni(),(int)local_threads[0]);
       cl_nj=(unsigned)RoundUp(img_view->nj(),(int)local_threads[1]);
@@ -964,15 +966,15 @@ bool bstm_ocl_update_change::update_change(vil_image_view<float>&    change_img,
 
 
     // create all buffers
-    cl_float* ray_origins = new cl_float[4*cl_ni*cl_nj];
-    cl_float* ray_directions = new cl_float[4*cl_ni*cl_nj];
+    auto* ray_origins = new cl_float[4*cl_ni*cl_nj];
+    auto* ray_directions = new cl_float[4*cl_ni*cl_nj];
     bocl_mem_sptr ray_o_buff = opencl_cache->alloc_mem(cl_ni*cl_nj*sizeof(cl_float4), ray_origins, "ray_origins buffer");
     bocl_mem_sptr ray_d_buff = opencl_cache->alloc_mem(cl_ni*cl_nj*sizeof(cl_float4), ray_directions, "ray_directions buffer");
     boxm2_ocl_camera_converter::compute_ray_image( device, queue, cam, cl_ni, cl_nj, ray_o_buff, ray_d_buff);
 
     //prepare image buffers (cpu)
-    float* vis_buff               = new float[cl_ni*cl_nj];
-    float* change_image_buff      = new float[cl_ni*cl_nj];
+    auto* vis_buff               = new float[cl_ni*cl_nj];
+    auto* change_image_buff      = new float[cl_ni*cl_nj];
 
     for (unsigned i=0;i<cl_ni*cl_nj;i++) {
         vis_buff[i]=1.0f;
@@ -1008,7 +1010,7 @@ bool bstm_ocl_update_change::update_change(vil_image_view<float>&    change_img,
 
     // Output Array
     float output_arr[100];
-    for (int i=0; i<100; ++i) output_arr[i] = -1.0f;
+    for (float & i : output_arr) i = -1.0f;
     bocl_mem_sptr  cl_output=new bocl_mem(device->context(), output_arr, sizeof(float)*100, "output buffer");
     cl_output->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
 
@@ -1115,7 +1117,7 @@ bool bstm_ocl_update_change::update_change(vil_image_view<float>&    change_img,
 
     int medfilt_halfsize = 5;
     //vil_image_view<float> orig_img(image);
-    vil_image_view<float>* out_img =  new vil_image_view<float>(ni, nj);
+    auto* out_img =  new vil_image_view<float>(ni, nj);
     out_img->fill(0.0f);
     std::vector<int> strel_vec_i, strel_vec_j;
     for (int i=-medfilt_halfsize; i <= medfilt_halfsize; ++i)
@@ -1159,9 +1161,9 @@ bool bstm_ocl_update_change::update_change(vil_image_view<float>&    change_img,
         bocl_mem* blk_t_info= opencl_cache->loaded_time_block_info();
         bocl_mem* alpha     = opencl_cache->get_data<BSTM_ALPHA>(*id);
 
-        bstm_scene_info* info_buffer = (bstm_scene_info*) blk_info->cpu_buffer();
+        auto* info_buffer = (bstm_scene_info*) blk_info->cpu_buffer();
 
-        bstm_scene_info* info_buffer_t = (bstm_scene_info*) blk_t_info->cpu_buffer();
+        auto* info_buffer_t = (bstm_scene_info*) blk_t_info->cpu_buffer();
         int num_time_trees = info_buffer_t->tree_buffer_length;
         bocl_mem *cum_seglen= opencl_cache->get_data<BSTM_AUX0>(*id, num_time_trees* bstm_data_traits<BSTM_AUX0>::datasize() ,false);
         bocl_mem *cum_vis   = opencl_cache->get_data<BSTM_AUX1>(*id, num_time_trees* bstm_data_traits<BSTM_AUX1>::datasize() ,false);
@@ -1282,7 +1284,7 @@ bool bstm_ocl_update_change::update_change(vil_image_view<float>&    change_img,
         bocl_mem* blk_t     = opencl_cache->get_time_block(*id);
         bocl_mem* blk_info  = opencl_cache->loaded_block_info();
         bocl_mem* blk_t_info= opencl_cache->loaded_time_block_info();
-        bstm_scene_info* info_buffer_t = (bstm_scene_info*) blk_t_info->cpu_buffer();
+        auto* info_buffer_t = (bstm_scene_info*) blk_t_info->cpu_buffer();
 
         bocl_mem *cum_seglen= opencl_cache->get_data<BSTM_AUX0>(*id);
         bocl_mem *cum_vis   = opencl_cache->get_data<BSTM_AUX1>(*id);
@@ -1350,7 +1352,7 @@ bool bstm_ocl_update_change::update_change(vil_image_view<float>&    change_img,
 //---------------------------------------------------
 // compiles, caches and returns list of kernels
 //---------------------------------------------------
-std::vector<bocl_kernel*>& bstm_ocl_update_change::get_kernels(bocl_device_sptr device, std::string opts, bool isColor)
+std::vector<bocl_kernel*>& bstm_ocl_update_change::get_kernels(const bocl_device_sptr& device, const std::string& opts, bool isColor)
 {
     // check to see if this device has compiled kernels already
     std::string identifier = device->device_identifier() + opts;
@@ -1387,7 +1389,7 @@ std::vector<bocl_kernel*>& bstm_ocl_update_change::get_kernels(bocl_device_sptr 
 
     std::cout << "Compiling with options " << change_options << std::endl;
     //have kernel construct itself using the context and device
-    bocl_kernel * ray_trace_kernel = new bocl_kernel();
+    auto * ray_trace_kernel = new bocl_kernel();
     ray_trace_kernel->create_kernel( &device->context(),
                                      device->device_id(),
                                      src_paths,
@@ -1398,11 +1400,11 @@ std::vector<bocl_kernel*>& bstm_ocl_update_change::get_kernels(bocl_device_sptr 
 
 
     //create normalize image kernel
-    std::string norm_options=opts;
+    const std::string& norm_options=opts;
     std::vector<std::string> norm_src_paths;
     norm_src_paths.push_back(source_dir + "pixel_conversion.cl");
     norm_src_paths.push_back(source_dir + "bit/normalize_kernels.cl");
-    bocl_kernel * normalize_render_kernel=new bocl_kernel();
+    auto * normalize_render_kernel=new bocl_kernel();
     normalize_render_kernel->create_kernel( &device->context(),
                                             device->device_id(),
                                             norm_src_paths,
@@ -1417,7 +1419,7 @@ std::vector<bocl_kernel*>& bstm_ocl_update_change::get_kernels(bocl_device_sptr 
     accum_options += " -D STEP_CELL=step_cell_update(aux_args,data_ptr,data_ptr_tt,d) ";
 
     //have kernel construct itself using the context and device
-    bocl_kernel * accum_kernel = new bocl_kernel();
+    auto * accum_kernel = new bocl_kernel();
     accum_kernel->create_kernel( &device->context(),
                                      device->device_id(),
                                      src_paths,
@@ -1425,11 +1427,11 @@ std::vector<bocl_kernel*>& bstm_ocl_update_change::get_kernels(bocl_device_sptr 
                                      accum_options,              //options
                                      "bstm 1x1 ocl change detection"); //kernel identifier (for error checking)
 
-    std::string update_options=opts;
+    const std::string& update_options=opts;
     std::vector<std::string> update_paths;
     update_paths.push_back(source_dir + "scene_info.cl");
     update_paths.push_back(source_dir + "change/change_detection.cl");
-    bocl_kernel * update_kernel=new bocl_kernel();
+    auto * update_kernel=new bocl_kernel();
     update_kernel->create_kernel( &device->context(),
                                             device->device_id(),
                                             update_paths,

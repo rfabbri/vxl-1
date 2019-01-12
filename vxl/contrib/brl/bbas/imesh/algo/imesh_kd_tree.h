@@ -27,11 +27,11 @@ struct imesh_kd_tree_node
   //: Constructor for internal node
   imesh_kd_tree_node( const vgl_box_3d<double>& outer_box,
                       const vgl_box_3d<double>& inner_box,
-                      vcl_unique_ptr<imesh_kd_tree_node> left,
-                      vcl_unique_ptr<imesh_kd_tree_node> right)
+                      std::unique_ptr<imesh_kd_tree_node> left,
+                      std::unique_ptr<imesh_kd_tree_node> right)
     : outer_box_(outer_box), inner_box_(inner_box),
       index_(static_cast<unsigned int>(-1)),
-      left_(vcl_move(left)), right_(vcl_move(right)) {}
+      left_(std::move(left)), right_(std::move(right)) {}
 
   //: Constructor for leaf node
   imesh_kd_tree_node( const vgl_box_3d<double>& outer_box,
@@ -42,7 +42,7 @@ struct imesh_kd_tree_node
 #if __cplusplus >= 201103L || (defined(_CPPLIB_VER) && _CPPLIB_VER >= 520)
       left_(), right_()
 #else
-      left_(VXL_NULLPTR), right_(VXL_NULLPTR)
+      left_(nullptr), right_(nullptr)
 #endif
   {}
 
@@ -51,8 +51,8 @@ struct imesh_kd_tree_node
     : outer_box_(other.outer_box_),
       inner_box_(other.inner_box_),
       index_(other.index_),
-      left_(other.left_.get() ? new imesh_kd_tree_node(*other.left_) : VXL_NULLPTR),
-      right_(other.right_.get() ? new imesh_kd_tree_node(*other.right_) : VXL_NULLPTR) {}
+      left_(other.left_.get() ? new imesh_kd_tree_node(*other.left_) : nullptr),
+      right_(other.right_.get() ? new imesh_kd_tree_node(*other.right_) : nullptr) {}
 
 
   //: Return true if this node is a leaf node
@@ -66,25 +66,25 @@ struct imesh_kd_tree_node
   //  Additional indices are assigned to internal nodes
   unsigned int index_;
   //: Left child
-  vcl_unique_ptr<imesh_kd_tree_node> left_;
+  std::unique_ptr<imesh_kd_tree_node> left_;
   //: Right child
-  vcl_unique_ptr<imesh_kd_tree_node> right_;
+  std::unique_ptr<imesh_kd_tree_node> right_;
 };
 
 
 //: Construct a kd-tree (in 3d) of axis aligned boxes
-vcl_unique_ptr<imesh_kd_tree_node>
+std::unique_ptr<imesh_kd_tree_node>
 imesh_build_kd_tree(const std::vector<vgl_box_3d<double> >& boxes);
 
 
 //: construct a kd-tree of mesh faces
-vcl_unique_ptr<imesh_kd_tree_node>
+std::unique_ptr<imesh_kd_tree_node>
 imesh_build_kd_tree(const imesh_vertex_array<3>& verts,
                     const imesh_face_array_base& faces);
 
 
 //: construct a kd-tree of mesh faces
-inline vcl_unique_ptr<imesh_kd_tree_node>
+inline std::unique_ptr<imesh_kd_tree_node>
 imesh_build_kd_tree(const imesh_mesh& mesh)
 {
   return imesh_build_kd_tree(mesh.vertices<3>(), mesh.faces());
@@ -97,7 +97,7 @@ class imesh_kd_tree_queue_entry
 {
  public:
   //: Constructor
-  imesh_kd_tree_queue_entry() {}
+  imesh_kd_tree_queue_entry() = default;
   //: Constructor
   imesh_kd_tree_queue_entry( double val, imesh_kd_tree_node* node )
     : val_(val), node_(node) {}
@@ -119,9 +119,9 @@ class imesh_kd_tree_queue_entry
 unsigned int
 imesh_kd_tree_closest_point(const vgl_point_3d<double>& query,
                             const imesh_mesh& mesh,
-                            const vcl_unique_ptr<imesh_kd_tree_node>& root,
+                            const std::unique_ptr<imesh_kd_tree_node>& root,
                             vgl_point_3d<double>& cp,
-                            std::vector<imesh_kd_tree_queue_entry>* dists = VXL_NULLPTR);
+                            std::vector<imesh_kd_tree_queue_entry>* dists = nullptr);
 
 
 //: Traverse the tree looking for leaf nodes that contain the query
@@ -129,7 +129,7 @@ imesh_kd_tree_closest_point(const vgl_point_3d<double>& query,
 //  Also returns a vector of the unexplored internal node-distance^2 pairs
 //  Resulting vectors are unsorted
 void imesh_kd_tree_traverse(const vgl_point_3d<double>& query,
-                            const vcl_unique_ptr<imesh_kd_tree_node>& root,
+                            const std::unique_ptr<imesh_kd_tree_node>& root,
                             std::vector<imesh_kd_tree_queue_entry>& internal,
                             std::vector<imesh_kd_tree_queue_entry>& leaf);
 

@@ -7,7 +7,9 @@
 // See sdet_grid_finder_params.h
 //
 //-----------------------------------------------------------------------------
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //------------------------------------------------------------------------
 // Constructors
@@ -40,12 +42,12 @@ void
 sdet_grid_finder_params::get_debug_choices(std::vector<std::string>& choices)
 {
   choices.clear();
-  choices.push_back("NO_DEBUG");
-  choices.push_back("VANISHING_POINT");
-  choices.push_back("AFFINE_GROUP_BEFORE_SKEW_SCALE");
-  choices.push_back("AFFINE_GROUP_AFTER_SKEW_SCALE");
-  choices.push_back("TRANS_PERIM_LINES");
-  choices.push_back("AFFINE_GROUP_AFTER_TRANS");
+  choices.emplace_back("NO_DEBUG");
+  choices.emplace_back("VANISHING_POINT");
+  choices.emplace_back("AFFINE_GROUP_BEFORE_SKEW_SCALE");
+  choices.emplace_back("AFFINE_GROUP_AFTER_SKEW_SCALE");
+  choices.emplace_back("TRANS_PERIM_LINES");
+  choices.emplace_back("AFFINE_GROUP_AFTER_TRANS");
 }
 
 void sdet_grid_finder_params::InitParams(const int n_lines_x,

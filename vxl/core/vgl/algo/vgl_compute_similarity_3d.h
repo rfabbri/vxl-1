@@ -1,9 +1,6 @@
 // This is core/vgl/algo/vgl_compute_similarity_3d.h
 #ifndef vgl_compute_similarity_3d_h_
 #define vgl_compute_similarity_3d_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Compute a similarity transformation between two corresponding sets of 3D points
@@ -20,7 +17,9 @@
 // \endverbatim
 
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_vector_3d.h>
 #include <vgl/algo/vgl_rotation_3d.h>
@@ -33,12 +32,12 @@ class vgl_compute_similarity_3d
 
   // Constructors/Initializers/Destructors-------------------------------------
 
-   vgl_compute_similarity_3d() {}
+   vgl_compute_similarity_3d() = default;
 
    vgl_compute_similarity_3d(std::vector<vgl_point_3d<T> > const& points1,
                              std::vector<vgl_point_3d<T> > const& points2);
 
-  ~vgl_compute_similarity_3d() {}
+  ~vgl_compute_similarity_3d() = default;
 
   // Operations---------------------------------------------------------------
 

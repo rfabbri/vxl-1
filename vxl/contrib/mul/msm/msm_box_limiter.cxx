@@ -11,8 +11,10 @@
 #include <mbl/mbl_parse_block.h>
 #include <mbl/mbl_read_props.h>
 #include <vul/vul_string.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 //=======================================================================
 msm_box_limiter::msm_box_limiter()
@@ -74,7 +76,7 @@ void msm_box_limiter::print_summary(std::ostream& os) const
     <<" accept_prop: "<<accept_prop_<<" } ";
 }
 
-const static short version_no = 1;
+constexpr static short version_no = 1;
 
 //: Save class to binary file stream
 void msm_box_limiter::b_write(vsl_b_ostream& bfs) const

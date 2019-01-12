@@ -6,7 +6,9 @@
 #include <iostream>
 #include "vgui_win32_dialog_impl.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgui/internals/vgui_simple_field.h>
 #include <vgui/internals/vgui_file_field.h>
 #include <vgui/internals/vgui_button_field.h>
@@ -294,10 +296,10 @@ bool vgui_win32_dialog_impl::ask()
   const int cyChar = HIWORD(GetDialogBaseUnits());
 
   const int height_sep = 6*cyChar/4; // vertical distance between two adjacent controls.
-  const int width_sep = 2; // horizontal distance between two adjacent controls.
-  const int edit_length = 20;
-  const int browser_length = 40;
-  const int button_length = 12;
+  constexpr int width_sep = 2; // horizontal distance between two adjacent controls.
+  constexpr int edit_length = 20;
+  constexpr int browser_length = 40;
+  constexpr int button_length = 12;
   const int button_height = 6*cyChar/4;
   const int edit_height = 5*cyChar/4;
 
@@ -1095,4 +1097,3 @@ void vgui_win32_dialog_impl::DrawImageOnButton(HDC hDC, RECT* lprcItem,
 
   return;
 }
-

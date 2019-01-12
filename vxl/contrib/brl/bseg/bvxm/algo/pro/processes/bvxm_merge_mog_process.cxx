@@ -12,7 +12,9 @@
 #include <bprb/bprb_parameters.h>
 #include <brdb/brdb_value.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <bvxm/algo/bvxm_merge_mog.h>
 #include <bvxm/grid/bvxm_voxel_grid_base.h>
@@ -68,4 +70,3 @@ bool bvxm_merge_mog_process(bprb_func_process& pro)
 
   return true;
 }
-

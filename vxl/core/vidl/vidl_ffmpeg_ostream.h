@@ -1,9 +1,6 @@
 // This is core/vidl/vidl_ffmpeg_ostream.h
 #ifndef vidl_ffmpeg_ostream_h_
 #define vidl_ffmpeg_ostream_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief A video output stream to an encoded file using FFMPEG
@@ -18,7 +15,9 @@
 
 #include <string>
 #include "vidl_ostream.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include "vidl_ffmpeg_ostream_params.h"
 
 
@@ -35,24 +34,24 @@ class VIDL_EXPORT vidl_ffmpeg_ostream
   vidl_ffmpeg_ostream();
 
   //: Constructor - opens a stream
-  vidl_ffmpeg_ostream(const std::string& filenam,
-                      const vidl_ffmpeg_ostream_params& parms);
+  vidl_ffmpeg_ostream(const std::string  & filenam,
+                      const vidl_ffmpeg_ostream_params  & parms);
 
   //: Destructor
-  virtual ~vidl_ffmpeg_ostream();
+  ~vidl_ffmpeg_ostream() override;
 
   //: Open the stream
   virtual bool open();
 
   //: Close the stream
-  virtual void close();
+  void close() override;
 
   //: Return true if the stream is open for writing
-  virtual bool is_open() const;
+  bool is_open() const override;
 
   //: Write and image to the stream
   // \retval false if the image could not be written
-  virtual bool write_frame(const vidl_frame_sptr& frame);
+  bool write_frame(const vidl_frame_sptr& frame) override;
 
   //: Set the filename
   void set_filename(const std::string& filenam) { filename_ = filenam; }

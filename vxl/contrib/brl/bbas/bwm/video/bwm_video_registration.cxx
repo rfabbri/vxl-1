@@ -7,7 +7,9 @@
 #include "bwm_video_registration.h"
 
 #include <bwm/video/bwm_video_cam_istream.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_timer.h>
 #include <vul/vul_file.h>
 #include <vnl/vnl_matrix_fixed.h>
@@ -127,7 +129,7 @@ convert_to_frame(std::vector<vil_image_view<float> >const&  views,
 {
   unsigned np = views.size();
   if (!np)
-    return VXL_NULLPTR;
+    return nullptr;
   unsigned ni = views[0].ni(), nj = views[0].nj();
   if (!preserve_float){
     std::vector<vil_image_view<unsigned char> > cviews;
@@ -191,8 +193,8 @@ register_image_stream_planar(vidl_istream_sptr& in_stream,
   // ground sample distance
   double w = bounds->width(), h = bounds->height();
   w/=world_sample_distance;    h/=world_sample_distance;
-  unsigned out_ni = static_cast<unsigned>(w);
-  unsigned out_nj = static_cast<unsigned>(h);
+  auto out_ni = static_cast<unsigned>(w);
+  auto out_nj = static_cast<unsigned>(h);
 
   vnl_matrix_fixed<double,3, 3> t;
   t[0][0]=1;  t[0][1]=0; t[0][2]=-bounds->get_min_x();
@@ -209,9 +211,9 @@ register_image_stream_planar(vidl_istream_sptr& in_stream,
       return false;
     vgl_h_matrix_2d<double> Hsh = compute_homography(H0,t,cam, world_plane);
     std::vector<vil_image_view<float> > out_vs;
-    for (unsigned p = 0; p<float_vs.size(); ++p){
+    for (const auto & float_v : float_vs){
       vil_image_view<float> out_view(out_ni, out_nj);
-      if (!brip_vil_float_ops::homography(float_vs[p], Hsh, out_view, true))
+      if (!brip_vil_float_ops::homography(float_v, Hsh, out_view, true))
         return false;
       out_vs.push_back(out_view);
     }

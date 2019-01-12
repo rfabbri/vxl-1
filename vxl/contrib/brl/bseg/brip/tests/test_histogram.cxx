@@ -2,7 +2,9 @@
 #include <iostream>
 #include <sstream>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_image_view.h>
 #include <brip/brip_histogram.h>
 
@@ -16,9 +18,9 @@ void test_hist(const vil_image_view<T>& image,
   double test_sum = 0.0;
 
   //std::cout << "Histogram: ";
-  for (unsigned int i=0; i<hist.size(); ++i){
+  for (double i : hist){
     //std::cout << hist[i] << ' ';
-    test_sum += hist[i];
+    test_sum += i;
   }
   //std::cout << std::endl;
   //std::cout << "Sum: " << sum << std::endl;
@@ -43,8 +45,8 @@ void test_hist_weight(const vil_image_view<T>& image,
   double sum = brip_weighted_histogram(image, weights, hist, min, max, n_bins);
 
   double verify_sum = 0.0;
-  for (unsigned int i=0; i<hist.size(); ++i)
-    verify_sum += hist[i];
+  for (double i : hist)
+    verify_sum += i;
 
   std::stringstream test_name;
   test_name<<"Validate Weights ("<<n_bins<<" bins, range "<<min<<"--"<<max<<')';

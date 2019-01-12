@@ -1,9 +1,6 @@
 // This is core/vgl/algo/vgl_fit_lines_2d.h
 #ifndef vgl_fit_lines_2d_h_
 #define vgl_fit_lines_2d_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Fits a contiguous set of line segments to a sampled curve
@@ -22,7 +19,9 @@
 //   none
 // \endverbatim
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_line_segment_2d.h>
 
@@ -43,7 +42,7 @@ class vgl_fit_lines_2d
 
   vgl_fit_lines_2d(unsigned int min_length = 10, T tol = 0.15);
 
-  ~vgl_fit_lines_2d() {}
+  ~vgl_fit_lines_2d() = default;
 
   // Operations----------------------------------------------------------------
   void set_verbose(bool verbose){verbose_ = verbose;}

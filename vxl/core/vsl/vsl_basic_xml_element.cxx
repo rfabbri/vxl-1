@@ -5,8 +5,8 @@
 
 void vsl_basic_xml_element::add_attribute_list(std::vector<std::pair<std::string, std::string> > attrs)
 {
-  for (unsigned int i=0; i<attrs.size(); i++) {
-    attrs_.push_back(attrs[i]);
+  for (const auto & attr : attrs) {
+    attrs_.push_back(attr);
   }
 }
 
@@ -30,7 +30,7 @@ void vsl_basic_xml_element::add_attribute(std::string attr_name, long value)
   attrs_.push_back(attr);
 }
 
-void vsl_basic_xml_element::append_cdata(std::string cdata)
+void vsl_basic_xml_element::append_cdata(const std::string& cdata)
 {
   if (cdata_.size() > 0)
     cdata_.append(" ");
@@ -75,8 +75,8 @@ void vsl_basic_xml_element::x_write(std::ostream& ostr)
 void vsl_basic_xml_element::x_write_open(std::ostream& ostr)
 {
   ostr << '<' << tag_;
-  for (unsigned int i=0; i<attrs_.size(); i++) {
-    ostr << ' ' << attrs_[i].first << "=\"" << attrs_[i].second << '"';
+  for (auto & attr : attrs_) {
+    ostr << ' ' << attr.first << "=\"" << attr.second << '"';
   }
   ostr << ">\n";
 }

@@ -8,7 +8,9 @@
 #include <iostream>
 #include <testlib/testlib_test.h>
 #include <bvgl/algo/bvgl_2d_geo_index.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 static void test_2d_geo_index()
 {
@@ -81,14 +83,14 @@ static void test_2d_geo_index()
 
   // quickly locate the leaves that intersect with a line
   std::vector<vgl_point_2d<float> > line;
-  line.push_back(vgl_point_2d<float>(0.2f, 0.2f));
-  line.push_back(vgl_point_2d<float>(0.2f, 0.4f));
-  line.push_back(vgl_point_2d<float>(0.4f, 0.6f));
+  line.emplace_back(0.2f, 0.2f);
+  line.emplace_back(0.2f, 0.4f);
+  line.emplace_back(0.4f, 0.6f);
   leaves.clear();
   bvgl_2d_geo_index::get_leaves(root1, leaves, line);
   std::cout << " leaves that intersect with line: ";
-  for (unsigned i = 0; i < line.size(); i++) {
-    std::cout << line[i] << ' ';
+  for (auto i : line) {
+    std::cout << i << ' ';
   }
   std::cout << '\n';
   for (unsigned i = 0; i < leaves.size(); i++) {
@@ -116,7 +118,7 @@ static void test_2d_geo_index()
   leaves.clear();
   bvgl_2d_geo_index::get_leaves(root1, leaves);
   for (unsigned l_idx = 0; l_idx < leaves.size(); l_idx++) {
-    bvgl_2d_geo_index_node<std::vector<int> >* leaf_ptr = dynamic_cast<bvgl_2d_geo_index_node<std::vector<int> >* >(leaves[l_idx].ptr());
+    auto* leaf_ptr = dynamic_cast<bvgl_2d_geo_index_node<std::vector<int> >* >(leaves[l_idx].ptr());
     for (unsigned i = 0; i < 3; i++)
       leaf_ptr->contents_.push_back(i + l_idx*2);
   }
@@ -125,11 +127,11 @@ static void test_2d_geo_index()
   leaves.clear();
   bvgl_2d_geo_index::get_leaves(root1, leaves, region);
   std::cout << " leaves intersecting with region " << region << " have following content:" << std::endl;
-  for (unsigned i = 0; i < leaves.size(); i++) {
-    std::cout << "\t leaf " << leaves[i]->extent_ << " contains: ";
-    bvgl_2d_geo_index_node<std::vector<int> >* leaf_ptr = dynamic_cast<bvgl_2d_geo_index_node<std::vector<int> >* >(leaves[i].ptr());
-    for (unsigned j = 0; j < leaf_ptr->contents_.size(); j++)
-      std::cout << leaf_ptr->contents_[j] << ' ';
+  for (auto & leave : leaves) {
+    std::cout << "\t leaf " << leave->extent_ << " contains: ";
+    auto* leaf_ptr = dynamic_cast<bvgl_2d_geo_index_node<std::vector<int> >* >(leave.ptr());
+    for (int content : leaf_ptr->contents_)
+      std::cout << content << ' ';
     std::cout << '\n';
   }
 

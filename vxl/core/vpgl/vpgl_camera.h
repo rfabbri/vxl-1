@@ -22,7 +22,9 @@
 // \endverbatim
 
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_ref_count.h>
 
 template <class T>
@@ -30,8 +32,8 @@ class vpgl_camera : public vbl_ref_count
 {
  public:
 
-  vpgl_camera() {}
-  virtual ~vpgl_camera() {}
+  vpgl_camera() = default;
+  ~vpgl_camera() override = default;
 
   //: class identity functions for casting
   virtual std::string type_name() const { return "vpgl_camera"; }

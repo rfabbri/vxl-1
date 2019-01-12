@@ -24,7 +24,9 @@
 #include <vgl/vgl_plane_3d.h>
 #include <bvxm/bvxm_edge_ray_processor.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: set input and output types
 bool bvxm_rpc_registration_process_cons(bprb_func_process& pro)
@@ -87,9 +89,9 @@ bool bvxm_rpc_registration_process(bprb_func_process& pro)
   // boolean parameter specifying the voxel world alignment state
   bool rpc_shift_3d_flag = pro.get_input<bool>(i++);
   // uncertainty in meters
-  float uncertainty = pro.get_input<float>(i++);
+  auto uncertainty = pro.get_input<float>(i++);
   // scale of image
-  unsigned scale = pro.get_input<unsigned>(i++);
+  auto scale = pro.get_input<unsigned>(i++);
 
   float n_normal = vox_world->get_params()->edges_n_normal();
 
@@ -187,7 +189,7 @@ bool bvxm_rpc_registration_process(bprb_func_process& pro)
   double motion_mult = 0.0;
   if (rpc_shift_3d_flag)
   {
-    vpgl_local_rational_camera<double> *cam_input_temp = dynamic_cast<vpgl_local_rational_camera<double>*>(camera_inp.ptr());
+    auto *cam_input_temp = dynamic_cast<vpgl_local_rational_camera<double>*>(camera_inp.ptr());
 
     vgl_point_3d<double> origin_3d(0.0,0.0,0.0);
     vgl_point_2d<double> origin_2d = cam_input_temp->project(origin_3d);

@@ -9,7 +9,9 @@
 #include <iosfwd>
 #include <msm/msm_ref_shape_instance.h>
 #include <msm/msm_shape_model.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Representation of an instance of a shape model.
 //  Contains shape model parameters and the parameters of
@@ -64,7 +66,7 @@ class msm_shape_instance
 
   //: Reference to current model
   const msm_shape_model& model() const
-  { assert(model_!=VXL_NULLPTR); return *model_; }
+  { assert(model_!=nullptr); return *model_; }
 
   //: Current pose parameters
   const vnl_vector<double>& pose() const { return pose_; }

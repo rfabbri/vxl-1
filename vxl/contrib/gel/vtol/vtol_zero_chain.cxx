@@ -3,7 +3,10 @@
 //:
 // \file
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vtol/vtol_macros.h>
 #include <vtol/vtol_list_functions.h>
 #include <vtol/vtol_edge.h>
@@ -13,22 +16,22 @@
 // Initialization
 //***************************************************************************
 
-void vtol_zero_chain::link_inferior(vtol_vertex_sptr inf)
+void vtol_zero_chain::link_inferior(const vtol_vertex_sptr& inf)
 {
   vtol_topology_object::link_inferior(inf->cast_to_topology_object());
 }
 
-void vtol_zero_chain::unlink_inferior(vtol_vertex_sptr inf)
+void vtol_zero_chain::unlink_inferior(const vtol_vertex_sptr& inf)
 {
   vtol_topology_object::unlink_inferior(inf->cast_to_topology_object());
 }
 
-void vtol_zero_chain::link_inferior(vtol_vertex_2d_sptr inf)
+void vtol_zero_chain::link_inferior(const vtol_vertex_2d_sptr& inf)
 {
   vtol_topology_object::link_inferior(inf->cast_to_topology_object());
 }
 
-void vtol_zero_chain::unlink_inferior(vtol_vertex_2d_sptr inf)
+void vtol_zero_chain::unlink_inferior(const vtol_vertex_2d_sptr& inf)
 {
   vtol_topology_object::unlink_inferior(inf->cast_to_topology_object());
 }
@@ -66,8 +69,8 @@ vtol_zero_chain::vtol_zero_chain(const vertex_list &new_vertices)
   // require
   assert(new_vertices.size()>0);
 
-  for (vertex_list::const_iterator i=new_vertices.begin();i!=new_vertices.end();++i)
-    link_inferior(*i);
+  for (const auto & new_vertice : new_vertices)
+    link_inferior(new_vertice);
 }
 
 //---------------------------------------------------------------------------
@@ -105,7 +108,7 @@ vtol_vertex_sptr vtol_zero_chain::v0() const
   if (numinf()>0)
     return inferiors()->front()->cast_to_vertex();
   else
-    return VXL_NULLPTR;
+    return nullptr;
 }
 
 //: get list of vertices

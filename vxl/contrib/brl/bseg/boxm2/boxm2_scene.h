@@ -10,14 +10,16 @@
 #include <iosfwd>
 #include <vector>
 #include <string>
-#include <vcl_cassert.h>
+#include <cassert>
 #include <boxm2/basic/boxm2_block_id.h>
 #include <boxm2/boxm2_block_metadata.h>
 #include <vpgl/vpgl_lvcs.h>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_box_3d.h>
 #include <vgl/vgl_box_2d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_file.h>
 
 //smart pointer stuff
@@ -97,7 +99,7 @@ class boxm2_scene : public vbl_ref_count
     boxm2_scene(boxm2_scene const& other_scene);
 
     //: destructor
-    ~boxm2_scene() { }
+    ~boxm2_scene() override = default;
 
     //:create an in-memory copy of the scene with unique id
     boxm2_scene_sptr clone_no_disk();

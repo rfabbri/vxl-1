@@ -1,9 +1,6 @@
 // This is mul/vimt/vimt_transform_2d.h
 #ifndef vimt_transform_2d_h_
 #define vimt_transform_2d_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author Tim Cootes
@@ -19,7 +16,9 @@
 #include <vgl/vgl_vector_2d.h>
 #include <vgl/vgl_point_2d.h>
 #include <vsl/vsl_binary_io.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: 2D transform, which can be up to a projective transformation.
 // In order of complexity the transform can be
@@ -75,7 +74,7 @@ class vimt_transform_2d
         xx_(1),xy_(0),xt_(0),
         yx_(0),yy_(1),yt_(0),
         tx_(0),ty_(0),tt_(1),
-        form_(Identity),inv_uptodate_(0) {}
+        form_(Identity),inv_uptodate_(false) {}
 
 
     bool is_identity() const { return form_==Identity; }
@@ -160,7 +159,7 @@ class vimt_transform_2d
 
     //: Returns the coordinates of the origin.
     // I.e. operator()(vgl_point_2d<double> (0,0))
-    vgl_point_2d<double>  origin() const { return vgl_point_2d<double>(xt_/tt_,yt_/tt_); }
+    vgl_point_2d<double>  origin() const { return {xt_/tt_,yt_/tt_}; }
 
     //: Modifies the transformation so that operator()(vgl_point_2d<double> (0,0)) == p.
     // The rest of the transformation is unaffected.

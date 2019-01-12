@@ -21,7 +21,9 @@
 #include <vnl/vnl_random.h>
 #include <vbl/vbl_array_3d.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 template<class data_type>
 void fill_in_data(vbl_array_3d<data_type> & data,data_type min_p, data_type max_p, vnl_float_3 axis)
@@ -77,7 +79,7 @@ void fill_in_data(vbl_array_3d<bsta_gauss_sf1> & data,bsta_gauss_sf1 min_p, bsta
 
 
 template <class F, class data_type>
-data_type run_kernel_at_the_center(vbl_array_3d<data_type> & data, bvpl_kernel_sptr kernel, F func)
+data_type run_kernel_at_the_center(vbl_array_3d<data_type> & data, const bvpl_kernel_sptr& kernel, F func)
 {
   unsigned ni=data.get_row1_count();
   unsigned nj=data.get_row2_count();
@@ -104,7 +106,7 @@ data_type run_kernel_at_the_center(vbl_array_3d<data_type> & data, bvpl_kernel_s
 
 
 template <class F,class data_type >
-bool is_correct_solution(bvpl_kernel_vector_sptr kernel_vec,
+bool is_correct_solution(const bvpl_kernel_vector_sptr& kernel_vec,
                          vbl_array_3d<data_type> & data, F func,
                          data_type min_p, data_type max_p, float sigma_noise, data_type maxval)
 {
@@ -154,7 +156,7 @@ bool is_correct_solution(bvpl_kernel_vector_sptr kernel_vec,
 }
 
 template <class F>//,class bsta_gauss_sf1 >
-bool is_correct_solution(bvpl_kernel_vector_sptr kernel_vec,
+bool is_correct_solution(const bvpl_kernel_vector_sptr& kernel_vec,
                          vbl_array_3d<bsta_gauss_sf1> & data, F func,
                          bsta_gauss_sf1 min_p, bsta_gauss_sf1 max_p, float sigma_noise, bsta_gauss_sf1 maxval,
                          vnl_vector<float> &response)
@@ -260,9 +262,9 @@ void test_gaussian_kernels()
 
   float var[3] ={1.0, 1.5, 2};
 
-  for (unsigned i=0; i<3; i++)
+  for (float i : var)
   {
-    bvpl_gauss3d_xx_kernel_factory factory(var[i], 1.5);
+    bvpl_gauss3d_xx_kernel_factory factory(i, 1.5);
     // get vector of kernel
     bvpl_create_directions_b dir;
     bvpl_kernel_vector_sptr kernel_vec = factory.create_kernel_vector(dir);

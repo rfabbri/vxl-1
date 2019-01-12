@@ -4,7 +4,10 @@
 #include <vil/vil_math.h>
 #include <vil/vil_new.h>
 #include <vnl/vnl_numeric_traits.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 //
 // index for relative image position of neighbors
 //      u
@@ -80,7 +83,7 @@ sdet_mrf_bp::sdet_mrf_bp(unsigned ni, unsigned nj,
       sites_[j][i]=new sdet_mrf_site_bp(n_labels_,lambda_, truncation_cost_);
 }
 
-sdet_mrf_bp::sdet_mrf_bp(vil_image_resource_sptr obs_labels, unsigned n_labels,
+sdet_mrf_bp::sdet_mrf_bp(const vil_image_resource_sptr& obs_labels, unsigned n_labels,
                          float discontinuity_cost, float truncation_cost,
                          float kappa, float lambda)
   : ni_(0), nj_(0), n_labels_(n_labels),
@@ -154,8 +157,8 @@ sdet_mrf_bp::sdet_mrf_bp(vil_image_view<float> const& obs_labels,
     }
 }
 
-sdet_mrf_bp::sdet_mrf_bp(vil_image_resource_sptr  obs_labels,
-                         vil_image_resource_sptr  var,
+sdet_mrf_bp::sdet_mrf_bp(const vil_image_resource_sptr&  obs_labels,
+                         const vil_image_resource_sptr&  var,
                          unsigned n_labels, float discontinuity_cost,
                          float truncation_cost, float kappa, float lambda)
   :  n_labels_(n_labels),discontinuity_cost_(discontinuity_cost),
@@ -274,7 +277,7 @@ void sdet_mrf_bp::print_belief_vectors()
 
 vil_image_resource_sptr sdet_mrf_bp::belief_image()
 {
-  vil_image_resource_sptr ret = VXL_NULLPTR;
+  vil_image_resource_sptr ret = nullptr;
   if (nj_==0||ni_==0)
     return ret;
   vil_image_view<float> view(ni_, nj_);
@@ -285,7 +288,7 @@ vil_image_resource_sptr sdet_mrf_bp::belief_image()
     for (unsigned i = 0; i<ni_; ++i) {
       sdet_mrf_site_bp_sptr sp = sites_[j][i];
       if (!sp) continue;
-      float label = static_cast<float>(sp->believed_label());
+      auto label = static_cast<float>(sp->believed_label());
       view(i,j) = scale*label + min_;
     }
   ret = vil_new_image_resource_of_view(view);

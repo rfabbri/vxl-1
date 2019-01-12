@@ -1,9 +1,6 @@
 // This is oxl/mvl/HomgOperator2D.h
 #ifndef HomgOperator2D_h_
 #define HomgOperator2D_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief useful operators for the 2D homogeneous primitive classes
@@ -15,7 +12,9 @@
 
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 class Homg2D;
 class HomgLine2D;
 class HomgPoint2D;

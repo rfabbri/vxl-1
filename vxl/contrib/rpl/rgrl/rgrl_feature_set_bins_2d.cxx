@@ -9,7 +9,10 @@
 //   April 2004 Charlene: allow the use of kd_tree and user-defined bin_size.
 // \endverbatim
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <rsdl/rsdl_bins.h>
 #include <rsdl/rsdl_bins.hxx> // to avoid explicit instantiation
@@ -38,7 +41,7 @@ rgrl_feature_set_bins_2d( feature_vector const& features,
     max.fill( bin_size );
 
   } else {
-    feature_vector::const_iterator itr = features.begin();
+    auto itr = features.begin();
     //feature_type_ = (*itr)->type_id();
     feature_type_ = &typeid(*(*itr));
     min = (*itr)->location();
@@ -63,16 +66,14 @@ rgrl_feature_set_bins_2d( feature_vector const& features,
   bins_2d_.reset( new bin2d_type( min, max, bin_sizes ) );
 
   // Add the data
-  for ( feature_vector::const_iterator itr = features.begin(); itr != features.end(); ++itr ) {
-    bins_2d_->add_point( (*itr)->location(), *itr );
+  for (const auto & feature : features) {
+    bins_2d_->add_point( feature->location(), feature );
   }
 }
 
 
 rgrl_feature_set_bins_2d::
-~rgrl_feature_set_bins_2d()
-{
-}
+~rgrl_feature_set_bins_2d() = default;
 
 
 void
@@ -149,4 +150,3 @@ type() const
 {
   return *feature_type_;
 }
-

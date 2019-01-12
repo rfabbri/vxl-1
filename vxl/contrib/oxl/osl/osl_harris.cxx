@@ -8,8 +8,10 @@
 //:
 // \file
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vil1/vil1_image_as.h>
 #include <vil1/vil1_copy.h>
@@ -150,8 +152,8 @@ void osl_harris::compute_corners()
       {
         double x, y;
         if (droid::compute_subpixel_max (&image_cornerness_buf, row, col, x,y, params_.pab_emulate))
-          cc.push_back(std::pair<float, float>(float(params_.col_start_index+x),
-                                              float(params_.row_start_index+y)));
+          cc.emplace_back(float(params_.col_start_index+x),
+                                              float(params_.row_start_index+y));
       }
   std::cerr << "osl_harris: Final corner count " << cc.size() << std::endl;
 }
@@ -311,18 +313,18 @@ void osl_harris::get_corners(std::vector<std::pair<float, float> > &cor) const
 
 void osl_harris::get_corners(std::vector<float> &corx, std::vector<float> &cory) const
 {
-  for (unsigned i=0; i<cc.size(); ++i)
+  for (const auto & i : cc)
   {
-    corx.push_back(cc[i].first);
-    cory.push_back(cc[i].second);
+    corx.push_back(i.first);
+    cory.push_back(i.second);
   }
 }
 
 //: convenience method
 void osl_harris::save_corners(std::ostream &f) const
 {
-  for (unsigned i=0; i<cc.size(); ++i)
-    f << cc[i].first << ' ' << cc[i].second << std::endl;
+  for (const auto & i : cc)
+    f << i.first << ' ' << i.second << std::endl;
 }
 
 void osl_harris::save_corners(char const *filename) const

@@ -1,14 +1,16 @@
 #include <iostream>
 #include <utility>
+#include <fstream>
 #include "bwm_site.h"
 //:
 // \file
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vsl/vsl_basic_xml_element.h>
 #include <vsol/vsol_point_2d.h>
-#include <fstream>
 //: destructor
 bwm_site::~bwm_site()
 {
@@ -236,4 +238,3 @@ void bwm_site::convert_object_groups_obj_to_multiple_ply(std::string const& obj_
     ostr.close();
   }
 }
-

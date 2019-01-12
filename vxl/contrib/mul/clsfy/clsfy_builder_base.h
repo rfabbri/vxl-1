@@ -13,13 +13,15 @@
 
 #include <vector>
 #include <string>
-#include <vcl_memory.h>
 #include <iostream>
+#include <memory>
 #include <iosfwd>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <mbl/mbl_data_wrapper.h>
 #include <vnl/vnl_vector.h>
 #include <vsl/vsl_binary_io.h>
-#include <vcl_compiler.h>
 
 class clsfy_classifier_base;
 
@@ -28,7 +30,7 @@ class clsfy_builder_base
 {
  public:
   // Destructor
-  virtual ~clsfy_builder_base() {}
+  virtual ~clsfy_builder_base() = default;
 
   //: Create empty model
   virtual clsfy_classifier_base* new_classifier() const = 0;
@@ -61,7 +63,7 @@ class clsfy_builder_base
   virtual void b_read(vsl_b_istream& bfs) = 0;
 
   //: Load description from a text stream
-  static vcl_unique_ptr<clsfy_builder_base> new_builder(
+  static std::unique_ptr<clsfy_builder_base> new_builder(
     std::istream &as);
 
   //: Initialise the parameters from a text stream.

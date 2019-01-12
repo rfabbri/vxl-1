@@ -1,7 +1,4 @@
 // This is core/vgui/impl/gtk/vgui_gtk_utils.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Philip C. Pritchett, RRG, University of Oxford
@@ -12,7 +9,9 @@
 #include <cstdlib>
 #include "vgui_gtk_utils.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vgui/vgui_gl.h>
 #include <gdk/gdkkeysyms.h>

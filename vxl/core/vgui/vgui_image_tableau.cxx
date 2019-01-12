@@ -13,7 +13,9 @@
 // \endverbatim
 
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vil/vil_image_view_base.h>
 #include <vil1/vil1_load.h>
@@ -36,9 +38,9 @@ vgui_image_tableau::
 vgui_image_tableau()
   : vgui_tableau(),
     pixels_centered_( true ),
-    rmp_( VXL_NULLPTR ),
-    renderer_( VXL_NULLPTR ),
-    vil_renderer_( VXL_NULLPTR )
+    rmp_( nullptr ),
+    renderer_( nullptr ),
+    vil_renderer_( nullptr )
 {
 }
 
@@ -49,8 +51,8 @@ vgui_image_tableau( vil1_image const &I,
                     vgui_range_map_params_sptr const& mp)
   : vgui_tableau(),
     pixels_centered_( true ),
-    renderer_( VXL_NULLPTR ),
-    vil_renderer_( VXL_NULLPTR )
+    renderer_( nullptr ),
+    vil_renderer_( nullptr )
 {
   set_image( I, mp );
 }
@@ -62,8 +64,8 @@ vgui_image_tableau( vil_image_view_base const& I,
                     vgui_range_map_params_sptr const& mp )
   : vgui_tableau(),
     pixels_centered_( true ),
-    renderer_( VXL_NULLPTR ),
-    vil_renderer_( VXL_NULLPTR )
+    renderer_( nullptr ),
+    vil_renderer_( nullptr )
 {
   set_image_view( I, mp );
 }
@@ -75,8 +77,8 @@ vgui_image_tableau( vil_image_resource_sptr const& I,
                     vgui_range_map_params_sptr const& mp )
   : vgui_tableau(),
     pixels_centered_( true ),
-    renderer_( VXL_NULLPTR ),
-    vil_renderer_( VXL_NULLPTR )
+    renderer_( nullptr ),
+    vil_renderer_( nullptr )
 {
   set_image_resource( I, mp);
 }
@@ -89,8 +91,8 @@ vgui_image_tableau(char const *f,
   : vgui_tableau(),
     name_( f ),
     pixels_centered_( true ),
-    renderer_( VXL_NULLPTR ),
-    vil_renderer_( VXL_NULLPTR )
+    renderer_( nullptr ),
+    vil_renderer_( nullptr )
 {
   set_image( f, mp );
 }
@@ -102,8 +104,8 @@ vgui_image_tableau::
 {
   delete renderer_;
   delete vil_renderer_;
-  renderer_ = VXL_NULLPTR;
-  vil_renderer_ = VXL_NULLPTR;
+  renderer_ = nullptr;
+  vil_renderer_ = nullptr;
 }
 
 //-----------------------------------------------------------------------------
@@ -143,7 +145,7 @@ get_image() const
   if (renderer_)
     return renderer_->get_image();
   else
-    return VXL_NULLPTR;
+    return nullptr;
 }
 
 //-----------------------------------------------------------------------------
@@ -155,7 +157,7 @@ get_image_view() const
   if (vil_renderer_)
     return vil_renderer_->get_image_resource()->get_view();
   else
-    return VXL_NULLPTR;
+    return nullptr;
 }
 
 //-----------------------------------------------------------------------------
@@ -167,7 +169,7 @@ get_image_resource() const
   if (vil_renderer_)
     return vil_renderer_->get_image_resource();
   else
-    return VXL_NULLPTR;
+    return nullptr;
 }
 
 //-----------------------------------------------------------------------------
@@ -239,7 +241,7 @@ set_image_resource( vil_image_resource_sptr const& I)
   if ( renderer_ )
   {
     delete renderer_;
-    renderer_ = VXL_NULLPTR;
+    renderer_ = nullptr;
   }
 }
 
@@ -258,7 +260,7 @@ set_image( vil1_image const& I)
   if ( vil_renderer_ )
   {
     delete vil_renderer_;
-    vil_renderer_ = VXL_NULLPTR;
+    vil_renderer_ = nullptr;
   }
 }
 
@@ -381,7 +383,7 @@ class vgui_set_rangemap_command : public vgui_command
   void execute()
   {
     vgui_range_map_params_sptr old_rmp = tab_->map_params();
-    vgui_range_map_params_sptr rmp = VXL_NULLPTR;
+    vgui_range_map_params_sptr rmp = nullptr;
     if (!old_rmp || old_rmp->n_components_ != nc_) {
       rmp = new vgui_range_map_params(0.0, 1.0);
       rmp->n_components_ = nc_;

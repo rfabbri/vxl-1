@@ -11,8 +11,10 @@
 #include <mbl/mbl_parse_block.h>
 #include <mbl/mbl_read_props.h>
 #include <vul/vul_string.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 //=======================================================================
 msm_ellipsoid_limiter::msm_ellipsoid_limiter()
@@ -119,7 +121,7 @@ void msm_ellipsoid_limiter::print_summary(std::ostream& os) const
   os<<" { M_max: "<<M_max_ <<" accept_prop: "<<accept_prop_<<" } ";
 }
 
-const static short version_no = 1;
+constexpr static short version_no = 1;
 
 //: Save class to binary file stream
 void msm_ellipsoid_limiter::b_write(vsl_b_ostream& bfs) const
@@ -177,4 +179,3 @@ void msm_ellipsoid_limiter::config_from_stream(std::istream &is)
   mbl_read_props_look_for_unused_props(
       "msm_ellipsoid_limiter::config_from_stream", props, mbl_read_props_type());
 }
-

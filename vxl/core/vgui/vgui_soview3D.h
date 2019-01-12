@@ -1,9 +1,6 @@
 // This is core/vgui/vgui_soview3D.h
 #ifndef vgui_soview3D_h_
 #define vgui_soview3D_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author Philip C. Pritchett, Robotics Research Group, University of Oxford
@@ -16,7 +13,9 @@
 
 #include <iosfwd>
 #include "vgui_soview.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: 3-dimensional spatial object view.
 class vgui_soview3D : public vgui_soview

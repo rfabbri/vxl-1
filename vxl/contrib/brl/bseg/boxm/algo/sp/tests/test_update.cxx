@@ -16,7 +16,9 @@
 #include <vul/vul_file.h>
 #include <vpgl/vpgl_camera.h>
 #include <vpgl/vpgl_perspective_camera.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_load.h>
 #include <vil/vil_save.h>
 #include <vil/vil_convert.h>
@@ -35,7 +37,7 @@ std::vector<vpgl_camera_double_sptr > generate_cameras_z(vgl_box_3d<double>& wor
   for (unsigned i=0; i<11; i++) {
     // double x = boxm_camera_dist*std::cos(alpha)/10;
     double z = boxm_camera_dist*std::sin(alpha);
-    centers.push_back(vgl_point_3d<double> (centroid.x(), centroid.y(), centroid.z()+z));
+    centers.emplace_back(centroid.x(), centroid.y(), centroid.z()+z);
     std::cout << centers[i] << std::endl;
     alpha += delta_alpha;
   }
@@ -48,8 +50,7 @@ std::vector<vpgl_camera_double_sptr > generate_cameras_z(vgl_box_3d<double>& wor
     rat_cameras.push_back(rat_cam);
 
     std::vector<vgl_point_3d<double> > corners = boxm_utils::corners_of_box_3d(world);
-    for (unsigned i=0; i<corners.size(); i++) {
-      vgl_point_3d<double> c = corners[i];
+    for (auto c : corners) {
       double u,v, u2, v2;
       vpgl_perspective_camera<double> persp_cam;
       persp_cam.project(c.x(), c.y() ,c.z(), u, v);
@@ -80,7 +81,7 @@ std::vector<vpgl_camera_double_sptr > generate_cameras_yz(vgl_box_3d<double>& wo
   for (unsigned i=0; i<num_train_images; i++) {
     double x = boxm_camera_dist*std::cos(alpha);
     double y = boxm_camera_dist*std::sin(alpha);
-    centers.push_back(vgl_point_3d<double> (x+centroid.x(), y+centroid.y(), 450+centroid.z()));
+    centers.emplace_back(x+centroid.x(), y+centroid.y(), 450+centroid.z());
   if (verbose)
     std::cout << centers[i] << std::endl;
 
@@ -106,8 +107,7 @@ std::vector<vpgl_camera_double_sptr > generate_cameras_yz(vgl_box_3d<double>& wo
 
     if (verbose) {
       std::vector<vgl_point_3d<double> > corners = boxm_utils::corners_of_box_3d(world);
-      for (unsigned i=0; i<corners.size(); i++) {
-        vgl_point_3d<double> c = corners[i];
+      for (auto c : corners) {
         double u,v;
         persp_cam.project(c.x(), c.y() ,c.z(), u, v);
         bb.add(vgl_point_2d<double> (u,v));
@@ -187,7 +187,7 @@ static void test_update()
   {
     scene.load_block(iter.index().x(),iter.index().y(),iter.index().z());
     boxm_block<boct_tree<short,boxm_sample<BOXM_APM_MOG_GREY> >  > * block=scene.get_active_block();
-    boct_tree<short,boxm_sample<BOXM_APM_MOG_GREY> > * tree=new boct_tree<short,boxm_sample<BOXM_APM_MOG_GREY> >(4,3);
+    auto * tree=new boct_tree<short,boxm_sample<BOXM_APM_MOG_GREY> >(4,3);
     boct_tree_cell<short,boxm_sample<BOXM_APM_MOG_GREY> >* cel11=tree->locate_point(vgl_point_3d<double>(0.01,0.01,0.01));
     cel11->set_data(s2_sample);
     boct_tree_cell<short,boxm_sample<BOXM_APM_MOG_GREY> >* cell2=tree->locate_point(vgl_point_3d<double>(0.51,0.51,0.01));

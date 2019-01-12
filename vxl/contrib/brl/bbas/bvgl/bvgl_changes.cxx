@@ -7,25 +7,25 @@
 #include <vgl/vgl_polygon_scan_iterator.h>
 
 vil_image_view_base_sptr
-bvgl_changes::create_mask_from_objs(unsigned ni, unsigned nj, std::string change_type)
+bvgl_changes::create_mask_from_objs(unsigned ni, unsigned nj, const std::string& change_type)
 {
-  vil_image_view<vxl_byte>* mask = new vil_image_view<vxl_byte>(ni, nj);
+  auto* mask = new vil_image_view<vxl_byte>(ni, nj);
   mask->fill(0);
 
   //index through the polygons and create the boolean mask image
-  for (unsigned i=0; i<objs_.size(); i++)
+  for (auto & obj : objs_)
   {
-    vgl_polygon<double> v_poly =  objs_[i]->poly();
+    vgl_polygon<double> v_poly =  obj->poly();
     vgl_polygon_scan_iterator<double> psi(v_poly, false);
     for (psi.reset(); psi.next();){
       int y = psi.scany();
       for (int x = psi.startx(); x<=psi.endx(); ++x)
       {
-        unsigned u = static_cast<unsigned>(x);
-        unsigned v = static_cast<unsigned>(y);
+        auto u = static_cast<unsigned>(x);
+        auto v = static_cast<unsigned>(y);
         if (u >= ni || v >= nj)
           continue;
-        if (objs_[i]->type().compare(change_type)==0)
+        if (obj->type().compare(change_type)==0)
           (*mask)(u,v) = 255;
       }
     }
@@ -37,21 +37,21 @@ bvgl_changes::create_mask_from_objs(unsigned ni, unsigned nj, std::string change
 vil_image_view_base_sptr
 bvgl_changes::create_mask_from_objs_all_types(unsigned ni, unsigned nj)
 {
-  vil_image_view<vxl_byte>* mask = new vil_image_view<vxl_byte>(ni, nj);
+  auto* mask = new vil_image_view<vxl_byte>(ni, nj);
   mask->fill(0);
 
   //index through the polygons and create the boolean mask image
-  for (unsigned i=0; i<objs_.size(); i++)
+  for (auto & obj : objs_)
   {
-    vgl_polygon<double> v_poly =  objs_[i]->poly();
+    vgl_polygon<double> v_poly =  obj->poly();
     vgl_polygon_scan_iterator<double> psi(v_poly, false);
     for (psi.reset(); psi.next();){
       int y = psi.scany();
       for (int x = psi.startx(); x<=psi.endx(); ++x)
       {
-        unsigned u = static_cast<unsigned>(x);
-        unsigned v = static_cast<unsigned>(y);
-        if (objs_[i]->type().compare("dont_care")!=0)
+        auto u = static_cast<unsigned>(x);
+        auto v = static_cast<unsigned>(y);
+        if (obj->type().compare("dont_care")!=0)
           (*mask)(u,v) = 255;
         else  // don't care areas
           (*mask)(u,v) = 125;
@@ -62,14 +62,14 @@ bvgl_changes::create_mask_from_objs_all_types(unsigned ni, unsigned nj)
   return mask;
 }
 
-void bvgl_changes::add_obj(bvgl_change_obj_sptr obj)
+void bvgl_changes::add_obj(const bvgl_change_obj_sptr& obj)
 {
   objs_.push_back(obj);
 }
 
-void bvgl_changes::remove_obj(bvgl_change_obj_sptr obj)
+void bvgl_changes::remove_obj(const bvgl_change_obj_sptr& obj)
 {
-  std::vector<bvgl_change_obj_sptr>::iterator iter = objs_.begin();
+  auto iter = objs_.begin();
   while (iter!=objs_.end()) {
     if (*iter == obj) {
       objs_.erase(iter);
@@ -107,8 +107,8 @@ void bvgl_changes::b_write(vsl_b_ostream& os)
 
   vsl_b_write(os, img_name_);
   vsl_b_write(os, objs_.size());
-  for (unsigned i = 0; i < objs_.size(); i++) {
-    objs_[i]->b_write(os);
+  for (auto & obj : objs_) {
+    obj->b_write(os);
   }
 }
 
@@ -147,5 +147,5 @@ bvgl_changes::obj(unsigned int i)
 {
   if (i<size())
     return objs_[i];
-  return VXL_NULLPTR;
+  return nullptr;
 }

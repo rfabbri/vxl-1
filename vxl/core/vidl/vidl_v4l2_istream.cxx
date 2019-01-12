@@ -10,7 +10,9 @@
 //   30 Apr 2008 Created (A. Garrido)
 //\endverbatim
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include "vidl_frame.h"
 #include "vidl_v4l2_pixel_format.h"
 
@@ -63,4 +65,3 @@ vidl_frame_sptr vidl_v4l2_istream::read_frame()
   advance();
   return cur_frame_;
 }
-

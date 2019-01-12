@@ -1,7 +1,4 @@
 // This is mul/mbl/mbl_lda.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \brief  Class to perform linear discriminant analysis
@@ -14,8 +11,10 @@
 #include <cstring>
 #include "mbl_lda.h"
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vsl/vsl_indent.h>
 #include <vsl/vsl_vector_io.h>
 #include <vsl/vsl_binary_io.h>
@@ -39,15 +38,11 @@ static mbl_logger& logger()
 
 
 //=======================================================================
-mbl_lda::mbl_lda()
-{
-}
+mbl_lda::mbl_lda() = default;
 
 
 //=======================================================================
-mbl_lda::~mbl_lda()
-{
-}
+mbl_lda::~mbl_lda() = default;
 
 
 //=======================================================================
@@ -265,9 +260,9 @@ void mbl_lda::build(const vnl_vector<double>* v, const int * label, int n,
   // increasing (signed) eigenvalue, not magnitude. If we ever get negative eigenvalues,
   // then the simple reversal of flip() and fliplr() will not be correct.
   // Not sure whether we could get (significant) negative eigenvalues, but let's check.
-  for (unsigned i=0; i<evals.size(); ++i)
+  for (double eval : evals)
   {
-    if (evals[i]<-1e-12) // tolerance?
+    if (eval<-1e-12) // tolerance?
       throw mbl_exception_abort("mbl_lda::build(): found negative eigenvalue(s)");
   }
   evals.flip();
@@ -535,5 +530,3 @@ void vsl_print_summary(std::ostream& os, const mbl_lda& b)
 {
   b.print_summary(os);
 }
-
-

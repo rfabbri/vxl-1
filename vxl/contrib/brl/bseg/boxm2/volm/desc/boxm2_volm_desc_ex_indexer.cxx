@@ -3,7 +3,9 @@
 #include "boxm2_volm_desc_ex_indexer.h"
 //:
 // \file
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_file.h>
 
 std::string&  volm_desc_ex_indexer::get_name()
@@ -20,7 +22,7 @@ volm_desc_ex_indexer::volm_desc_ex_indexer(std::string const& index_folder,
                                            float ind_buffer,
                                            unsigned const& norients,
                                            unsigned const& nlands,
-                                           unsigned char const& initial_mag)
+                                           unsigned char const&  /*initial_mag*/)
  : volm_desc_indexer(out_index_folder)
 {
   depth_interval_ = depth_interval;
@@ -81,7 +83,7 @@ bool volm_desc_ex_indexer::get_next()
 
 }
 
-bool volm_desc_ex_indexer::extract(double lat, double lon, double elev, std::vector<unsigned char>& values)
+bool volm_desc_ex_indexer::extract(double  /*lat*/, double  /*lon*/, double  /*elev*/, std::vector<unsigned char>& values)
 {
   // fetch previous wr3db index for current location
   std::vector<unsigned char> values_dist(index_layer_size_);

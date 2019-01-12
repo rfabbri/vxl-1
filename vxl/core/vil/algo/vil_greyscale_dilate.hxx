@@ -7,7 +7,10 @@
 // \author Tim Cootes
 
 #include "vil_greyscale_dilate.h"
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Dilates src_image to produce dest_image (assumed single plane).
 // dest_image(i0,j0) is the maximum value of the pixels under the

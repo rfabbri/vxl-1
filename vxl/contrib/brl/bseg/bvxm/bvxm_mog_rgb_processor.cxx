@@ -4,7 +4,10 @@
 #include "grid/bvxm_voxel_slab.h"
 #include "grid/bvxm_voxel_slab.hxx"
 #include "grid/bvxm_voxel_slab_iterator.h"
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Return probability density of observing pixel values
 bvxm_voxel_slab<float>
@@ -164,4 +167,3 @@ bvxm_voxel_slab<bvxm_mog_rgb_processor::obs_datatype> bvxm_mog_rgb_processor::sa
 
   return color;
 }
-

@@ -13,7 +13,9 @@
 #include <vcl_where_root_dir.h>
 #include <bprb/bprb_func_process.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bstm/ocl/bstm_opencl_cache.h>
 #include <bstm/bstm_scene.h>
 #include <bstm/bstm_block.h>
@@ -28,8 +30,8 @@
 
 namespace bstm_ocl_track_process_globals
 {
-  const unsigned n_inputs_ = 12;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 12;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool bstm_ocl_track_process_cons(bprb_func_process& pro)
@@ -71,12 +73,12 @@ bool bstm_ocl_track_process(bprb_func_process& pro)
   bstm_scene_sptr scene =pro.get_input<bstm_scene_sptr>(i++);
   bstm_cache_sptr cache= pro.get_input<bstm_cache_sptr>(i++);
   bstm_opencl_cache_sptr opencl_cache= pro.get_input<bstm_opencl_cache_sptr>(i++);
-  float center_x = pro.get_input<float>(i++);
-  float center_y = pro.get_input<float>(i++);
-  float center_z = pro.get_input<float>(i++);
-  float len_x = pro.get_input<float>(i++);
-  float len_y = pro.get_input<float>(i++);
-  float len_z = pro.get_input<float>(i++);
+  auto center_x = pro.get_input<float>(i++);
+  auto center_y = pro.get_input<float>(i++);
+  auto center_z = pro.get_input<float>(i++);
+  auto len_x = pro.get_input<float>(i++);
+  auto len_y = pro.get_input<float>(i++);
+  auto len_z = pro.get_input<float>(i++);
   int label = pro.get_input<int>(i++);
   std::string pf_output_path = pro.get_input<std::string>(i++);
 

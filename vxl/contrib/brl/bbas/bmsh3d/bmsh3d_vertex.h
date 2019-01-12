@@ -20,8 +20,10 @@
 #include <set>
 #include <string>
 #include <sstream>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vgl/vgl_point_3d.h>
 
 #include "bmsh3d_ptr_list.h"
@@ -89,25 +91,25 @@ class bmsh3d_vertex : public vispt_elm
  public:
   //###### Constructor/Destructor ######
   bmsh3d_vertex(int id) {
-    E_list_ = VXL_NULLPTR;
-    F_list_ = VXL_NULLPTR;
+    E_list_ = nullptr;
+    F_list_ = nullptr;
     id_ = id;
     i_value_  = 0;
     c_value_  = '?';
     flow_type_ = '?';
   }
   bmsh3d_vertex(const double& x, const double& y, const double& z, const int id) {
-    E_list_ = VXL_NULLPTR;
-    F_list_ = VXL_NULLPTR;
+    E_list_ = nullptr;
+    F_list_ = nullptr;
     id_ = id;
     i_value_  = 0;
     c_value_  = '?';
     flow_type_ = '?';
     pt_.set(x, y, z);
   }
-  virtual ~bmsh3d_vertex() {
+  ~bmsh3d_vertex() override {
     //can not delete a vertex with any incident edge
-    assert(E_list_ == VXL_NULLPTR);
+    assert(E_list_ == nullptr);
   }
 
   //###### Data access functions ######
@@ -222,7 +224,7 @@ class bmsh3d_vertex : public vispt_elm
     return clear_ptr_list(E_list_);
   }
   bool has_incident_Es() const {
-    return E_list_!=VXL_NULLPTR;
+    return E_list_!=nullptr;
   }
   bool is_E_incident(const bmsh3d_edge* E) const {
     return is_in_ptr_list(E_list_, E);
@@ -238,8 +240,8 @@ class bmsh3d_vertex : public vispt_elm
   }
 
   const bmsh3d_edge* get_1st_incident_E() const {
-    if (E_list_ == VXL_NULLPTR)
-      return VXL_NULLPTR;
+    if (E_list_ == nullptr)
+      return nullptr;
     return (const bmsh3d_edge*)E_list_->ptr();
   }
 
@@ -254,7 +256,7 @@ class bmsh3d_vertex : public vispt_elm
   const bmsh3d_edge* find_unvisited_E_() const;
 
   //###### Other functions ######
-  virtual void getInfo(std::ostringstream& ostrm);
+  void getInfo(std::ostringstream& ostrm) override;
 
   //###### For the face of a 2-manifold mesh only ######
   //  these functions start with a tag m2 (manifold-2)

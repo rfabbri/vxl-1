@@ -1,14 +1,13 @@
 // This is oxl/mvl/FMatrixSkew.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 //  \file
 
 #include <iostream>
 #include <cmath>
 #include "FMatrixSkew.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_matrix.h>
 #include <mvl/HomgLine2D.h>
 #include <mvl/HomgOperator2D.h>
@@ -49,9 +48,7 @@ FMatrixSkew::FMatrixSkew(const vnl_matrix<double>& f_matrix)
 //
 //: Destructor.
 
-FMatrixSkew::~FMatrixSkew()
-{
-}
+FMatrixSkew::~FMatrixSkew() = default;
 
 
 //--------------------------------------------------------------
@@ -283,7 +280,7 @@ bool FMatrixSkew::set (const double* f_matrix )
   int row_index, col_index;
 
   // should be set to 0.0
-  const double tolerance=0.0;
+  constexpr double tolerance = 0.0;
 
   // CRUDE test for skewness with tolerance 0
   // test diagonal is zero and asymmetric

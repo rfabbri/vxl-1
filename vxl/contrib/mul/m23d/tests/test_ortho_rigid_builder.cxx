@@ -4,7 +4,9 @@
 #include <testlib/testlib_test.h>
 #include <m23d/m23d_make_ortho_projection.h>
 #include <m23d/m23d_ortho_rigid_builder.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_random.h>
 
 void test_ortho_rigid_builder()

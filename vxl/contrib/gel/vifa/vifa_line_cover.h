@@ -39,16 +39,16 @@ class vifa_line_cover : public vbl_ref_count
  public:
   // Constructors and Destructors
   vifa_line_cover();
-  vifa_line_cover(imp_line_sptr prototype_line,
+  vifa_line_cover(const imp_line_sptr& prototype_line,
                   int           index_dimension);
   // copy constructor - compiler-provided one sets ref_count to nonzero which is wrong -PVr
   inline vifa_line_cover(vifa_line_cover const& c)
     : vbl_ref_count(), dim_(c.dim_), index_(c.index_),
       max_extent_(c.max_extent_), min_extent_(c.min_extent_), line_(c.line_) {}
-  ~vifa_line_cover();
+  ~vifa_line_cover() override;
 
   // Indexing methods
-  void InsertLine(imp_line_sptr l);
+  void InsertLine(const imp_line_sptr& l);
 
   // Data Access methods
   double GetCoverage();

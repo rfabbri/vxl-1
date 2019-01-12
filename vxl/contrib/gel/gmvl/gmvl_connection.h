@@ -1,9 +1,6 @@
 // This is gel/gmvl/gmvl_connection.h
 #ifndef gmvl_connection_h_
 #define gmvl_connection_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author crossge@crd.ge.com
@@ -15,7 +12,9 @@
 
 #include <iostream>
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_ref_count.h>
 #include <gmvl/gmvl_node_sptr.h>
 
@@ -24,10 +23,10 @@ class gmvl_connection : public vbl_ref_count
  public:
   // constructors / destructors
 
-  gmvl_connection( const gmvl_node_sptr node1, const gmvl_node_sptr node2);
+  gmvl_connection( const gmvl_node_sptr& node1, const gmvl_node_sptr& node2);
   gmvl_connection(gmvl_connection const& x)
     : vbl_ref_count(), n1_(x.n1_), n2_(x.n2_) {}
-  ~gmvl_connection();
+  ~gmvl_connection() override;
 
   // accessors
 

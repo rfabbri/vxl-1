@@ -1,7 +1,9 @@
 #include <iostream>
 #include <vector>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_file.h>
 
 #include <vgl/vgl_vector_3d.h>
@@ -32,11 +34,11 @@ static void test_voxel_grid()
   std::vector<bvxm_voxel_grid<float>* > grids;
   std::vector<std::string> grid_types; // for labeling tests
   grids.push_back(new bvxm_voxel_grid<float>(storage_fname,grid_size)); // disk storage;
-  grid_types.push_back("disk_storage");
+  grid_types.emplace_back("disk_storage");
   grids.push_back(new bvxm_voxel_grid<float>(grid_size)); // memory storage;
-  grid_types.push_back("memory storage");
+  grid_types.emplace_back("memory storage");
   grids.push_back(new bvxm_voxel_grid<float>(storage_cached_fname,grid_size,max_cache_size)); // cached disk storage
-  grid_types.push_back("disk_cached_storage");
+  grid_types.emplace_back("disk_cached_storage");
 
   std::string test_name;
 
@@ -115,8 +117,8 @@ static void test_voxel_grid()
   }
 
   // delete grids
-  for (unsigned i=0; i<grids.size(); i++) {
-    delete grids[i];
+  for (auto & grid : grids) {
+    delete grid;
   }
 
   // remove temporary file

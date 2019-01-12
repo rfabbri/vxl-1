@@ -20,8 +20,14 @@
 #include <vpgl/vpgl_camera_double_sptr.h>
 #include "brad_appearance_neighborhood_index.h"
 struct brad_cell_data{
-brad_cell_data(): vis_(1.0), mog3_(vnl_vector_fixed<unsigned char, 8>(static_cast<unsigned char>(0))),
-    nobs_(vnl_vector_fixed<float, 4>(0.0f)), pre_(0.0), post_(0.0), init_ratio_(1.0){}
+brad_cell_data()
+    : vis_(1.0)
+    , pre_(0.0)
+    , post_(0.0)
+    , init_ratio_(1.0)
+    , mog3_(vnl_vector_fixed<unsigned char , 8>(static_cast<unsigned char>(0)))
+    , nobs_(vnl_vector_fixed<float , 4>(0.0f))
+  {}
   double cell_z_;
   double vis_;
   double PinS_;
@@ -67,7 +73,7 @@ brad_ray(): dim_(1.0), min_z_(0.0), max_z_(10.0){}
   class brad_belief_prop_utils
 {
  public:
- brad_belief_prop_utils(){}
+ brad_belief_prop_utils()= default;
   void set_metadata(std::vector<brad_image_metadata_sptr> const& metadata){
     app_index_ = brad_appearance_neighborhood_index(metadata);
   }

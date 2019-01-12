@@ -3,7 +3,9 @@
 #include <algorithm>
 #include <list>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_double_2.h>
 #include <vtol/vtol_vertex_2d_sptr.h>
 #include <vtol/vtol_vertex_2d.h>
@@ -94,7 +96,7 @@ static void test_vertex_2d()
 
   // check casting
 
-  TEST("vtol_vertex_2d::cast_to_vertex_2d()", v1->cast_to_vertex_2d()==VXL_NULLPTR, false);
+  TEST("vtol_vertex_2d::cast_to_vertex_2d()", v1->cast_to_vertex_2d()==nullptr, false);
 
   // check distance from
 
@@ -108,7 +110,7 @@ static void test_vertex_2d()
 
   // checking the vertex side of things
 
-  TEST("vtol_vertex_2d::cast_to_vertex()", v1->cast_to_vertex()==VXL_NULLPTR, false);
+  TEST("vtol_vertex_2d::cast_to_vertex()", v1->cast_to_vertex()==nullptr, false);
 
   vtol_edge_sptr new_edge = v1->new_edge(v2);
   edge_list e_list; v1->edges(e_list);
@@ -118,8 +120,8 @@ static void test_vertex_2d()
 
   vertex_list v_list; v1->explore_vertex(v_list);
   std::cout << "List size: " << v_list.size() << std::endl;
-  for (unsigned int i=0; i<v_list.size(); ++i)
-    std::cout << *(v_list[i]) << std::endl;
+  for (auto & i : v_list)
+    std::cout << *i << std::endl;
   TEST("vtol_vertex_2d::explore_vertex()", v_list.size(), 2);
 
   vtol_vertex_sptr v1v = v1->cast_to_vertex();
@@ -134,8 +136,8 @@ static void test_vertex_2d()
   (*v1v_copy) = (*v1v);
   TEST("vtol_vertex assignment", *v1v_copy, *v1v);
 
-  TEST("vtol_vertex::cast_to_vertex()", v1v->cast_to_vertex()==VXL_NULLPTR, false);
-  TEST("vtol_vertex::cast_to_vertex_2d()", v1v->cast_to_vertex_2d()==VXL_NULLPTR, false);
+  TEST("vtol_vertex::cast_to_vertex()", v1v->cast_to_vertex()==nullptr, false);
+  TEST("vtol_vertex::cast_to_vertex_2d()", v1v->cast_to_vertex_2d()==nullptr, false);
 
   TEST("vtol_vertex::is_connected()", v1v->is_connected(v2v), true);
 
@@ -152,18 +154,17 @@ static void test_vertex_2d()
   std::cout << "Testing superiors_list\n"
            << "ve before superiors access " << *ve << std::endl;
   const std::list<vtol_topology_object*>* sups = ve->superiors_list();
-  TEST("vtol_vertex::superiors_list()", sups==VXL_NULLPTR, false);
-  for (std::list<vtol_topology_object*>::const_iterator sit = sups->begin();
-       sit !=sups->end(); sit++)
+  TEST("vtol_vertex::superiors_list()", sups==nullptr, false);
+  for (auto sup : *sups)
   {
-    vtol_zero_chain_sptr zc = (*sit)->cast_to_zero_chain();
+    vtol_zero_chain_sptr zc = sup->cast_to_zero_chain();
     TEST("vtol_zero_chain::cast_to_zero_chain()", zc?true:false, true);
     vertex_list verts; zc->vertices(verts);
     bool found = false;
-    for (vertex_list::iterator vit = verts.begin(); vit!=verts.end(); vit++)
+    for (auto & vert : verts)
     {
-      std::cout << **vit;
-      found = ve==*vit;
+      std::cout << *vert;
+      found = ve==vert;
     }
     TEST("vtol_zero_chain::vertices()", found, true);
   }

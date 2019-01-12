@@ -2,8 +2,8 @@
 #ifndef vidl_ffmpeg_istream_stub_hxx_
 #define vidl_ffmpeg_istream_stub_hxx_
 #include <string>
-#include "vidl_ffmpeg_istream.h"
 #include <stdexcept>
+#include "vidl_ffmpeg_istream.h"
 
 //:
 // \file
@@ -12,7 +12,9 @@
 // \author Amitha Perera
 // \date 14 Jan 2008
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 struct vidl_ffmpeg_istream::pimpl
 {

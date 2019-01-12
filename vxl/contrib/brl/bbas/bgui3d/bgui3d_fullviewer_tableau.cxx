@@ -18,7 +18,10 @@
 #include <Inventor/SoSceneManager.h>
 #include <Inventor/misc/SoChildList.h>
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Constructor
 bgui3d_fullviewer_tableau::bgui3d_fullviewer_tableau(SoNode * scene_root)

@@ -3,7 +3,10 @@
 //:
 // \file
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_vector_fixed.h>
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_double_2.h>
@@ -381,7 +384,7 @@ rgrl_trans_rad_dis_homo2d::
 inverse_transform( ) const
 {
   assert ( ! "rgrl_trans_quadratic::inverse_transform() is not defined" );
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 // for output CENTERED transformation,

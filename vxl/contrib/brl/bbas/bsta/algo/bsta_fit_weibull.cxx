@@ -5,7 +5,10 @@
 // \file
 #include "bsta_fit_weibull.h"
 #include <vnl/vnl_gamma.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 //this function computes the model value for (mean/standard_dev)^2 as

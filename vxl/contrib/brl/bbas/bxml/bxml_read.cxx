@@ -1,7 +1,4 @@
 // This is brl/bbas/bxml/bxml_read.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Matt Leotta
@@ -12,8 +9,10 @@
 #include <utility>
 #include <fstream>
 #include "bxml_read.h"
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vul/vul_file.h>
 #ifdef WIN32
  #define _LIB
@@ -27,12 +26,12 @@ class bxml_expat_parser : public expatpp
 {
  public:
   bxml_expat_parser(bool online = false) : online_mode_(online) {}
-  virtual void startElement(const XML_Char* name, const XML_Char** atts);
-  virtual void endElement(const XML_Char* name);
-  virtual void charData(const XML_Char*, int len);
-  virtual void xmlDecl( const XML_Char *version,
+  void startElement(const XML_Char* name, const XML_Char** atts) override;
+  void endElement(const XML_Char* name) override;
+  void charData(const XML_Char*, int len) override;
+  void xmlDecl( const XML_Char *version,
                         const XML_Char *encoding,
-                        int            standalone);
+                        int            standalone) override;
 
   bxml_document document() const { return document_; }
 
@@ -74,11 +73,11 @@ void bxml_expat_parser::startElement(const XML_Char* name, const XML_Char** atts
       stack_.push_back(data);
     }
     else
-      stack_.push_back(VXL_NULLPTR);
+      stack_.emplace_back(nullptr);
   }
   else{
     if (stack_.back().ptr()) {
-      bxml_element* parent = static_cast<bxml_element*>(stack_.back().ptr());
+      auto* parent = static_cast<bxml_element*>(stack_.back().ptr());
       parent->append_data(data);
     }
     stack_.push_back(data);
@@ -91,7 +90,7 @@ void bxml_expat_parser::endElement(const XML_Char* name)
 {
   if (stack_.back().ptr()) {
     assert(static_cast<bxml_element*>(stack_.back().ptr())->name() == std::string(name));
-    complete_.push_back(std::pair<bxml_data_sptr,unsigned int>(stack_.back(),stack_.size()-1));
+    complete_.emplace_back(stack_.back(),stack_.size()-1);
   }
   stack_.pop_back();
 }
@@ -102,7 +101,7 @@ void bxml_expat_parser::charData(const XML_Char* text, int len)
 {
   assert(!stack_.empty());
   if (stack_.back().ptr()) {
-    bxml_element* parent = static_cast<bxml_element*>(stack_.back().ptr());
+    auto* parent = static_cast<bxml_element*>(stack_.back().ptr());
     parent->append_text(std::string(text,len));
   }
 }
@@ -195,7 +194,7 @@ bxml_stream_read::next_element(std::istream& is, unsigned int& depth)
   char buf[4096];
   int done = 0;
 
-  bxml_data_sptr data = VXL_NULLPTR;
+  bxml_data_sptr data = nullptr;
   depth = 0;
   while ( p_->parser.pop_complete_data(data, depth) )
     if (depth <= p_->depth)
@@ -213,6 +212,5 @@ bxml_stream_read::next_element(std::istream& is, unsigned int& depth)
       if (depth <= p_->depth)
         return data;
   }
-  return VXL_NULLPTR;
+  return nullptr;
 }
-

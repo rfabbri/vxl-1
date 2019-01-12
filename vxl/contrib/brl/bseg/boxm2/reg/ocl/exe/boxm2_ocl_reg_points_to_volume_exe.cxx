@@ -18,7 +18,9 @@
 #include <vgl/vgl_box_3d.h>
 #include <vul/vul_arg.h>
 #include <vul/vul_timer.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bocl/bocl_manager.h>
 #include <bocl/bocl_device.h>
 #include <boxm2/ocl/boxm2_opencl_cache.h>
@@ -99,7 +101,7 @@ int main(int argc,  char** argv)
           std::istringstream iss(line);
           vnl_vector<double> x;
           iss>>x;
-          pts.push_back(vgl_point_3d<double>(x[0],x[1],x[2]) );
+          pts.emplace_back(x[0],x[1],x[2] );
       }
       ifile.close();
   }
@@ -108,7 +110,7 @@ int main(int argc,  char** argv)
       return 0;
   }
   std::cout<<"Points Loaded "<<pts.size()<<std::endl;
-  float * vpts = new float[pts.size()*3];
+  auto * vpts = new float[pts.size()*3];
   for(unsigned i= 0;i < pts.size(); i++)
   {
       vpts[i*3+0] = pts[i].x(); vpts[i*3+1] = pts[i].y(); vpts[i*3+2] = pts[i].z();

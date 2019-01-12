@@ -1,7 +1,9 @@
 // This is core/vil/algo/tests/test_algo_find_peaks.cxx
 #include <iostream>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vxl_config.h> // for vxl_byte
 #include <vil/algo/vil_find_peaks.h>
 

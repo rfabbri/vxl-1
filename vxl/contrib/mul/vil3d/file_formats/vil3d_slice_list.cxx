@@ -1,14 +1,17 @@
-#include <cstring>
-#include <cstdlib>
-#include <iostream>
 #include <algorithm>
+#include <cstdlib>
+#include <cstring>
+#include <iostream>
+#include <utility>
 #include "vil3d_slice_list.h"
 //:
 // \file
 // \brief Reader/Writer for a volume made up of a list of slices.
 // \author Ian Scott - Manchester
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_file.h>
 #include <vul/vul_file_iterator.h>
 #include <vil/vil_load.h>
@@ -17,11 +20,9 @@
 #include <vil3d/vil3d_slice.h>
 #include <vil3d/file_formats/vil3d_dicom.h>
 
-vil3d_slice_list_format::vil3d_slice_list_format() {}
+vil3d_slice_list_format::vil3d_slice_list_format() = default;
 
-vil3d_slice_list_format::~vil3d_slice_list_format()
-{
-}
+vil3d_slice_list_format::~vil3d_slice_list_format() = default;
 
 // Look for a set of filenames that match the glob spec in filename
 // The globbing format expects only '#' to represent numbers.
@@ -34,14 +35,14 @@ void parse_globbed_filenames(const std::string & input,
   std::string filename = input;
 
   // Avoid confusing globbing functions
-  if (filename.find("*") != filename.npos) return;
-  if (filename.find("?") != filename.npos) return;
+  if (filename.find('*') != filename.npos) return;
+  if (filename.find('?') != filename.npos) return;
 
   // Check that all the #s are in a single group.
-  std::size_t start = filename.find_first_of("#");
+  std::size_t start = filename.find_first_of('#');
   if (start == filename.npos) return;
-  std::size_t end = filename.find_first_not_of("#", start);
-  if (filename.find_first_of("#",end) != filename.npos) return;
+  std::size_t end = filename.find_first_not_of('#', start);
+  if (filename.find_first_of('#',end) != filename.npos) return;
   if (end == filename.npos) end = filename.length();
   for (std::size_t i=start, j=start; i!=end; ++i, j+=12)
     filename.replace(j,1,"[0123456789]");
@@ -49,7 +50,7 @@ void parse_globbed_filenames(const std::string & input,
 
   // Search for the files
   for (vul_file_iterator fit(filename); fit; ++fit)
-    filenames.push_back(fit());
+    filenames.emplace_back(fit());
 
 
   if (filenames.empty()) return;
@@ -62,7 +63,7 @@ void parse_globbed_filenames(const std::string & input,
 
   // Now discard non-contiguously numbered files.
   long count = std::atol(filenames.front().substr(start, end-start).c_str());
-  std::vector<std::string>::iterator it=filenames.begin()+1;
+  auto it=filenames.begin()+1;
   while (it != filenames.end())
   {
     if (std::atol(it->substr(start, end-start).c_str()) != ++count)
@@ -106,7 +107,7 @@ vil3d_slice_list_format::make_input_image(const char * filename) const
   if (filenames.empty() || filenames.size()==1)
     parse_globbed_filenames(filename, filenames);
 
-  if (filenames.empty()) return VXL_NULLPTR;
+  if (filenames.empty()) return nullptr;
 
   // load all the slices
   std::vector<vil_image_resource_sptr> images(filenames.size());
@@ -125,7 +126,7 @@ vil3d_slice_list_format::make_input_image(const char * filename) const
         im->ni() != images.front()->ni() ||
         im->nj() != images.front()->nj() ||
         im->pixel_format() != images.front()->pixel_format())
-      return VXL_NULLPTR;
+      return nullptr;
     // decide if all slices are of the same type.
     if (std::strcmp(im->file_format(), images.front()->file_format())!=0)
       same=true;
@@ -144,7 +145,7 @@ vil3d_slice_list_format::make_input_image(const char * filename) const
 vil3d_image_resource_sptr
 vil3d_slice_list_to_volume(const std::vector<vil_image_resource_sptr> & images)
 {
-  if (!images.empty() && !images.front()) return VXL_NULLPTR;
+  if (!images.empty() && !images.front()) return nullptr;
   for (unsigned i=1; i<images.size(); ++i)
   {
     // make sure all slices are consistent,
@@ -153,7 +154,7 @@ vil3d_slice_list_to_volume(const std::vector<vil_image_resource_sptr> & images)
         images[i]->ni() != images.front()->ni() ||
         images[i]->nj() != images.front()->nj() ||
         images[i]->pixel_format() != images.front()->pixel_format())
-      return VXL_NULLPTR;
+      return nullptr;
   }
   // everything seems fine so create the volume
   return new vil3d_slice_list_image(images);
@@ -175,18 +176,16 @@ vil3d_slice_list_format::make_output_image(const char* /*filename*/,
   // If you are able to construct them all, then create the slice_image.
   std::cerr <<"vil3d_slice_list_format::make_output_image() NYI\n";
   std::abort();
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 
-vil3d_slice_list_image::vil3d_slice_list_image(const std::vector<vil_image_resource_sptr>& images):
-slices_(images)
+vil3d_slice_list_image::vil3d_slice_list_image(std::vector<vil_image_resource_sptr>  images):
+slices_(std::move(images))
 {
 }
 
-vil3d_slice_list_image::~vil3d_slice_list_image()
-{
-}
+vil3d_slice_list_image::~vil3d_slice_list_image() = default;
 
 //: Dimensions:  nplanes x ni x nj x nk.
 // This concept is treated as a synonym to components.
@@ -232,7 +231,7 @@ vil3d_slice_list_image::get_copy_view(unsigned i0, unsigned ni,
                                       unsigned j0, unsigned nj,
                                       unsigned k0, unsigned nk) const
 {
-  if (i0+ni > this->ni() || j0+nj > this->nj() || k0+nk > this->nk()) return VXL_NULLPTR;
+  if (i0+ni > this->ni() || j0+nj > this->nj() || k0+nk > this->nk()) return nullptr;
 
 #define macro( type ) { \
   vil3d_image_view< type > vv(ni, nj, nk, nplanes()); \
@@ -270,7 +269,7 @@ vil3d_slice_list_image::get_copy_view(unsigned i0, unsigned ni,
   default:
     std::cerr<< "ERROR: vil3d_slice_list_image::get_copy_view\n"
             << "       Can't deal with pixel_format " << pixel_format() << '\n';
-    return VXL_NULLPTR;
+    return nullptr;
   }
 }
 

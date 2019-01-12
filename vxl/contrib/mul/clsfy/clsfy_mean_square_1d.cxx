@@ -10,8 +10,10 @@
 
 //=======================================================================
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_binary_io.h>
 #include <vsl/vsl_indent.h>
 #include <vnl/vnl_double_2.h>
@@ -62,7 +64,7 @@ void clsfy_mean_square_1d::set_params(const vnl_vector<double>& p)
 bool clsfy_mean_square_1d::operator==(const clsfy_classifier_1d& x) const
 {
   assert( x.is_class("clsfy_mean_square_1d"));
-  clsfy_mean_square_1d& x2= (clsfy_mean_square_1d&) x;
+  auto& x2= (clsfy_mean_square_1d&) x;
   return std::fabs(x2.mean_ - mean_) < 0.001 &&
          std::fabs(x2.threshold_ - threshold_) < 0.001;
 }

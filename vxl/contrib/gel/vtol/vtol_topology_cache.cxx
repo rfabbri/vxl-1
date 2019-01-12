@@ -6,27 +6,27 @@
 //: Set up the cache
 vtol_topology_cache::vtol_topology_cache()
 {
-  source_ = VXL_NULLPTR;
-  vertices_ = VXL_NULLPTR;
-  zerochains_ = VXL_NULLPTR;
-  edges_  = VXL_NULLPTR;
-  onechains_ = VXL_NULLPTR;
-  faces_ =VXL_NULLPTR;
-  twochains_ =VXL_NULLPTR;
-  blocks_ =VXL_NULLPTR;
+  source_ = nullptr;
+  vertices_ = nullptr;
+  zerochains_ = nullptr;
+  edges_  = nullptr;
+  onechains_ = nullptr;
+  faces_ =nullptr;
+  twochains_ =nullptr;
+  blocks_ =nullptr;
 }
 
 //: Set up the cache
 vtol_topology_cache::vtol_topology_cache(vtol_topology_object * to_be_cached)
 {
   source_ = to_be_cached;
-  vertices_ = VXL_NULLPTR;
-  zerochains_ = VXL_NULLPTR;
-  edges_  = VXL_NULLPTR;
-  onechains_ = VXL_NULLPTR;
-  faces_ =VXL_NULLPTR;
-  twochains_ =VXL_NULLPTR;
-  blocks_ =VXL_NULLPTR;
+  vertices_ = nullptr;
+  zerochains_ = nullptr;
+  edges_  = nullptr;
+  onechains_ = nullptr;
+  faces_ =nullptr;
+  twochains_ =nullptr;
+  blocks_ =nullptr;
 }
 
 // destructor
@@ -44,13 +44,13 @@ void vtol_topology_cache::set_source(vtol_topology_object *to_be_cached)
 //: reset the list pointers
 void vtol_topology_cache::clear_cache()
 {
-  delete vertices_; vertices_ = VXL_NULLPTR;
-  delete zerochains_; zerochains_ = VXL_NULLPTR;
-  delete edges_; edges_ = VXL_NULLPTR;
-  delete onechains_; onechains_ = VXL_NULLPTR;
-  delete faces_; faces_ = VXL_NULLPTR;
-  delete twochains_; twochains_ = VXL_NULLPTR;
-  delete blocks_; blocks_ = VXL_NULLPTR;
+  delete vertices_; vertices_ = nullptr;
+  delete zerochains_; zerochains_ = nullptr;
+  delete edges_; edges_ = nullptr;
+  delete onechains_; onechains_ = nullptr;
+  delete faces_; faces_ = nullptr;
+  delete twochains_; twochains_ = nullptr;
+  delete blocks_; blocks_ = nullptr;
 }
 
 //: If cache is out of date as compared to its source object, then clear the cache.
@@ -84,9 +84,8 @@ void vtol_topology_cache::vertices(vertex_list& verts)
   // copy the lists
 
   verts.clear();
-  for (std::vector<vtol_vertex*>::iterator it = vertices_->begin();
-       it != vertices_->end(); ++it){
-    verts.push_back(*it);
+  for (auto & vertice : *vertices_){
+    verts.push_back(vertice);
   }
 }
 
@@ -100,9 +99,8 @@ void vtol_topology_cache::zero_chains(zero_chain_list& zchains)
     // copy the lists
 
   zchains.clear();
-  for (std::vector<vtol_zero_chain*>::iterator it = zerochains_->begin();
-       it != zerochains_->end(); ++it){
-    zchains.push_back(*it);
+  for (auto & zerochain : *zerochains_){
+    zchains.push_back(zerochain);
   }
 }
 
@@ -116,9 +114,8 @@ void vtol_topology_cache::edges(edge_list& oedges)
     // copy the lists
 
   oedges.clear();
-  for (std::vector<vtol_edge*>::iterator it = edges_->begin();
-       it != edges_->end(); ++it){
-    oedges.push_back(*it);
+  for (auto & edge : *edges_){
+    oedges.push_back(edge);
   }
 }
 
@@ -130,9 +127,8 @@ void vtol_topology_cache::one_chains(one_chain_list& ochains)
     onechains_ = source_->compute_one_chains();
 
   ochains.clear();
-  for (std::vector<vtol_one_chain*>::iterator it = onechains_->begin();
-       it != onechains_->end(); ++it){
-    ochains.push_back(*it);
+  for (auto & onechain : *onechains_){
+    ochains.push_back(onechain);
   }
 }
 
@@ -144,9 +140,8 @@ void vtol_topology_cache::faces(face_list& ofaces)
     faces_ = source_->compute_faces();
 
   ofaces.clear();
-  for (std::vector<vtol_face*>::iterator it = faces_->begin();
-       it != faces_->end(); ++it){
-    ofaces.push_back(*it);
+  for (auto & face : *faces_){
+    ofaces.push_back(face);
   }
 }
 
@@ -159,9 +154,8 @@ void vtol_topology_cache::two_chains(two_chain_list& otwo_chains)
     twochains_ = source_->compute_two_chains();
 
   otwo_chains.clear();
-  for (std::vector<vtol_two_chain*>::iterator it = twochains_->begin();
-       it != twochains_->end(); ++it){
-    otwo_chains.push_back(*it);
+  for (auto & twochain : *twochains_){
+    otwo_chains.push_back(twochain);
   }
 }
 
@@ -174,8 +168,7 @@ void vtol_topology_cache::blocks(block_list& oblocks)
     blocks_ = source_->compute_blocks();
 
   oblocks.clear();
-  for (std::vector<vtol_block*>::iterator it = blocks_->begin();
-       it != blocks_->end(); ++it){
-    oblocks.push_back(*it);
+  for (auto & block : *blocks_){
+    oblocks.push_back(block);
   }
 }

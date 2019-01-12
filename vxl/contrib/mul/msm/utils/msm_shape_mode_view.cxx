@@ -10,15 +10,17 @@
 #include "msm_shape_mode_view.h"
 #include <msm/msm_ref_shape_model.h>
 #include <vsl/vsl_indent.h>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //=======================================================================
 // Dflt ctor
 //=======================================================================
 
 msm_shape_mode_view::msm_shape_mode_view():
-  shape_model_(VXL_NULLPTR),
+  shape_model_(nullptr),
   points_(3),
   n_per_mode_(3),
   mode_(0),
@@ -34,7 +36,7 @@ void msm_shape_mode_view::set_overlap_shapes(bool b)
 {
   msm_shape_mode_view::overlap_shapes_=b;
 
-  if (shape_model_!=VXL_NULLPTR)
+  if (shape_model_!=nullptr)
     compute_shapes();
 }
 
@@ -48,7 +50,7 @@ void msm_shape_mode_view::set_shape_model(const msm_ref_shape_model& sm)
   sm_inst_.set_shape_model(*shape_model_);
 
   b_sd_ = sm.mode_var();
-  for (unsigned i=0;i<b_sd_.size();i++) b_sd_[i]=std::sqrt(b_sd_[i]);
+  for (double & i : b_sd_) i=std::sqrt(i);
 
   if (b_sd_.size()>0)
     set_mode(1);
@@ -82,7 +84,7 @@ void msm_shape_mode_view::set_display_width(double width)
 //: Current shape model
 const msm_ref_shape_model& msm_shape_mode_view::shape_model() const
 {
-  assert(shape_model_!=VXL_NULLPTR);
+  assert(shape_model_!=nullptr);
   return *shape_model_;
 }
 
@@ -186,14 +188,14 @@ void msm_shape_mode_view::set_display_window(const vgl_box_2d<int> & win)
 {
   display_win_ = win;
 
-  if (shape_model_!=VXL_NULLPTR)
+  if (shape_model_!=nullptr)
     compute_shapes();
 }
 
     //: Define current mode to use
 void msm_shape_mode_view::set_mode(unsigned m)
 {
-  if (shape_model_==VXL_NULLPTR) return;
+  if (shape_model_==nullptr) return;
 
   if (m>=shape_model().n_modes()) m = shape_model().n_modes();
   mode_ = m;
@@ -221,7 +223,7 @@ void msm_shape_mode_view::set_n_per_mode(unsigned n)
 //: Maximum number of shape modes available
 unsigned msm_shape_mode_view::max_modes() const
 {
-  if (shape_model_==VXL_NULLPTR)
+  if (shape_model_==nullptr)
     return 0;
   else
     return shape_model_->n_modes();

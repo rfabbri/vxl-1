@@ -1,16 +1,16 @@
 // This is core/vil/vil_copy.hxx
 #ifndef vil_copy_hxx_
 #define vil_copy_hxx_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Ian Scott, ISBE, Manchester
 // \date   4 Oct 2002
 
 #include "vil_copy.h"
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_image_view.h>
 
 //: Create a copy of the data viewed by this, and return a view of copy.

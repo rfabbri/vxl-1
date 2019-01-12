@@ -6,10 +6,12 @@
 // \author Matt Leotta
 //
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: The total number of pixel datatypes
-const unsigned int num_types = 5;
+constexpr unsigned int num_types = 5;
 
 namespace {
 
@@ -61,10 +63,10 @@ struct table_init
   static inline void populate(vidl_color_conv_fptr table[VIDL_PIXEL_COLOR_ENUM_END][VIDL_PIXEL_COLOR_ENUM_END]
                                                         [num_types][num_types])
   {
-    const vidl_pixel_format in_fmt = vidl_pixel_format(Fmt_Code/VIDL_PIXEL_FORMAT_ENUM_END);
-    const vidl_pixel_format out_fmt = vidl_pixel_format(Fmt_Code%VIDL_PIXEL_FORMAT_ENUM_END);
-    vidl_pixel_color in_color = static_cast<vidl_pixel_color>(vidl_pixel_traits_of<in_fmt>::color_idx);
-    vidl_pixel_color out_color = static_cast<vidl_pixel_color>(vidl_pixel_traits_of<out_fmt>::color_idx);
+    const auto in_fmt = vidl_pixel_format(Fmt_Code/VIDL_PIXEL_FORMAT_ENUM_END);
+    const auto out_fmt = vidl_pixel_format(Fmt_Code%VIDL_PIXEL_FORMAT_ENUM_END);
+    auto in_color = static_cast<vidl_pixel_color>(vidl_pixel_traits_of<in_fmt>::color_idx);
+    auto out_color = static_cast<vidl_pixel_color>(vidl_pixel_traits_of<out_fmt>::color_idx);
     typedef typename vidl_pixel_traits_of<in_fmt>::type in_type;
     typedef typename vidl_pixel_traits_of<out_fmt>::type out_type;
     unsigned in_type_num = type_index<in_type>::index;
@@ -85,10 +87,10 @@ struct table_init<0>
   static inline void populate(vidl_color_conv_fptr table[VIDL_PIXEL_COLOR_ENUM_END][VIDL_PIXEL_COLOR_ENUM_END]
                                                         [num_types][num_types])
   {
-    const vidl_pixel_format in_fmt = vidl_pixel_format(0);
-    const vidl_pixel_format out_fmt = vidl_pixel_format(0);
-    vidl_pixel_color in_color = static_cast<vidl_pixel_color>(vidl_pixel_traits_of<in_fmt>::color_idx);
-    vidl_pixel_color out_color = static_cast<vidl_pixel_color>(vidl_pixel_traits_of<out_fmt>::color_idx);
+    const auto in_fmt = vidl_pixel_format(0);
+    const auto out_fmt = vidl_pixel_format(0);
+    auto in_color = static_cast<vidl_pixel_color>(vidl_pixel_traits_of<in_fmt>::color_idx);
+    auto out_color = static_cast<vidl_pixel_color>(vidl_pixel_traits_of<out_fmt>::color_idx);
     typedef vidl_pixel_traits_of<in_fmt>::type in_type;
     typedef vidl_pixel_traits_of<out_fmt>::type out_type;
     unsigned in_type_num = type_index<in_type>::index;

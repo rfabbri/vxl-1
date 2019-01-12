@@ -13,8 +13,10 @@
 
 //=======================================================================
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/algo/vnl_svd.h>
 #include <vnl/vnl_math.h>
 
@@ -50,7 +52,7 @@ double clsfy_binary_hyperplane_ls_builder::build(
   assert(* std::max_element(outputs.begin(), outputs.end()) <= 1);
   assert(classifier.is_class("clsfy_binary_hyperplane"));
 
-  clsfy_binary_hyperplane &hyperplane = (clsfy_binary_hyperplane &) classifier;
+  auto &hyperplane = (clsfy_binary_hyperplane &) classifier;
 
   inputs.reset();
   const unsigned k = inputs.current().size();
@@ -133,7 +135,7 @@ double clsfy_binary_hyperplane_ls_builder::build(
 
 void clsfy_binary_hyperplane_ls_builder::b_write(vsl_b_ostream &bfs) const
 {
-  const short version_no=1;
+  constexpr short version_no = 1;
   vsl_b_write(bfs, version_no);
 }
 

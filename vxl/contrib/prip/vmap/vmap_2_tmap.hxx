@@ -4,8 +4,10 @@
 
 #include <iostream>
 #include "vmap_2_tmap.h"
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 template <class V, class E, class F, class D>
 vmap_2_tmap< V,E,F,D >::vmap_2_tmap(self_type const& tmap)
@@ -80,7 +82,7 @@ void vmap_2_tmap< V,E,F,D >::initialise_faces(int arg_nb_faces)
 }
 
 template <class V, class E, class F, class D>
-vmap_2_tmap< V,E,F,D >::~ vmap_2_tmap() {}
+vmap_2_tmap< V,E,F,D >::~ vmap_2_tmap() = default;
 
 template <class V, class E, class F, class D>
 vmap_2_tmap< V,E,F,D > & vmap_2_tmap< V,E,F,D >::operator=(self_type const& tmap)
@@ -187,12 +189,12 @@ void vmap_2_tmap< V,E,F,D >::set_edge_cycles()
   dart_iterator d ;
   for (d=this->begin_dart(); d!=this->end_dart(); ++d)
   {
-    d->set_edge(VXL_NULLPTR) ;
+    d->set_edge(nullptr) ;
   }
   int count_vertex =0 ;
   for (d=this->begin_dart(); d!=this->end_dart(); ++d)
   {
-    if (d->get_edge_pointer() == (vmap_2_tmap_edge*)VXL_NULLPTR)
+    if (d->get_edge_pointer() == (vmap_2_tmap_edge*)nullptr)
     {
       edge(count_vertex).set_begin(d) ;
       d->set_edge(get_edge_pointer(count_vertex)) ;
@@ -210,12 +212,12 @@ void vmap_2_tmap< V,E,F,D >::set_face_cycles()
   dart_iterator d ;
   for (d=this->begin_dart(); d!=this->end_dart(); ++d)
   {
-    d->set_face(VXL_NULLPTR) ;
+    d->set_face(nullptr) ;
   }
   vmap_face_index count_vertex =0 ;
   for (d=this->begin_dart(); d!=this->end_dart(); ++d)
   {
-    if (d->get_face_pointer() == VXL_NULLPTR)
+    if (d->get_face_pointer() == nullptr)
     {
       dart_iterator end=d ;
       do

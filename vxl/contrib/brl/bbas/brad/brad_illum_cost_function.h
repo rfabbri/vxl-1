@@ -11,7 +11,9 @@
 #include <iostream>
 #include <cmath>
 #include <vnl/vnl_cost_function.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class brad_illum_cost_function : public vnl_cost_function
 {
@@ -24,10 +26,10 @@ class brad_illum_cost_function : public vnl_cost_function
       u_(u), v_(v), a_uu_(a_uu), a_uv_(a_uv), a_vv_(a_vv),
       a_uh_(a_uh), a_vh_(a_vh), a_hh_(a_hh){}
 
-  virtual ~brad_illum_cost_function() {}
+  ~brad_illum_cost_function() override = default;
 
   //:  The main function.  Given the parameter vector x, compute the value of f(x).
-  virtual double f(vnl_vector<double> const& x){
+  double f(vnl_vector<double> const& x) override{
     double theta = x[0];
     double c = std::cos(theta), s = std::sin(theta);
     double temp = a_uu_*c*c + 2.0*a_uv_*s*c + a_vv_*s*s;

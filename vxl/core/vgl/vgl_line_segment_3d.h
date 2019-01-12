@@ -1,9 +1,6 @@
 // This is core/vgl/vgl_line_segment_3d.h
 #ifndef vgl_line_segment_3d_h_
 #define vgl_line_segment_3d_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief line segment in 3D nonhomogeneous space
@@ -17,7 +14,9 @@
 // \endverbatim
 
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_point_3d.h> // data member of this class
 
 //: Represents a 3D line segment using two points.
@@ -29,7 +28,7 @@ class vgl_line_segment_3d
 
  public:
   //: Default constructor - does not initialise!
-  inline vgl_line_segment_3d() {}
+  inline vgl_line_segment_3d() = default;
 
   //: Copy constructor
   inline vgl_line_segment_3d(vgl_line_segment_3d<Type> const& l)
@@ -40,7 +39,7 @@ class vgl_line_segment_3d
                              vgl_point_3d<Type> const& p2)
     : point1_(p1), point2_(p2) {}
 
-  inline ~vgl_line_segment_3d() {}
+  inline ~vgl_line_segment_3d() = default;
 
   inline vgl_point_3d<Type> point1() const { return point1_; } // return a copy
   inline vgl_point_3d<Type> point2() const { return point2_; } // return a copy

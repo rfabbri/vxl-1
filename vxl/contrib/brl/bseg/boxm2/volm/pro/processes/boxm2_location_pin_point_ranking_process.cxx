@@ -13,8 +13,8 @@
 
 namespace boxm2_location_pin_point_ranking_process_globals
 {
-  const unsigned n_inputs_  = 3;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 3;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 bool boxm2_location_pin_point_ranking_process_cons(bprb_func_process& pro)
@@ -39,8 +39,8 @@ bool boxm2_location_pin_point_ranking_process(bprb_func_process& pro)
     return false;
   // get the inputs
   unsigned in_i = 0;
-  double lon = pro.get_input<double>(in_i++);
-  double lat = pro.get_input<double>(in_i++);
+  auto lon = pro.get_input<double>(in_i++);
+  auto lat = pro.get_input<double>(in_i++);
   std::string pin_point_kml = pro.get_input<std::string>(in_i++);
 
   // parse the pin-point regions

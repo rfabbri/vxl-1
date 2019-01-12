@@ -6,8 +6,10 @@
 #include "rgrl_scale.h"
 #include "rgrl_cast.h"
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_inverse.h>
@@ -17,10 +19,10 @@
 #include <vnl/vnl_matrix_fixed.h>
 
 rgrl_invariant_single_landmark::
-rgrl_invariant_single_landmark(vnl_vector<double> location,
-                               vnl_vector<double> vessel_dir1,
-                               vnl_vector<double> vessel_dir2,
-                               vnl_vector<double> vessel_dir3,
+rgrl_invariant_single_landmark(const vnl_vector<double>& location,
+                               const vnl_vector<double>& vessel_dir1,
+                               const vnl_vector<double>& vessel_dir2,
+                               const vnl_vector<double>& vessel_dir3,
                                double width1, double width2, double width3,
                                double angular_std,
                                double width_ratio_std):
@@ -60,8 +62,8 @@ rgrl_invariant_single_landmark(vnl_vector<double> location,
     vnl_double_2 normal = vnl_double_2(-vessel_dirs[i][1], vessel_dirs[i][0]);
     vnl_double_2 trace_pt = location_+radius_*vessel_dirs[i];
 
-    boundary_points_.push_back( trace_pt-normal*local_widths_[i]/2.0 );
-    boundary_points_.push_back( trace_pt+normal*local_widths_[i]/2.0 );
+    boundary_points_.emplace_back(trace_pt-normal*local_widths_[i]/2.0 );
+    boundary_points_.emplace_back(trace_pt+normal*local_widths_[i]/2.0 );
     trace_normals_.push_back(normal);
   }
 
@@ -308,9 +310,9 @@ center()
   double xc = location_[0];
   double yc = location_[1];
 
-  for (unsigned int i = 0; i< boundary_points_.size(); i++) {
-    xc += boundary_points_[i][0];
-    yc += boundary_points_[i][1];
+  for (auto & boundary_point : boundary_points_) {
+    xc += boundary_point[0];
+    yc += boundary_point[1];
   }
 
   int size = int(boundary_points_.size() + 1);

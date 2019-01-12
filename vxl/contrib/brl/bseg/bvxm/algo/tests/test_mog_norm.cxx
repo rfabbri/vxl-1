@@ -3,7 +3,9 @@
 #include "../bvxm_mog_norm.h"
 #include <bvxm/grid/bvxm_voxel_grid.h>
 #include <bvxm/grid/bvxm_voxel_grid_base.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 void test_l2_mog_norm()
 {
@@ -65,17 +67,17 @@ void test_l2_mog_norm()
   //Create grids
   vgl_vector_3d<unsigned> grid_size(2,2,2);
 
-  bvxm_voxel_grid<mix_gauss_type> *apm_grid= new bvxm_voxel_grid<mix_gauss_type>(grid_size);
+  auto *apm_grid= new bvxm_voxel_grid<mix_gauss_type>(grid_size);
   apm_grid->initialize_data(g);
 
-  bvxm_voxel_grid<bool> *mask_grid = new bvxm_voxel_grid<bool>(grid_size);
+  auto *mask_grid = new bvxm_voxel_grid<bool>(grid_size);
   mask_grid->initialize_data(true);
 
   bvxm_voxel_grid_base_sptr dist_base  = new bvxm_voxel_grid<float>(grid_size);
 
   bvxm_mog_norm<float>::mog_l2_grid(apm_grid,mask_grid,dist_base,true,f);
 
-  bvxm_voxel_grid<float>* dist_grid = static_cast<bvxm_voxel_grid< float>* >(dist_base.ptr());
+  auto* dist_grid = static_cast<bvxm_voxel_grid< float>* >(dist_base.ptr());
   //check that the distances are as expected
   bvxm_voxel_grid<float>::iterator dist_grid_it = dist_grid->begin();
 
@@ -111,7 +113,7 @@ void test_gauss2mix()
 
   bsta_gauss_sf1 g(6.3333f,39.5556f);
 
-  double dist1 = bvxm_mog_norm<float>::l2_gauss2mix(g,f,0);
+  double dist1 = bvxm_mog_norm<float>::l2_gauss2mix(g,f,false);
   TEST_NEAR("G-F",dist1, 0.2719,0.01);
 }
 

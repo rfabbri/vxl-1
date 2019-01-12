@@ -1,7 +1,4 @@
 // This is core/vgui/impl/mfc/vgui_mfc_utils.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \brief See vgui_mfc_utils.h for a description of this file.
@@ -19,7 +16,9 @@
 #include <iostream>
 #include "vgui_mfc_utils.h"
 #include <vgui/vgui_command.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 static bool debug = false;
 
 

@@ -4,7 +4,9 @@
 #include <iterator>
 #include <utility>
 #include <algorithm>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <testlib/testlib_test.h>
 #include <mbl/mbl_stl.h>
 
@@ -14,7 +16,7 @@ static void test_stl_sequence()
            << " Testing mbl_stl_sequence\n"
            << "**************************\n";
 
-  const unsigned int n = 20;
+  constexpr unsigned int n = 20;
   std::vector<double> x(n);
 
   for (unsigned int i=0;i<n;++i) x[i]=double(i);

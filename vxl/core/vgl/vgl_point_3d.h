@@ -1,9 +1,6 @@
 // This is core/vgl/vgl_point_3d.h
 #ifndef vgl_point_3d_h
 #define vgl_point_3d_h
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief a point in 3D nonhomogeneous space
@@ -18,10 +15,12 @@
 
 #include <iosfwd>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_fwd.h> // forward declare vgl_plane_3d
 #include <vgl/vgl_vector_3d.h>
-#include <vcl_cassert.h>
+#include <cassert>
 
 //: Represents a cartesian 3D point
 template <class Type>
@@ -37,7 +36,7 @@ class vgl_point_3d
   // Constructors/Initializers/Destructor------------------------------------
 
   //: Default constructor
-  inline vgl_point_3d () {}
+  inline vgl_point_3d () = default;
 
   //: Construct from three Types.
   inline vgl_point_3d(Type px, Type py, Type pz) : x_(px), y_(py), z_(pz) {}

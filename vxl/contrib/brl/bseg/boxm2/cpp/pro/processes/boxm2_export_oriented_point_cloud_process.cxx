@@ -13,7 +13,9 @@
 // \author Ali Osman Ulusoy
 // \date Oct 25, 2011
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_util.h>
 #include <boxm2/io/boxm2_cache.h>
@@ -24,8 +26,8 @@
 
 namespace boxm2_export_oriented_point_cloud_process_globals
 {
-  const unsigned n_inputs_ = 9;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 9;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool boxm2_export_oriented_point_cloud_process_cons(bprb_func_process& pro)
@@ -82,10 +84,10 @@ bool boxm2_export_oriented_point_cloud_process (bprb_func_process& pro)
   boxm2_cache_sptr cache = pro.get_input<boxm2_cache_sptr>(i++);
   std::string output_filename = pro.get_input<std::string>(i++);
   bool output_aux = pro.get_input<bool>(i++);
-  float vis_t = pro.get_input<float>(i++);
-  float nmag_t = pro.get_input<float>(i++);
-  float prob_t = pro.get_input<float>(i++);
-  float exp_t = pro.get_input<float>(i++);
+  auto vis_t = pro.get_input<float>(i++);
+  auto nmag_t = pro.get_input<float>(i++);
+  auto prob_t = pro.get_input<float>(i++);
+  auto exp_t = pro.get_input<float>(i++);
   std::string bb_filename = pro.get_input<std::string>(i++);
 
   return boxm2_export_oriented_point_cloud::export_oriented_point_cloud(scene, cache, output_filename,
@@ -93,4 +95,3 @@ bool boxm2_export_oriented_point_cloud_process (bprb_func_process& pro)
                                                                         bb_filename);
 
 }
-

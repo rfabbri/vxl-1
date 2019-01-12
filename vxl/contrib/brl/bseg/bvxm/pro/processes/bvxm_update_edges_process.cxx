@@ -25,7 +25,9 @@
 #include <brip/brip_vil_float_ops.h>
 
 #include <vil/vil_image_view.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: set input and output types
 bool bvxm_update_edges_process_cons(bprb_func_process& pro)
@@ -73,11 +75,11 @@ bool bvxm_update_edges_process(bprb_func_process& pro)
   vil_image_view<vxl_byte> edge_image(edge_image_sptr);
 
   // scale of image
-  unsigned scale = pro.get_input<unsigned>(i++);
+  auto scale = pro.get_input<unsigned>(i++);
 
   // edge update parameters
   int edge_prob_mask_size = pro.get_input<int>(i++);
-  float edge_prob_mask_sigma = pro.get_input<float>(i++);
+  auto edge_prob_mask_sigma = pro.get_input<float>(i++);
 
 #if 0
   // get parameters

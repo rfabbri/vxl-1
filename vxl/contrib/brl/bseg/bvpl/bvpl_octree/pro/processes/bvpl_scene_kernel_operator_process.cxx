@@ -29,8 +29,8 @@
 
 namespace bvpl_scene_kernel_operator_process_globals
 {
-  const unsigned n_inputs_ = 5;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 5;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 //: process takes 5 inputs and has 1 output.
@@ -104,7 +104,7 @@ bool bvpl_scene_kernel_operator_process(bprb_func_process& pro)
   {
     typedef bsta_num_obs<bsta_gauss_sf1> gauss_type;
     typedef boct_tree<short, gauss_type > tree_type;
-    boxm_scene<tree_type> *scene_in = static_cast<boxm_scene<tree_type>* > (scene_base.as_pointer());
+    auto *scene_in = static_cast<boxm_scene<tree_type>* > (scene_base.as_pointer());
     double finest_cell_length = scene_in->finest_cell_length();
     kernel->set_voxel_length(finest_cell_length);
 
@@ -143,7 +143,7 @@ bool bvpl_scene_kernel_operator_process(bprb_func_process& pro)
   else if (datatype == "float")
   {
     typedef boct_tree<short, float > tree_type;
-    boxm_scene<tree_type> *scene_in = static_cast<boxm_scene<tree_type>* > (scene_base.as_pointer());
+    auto *scene_in = static_cast<boxm_scene<tree_type>* > (scene_base.as_pointer());
     double finest_cell_length = scene_in->finest_cell_length();
     kernel->set_voxel_length(finest_cell_length);
     //parameters of the output scene are the same as those of the input scene

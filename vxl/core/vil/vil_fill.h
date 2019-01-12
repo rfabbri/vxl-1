@@ -7,9 +7,11 @@
 // \author Tim Cootes - Manchester
 
 #include <algorithm>
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vil/vil_image_view.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Fill view with given value
 //  O(size).

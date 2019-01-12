@@ -28,19 +28,19 @@ namespace {
 class simple_invariant_feature: public rgrl_invariant
 {
  public:
-  simple_invariant_feature(vnl_vector<double> location,
-                           vnl_vector<double> cart_inv,
-                           vnl_vector<double> ang_inv)
+  simple_invariant_feature(const vnl_vector<double>& location,
+                           const vnl_vector<double>& cart_inv,
+                           const vnl_vector<double>& ang_inv)
     : location_(location),
       cart_inv_(cart_inv),
       ang_inv_(ang_inv)
   {}
-  ~simple_invariant_feature(){}
+  ~simple_invariant_feature() override = default;
 
   //estimate the a translation using the location
   bool estimate(rgrl_invariant_sptr         from,
                 rgrl_transformation_sptr&   xform,
-                rgrl_scale_sptr&            scale )
+                rgrl_scale_sptr&            scale ) override
   {
     simple_invariant_feature* simple_from =
       rgrl_cast<simple_invariant_feature*>(from);
@@ -52,8 +52,8 @@ class simple_invariant_feature: public rgrl_invariant
   }
 
   const vnl_vector<double>& location() const {return location_;}
-  const vnl_vector<double>& cartesian_invariants() const {return cart_inv_;}
-  const vnl_vector<double>& angular_invariants() const {return ang_inv_;}
+  const vnl_vector<double>& cartesian_invariants() const override {return cart_inv_;}
+  const vnl_vector<double>& angular_invariants() const override {return ang_inv_;}
 
  private:
   vnl_vector<double> location_;
@@ -113,7 +113,7 @@ test_inv_indexing()
                                                      loc2_cart_inv.as_ref(),
                                                      zero_vec.as_ref()) );
   rgrl_mask_sptr roi = new rgrl_mask_box(2);
-  rgrl_initializer_inv_indexing* initializer = new rgrl_initializer_inv_indexing( roi, roi, VXL_NULLPTR, 0, false);
+  rgrl_initializer_inv_indexing* initializer = new rgrl_initializer_inv_indexing( roi, roi, nullptr, 0, false);
 
   initializer->add_data(fixed_set1, moving_set1, 0, 1);
   initializer->add_data(fixed_set2, moving_set2, 0, 1);

@@ -10,7 +10,9 @@
 #include "rgrl_matcher_k_nearest.h"
 #include "rgrl_feature_sptr.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_array_2d.h>
 
 //: For each "from" feature, match the boundary points with the k nearest "to" features.
@@ -43,7 +45,7 @@ class rgrl_matcher_k_nearest_boundary
                    rgrl_view const&              current_view,
                    rgrl_transformation const&    current_xform,
                    rgrl_scale const&             /* current_scale */,
-                   rgrl_match_set_sptr const& old_matches = VXL_NULLPTR );
+                   rgrl_match_set_sptr const& old_matches = nullptr ) override;
 
   // Defines type-related functions
   rgrl_type_macro( rgrl_matcher_k_nearest_boundary, rgrl_matcher_k_nearest);

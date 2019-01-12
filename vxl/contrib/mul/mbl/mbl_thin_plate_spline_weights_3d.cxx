@@ -8,7 +8,9 @@
 // \brief Construct thin plate spline to map 3D to 3D
 // \author Tim Cootes
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_indent.h>
 #include <vsl/vsl_vector_io.h>
 #include <vnl/vnl_math.h>
@@ -40,9 +42,7 @@ mbl_thin_plate_spline_weights_3d::mbl_thin_plate_spline_weights_3d()
 // Destructor
 //=======================================================================
 
-mbl_thin_plate_spline_weights_3d::~mbl_thin_plate_spline_weights_3d()
-{
-}
+mbl_thin_plate_spline_weights_3d::~mbl_thin_plate_spline_weights_3d() = default;
 
 // First some useful maths functions
 
@@ -413,7 +413,7 @@ vgl_point_3d<double>  mbl_thin_plate_spline_weights_3d::operator()(double x, dou
   double z_sum = Az0_ + AzX_ * x + AzY_ * y + AzZ_ * z;
 
   if (n<=4)  // Pure affine
-    return vgl_point_3d<double>(x_sum,y_sum,z_sum);
+    return {x_sum,y_sum,z_sum};
 
   const vgl_point_3d<double> * pts_data = &src_pts_[0];
   const double* Wx_data = Wx_.data_block();
@@ -440,7 +440,7 @@ vgl_point_3d<double>  mbl_thin_plate_spline_weights_3d::operator()(double x, dou
     z_sum += (Ui * Wz_data[i]);
   }
 
-  return vgl_point_3d<double>(x_sum,y_sum,z_sum);
+  return {x_sum,y_sum,z_sum};
 }
 
 //=======================================================================
@@ -462,16 +462,16 @@ void mbl_thin_plate_spline_weights_3d::print_summary(std::ostream& os) const
 {
   os<<"\nfx: "<<Ax0_<<" + "<<AxX_<<"*x + "<<AxY_
     <<"*y + "<<AxZ_<<"*z   Nonlinear terms:";
-  for (unsigned int i=0;i<Wx_.size();++i)
-    os<<' '<<Wx_[i];
+  for (double i : Wx_)
+    os<<' '<<i;
   os<<"\nfy: "<<Ay0_<<" + "<<AyX_<<"*x + "<<AyY_
     <<"*y + "<<AyZ_<<"*z   Nonlinear terms:";
-  for (unsigned int i=0;i<Wy_.size();++i)
-    os<<' '<<Wy_[i];
+  for (double i : Wy_)
+    os<<' '<<i;
   os<<"\nfy: "<<Az0_<<" + "<<AzX_<<"*x + "<<AzY_
     <<"*y + "<<AzZ_<<"*z   Nonlinear terms:";
-  for (unsigned int i=0;i<Wz_.size();++i)
-    os<<' '<<Wz_[i];
+  for (double i : Wz_)
+    os<<' '<<i;
   os<<'\n';
 }
 

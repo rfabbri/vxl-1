@@ -12,7 +12,9 @@
 // \author iscott
 // \date  Aug 2005
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_file.h>
 #include <vul/vul_expand_path.h>
 #include <mbl/mbl_config.h>
@@ -22,11 +24,11 @@
 static unsigned replace(char from, char to, std::string &s)
 {
   unsigned c = 0;
-  for (unsigned i=0; i<s.size(); ++i)
-    if (s[i] == from)
+  for (char & i : s)
+    if (i == from)
     {
       c++;
-      s[i] = to;
+      i = to;
     }
     return c;
 }

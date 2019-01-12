@@ -1,7 +1,4 @@
 // This is mul/clsfy/clsfy_direct_boost_builder.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \brief Functions to train classifiers using AdaBoost algorithm
@@ -22,8 +19,10 @@
 #include "clsfy_direct_boost.h"
 #include "clsfy_builder_1d.h"
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <mbl/mbl_file_data_collector.h>
 #include <mbl/mbl_data_collector_list.h>
 #include <mbl/mbl_index_sort.h>
@@ -31,15 +30,13 @@
 //=======================================================================
 
 clsfy_direct_boost_builder::clsfy_direct_boost_builder()
-: save_data_to_disk_(false), bs_(-1), max_n_clfrs_(-1), weak_builder_(VXL_NULLPTR)
+: save_data_to_disk_(false), bs_(-1), max_n_clfrs_(-1), weak_builder_(nullptr)
 {
 }
 
 //=======================================================================
 
-clsfy_direct_boost_builder::~clsfy_direct_boost_builder()
-{
-}
+clsfy_direct_boost_builder::~clsfy_direct_boost_builder() = default;
 
 
 //=======================================================================
@@ -154,7 +151,7 @@ double clsfy_direct_boost_builder::build(clsfy_classifier_base& model,
   // nb  ignore nClasses=1, ie always binary classifier
 
   assert( model.is_class("clsfy_direct_boost") );
-  clsfy_direct_boost &strong_classifier = (clsfy_direct_boost&) model;
+  auto &strong_classifier = (clsfy_direct_boost&) model;
 
 
   // check parameters are OK
@@ -171,7 +168,7 @@ double clsfy_direct_boost_builder::build(clsfy_classifier_base& model,
             <<max_n_clfrs_<<'\n';
   }
 
-  if ( weak_builder_ == VXL_NULLPTR )
+  if ( weak_builder_ == nullptr )
   {
     std::cout<<"Error: clsfy_direct_boost_builder::build\n"
             <<"weak_builder_ pointer has not been set\n"
@@ -403,8 +400,8 @@ double clsfy_direct_boost_builder::build(clsfy_classifier_base& model,
     //for (int p=0; p<index.size(); ++p)
     //  std::cout<<"index["<<p<<"]= "<<index[p]<<std::endl;
   }
-  for (unsigned i =0; i< classifiers.size(); ++i)
-    delete classifiers[i];
+  for (auto & classifier : classifiers)
+    delete classifier;
 
   // calculating response from classifier so far
   // and using this to calc min_error threshold

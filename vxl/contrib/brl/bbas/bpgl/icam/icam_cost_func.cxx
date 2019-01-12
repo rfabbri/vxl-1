@@ -6,7 +6,10 @@
 #include <vbl/vbl_array_1d.h>
 #include <icam/icam_sample.h>
 #include <vnl/vnl_numeric_traits.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Constructor
 icam_cost_func::icam_cost_func( const vil_image_view<float>& source_img,
@@ -129,7 +132,7 @@ joint_probability(vnl_vector<double> const& samples, vnl_vector<double> const& m
         is = static_cast<unsigned>(samples[i]*scl + 0.5);
 #endif
       //match the gpu implementation, which does a floor operation
-      unsigned id = static_cast<unsigned>(std::floor(dest_samples_[i]*scl)),
+      auto id = static_cast<unsigned>(std::floor(dest_samples_[i]*scl)),
         is = static_cast<unsigned>(std::floor(samples[i]*scl));
 
       if (id>nbins_-1 || is> nbins_-1)

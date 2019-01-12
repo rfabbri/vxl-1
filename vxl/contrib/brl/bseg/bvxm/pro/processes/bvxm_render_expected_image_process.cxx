@@ -62,12 +62,12 @@ bool bvxm_render_expected_image_process(bprb_func_process& pro)
   //get the inputs
   unsigned i = 0;
   vpgl_camera_double_sptr camera = pro.get_input<vpgl_camera_double_sptr>(i++);
-  unsigned npixels_x = pro.get_input<unsigned>(i++);
-  unsigned npixels_y = pro.get_input<unsigned>(i++);
+  auto npixels_x = pro.get_input<unsigned>(i++);
+  auto npixels_y = pro.get_input<unsigned>(i++);
   bvxm_voxel_world_sptr world = pro.get_input<bvxm_voxel_world_sptr>(i++);
   std::string voxel_type = pro.get_input<std::string>(i++);
-  unsigned bin_index = pro.get_input<unsigned>(i++);
-  unsigned scale_index = pro.get_input<unsigned>(i++);
+  auto bin_index = pro.get_input<unsigned>(i++);
+  auto scale_index = pro.get_input<unsigned>(i++);
 
   //check input validity
   if (!camera) {
@@ -80,12 +80,12 @@ bool bvxm_render_expected_image_process(bprb_func_process& pro)
   }
 
   //create image metadata object (no image with camera, so just use dummy):
-  vil_image_view_base_sptr dummy_img = VXL_NULLPTR;
+  vil_image_view_base_sptr dummy_img = nullptr;
   bvxm_image_metadata camera_metadata(dummy_img,camera);
   //render image
   bool result=true;
   vil_image_view_base_sptr expected_img;
-  vil_image_view<float> *mask_img = new vil_image_view<float>(npixels_x,npixels_y,1);
+  auto *mask_img = new vil_image_view<float>(npixels_x,npixels_y,1);
 
   if (voxel_type == "apm_mog_grey")
   {

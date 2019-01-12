@@ -8,7 +8,9 @@
 #include <vil/algo/vil_structuring_element.h>
 #include <vil/algo/vil_blob.h>
 #include <vil/algo/vil_binary_closing.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_random.h>
 
 
@@ -17,14 +19,14 @@ bool vil_blob_detection_process_cons(bprb_func_process& pro)
 {
   //this process takes 3 inputs
   std::vector<std::string> input_types;
-  input_types.push_back("vil_image_view_base_sptr");
-  input_types.push_back("unsigned"); // max size of the blob in pixels
-  input_types.push_back("unsigned"); // min size of the blob in pixels
+  input_types.emplace_back("vil_image_view_base_sptr");
+  input_types.emplace_back("unsigned"); // max size of the blob in pixels
+  input_types.emplace_back("unsigned"); // min size of the blob in pixels
 
   std::vector<std::string> output_types;
-  output_types.push_back("vil_image_view_base_sptr");  // label image
-  output_types.push_back("vil_image_view_base_sptr");  // randomly colored output image
-  output_types.push_back("unsigned");  // also return the number of blobs
+  output_types.emplace_back("vil_image_view_base_sptr");  // label image
+  output_types.emplace_back("vil_image_view_base_sptr");  // randomly colored output image
+  output_types.emplace_back("unsigned");  // also return the number of blobs
 
   return pro.set_input_types(input_types)
       && pro.set_output_types(output_types);
@@ -42,10 +44,10 @@ bool vil_blob_detection_process(bprb_func_process& pro)
   // get the inputs
   unsigned i=0;
   vil_image_view_base_sptr img_ptr_a = pro.get_input<vil_image_view_base_sptr>(i++);
-  unsigned int min_size  = pro.get_input<unsigned>(i++);
-  unsigned int max_size  = pro.get_input<unsigned>(i++);
+  auto min_size  = pro.get_input<unsigned>(i++);
+  auto max_size  = pro.get_input<unsigned>(i++);
 
-  if (vil_image_view<bool> *view=dynamic_cast<vil_image_view<bool>* > (img_ptr_a.ptr()))
+  if (auto *view=dynamic_cast<vil_image_view<bool>* > (img_ptr_a.ptr()))
   {
     // Closing the holes or gaps
     vil_structuring_element selem;
@@ -64,7 +66,7 @@ bool vil_blob_detection_process(bprb_func_process& pro)
 
     view_blobs.fill(false);
 
-    vil_image_view<vil_rgb<vxl_byte> >* colored_blobs = new vil_image_view<vil_rgb<vxl_byte> >(view_blobs.ni(),view_blobs.nj());
+    auto* colored_blobs = new vil_image_view<vil_rgb<vxl_byte> >(view_blobs.ni(),view_blobs.nj());
     colored_blobs->fill(vil_rgb<vxl_byte>(0,0,0));
     vnl_random rng;
     unsigned cnt_blobs = 0;
@@ -76,10 +78,10 @@ bool vil_blob_detection_process(bprb_func_process& pro)
       std::size_t sizecount= vil_area(*it);
       if (sizecount>min_size && sizecount<max_size) {
         vil_rgb<vxl_byte> random_color = vil_rgb<vxl_byte>((char)rng.lrand32(0,255), (char)rng.lrand32(0,255), (char)rng.lrand32(0,255));
-        for (vil_blob_region::const_iterator chords_it=it->begin(), chords_end=it->end(); chords_it!=chords_end; ++chords_it)
-          for (unsigned i=chords_it->ilo; i<=chords_it->ihi; i++) {
-            view_blobs(i,chords_it->j)=true;
-            (*colored_blobs)(i,chords_it->j) = random_color;
+        for (auto chords_it : *it)
+          for (unsigned i=chords_it.ilo; i<=chords_it.ihi; i++) {
+            view_blobs(i,chords_it.j)=true;
+            (*colored_blobs)(i,chords_it.j) = random_color;
           }
         cnt_blobs++;
       }

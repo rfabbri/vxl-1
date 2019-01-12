@@ -14,7 +14,9 @@
 
 #include <iostream>
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include "vmap_types.h"       // for vmap_face_index etc.
 #include "vmap_2_tmap_elts.h" // for vmap_2_tmap_dart etc.
 #include "vmap_2_map.h"
@@ -197,14 +199,13 @@ class vmap_2_tmap: public vmap_2_map<D>,
  public:
 
   //:
-  vmap_2_tmap()
-  {}
+  vmap_2_tmap() = default;
 
   //:
   vmap_2_tmap(self_type const& m) ;
 
   //:
-  virtual ~vmap_2_tmap();
+  ~vmap_2_tmap() override;
 
   //:
   self_type & operator=(self_type const& m);
@@ -517,10 +518,10 @@ class vmap_2_tmap: public vmap_2_map<D>,
   bool valid_permutations() const ;
 
   //:
-  virtual bool valid() const ;
+  bool valid() const override ;
 
   //: Deletes everything.
-  virtual void clear() ;
+  void clear() override ;
 
   //:
   void removal(dart_iterator & arg) ;

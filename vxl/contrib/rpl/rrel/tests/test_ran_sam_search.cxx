@@ -1,7 +1,9 @@
 // This is rpl/rrel/tests/test_ran_sam_search.cxx
 #include <iostream>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <vnl/vnl_double_3.h>
 #include <vnl/vnl_double_4.h>
@@ -35,9 +37,9 @@ struct null_problem : public rrel_estimation_problem
 {
   null_problem( unsigned int num_samples, unsigned int dof, unsigned int min_samples )
     : rrel_estimation_problem( dof, min_samples ), ns(num_samples) { }
-  unsigned int num_samples() const { return ns; }
+  unsigned int num_samples() const override { return ns; }
   void compute_residuals( const vnl_vector<double>& /*params*/,
-                          std::vector<double>& /*residuals*/ ) const { }
+                          std::vector<double>& /*residuals*/ ) const override { }
   unsigned int ns;
 };
 
@@ -83,7 +85,7 @@ static void test_ran_sam_residuals()
 static void test_ran_sam_search()
 {
   vnl_double_3 true_params(10.0, 0.02, -0.1);
-  const int num_pts=12;
+  constexpr int num_pts = 12;
 
   //  Build LinearRegression objects.
   std::vector< vnl_vector<double> > pts(num_pts);
@@ -135,7 +137,7 @@ static void test_ran_sam_search()
   rrel_estimation_problem * lr = new rrel_linear_regression( pts, use_intercept );
   int dof = lr->num_samples_to_instantiate();
   rrel_objective* lms = new rrel_lms_obj( dof );
-  rrel_ran_sam_search * ransam = new rrel_ran_sam_search();
+  auto * ransam = new rrel_ran_sam_search();
   TEST("ctor", !ransam, false);
 #if 0
   //  Test sampling by generating all parameters

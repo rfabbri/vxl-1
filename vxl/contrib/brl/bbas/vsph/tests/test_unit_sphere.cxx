@@ -24,7 +24,7 @@ static void test_unit_sphere()
   vsl_b_ifstream is("./temp.bin");
   vsph_unit_sphere_sptr usph_in;
   vsl_b_read(is, usph_in);
-  bool good = usph_in != VXL_NULLPTR;
+  bool good = usph_in != nullptr;
   if(good){
     double point_angle_in = usph_in->point_angle();
     double min_theta_in = usph_in->min_theta();
@@ -39,4 +39,3 @@ static void test_unit_sphere()
   vpl_unlink("./temp.bin");
 }
 TESTMAIN(test_unit_sphere);
-

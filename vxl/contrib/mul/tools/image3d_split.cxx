@@ -18,7 +18,9 @@
 #include <vil3d/vil3d_new.h>
 #include <vil3d/vil3d_crop.h>
 #include <vul/vul_string.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //=========================================================================
 // Static function to create a static logger when first required
@@ -39,9 +41,9 @@ int main2(int argc, char*argv[])
 
   // Parse the program arguments
   vul_arg_base::set_help_precis("Divide a volume image in smaller pieces.");
-  vul_arg<std::string> img_src(VXL_NULLPTR, "input image filename");
-  vul_arg<std::string> img_dst(VXL_NULLPTR, "output image file-stem");
-  vul_arg<std::string> max_voxels_arg(VXL_NULLPTR, "Max number of voxels in an output image. (Suffix k=1000, kb=1024, M=1e6, G=1e9 etc.)");
+  vul_arg<std::string> img_src(nullptr, "input image filename");
+  vul_arg<std::string> img_dst(nullptr, "output image file-stem");
+  vul_arg<std::string> max_voxels_arg(nullptr, "Max number of voxels in an output image. (Suffix k=1000, kb=1024, M=1e6, G=1e9 etc.)");
   vul_arg<std::string> replace_str("-I", "Replace this string in the filestem with the split numbering. Default puts it at end.");
   vul_arg<std::string> output_format_arg("-f", "Format of output images (e.g. v3i, dcm, gipl.) Guesses from filestem by default.");
   vul_arg<bool> split_z("-z", "Split along z-plane boundaries, default is rough cubes.");
@@ -49,7 +51,7 @@ int main2(int argc, char*argv[])
 //  vul_arg<bool> ("-t", "Try to keep all images roughly same size - Default keeps all bu last ones identically sized.");
   vul_arg_parse(argc, argv);
 
-  unsigned long max_voxels = (unsigned long) vul_string_atof_withsuffix(max_voxels_arg());
+  auto max_voxels = (unsigned long) vul_string_atof_withsuffix(max_voxels_arg());
   if (max_voxels==0) vul_arg_base::display_usage_and_exit("Bad maximum number of voxels");
 
 
@@ -113,7 +115,7 @@ int main2(int argc, char*argv[])
   else
   {
     blockwidth_k = std::min<unsigned long>(nk,
-                                          vnl_math::rnd(vnl_math::cuberoot(static_cast<double>(max_voxels))) );
+                                          vnl_math::rnd(std::cbrt(static_cast<double>(max_voxels))) );
     blockcount_k = (nk+blockwidth_k-1) / blockwidth_k;
     blockwidth_j = std::min<unsigned long>(nj,
                                           vnl_math::rnd(std::sqrt(static_cast<double>(max_voxels/blockwidth_k))));
@@ -191,7 +193,7 @@ int main2(int argc, char*argv[])
         trans.set_translation(-double(i0), -double(j0), -double(k0));
         vimt3d_save_transform(ir2, trans*w2i, use_millimeters);
 
-        vimt3d_vil3d_v3i_image* v3i_ir2 = dynamic_cast<vimt3d_vil3d_v3i_image *>(ir2.as_pointer());
+        auto* v3i_ir2 = dynamic_cast<vimt3d_vil3d_v3i_image *>(ir2.as_pointer());
         if (v3i_ir2)
           v3i_ir2->set_world2im(trans*w2i);
         else

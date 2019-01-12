@@ -14,7 +14,10 @@
 
 #include <vil/vil_image_view.h>
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpdl/vpdt/vpdt_field_traits.h>
 
 #include "bbgm_planes_to_sample.h"

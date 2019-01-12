@@ -1,16 +1,15 @@
 // This is core/vgui/vgui_modifier.h
 #ifndef vgui_modifier_h_
 #define vgui_modifier_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author VGG, Oxford University
 // \brief  Enum of modifiers for key-strokes and mouse presses.
 
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Enum of modifiers for key-strokes and mouse presses.
 enum vgui_modifier {

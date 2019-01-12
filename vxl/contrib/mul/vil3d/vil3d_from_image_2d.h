@@ -2,9 +2,6 @@
 #ifndef vil3d_from_image_2d_h_
 #define vil3d_from_image_2d_h_
 
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 
 //:
 // \file
@@ -12,7 +9,10 @@
 
 #include <vil/vil_image_view.h>
 #include <vil3d/vil3d_image_view.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 //: Return a 3D image view containing a single slice obtained from a 2D image.

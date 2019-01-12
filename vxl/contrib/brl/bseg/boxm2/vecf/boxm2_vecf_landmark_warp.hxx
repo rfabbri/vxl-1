@@ -12,7 +12,9 @@
 #include <boxm2/io/boxm2_lru_cache.h>
 #include <boct/boct_bit_tree.h>
 #include <vgl/vgl_point_3d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <rsdl/rsdl_kd_tree.h>
 #include <rsdl/rsdl_point.h>
 
@@ -20,8 +22,8 @@
 std::vector<rsdl_point> convert_vgl_to_rsdl(std::vector<vgl_point_3d<double> > const& pts)
 {
   std::vector<rsdl_point> pts_out;
-  for (std::vector<vgl_point_3d<double> >::const_iterator pit = pts.begin(); pit != pts.end(); ++pit) {
-    rsdl_point point(vnl_vector_fixed<double,3>(pit->x(), pit->y(), pit->z()), vnl_vector<double>());
+  for (const auto & pt : pts) {
+    rsdl_point point(vnl_vector_fixed<double,3>(pt.x(), pt.y(), pt.z()), vnl_vector<double>());
     pts_out.push_back(point);
   }
   return pts_out;
@@ -30,12 +32,12 @@ std::vector<rsdl_point> convert_vgl_to_rsdl(std::vector<vgl_point_3d<double> > c
 template<class F>
 boxm2_vecf_landmark_mapper<F>::
 boxm2_vecf_landmark_mapper(std::vector<vgl_point_3d<double> > const& control_pts_source,
-                           std::vector<vgl_point_3d<double> > const& control_pts_target,
+                           std::vector<vgl_point_3d<double> >  control_pts_target,
                            F weight_function,
                            int n_nearest
                            )
   : control_pts_source_(control_pts_source),
-    control_pts_target_(control_pts_target),
+    control_pts_target_(std::move(control_pts_target)),
     weight_function_(weight_function),
     n_nearest_(n_nearest),
     source_kd_tree_(new rsdl_kd_tree(convert_vgl_to_rsdl(control_pts_source), 0, n_nearest))
@@ -91,11 +93,11 @@ boxm2_vecf_landmark_warp<F>::make_inverse_mapper(boxm2_scene_sptr source, boxm2_
 }
 
 template <class F>
-boxm2_vecf_landmark_warp<F>::boxm2_vecf_landmark_warp(std::vector<vgl_point_3d<double> > const& control_pts_source,
-                                                      std::vector<vgl_point_3d<double> > const& control_pts_target,
+boxm2_vecf_landmark_warp<F>::boxm2_vecf_landmark_warp(std::vector<vgl_point_3d<double> >  control_pts_source,
+                                                      std::vector<vgl_point_3d<double> >  control_pts_target,
                                                       F weight_function)
-: control_pts_source_(control_pts_source),
-  control_pts_target_(control_pts_target),
+: control_pts_source_(std::move(control_pts_source)),
+  control_pts_target_(std::move(control_pts_target)),
   weight_function_(weight_function)
 {
 }

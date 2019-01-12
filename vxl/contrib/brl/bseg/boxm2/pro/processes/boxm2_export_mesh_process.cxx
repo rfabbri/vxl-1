@@ -9,7 +9,9 @@
 // \author Vishal Jain
 // \date Mar 15, 2011
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_file.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_util.h>
@@ -31,8 +33,8 @@
 
 namespace boxm2_export_mesh_process_globals
 {
-  const unsigned n_inputs_ = 4;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 4;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 bool boxm2_export_mesh_process_cons(bprb_func_process& pro)
@@ -67,7 +69,7 @@ bool boxm2_export_mesh_process(bprb_func_process& pro)
   vil_image_view_base_sptr img = pro.get_input<vil_image_view_base_sptr>(argIdx++);
   vil_image_view_base_sptr ximg = pro.get_input<vil_image_view_base_sptr>(argIdx++);
   vil_image_view_base_sptr yimg = pro.get_input<vil_image_view_base_sptr>(argIdx++);
-  std::string out_dir           = pro.get_input<std::string>(argIdx++);
+  std::string out_dir = pro.get_input<std::string>(argIdx++);
 
   //create the mesh directory
   if (out_dir != "") {
@@ -78,9 +80,9 @@ bool boxm2_export_mesh_process(bprb_func_process& pro)
   }
 
   //cast camera and image so they are useful
-  vil_image_view<float>* z_img = (vil_image_view<float>*) img.ptr();
-  vil_image_view<float>* x_img = (vil_image_view<float>*) ximg.ptr();
-  vil_image_view<float>* y_img = (vil_image_view<float>*) yimg.ptr();
+  auto* z_img = (vil_image_view<float>*) img.ptr();
+  auto* x_img = (vil_image_view<float>*) ximg.ptr();
+  auto* y_img = (vil_image_view<float>*) yimg.ptr();
 
   //determine size of depth image
   unsigned ni = z_img->ni();
@@ -108,7 +110,7 @@ bool boxm2_export_mesh_process(bprb_func_process& pro)
   im.set_image(z_img_res);
   if (!im.compute_mesh()) {
     std::cout<<"mesh could not be computed"<<std::endl;
-    return 0;
+    return false;
   }
   imesh_mesh& mesh = im.get_mesh();
   std::cout << "Number of vertices " << mesh.num_verts()
@@ -135,8 +137,8 @@ bool boxm2_export_mesh_process(bprb_func_process& pro)
   for (unsigned iv = 0; iv<nverts; ++iv)
   {
     //get coordinates so you can index into the height map
-    unsigned i = static_cast<unsigned>(verts[iv][0]);
-    unsigned j = static_cast<unsigned>(verts[iv][1]);
+    auto i = static_cast<unsigned>(verts[iv][0]);
+    auto j = static_cast<unsigned>(verts[iv][1]);
     if (i<ni && j<nj)
     {
       verts[iv][0] = (*x_img)(i,j);
@@ -153,7 +155,7 @@ bool boxm2_export_mesh_process(bprb_func_process& pro)
   {
     std::set<unsigned int> sel_faces;
     double maxLen = (maxz-minz) / 3.0;
-    imesh_regular_face_array<3>& faces = (imesh_regular_face_array<3>&) mesh.faces();
+    auto& faces = (imesh_regular_face_array<3>&) mesh.faces();
     imesh_vertex_array<3>&       verts = mesh.vertices<3>();
 
     unsigned nfaces = mesh.num_faces();
@@ -166,7 +168,7 @@ bool boxm2_export_mesh_process(bprb_func_process& pro)
         double x = verts[vertexId][0];
         double y = verts[vertexId][1];
         double z = verts[vertexId][2];
-        points.push_back( vgl_point_3d<double>(x,y,z) );
+        points.emplace_back(x,y,z );
       }
 
       // if any one side of the triangle is too long, cut it

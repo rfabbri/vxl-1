@@ -12,12 +12,14 @@
 #include <boxm2/boxm2_scene.h>
 #include <vpgl/vpgl_lvcs.h>
 #include <vgl/vgl_box_3d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 namespace boxm2_scene_vrml_process_globals
 {
-  const unsigned n_inputs_ = 2;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 2;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool boxm2_scene_vrml_process_cons(bprb_func_process& pro)
@@ -49,13 +51,13 @@ bool boxm2_scene_vrml_process(bprb_func_process& pro)
 
   // obtain the largest id along z direction
   int max_z_id = 0;
-  for (std::map<boxm2_block_id, boxm2_block_metadata>::iterator mit = blks.begin(); mit != blks.end(); ++mit)
-    if (max_z_id < mit->first.k())
-      max_z_id = mit->first.k();
+  for (auto & blk : blks)
+    if (max_z_id < blk.first.k())
+      max_z_id = blk.first.k();
 
-  for (std::map<boxm2_block_id, boxm2_block_metadata>::iterator mit = blks.begin(); mit != blks.end(); ++mit) {
-    vgl_box_3d<double> box = mit->second.bbox();
-    boxm2_block_id id = mit->first;
+  for (auto & blk : blks) {
+    vgl_box_3d<double> box = blk.second.bbox();
+    boxm2_block_id id = blk.first;
     float transparency = 0;
     float r = (float)id.k()/(float)max_z_id*255;
     float g = 0;

@@ -1,7 +1,9 @@
 #include <iostream>
-#include "bocl_utils.h"
-#include <vcl_compiler.h>
 #include <sstream>
+#include "bocl_utils.h"
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 std::size_t RoundUp(int global_size,int group_size)
 {
@@ -77,7 +79,7 @@ std::string error_to_string(cl_int  status )
     return output;
 }
 
-int check_val(cl_int status, cl_int result, std::string message)
+int check_val(cl_int status, cl_int result, const std::string& message)
 {
   if (status != result) {
     std::cout << message << '\n';
@@ -86,4 +88,3 @@ int check_val(cl_int status, cl_int result, std::string message)
   else
     return 1;
 }
-

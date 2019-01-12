@@ -14,7 +14,9 @@
 #include <vil/vil_crop.h>
 #include <vpgl/vpgl_lvcs.h>
 #include <vpgl/vpgl_lvcs_sptr.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/algo/vgl_fit_lines_2d.h>
 #include <vgl/vgl_intersection.h>
 #include <vgl/vgl_line_segment_3d.h>
@@ -31,14 +33,14 @@ bool near_eq_pt(vgl_point_2d<double> a, vgl_point_2d<double> b)
 }
 
 
-void volm_img_info::save_box_kml(std::string out_name) {
+void volm_img_info::save_box_kml(const std::string& out_name) {
     std::ofstream ofs(out_name.c_str());
     bkml_write::open_document(ofs);
     bkml_write::write_box(ofs, name, "", bbox);
     bkml_write::close_document(ofs);
   }
 
-bool read_box(std::string bbox_file, vgl_box_2d<double>& bbox) {
+bool read_box(const std::string& bbox_file, vgl_box_2d<double>& bbox) {
   char buffer[1000];
   std::ifstream ifs(bbox_file.c_str());
   if (!ifs.is_open()) {
@@ -101,7 +103,7 @@ bool volm_io_tools::load_naip_img(std::string const& img_folder, std::string con
 
   }
 
-  vpgl_geo_camera *cam = VXL_NULLPTR;
+  vpgl_geo_camera *cam = nullptr;
   if (!vpgl_geo_camera::init_geo_camera(tfw_name, lvcs, utm_zone, northing, cam))
     return false;
   info.cam = cam;
@@ -131,7 +133,7 @@ bool volm_io_tools::load_naip_imgs(std::string const& img_folder, std::vector<vo
   return true;
 }
 
-int volm_io_tools::load_lidar_img(std::string img_file, volm_img_info& info, bool load_image_resource,
+int volm_io_tools::load_lidar_img(const std::string& img_file, volm_img_info& info, bool load_image_resource,
                                   bool is_cam_global,
                                   bool load_cam_from_tfw, std::string const& cam_tfw_file)
 {
@@ -148,7 +150,7 @@ int volm_io_tools::load_lidar_img(std::string img_file, volm_img_info& info, boo
   info.name = vul_file::strip_directory(vul_file::strip_extension(img_file));
   info.img_name = img_file;
 
-  vpgl_geo_camera *cam = VXL_NULLPTR;
+  vpgl_geo_camera *cam = nullptr;
   // try to load camera from image header first
   vil_image_resource_sptr img_res = vil_load_image_resource(info.img_name.c_str());
   vpgl_lvcs_sptr lvcs_dummy = new vpgl_lvcs;
@@ -175,12 +177,12 @@ int volm_io_tools::load_lidar_img(std::string img_file, volm_img_info& info, boo
 
   std::string n_coords = name.substr(0, name.find_first_of('_'));
   std::string hemisphere, direction;
-  std::size_t n = n_coords.find("N");
+  std::size_t n = n_coords.find('N');
   if (n < n_coords.size())
     hemisphere = "N";
   else
     hemisphere = "S";
-  n = n_coords.find("E");
+  n = n_coords.find('E');
   if (n < n_coords.size())
     direction = "E";
   else
@@ -259,17 +261,17 @@ void volm_io_tools::load_imgs(std::string const& folder, std::vector<volm_img_in
 bool volm_io_tools::get_location_nlcd(std::vector<volm_img_info>& NLCD_imgs, double lat, double lon, double elev, unsigned char& label)
 {
   bool found_it = false;
-  for (unsigned i = 0; i < NLCD_imgs.size(); i++) {
-    if (NLCD_imgs[i].bbox.contains(lon, lat)) {
-      vil_image_view<vxl_byte> img(NLCD_imgs[i].img_r);
+  for (auto & NLCD_img : NLCD_imgs) {
+    if (NLCD_img.bbox.contains(lon, lat)) {
+      vil_image_view<vxl_byte> img(NLCD_img.img_r);
 
       // get the land type of the location
       double u, v;
-      NLCD_imgs[i].cam->global_to_img(lon, lat, elev, u, v);
+      NLCD_img.cam->global_to_img(lon, lat, elev, u, v);
       //NLCD_imgs[i].cam->global_to_img(-lon, lat, elev, u, v);
-      unsigned uu = (unsigned)std::floor(u + 0.5);
-      unsigned vv = (unsigned)std::floor(v + 0.5);
-      if (uu > 0 && vv > 0 && uu < NLCD_imgs[i].ni && vv < NLCD_imgs[i].nj) {
+      auto uu = (unsigned)std::floor(u + 0.5);
+      auto vv = (unsigned)std::floor(v + 0.5);
+      if (uu > 0 && vv > 0 && uu < NLCD_img.ni && vv < NLCD_img.nj) {
         label = img(uu, vv);
         found_it = true;
         break;
@@ -301,8 +303,9 @@ bool volm_io_tools::expend_line(std::vector<vgl_point_2d<double> > line, double 
     }
   }
   // rearrange the point list
-  for (unsigned i = 0; i < pts_u.size(); i++)
-    sheet.push_back(pts_u[i]);
+  sheet.reserve(pts_u.size());
+for (auto i : pts_u)
+    sheet.push_back(i);
   for (int i = pts_d.size()-1; i >=0; i--)
     sheet.push_back(pts_d[i]);
   poly.push_back(sheet);
@@ -314,7 +317,7 @@ bool volm_io_tools::expend_line(std::vector<vgl_point_2d<double> > line, double 
 #include <volm/volm_osm_objects.h>
 
 // a method to read the binary osm object file and also contstruct the volm_geo_index2, the method returns the root of the tree
-volm_geo_index2_node_sptr volm_io_tools::read_osm_data_and_tree(std::string geoindex_filename_pre, std::string osm_bin_filename, volm_osm_objects& osm_objs, double& min_size)
+volm_geo_index2_node_sptr volm_io_tools::read_osm_data_and_tree(const std::string& geoindex_filename_pre, const std::string& osm_bin_filename, volm_osm_objects& osm_objs, double& min_size)
 {
   std::string filename = geoindex_filename_pre + ".txt";
   volm_geo_index2_node_sptr root = volm_geo_index2::read_and_construct<volm_osm_object_ids_sptr>(filename, min_size);
@@ -322,24 +325,24 @@ volm_geo_index2_node_sptr volm_io_tools::read_osm_data_and_tree(std::string geoi
   std::vector<volm_geo_index2_node_sptr> leaves;
   volm_geo_index2::get_leaves(root, leaves);
   // load the content for valid leaves
-  for (unsigned l_idx = 0; l_idx < leaves.size(); l_idx++) {
-    std::string bin_file = leaves[l_idx]->get_label_name(geoindex_filename_pre, "osm");
+  for (auto & leave : leaves) {
+    std::string bin_file = leave->get_label_name(geoindex_filename_pre, "osm");
     if (!vul_file::exists(bin_file))
       continue;
-    volm_geo_index2_node<volm_osm_object_ids_sptr>* ptr = dynamic_cast<volm_geo_index2_node<volm_osm_object_ids_sptr>* >(leaves[l_idx].ptr());
+    auto* ptr = dynamic_cast<volm_geo_index2_node<volm_osm_object_ids_sptr>* >(leave.ptr());
     ptr->contents_ = new volm_osm_object_ids(bin_file);
   }
 
   // load the osm bin file to get real location date with unit of lon and lat, associated with ids stored in geo_index2
   if (!vul_file::exists(osm_bin_filename)) {
     std::cout << "ERROR: can not find osm binary: " << osm_bin_filename << std::endl;
-    return VXL_NULLPTR;
+    return nullptr;
   }
 
   vsl_b_ifstream is(osm_bin_filename.c_str());
   if (!is) {
     std::cerr << "In volm_osm_object::volm_osm_object() -- cannot open: " << osm_bin_filename << std::endl;
-    return VXL_NULLPTR;
+    return nullptr;
   }
   osm_objs.b_read(is);
   is.close();
@@ -361,7 +364,7 @@ volm_geo_index2_node_sptr volm_io_tools::read_osm_data_and_tree(std::string geoi
 
 //: load a geotiff file with .tif file and read its ortho camera info from its header, puts a dummy lvcs to vpgl_geo_cam object so lvcs is not valid
 //  even though it reads the camera from filename with N/S and W/E distinction, it constructs a camera in global WGS84 coordinates, so the global coordinates should be used to fetch pixels, (i.e. no need to make them always positive)
-void volm_io_tools::load_geotiff_image(std::string filename, volm_img_info& info, bool load_cam_from_name)
+void volm_io_tools::load_geotiff_image(const std::string& filename, volm_img_info& info, bool load_cam_from_name)
 {
   info.img_name = filename;
   info.name = vul_file::strip_directory(info.img_name);
@@ -513,7 +516,7 @@ void crop_and_find_min_max(std::vector<volm_img_info>& infos, unsigned img_id, i
       if (max < img_crop(ii, jj)) max = img_crop(ii, jj);
     }
 #endif
-  if (vil_image_view<vxl_int_16>* img = dynamic_cast<vil_image_view<vxl_int_16>*>(infos[img_id].img_r.ptr())) {
+  if (auto* img = dynamic_cast<vil_image_view<vxl_int_16>*>(infos[img_id].img_r.ptr())) {
     vil_image_view<vxl_int_16> img_crop = vil_crop(*img, i0, crop_ni, j0, crop_nj);
     for (unsigned ii = 0; ii < img_crop.ni(); ii++)
       for (unsigned jj = 0; jj < img_crop.nj(); jj++) {
@@ -521,7 +524,7 @@ void crop_and_find_min_max(std::vector<volm_img_info>& infos, unsigned img_id, i
         if (max < img_crop(ii, jj)) max = img_crop(ii, jj);
       }
   }
-  else if (vil_image_view<float>* img = dynamic_cast<vil_image_view<float>*>(infos[img_id].img_r.ptr()) ) {
+  else if (auto* img = dynamic_cast<vil_image_view<float>*>(infos[img_id].img_r.ptr()) ) {
     vil_image_view<float> img_crop = vil_crop(*img, i0, crop_ni, j0, crop_nj);
     for (unsigned ii = 0; ii < img_crop.ni(); ii++)
       for (unsigned jj = 0; jj < img_crop.nj(); jj++) {
@@ -538,16 +541,16 @@ bool volm_io_tools::find_min_max_height(vgl_point_2d<double>& lower_left, vgl_po
   // find the image of all four corners
   std::vector<std::pair<unsigned, std::pair<int, int> > > corners;
   std::vector<vgl_point_2d<double> > pts;
-  pts.push_back(vgl_point_2d<double>(lower_left.x(), upper_right.y()));
-  pts.push_back(vgl_point_2d<double>(upper_right.x(), lower_left.y()));
+  pts.emplace_back(lower_left.x(), upper_right.y());
+  pts.emplace_back(upper_right.x(), lower_left.y());
   pts.push_back(lower_left);
   pts.push_back(upper_right);
 
-  for (unsigned k = 0; k < (unsigned)pts.size(); k++) {
+  for (auto & pt : pts) {
     // find the image
     for (unsigned j = 0; j < (unsigned)infos.size(); j++) {
       double u, v;
-      infos[j].cam->global_to_img(pts[k].x(), pts[k].y(), 0, u, v);
+      infos[j].cam->global_to_img(pt.x(), pt.y(), 0, u, v);
       int uu = (int)std::floor(u+0.5);
       int vv = (int)std::floor(v+0.5);
       if (uu < 0 || vv < 0 || uu >= (int)infos[j].ni || vv >= (int)infos[j].nj)
@@ -685,13 +688,12 @@ bool volm_io_tools::line_inside_the_box(vgl_box_2d<double> const& bbox, std::vec
   std::vector<vgl_point_2d<double> > line_in = vgl_intersection(line, bbox);
   if (line_in.empty())
     return false;
-  for (unsigned i = 0; i < line_in.size(); i++)
-    road.push_back(line_in[i]);
+  for (auto i : line_in)
+    road.push_back(i);
 
   // find the intersection points
-  for (unsigned i = 0; i < line_in.size(); i++) {
-    vgl_point_2d<double> curr_pt = line_in[i];
-    std::vector<vgl_point_2d<double> >::const_iterator vit = std::find(line.begin(), line.end(), curr_pt);
+  for (auto curr_pt : line_in) {
+    auto vit = std::find(line.begin(), line.end(), curr_pt);
     if (vit == line.begin() ) {
       vgl_point_2d<double> next = *(vit+1);
       if (bbox.contains(next))
@@ -701,7 +703,7 @@ bool volm_io_tools::line_inside_the_box(vgl_box_2d<double> const& bbox, std::vec
         if (!find_intersect(bbox, curr_pt, next, intersect_pt))
           return false;
         // insert the intersect after current point
-        std::vector<vgl_point_2d<double> >::iterator it = std::find(road.begin(), road.end(), curr_pt);
+        auto it = std::find(road.begin(), road.end(), curr_pt);
         road.insert(it+1, intersect_pt);
       }
     }
@@ -714,7 +716,7 @@ bool volm_io_tools::line_inside_the_box(vgl_box_2d<double> const& bbox, std::vec
         if (!find_intersect(bbox, prev, curr_pt,intersect_pt))
           return false;
         // insert the intersect point before current point
-        std::vector<vgl_point_2d<double> >::iterator it = std::find(road.begin(), road.end(), curr_pt);
+        auto it = std::find(road.begin(), road.end(), curr_pt);
         road.insert(it, intersect_pt);
       }
     }
@@ -727,7 +729,7 @@ bool volm_io_tools::line_inside_the_box(vgl_box_2d<double> const& bbox, std::vec
         vgl_point_2d<double> intersect_pt;
         if (!find_intersect(bbox, prev, curr_pt, intersect_pt))
           return false;
-        std::vector<vgl_point_2d<double> >::iterator it = std::find(road.begin(), road.end(), curr_pt);
+        auto it = std::find(road.begin(), road.end(), curr_pt);
         road.insert(it, intersect_pt);
       }
       else if (bbox.contains(prev)) {
@@ -735,7 +737,7 @@ bool volm_io_tools::line_inside_the_box(vgl_box_2d<double> const& bbox, std::vec
         if (!find_intersect(bbox, curr_pt, next, intersect_pt))
           return false;
         // insert the intersect after current point
-        std::vector<vgl_point_2d<double> >::iterator it = std::find(road.begin(), road.end(), curr_pt);
+        auto it = std::find(road.begin(), road.end(), curr_pt);
         road.insert(it+1, intersect_pt);
       }
       else {
@@ -743,7 +745,7 @@ bool volm_io_tools::line_inside_the_box(vgl_box_2d<double> const& bbox, std::vec
         if (!find_intersect(bbox, curr_pt, next, intersect_pt))
           return false;
         // find and insert the intersection after current point
-        std::vector<vgl_point_2d<double> >::iterator it = std::find(road.begin(), road.end(), curr_pt);
+        auto it = std::find(road.begin(), road.end(), curr_pt);
         road.insert(it+1, intersect_pt);
         // find and insert the intersection before current point
         if (!find_intersect(bbox, prev, curr_pt,intersect_pt))
@@ -766,7 +768,7 @@ void form_line_segment_from_pts(std::vector<vgl_point_2d<double> > const& road, 
     vgl_point_2d<double> s = road[i];  vgl_point_2d<double> e = road[i+1];
     if (near_eq_pt(s,e))
       continue;
-    road_seg.push_back(vgl_line_segment_2d<double>(s, e));
+    road_seg.emplace_back(s, e);
   }
 #if 0
   // define a 2d line fit
@@ -827,7 +829,7 @@ void find_junctions(vgl_line_segment_2d<double> const& seg,
       else
         continue;
     }
-    cross_pts.push_back(vgl_point_2d<double>(pt.x(), pt.y()));
+    cross_pts.emplace_back(pt.x(), pt.y());
     std::pair<int,int> key(seg_prop.id_, line_prop.id_);
     cross_prop.push_back(volm_osm_category_io::road_junction_table[key]);
   }
@@ -842,8 +844,8 @@ unsigned count_line_start_from_cross(vgl_point_2d<double> const& cross_pt,
   vgl_point_2d<double> s = *(rd.begin());  vgl_point_2d<double> e = *(rd.end()-1);
   if ( near_eq_pt(cross_pt, s) || near_eq_pt(cross_pt, e))
     cnt++;
-  for (unsigned i = 0; i < net.size(); i++) {
-    s = *(net[i].begin());  e = *(net[i].end()-1);
+  for (const auto & i : net) {
+    s = *(i.begin());  e = *(i.end()-1);
     if ( near_eq_pt(cross_pt, s) || near_eq_pt(cross_pt, e))
       cnt++;
   }

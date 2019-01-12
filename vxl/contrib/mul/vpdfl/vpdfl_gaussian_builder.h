@@ -1,9 +1,6 @@
 // This is mul/vpdfl/vpdfl_gaussian_builder.h
 #ifndef vpdfl_gaussian_builder_h
 #define vpdfl_gaussian_builder_h
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Builders for Multi-variate gaussian PDF with arbitrary axes.
@@ -19,7 +16,9 @@
 #include <iosfwd>
 #include <vpdfl/vpdfl_builder_base.h>
 #include <vnl/vnl_fwd.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //=======================================================================
 
@@ -45,29 +44,29 @@ class vpdfl_gaussian_builder : public vpdfl_builder_base
   vpdfl_gaussian_builder();
 
   //: Destructor
-  virtual ~vpdfl_gaussian_builder();
+  ~vpdfl_gaussian_builder() override;
 
   //: Create empty model
-  virtual vpdfl_pdf_base* new_model() const;
+  vpdfl_pdf_base* new_model() const override;
 
   //: Define lower threshold on variance for built models
-  virtual void set_min_var(double min_var);
+  void set_min_var(double min_var) override;
 
   //: Get lower threshold on variance for built models
-  virtual double min_var() const;
+  double min_var() const override;
 
   //: Build default model with given mean
-  virtual void build(vpdfl_pdf_base& model,
-                     const vnl_vector<double>& mean) const;
+  void build(vpdfl_pdf_base& model,
+                     const vnl_vector<double>& mean) const override;
 
   //: Build model from data
-  virtual void build(vpdfl_pdf_base& model,
-                     mbl_data_wrapper<vnl_vector<double> >& data) const;
+  void build(vpdfl_pdf_base& model,
+                     mbl_data_wrapper<vnl_vector<double> >& data) const override;
 
   //: Build model from weighted data
-  virtual void weighted_build(vpdfl_pdf_base& model,
+  void weighted_build(vpdfl_pdf_base& model,
                               mbl_data_wrapper<vnl_vector<double> >& data,
-                              const std::vector<double>& wts) const;
+                              const std::vector<double>& wts) const override;
 
   //: Computes mean and covariance of given data
   void meanCovar(vnl_vector<double>& mean, vnl_matrix<double>& covar,
@@ -82,22 +81,22 @@ class vpdfl_gaussian_builder : public vpdfl_builder_base
   short version_no() const;
 
   //: Name of the class
-  virtual std::string is_a() const;
+  std::string is_a() const override;
 
   //: Does the name of the class match the argument?
-  virtual bool is_class(std::string const&) const;
+  bool is_class(std::string const&) const override;
 
   //: Create a copy on the heap and return base class pointer
-  virtual vpdfl_builder_base* clone() const;
+  vpdfl_builder_base* clone() const override;
 
   //: Print class to os
-  virtual void print_summary(std::ostream& os) const;
+  void print_summary(std::ostream& os) const override;
 
   //: Save class to binary file stream
-  virtual void b_write(vsl_b_ostream& bfs) const;
+  void b_write(vsl_b_ostream& bfs) const override;
 
   //: Load class from binary file stream
-  virtual void b_read(vsl_b_istream& bfs);
+  void b_read(vsl_b_istream& bfs) override;
 
   //: Read initialisation settings from a stream.
   // Parameters:
@@ -107,7 +106,7 @@ class vpdfl_gaussian_builder : public vpdfl_builder_base
   // }
   // \endverbatim
   // \throw mbl_exception_parse_error if the parse fails.
-  virtual void config_from_stream(std::istream & is);
+  void config_from_stream(std::istream & is) override;
 
 };
 

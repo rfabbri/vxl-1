@@ -35,7 +35,7 @@
 #include <vipl/filter/vipl_filter_2d.h> // parent class
 
 //: median filter with circular element
-template <class ImgIn,class ImgOut,class DataIn,class DataOut, VCL_DFL_TYPE_PARAM_STLDECL(PixelItr, vipl_trivial_pixeliter) >
+template <class ImgIn,class ImgOut,class DataIn,class DataOut, class PixelItr = vipl_trivial_pixeliter >
 class vipl_median : public vipl_filter_2d<ImgIn,ImgOut,DataIn,DataOut,PixelItr>
 {
   // -+-+- data members: -+-+-
@@ -56,16 +56,16 @@ class vipl_median : public vipl_filter_2d<ImgIn,ImgOut,DataIn,DataOut,PixelItr>
   // -+-+- constructors/destructors: -+-+-
  public:
   inline vipl_median(float r=1)
-           : vipl_filter_2d<ImgIn,ImgOut,DataIn,DataOut,PixelItr>(), radius_(r), mask_(VXL_NULLPTR){}
+           : vipl_filter_2d<ImgIn,ImgOut,DataIn,DataOut,PixelItr>(), radius_(r), mask_(nullptr){}
   inline vipl_median(vipl_median const& A)
-           : vipl_filter_2d<ImgIn,ImgOut,DataIn,DataOut,PixelItr>(A), radius_(A.radius()), mask_(VXL_NULLPTR) {}
-  inline ~vipl_median() {}
+           : vipl_filter_2d<ImgIn,ImgOut,DataIn,DataOut,PixelItr>(A), radius_(A.radius()), mask_(nullptr) {}
+  inline ~vipl_median() override = default;
 
   // -+-+- required method for filters: -+-+-
-  bool section_applyop();
+  bool section_applyop() override;
   // -+-+- optional method for filters, compute mask only once in preop, free in postop: -+-+-
-  bool preop();
-  bool postop();
+  bool preop() override;
+  bool postop() override;
 };
 
 #ifdef INSTANTIATE_TEMPLATES

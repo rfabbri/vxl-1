@@ -66,9 +66,6 @@
  * at least when math.h provides this.
  */
 #include <vxl_config.h>
-#if ! VXL_C_MATH_HAS_SQRTF
-#define sqrtf(x) (float)sqrt((double)(x))
-#endif
 
 /*
  * Local function prototypes (not defined in trackball.h)
@@ -326,4 +323,3 @@ build_rotmatrix(float m[4][4], const float q[4])
     m[3][2] = 0.0f;
     m[3][3] = 1.0f;
 }
-

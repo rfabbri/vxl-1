@@ -12,8 +12,10 @@
 #include <vul/vul_string.h>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_vector_2d.h>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <mbl/mbl_parse_block.h>
 #include <mbl/mbl_read_props.h>
@@ -46,9 +48,7 @@ void mfpf_profile_pdf_builder::set_defaults()
 // Destructor
 //=======================================================================
 
-mfpf_profile_pdf_builder::~mfpf_profile_pdf_builder()
-{
-}
+mfpf_profile_pdf_builder::~mfpf_profile_pdf_builder() = default;
 
 //: Create new mfpf_profile_pdf on heap
 mfpf_point_finder* mfpf_profile_pdf_builder::new_finder() const
@@ -76,7 +76,7 @@ void mfpf_profile_pdf_builder::set_region_size(double wi, double)
 
 //: Initialise building
 // Must be called before any calls to add_example(...)
-void mfpf_profile_pdf_builder::clear(unsigned n_egs)
+void mfpf_profile_pdf_builder::clear(unsigned  /*n_egs*/)
 {
   data_.resize(0);
 }
@@ -101,7 +101,7 @@ void mfpf_profile_pdf_builder::add_example(const vimt_image_2d_of<float>& image,
 void mfpf_profile_pdf_builder::build(mfpf_point_finder& pf)
 {
   assert(pf.is_a()=="mfpf_profile_pdf");
-  mfpf_profile_pdf& nc = static_cast<mfpf_profile_pdf&>(pf);
+  auto& nc = static_cast<mfpf_profile_pdf&>(pf);
   nc.set_search_area(search_ni_,0);
 
   std::cout<<"Building from "<<data_.size()<<" examples."<<std::endl;
@@ -150,7 +150,7 @@ bool mfpf_profile_pdf_builder::set_from_stream(std::istream &is)
   if (props.find("pdf_builder")!=props.end())
   {
     std::istringstream b_ss(props["pdf_builder"]);
-    vcl_unique_ptr<vpdfl_builder_base> bb =
+    std::unique_ptr<vpdfl_builder_base> bb =
          vpdfl_builder_base::new_pdf_builder_from_stream(b_ss);
     pdf_builder_ = bb->clone();
     props.erase("pdf_builder");
@@ -230,4 +230,3 @@ void mfpf_profile_pdf_builder::b_read(vsl_b_istream& bfs)
       return;
   }
 }
-

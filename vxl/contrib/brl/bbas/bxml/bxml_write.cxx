@@ -1,7 +1,4 @@
 // This is brl/bbas/bxml/bxml_write.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Matt Leotta
@@ -10,7 +7,9 @@
 #include <iostream>
 #include <fstream>
 #include "bxml_write.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 //: Write the entire contents of \p filepath into an XML document class
@@ -45,12 +44,12 @@ void bxml_write_data(std::ostream& os, const bxml_data_sptr& data)
     return;
 
   if (data->type() == bxml_data::TEXT) {
-    bxml_text* text = static_cast<bxml_text*>(data.ptr());
+    auto* text = static_cast<bxml_text*>(data.ptr());
     os << text->data();
   }
 
   if (data->type() == bxml_data::ELEMENT) {
-    bxml_element* element = static_cast<bxml_element*>(data.ptr());
+    auto* element = static_cast<bxml_element*>(data.ptr());
     bxml_write_element(os, *element);
   }
 }
@@ -63,7 +62,7 @@ void bxml_write_element(std::ostream& os, const bxml_element& element)
   os << '<' << element.name();
 
   // write the attributes
-  for (bxml_element::const_attr_iterator i = element.attr_begin();
+  for (auto i = element.attr_begin();
        i != element.attr_end();  ++i)
   {
     os << ' '<<i->first<<"=\""<<i->second<<'"';
@@ -77,7 +76,7 @@ void bxml_write_element(std::ostream& os, const bxml_element& element)
   os << '>';
 
   // write the data within the tag
-  for (bxml_element::const_data_iterator i = element.data_begin();
+  for (auto i = element.data_begin();
        i != element.data_end();  ++i)
   {
     bxml_write_data(os, *i);

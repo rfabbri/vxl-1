@@ -5,7 +5,9 @@
 #include <testlib/testlib_test.h>
 #include <vpdl/vpdl_kernel_gaussian_sfbw.h>
 #include <vpdl/vpdl_gaussian_sphere.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 template <class T>
 void test_kernel_gaussian_sfbw_type(T epsilon, const std::string& type_name)
@@ -225,4 +227,3 @@ static void test_kernel_gaussian_sfbw()
 }
 
 TESTMAIN(test_kernel_gaussian_sfbw);
-

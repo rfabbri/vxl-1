@@ -2,7 +2,9 @@
 #include <iomanip>
 #include "bvpl_create_directions.h"
 #include <vnl/vnl_math.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bxml/bsvg/bsvg_document.h>
 #include <bxml/bsvg/bsvg_element.h>
 #include <bxml/bxml_write.h>
@@ -150,11 +152,11 @@ bvpl_create_directions_c::bvpl_create_directions_c()
   save_directions_map("directions_c.svg");
 }
 
-void bvpl_create_directions_base::save_directions_map(std::string outfile)
+void bvpl_create_directions_base::save_directions_map(const std::string& outfile)
 {
   bsvg_document doc(400, 800);
-  std::vector<vnl_float_3>::iterator iter1 = axes_.begin();
-  std::vector<float>::iterator iter2 = angles_.begin();
+  auto iter1 = axes_.begin();
+  auto iter2 = angles_.begin();
   int i=0;
   for (;iter1!=axes_.end(); ++iter1, ++iter2, i++)
   {

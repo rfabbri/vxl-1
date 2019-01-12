@@ -4,7 +4,9 @@
 #include <volm/conf/volm_conf_object.h>
 //:
 // \file
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h>
 #include <vpgl/vpgl_lvcs.h>
 #include <bkml/bkml_write.h>
@@ -67,7 +69,7 @@ volm_conf_object
   height_((float)height),
   land_(land)
 {
-  float theta = (float)std::atan2(pt.y(), pt.x());
+  auto theta = (float)std::atan2(pt.y(), pt.x());
   theta_ = (theta < 0) ? theta + (float)vnl_math::twopi : theta;
 }
 
@@ -78,7 +80,7 @@ volm_conf_object
   land_(land),
   height_(pt.z())
 {
-  float theta = (float)std::atan2(pt.y(), pt.x());
+  auto theta = (float)std::atan2(pt.y(), pt.x());
   theta_ = (theta < 0) ? theta + (float)vnl_math::twopi : theta;
 }
 
@@ -89,7 +91,7 @@ volm_conf_object
   height_((float)pt.z()),
   land_(land)
 {
-  float theta = (float)std::atan2(pt.y(), pt.x());
+  auto theta = (float)std::atan2(pt.y(), pt.x());
   theta_ = (theta < 0) ? theta + (float)vnl_math::twopi : theta;
 }
 
@@ -117,7 +119,7 @@ vgl_point_2d<float>
 volm_conf_object
 ::loc() const
 {
-return vgl_point_2d<float>(this->x(), this->y());
+return {this->x(), this->y()};
 }
 
 bool
@@ -131,7 +133,7 @@ volm_conf_object
 
 bool
 volm_conf_object
-::is_same(volm_conf_object_sptr other_sptr)
+::is_same(const volm_conf_object_sptr& other_sptr)
 {
   return this->is_same(*other_sptr);
 }
@@ -232,7 +234,7 @@ void vsl_b_write(vsl_b_ostream& os, volm_conf_object const& obj)
 
 void vsl_b_write(vsl_b_ostream& os, volm_conf_object const* obj_ptr)
 {
-  if (obj_ptr == VXL_NULLPTR)
+  if (obj_ptr == nullptr)
     vsl_b_write(os, false);
   else {
     vsl_b_write(os, true);
@@ -252,7 +254,7 @@ void vsl_b_read(vsl_b_istream& is, volm_conf_object& obj)
 
 void vsl_b_read(vsl_b_istream& is, volm_conf_object*& obj_ptr)
 {
-  delete obj_ptr;  obj_ptr = VXL_NULLPTR;
+  delete obj_ptr;  obj_ptr = nullptr;
   bool not_null_ptr;
   vsl_b_read(is, not_null_ptr);
   if (not_null_ptr)
@@ -264,7 +266,7 @@ void vsl_b_read(vsl_b_istream& is, volm_conf_object*& obj_ptr)
 
 void vsl_b_read(vsl_b_istream& is, volm_conf_object_sptr& obj_sptr)
 {
-  volm_conf_object* obj_ptr = VXL_NULLPTR;
+  volm_conf_object* obj_ptr = nullptr;
   vsl_b_read(is, obj_ptr);
   obj_sptr = obj_ptr;
 }

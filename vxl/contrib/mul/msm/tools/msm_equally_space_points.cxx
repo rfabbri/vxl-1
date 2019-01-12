@@ -12,7 +12,9 @@
 #include <mbl/mbl_parse_colon_pairs_list.h>
 #include <vul/vul_arg.h>
 #include <vul/vul_string.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <msm/msm_equally_space.h>
 #include <mbl/mbl_stats_1d.h>
 /*
@@ -98,7 +100,7 @@ void tool_params::read_from_file(const std::string& path)
 
   out_points_dir=props.get_optional_property("out_points_dir","");
 
-  vcl_string curves_data = props.get_optional_property("curves","-");
+  std::string curves_data = props.get_optional_property("curves","-");
   curves.parse_or_load(curves_data);
 
   mbl_parse_colon_pairs_list(props.get_required_property("images"),
@@ -178,10 +180,10 @@ int main(int argc, char** argv)
     }
   }
   unsigned n_moved=0;
-  for (unsigned j=0;j<may_move.size();++j) if (may_move[j]) n_moved++;
+  for (auto && j : may_move) if (j) n_moved++;
 
-  std::cout<<"Number of points which may be moved: "<<n_moved<<vcl_endl;
-  std::cout<<"Writing new points to "<<params.out_points_dir<<vcl_endl;
+  std::cout<<"Number of points which may be moved: "<<n_moved<<std::endl;
+  std::cout<<"Writing new points to "<<params.out_points_dir<<std::endl;
 
   if (verbose())
     std::cout<<"Movement per file:"<<std::endl;

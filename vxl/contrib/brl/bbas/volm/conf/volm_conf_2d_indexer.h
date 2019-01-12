@@ -27,11 +27,11 @@ public:
   // ==================== constructor =======================
 
   //: default constructor
-  volm_conf_2d_indexer() : radius_(0.0), land_map_root_(VXL_NULLPTR) { land_map_leaves_.clear(); }
+  volm_conf_2d_indexer() : radius_(0.0), land_map_root_(nullptr) { land_map_leaves_.clear(); }
   //: constructor by giving out_put folder, land map index folder and radius
   volm_conf_2d_indexer(double const& radius, std::string const& out_folder, std::string const& land_map_folder, unsigned const& tile_id);
 
-  ~volm_conf_2d_indexer() {}
+  ~volm_conf_2d_indexer() override = default;
 
   // ======================= access =========================
   double radius()                                      const { return radius_; }
@@ -43,17 +43,17 @@ public:
   // ======================= method =========================
 
   //: return the name of the indexer
-  virtual std::string get_index_name() const { return name_; }
+  std::string get_index_name() const override { return name_; }
 
   //: generate parameter files for different indexer
-  virtual bool write_params_file();
+  bool write_params_file() override;
 
   //: handles any necessary loading during indexing as current indexer switches processing from one location leaf to next leaf
   //: load the contents for land map leaves that intersect location leaf
-  virtual bool get_next();
+  bool get_next() override;
 
   //: function to create index for a location
-  virtual bool extract(double const& lon, double const& lat, double const& elev, std::vector<volm_conf_object>& values);
+  bool extract(double const& lon, double const& lat, double const& elev, std::vector<volm_conf_object>& values) override;
 
 private:
   //: search radius

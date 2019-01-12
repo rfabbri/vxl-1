@@ -1,15 +1,12 @@
 // This is tbl/vipl/filter/vipl_filter_2d.h
 #ifndef vipl_filter_2d_h_
 #define vipl_filter_2d_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 
 #include <vipl/filter/vipl_filter.h>
 
-template < class ImgIn, class ImgOut, class DataIn, class DataOut, VCL_DFL_TYPE_PARAM_STLDECL(PixelItr, vipl_trivial_pixeliter) >
+template < class ImgIn, class ImgOut, class DataIn, class DataOut, class PixelItr = vipl_trivial_pixeliter >
 class vipl_filter_2d : public vipl_filter< ImgIn, ImgOut, DataIn, DataOut, 2, PixelItr >
 {
  public:
@@ -52,8 +49,8 @@ class vipl_filter_2d : public vipl_filter< ImgIn, ImgOut, DataIn, DataOut, 2, Pi
                 int img_border=0 ,
                 DataOut fill_val=0) ;
 
-  vipl_filter_2d() {} // argless ctor
-  ~vipl_filter_2d() {} // (virtual) destructor
+  vipl_filter_2d() = default; // argless ctor
+  ~vipl_filter_2d() override = default; // (virtual) destructor
 
   //: User accessed low_level c++ copy constructor.
   // note this does NOT copy input/output image pointers.
@@ -64,9 +61,9 @@ class vipl_filter_2d : public vipl_filter< ImgIn, ImgOut, DataIn, DataOut, 2, Pi
   //: This walks over the sections calling section_applyop.
   // Now that we know the dim we can write the
   // loop.
-  virtual bool applyop();
+  bool applyop() override;
  //: The main filtering method, derived class must supply it.
-  virtual bool section_applyop() = 0;
+  bool section_applyop() override = 0;
 };
 
 #ifdef INSTANTIATE_TEMPLATES

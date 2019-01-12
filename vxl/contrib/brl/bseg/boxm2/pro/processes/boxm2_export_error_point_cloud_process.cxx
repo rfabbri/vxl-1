@@ -1,4 +1,5 @@
 // This is brl/bseg/boxm2/pro/processes/boxm2_export_oriented_point_cloud_process.cxx
+#include <fstream>
 #include <bprb/bprb_func_process.h>
 //:
 // \file
@@ -9,7 +10,6 @@
 // \author Ozge C. Ozcanli
 // \date April 18, 2012
 
-#include <fstream>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_util.h>
 #include <boxm2/io/boxm2_cache.h>
@@ -18,8 +18,8 @@
 
 namespace boxm2_export_error_point_cloud_process_globals
 {
-  const unsigned n_inputs_ = 6;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 6;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool boxm2_export_error_point_cloud_process_cons(bprb_func_process& pro)
@@ -56,9 +56,9 @@ bool boxm2_export_error_point_cloud_process (bprb_func_process& pro)
   boxm2_scene_sptr scene = pro.get_input<boxm2_scene_sptr>(i++);
   boxm2_cache_sptr cache = pro.get_input<boxm2_cache_sptr>(i++);
   std::string output_filename = pro.get_input<std::string>(i++);
-  float prob_t = pro.get_input<float>(i++);
-  float LE_t = pro.get_input<float>(i++);
-  float CE_t = pro.get_input<float>(i++);
+  auto prob_t = pro.get_input<float>(i++);
+  auto LE_t = pro.get_input<float>(i++);
+  auto CE_t = pro.get_input<float>(i++);
   // if LE_t or CE_t are passed as -1.0 then they are invalid so replace them with max value so that any LE, CE is less than that
   if (LE_t == -1.0)
     LE_t = std::numeric_limits<float>::max();
@@ -69,11 +69,11 @@ bool boxm2_export_error_point_cloud_process (bprb_func_process& pro)
 
   std::vector<std::string> apps = scene->appearances();
   std::string data_type = "";
-  for (unsigned int i=0; i<apps.size(); ++i) {
-    if ( apps[i] == boxm2_data_traits<BOXM2_GAUSS_RGB>::prefix() )
-      data_type = apps[i];
-    else if ( apps[i] == boxm2_data_traits<BOXM2_MOG3_GREY>::prefix() )
-      data_type = apps[i];
+  for (const auto & app : apps) {
+    if ( app == boxm2_data_traits<BOXM2_GAUSS_RGB>::prefix() )
+      data_type = app;
+    else if ( app == boxm2_data_traits<BOXM2_MOG3_GREY>::prefix() )
+      data_type = app;
   }
   if(    data_type=="")
   {
@@ -99,7 +99,7 @@ bool boxm2_export_error_point_cloud_process (bprb_func_process& pro)
   for (blk_iter = blocks.begin(); blk_iter != blocks.end(); ++blk_iter)
   {
     boxm2_block_id id = blk_iter->first;
-    boxm2_block *     blk     = cache->get_block(scene, id);
+    boxm2_block *     blk = cache->get_block(scene, id);
 
     //: the following code does not work
     boxm2_block_metadata data = blk_iter->second;
@@ -138,4 +138,3 @@ bool boxm2_export_error_point_cloud_process (bprb_func_process& pro)
 
   return true;
 }
-

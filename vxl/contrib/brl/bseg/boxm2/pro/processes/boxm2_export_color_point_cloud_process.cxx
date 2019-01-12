@@ -11,7 +11,9 @@
 // \author Vishal Jain
 // \date Aug 15, 2014
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_util.h>
 #include <boxm2/io/boxm2_cache.h>
@@ -22,8 +24,8 @@
 
 namespace boxm2_export_color_point_cloud_process_globals
 {
-  const unsigned n_inputs_  = 5;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 5;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool boxm2_export_color_point_cloud_process_cons(bprb_func_process& pro)
@@ -59,16 +61,16 @@ bool boxm2_export_color_point_cloud_process(bprb_func_process& pro)
   boxm2_scene_sptr scene = pro.get_input<boxm2_scene_sptr>(i++);
   boxm2_cache_sptr cache = pro.get_input<boxm2_cache_sptr>(i++);
   std::string output_filename = pro.get_input<std::string>(i++);
-  float prob_t = pro.get_input<float>(i++);
+  auto prob_t = pro.get_input<float>(i++);
   std::string identifier = pro.get_input<std::string>(i++);
 
   std::vector<std::string> apps = scene->appearances();
   std::string data_type = "";
-  for (unsigned int i=0; i<apps.size(); ++i) {
-    if ( apps[i] == boxm2_data_traits<BOXM2_GAUSS_RGB>::prefix() )
-      data_type = apps[i];
-    else if ( apps[i] == boxm2_data_traits<BOXM2_MOG3_GREY>::prefix() )
-      data_type = apps[i];
+  for (const auto & app : apps) {
+    if ( app == boxm2_data_traits<BOXM2_GAUSS_RGB>::prefix() )
+      data_type = app;
+    else if ( app == boxm2_data_traits<BOXM2_MOG3_GREY>::prefix() )
+      data_type = app;
   }
   if(    data_type=="")
   {
@@ -91,14 +93,14 @@ bool boxm2_export_color_point_cloud_process(bprb_func_process& pro)
       if (vgl_intersection(bb_expanded, blk_info.bbox()).is_empty())
           continue;
       std::cout << "Processing Block: "<<id<< " with prob t: " << prob_t << "Color Model "  << " finest cell length: " << finest_cell_length << std::endl;
-      boxm2_block *     blk     = cache->get_block(scene,id);
+      boxm2_block *     blk = cache->get_block(scene,id);
       //get data sizes
       std::size_t alphaTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_ALPHA>::prefix());
       std::size_t pointTypeSize = boxm2_data_info::datasize(boxm2_data_traits<BOXM2_POINT>::prefix());
       int mogSize = (int) boxm2_data_info::datasize(boxm2_data_traits<BOXM2_MOG3_GREY>::prefix());
       std::size_t expTypeSize = boxm2_data_info::datasize(boxm2_data_traits<BOXM2_EXPECTATION>::prefix());
       boxm2_data_base * alpha =        cache->get_data_base(scene, id,boxm2_data_traits<BOXM2_ALPHA>::prefix());
-      int data_buff_length    = (int) (alpha->buffer_length()/alphaTypeSize);
+      int data_buff_length = (int) (alpha->buffer_length()/alphaTypeSize);
       //specify size to make sure data is right size.
       boxm2_data_base * points = cache->get_data_base(scene, id,boxm2_data_traits<BOXM2_POINT>::prefix(), data_buff_length * pointTypeSize);
       boxm2_data_base * mog;
@@ -107,9 +109,9 @@ bool boxm2_export_color_point_cloud_process(bprb_func_process& pro)
       else
           mog= cache->get_data_base(scene,id,boxm2_data_traits<BOXM2_MOG3_GREY>::prefix(identifier), data_buff_length * mogSize);
       boxm2_block_metadata data = blk_iter->second;
-      if (output_filename.substr(output_filename.find_last_of(".") + 1) == "xyz")
+      if (output_filename.substr(output_filename.find_last_of('.') + 1) == "xyz")
           boxm2_export_oriented_point_cloud_function::exportColorPointCloudPLY(scene, data, blk, mog, alpha,data_type,  points, myfile,  prob_t,  bb_expanded, num_vertices);
-      else if (output_filename.substr(output_filename.find_last_of(".") + 1) == "ply")
+      else if (output_filename.substr(output_filename.find_last_of('.') + 1) == "ply")
           boxm2_export_oriented_point_cloud_function::exportColorPointCloudPLY(scene, data, blk, mog, alpha,data_type,  points, myfile,  prob_t,  bb_expanded, num_vertices);
       else
           std::cout << "UNKNOWN FILE FORMAT..." << std::endl;
@@ -117,7 +119,7 @@ bool boxm2_export_color_point_cloud_process(bprb_func_process& pro)
   myfile.flush();
   myfile.close();
   //if ply, have to write annoying header at the beginning
-  if (output_filename.substr(output_filename.find_last_of(".") + 1) == "ply") {
+  if (output_filename.substr(output_filename.find_last_of('.') + 1) == "ply") {
     std::ifstream myfile_input;
     myfile_input.open(output_filename.c_str());
     std::stringstream ss;
@@ -133,4 +135,3 @@ bool boxm2_export_color_point_cloud_process(bprb_func_process& pro)
   }
   return true;
 }
-

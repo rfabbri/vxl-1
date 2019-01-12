@@ -1,8 +1,8 @@
-#include "boxm2_vecf_composite_face_scene.h"
 #include <iostream>
 #include <fstream>
 #include <map>
 #include <string>
+#include "boxm2_vecf_composite_face_scene.h"
 #include <vul/vul_file.h>
 #include <vul/vul_timer.h>
 #include <vgl/vgl_point_3d.h>
@@ -205,7 +205,7 @@ void  boxm2_vecf_composite_face_scene::inverse_vector_field(std::vector<vgl_vect
   vul_timer t;
 
   //the target cell centers. the vector field could potentially be defined at all target points
-  unsigned nt = static_cast<unsigned>(target_cell_centers_.size());
+  auto nt = static_cast<unsigned>(target_cell_centers_.size());
   vfield.resize(nt, vgl_vector_3d<double>(0.0, 0.0, 0.0));// initialized to 0
   type.resize(nt, "invalid");
   unsigned mandible_cnt = 0, skin_cnt = 0, cranium_cnt = 0;
@@ -237,7 +237,7 @@ void boxm2_vecf_composite_face_scene::extract_unrefined_cell_info(){
         double y = targ_origin_.y() + iy*targ_dims_.y();
         double z = targ_origin_.z() + iz*targ_dims_.z();
         vgl_point_3d<double> p(x, y, z);
-        unsigned lindex = static_cast<unsigned>(target_linear_index(ix, iy, iz));
+        auto lindex = static_cast<unsigned>(target_linear_index(ix, iy, iz));
         unrefined_cell_info cinf;
         cinf.linear_index_ = lindex;
         cinf.ix_ = ix; cinf.iy_ = iy; cinf.iz_ = iz;
@@ -256,9 +256,8 @@ void boxm2_vecf_composite_face_scene::map_to_target(boxm2_scene_sptr target){
 
   this->extract_unrefined_cell_info();//on articulated_scene
   std::vector<vgl_point_3d<double> > tgt_pts;
-  for(std::vector<unrefined_cell_info>::iterator cit = unrefined_cell_info_.begin();
-      cit != unrefined_cell_info_.end(); ++cit){
-    tgt_pts.push_back(cit->pt_);
+  for(auto & cit : unrefined_cell_info_){
+    tgt_pts.push_back(cit.pt_);
   }
 
   // compute inverse vector field for prerefining the target
@@ -301,7 +300,7 @@ void boxm2_vecf_composite_face_scene::map_to_target(boxm2_scene_sptr target){
 
 bool boxm2_vecf_composite_face_scene::set_params(boxm2_vecf_articulated_params const& params){
   try{
-    boxm2_vecf_composite_face_params const& params_ref = dynamic_cast<boxm2_vecf_composite_face_params const &>(params);
+    auto const& params_ref = dynamic_cast<boxm2_vecf_composite_face_params const &>(params);
     params_ =boxm2_vecf_composite_face_params(params_ref);
   }catch(std::exception e){
     std::cout<<" Can't downcast to composite_face parameters! PARAMATER ASSIGNMENT PHAILED!"<<std::endl;
@@ -320,7 +319,7 @@ bool boxm2_vecf_composite_face_scene::set_params(boxm2_vecf_articulated_params c
   return true;
 }
 
-void boxm2_vecf_composite_face_scene::inverse_vector_field_unrefined(std::vector<vgl_point_3d<double> > const& unrefined_target_pts){
+void boxm2_vecf_composite_face_scene::inverse_vector_field_unrefined(std::vector<vgl_point_3d<double> > const&  /*unrefined_target_pts*/){
 }
 
 int boxm2_vecf_composite_face_scene::prerefine_target_sub_block(vgl_point_3d<double> const& sub_block_pt, unsigned pt_index){
@@ -363,10 +362,10 @@ boxm2_scene_sptr boxm2_vecf_composite_face_scene::
 construct_target_scene(std::string const& scene_dir,std::string const& scene_name, std::string const& data_path,
                       double sub_block_len, bool save_scene_xml){
   if(target_box_.is_empty())
-    return VXL_NULLPTR;
+    return nullptr;
   std::vector<std::string> prefixes;
-  prefixes.push_back("boxm2_mog3_grey");
-  prefixes.push_back("boxm2_num_obs");
+  prefixes.emplace_back("boxm2_mog3_grey");
+  prefixes.emplace_back("boxm2_num_obs");
   boxm2_scene_sptr tscene = new boxm2_scene(scene_dir, scene_name, data_path, prefixes, target_box_, sub_block_len);
   if(save_scene_xml)
     tscene->save_scene();
@@ -377,10 +376,9 @@ void boxm2_vecf_composite_face_scene::extract_target_cell_centers(){
   vgl_box_3d<double> target_bb = target_blk_->bounding_box_global();
   target_cell_centers_ = target_blk_->cells_in_box(target_bb);
   const vgl_h_matrix_3d<double>& Ainv = params_.trans_.get_inverse();
-  for(std::vector<cell_info>::iterator cit =target_cell_centers_.begin();
-      cit!=target_cell_centers_.end(); ++cit){
-    const vgl_point_3d<double>& c =     cit->cell_center_;
-    cit->cell_center_ = Ainv*c;
+  for(auto & target_cell_center : target_cell_centers_){
+    const vgl_point_3d<double>& c =     target_cell_center.cell_center_;
+    target_cell_center.cell_center_ = Ainv*c;
   }
 }
 
@@ -389,7 +387,7 @@ void boxm2_vecf_composite_face_scene::apply_vector_field_to_target(std::vector<v
   boxm2_data_traits<BOXM2_ALPHA>::datatype alpha = 0.0f;
   boxm2_data_traits<BOXM2_MOG3_GREY>::datatype app;
   unsigned n_valid = 0;
-  unsigned n = static_cast<unsigned>(vf.size());
+  auto n = static_cast<unsigned>(vf.size());
   bool show_mouth = params_.mouth_params_.show_mouth_region_;
   for(unsigned j = 0; j<n; ++j){
     const std::string& t = type[j];

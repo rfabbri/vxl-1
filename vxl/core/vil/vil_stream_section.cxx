@@ -1,15 +1,14 @@
 // This is core/vil/vil_stream_section.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
 
 #include <iostream>
 #include "vil_stream_section.h"
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 // underlying_: pointer to underlying stream.
 // begin_     : start of section in the underlying stream.
@@ -22,7 +21,7 @@ vil_stream_section::vil_stream_section(vil_stream *underlying, int begin)
   , end_((vil_streampos)(-1L))
   , current_(begin)
 {
-  assert(underlying != VXL_NULLPTR);
+  assert(underlying != nullptr);
   assert(begin >= 0);
   underlying_->ref();
 }
@@ -33,7 +32,7 @@ vil_stream_section::vil_stream_section(vil_stream *underlying, int begin, int en
   , end_(end)
   , current_(begin)
 {
-  assert(underlying != VXL_NULLPTR);
+  assert(underlying != nullptr);
   assert(begin >= 0);
   assert(begin <= end);
   underlying->ref();
@@ -44,7 +43,7 @@ vil_stream_section::~vil_stream_section()
   // unreffing the underlying stream might cause deletion of *this, so
   // zero out the pointer first.
   vil_stream *u = underlying_;
-  underlying_ = VXL_NULLPTR;
+  underlying_ = nullptr;
   u->unref();
 }
 

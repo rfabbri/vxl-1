@@ -2,7 +2,10 @@
 #include <vgl/algo/vgl_convex_hull_2d.h>
 #include <vgl/algo/vgl_homg_operators_3d.h>
 #include <vnl/vnl_double_3.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 // Default constructor
 bvxm_camera_estimator::bvxm_camera_estimator()
@@ -101,10 +104,10 @@ std::vector<vgl_point_3d<double> > bvxm_camera_estimator::convert_3d_box_to_3d_p
   box_z[1] = box_3d.max_z();
 
   std::vector<vgl_point_3d<double> > box_pts_3d;
-  for (int i=0; i<2; i++) {
-    for (int j=0; j<2; j++) {
-      for (int k=0; k<2; k++) {
-        box_pts_3d.push_back(vgl_point_3d<double>(box_x[i],box_y[j],box_z[k]));
+  for (double & i : box_x) {
+    for (double & j : box_y) {
+      for (double & k : box_z) {
+        box_pts_3d.emplace_back(i,j,k);
       }
     }
   }
@@ -118,9 +121,9 @@ vgl_polygon<double> bvxm_camera_estimator::convert_3d_box_to_2d_polygon(const vg
   std::vector<vgl_point_3d<double> > box_pts_3d = convert_3d_box_to_3d_points(box_3d);
 
   std::vector<vgl_point_2d<double> > box_pts_2d;
-  for (unsigned i=0; i<box_pts_3d.size(); i++) {
+  for (auto & i : box_pts_3d) {
     double u,v;
-    cam->project(box_pts_3d[i].x(),box_pts_3d[i].y(),box_pts_3d[i].z(),u,v);
+    cam->project(i.x(),i.y(),i.z(),u,v);
     vgl_point_2d<double> curr_pt_2d(u,v);
     box_pts_2d.push_back(curr_pt_2d);
   }

@@ -1,9 +1,6 @@
 // This is core/vgui/vgui_text_tableau.h
 #ifndef vgui_text_tableau_h_
 #define vgui_text_tableau_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief  Tableau for rendering text.
@@ -23,7 +20,9 @@
 
 
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgui/vgui_tableau.h>
 #include <vgui/vgui_text_tableau_sptr.h>
 

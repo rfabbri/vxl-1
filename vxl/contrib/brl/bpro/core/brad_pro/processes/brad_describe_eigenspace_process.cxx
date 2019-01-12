@@ -7,7 +7,9 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Constructor
 bool brad_describe_eigenspace_process_cons(bprb_func_process& pro)
@@ -15,7 +17,7 @@ bool brad_describe_eigenspace_process_cons(bprb_func_process& pro)
   // no inputs
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("brad_eigenspace_sptr"); //eigenspace
+  input_types.emplace_back("brad_eigenspace_sptr"); //eigenspace
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
@@ -44,4 +46,3 @@ bool brad_describe_eigenspace_process(bprb_func_process& pro)
   std::cout << '\n';
   return true;
 }
-

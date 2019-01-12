@@ -33,12 +33,14 @@
 #include <imesh/imesh_mesh.h>
 #include <imesh/imesh_fileio.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 namespace boxm_upload_mesh_process_globals
 {
-  const unsigned n_inputs_ = 4;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 4;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 
@@ -109,7 +111,7 @@ bool boxm_upload_mesh_process(bprb_func_process& pro)
     if (!scene->multi_bin())
     {
       typedef boct_tree<short, boxm_sample<BOXM_APM_MOG_GREY> > tree_type;
-      boxm_scene<tree_type> *s = static_cast<boxm_scene<tree_type>*> (scene.as_pointer());
+      auto *s = static_cast<boxm_scene<tree_type>*> (scene.as_pointer());
 
       boxm_sample<BOXM_APM_MOG_GREY> val(0,boxm_utils::obtain_mog_grey_unit_mode());
       if (draw_or_fill=="draw")
@@ -125,7 +127,7 @@ bool boxm_upload_mesh_process(bprb_func_process& pro)
     if (!scene->multi_bin())
     {
       typedef boct_tree<short, boxm_sample<BOXM_APM_SIMPLE_GREY> > tree_type;
-      boxm_scene<tree_type> *s = static_cast<boxm_scene<tree_type>*> (scene.as_pointer());
+      auto *s = static_cast<boxm_scene<tree_type>*> (scene.as_pointer());
       boxm_simple_grey simplegrey(1.0f,0.1f,1.0f);
       boxm_sample<BOXM_APM_SIMPLE_GREY> val(1,simplegrey);
       if (draw_or_fill=="draw")

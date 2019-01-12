@@ -1,9 +1,6 @@
 // This is core/vil1/vil1_warp.h
 #ifndef vil1_warp_h_
 #define vil1_warp_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author awf@robots.ox.ac.uk
@@ -16,7 +13,7 @@
 class vil1_warp_mapping
 {
  public:
-  virtual ~vil1_warp_mapping() {}
+  virtual ~vil1_warp_mapping() = default;
   virtual void forward_map(double x1, double y1, double* x2, double* y2) const = 0;
   virtual void inverse_map(double x2, double y2, double* x1, double* y1) const = 0;
 };

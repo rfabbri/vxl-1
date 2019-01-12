@@ -1,7 +1,4 @@
 // This is core/vgui/vgui_displaybase_tableau.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Philip C. Pritchett, RRG, University of Oxford
@@ -15,7 +12,9 @@
 #include "vgui_displaybase_tableau.h"
 #include "vgui_macro.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vgui/vgui_gl.h>
 #include <vgui/vgui_glu.h>
@@ -47,7 +46,7 @@ vgui_displaybase_tableau::vgui_displaybase_tableau()
   highlighted = 0;
   gl_display_list = GL_INVALID_VALUE;
 
-  cb_ = VXL_NULLPTR;
+  cb_ = nullptr;
 
   current_grouping = "default";
   groupings.clear();
@@ -74,7 +73,7 @@ void vgui_displaybase_tableau::add(vgui_soview* object)
     if ( it == groupings.end() )
     {
       vgui_displaybase_tableau_grouping temp;
-      temp.style = VXL_NULLPTR;
+      temp.style = nullptr;
       temp.hide = false;
       temp.color_override = false;
       temp.line_width_override = false;
@@ -380,7 +379,7 @@ vgui_soview* vgui_displaybase_tableau::contains_hit(std::vector<unsigned> names)
       return *i;
   }
 
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 vgui_displaybase_tableau_grouping* vgui_displaybase_tableau::get_grouping_ptr( std::string t_name )
@@ -389,7 +388,7 @@ vgui_displaybase_tableau_grouping* vgui_displaybase_tableau::get_grouping_ptr( s
   if ( it != groupings.end() )
     return & it->second;
   else
-    return VXL_NULLPTR;
+    return nullptr;
 }
 
 std::vector< std::string > vgui_displaybase_tableau::get_grouping_names()
@@ -405,4 +404,3 @@ std::vector< std::string > vgui_displaybase_tableau::get_grouping_names()
 
   return to_return;
 }
-

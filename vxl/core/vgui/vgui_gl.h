@@ -3,13 +3,15 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgui/vgui_config.h>
 
-#if defined(VCL_WIN32) && !defined(__CYGWIN__)
+#if defined(_WIN32) && !defined(__CYGWIN__)
 // fix windows gl.h :
 # include <windows.h>
-# ifdef VCL_VC // exclude when using MinGW
+# ifdef _MSC_VER // exclude when using MinGW
 #  pragma warning (disable:4244) // disable bogus conversion warnings
 # endif
 # include <GL/gl.h>

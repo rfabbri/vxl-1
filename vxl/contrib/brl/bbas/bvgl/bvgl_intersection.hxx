@@ -18,8 +18,10 @@
 #include <algorithm>
 #include <vector>
 #include "bvgl_intersection.h"
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //helper functions
 namespace bvgl_intersection_helpers

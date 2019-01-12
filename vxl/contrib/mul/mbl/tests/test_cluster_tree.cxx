@@ -3,7 +3,9 @@
 #include <testlib/testlib_test.h>
 //:
 // \file
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <mbl/mbl_cluster_tree.h>
 
 #include <mbl/mbl_clusters.hxx>

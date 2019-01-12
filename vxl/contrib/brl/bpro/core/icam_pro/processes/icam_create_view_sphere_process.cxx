@@ -20,7 +20,9 @@
 #include <brdb/brdb_value.h>
 
 #include <vpgl/vpgl_perspective_camera.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <icam/icam_view_sphere.h>
 #include <icam/icam_view_metadata.h>
@@ -29,8 +31,8 @@
 namespace icam_create_view_sphere_process_globals
 {
   // this process takes 0 inputs and 2 outputs
-  const unsigned n_inputs_ = 0;
-  const unsigned n_outputs_ = 2;
+  constexpr unsigned n_inputs_ = 0;
+  constexpr unsigned n_outputs_ = 2;
 }
 
 //: sets input and output types
@@ -88,11 +90,11 @@ bool icam_create_view_sphere_process(bprb_func_process& pro)
     return false;
   }
 
-  std::map<unsigned, vpgl_camera_double_sptr>::iterator it=cameras.begin();
+  auto it=cameras.begin();
   while (it != cameras.end()) {
     unsigned uid=it->first;
     vpgl_camera_double_sptr cam = it->second;
-    vpgl_perspective_camera<double>* pers_cam = dynamic_cast<vpgl_perspective_camera<double>*>(cam.as_pointer());
+    auto* pers_cam = dynamic_cast<vpgl_perspective_camera<double>*>(cam.as_pointer());
 
     std::stringstream cam_path;
     cam_path << "camera" << uid << ".txt";

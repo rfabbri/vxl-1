@@ -2,7 +2,9 @@
 #include <vector>
 #include <iostream>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vxl_config.h> // for vxl_byte
 #include <vil/algo/vil_exp_grad_filter_1d.h>
 #include <vil/vil_print.h>
@@ -13,7 +15,7 @@ static void test_algo_exp_grad_filter_1d_byte_float()
            << " Testing vil_algo_exp_grad_filter_1d byte-float\n"
            << "************************************************\n";
 
-  const int n = 100;
+  constexpr int n = 100;
   std::vector<vxl_byte> src(n);
   for (int i=0;i<n;++i) src[i]=0;
   src[50] = 100;

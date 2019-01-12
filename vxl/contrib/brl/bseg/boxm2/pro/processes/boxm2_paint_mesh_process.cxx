@@ -21,15 +21,17 @@
 #include <bmsh3d/algo/bmsh3d_fileio.h>
 #include <boct/boct_bit_tree.h>
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <rply.h>
 
 namespace boxm2_paint_mesh_process_globals
 {
-  const unsigned n_inputs_ = 5;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 5;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool boxm2_paint_mesh_process_cons(bprb_func_process& pro)
@@ -67,16 +69,16 @@ bool boxm2_paint_mesh_process(bprb_func_process& pro)
   boxm2_cache_sptr cache = pro.get_input<boxm2_cache_sptr>(i++);
   std::string input_mesh_filename = pro.get_input<std::string>(i++);
   std::string output_mesh_filename = pro.get_input<std::string>(i++);
-  float prob_t = pro.get_input<float>(i++);
+  auto prob_t = pro.get_input<float>(i++);
 
   bool foundDataType = false;
 
   std::string data_type;
   std::vector<std::string> apps = scene->appearances();
-  for (unsigned int i=0; i<apps.size(); ++i) {
-      if ( apps[i] == boxm2_data_traits<BOXM2_GAUSS_RGB>::prefix() )
+  for (const auto & app : apps) {
+      if ( app == boxm2_data_traits<BOXM2_GAUSS_RGB>::prefix() )
       {
-          data_type = apps[i];
+          data_type = app;
           foundDataType = true;
           // boxm2_data_info::datasize(boxm2_data_traits<BOXM2_GAUSS_RGB>::prefix());
       }
@@ -96,7 +98,7 @@ bool boxm2_paint_mesh_process(bprb_func_process& pro)
   input_mesh.print_summary(std::cout);
 
   //write outgoing mesh header
-  p_ply oply = ply_create(output_mesh_filename.c_str(), PLY_ASCII, VXL_NULLPTR, 0, VXL_NULLPTR);
+  p_ply oply = ply_create(output_mesh_filename.c_str(), PLY_ASCII, nullptr, 0, nullptr);
 
   // HEADER SECTION
   // vertex
@@ -141,7 +143,7 @@ bool boxm2_paint_mesh_process(bprb_func_process& pro)
     int depth=tree.depth_at(bit_index);
 
     int data_offset=tree.get_data_index(bit_index,false);
-    boxm2_data_base *  alpha_base  = cache->get_data_base(scene,id,boxm2_data_traits<BOXM2_ALPHA>::prefix());
+    boxm2_data_base *  alpha_base = cache->get_data_base(scene,id,boxm2_data_traits<BOXM2_ALPHA>::prefix());
     boxm2_data<BOXM2_ALPHA> *alpha_data=new boxm2_data<BOXM2_ALPHA>(alpha_base->data_buffer(),alpha_base->buffer_length(),alpha_base->block_id());
 
     float alpha=(alpha_data->data())[data_offset];
@@ -149,7 +151,7 @@ bool boxm2_paint_mesh_process(bprb_func_process& pro)
     //store cell probability
     prob = 1.0f - (float)std::exp(-alpha * side_len * mdata.sub_block_dim_.x());
 
-    boxm2_data_base *  int_base  = cache->get_data_base(scene,id, data_type);
+    boxm2_data_base *  int_base = cache->get_data_base(scene,id, data_type);
     if (data_type.find(boxm2_data_traits<BOXM2_GAUSS_RGB>::prefix()) != std::string::npos) {
       boxm2_data<BOXM2_GAUSS_RGB> *int_data = new boxm2_data<BOXM2_GAUSS_RGB>(int_base->data_buffer(),int_base->buffer_length(),int_base->block_id());
       intensity = boxm2_gauss_rgb_processor::expected_color( (int_data->data())[data_offset]);
@@ -173,7 +175,7 @@ bool boxm2_paint_mesh_process(bprb_func_process& pro)
   std::cout << "Done iterating over pts..." << std::endl;
 
   // faces
-  std::map<int, bmsh3d_face*>::iterator fit = input_mesh.facemap().begin();
+  auto fit = input_mesh.facemap().begin();
   for (; fit != input_mesh.facemap().end(); fit++)
   {
     bmsh3d_face* f = (*fit).second;

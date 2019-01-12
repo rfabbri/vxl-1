@@ -11,7 +11,9 @@
 #include <cmath>
 #include <vector>
 #include <vsl/vsl_binary_io.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_vector_2d.h>
 
@@ -37,7 +39,7 @@ class mfpf_pose
 
   //: Vector of same size, orthogonal to u()
   vgl_vector_2d<double> v() const
-  { return vgl_vector_2d<double>(-u_.y(),u_.x()); }
+  { return {-u_.y(),u_.x()}; }
 
   //: Scale and orientation defined by basis vector
   vgl_vector_2d<double>& u() { return u_; }
@@ -64,28 +66,28 @@ class mfpf_pose
 
   //: Apply pose transformation (map from ref frame to pose)
   vgl_point_2d<double> operator()(double x, double y) const
-  {  return vgl_point_2d<double>(p_.x()+x*u_.x()-y*u_.y(),
-                                 p_.y()+x*u_.y()+y*u_.x()); }
+  {  return {p_.x()+x*u_.x()-y*u_.y(),
+                                 p_.y()+x*u_.y()+y*u_.x()}; }
 
   //: Apply pose transformation (map from ref frame to pose)
   vgl_point_2d<double> operator()(const vgl_point_2d<double>& q) const
-  {  return vgl_point_2d<double>(p_.x()+q.x()*u_.x()-q.y()*u_.y(),
-                                 p_.y()+q.x()*u_.y()+q.y()*u_.x()); }
+  {  return {p_.x()+q.x()*u_.x()-q.y()*u_.y(),
+                                 p_.y()+q.x()*u_.y()+q.y()*u_.x()}; }
 
   //: Apply inverse of pose transformation (map from pose frame -> ref)
   vgl_point_2d<double> apply_inverse(double x, double y) const
   {
     double dx=x-p_.x(), dy=y-p_.y(),s2=sqr_scale();
-    return vgl_point_2d<double>((dx*u_.x()+dy*u_.y())/s2,
-                                (dy*u_.x()-dx*u_.y())/s2);
+    return {(dx*u_.x()+dy*u_.y())/s2,
+                                (dy*u_.x()-dx*u_.y())/s2};
   }
 
   //: Apply inverse of pose transformation (map from pose frame -> ref)
   vgl_point_2d<double> apply_inverse(const vgl_point_2d<double>& q) const
   {
     double dx=q.x()-p_.x(), dy=q.y()-p_.y(),s2=sqr_scale();
-    return vgl_point_2d<double>((dx*u_.x()+dy*u_.y())/s2,
-                                (dy*u_.x()-dx*u_.y())/s2);
+    return {(dx*u_.x()+dy*u_.y())/s2,
+                                (dy*u_.x()-dx*u_.y())/s2};
   }
 
   //: Return pose in co-ordinates defined by this pose.
@@ -188,8 +190,8 @@ inline void vsl_b_write(vsl_b_ostream& bfs,
 {
   vsl_b_write(bfs,short(1));  // Version number
   vsl_b_write(bfs,unsigned(p.size()));
-  for (unsigned i=0;i<p.size();++i)
-    vsl_b_write(bfs,p[i]);
+  for (const auto & i : p)
+    vsl_b_write(bfs,i);
 }
 
 //: Read in vector of feature points from stream
@@ -214,4 +216,3 @@ inline void vsl_b_read(vsl_b_istream& bfs,
 }
 
 #endif // mfpf_pose_h_
-

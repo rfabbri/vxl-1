@@ -15,7 +15,9 @@
 #include <vil/vil_blocked_image_resource.h>
 #include <vil/vil_blocked_image_resource_sptr.h>
 #include <vil/vil_crop.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_save.h>
 #include <vil/vil_plane.h>
 
@@ -175,4 +177,3 @@ bool vil_nitf_remove_margin_process(bprb_func_process& pro)
 
   return true;
 }
-

@@ -1,3 +1,4 @@
+#include <utility>
 #include "rgrl_feature_landmark.h"
 //:
 // \file
@@ -9,33 +10,30 @@
 #include <rgrl/rgrl_util.h>
 
 #include <vnl/vnl_math.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+
 
 typedef std::vector< vnl_vector<double> > vec_vec_type;
 
 rgrl_feature_landmark::
 rgrl_feature_landmark( vnl_vector<double> const& loc,
-                       std::vector< vnl_vector<double> > const& outgoing_directions)
+                       std::vector< vnl_vector<double> >  outgoing_directions)
   : rgrl_feature( loc ),
     error_proj_( loc.size(), loc.size(), vnl_matrix_identity ),
-    outgoing_directions_( outgoing_directions )
+    outgoing_directions_(std::move( outgoing_directions ))
 {
   assert(outgoing_directions_.size() > 0);
 }
 
 
 rgrl_feature_landmark::
-rgrl_feature_landmark( rgrl_feature_landmark const& other )
-  : rgrl_feature(other),
-    error_proj_( other.error_proj_ ),
-    outgoing_directions_( other.outgoing_directions_ )
-{
-}
+rgrl_feature_landmark( rgrl_feature_landmark const& other ) = default;
 
 rgrl_feature_landmark::
-rgrl_feature_landmark( )
-{
-}
+rgrl_feature_landmark( ) = default;
 
 vnl_matrix<double> const&
 rgrl_feature_landmark::
@@ -64,7 +62,7 @@ rgrl_feature_sptr
 rgrl_feature_landmark::
 transform( rgrl_transformation const& xform ) const
 {
-  rgrl_feature_landmark* result = new rgrl_feature_landmark( *this );
+  auto* result = new rgrl_feature_landmark( *this );
 
   // Transform the location
   //
@@ -72,9 +70,9 @@ transform( rgrl_transformation const& xform ) const
 
   // Transform each of the direction vectors
   //
-  vec_vec_type::const_iterator fitr = this->outgoing_directions_.begin();
-  vec_vec_type::const_iterator fend = this->outgoing_directions_.end();
-  vec_vec_type::iterator titr = result->outgoing_directions_.begin();
+  auto fitr = this->outgoing_directions_.begin();
+  auto fend = this->outgoing_directions_.end();
+  auto titr = result->outgoing_directions_.begin();
   for ( ; fitr != fend; ++fitr, ++titr ) {
     xform.map_direction( this->location_, *fitr, *titr );
   }
@@ -150,8 +148,8 @@ write( std::ostream& os ) const
   os << location_ << '\n'
      << error_proj_ << '\n'
      << outgoing_directions_.size() << '\n';
-  for ( unsigned i=0; i<outgoing_directions_.size(); ++i )
-    os << outgoing_directions_[i] << '\n';
+  for (const auto & outgoing_direction : outgoing_directions_)
+    os << outgoing_direction << '\n';
   os << std::endl;
 }
 

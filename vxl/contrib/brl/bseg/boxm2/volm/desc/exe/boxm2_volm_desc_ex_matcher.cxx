@@ -4,21 +4,24 @@
 // \author Yi Dong
 // \date June 04, 2013
 
-#include <iostream>
 #include <algorithm>
-#include <boxm2/volm/desc/boxm2_volm_desc_ex_matcher.h>
 #include <boxm2/volm/desc/boxm2_volm_desc_ex_land_only_matcher.h>
+#include <boxm2/volm/desc/boxm2_volm_desc_ex_matcher.h>
+#include <iostream>
+#include <utility>
 #include <volm/desc/volm_desc_ex_2d_matcher.h>
+#include <volm/volm_buffered_index.h>
 #include <volm/volm_io.h>
 #include <volm/volm_tile.h>
-#include <volm/volm_buffered_index.h>
 #include <vul/vul_arg.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
-void error_report(std::string error_file, std::string error_msg)
+void error_report(std::string error_file, const std::string& error_msg)
 {
   std::cerr << error_msg;
-  volm_io::write_post_processing_log(error_file, error_msg);
+  volm_io::write_post_processing_log(std::move(error_file), error_msg);
 }
 
 int main(int argc, char** argv)
@@ -99,8 +102,8 @@ int main(int argc, char** argv)
       // check self_consistency between dms and loaded weight parameters
       if (!dms->ground_plane().empty()) {
         bool has_grd = false;
-        for (std::vector<volm_weight>::iterator wit = weights.begin();  wit != weights.end();  ++wit)
-          if ( (*wit).w_typ_ == "ground_plane" || (*wit).w_typ_ == "ground" ) {
+        for (auto & weight : weights)
+          if ( weight.w_typ_ == "ground_plane" || weight.w_typ_ == "ground" ) {
             has_grd = true;
             break;
           }
@@ -113,8 +116,8 @@ int main(int argc, char** argv)
       if (weights.size() != (!dms->sky().empty() + !dms->ground_plane().empty() + dms->scene_regions().size())) {
         std::cout << " weights_size = " << weights.size() << std::endl;
         std::cout << " depth map scene size = " << !dms->sky().empty() + !dms->ground_plane().empty() + dms->scene_regions().size() << std::endl;
-        for (unsigned i = 0; i < weights.size(); i++) {
-          std::cout << " \t\t" << weights[i].w_name_ << " " << weights[i].w_obj_ << std::endl;
+        for (auto & weight : weights) {
+          std::cout << " \t\t" << weight.w_name_ << " " << weight.w_obj_ << std::endl;
         }
         err_log << " ERROR: number of weight parameters is different from labeled depth_map_region objects\n";
         error_report(err_log_file.str(), err_log.str());
@@ -189,8 +192,8 @@ int main(int argc, char** argv)
     std::cout << " \t Descriptor type : " << ex_matcher->get_index_type_str() << std::endl;
     std::cout << " \t world region: " << world_region << std::endl;
     std::cout << " \t weight parameters: " << std::endl;
-    for (unsigned i = 0; i < weights.size(); i++) {
-      std::cout << " \t\t" << weights[i].w_name_ << " " << weights[i].w_obj_ << std::endl;
+    for (auto & weight : weights) {
+      std::cout << " \t\t" << weight.w_name_ << " " << weight.w_obj_ << std::endl;
     }
     std::cout << " \t query " << query_name << " has following objects " << std::endl;
     std::vector<depth_map_region_sptr> obj = dms->scene_regions();

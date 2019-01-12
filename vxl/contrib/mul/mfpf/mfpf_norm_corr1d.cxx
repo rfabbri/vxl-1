@@ -8,8 +8,10 @@
 // \author Tim Cootes
 
 #include <vsl/vsl_binary_loader.h>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vimt/vimt_sample_profile_bilin.h>
 #include <vnl/io/vnl_io_vector.h>
@@ -37,9 +39,7 @@ void mfpf_norm_corr1d::set_defaults()
 // Destructor
 //=======================================================================
 
-mfpf_norm_corr1d::~mfpf_norm_corr1d()
-{
-}
+mfpf_norm_corr1d::~mfpf_norm_corr1d() = default;
 
 //: Generate points in ref frame that represent boundary
 //  Points of a contour around the shape.
@@ -248,4 +248,3 @@ bool mfpf_norm_corr1d::operator==(const mfpf_norm_corr1d& nc) const
   if (kernel_.size()!=nc.kernel_.size()) return false;
   return vnl_vector_ssd(kernel_,nc.kernel_)<1e-4;
 }
-

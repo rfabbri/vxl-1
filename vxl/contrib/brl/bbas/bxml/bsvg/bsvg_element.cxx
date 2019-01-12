@@ -7,7 +7,9 @@
 // \author Ozge C. Ozcanli (Brown)
 // \date   April 21, 2009
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 void bsvg_element::set_transformation(float trans_x, float trans_y, float rot)
 {
@@ -152,11 +154,11 @@ bsvg_arrow_head::bsvg_arrow_head(float x, float y, float l) : bsvg_group()
 {
   this->set_location(x,y);
 
-  bsvg_line* l1 = new bsvg_line(0, 0, 0, l);
+  auto* l1 = new bsvg_line(0, 0, 0, l);
   l1->set_rotation(135);
   this->add_element(l1);
 
-  bsvg_line* l2 = new bsvg_line(0, 0, 0, l);
+  auto* l2 = new bsvg_line(0, 0, 0, l);
   l2->set_rotation(45);
   this->add_element(l2);
 }
@@ -195,4 +197,3 @@ bsvg_splice::bsvg_splice(float center_x, float center_y, float radius, float sta
   el->set_attribute("d", attr.str());
   this->add_element(el);
 }
-

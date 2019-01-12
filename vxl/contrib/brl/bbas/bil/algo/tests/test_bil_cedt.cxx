@@ -4,8 +4,10 @@
 #include <algorithm>
 #include <testlib/testlib_test.h>
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <bil/algo/bil_cedt.h>
 #include <vil/vil_image_view.h>
@@ -132,7 +134,7 @@ bool generate_random_circle(vil_image_view<unsigned char> &im,int seed)
 
   for (int i=0;i<imniunsigned;i++)
   {
-    float discriminant= (float)(radius*radius-(i-x0)*(i-x0));
+    auto discriminant= (float)(radius*radius-(i-x0)*(i-x0));
     if (discriminant>0)
     {
       int j1=x0+(int)std::sqrt(discriminant);

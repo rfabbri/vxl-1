@@ -1,7 +1,4 @@
 // This is core/vil1/file_formats/vil1_tiff.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \brief See vil1_tiff.h for a description of this file.
@@ -17,9 +14,11 @@
 #include <iostream>
 #include "vil1_tiff.h"
 
-#include <vcl_cassert.h>
+#include <cassert>
 #if 0 // commented out
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #endif
 
 #include <vil1/vil1_stream.h>
@@ -94,7 +93,7 @@ bool vil1_tiff_file_format_probe(vil1_stream* is)
 vil1_image_impl* vil1_tiff_file_format::make_input_image(vil1_stream* is)
 {
   if (!vil1_tiff_file_format_probe(is))
-    return VXL_NULLPTR;
+    return nullptr;
 
   return new vil1_tiff_generic_image(is);
 }
@@ -120,7 +119,7 @@ struct vil1_tiff_structures {
   vil1_tiff_structures(vil1_stream *vs_):
     vs(vs_),
     filesize(0),
-    buf(VXL_NULLPTR)
+    buf(nullptr)
     { if (vs) vs->ref(); }
   ~vil1_tiff_structures() {
     delete [] buf;
@@ -165,7 +164,7 @@ TIFF* TIFFClientOpen(const char* filename, const char* mode, thandle_t clientdat
 
 static tsize_t vil1_tiff_readproc(thandle_t h, tdata_t buf, tsize_t n)
 {
-  vil1_tiff_structures* p = (vil1_tiff_structures*)h;
+  auto* p = (vil1_tiff_structures*)h;
   if (n > p->filesize) p->filesize= n;
   tsize_t ret = p->vs->read(buf, n);
   trace << "readproc, n = " << n << ", ret = " << ret << '\n';
@@ -174,7 +173,7 @@ static tsize_t vil1_tiff_readproc(thandle_t h, tdata_t buf, tsize_t n)
 
 static tsize_t vil1_tiff_writeproc(thandle_t h, tdata_t buf, tsize_t n)
 {
-  vil1_tiff_structures* p = (vil1_tiff_structures*)h;
+  auto* p = (vil1_tiff_structures*)h;
   tsize_t ret = p->vs->write(buf, n);
   vil1_streampos s = p->vs->tell();
   if (s > p->filesize)
@@ -186,7 +185,7 @@ static tsize_t vil1_tiff_writeproc(thandle_t h, tdata_t buf, tsize_t n)
 static toff_t vil1_tiff_seekproc(thandle_t h, toff_t offset, int whence)
 {
   trace << "seek " << offset << " w = " << whence << std::endl;
-  vil1_tiff_structures* p = (vil1_tiff_structures*)h;
+  auto* p = (vil1_tiff_structures*)h;
   if (whence == SEEK_SET) {
     p->vs->seek(offset);
   } else if (whence == SEEK_CUR) {
@@ -203,11 +202,11 @@ static toff_t vil1_tiff_seekproc(thandle_t h, toff_t offset, int whence)
 static int vil1_tiff_closeproc(thandle_t h)
 {
   trace << "vil1_tiff_closeproc\n";
-  vil1_tiff_structures* p = (vil1_tiff_structures*)h;
+  auto* p = (vil1_tiff_structures*)h;
   //delete p->vs;
   if (p->vs) {
     p->vs->unref();
-    p->vs = VXL_NULLPTR;
+    p->vs = nullptr;
   }
   return 0;
 }

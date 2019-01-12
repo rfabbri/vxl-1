@@ -1,7 +1,9 @@
 // This is core/vpgl/algo/vpgl_calibration_matrix_compute.cxx
 #include <iostream>
 #include <vpgl/algo/vpgl_calibration_matrix_compute.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_matrix_fixed.h>
 #include <vnl/vnl_vector_fixed.h>
 #include <vnl/vnl_det.h>
@@ -94,8 +96,8 @@ vpgl_calibration_matrix_compute::natural(const std::vector< vgl_point_2d<double>
   std::vector< vgl_homg_point_2d<double> > homg_ground_pts;
   for ( unsigned int k = 0; k < image_pts.size(); ++k )
   {
-    homg_image_pts.push_back( vgl_homg_point_2d<double>( image_pts[k] ) );
-    homg_ground_pts.push_back( vgl_homg_point_2d<double>( ground_pts[k] ) );
+    homg_image_pts.emplace_back( image_pts[k] );
+    homg_ground_pts.emplace_back( ground_pts[k] );
   }
 
   // estimate and optimize the ground to image homography
@@ -117,6 +119,3 @@ vpgl_calibration_matrix_compute::natural(const std::vector< vgl_point_2d<double>
 
   return vpgl_calibration_matrix_compute::natural(H, principal_point, K);
 }
-
-
-

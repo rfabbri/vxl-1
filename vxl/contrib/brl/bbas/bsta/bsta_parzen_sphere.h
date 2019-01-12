@@ -20,7 +20,9 @@
 #include <iostream>
 #include <algorithm>
 #include "bsta_parzen.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: forward declare vnl_matrix_fixed and vnl_vector_fixed
 template<class T, unsigned n, unsigned m> class vnl_matrix_fixed;
@@ -44,7 +46,7 @@ class bsta_parzen_sphere : public bsta_parzen<T,n>
     bsta_parzen<T,n>(samples), bandwidth_(bandwidth),
     bandwidth_adapted_(false){}
 
-  ~bsta_parzen_sphere() {}
+  ~bsta_parzen_sphere() override = default;
 
   //: kernel bandwidth
   T bandwidth() const {return bandwidth_;}
@@ -92,7 +94,7 @@ class bsta_parzen_sphere<T,1> : public bsta_parzen<T,1>
                      T bandwidth = T(1)): bsta_parzen<T,1>(samples),
     bandwidth_(bandwidth), bandwidth_adapted_(false){}
 
-  ~bsta_parzen_sphere() {}
+  ~bsta_parzen_sphere() override = default;
 
   //: kernel bandwidth
   T bandwidth() const {return bandwidth_;}

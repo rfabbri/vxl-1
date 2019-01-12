@@ -10,8 +10,10 @@
 #include <mfpf/mfpf_ssd_vec_cost.h>
 #include <vsl/vsl_binary_loader.h>
 #include <vul/vul_string.h>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <mbl/mbl_parse_block.h>
 #include <mbl/mbl_read_props.h>
@@ -39,9 +41,7 @@ void mfpf_ssd_vec_cost_builder::set_defaults()
 // Destructor
 //=======================================================================
 
-mfpf_ssd_vec_cost_builder::~mfpf_ssd_vec_cost_builder()
-{
-}
+mfpf_ssd_vec_cost_builder::~mfpf_ssd_vec_cost_builder() = default;
 
 //: Create new mfpf_ssd_vec_cost on heap
 mfpf_vec_cost* mfpf_ssd_vec_cost_builder::new_cost() const
@@ -52,7 +52,7 @@ mfpf_vec_cost* mfpf_ssd_vec_cost_builder::new_cost() const
 
 //: Initialise building
 // Must be called before any calls to add_example(...)
-void mfpf_ssd_vec_cost_builder::clear(unsigned n_egs)
+void mfpf_ssd_vec_cost_builder::clear(unsigned  /*n_egs*/)
 {
   data_.resize(0);
 }
@@ -77,7 +77,7 @@ inline void abs_diff(const vnl_vector<double>& v1,
 void mfpf_ssd_vec_cost_builder::build(mfpf_vec_cost& pf)
 {
   assert(pf.is_a()=="mfpf_ssd_vec_cost");
-  mfpf_ssd_vec_cost& nc = static_cast<mfpf_ssd_vec_cost&>(pf);
+  auto& nc = static_cast<mfpf_ssd_vec_cost&>(pf);
 
   unsigned n = data_.size();
 
@@ -214,4 +214,3 @@ void mfpf_ssd_vec_cost_builder::b_read(vsl_b_istream& bfs)
       return;
   }
 }
-

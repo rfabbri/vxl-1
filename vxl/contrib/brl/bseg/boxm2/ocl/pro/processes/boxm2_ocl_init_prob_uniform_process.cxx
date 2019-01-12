@@ -1,4 +1,6 @@
 // This is brl/bseg/boxm2/ocl/pro/processes/boxm2_ocl_init_prob_uniform_process.cxx
+#include <iostream>
+#include <fstream>
 #include <bprb/bprb_func_process.h>
 //:
 // \file
@@ -7,7 +9,9 @@
 // \author Vishal Jain
 // \date Mar 30, 2011
 
-#include <vcl_fstream.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/ocl/boxm2_opencl_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -25,19 +29,19 @@
 
 namespace boxm2_ocl_init_prob_uniform_process_globals
 {
-    const unsigned n_inputs_ = 3;
-    const unsigned n_outputs_ = 0;
-    vcl_size_t local_threads[2] = { 8, 8 };
-    static vcl_map<vcl_string, vcl_vector<bocl_kernel*> > kernels_;
-    vcl_vector<bocl_kernel*>& get_kernels(bocl_device_sptr device, vcl_string opts)
+    constexpr unsigned n_inputs_ = 3;
+    constexpr unsigned n_outputs_ = 0;
+    std::size_t local_threads[2] = { 8, 8 };
+    static std::map<std::string, std::vector<bocl_kernel*> > kernels_;
+    std::vector<bocl_kernel*>& get_kernels(const bocl_device_sptr& device, const std::string& opts)
     {
-        vcl_string identifier = device->device_identifier() + opts;
+        std::string identifier = device->device_identifier() + opts;
         if (kernels_.find(identifier) != kernels_.end())
             return kernels_[identifier];
-        vcl_vector<bocl_kernel*> vec_kernels;
+        std::vector<bocl_kernel*> vec_kernels;
         //gather all render sources... seems like a lot for rendering...
-        vcl_vector<vcl_string> src_paths;
-        vcl_string source_dir = boxm2_ocl_util::ocl_src_root();
+        std::vector<std::string> src_paths;
+        std::string source_dir = boxm2_ocl_util::ocl_src_root();
         src_paths.push_back(source_dir + "scene_info.cl");
         src_paths.push_back(source_dir + "pixel_conversion.cl");
         src_paths.push_back(source_dir + "bit/bit_tree_library_functions.cl");
@@ -45,9 +49,9 @@ namespace boxm2_ocl_init_prob_uniform_process_globals
         src_paths.push_back(source_dir + "bit/update_bp_kernels.cl");
         src_paths.push_back(source_dir + "bit/cast_ray_bit.cl");
         //set kernel options
-        vcl_string options = "-D INIT_UNIFORM_PROB -D STEP_CELL=step_cell_init_prob(aux_args,data_ptr,tfar-tblockfixed,d)";
+        std::string options = "-D INIT_UNIFORM_PROB -D STEP_CELL=step_cell_init_prob(aux_args,data_ptr,tfar-tblockfixed,d)";
         //have kernel construct itself using the context and device
-        bocl_kernel * ray_trace_kernel = new bocl_kernel();
+        auto * ray_trace_kernel = new bocl_kernel();
         ray_trace_kernel->create_kernel(&device->context(),
                                          device->device_id(),
                                          src_paths,
@@ -64,13 +68,13 @@ bool boxm2_ocl_init_prob_uniform_process_cons(bprb_func_process& pro)
 {
     using namespace boxm2_ocl_init_prob_uniform_process_globals;
     //process takes 1 input
-    vcl_vector<vcl_string> input_types_(n_inputs_);
+    std::vector<std::string> input_types_(n_inputs_);
     input_types_[0] = "bocl_device_sptr";
     input_types_[1] = "boxm2_scene_sptr";
     input_types_[2] = "boxm2_opencl_cache_sptr";
     // process has 1 output:
     // output[0]: scene sptr
-    vcl_vector<vcl_string>  output_types_(n_outputs_);
+    std::vector<std::string>  output_types_(n_outputs_);
     return pro.set_input_types(input_types_) && pro.set_output_types(output_types_);
 }
 
@@ -78,7 +82,7 @@ bool boxm2_ocl_init_prob_uniform_process(bprb_func_process& pro)
 {
     using namespace boxm2_ocl_init_prob_uniform_process_globals;
     if (pro.n_inputs() < n_inputs_) {
-        vcl_cout << pro.name() << ": The input number should be " << n_inputs_ << vcl_endl;
+        std::cout << pro.name() << ": The input number should be " << n_inputs_ << std::endl;
         return false;
     }
     float transfer_time = 0.0f;
@@ -90,22 +94,22 @@ bool boxm2_ocl_init_prob_uniform_process(bprb_func_process& pro)
     boxm2_opencl_cache_sptr opencl_cache = pro.get_input<boxm2_opencl_cache_sptr>(i++);
     vgl_box_3d<double> bbox = scene->bounding_box();
     //get x and y size from scene
-    vcl_vector<boxm2_block_id> vis_order = scene->get_block_ids();
-    vcl_vector<boxm2_block_id>::iterator id;
+    std::vector<boxm2_block_id> vis_order = scene->get_block_ids();
+    std::vector<boxm2_block_id>::iterator id;
     float xint = 0.0f;
     float yint = 0.0f;
     for (id = vis_order.begin(); id != vis_order.end(); ++id)
     {
         boxm2_block_metadata mdata = scene->get_block_metadata(*id);
-        float num_octree_cells = vcl_pow(2.0f, (float)mdata.max_level_ - 1);
+        float num_octree_cells = std::pow(2.0f, (float)mdata.max_level_ - 1);
         xint = mdata.sub_block_dim_.x() / num_octree_cells;
         yint = mdata.sub_block_dim_.y() / num_octree_cells;
     }
-    unsigned int ni = (unsigned int)vcl_ceil(bbox.width() / xint);
-    unsigned int nj = (unsigned int)vcl_ceil(bbox.height() / yint);
-    vcl_cout << "Size of the image " << ni << ',' << nj << vcl_endl;
+    auto ni = (unsigned int)std::ceil(bbox.width() / xint);
+    auto nj = (unsigned int)std::ceil(bbox.height() / yint);
+    std::cout << "Size of the image " << ni << ',' << nj << std::endl;
     float z = bbox.max_z();
-    vcl_string identifier = device->device_identifier();
+    std::string identifier = device->device_identifier();
 
     //: create a command queue.
     int status = 0;
@@ -113,7 +117,7 @@ bool boxm2_ocl_init_prob_uniform_process(bprb_func_process& pro)
         CL_QUEUE_PROFILING_ENABLE, &status);
     if (status != 0)return false;
 
-    vcl_vector<bocl_kernel*>& kernels = get_kernels(device, "");
+    std::vector<bocl_kernel*>& kernels = get_kernels(device, "");
     float scene_origin[4];
     scene_origin[0] = bbox.min_x();
     scene_origin[1] = bbox.min_y();
@@ -121,8 +125,8 @@ bool boxm2_ocl_init_prob_uniform_process(bprb_func_process& pro)
     scene_origin[3] = 1.0;
     unsigned cl_ni = RoundUp(ni, local_threads[0]);
     unsigned cl_nj = RoundUp(nj, local_threads[1]);
-    cl_float* ray_origins = new cl_float[4 * cl_ni*cl_nj];
-    cl_float* ray_directions = new cl_float[4 * cl_ni*cl_nj];
+    auto* ray_origins = new cl_float[4 * cl_ni*cl_nj];
+    auto* ray_directions = new cl_float[4 * cl_ni*cl_nj];
     float ray_dx = 0, ray_dy = 0, ray_dz = -1;
     // initialize ray origin buffer, first and last return buffers
     int count = 0;
@@ -155,7 +159,7 @@ bool boxm2_ocl_init_prob_uniform_process(bprb_func_process& pro)
     exp_img_dim->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
     // Output Array
     float output_arr[100];
-    for (int i = 0; i<100; ++i) output_arr[i] = 0.0f;
+    for (float & i : output_arr) i = 0.0f;
     bocl_mem_sptr  cl_output = new bocl_mem(device->context(), output_arr, sizeof(float) * 100, "output buffer");
     cl_output->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
     // bit lookup buffer
@@ -164,8 +168,8 @@ bool boxm2_ocl_init_prob_uniform_process(bprb_func_process& pro)
     bocl_mem_sptr lookup = new bocl_mem(device->context(), lookup_arr, sizeof(cl_uchar) * 256, "bit lookup buffer");
     lookup->create_buffer(CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR);
     //2. set workgroup size
-    vcl_size_t lThreads[] = { 8, 8 };
-    vcl_size_t gThreads[] = { cl_ni, cl_nj };
+    std::size_t lThreads[] = { 8, 8 };
+    std::size_t gThreads[] = { cl_ni, cl_nj };
     float subblk_dim = 0.0;
     for (id = vis_order.begin(); id != vis_order.end(); ++id)
     {

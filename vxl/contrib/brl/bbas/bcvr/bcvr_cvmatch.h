@@ -21,7 +21,10 @@
 
 #include <bsol/bsol_intrinsic_curve_2d.h>
 #include <bsol/bsol_intrinsic_curve_2d_sptr.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include "bcvr_cv_cor_sptr.h"
 
@@ -113,8 +116,8 @@ class bcvr_cvmatch : public vbl_ref_count
       return curve_angleDiff (curve->angle(i), curve->angle(ip));}
 
   bcvr_cvmatch ();
-  bcvr_cvmatch (bsol_intrinsic_curve_2d_sptr c1, bsol_intrinsic_curve_2d_sptr c2);
-  virtual ~bcvr_cvmatch ();
+  bcvr_cvmatch (const bsol_intrinsic_curve_2d_sptr& c1, const bsol_intrinsic_curve_2d_sptr& c2);
+  ~bcvr_cvmatch () override;
 
   void initializeDPCosts();
   virtual double computeIntervalCost (int i, int ip, int j, int jp);
@@ -127,9 +130,9 @@ class bcvr_cvmatch : public vbl_ref_count
   //: prepare and return the instance of container class that saves curve correspondence
   bcvr_cv_cor_sptr get_cv_cor();
 
-  void GetAverageCurveFromAMatch (bsol_intrinsic_curve_2d_sptr AverageCurve);
-  void GetSumCurveFromAMatch (bsol_intrinsic_curve_2d_sptr SumCurve);
-  void GetMorphingCurvesFromAMatch (bsol_intrinsic_curve_2d_sptr MorphingCurves, int NumMorphs);
+  void GetAverageCurveFromAMatch (const bsol_intrinsic_curve_2d_sptr& AverageCurve);
+  void GetSumCurveFromAMatch (const bsol_intrinsic_curve_2d_sptr& SumCurve);
+  void GetMorphingCurvesFromAMatch (const bsol_intrinsic_curve_2d_sptr& MorphingCurves, int NumMorphs);
 
   //Debug Print...
   void ListDPTable (void);

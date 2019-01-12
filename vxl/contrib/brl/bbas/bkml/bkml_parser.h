@@ -44,7 +44,9 @@
 #include <vector>
 #include <utility>
 #include <expatpp.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_polygon.h>
 
@@ -54,21 +56,21 @@ class bkml_parser : public expatpp
  public:
   bkml_parser(void);
   // parser should not delete the site, it is used afterwards
-  ~bkml_parser(void) {}
+  ~bkml_parser(void) override = default;
 
 
   //: parser to load the points defined in kml file
-  static std::vector<vgl_point_3d<double> > parse_points(std::string kml_file);
+  static std::vector<vgl_point_3d<double> > parse_points(const std::string& kml_file);
 
   //: parser to load the outer boundary of all defined polygons in the kml file (only parse the lat(y) and lon(x), elev ignored)
-  static vgl_polygon<double> parse_polygon(std::string poly_kml_file);
+  static vgl_polygon<double> parse_polygon(const std::string& poly_kml_file);
 
   //: parser to load the outer and inner boundary, the first n_out sheets are the outer boundary
   //  and the following n_in sheets are the inner boundary
-  static vgl_polygon<double> parse_polygon_with_inner(std::string poly_kml_file, vgl_polygon<double>& outer, vgl_polygon<double>& inter,
+  static vgl_polygon<double> parse_polygon_with_inner(const std::string& poly_kml_file, vgl_polygon<double>& outer, vgl_polygon<double>& inter,
                                                       unsigned& n_out, unsigned& n_in);
 
-  static bool parse_location_from_kml(std::string kml_file, double& lat, double& lon);
+  static bool parse_location_from_kml(const std::string& kml_file, double& lat, double& lon);
 
   static void trim_string(std::string& s);
 
@@ -95,11 +97,11 @@ class bkml_parser : public expatpp
   std::string current_name_;
  private:
 
-  virtual void startElement(const XML_Char* name, const XML_Char** atts);
-  virtual void endElement(const XML_Char* name);
-  virtual void charData(const XML_Char* s, int len);
+  void startElement(const XML_Char* name, const XML_Char** atts) override;
+  void endElement(const XML_Char* name) override;
+  void charData(const XML_Char* s, int len) override;
   void handleAtts(const XML_Char** atts);
-  void cdataHandler(std::string name, std::string data);
+  void cdataHandler(const std::string& name, const std::string& data);
   void init_params();
 
   //element parser

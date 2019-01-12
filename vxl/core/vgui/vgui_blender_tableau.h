@@ -1,9 +1,6 @@
 // This is core/vgui/vgui_blender_tableau.h
 #ifndef vgui_blender_tableau_h_
 #define vgui_blender_tableau_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief  Tableau to blend two images.
@@ -39,23 +36,23 @@ class vgui_blender_tableau : public vgui_tableau
  public:
   //: Constructor - don't use this, use vgui_blender_tableau_new.
   //  Creates a blender with the given image and alpha value.
-  vgui_blender_tableau(char const* file, vgui_range_map_params_sptr const& rmp = VXL_NULLPTR,
+  vgui_blender_tableau(char const* file, vgui_range_map_params_sptr const& rmp = nullptr,
                        float a=1.0);
 
   //: Constructor - don't use this, use vgui_blender_tableau_new.
   //  Creates a blender with the given image and alpha value.
-  vgui_blender_tableau(vil1_image const& img, vgui_range_map_params_sptr const& rmp = VXL_NULLPTR,
+  vgui_blender_tableau(vil1_image const& img, vgui_range_map_params_sptr const& rmp = nullptr,
                        float a=1.0);
 
   //: Constructor - don't use this, use vgui_blender_tableau_new.
   //  Creates a blender with the given image and alpha value.
   vgui_blender_tableau(vil_image_view_base const& img,
-                       vgui_range_map_params_sptr const& rmp = VXL_NULLPTR, float a=1.0);
+                       vgui_range_map_params_sptr const& rmp = nullptr, float a=1.0);
 
   //: Constructor - don't use this, use vgui_blender_tableau_new.
   //  Creates a blender with the given image and alpha value.
   vgui_blender_tableau(vil_image_resource_sptr const& img,
-                       vgui_range_map_params_sptr const& rmp = VXL_NULLPTR, float a=1.0);
+                       vgui_range_map_params_sptr const& rmp = nullptr, float a=1.0);
 
   //: Handle all events sent to this tableau.
   //  In particular use draw events to draw the blended image.
@@ -103,22 +100,22 @@ class vgui_blender_tableau : public vgui_tableau
 struct vgui_blender_tableau_new : public vgui_blender_tableau_sptr
 {
   //: Constructor - create a blender with the given image and alpha value.
-  vgui_blender_tableau_new(char const* file, vgui_range_map_params_sptr const& rmp=VXL_NULLPTR, float a=1.0)
+  vgui_blender_tableau_new(char const* file, vgui_range_map_params_sptr const& rmp=nullptr, float a=1.0)
     : vgui_blender_tableau_sptr(new vgui_blender_tableau(file, rmp, a)) { }
 
   //: Constructor - create a blender with the given image and alpha value.
   vgui_blender_tableau_new(vil1_image const& img,
-                           vgui_range_map_params_sptr const& rmp=VXL_NULLPTR, float a=1.0)
+                           vgui_range_map_params_sptr const& rmp=nullptr, float a=1.0)
     : vgui_blender_tableau_sptr(new vgui_blender_tableau(img, rmp, a)) { }
 
   //: Constructor - create a blender with the given image and alpha value.
   vgui_blender_tableau_new(vil_image_resource_sptr const& img,
-                           vgui_range_map_params_sptr const& rmp=VXL_NULLPTR, float a=1.0)
+                           vgui_range_map_params_sptr const& rmp=nullptr, float a=1.0)
     : vgui_blender_tableau_sptr(new vgui_blender_tableau(img, rmp, a)) { }
 
   //: Constructor - create a blender with the given image and alpha value.
   vgui_blender_tableau_new(vil_image_view_base const& img,
-                           vgui_range_map_params_sptr const& rmp=VXL_NULLPTR, float a=1.0)
+                           vgui_range_map_params_sptr const& rmp=nullptr, float a=1.0)
     : vgui_blender_tableau_sptr(new vgui_blender_tableau(img, rmp, a)) { }
 };
 

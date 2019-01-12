@@ -1,7 +1,4 @@
 // This is core/vgui/vgui_active_tableau.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \brief  See vgui_active_tableau.h for a description of this file.
@@ -106,4 +103,3 @@ void vgui_active_tableau::toggle_visible()
   visible_ = !visible_;
   post_redraw();
 }
-

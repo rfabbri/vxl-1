@@ -11,7 +11,9 @@
 // \author Tim Cootes
 // \brief test mfpf_pose
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <mfpf/mfpf_pose.h>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_vector_2d.h>

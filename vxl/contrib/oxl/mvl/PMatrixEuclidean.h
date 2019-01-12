@@ -22,8 +22,8 @@ class PMatrixEuclidean : public PMatrix
 {
  public:
   // Constructors/Initializers/Destructors-------------------------------------
-  PMatrixEuclidean(void) {}
-  ~PMatrixEuclidean(void) {}
+  PMatrixEuclidean(void) = default;
+  ~PMatrixEuclidean(void) override = default;
 
   // Computations--------------------------------------------------------------
 

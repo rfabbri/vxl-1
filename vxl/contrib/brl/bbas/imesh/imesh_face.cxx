@@ -27,9 +27,9 @@ imesh_face_array_base::group_face_set(const std::string& name) const
 {
   std::set<unsigned int> face_set;
   unsigned int start = 0, end;
-  for (unsigned int g=0; g<groups_.size(); ++g) {
-    end = groups_[g].second;
-    if (groups_[g].first == name) {
+  for (const auto & group : groups_) {
+    end = group.second;
+    if (group.first == name) {
       for (unsigned int i=start; i<end; ++i)
         face_set.insert(i);
     }
@@ -48,7 +48,7 @@ unsigned int imesh_face_array_base::make_group(const std::string& name)
     start_idx = groups_.back().second;
 
   if (start_idx < this->size())
-    groups_.push_back(std::pair<std::string,unsigned int>(name,this->size()));
+    groups_.emplace_back(name,this->size());
 
   return this->size() - start_idx;
 }
@@ -68,8 +68,8 @@ void imesh_face_array_base::append(const imesh_face_array_base& other,
     // group any ungrouped faces in this array
     this->make_group("ungrouped");
     unsigned int offset = this->size();
-    for (unsigned int g=0; g<other.groups_.size(); ++g) {
-      groups_.push_back(other.groups_[g]);
+    for (const auto & group : other.groups_) {
+      groups_.push_back(group);
       groups_.back().second += offset;
     }
   }
@@ -86,14 +86,14 @@ void imesh_face_array::append(const imesh_face_array_base& other,
   const unsigned int new_begin = faces_.size();
 
   if (other.regularity() == 0) {
-    const imesh_face_array& fs = static_cast<const imesh_face_array&>(other);
+    const auto& fs = static_cast<const imesh_face_array&>(other);
     faces_.insert(faces_.end(), fs.faces_.begin(), fs.faces_.end());
 
     if (ind_shift > 0) {
       for (unsigned int i=new_begin; i<faces_.size(); ++i) {
         std::vector<unsigned int>& f = faces_[i];
-        for (unsigned int j=0; j<f.size(); ++j)
-          f[j] += ind_shift;
+        for (unsigned int & j : f)
+          j += ind_shift;
       }
     }
   }
@@ -109,12 +109,12 @@ void imesh_face_array::append(const imesh_face_array_base& other,
 
 
 //: Merge the two face arrays
-vcl_unique_ptr<imesh_face_array_base>
+std::unique_ptr<imesh_face_array_base>
 imesh_merge(const imesh_face_array_base& f1,
             const imesh_face_array_base& f2,
             unsigned int ind_shift)
 {
-  vcl_unique_ptr<imesh_face_array_base> f;
+  std::unique_ptr<imesh_face_array_base> f;
   // if both face sets are regular with the same number of vertices per face
   if (f1.regularity() == f2.regularity() || f1.regularity() == 0) {
     f.reset(f1.clone());

@@ -1,9 +1,6 @@
 // This is core/vil1/vil1_memory_image_impl.h
 #ifndef vil1_memory_image_impl_h_
 #define vil1_memory_image_impl_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author awf@robots.ox.ac.uk
@@ -19,7 +16,9 @@
 #include <string>
 #include <vil1/vil1_image_impl.h>
 #include <vil1/vil1_memory_image.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Implementation class for vil1_memory_image.
 class vil1_memory_image_impl : public vil1_image_impl
@@ -37,30 +36,30 @@ class vil1_memory_image_impl : public vil1_image_impl
                          vil1_pixel_format_t pixel_format);
   vil1_memory_image_impl(vil1_memory_image_impl const&);
 
-  ~vil1_memory_image_impl();
+  ~vil1_memory_image_impl() override;
 
-  virtual int planes() const { return planes_; }
-  virtual int width() const { return width_; }
-  virtual int height() const { return height_; }
-  virtual int components() const { return components_; }
-  virtual int bits_per_component() const { return bits_per_component_; }
-  virtual vil1_component_format component_format() const { return component_format_; }
-  virtual vil1_image get_plane(unsigned int p) const;
+  int planes() const override { return planes_; }
+  int width() const override { return width_; }
+  int height() const override { return height_; }
+  int components() const override { return components_; }
+  int bits_per_component() const override { return bits_per_component_; }
+  vil1_component_format component_format() const override { return component_format_; }
+  vil1_image get_plane(unsigned int p) const override;
 
-  virtual bool get_section(void* buf, int x0, int y0, int width, int height) const;
-  virtual bool put_section(void const* buf, int x0, int y0, int width, int height);
+  bool get_section(void* buf, int x0, int y0, int width, int height) const override;
+  bool put_section(void const* buf, int x0, int y0, int width, int height) override;
 
-  virtual bool get_property(char const *tag, void *property_value = VXL_NULLPTR) const;
+  bool get_property(char const *tag, void *property_value = nullptr) const override;
 
   void resize(int planes, int width, int height);
   void resize(int planes, int width, int height, int components, int bits_per_component,
               vil1_component_format format);
 
   //: Return the name of the class;
-  virtual std::string is_a() const;
+  std::string is_a() const override;
 
   //: Return true if the name of the class matches the argument
-  virtual bool is_class(std::string const&) const;
+  bool is_class(std::string const&) const override;
 
   //: Constructor from previously allocated memory.
   // This memory is not deallocated on destruction.

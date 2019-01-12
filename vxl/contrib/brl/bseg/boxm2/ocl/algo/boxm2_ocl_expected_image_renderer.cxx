@@ -10,7 +10,9 @@
 #include <stdexcept>
 #include "boxm2_ocl_expected_image_renderer.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/ocl/boxm2_opencl_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -28,9 +30,9 @@
 
 
 boxm2_ocl_expected_image_renderer
-::boxm2_ocl_expected_image_renderer(boxm2_scene_sptr scene,
-                                    boxm2_opencl_cache_sptr ocl_cache,
-                                    std::string ident) :
+::boxm2_ocl_expected_image_renderer(const boxm2_scene_sptr& scene,
+                                    const boxm2_opencl_cache_sptr& ocl_cache,
+                                    const std::string& ident) :
   scene_(scene),
   opencl_cache_(ocl_cache),
   buffers_allocated_(false),
@@ -49,11 +51,11 @@ boxm2_ocl_expected_image_renderer
 
   int num_valid_appearances_grey = sizeof(valid_appearance_types_grey) / sizeof(valid_appearance_types_grey[0]);
 
-  for (unsigned int i=0; i<apps.size(); ++i) {
+  for (const auto & app : apps) {
     for (unsigned v = 0; v < num_valid_appearances_grey; ++v) {
       boxm2_data_type valid_apm_type = valid_appearance_types_grey[v];
       std::string valid_apm_prefix = boxm2_data_info::prefix(valid_apm_type, ident);
-      if ( apps[i] == valid_apm_prefix )
+      if ( app == valid_apm_prefix )
       {
         data_type_ = valid_apm_prefix;
         foundDataType = true;
@@ -66,11 +68,11 @@ boxm2_ocl_expected_image_renderer
     }
   }
   int num_valid_appearances_rgb = sizeof(valid_appearance_types_rgb) / sizeof(valid_appearance_types_rgb[0]);
-  for (unsigned int i=0; i<apps.size(); ++i) {
+  for (const auto & app : apps) {
     for (unsigned v = 0; v < num_valid_appearances_rgb; ++v) {
       boxm2_data_type valid_apm_type = valid_appearance_types_rgb[v];
       std::string valid_apm_prefix = boxm2_data_info::prefix(valid_apm_type, ident);
-      if ( apps[i] == valid_apm_prefix )
+      if ( app == valid_apm_prefix )
       {
         data_type_ = valid_apm_prefix;
         foundDataType = true;
@@ -140,15 +142,15 @@ boxm2_ocl_expected_image_renderer
   delete[] max_omega_buff_;
 
   opencl_cache_->unref_mem(exp_image_.ptr());
-  exp_image_ = bocl_mem_sptr(VXL_NULLPTR);
+  exp_image_ = bocl_mem_sptr(nullptr);
   opencl_cache_->unref_mem(vis_image_.ptr());
-  vis_image_ = bocl_mem_sptr(VXL_NULLPTR);
+  vis_image_ = bocl_mem_sptr(nullptr);
   opencl_cache_->unref_mem(max_omega_image_.ptr());
-  max_omega_image_ = bocl_mem_sptr(VXL_NULLPTR);
+  max_omega_image_ = bocl_mem_sptr(nullptr);
   opencl_cache_->unref_mem(img_dim_.ptr());
-  img_dim_ = bocl_mem_sptr(VXL_NULLPTR);
+  img_dim_ = bocl_mem_sptr(nullptr);
   opencl_cache_->unref_mem(tnearfar_.ptr());
-  tnearfar_ = bocl_mem_sptr(VXL_NULLPTR);
+  tnearfar_ = bocl_mem_sptr(nullptr);
 
   buffers_allocated_ = false;
   return true;
@@ -275,7 +277,7 @@ boxm2_ocl_expected_image_renderer
 
 bool
 boxm2_ocl_expected_image_renderer
-::compile_kernels(bocl_device_sptr device, std::vector<bocl_kernel*> & vec_kernels, boxm2_data_type data_type)
+::compile_kernels(const bocl_device_sptr& device, std::vector<bocl_kernel*> & vec_kernels, boxm2_data_type data_type)
 {
   std::string options_basic = boxm2_ocl_util::mog_options( boxm2_data_info::prefix(data_type) );
 
@@ -300,7 +302,7 @@ boxm2_ocl_expected_image_renderer
     options += "-D STEP_CELL=step_cell_render(aux_args.mog,aux_args.alpha,data_ptr,d*linfo->block_len,vis,aux_args.expint)";
 
     //have kernel construct itself using the context and device
-    bocl_kernel * ray_trace_kernel=new bocl_kernel();
+    auto * ray_trace_kernel=new bocl_kernel();
     ray_trace_kernel->create_kernel( &device->context(),
                                      device->device_id(),
                                      src_paths,
@@ -313,7 +315,7 @@ boxm2_ocl_expected_image_renderer
     std::vector<std::string> norm_src_paths;
     norm_src_paths.push_back(source_dir + "pixel_conversion.cl");
     norm_src_paths.push_back(source_dir + "bit/normalize_kernels.cl");
-    bocl_kernel * normalize_render_kernel=new bocl_kernel();
+    auto * normalize_render_kernel=new bocl_kernel();
 
     normalize_render_kernel->create_kernel( &device->context(),
                                             device->device_id(),
@@ -345,7 +347,7 @@ boxm2_ocl_expected_image_renderer
 
 
     //have kernel construct itself using the context and device
-    bocl_kernel * ray_trace_kernel=new bocl_kernel();
+    auto * ray_trace_kernel=new bocl_kernel();
     ray_trace_kernel->create_kernel( &device->context(),
                                      device->device_id(),
                                      src_paths,
@@ -373,7 +375,7 @@ boxm2_ocl_expected_image_renderer
     options += " -D YUV -D STEP_CELL=step_cell_render(aux_args,data_ptr,llid,d*linfo->block_len)";
 
     //have kernel construct itself using the context and device
-    bocl_kernel * ray_trace_kernel=new bocl_kernel();
+    auto * ray_trace_kernel=new bocl_kernel();
     ray_trace_kernel->create_kernel( &device->context(),
                                      device->device_id(),
                                      src_paths,
@@ -386,7 +388,7 @@ boxm2_ocl_expected_image_renderer
     std::vector<std::string> norm_src_paths;
     norm_src_paths.push_back(source_dir + "pixel_conversion.cl");
     norm_src_paths.push_back(source_dir + "bit/normalize_kernels.cl");
-    bocl_kernel * normalize_render_kernel=new bocl_kernel();
+    auto * normalize_render_kernel=new bocl_kernel();
 
     normalize_render_kernel->create_kernel( &device->context(),
                                             device->device_id(),
@@ -415,7 +417,7 @@ boxm2_ocl_expected_image_renderer
       options += " -D RENDER_VIEW_DEP ";
       options += " -D STEP_CELL=step_cell_render(aux_args,data_ptr,d*linfo->block_len)";
 
-      bocl_kernel * ray_trace_kernel=new bocl_kernel();
+      auto * ray_trace_kernel=new bocl_kernel();
       ray_trace_kernel->create_kernel( &device->context(),
                                        device->device_id(),
                                        src_paths,
@@ -428,7 +430,7 @@ boxm2_ocl_expected_image_renderer
       std::vector<std::string> norm_src_paths;
       norm_src_paths.push_back(source_dir + "pixel_conversion.cl");
       norm_src_paths.push_back(source_dir + "bit/normalize_kernels.cl");
-      bocl_kernel * normalize_render_kernel=new bocl_kernel();
+      auto * normalize_render_kernel=new bocl_kernel();
 
       std::string normalize_options = options_basic;
       normalize_options += " -D RENDER -D YUV";

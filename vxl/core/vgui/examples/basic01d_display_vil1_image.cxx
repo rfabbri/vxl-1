@@ -2,7 +2,9 @@
 // the filename given as the first command line parameter.
 
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vil1/vil1_image.h>
 #include <vil1/vil1_load.h>

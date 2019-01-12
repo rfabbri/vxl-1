@@ -1,7 +1,4 @@
 // This is oxl/mvl/mvl_five_point_camera_pencil.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
@@ -10,7 +7,9 @@
 #include <cmath>
 #include "mvl_five_point_camera_pencil.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_double_3.h>
 #include <vnl/algo/vnl_svd.h>
 

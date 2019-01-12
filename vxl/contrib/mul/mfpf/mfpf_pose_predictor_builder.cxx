@@ -8,8 +8,10 @@
 // \author Tim Cootes
 
 #include <vsl/vsl_binary_loader.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vnl/algo/vnl_svd.h>
 
 #include <vsl/vsl_indent.h>
@@ -41,9 +43,7 @@ void mfpf_pose_predictor_builder::set_n_per_eg(unsigned n)
 // Destructor
 //=======================================================================
 
-mfpf_pose_predictor_builder::~mfpf_pose_predictor_builder()
-{
-}
+mfpf_pose_predictor_builder::~mfpf_pose_predictor_builder() = default;
 
 //: Define sampling region and method
 //  Supplied predictor is partially initialised
@@ -276,4 +276,3 @@ std::ostream& operator<<(std::ostream& os,const mfpf_pose_predictor_builder& b)
   vsl_indent_dec(os);
   return os;
 }
-

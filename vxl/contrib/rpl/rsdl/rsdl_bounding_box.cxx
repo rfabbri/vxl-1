@@ -2,8 +2,10 @@
 #include <ostream>
 #include "rsdl_bounding_box.h"
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 rsdl_bounding_box::rsdl_bounding_box( const rsdl_point& min_point,
                                       const rsdl_point& max_point )
@@ -22,19 +24,11 @@ rsdl_bounding_box::rsdl_bounding_box( const rsdl_point& min_point,
 }
 
 
-rsdl_bounding_box::rsdl_bounding_box( const rsdl_bounding_box& old )
-  : min_point_(old.min_point_), max_point_(old.max_point_)
-{
-}
+rsdl_bounding_box::rsdl_bounding_box( const rsdl_bounding_box& old ) = default;
 
 
 rsdl_bounding_box &
-rsdl_bounding_box::operator= ( const rsdl_bounding_box& old )
-{
-  min_point_ = old.min_point_;
-  max_point_ = old.max_point_;
-  return *this;
-}
+rsdl_bounding_box::operator= ( const rsdl_bounding_box& old ) = default;
 
 
 std::ostream& operator<< ( std::ostream& ostr, const rsdl_bounding_box& box )
@@ -49,5 +43,3 @@ std::ostream& operator<< ( std::ostream& ostr, const rsdl_bounding_box& box )
     ostr << "Angular  " << i << ": [" << box.min_angular(i) << "," << box.max_angular(i) << "]\n";
   return ostr;
 }
-
-

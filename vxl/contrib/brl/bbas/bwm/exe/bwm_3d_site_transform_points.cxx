@@ -9,8 +9,10 @@
 #include <bwm/bwm_observer_mgr.h>
 #include <bwm/bwm_3d_corr.h>
 #include <bwm/bwm_3d_corr_sptr.h>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_arg.h>
 #include <vul/vul_file.h>
 #include <vul/vul_file_iterator.h>
@@ -64,7 +66,7 @@ void readPointsFromPLY(const std::string& filename, std::vector<vnl_vector_fixed
   ply_points_reader parsed_ply;
   parsed_ply.all_points = all_points;
 
-  p_ply ply = ply_open(filename.c_str(), VXL_NULLPTR, 0, VXL_NULLPTR);
+  p_ply ply = ply_open(filename.c_str(), nullptr, 0, nullptr);
   if (!ply) {
     std::cout << "File " << filename << " doesn't exist.";
   }
@@ -93,7 +95,7 @@ void readPointsFromPLY(const std::string& filename, std::vector<vnl_vector_fixed
 void writePointsToPLY(const std::string& ply_file_out, std::vector<vnl_vector_fixed<double,3> > &all_points)
 {
     // OPEN output file
-  p_ply oply = ply_create(ply_file_out.c_str(), PLY_ASCII, VXL_NULLPTR, 0, VXL_NULLPTR);
+  p_ply oply = ply_create(ply_file_out.c_str(), PLY_ASCII, nullptr, 0, nullptr);
 
   std::cerr << "  saving " << ply_file_out << " :\n";
 

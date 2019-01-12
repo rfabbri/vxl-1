@@ -2,14 +2,18 @@
 #include "boxm2_point_util.h"
 //:
 // \file
-#include <vsph/vsph_camera_bounds.h>
-#include <vidl/vidl_image_list_istream.h>
-#include <vgl/vgl_box_3d.h>
+#include <cassert>
+#include <utility>
 #include <vgl/algo/vgl_rotation_3d.h>
+#include <vgl/vgl_box_3d.h>
+#include <vidl/vidl_image_list_istream.h>
 #include <vnl/vnl_double_3.h>
 #include <vnl/vnl_matrix_fixed.h>
+#include <vsph/vsph_camera_bounds.h>
 #include <vul/vul_file.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Main boxm2_convert_bundle function
 //  Takes in bundle.out file and image directory that created img_dir
@@ -19,14 +23,14 @@ void boxm2_util_convert_bundle (std::string bundle_file,
                                 vgl_box_3d<double>& bbox,
                                 double& resolution)
 {
-  boxm2_convert_bundle b2s(bundle_file, img_dir);
+  boxm2_convert_bundle b2s(std::move(bundle_file), std::move(img_dir));
   cams        = b2s.get_cams();
   bbox        = b2s.get_bbox();
   resolution  = b2s.get_resolution();
 }
 
 // reads bundler file and populates list of cameras, and a scene bounding box
-boxm2_convert_bundle::boxm2_convert_bundle(std::string bundle_file, std::string img_dir)
+boxm2_convert_bundle::boxm2_convert_bundle(const std::string& bundle_file, const std::string& img_dir)
 {
   img_dir_ = img_dir;
   bundle_file_ = bundle_file;
@@ -79,7 +83,7 @@ boxm2_convert_bundle::boxm2_convert_bundle(std::string bundle_file, std::string 
     if ( !bad_cams_.count(i) ) {
       imgstream.seek_frame(i);
       std::string path = imgstream.current_path();
-      CamType* cam = new CamType(cams_[i]);
+      auto* cam = new CamType(cams_[i]);
       final_cams_[path] = cam;
       //std::cout<<"Final cam: "<<path<<std::endl;
     }
@@ -90,10 +94,10 @@ boxm2_convert_bundle::boxm2_convert_bundle(std::string bundle_file, std::string 
   //------------------------------------------------------------------------
   std::vector<vgl_point_3d<double> > pts_3d;
   vgl_box_3d<double> bounding_box;
-  for (unsigned i=0; i<corrs_.size(); ++i)
+  for (auto & corr : corrs_)
   {
-    bounding_box.add(corrs_[i]->world_pt());
-    pts_3d.push_back(corrs_[i]->world_pt());
+    bounding_box.add(corr->world_pt());
+    pts_3d.push_back(corr->world_pt());
   }
 
   // Dimensions of the World

@@ -1,9 +1,6 @@
 // This is core/vgl/vgl_frustum_3d.h
 #ifndef vgl_frustum_3d_h
 #define vgl_frustum_3d_h
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief A polygonal cone truncated by parallel planes
@@ -18,7 +15,9 @@
 #include <iosfwd>
 #include <vector>
 #include <map>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_plane_3d.h>
 #include <vgl/vgl_point_3d.h> // forward declare vgl datatypes
 

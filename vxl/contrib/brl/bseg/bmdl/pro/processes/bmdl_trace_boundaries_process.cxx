@@ -7,14 +7,14 @@
 
 #include <bmdl/bmdl_mesh.h>
 
-bool trace_boundaries(vil_image_view_base_sptr label_img, std::string fpath)
+bool trace_boundaries(const vil_image_view_base_sptr& label_img, const std::string& fpath)
 {
   if (label_img->pixel_format() != VIL_PIXEL_FORMAT_UINT_32) {
     std::cout << "bmdl_trace_boundaries_process::the Label Image pixel format" << label_img->pixel_format() << " undefined" << std::endl;
     return false;
   }
 
-  vil_image_view<unsigned int>* img = static_cast<vil_image_view<unsigned int>* > (label_img.as_pointer());
+  auto* img = static_cast<vil_image_view<unsigned int>* > (label_img.as_pointer());
   std::vector<vgl_polygon<double> > polygons =
     bmdl_mesh::trace_boundaries(*img);
 
@@ -23,8 +23,8 @@ bool trace_boundaries(vil_image_view_base_sptr label_img, std::string fpath)
   unsigned char ver = 1; //version();
   vsl_b_write(os, ver);
   vsl_b_write(os, polygons.size());
-  for (unsigned i = 0; i < polygons.size(); i++) {
-    vsl_b_write(os, polygons[i]);
+  for (const auto & polygon : polygons) {
+    vsl_b_write(os, polygon);
   }
 
   return true;
@@ -55,7 +55,7 @@ bool bmdl_trace_boundaries_process(bprb_func_process& pro)
 bool bmdl_trace_boundaries_process_cons(bprb_func_process& pro)
 {
   std::vector<std::string> input_types;
-  input_types.push_back("vil_image_view_base_sptr");
-  input_types.push_back("vcl_string");
+  input_types.emplace_back("vil_image_view_base_sptr");
+  input_types.emplace_back("vcl_string");
   return pro.set_input_types(input_types);
 }

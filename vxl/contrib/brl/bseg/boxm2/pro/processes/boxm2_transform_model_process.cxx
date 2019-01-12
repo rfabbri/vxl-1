@@ -10,7 +10,9 @@
 #include <iostream>
 #include <fstream>
 #include <bprb/bprb_func_process.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_util.h>
 #include <boxm2/boxm2_data_traits.h>
@@ -22,8 +24,8 @@
 
 namespace boxm2_transform_model_process_globals
 {
-  const unsigned n_inputs_ = 8;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 8;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool boxm2_transform_model_process_cons(bprb_func_process& pro)
@@ -89,7 +91,7 @@ bool boxm2_transform_model_process(bprb_func_process& pro)
   scene->set_lvcs(lvcs);
 #else
   std::map<boxm2_block_id, boxm2_block_metadata>& blocks = scene->blocks();
-  std::map<boxm2_block_id, boxm2_block_metadata>::iterator bit = blocks.begin();
+  auto bit = blocks.begin();
   for (; bit != blocks.end(); ++bit) {
     vgl_point_3d<double> old_origin = bit->second.local_origin_;
     bit->second.local_origin_ = old_origin + trans_vec;

@@ -5,7 +5,9 @@
 #include <bvxm/bvxm_world_params.h>
 #include <bvxm/bvxm_voxel_world.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <brdb/brdb_value.h>
 #include <brdb/brdb_selection.h>
@@ -65,7 +67,7 @@ static void test_bvxm_update_lidar_process()
 
     //retrieve lidar image
     brdb_query_aptr Q_img = brdb_query_comp_new("id", brdb_query::EQ, id_lidar_img);
-    brdb_selection_sptr S_img = DATABASE->select("vil_image_view_base_sptr_data", vcl_move(Q_img));
+    brdb_selection_sptr S_img = DATABASE->select("vil_image_view_base_sptr_data", std::move(Q_img));
 
     if (S_img->size()!=1) {
       std::cout << "in bprb_batch_process_manager::set_input_from_db(.) -"
@@ -77,10 +79,10 @@ static void test_bvxm_update_lidar_process()
       std::cout << "in bprb_batch_process_manager::set_input_from_db(.) -"
                << " didn't get value\n";
     }
-    bool non_null = (value_img != VXL_NULLPTR);
+    bool non_null = (value_img != nullptr);
     TEST("display output non-null", non_null ,true);
 
-    brdb_value_t<vil_image_view_base_sptr>* result =
+    auto* result =
       static_cast<brdb_value_t<vil_image_view_base_sptr>* >(value_img.ptr());
     vil_image_view_base_sptr lidar_img = result->value();
 
@@ -94,7 +96,7 @@ static void test_bvxm_update_lidar_process()
 
     //retrieve lidar camera
     brdb_query_aptr Q_cam = brdb_query_comp_new("id", brdb_query::EQ, id_cam);
-    brdb_selection_sptr S_cam = DATABASE->select("vpgl_camera_double_sptr_data", vcl_move(Q_cam));
+    brdb_selection_sptr S_cam = DATABASE->select("vpgl_camera_double_sptr_data", std::move(Q_cam));
 
     if (S_cam->size()!=1) {
       std::cout << "in bprb_batch_process_manager::set_input_from_db(.) -"
@@ -107,10 +109,10 @@ static void test_bvxm_update_lidar_process()
                << " didn't get value\n";
     }
 
-    non_null = (value_cam != VXL_NULLPTR);
+    non_null = (value_cam != nullptr);
     TEST("display output non-null", non_null ,true);
 
-    brdb_value_t<vpgl_camera_double_sptr>* result2 =
+    auto* result2 =
       static_cast<brdb_value_t<vpgl_camera_double_sptr>* >(value_cam.ptr());
     vpgl_camera_double_sptr lidar_cam = result2->value();
 
@@ -141,7 +143,7 @@ static void test_bvxm_update_lidar_process()
 
     //retrieve world
     brdb_query_aptr Q_world = brdb_query_comp_new("id", brdb_query::EQ, id_world);
-    brdb_selection_sptr S_world = DATABASE->select("bvxm_voxel_world_sptr_data", Q_world);
+    brdb_selection_sptr S_world = DATABASE->select("bvxm_voxel_world_sptr_data", std::move(Q_world));
     if (S_world->size()!=1) {
       std::cout << "in bprb_batch_process_manager::set_input_from_db(.) -"
                << " no selections\n";
@@ -188,7 +190,7 @@ static void test_bvxm_update_lidar_process()
 
     //retrieve world
     brdb_query_aptr Q_world = brdb_query_comp_new("id", brdb_query::EQ, id_world);
-    brdb_selection_sptr S_world = DATABASE->select("bvxm_voxel_world_sptr_data", vcl_move(Q_world));
+    brdb_selection_sptr S_world = DATABASE->select("bvxm_voxel_world_sptr_data", std::move(Q_world));
     if (S_world->size()!=1) {
       std::cout << "in bprb_batch_process_manager::set_input_from_db(.) -"
                << " no selections\n";
@@ -199,10 +201,10 @@ static void test_bvxm_update_lidar_process()
       std::cout << "in bprb_batch_process_manager::set_input_from_db(.) -"
                << " didn't get value\n";
     }
-    bool non_null = (value_world != VXL_NULLPTR);
+    bool non_null = (value_world != nullptr);
     TEST("display output non-null", non_null ,true);
 
-    brdb_value_t<bvxm_voxel_world_sptr>* result =
+    auto* result =
       static_cast<brdb_value_t<bvxm_voxel_world_sptr>* >(value_world.ptr());
     bvxm_voxel_world_sptr world = result->value();
 
@@ -272,7 +274,7 @@ static void test_bvxm_update_lidar_process()
 
     //retrieve prob_map
     brdb_query_aptr Q_img = brdb_query_comp_new("id", brdb_query::EQ, id_prob_map);
-    brdb_selection_sptr S_img = DATABASE->select("vil_image_view_base_sptr_data", vcl_move(Q_img));
+    brdb_selection_sptr S_img = DATABASE->select("vil_image_view_base_sptr_data", std::move(Q_img));
     if (S_img->size()!=1) {
       std::cout << "in bprb_batch_process_manager::set_input_from_db(.) -"
                << " no selections\n";
@@ -283,10 +285,10 @@ static void test_bvxm_update_lidar_process()
       std::cout << "in bprb_batch_process_manager::set_input_from_db(.) -"
                << " didn't get value\n";
     }
-    bool non_null = (value_img != VXL_NULLPTR);
+    bool non_null = (value_img != nullptr);
     TEST("display output non-null", non_null ,true);
 
-    brdb_value_t<vil_image_view_base_sptr>* result =
+    auto* result =
       static_cast<brdb_value_t<vil_image_view_base_sptr>* >(value_img.ptr());
     vil_image_view_base_sptr prob_map = result->value();
 
@@ -366,7 +368,7 @@ static void test_bvxm_update_lidar_process()
 
   //retrieve camera
   brdb_query_aptr Q_img = brdb_query_comp_new("id", brdb_query::EQ, id_img);
-  brdb_selection_sptr S_img = DATABASE->select("vil_image_view_base_sptr_data", Q_img);
+  brdb_selection_sptr S_img = DATABASE->select("vil_image_view_base_sptr_data", std::move(Q_img));
   if (S_img->size()!=1) {
     std::cout << "in bprb_batch_process_manager::set_input_from_db(.) -"
              << " no selections\n";

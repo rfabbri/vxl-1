@@ -18,22 +18,22 @@ bool sdet_create_texture_classifier_process_cons(bprb_func_process& pro)
   vsl_add_to_binary_loader(vsol_polygon_2d());
   // process takes 9 inputs:
   std::vector<std::string> input_types;
-  input_types.push_back("float"); //lambda 0
-  input_types.push_back("float"); //lambda 1
-  input_types.push_back("unsigned"); //number of scales
-  input_types.push_back("float"); //scale interval
-  input_types.push_back("float"); //angle interval
-  input_types.push_back("float"); //laplace radius
-  input_types.push_back("float"); //gauss radius
-  input_types.push_back("unsigned"); // k
-  input_types.push_back("unsigned"); // number of samples
+  input_types.emplace_back("float"); //lambda 0
+  input_types.emplace_back("float"); //lambda 1
+  input_types.emplace_back("unsigned"); //number of scales
+  input_types.emplace_back("float"); //scale interval
+  input_types.emplace_back("float"); //angle interval
+  input_types.emplace_back("float"); //laplace radius
+  input_types.emplace_back("float"); //gauss radius
+  input_types.emplace_back("unsigned"); // k
+  input_types.emplace_back("unsigned"); // number of samples
   if (!pro.set_input_types(input_types))
     return false;
 
   // process has 1 output:
   // output[0]: the current state of the texture classifier
   std::vector<std::string> output_types;
-  output_types.push_back("sdet_texture_classifier_sptr");
+  output_types.emplace_back("sdet_texture_classifier_sptr");
   return pro.set_output_types(output_types);
 }
 
@@ -46,15 +46,15 @@ bool sdet_create_texture_classifier_process(bprb_func_process& pro)
   }
 
   // get inputs
-  float    lambda0        = pro.get_input<float>(0);
-  float    lambda1        = pro.get_input<float>(1);
-  unsigned n_scales       = pro.get_input<unsigned>(2);
-  float    scale_interval = pro.get_input<float>(3);
-  float    angle_interval = pro.get_input<float>(4);
-  float    laplace_radius = pro.get_input<float>(5);
-  float    gauss_radius   = pro.get_input<float>(6);
-  unsigned k              = pro.get_input<unsigned>(7);
-  unsigned n_samples      = pro.get_input<unsigned>(8);
+  auto    lambda0        = pro.get_input<float>(0);
+  auto    lambda1        = pro.get_input<float>(1);
+  auto n_scales       = pro.get_input<unsigned>(2);
+  auto    scale_interval = pro.get_input<float>(3);
+  auto    angle_interval = pro.get_input<float>(4);
+  auto    laplace_radius = pro.get_input<float>(5);
+  auto    gauss_radius   = pro.get_input<float>(6);
+  auto k              = pro.get_input<unsigned>(7);
+  auto n_samples      = pro.get_input<unsigned>(8);
 
   //set texture classifier params
   sdet_texture_classifier_params tcp;
@@ -83,8 +83,8 @@ bool sdet_save_texture_classifier_process_cons(bprb_func_process& pro)
 {
   // process takes 2 inputs:
   std::vector<std::string> input_types;
-  input_types.push_back("sdet_texture_classifier_sptr"); //texture classifier
-  input_types.push_back("vcl_string"); // output filename
+  input_types.emplace_back("sdet_texture_classifier_sptr"); //texture classifier
+  input_types.emplace_back("vcl_string"); // output filename
 
   if (!pro.set_input_types(input_types))
     return false;
@@ -120,12 +120,12 @@ bool sdet_load_texture_classifier_process_cons(bprb_func_process& pro)
 {
   // process takes 1 inputs:
   std::vector<std::string> input_types;
-  input_types.push_back("vcl_string"); // input filename to read data for the instance of texture classifier
+  input_types.emplace_back("vcl_string"); // input filename to read data for the instance of texture classifier
   if (!pro.set_input_types(input_types))
     return false;
 
   std::vector<std::string> output_types;
-  output_types.push_back("sdet_texture_classifier_sptr"); //texture classifier
+  output_types.emplace_back("sdet_texture_classifier_sptr"); //texture classifier
   return pro.set_output_types(output_types);
 }
 
@@ -159,12 +159,12 @@ bool sdet_load_texture_dictionary_process_cons(bprb_func_process& pro)
 {
   // process takes 1 inputs:
   std::vector<std::string> input_types;
-  input_types.push_back("vcl_string"); // input filename
+  input_types.emplace_back("vcl_string"); // input filename
   if (!pro.set_input_types(input_types))
     return false;
 
   std::vector<std::string> output_types;
-  output_types.push_back("sdet_texture_classifier_sptr"); //texture classifier
+  output_types.emplace_back("sdet_texture_classifier_sptr"); //texture classifier
   return pro.set_output_types(output_types);
 }
 
@@ -190,4 +190,3 @@ bool sdet_load_texture_dictionary_process(bprb_func_process& pro)
   pro.set_output_val<sdet_texture_classifier_sptr>(0, tc_ptr);
   return true;
 }
-

@@ -14,8 +14,10 @@
 #include <vnl/vnl_math.h>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_vector_2d.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <vsl/vsl_indent.h>
 #include <vsl/vsl_binary_loader.h>
@@ -25,9 +27,7 @@
 // Constructors
 //=======================================================================
 
-mfpf_mr_point_finder_builder::mfpf_mr_point_finder_builder()
-{
-}
+mfpf_mr_point_finder_builder::mfpf_mr_point_finder_builder() = default;
 
 //: Copy ctor
 mfpf_mr_point_finder_builder::mfpf_mr_point_finder_builder(const mfpf_mr_point_finder_builder& b)
@@ -63,8 +63,8 @@ mfpf_mr_point_finder_builder::~mfpf_mr_point_finder_builder()
 //: Delete all the builders
 void mfpf_mr_point_finder_builder::delete_all()
 {
-  for (unsigned i=0;i<builders_.size();++i)
-    delete builders_[i];
+  for (auto & builder : builders_)
+    delete builder;
   builders_.resize(0);
 }
 
@@ -230,7 +230,7 @@ void mfpf_mr_point_finder_builder::get_sample_vector(
   }
 
   assert(image_pyr(im_L).is_a()=="vimt_image_2d_of<float>");
-  const vimt_image_2d_of<float>& image
+  const auto& image
     = static_cast<const vimt_image_2d_of<float>&>(image_pyr(im_L));
 
   builder(L).get_sample_vector(image,p,u,v);
@@ -261,7 +261,7 @@ void mfpf_mr_point_finder_builder::add_example(
     }
 
     assert(image_pyr(im_L).is_a()=="vimt_image_2d_of<float>");
-    const vimt_image_2d_of<float>& image
+    const auto& image
       = static_cast<const vimt_image_2d_of<float>&>(image_pyr(im_L));
 
     builder(L).add_example(image,p,u);
@@ -328,8 +328,8 @@ void mfpf_mr_point_finder_builder::b_write(vsl_b_ostream& bfs) const
 {
   vsl_b_write(bfs,version_no());
   vsl_b_write(bfs,builders_.size());
-  for (unsigned i=0;i<builders_.size();++i)
-    vsl_b_write(bfs,builders_[i]);
+  for (auto builder : builders_)
+    vsl_b_write(bfs,builder);
 }
 
 //=======================================================================
@@ -352,7 +352,7 @@ void mfpf_mr_point_finder_builder::b_read(vsl_b_istream& bfs)
       builders_.resize(n);
       for (unsigned i=0;i<n;++i)
       {
-        builders_[i]=VXL_NULLPTR;
+        builders_[i]=nullptr;
         vsl_b_read(bfs,builders_[i]);
       }
       break;
@@ -388,5 +388,3 @@ void vsl_b_read(vsl_b_istream& bfs, mfpf_mr_point_finder_builder& b)
 {
   b.b_read(bfs);
 }
-
-

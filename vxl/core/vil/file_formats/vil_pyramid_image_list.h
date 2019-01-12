@@ -1,8 +1,5 @@
 #ifndef vil_pyramid_image_list_h_
 #define vil_pyramid_image_list_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief A pyramid image resource based on multiple file-based image resources
@@ -15,7 +12,9 @@
 
 #include <string>
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_file_format.h>
 #include <vil/vil_pyramid_image_resource.h>
 
@@ -24,19 +23,19 @@
 class vil_pyramid_image_list_format : public vil_file_format
 {
  public:
-  ~vil_pyramid_image_list_format(){}
+  ~vil_pyramid_image_list_format() override = default;
 
   //: Return a character string which uniquely identifies this format.
   //E.g. "pnm", "jpeg", etc.
-  virtual char const* tag() const {return "pyil";}//pyramid image list
+  char const* tag() const override {return "pyil";}//pyramid image list
 
   //: should return 0 so that no attempt is made to create a single image resource
-  virtual vil_image_resource_sptr make_input_image(vil_stream* /*vs*/)
-  { return VXL_NULLPTR; }
+  vil_image_resource_sptr make_input_image(vil_stream* /*vs*/) override
+  { return nullptr; }
 
   //: Read a pyramid resource. Image list files are stored in directory.
-  virtual vil_pyramid_image_resource_sptr
-  make_input_pyramid_image(char const* directory);
+  vil_pyramid_image_resource_sptr
+  make_input_pyramid_image(char const* directory) override;
 
 
   //: Construct a pyramid image resource from a base image
@@ -45,24 +44,24 @@ class vil_pyramid_image_list_format : public vil_file_format
   //  Level 0 is already present in the directory and is used without
   //  modification. Each pyramid file in the directory is named
   //  filename + "level_index", e.g. R0, R1, ... Rn.
-  virtual vil_pyramid_image_resource_sptr
+  vil_pyramid_image_resource_sptr
   make_pyramid_image_from_base(char const* directory,
                                vil_image_resource_sptr const& base_image,
                                unsigned int nlevels,
                                bool copy_base,
                                char const* level_file_format,
-                               char const* filename);
+                               char const* filename) override;
 
   //: A non-pyramid output image doesn't make sense here
-  virtual vil_image_resource_sptr make_output_image(vil_stream* /*vs*/,
+  vil_image_resource_sptr make_output_image(vil_stream* /*vs*/,
                                                     unsigned int /*ni*/,
                                                     unsigned int /*nj*/,
                                                     unsigned int /*nplanes*/,
-                                                    enum vil_pixel_format)
-  { return VXL_NULLPTR; }
+                                                    enum vil_pixel_format) override
+  { return nullptr; }
 
-  virtual vil_pyramid_image_resource_sptr
-    make_pyramid_output_image(char const* directory);
+  vil_pyramid_image_resource_sptr
+    make_pyramid_output_image(char const* directory) override;
 };
 
 struct pyramid_level
@@ -92,12 +91,12 @@ class vil_pyramid_image_list : public vil_pyramid_image_resource
  public:
   vil_pyramid_image_list(char const* directory);
   vil_pyramid_image_list(std::vector<vil_image_resource_sptr> const& images);
-  virtual ~vil_pyramid_image_list();
+  ~vil_pyramid_image_list() override;
   //: The number of planes (or components) in the image.
   // This method refers to the base (max resolution) image
   // Dimensions:  Planes x ni x nj.
   // This concept is treated as a synonym to components.
-  inline virtual unsigned int nplanes() const
+  inline unsigned int nplanes() const override
   {
     if (levels_.size()>0)
       return levels_[0]->image_->nplanes();
@@ -107,7 +106,7 @@ class vil_pyramid_image_list : public vil_pyramid_image_resource
   //: The number of pixels in each row.
   // This method refers to the base (max resolution) image
   // Dimensions:  Planes x ni x nj.
-  inline virtual unsigned int ni() const
+  inline unsigned int ni() const override
   {
     if (levels_.size()>0)
       return levels_[0]->image_->ni();
@@ -117,7 +116,7 @@ class vil_pyramid_image_list : public vil_pyramid_image_resource
   //: The number of pixels in each column.
   // This method refers to the base (max resolution) image
   // Dimensions:  Planes x ni x nj.
-  inline virtual unsigned int nj() const
+  inline unsigned int nj() const override
   {
     if (levels_.size()>0)
       return levels_[0]->image_->nj();
@@ -127,7 +126,7 @@ class vil_pyramid_image_list : public vil_pyramid_image_resource
 
   //: Pixel Format.
 
-  inline virtual enum vil_pixel_format pixel_format() const
+  inline enum vil_pixel_format pixel_format() const override
   {
     if (levels_.size()>0)
       return levels_[0]->image_->pixel_format();
@@ -137,49 +136,49 @@ class vil_pyramid_image_list : public vil_pyramid_image_resource
 
   //: Create a read/write view of a copy of this data.
   // Applies only to the base image
-  inline virtual vil_image_view_base_sptr get_copy_view(unsigned int i0,
+  inline vil_image_view_base_sptr get_copy_view(unsigned int i0,
                                                         unsigned int n_i,
                                                         unsigned int j0,
-                                                        unsigned int n_j) const
+                                                        unsigned int n_j) const override
   {
     if (levels_.size()>0)
       return levels_[0]->image_->get_copy_view(i0, n_i, j0, n_j);
     else
-      return VXL_NULLPTR;
+      return nullptr;
   }
 
   //: Return a string describing the file format.
   // Only file images have a format, others return 0
-  virtual char const* file_format() const { return "pryl"; }
+  char const* file_format() const override { return "pryl"; }
 
         // --- Methods particular to pyramid resource ---
 
   //: number of levels in the pyramid
-  virtual unsigned int nlevels() const {return (unsigned int)(levels_.size());}
+  unsigned int nlevels() const override {return (unsigned int)(levels_.size());}
 
   //:Copy an image resource to the pyramid.
   // If an image of the same scale already exists, then method returns false.
-  bool put_resource(vil_image_resource_sptr const& image);
+  bool put_resource(vil_image_resource_sptr const& image) override;
 
   //:Add an image resource directly to the pyramid without copying.
   // If an image of the same scale already exists, then method returns false.
   bool add_resource(vil_image_resource_sptr const& image);
 
   //: virtual method for getting a level of the pyramid
-  vil_image_resource_sptr get_resource(const unsigned int level) const
+  vil_image_resource_sptr get_resource(const unsigned int level) const override
     {return get_level(level);}
 
   //: Get a level image resource of the pyramid
   inline vil_image_resource_sptr get_level(const unsigned int level) const
-  { if (level<levels_.size()) return levels_[level]->image_; else return VXL_NULLPTR; }
+  { if (level<levels_.size()) return levels_[level]->image_; else return nullptr; }
 
   //:Get a partial view from the image from a specified pyramid level
-  virtual vil_image_view_base_sptr get_copy_view(unsigned int i0, unsigned int n_i,
+  vil_image_view_base_sptr get_copy_view(unsigned int i0, unsigned int n_i,
                                                  unsigned int j0, unsigned int n_j,
-                                                 unsigned int level) const;
+                                                 unsigned int level) const override;
 
   //:Get a view from the image in the pyramid closest to scale
-  vil_image_view_base_sptr get_copy_view(const float scale, float& actual_scale) const
+  vil_image_view_base_sptr get_copy_view(const float scale, float& actual_scale) const override
   { return get_copy_view(0, ni(), 0, nj(), scale, actual_scale); }
 
   //:Get a partial view from the image in the pyramid closest to scale.
@@ -187,12 +186,12 @@ class vil_pyramid_image_list : public vil_pyramid_image_resource
   vil_image_view_base_sptr get_copy_view(unsigned int i0, unsigned int n_i,
                                          unsigned int j0, unsigned int n_j,
                                          const float scale,
-                                         float& actual_scale) const;
+                                         float& actual_scale) const override;
 
   void set_directory(char const* directory) { directory_ = directory; }
 
   //for debugging purposes
-  void print(const unsigned int level)
+  void print(const unsigned int level) override
   { if (level<levels_.size()) levels_[level]->print(level); }
 
  protected:

@@ -13,14 +13,16 @@
 //   <none yet>
 // \endverbatim
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bocl/bocl_manager.h>
 
 
 namespace bocl_init_manager_process_globals
 {
-  const unsigned n_inputs_ = 0;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 0;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool bocl_init_manager_process_cons(bprb_func_process& pro)
@@ -32,7 +34,7 @@ bool bocl_init_manager_process_cons(bprb_func_process& pro)
   return pro.set_output_types(output_types_);
 }
 
-bool bocl_init_manager_process(bprb_func_process& pro)
+bool bocl_init_manager_process(bprb_func_process&  /*pro*/)
 {
   using namespace bocl_init_manager_process_globals;
   // force bocl_manager to be created, if it hasn't been already

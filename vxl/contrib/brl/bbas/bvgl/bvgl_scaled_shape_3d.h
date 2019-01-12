@@ -8,14 +8,15 @@
 //
 // this shape is a form of generalized cylinder and may be folded into the
 // gen_cylinder class at a later stage.
+#include <utility>
+#include <vector>
+#include <iosfwd>
 #include "bvgl_spline_region_3d.h"
 #include <vgl/vgl_pointset_3d.h>
 #include <vgl/vgl_plane_3d.h>
 #include <vgl/vgl_box_3d.h>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/algo/vgl_rotation_3d.h>
-#include <vector>
-#include <iosfwd>
 
 template <class Type>
 class bvgl_scaled_shape_3d
@@ -26,16 +27,16 @@ class bvgl_scaled_shape_3d
  bvgl_scaled_shape_3d():tolerance_(Type(0.5)), scale_at_midpt_(Type(1)), scale_at_max_(Type(1)), max_norm_distance_(Type(0)),
     stype_(LINEAR){reset_def_params(); reset_scale_params();}
   //: Construct using spline knots (must be closed curve)
- bvgl_scaled_shape_3d(bvgl_spline_region_3d<Type> const& region, Type max_norm_distance, Type scale_at_max, Type tolerance):
-  base_(region), max_norm_distance_(max_norm_distance), scale_at_max_(scale_at_max),scale_at_midpt_(Type(0.5)*scale_at_max),
+ bvgl_scaled_shape_3d(bvgl_spline_region_3d<Type>  region, Type max_norm_distance, Type scale_at_max, Type tolerance):
+  base_(std::move(region)), max_norm_distance_(max_norm_distance), scale_at_max_(scale_at_max),scale_at_midpt_(Type(0.5)*scale_at_max),
   tolerance_(tolerance), stype_(LINEAR){
     reset_def_params(); reset_scale_params();
     this->compute_cross_sections();
     std::cout << cross_sections_.size() << '\n';
   }
 
- bvgl_scaled_shape_3d(bvgl_spline_region_3d<Type> const& region, Type max_norm_distance, Type scale_at_midpt,Type scale_at_max, Type tolerance):
-  base_(region), max_norm_distance_(max_norm_distance), scale_at_midpt_(scale_at_midpt), scale_at_max_(scale_at_max),tolerance_(tolerance),stype_(QUADRATIC){
+ bvgl_scaled_shape_3d(bvgl_spline_region_3d<Type>  region, Type max_norm_distance, Type scale_at_midpt,Type scale_at_max, Type tolerance):
+  base_(std::move(region)), max_norm_distance_(max_norm_distance), scale_at_midpt_(scale_at_midpt), scale_at_max_(scale_at_max),tolerance_(tolerance),stype_(QUADRATIC){
     reset_def_params(); reset_scale_params();
     this->compute_cross_sections();
     std::cout << cross_sections_.size() << '\n';

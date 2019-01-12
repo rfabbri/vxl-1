@@ -17,8 +17,10 @@
 #include "vgl_line_2d.h"
 #include "vgl_tolerance.h"
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 // Constructors/Destructor---------------------------------------------------
 
@@ -306,8 +308,8 @@ void vgl_selfintersections(vgl_polygon<T> const& p,
                 t /= 2;
                 ipt = v1 + t*dir;
               }
-              e1.push_back(upair(s2,i2));
-              e2.push_back(upair(s1,i1));
+              e1.emplace_back(s2,i2);
+              e2.emplace_back(s1,i1);
               ip.push_back(ipt);
             }
           }

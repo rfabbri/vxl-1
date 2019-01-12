@@ -9,7 +9,9 @@
 #include <bundler/tests/utils.h>
 
 #include <vil/vil_load.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 static const double FOCAL_LENGTH_MM = 5.4;
 static const double SENSOR_WIDTH_MM = 5.312;
@@ -86,4 +88,3 @@ static void test_add_next_image(int argc, char** argv)
 }
 
 TESTMAIN_ARGS(test_add_next_image);
-

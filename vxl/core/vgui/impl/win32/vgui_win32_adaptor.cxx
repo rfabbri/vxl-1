@@ -5,7 +5,9 @@
 #include "vgui_win32_adaptor.h"
 #include "vgui_win32_utils.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgui/vgui_gl.h>
 #include <vgui/vgui_event.h>
 #include <vgui/vgui_macro.h>
@@ -700,4 +702,3 @@ void vgui_win32_adaptor::domouse(vgui_event_type et, vgui_button b, UINT nFlags,
    }
 #endif // 0
 }
-

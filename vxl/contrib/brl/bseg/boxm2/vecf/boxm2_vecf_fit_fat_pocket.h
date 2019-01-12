@@ -1,9 +1,6 @@
 // This is core/vgl/algo/boxm2_vecf_fit_fat_pocket.h
 #ifndef boxm2_vecf_fit_fat_pocket_h_
 #define boxm2_vecf_fit_fat_pocket_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Estimates the fat pocket parameters to match a point cloud of the skin
@@ -12,9 +9,9 @@
 //
 #include <vector>
 #include <string>
+#include <iosfwd>
 #include <vgl/vgl_vector_3d.h>
 #include <vgl/vgl_point_3d.h>
-#include <iosfwd>
 #include "boxm2_vecf_middle_fat_pocket_params.h"
 #include "boxm2_vecf_middle_fat_pocket.h"
 #include <bvgl/bvgl_knn_index_3d.h>
@@ -40,7 +37,7 @@ class boxm2_vecf_fit_fat_pocket
 
   boxm2_vecf_fit_fat_pocket(std::string const& neutral_face_ptset_path, std::string const& skin_layer_path, std::string const& fat_pocket_geo_path);
   boxm2_vecf_fit_fat_pocket(std::string const& neutral_face_ptset_path, std::string const& deformed_face_ptset_path, std::string const& skin_ptset_path,  std::string const& fat_pocket_geo_path);
-  ~boxm2_vecf_fit_fat_pocket() {}
+  ~boxm2_vecf_fit_fat_pocket() = default;
 
   // Operations---------------------------------------------------------------
 
@@ -50,8 +47,8 @@ class boxm2_vecf_fit_fat_pocket
   //: find the parameters that adjust the shape of the fat pocket model to match the neutral face
   // returns the average distance from the data points to the fat_pocket model
   // error conditions are reported on outstream
-  double fit_neutral(std::ostream* outstream=VXL_NULLPTR, bool verbose=false);
-  double fit_deformed(std::ostream* outstream=VXL_NULLPTR, bool verbose=false);
+  double fit_neutral(std::ostream* outstream=nullptr, bool verbose=false);
+  double fit_deformed(std::ostream* outstream=nullptr, bool verbose=false);
 
 // Data Access---------------------------------------------------------------
 

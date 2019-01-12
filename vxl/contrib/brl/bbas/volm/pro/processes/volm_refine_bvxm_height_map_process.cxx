@@ -5,7 +5,9 @@
 #include <iostream>
 #include <bprb/bprb_func_process.h>
 #include <bprb/bprb_parameters.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_image_view.h>
 #include <vul/vul_file.h>
 #include <vil/algo/vil_region_finder.h>
@@ -23,8 +25,8 @@
 
 namespace volm_refine_bvxm_height_map_process_globals
 {
-  const unsigned int n_inputs_  = 3;
-  const unsigned int n_outputs_ = 1;
+  constexpr unsigned int n_inputs_ = 3;
+  constexpr unsigned int n_outputs_ = 1;
   float neighbor_min_height(std::vector<unsigned> const& ri, std::vector<unsigned> const& rj, vil_image_view<float> const& in_img)
   {
     // create a neighbor list
@@ -36,8 +38,8 @@ namespace volm_refine_bvxm_height_map_process_globals
     for (unsigned k = 0; k < ri.size(); k++) {
       unsigned i = ri[k];  unsigned j = rj[k];
       for (unsigned c = 0; c < num_nbrs; c++) {
-        unsigned nbr_i = (unsigned)( (signed)i + nbrs8_delta[c][0] );
-        unsigned nbr_j = (unsigned)( (signed)j + nbrs8_delta[c][1] );
+        auto nbr_i = (unsigned)( (signed)i + nbrs8_delta[c][0] );
+        auto nbr_j = (unsigned)( (signed)j + nbrs8_delta[c][1] );
         if (nbr_i < in_img.ni() && nbr_j < in_img.nj())
           if ( in_img(nbr_i, nbr_j) < min_h )
             min_h = in_img(nbr_i, nbr_j);
@@ -75,10 +77,10 @@ bool volm_refine_bvxm_height_map_process(bprb_func_process& pro)
   // get input
   unsigned i = 0;
   vil_image_view_base_sptr i_img_res = pro.get_input<vil_image_view_base_sptr>(i++);
-  float sky_h = pro.get_input<float>(i++);
-  float grd_h = pro.get_input<float>(i++);
+  auto sky_h = pro.get_input<float>(i++);
+  auto grd_h = pro.get_input<float>(i++);
 
-  vil_image_view<float>* in_img = dynamic_cast<vil_image_view<float>*>(i_img_res.ptr());
+  auto* in_img = dynamic_cast<vil_image_view<float>*>(i_img_res.ptr());
   if (!in_img) {
     std::cout << pro.name() << ": The image pixel format: " << i_img_res->pixel_format() << " is not supported" << std::endl;
     return false;
@@ -103,7 +105,7 @@ bool volm_refine_bvxm_height_map_process(bprb_func_process& pro)
         grd_mask(i,j) = 1;
 
   // create an output image
-  vil_image_view<float>* out_img = new vil_image_view<float>(ni, nj);
+  auto* out_img = new vil_image_view<float>(ni, nj);
   out_img->deep_copy(*in_img);
 
 #if 0
@@ -179,16 +181,16 @@ bool volm_extract_building_outlines_process_cons(bprb_func_process& pro)
 {
 
   std::vector<std::string> input_types;
-  input_types.push_back("vil_image_view_base_sptr"); // height map
-  input_types.push_back("vil_image_view_base_sptr"); // classification map
-  input_types.push_back("vpgl_camera_double_sptr"); // geo camera
-  input_types.push_back("vcl_string"); // output building .csv filename
-  input_types.push_back("vcl_string"); // output building kml filename
+  input_types.emplace_back("vil_image_view_base_sptr"); // height map
+  input_types.emplace_back("vil_image_view_base_sptr"); // classification map
+  input_types.emplace_back("vpgl_camera_double_sptr"); // geo camera
+  input_types.emplace_back("vcl_string"); // output building .csv filename
+  input_types.emplace_back("vcl_string"); // output building kml filename
 
   std::vector<std::string> output_types;
-  output_types.push_back("vil_image_view_base_sptr"); // binary map
-  output_types.push_back("vil_image_view_base_sptr"); // binary map
-  output_types.push_back("vil_image_view_base_sptr"); // binary map
+  output_types.emplace_back("vil_image_view_base_sptr"); // binary map
+  output_types.emplace_back("vil_image_view_base_sptr"); // binary map
+  output_types.emplace_back("vil_image_view_base_sptr"); // binary map
   return pro.set_input_types(input_types)
      &&  pro.set_output_types(output_types);
 }
@@ -205,7 +207,7 @@ bool volm_extract_building_outlines_process(bprb_func_process& pro)
   vil_image_view_base_sptr height_sptr = pro.get_input<vil_image_view_base_sptr>(i++);
   vil_image_view_base_sptr class_img_sptr = pro.get_input<vil_image_view_base_sptr>(i++);
   vpgl_camera_double_sptr cam = pro.get_input<vpgl_camera_double_sptr>(i++);
-  vpgl_geo_camera* geocam = dynamic_cast<vpgl_geo_camera*> (cam.ptr());
+  auto* geocam = dynamic_cast<vpgl_geo_camera*> (cam.ptr());
   std::string csv_filename = pro.get_input<std::string>(i++);
   std::string kml_filename = pro.get_input<std::string>(i++);
 
@@ -252,7 +254,7 @@ bool volm_extract_building_outlines_process(bprb_func_process& pro)
     for (unsigned i = 0; i < bi.size(); i++) {
       double lon, lat;
       geocam->img_to_global(bi[i], bj[i], lon, lat);
-      poly.push_back(vgl_point_3d<double>(lon, lat, height(bi[i], bj[i])));
+      poly.emplace_back(lon, lat, height(bi[i], bj[i]));
     }
     bldgs.push_back(poly);
   }
@@ -267,10 +269,10 @@ bool volm_extract_building_outlines_process(bprb_func_process& pro)
     double avg_height = 0.0;
     unsigned cnt = 0;
     double area = 0.0;
-    for (unsigned k = 0; k < region.size(); k++) {
-      for (unsigned i = region[k].ilo; i < region[k].ihi; i++) {
+    for (auto & k : region) {
+      for (unsigned i = k.ilo; i < k.ihi; i++) {
         double lon, lat;
-        avg_height += height(i, region[k].j);
+        avg_height += height(i, k.j);
         cnt++;
       }
     }
@@ -288,10 +290,10 @@ bool volm_extract_building_outlines_process(bprb_func_process& pro)
   for (unsigned i = 0; i < bldgs.size(); i++) {
     vgl_polygon<double> poly(1);
     double cent_lon = 0.0, cent_lat = 0.0;
-    for (unsigned j = 0; j < bldgs[i].size(); j++) {
-      poly[0].push_back(vgl_point_2d<double>(bldgs[i][j].x(), bldgs[i][j].y()));
-      cent_lon += bldgs[i][j].x();
-      cent_lat += bldgs[i][j].y();
+    for (auto & j : bldgs[i]) {
+      poly[0].push_back(vgl_point_2d<double>(j.x(), j.y()));
+      cent_lon += j.x();
+      cent_lat += j.y();
     }
     cent_lon /= bldgs[i].size();
     cent_lat /= bldgs[i].size();
@@ -306,8 +308,8 @@ bool volm_extract_building_outlines_process(bprb_func_process& pro)
 
     // for csv each building is one line:   height, volume (=0.0 for now), area (=0.0 for now), confidence (=0.5 for now), cent_lon, cent_lat, lon_0, lat_0, ..., lon_i, lat_i, ..., lon_n, lat_n;
     ofs_csv << bldg_heights[i] << ",0.0,0.0,0.5," << cent_lon << ',' << cent_lat;
-    for (unsigned j = 0; j < bldgs[i].size(); j++)
-      ofs_csv << ',' << bldgs[i][j].x() << ',' << bldgs[i][j].y();
+    for (auto & j : bldgs[i])
+      ofs_csv << ',' << j.x() << ',' << j.y();
     ofs_csv << '\n';
   }
   bkml_write::close_document(ofs);
@@ -324,8 +326,8 @@ bool volm_extract_building_outlines_process(bprb_func_process& pro)
 
 namespace volm_stereo_height_fix_process_globals
 {
-  const unsigned int n_inputs_ = 2;
-  const unsigned int n_outputs_ = 0;
+  constexpr unsigned int n_inputs_ = 2;
+  constexpr unsigned int n_outputs_ = 0;
 }
 
 bool volm_stereo_height_fix_process_cons(bprb_func_process& pro)
@@ -348,8 +350,8 @@ bool volm_stereo_height_fix_process(bprb_func_process& pro)
   // get inputs
   unsigned i = 0;
   vil_image_view_base_sptr i_img_res = pro.get_input<vil_image_view_base_sptr>(i++);
-  float h_fix = pro.get_input<float>(i++);
-  vil_image_view<float>* in_img = dynamic_cast<vil_image_view<float>*>(i_img_res.ptr());
+  auto h_fix = pro.get_input<float>(i++);
+  auto* in_img = dynamic_cast<vil_image_view<float>*>(i_img_res.ptr());
   if (!in_img) {
     std::cout << pro.name() << ": The image pixel format: " << i_img_res->pixel_format() << " is not supported" << std::endl;
     return false;

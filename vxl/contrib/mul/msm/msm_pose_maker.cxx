@@ -6,7 +6,10 @@
 #include "msm_pose_maker.h"
 #include <vsl/vsl_binary_loader.h>
 #include <vsl/vsl_vector_io.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //=======================================================================
 
@@ -47,8 +50,8 @@ void msm_pose_maker::create_vectors(const msm_points& points,
   if (end0_.size()==0)
   {
     dir.resize(points.size());
-    for (unsigned i=0;i<dir.size();++i)
-      dir[i]=vgl_vector_2d<double>(1,0);
+    for (auto & i : dir)
+      i=vgl_vector_2d<double>(1,0);
     return;
   }
 
@@ -102,7 +105,7 @@ void msm_pose_maker::print_summary(std::ostream& os) const
   os<<" n_points: "<<end0_.size();
 }
 
-const static short version_no = 1;
+constexpr static short version_no = 1;
 
 //: Save class to binary file stream
 void msm_pose_maker::b_write(vsl_b_ostream& bfs) const
@@ -147,5 +150,3 @@ std::ostream& operator<<(std::ostream& os,const msm_pose_maker& b)
   b.print_summary(os);
   return os;
 }
-
-

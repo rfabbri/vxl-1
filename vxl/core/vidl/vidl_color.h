@@ -1,9 +1,6 @@
 // This is core/vidl/vidl_color.h
 #ifndef vidl_color_h_
 #define vidl_color_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Color space conversions and related functions
@@ -15,8 +12,10 @@
 #include <cstring>
 #include <typeinfo>
 #include "vidl_pixel_format.h"
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 
 //-----------------------------------------------------------------------------
@@ -751,4 +750,3 @@ struct vidl_color_component<VIDL_PIXEL_FORMAT_UYV_444>
 };
 
 #endif // vidl_color_h_
-

@@ -8,7 +8,9 @@
 #include <vector>
 #include <iostream>
 #include <set>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <mmn/mmn_arc.h>
 #include <mmn/mmn_dependancy.h>
 #include <mmn/mmn_graph_rep1.h>

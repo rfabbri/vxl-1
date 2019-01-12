@@ -2,7 +2,9 @@
 #include <vector>
 #include <iostream>
 #include <cstdio>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_file.h>
 #include <vul/vul_file_iterator.h>
 #include <vul/vul_timer.h>
@@ -16,7 +18,7 @@
 #include <ihog/ihog_world_roi.h>
 #include <ihog/ihog_transform_2d.h>
 #include <ihog/ihog_transform_2d_sptr.h>
-#include <vcl_cassert.h>
+#include <cassert>
 
 
 static void filenames_from_directory(std::string const& dirname,
@@ -28,7 +30,7 @@ static void filenames_from_directory(std::string const& dirname,
     // check to see if file is a directory.
     if (vul_file::is_directory(fit()))
       continue;
-    filenames.push_back(fit());
+    filenames.emplace_back(fit());
   }
 }
 
@@ -44,7 +46,7 @@ static bool write_homographies(std::string const& filename,
     return false;
   }
   unsigned frame = 0;
-  for (std::vector<vnl_double_3x3 >::const_iterator hit = homographies.begin();
+  for (auto hit = homographies.begin();
        hit != homographies.end(); ++hit, ++frame)
   {
     ofile <<"Frame No " << frame << '\n' << *hit;
@@ -56,7 +58,7 @@ static bool write_homographies(std::string const& filename,
 static ihog_transform_2d
 register_image(vil_image_view<float> & curr_view,
                vil_image_view<float> & last_view,
-               std::string transform_type ="Affine")
+               const std::string& transform_type ="Affine")
 {
   // do registration
   vul_timer time;

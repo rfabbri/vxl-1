@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <testlib/testlib_test.h>
 #include <vnl/vnl_matrix_fixed.h>
@@ -15,10 +17,10 @@ bool close(double,double);
 class null_m_est : public rrel_m_est_obj
 {
  public:
-  double rho( double u ) const { return u; }
-  double wgt( double u ) const { return u; }
-  void wgt( vect_const_iter b, vect_const_iter e, vect_const_iter s, vect_iter w) const { rrel_m_est_obj::wgt(b,e,s,w); }
-  void wgt( vect_const_iter b, vect_const_iter e, double s, vect_iter w) const { rrel_m_est_obj::wgt(b,e,s,w); }
+  double rho( double u ) const override { return u; }
+  double wgt( double u ) const override { return u; }
+  void wgt( vect_const_iter b, vect_const_iter e, vect_const_iter s, vect_iter w) const override { rrel_m_est_obj::wgt(b,e,s,w); }
+  void wgt( vect_const_iter b, vect_const_iter e, double s, vect_iter w) const override { rrel_m_est_obj::wgt(b,e,s,w); }
 };
 
 static void test_similarity_from_matches()
@@ -39,31 +41,31 @@ static void test_similarity_from_matches()
   from_loc[0] = 10;  from_loc[1] = 20;
   to_loc = A*from_loc + t;
   int id = 0;
-  matches.push_back( image_point_match( from_loc, to_loc, id ) );  // 0 - id 0 - good
+  matches.emplace_back( from_loc, to_loc, id );  // 0 - id 0 - good
 
   to_loc[0] += 3;  to_loc[1] += -4;   // dist = 5
   id = 0;
-  matches.push_back( image_point_match( from_loc, to_loc, id ) );  // 1 - id 0 - bad
+  matches.emplace_back( from_loc, to_loc, id );  // 1 - id 0 - bad
 
   from_loc[0] = -15;  from_loc[1] = 6;
   to_loc = A*from_loc + t;
   to_loc[0] += -30;  to_loc[1] += 40;  // dist = 50
   id = 1;
-  matches.push_back( image_point_match( from_loc, to_loc, id ) );  // 2 - id 1 - bad
+  matches.emplace_back( from_loc, to_loc, id );  // 2 - id 1 - bad
 
   to_loc = A*from_loc + t;
   id = 1;
-  matches.push_back( image_point_match( from_loc, to_loc, id ) );  // 3 - id 1 - good
+  matches.emplace_back( from_loc, to_loc, id );  // 3 - id 1 - good
 
   id = 1;
   to_loc[0] += -6; to_loc[1] += 8;   // dist = 10
-  matches.push_back( image_point_match( from_loc, to_loc, id ) );  // 4 - id 1 - bad
+  matches.emplace_back( from_loc, to_loc, id );  // 4 - id 1 - bad
 
   id = 2;
   from_loc[0] += 5; from_loc[1] += -3;
   to_loc = A*from_loc + t;
   to_loc[0] += 0.3;  to_loc[1] += -0.4;
-  matches.push_back( image_point_match( from_loc, to_loc, id ) );  // 5 - id 2 - good (small error)
+  matches.emplace_back( from_loc, to_loc, id );  // 5 - id 2 - good (small error)
 
   testlib_test_begin( "ctor" );
   similarity_from_matches sim( matches );

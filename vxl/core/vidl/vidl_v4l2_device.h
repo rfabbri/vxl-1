@@ -16,8 +16,10 @@
 #include <iosfwd>
 #include <iostream>
 #include "vidl_v4l2_control.h"
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 extern "C" {
 //#include <asm/types.h>          /* for videodev2.h */
 #include <sys/time.h>
@@ -57,7 +59,7 @@ class vidl_v4l2_input
 // \see vidl_v4l2_devices
 class vidl_v4l2_device
 {
-  VCL_SAFE_BOOL_DEFINE;
+
   int fd;
 
   struct buffer {
@@ -295,8 +297,8 @@ class vidl_v4l2_device
   // --------   Next functions indicate if the device is in a bad state: not usable.
 
   //: Cast to bool is true if video device is working ok
-  operator safe_bool () const
-  { return (last_error.size()==0)? VCL_SAFE_BOOL_TRUE : 0; }
+  explicit operator bool () const
+  { return (last_error.size()==0)? true : false; }
 
   //: Return false if video device is not working ok
   bool operator!() const

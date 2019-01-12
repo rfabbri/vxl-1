@@ -40,7 +40,9 @@
 
 #include <iostream>
 #include <fstream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_vector_fixed.h>
 
 #include <vil/vil_load.h>
@@ -121,14 +123,14 @@ read_feature_file( const char* filename,
 class command_iteration_update: public rgrl_command
 {
  public:
-  void execute(rgrl_object* caller, const rgrl_event & event )
+  void execute(rgrl_object* caller, const rgrl_event & event ) override
   {
     execute( (const rgrl_object*) caller, event );
   }
 
-  void execute(const rgrl_object* caller, const rgrl_event & /*event*/ )
+  void execute(const rgrl_object* caller, const rgrl_event & /*event*/ ) override
   {
-    const rgrl_feature_based_registration* reg_engine =
+    const auto* reg_engine =
       dynamic_cast<const rgrl_feature_based_registration*>(caller);
     rgrl_transformation_sptr trans = reg_engine->current_transformation();
 
@@ -180,7 +182,7 @@ main( int argc, char* argv[] )
   // differs from its super-class, \code{rgrl\_feature\_set\_location}, by
   // checking if the requested features are in the valid region.
   //
-  const unsigned int dimension = 2;
+  constexpr unsigned int dimension = 2;
   rgrl_feature_set_sptr moving_feature_set =
     new rgrl_feature_set_location_masked( new  rgrl_feature_set_bins<dimension>(moving_landmark_set),
                                           mask);
@@ -244,11 +246,11 @@ main( int argc, char* argv[] )
 
   rgrl_estimator_sptr affine_estimator = new rgrl_est_affine(dim);
 
-  vcl_unique_ptr<rrel_objective> obj_fun( new rrel_lms_obj(1) );
+  std::unique_ptr<rrel_objective> obj_fun( new rrel_lms_obj(1) );
   rgrl_scale_estimator_unwgted_sptr unwgted_scale_est =
-    new rgrl_scale_est_closest( vcl_move(obj_fun) );
+    new rgrl_scale_est_closest( std::move(obj_fun) );
 
-  rgrl_initializer_ran_sam* ran_sam = new rgrl_initializer_ran_sam();
+  auto* ran_sam = new rgrl_initializer_ran_sam();
   ran_sam->set_data(pruned_match_set,
                     unwgted_scale_est,
                     moving_image_region,
@@ -272,10 +274,10 @@ main( int argc, char* argv[] )
   // \code{rgrl\_weighter\_m\_est}. Make sure
   // \code{signature\_precomputed} is allowed.
   //
-  vcl_unique_ptr<rrel_m_est_obj>  m_est_obj( new rrel_tukey_obj(4) );
+  std::unique_ptr<rrel_m_est_obj>  m_est_obj( new rrel_tukey_obj(4) );
   bool use_signature_error = false;
   bool signature_precomputed = true;
-  rgrl_weighter_sptr wgter = new rgrl_weighter_m_est(vcl_move(m_est_obj),
+  rgrl_weighter_sptr wgter = new rgrl_weighter_m_est(std::move(m_est_obj),
                                                      use_signature_error,
                                                      signature_precomputed);
 

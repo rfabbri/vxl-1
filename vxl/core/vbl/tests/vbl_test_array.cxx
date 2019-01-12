@@ -1,7 +1,9 @@
 // This is core/vbl/tests/vbl_test_array.cxx
 #include <iostream>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_array_1d.h>
 #include <vbl/vbl_array_2d.h>
 #include <vbl/vbl_array_3d.h>
@@ -30,8 +32,8 @@ static void vbl_test_array_1d()
   TEST("size()", v.size(), 5);
   TEST("capacity()", v.capacity() >= v.size(), true);
 
-  for (vbl_array_1d<vbl_test_array_x>::const_iterator i=v.begin(); i!=v.end(); ++i)
-    (*i).method();
+  for (auto i : v)
+    i.method();
 
   TEST("element 0 is 3", v[0], vbl_test_array_x(3,0));
   TEST("element 1 is 7", v[1], vbl_test_array_x(7,0));
@@ -68,8 +70,8 @@ static void vbl_test_array_2d()
   TEST("rows()", v.rows(), 2);
   TEST("cols()", v.cols(), 3);
 
-  for (vbl_array_2d<vbl_test_array_x>::const_iterator i=v.begin(); i!=v.end(); ++i)
-    (*i).method();
+  for (auto i : v)
+    i.method();
 
   TEST("element (0,0) is 3", v(0,0), vbl_test_array_x(3,0));
   TEST("element (0,1) is 7", v(0,1), vbl_test_array_x(7,0));
@@ -112,8 +114,8 @@ static void vbl_test_array_3d()
   TEST("get_row2_count()", v.get_row2_count(), 2);
   TEST("get_row3_count()", v.get_row3_count(), 3);
 
-  for (vbl_array_3d<vbl_test_array_x>::const_iterator i=v.begin(); i!=v.end(); ++i)
-    (*i).method();
+  for (auto i : v)
+    i.method();
 
   TEST("element (0,0,0) is 3", v(0,0,0), vbl_test_array_x(3,0));
   TEST("element (0,0,1) is 7", v(0,0,1), vbl_test_array_x(7,0));
@@ -137,8 +139,8 @@ static void vbl_test_array_3d()
   const vbl_array_3d<vbl_test_array_x> u = v;
   TEST("copy constructor", u, v);
 
-  for (vbl_array_3d<vbl_test_array_x>::const_iterator i=u.begin(); i!=u.end(); ++i)
-    (*i).method();
+  for (auto i : u)
+    i.method();
 
   vbl_array_3d<vbl_test_array_x> z(0,0,0); // Create Zero sized array
 
@@ -152,4 +154,3 @@ static void vbl_test_array()
 }
 
 TESTMAIN(vbl_test_array);
-

@@ -10,8 +10,10 @@
 
 //=======================================================================
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_binary_io.h>
 #include <vsl/vsl_binary_loader.h>
 #include <vsl/vsl_vector_io.h>
@@ -50,8 +52,8 @@ clsfy_direct_boost& clsfy_direct_boost::operator=(const clsfy_direct_boost& c)
 //: Delete objects on heap
 void clsfy_direct_boost::delete_stuff()
 {
-  for (unsigned int i=0;i<classifier_1d_.size();++i)
-    delete classifier_1d_[i];
+  for (auto & i : classifier_1d_)
+    delete i;
 
   classifier_1d_.resize(0);
 

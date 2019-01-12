@@ -8,7 +8,9 @@
 
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_vector.h>
 
 class rgrl_transformation;
@@ -22,7 +24,7 @@ class rgrl_feature_region
   rgrl_feature_region()  : pixel_coordinates_cached_( false ) {}
 
   // destructor
-  virtual ~rgrl_feature_region() {}
+  virtual ~rgrl_feature_region() = default;
 
 #if 0
   // Defines type-related functions

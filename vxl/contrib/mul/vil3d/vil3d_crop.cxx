@@ -1,7 +1,4 @@
 // This is mul/vil3d/vil3d_crop.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Ian Scott.
@@ -9,7 +6,10 @@
 //-----------------------------------------------------------------------------
 
 #include "vil3d_crop.h"
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 vil3d_image_resource_sptr vil3d_crop(
   const vil3d_image_resource_sptr &src,
@@ -38,4 +38,3 @@ vil3d_crop_image_resource::vil3d_crop_image_resource(
          j0 + n_j <= src_->nj() &&
          k0 + n_k <= src_->nk() );
 }
-

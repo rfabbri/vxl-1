@@ -7,8 +7,10 @@
 // \author Charlene Tsai
 // \date   Sep 2003
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include "rgrl_match_set.h"
 #include "rgrl_estimator.h"
@@ -19,8 +21,6 @@
 #include "rgrl_util.h"
 
 #include <vnl/vnl_random.h>
-
-static const unsigned verbose_ = 0;
 
 // Random number generator. This will be shared by all ran_sam instances.
 static vnl_random global_generator_;
@@ -35,7 +35,7 @@ rgrl_initializer_ran_sam( )
   : generate_all_(false),
     generator_( &global_generator_ ),
     own_generator_( false ),
-    xform_(VXL_NULLPTR), scale_(VXL_NULLPTR),
+    xform_(nullptr), scale_(nullptr),
     samples_to_take_(0)
 {
   set_sampling_params();
@@ -46,7 +46,7 @@ rgrl_initializer_ran_sam( int seed )
   : generate_all_(false),
     generator_( new vnl_random( seed ) ),
     own_generator_( true ),
-    xform_(VXL_NULLPTR), scale_(VXL_NULLPTR),
+    xform_(nullptr), scale_(nullptr),
     samples_to_take_(0)
 {
   set_sampling_params();
@@ -83,9 +83,9 @@ set_sampling_params( double max_outlier_frac,
 
 void
 rgrl_initializer_ran_sam::
-set_data(rgrl_match_set_sptr                init_match_set,
-         rgrl_scale_estimator_unwgted_sptr  scale_est,
-         rgrl_view_sptr                     prior_view,
+set_data(const rgrl_match_set_sptr&                init_match_set,
+         const rgrl_scale_estimator_unwgted_sptr&  scale_est,
+         const rgrl_view_sptr&                     prior_view,
          bool should_estimate_global_region)
 {
   match_set_ = init_match_set;
@@ -99,12 +99,12 @@ set_data(rgrl_match_set_sptr                init_match_set,
 
 void
 rgrl_initializer_ran_sam::
-set_data(rgrl_match_set_sptr                init_match_set,
-         rgrl_scale_estimator_unwgted_sptr  scale_est,
+set_data(const rgrl_match_set_sptr&                init_match_set,
+         const rgrl_scale_estimator_unwgted_sptr&  scale_est,
          rgrl_mask_sptr           const&    from_image_roi,
          rgrl_mask_sptr           const&    to_image_roi,
          rgrl_mask_box            const&    initial_from_image_roi,
-         rgrl_estimator_sptr                xform_estimator,
+         const rgrl_estimator_sptr&                xform_estimator,
          unsigned                           initial_resolution,
          bool should_estimate_global_region)
 {
@@ -112,39 +112,39 @@ set_data(rgrl_match_set_sptr                init_match_set,
   rgrl_view_sptr  prior_view  = new rgrl_view( from_image_roi, to_image_roi,
                                                initial_from_image_roi,
                                                global_region, xform_estimator,
-                                               VXL_NULLPTR, initial_resolution );
+                                               nullptr, initial_resolution );
   set_data( init_match_set, scale_est, prior_view, should_estimate_global_region );
 }
 
 void
 rgrl_initializer_ran_sam::
-set_data(rgrl_match_set_sptr                init_match_set,
-         rgrl_scale_estimator_unwgted_sptr  scale_est,
+set_data(const rgrl_match_set_sptr&                init_match_set,
+         const rgrl_scale_estimator_unwgted_sptr&  scale_est,
          rgrl_mask_sptr      const&         from_image_roi,
          rgrl_mask_sptr      const&         to_image_roi,
-         rgrl_estimator_sptr                xform_estimator,
+         const rgrl_estimator_sptr&                xform_estimator,
          unsigned                           initial_resolution )
 {
   rgrl_mask_box global_region( from_image_roi->bounding_box() );
   rgrl_view_sptr  prior_view  = new rgrl_view( from_image_roi, to_image_roi,
                                                global_region, global_region,
-                                               xform_estimator, VXL_NULLPTR,
+                                               xform_estimator, nullptr,
                                                initial_resolution );
   set_data( init_match_set, scale_est, prior_view, false );
 }
 
 void
 rgrl_initializer_ran_sam::
-set_data(rgrl_match_set_sptr                init_match_set,
-         rgrl_scale_estimator_unwgted_sptr  scale_est,
+set_data(const rgrl_match_set_sptr&                init_match_set,
+         const rgrl_scale_estimator_unwgted_sptr&  scale_est,
          rgrl_mask_sptr      const&         from_image_roi,
-         rgrl_estimator_sptr                xform_estimator,
+         const rgrl_estimator_sptr&                xform_estimator,
          unsigned                           initial_resolution )
 {
   rgrl_mask_box global_region( from_image_roi->bounding_box() );
   rgrl_view_sptr  prior_view  = new rgrl_view( from_image_roi, from_image_roi,
                                                global_region, global_region,
-                                               xform_estimator, VXL_NULLPTR,
+                                               xform_estimator, nullptr,
                                                initial_resolution );
   set_data( init_match_set, scale_est, prior_view, false );
 }
@@ -363,8 +363,8 @@ get_matches(const std::vector<int>&  point_indices, unsigned int total_num_match
     sub_match_set = new rgrl_match_set( match_set_->from_feature_type(), match_set_->to_feature_type() );
 
   if ( total_num_matches == match_set_->from_size() ) { //unique matches
-    for (unsigned int i = 0; i<point_indices.size(); ++i) {
-      FIter fi = match_set_->from_begin() + point_indices[i];
+    for (int point_index : point_indices) {
+      FIter fi = match_set_->from_begin() + point_index;
       TIter ti = fi.begin();
       sub_match_set->add_feature_and_match( fi.from_feature(),
                                             fi.mapped_from_feature(),
@@ -374,9 +374,9 @@ get_matches(const std::vector<int>&  point_indices, unsigned int total_num_match
   else {
     int match_count = 0;
     for ( FIter fi = match_set_->from_begin(); fi != match_set_->from_end(); ++fi ) {
-      for (unsigned int i = 0; i<point_indices.size(); ++i) {
-        if ( match_count <= point_indices[i] && match_count + (int)fi.size() > point_indices[i]) {
-          unsigned int offset = point_indices[i] - match_count;
+      for (int point_index : point_indices) {
+        if ( match_count <= point_index && match_count + (int)fi.size() > point_index) {
+          unsigned int offset = point_index - match_count;
           TIter ti = fi.begin() + offset;
           sub_match_set->add_feature_and_match( fi.from_feature(),
                                                 fi.mapped_from_feature(),
@@ -395,7 +395,7 @@ rgrl_initializer_ran_sam::
 trace_sample( const std::vector<int>& indices ) const
 {
   std::cout << "\nNew sample: ";
-  for ( unsigned int i=0; i<indices.size(); ++i)
-    std::cout << ' ' << indices[i];
+  for (int index : indices)
+    std::cout << ' ' << index;
   std::cout << std::endl;
 }

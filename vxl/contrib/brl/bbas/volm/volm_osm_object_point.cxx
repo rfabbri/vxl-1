@@ -49,13 +49,13 @@ void volm_osm_object_point::b_read(vsl_b_istream& is)
 
 void vsl_b_write(vsl_b_ostream& os, const volm_osm_object_point* rptr)
 {
-  if (rptr == VXL_NULLPTR) {
+  if (rptr == nullptr) {
     vsl_b_write(os, false);
     return;
   }
   else
     vsl_b_write(os, true);
-  volm_osm_object_point* ptr = const_cast<volm_osm_object_point*>(rptr);
+  auto* ptr = const_cast<volm_osm_object_point*>(rptr);
   ptr->b_write(os);
 }
 
@@ -68,7 +68,7 @@ void vsl_b_read(vsl_b_istream& is, volm_osm_object_point*& rptr)
     rptr->b_read(is);
     return;
   }
-  rptr = VXL_NULLPTR;
+  rptr = nullptr;
 }
 
 void vsl_b_write(vsl_b_ostream& os, const volm_osm_object_point_sptr& sptr)
@@ -79,7 +79,7 @@ void vsl_b_write(vsl_b_ostream& os, const volm_osm_object_point_sptr& sptr)
 
 void vsl_b_read(vsl_b_istream& is, volm_osm_object_point_sptr& sptr)
 {
-  volm_osm_object_point* rptr = VXL_NULLPTR;
+  volm_osm_object_point* rptr = nullptr;
   vsl_b_read(is, rptr);
   sptr = rptr;
 }

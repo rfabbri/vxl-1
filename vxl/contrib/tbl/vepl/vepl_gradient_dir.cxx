@@ -1,7 +1,9 @@
 // This is tbl/vepl/vepl_gradient_dir.cxx
 #include <iostream>
 #include "vepl_gradient_dir.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vepl/accessors/vipl_accessors_vil_image_view_base.h>
 #include <vipl/vipl_gradient_dir.h>
 #include <vil/vil_image_view.h>
@@ -10,7 +12,7 @@
 #include <vil/vil_new.h>
 #include <vxl_config.h> // for vxl_byte
 
-vil_image_resource_sptr vepl_gradient_dir(vil_image_resource_sptr image, double scale, double shift)
+vil_image_resource_sptr vepl_gradient_dir(const vil_image_resource_sptr& image, double scale, double shift)
 {
   vil_image_resource_sptr img_out = vil_new_image_resource(image->ni(), image->nj(), image->nplanes(), image->pixel_format());
 
@@ -92,4 +94,3 @@ vil_image_resource_sptr vepl_gradient_dir(vil_image_resource_sptr image, double 
 
   return img_out;
 }
-

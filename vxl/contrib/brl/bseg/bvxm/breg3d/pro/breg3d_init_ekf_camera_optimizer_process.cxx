@@ -13,13 +13,13 @@ breg3d_init_ekf_camera_optimizer_process::breg3d_init_ekf_camera_optimizer_proce
   // process takes 1 input:
   //input[0]: The first estimated camera (eg GPS/INS reading)
   // camera should be of type vgpl_perspective_camera
-  input_data_.resize(1,brdb_value_sptr(VXL_NULLPTR));
+  input_data_.resize(1,brdb_value_sptr(nullptr));
   input_types_.resize(1);
   input_types_[0] = "vpgl_camera_double_sptr";
 
   // process has 1 output:
   // output[0]: The initial state estimate for the kalman filter
-  output_data_.resize(1,brdb_value_sptr(VXL_NULLPTR));
+  output_data_.resize(1,brdb_value_sptr(nullptr));
   output_types_.resize(1);
   output_types_[0]= "breg3d_ekf_camera_optimizer_state";
 
@@ -44,7 +44,7 @@ bool breg3d_init_ekf_camera_optimizer_process::execute()
   if (!this->verify_inputs())
     return false;
 
-  brdb_value_t<vpgl_camera_double_sptr>* input0 =
+  auto* input0 =
     static_cast<brdb_value_t<vpgl_camera_double_sptr>* >(input_data_[0].ptr());
 
   vpgl_perspective_camera<double> *cam0;
@@ -76,4 +76,3 @@ bool breg3d_init_ekf_camera_optimizer_process::execute()
 
   return true;
 }
-

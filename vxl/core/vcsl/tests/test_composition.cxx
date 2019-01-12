@@ -13,7 +13,9 @@
 
 #include <iostream>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vcsl/vcsl_cartesian_3d.h>
 #include <vcsl/vcsl_composition.h>
 #include <vcsl/vcsl_translation.h>
@@ -66,12 +68,12 @@ static void test_composition()
 
   vcsl_composition_sptr composition=new vcsl_composition;
   std::vector<vcsl_spatial_transformation_sptr> transfo;
-  transfo.push_back(tr.ptr());
-  transfo.push_back(scale.ptr());
+  transfo.emplace_back(tr.ptr());
+  transfo.emplace_back(scale.ptr());
   composition->set_composition(transfo);
 
   std::vector<vcsl_spatial_transformation_sptr> motion;
-  motion.push_back(composition.ptr());
+  motion.emplace_back(composition.ptr());
   cs0->set_motion(motion);
 
   vnl_vector<double> p(3);

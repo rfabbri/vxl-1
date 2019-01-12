@@ -9,8 +9,10 @@
 #include <vil1/vil1_rgb.h>
 #include <vil1/vil1_load.h>
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <vxl_config.h> // for vxl_uint_16 etc.
 
@@ -28,7 +30,7 @@ typedef double TruePixelType;
 class CheckPixel
 {
  public:
-  virtual ~CheckPixel() { }
+  virtual ~CheckPixel() = default;
   virtual bool operator() ( int p, int x, int y, const std::vector<TruePixelType>& pixel ) const = 0;
 };
 
@@ -45,7 +47,7 @@ class CheckRGB : public CheckPixel
       img_ = i;
   };
 
-  bool operator() ( int p, int x, int y, const std::vector<TruePixelType>& pixel ) const
+  bool operator() ( int p, int x, int y, const std::vector<TruePixelType>& pixel ) const override
   {
     assert( p == 0 );
     if (!img_ || pixel.size() != 3) return false;
@@ -73,7 +75,7 @@ class CheckColourPlanes : public CheckPixel
       img_ = i;
   };
 
-  bool operator() ( int p, int x, int y, const std::vector<TruePixelType>& pixel ) const
+  bool operator() ( int p, int x, int y, const std::vector<TruePixelType>& pixel ) const override
   {
     assert( p==0 || p==1 || p==2 );
     if (!img_ || pixel.size() != 1) return false;
@@ -100,7 +102,7 @@ class CheckGrey : public CheckPixel
       img_ = i;
   };
 
-  bool operator() ( int p, int x, int y, const std::vector<TruePixelType>& pixel ) const
+  bool operator() ( int p, int x, int y, const std::vector<TruePixelType>& pixel ) const override
   {
     assert( p == 0 );
     if (!img_ || pixel.size() != 1) return false;
@@ -127,7 +129,7 @@ class CheckBit : public CheckPixel
       img_ = i;
   };
 
-  bool operator() ( int p, int x, int y, const std::vector<TruePixelType>& pixel ) const
+  bool operator() ( int p, int x, int y, const std::vector<TruePixelType>& pixel ) const override
   {
     assert( p == 0 );
     if (!img_ || pixel.size() != 1) return false;

@@ -10,7 +10,9 @@
 #include <ostream>
 #include <string>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 //: Save vector to file with format "v1 v2 .. vn"

@@ -1,7 +1,4 @@
 // This is oxl/mvl/TripleMatchSet.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 
@@ -9,7 +6,9 @@
 #include <cstdlib>
 #include "TripleMatchSet.h"
 //
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_matrix.h>
 #include <mvl/PairMatchSet.h>
 
@@ -247,8 +246,8 @@ void TripleMatchSet::clear_nontriplets()
 {
   //mt_clear_affinity_nontriplets (match12_->get_table(), match23_->get_table());
   std::vector<bool> accept(match23_->size());
-  for (std::vector<bool>::iterator i=accept.begin(); i!=accept.end(); ++i)
-    *i = false;
+  for (auto && i : accept)
+    i = false;
 
   int cleared_count = 0;
   for (int i1 = 0; i1 < match12_->size(); i1++) {
@@ -380,4 +379,3 @@ void TripleMatchSet::update_from(MA_MATCH_TABLE_STR* matchtable)
   mt_3image_match_to_affinity (matchtable, match12_->get_table(), match23_->get_table());
 }
 #endif
-

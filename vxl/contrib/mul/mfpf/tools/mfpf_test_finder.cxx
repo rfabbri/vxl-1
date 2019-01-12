@@ -44,8 +44,10 @@
 
 #include <msm/msm_points.h>
 #include <mbl/mbl_stats_1d.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 //: Structure to hold parameters
 struct tool_params
@@ -79,9 +81,7 @@ struct tool_params
   void read_from_file(const std::string& path);
 };
 
-tool_params::tool_params()
-{
-}
+tool_params::tool_params() = default;
 
 //: Parse named text file to read in data
 //  Throws a upf_exception_parse_error if fails
@@ -152,7 +152,7 @@ int main(int argc, char** argv)
 
   vgl_vector_2d<double> u(1,0);  // Default to unit scale and fixed angle
 
-  mfpf_point_finder *finder = VXL_NULLPTR;
+  mfpf_point_finder *finder = nullptr;
   vsl_quick_file_load(finder,params.model_path);
   std::cout<<"Finder: "<<*finder<<std::endl;
 
@@ -188,7 +188,7 @@ int main(int argc, char** argv)
     assert(int(params.res_level)<=image_pyr.hi());
 
     // Select relevant level from pyramid
-    const vimt_image_2d_of<float>& imageL
+    const auto& imageL
       = static_cast<const vimt_image_2d_of<float>&>(image_pyr(params.res_level));
 
     // Load in points
@@ -240,4 +240,3 @@ int main(int argc, char** argv)
 
   return 0;
 }
-

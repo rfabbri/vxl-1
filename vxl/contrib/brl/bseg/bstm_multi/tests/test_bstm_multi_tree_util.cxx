@@ -4,10 +4,13 @@
 // \author Raphael Kargon
 // \date 21-Aug-2017
 
+#include <iostream>
+#include <string>
 #include <testlib/testlib_root_dir.h>
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
-#include <vcl_string.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <bstm_multi/bstm_multi_tree_util.h>
 
@@ -22,8 +25,8 @@ void test_space_time_enum() {
   TEST("STE from string failure", ste_from_string("lol", ste), false);
 
   // last one should be skipped since it's a typo
-  vcl_string subdivs = "time,space,time,space,spaec";
-  vcl_vector<space_time_enum> subdivisions = parse_subdivisions(subdivs);
+  std::string subdivs = "time,space,time,space,spaec";
+  std::vector<space_time_enum> subdivisions = parse_subdivisions(subdivs);
   TEST("parse subdivisions skip incorrect", subdivisions.size(), 4);
   TEST("parse subdivisions", subdivisions[0], STE_TIME);
   TEST("parse subdivisions", subdivisions[1], STE_SPACE);

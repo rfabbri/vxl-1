@@ -18,10 +18,12 @@
 
 #include <iostream>
 #include "volm_desc.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <volm_io.h>
 #include <volm_category_io.h>
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vsl/vsl_binary_io.h>
 #include <bpgl/depth_map/depth_map_region.h>
 #include <bpgl/depth_map/depth_map_region_sptr.h>
@@ -32,10 +34,10 @@
 class volm_object
 {
 public:
-  volm_object() {}
+  volm_object() = default;
   volm_object(double const& dist, depth_map_region::orientation const& orient, unsigned const& land, double const& height = 0)
     : dist_(dist), height_(height), orient_(orient), land_(land) {}
-  ~volm_object() {}
+  ~volm_object() = default;
 
   void print() const {
     std::cout << "[dist: " << dist_ << " height: " << height_
@@ -54,7 +56,7 @@ class volm_desc_ex : public volm_desc
 {
 public:
   //: Default constructor
-  volm_desc_ex() {}
+  volm_desc_ex() = default;
   //: constructor from depth_map_scene
   volm_desc_ex(depth_map_scene_sptr const& dms,
                std::vector<double> const& radius,
@@ -76,7 +78,7 @@ public:
     ndists_(ndists), norients_(norients), nlands_(nlands), radius_(radius) { nbins_ = ndists_ * nlands_; h_.resize(nbins_); initialize_bin(0); }
 
   //: destructor
-  ~volm_desc_ex() {}
+  ~volm_desc_ex() override = default;
 
   //: number of depth bins
   unsigned ndepths() const { return this->ndists_; }
@@ -123,21 +125,21 @@ public:
   {  this->set_count(ob.dist_, ob.orient_, ob.land_, count);  }
 
   //: screen print
-  void print() const;
+  void print() const override;
 
   //: similarity method -- calculate the intersection of two histogram, normalized by current histogram
-  float similarity(volm_desc_sptr other);
+  float similarity(volm_desc_sptr other) override;
 
   // ===========  binary I/O ================
 
   //: version
-  unsigned version() const { return 1; }
+  unsigned version() const override { return 1; }
 
   //: binary IO write
-  void b_write(vsl_b_ostream& os);
+  void b_write(vsl_b_ostream& os) override;
 
   //: binary IO read
-  void b_read(vsl_b_istream& is);
+  void b_read(vsl_b_istream& is) override;
 
 private:
   //: histogram structure

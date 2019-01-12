@@ -1,5 +1,7 @@
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vnl/vnl_double_3.h>
 #include <vnl/vnl_double_4.h>
@@ -20,7 +22,7 @@ static void test_orthogonal_regression()
   vnl_double_3 norm_vect(true_params[0],true_params[1],true_params[2]);
   true_params /= norm_vect.two_norm();  //  4 component vector
   norm_vect /= norm_vect.two_norm();    //  3 component normal only
-  const unsigned int num_pts=7;
+  constexpr unsigned int num_pts = 7;
 
   //  Build LinearRegression objects exercising both constructors and
   //  the two different options for the first constructor.

@@ -10,15 +10,17 @@
 #include <fstream>
 #include <bprb/bprb_func_process.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/boxm2_scene.h>
 #include <bocl/bocl_device.h>
 #include <boxm2/ocl/boxm2_opencl_cache1.h>
 #include <boxm2/ocl/boxm2_opencl_cache.h>
 namespace boxm2_create_opencl_cache1_process_globals
 {
-  const unsigned n_inputs_ = 2;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 2;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 bool boxm2_create_opencl_cache1_process_cons(bprb_func_process& pro)
@@ -58,8 +60,8 @@ bool boxm2_create_opencl_cache1_process(bprb_func_process& pro)
 }
 namespace boxm2_create_opencl_cache_process_globals
 {
-  const unsigned n_inputs_ = 1;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 1;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 bool boxm2_create_opencl_cache_process_cons(bprb_func_process& pro)

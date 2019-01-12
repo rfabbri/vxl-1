@@ -1,9 +1,6 @@
 // This is core/vgui/vgui_event_condition.h
 #ifndef vgui_event_condition_h_
 #define vgui_event_condition_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author fsm
@@ -20,7 +17,9 @@
 // \endverbatim
 
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgui/vgui_key.h>
 #include <vgui/vgui_button.h>
 #include <vgui/vgui_modifier.h>

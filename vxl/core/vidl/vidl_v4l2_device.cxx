@@ -21,7 +21,9 @@ extern "C" {
 #include <sys/stat.h>
 #include <sys/mman.h>
 #include <sys/ioctl.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <fcntl.h>
 #include <unistd.h>
 };
@@ -656,4 +658,3 @@ operator<<(std::ostream &os, const vidl_v4l2_device & dev)
      << " width: "<< dev.get_width()<< " height: " << dev.get_height() << std::endl;
   return os;
 }
-

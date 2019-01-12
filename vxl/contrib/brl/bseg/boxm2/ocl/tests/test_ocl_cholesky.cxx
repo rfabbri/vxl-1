@@ -1,7 +1,9 @@
 #include <iostream>
 #include <vcl_where_root_dir.h>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_matrix.h>
 #include <vnl/algo/vnl_cholesky.h>
 #include <vnl/vnl_inverse.h>
@@ -12,7 +14,7 @@
 #include <bocl/bocl_device.h>
 #include <boxm2/ocl/tests/boxm2_ocl_test_utils.h>
 
-void compute_ocl_cholesky(vnl_matrix<float>  A, vnl_vector<float>  b, vnl_vector<float>  x0, vnl_vector<float>  & x)
+void compute_ocl_cholesky(const vnl_matrix<float>&  A, vnl_vector<float>  b, const vnl_vector<float>&  x0, vnl_vector<float>  & x)
 {
   //load BOCL stuff
   bocl_manager_child &mgr = bocl_manager_child::instance();
@@ -92,7 +94,7 @@ void compute_ocl_cholesky(vnl_matrix<float>  A, vnl_vector<float>  b, vnl_vector
   testlib_test_assert_near("ONL CHOLESKY SOLVE x- x0", (x - x0).two_norm(),0,1e-3);
 }
 
-void compute_vnl_cholesky(vnl_matrix<double> & A, vnl_vector<double>  b, vnl_vector<double>  x0, vnl_vector<double>  & x)
+void compute_vnl_cholesky(vnl_matrix<double> & A, const vnl_vector<double>&  b, const vnl_vector<double>&  x0, vnl_vector<double>  & x)
 {
   vnl_matrix<double> I(4,4);
   I.set_identity();

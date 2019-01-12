@@ -5,7 +5,9 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bxml/bxml_read.h>
 #include <bxml/bxml_find.h>
 #include <bxml/bxml_write.h>
@@ -26,29 +28,24 @@ std::ostream& operator<<(std::ostream& os, const bprb_param& p)
 
 //: Constructor
 bprb_parameters::bprb_parameters()
-{
-}
+= default;
 
 
 //: Destructor
 bprb_parameters::~bprb_parameters()
 {
-  for ( std::vector< bprb_param * >::iterator it = param_list_.begin();
-        it != param_list_.end();
-        it++ ) {
-    delete *it;
+  for (auto & it : param_list_) {
+    delete it;
   }
 }
 
 //: Deep copy constructor
 bprb_parameters::bprb_parameters(const bprb_parameters_sptr& old_params)
 {
-  for ( std::vector< bprb_param * >::iterator it = old_params->param_list_.begin();
-        it != old_params->param_list_.end();
-        it++ ) {
+  for (auto & it : old_params->param_list_) {
 
     //deep copy this param
-    bprb_param * new_param = (*it)->clone();
+    bprb_param * new_param = it->clone();
 
     param_list_.push_back( new_param );
     name_param_map_.insert( std::pair< std::string , bprb_param* >( new_param->name() , new_param ) );
@@ -60,7 +57,7 @@ bprb_parameters::bprb_parameters(const bprb_parameters_sptr& old_params)
 bool
 bprb_parameters::valid_parameter( const std::string& name ) const
 {
-  std::map< std::string , bprb_param * >::const_iterator itr = name_param_map_.find( name );
+  auto itr = name_param_map_.find( name );
   return itr != name_param_map_.end();
 }
 
@@ -109,16 +106,16 @@ bool bprb_parameters::parse_XML(const std::string& xml_path,
   }
 
   // iterate over he elements and find out their types
-  bxml_element* h_elm = static_cast<bxml_element*>(root.ptr());
-  for (bxml_element::const_data_iterator i = h_elm->data_begin(); i != h_elm->data_end();  ++i) {
+  auto* h_elm = static_cast<bxml_element*>(root.ptr());
+  for (auto i = h_elm->data_begin(); i != h_elm->data_end();  ++i) {
     bxml_data_sptr elm = *i;
     if (elm->type() == bxml_data::ELEMENT) {
-      bxml_element* param = static_cast<bxml_element*> (elm.as_pointer());
+      auto* param = static_cast<bxml_element*> (elm.as_pointer());
       if (param) {
         std::string value = param->attribute("value");
         std::string type = param->attribute("type");
         std::string desc = param->attribute("desc");
-        bprb_param* p=VXL_NULLPTR;
+        bprb_param* p=nullptr;
         if (!type.compare("float")) {
           p =  new bprb_param_type<float>(param->name(), desc, 0);
         } else if ( (!type.compare("unsigned int")) || (!type.compare("unsigned")) ) {
@@ -152,14 +149,12 @@ void bprb_parameters::print_def_XML(const std::string& root_tag,
   bxml_element* root = new bxml_element(root_tag);
   root->append_text("\n");
   // iterate over each parameter, and get the default ones
-  for ( std::vector< bprb_param * >::iterator it = param_list_.begin();
-        it != param_list_.end();
-        it++ ) {
-    std::string name = (*it)->name();
-    std::string def_value = (*it)->default_str();
+  for (auto & it : param_list_) {
+    std::string name = it->name();
+    std::string def_value = it->default_str();
     bxml_element* param_elem = new bxml_element(name);
-    param_elem->set_attribute("type", (*it)->type_str());
-    param_elem->set_attribute("desc", (*it)->description());
+    param_elem->set_attribute("type", it->type_str());
+    param_elem->set_attribute("desc", it->description());
     param_elem->set_attribute("value", def_value);
     root->append_data(param_elem);
     root->append_text("\n");
@@ -176,14 +171,12 @@ void bprb_parameters::print_current_XML(const std::string& root_tag,
   bxml_element* root = new bxml_element(root_tag);
   root->append_text("\n");
   // iterate over each parameter, and get the default ones
-  for ( std::vector< bprb_param * >::iterator it = param_list_.begin();
-        it != param_list_.end();
-        it++ ) {
-    std::string name = (*it)->name();
-    std::string value = (*it)->value_str();
+  for (auto & it : param_list_) {
+    std::string name = it->name();
+    std::string value = it->value_str();
     bxml_element* param_elem = new bxml_element(name);
-    param_elem->set_attribute("type", (*it)->type_str());
-    param_elem->set_attribute("desc", (*it)->description());
+    param_elem->set_attribute("type", it->type_str());
+    param_elem->set_attribute("desc", it->description());
     param_elem->set_attribute("value", value);
     root->append_data(param_elem);
     root->append_text("\n");
@@ -197,10 +190,8 @@ void bprb_parameters::print_current_XML(const std::string& root_tag,
 bool
 bprb_parameters::reset_all()
 {
-  for ( std::vector< bprb_param * >::iterator it = param_list_.begin();
-        it != param_list_.end();
-        it++ ) {
-    (*it)->reset();
+  for (auto & it : param_list_) {
+    it->reset();
   }
   return true;
 }
@@ -210,7 +201,7 @@ bprb_parameters::reset_all()
 bool
 bprb_parameters::reset( const std::string& name )
 {
-  std::map< std::string , bprb_param * >::iterator it = name_param_map_.find( name );
+  auto it = name_param_map_.find( name );
   if ( it == name_param_map_.end() ) {
     return false;
   }
@@ -233,7 +224,7 @@ bprb_parameters::get_param_list() const
 std::string
 bprb_parameters::get_desc( const std::string& name ) const
 {
-  std::map< std::string , bprb_param * >::const_iterator it = name_param_map_.find( name );
+  auto it = name_param_map_.find( name );
   if ( it == name_param_map_.end() ) {
     return "";
   }
@@ -245,10 +236,8 @@ bprb_parameters::get_desc( const std::string& name ) const
 void
 bprb_parameters::print_all(std::ostream& os) const
 {
-  for ( std::vector< bprb_param * >::const_iterator it = param_list_.begin();
-        it != param_list_.end();
-        it++ ) {
-    os << *it;
+  for (auto it : param_list_) {
+    os << it;
   }
 }
 
@@ -300,4 +289,3 @@ std::istream& operator>>( std::istream& strm, bprb_filepath& fp )
   strm >> fp.path >> fp.ext;
   return strm;
 }
-

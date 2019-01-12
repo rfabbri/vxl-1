@@ -1,9 +1,6 @@
 // This is brl/bbas/bil/bil_raw_image_istream.h
 #ifndef bil_raw_image_istream_h_
 #define bil_raw_image_istream_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief A video input stream from a list of images on disk
@@ -21,7 +18,9 @@
 #include <vbl/vbl_ref_count.h>
 #include <vbl/vbl_smart_ptr.h>
 #include <vsl/vsl_binary_io.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: A video input stream from a list of images on disk
 // This istream will try to open and validate (but not read image data from)
@@ -41,7 +40,7 @@ class bil_raw_image_istream : public vbl_ref_count
   bil_raw_image_istream(const std::string& rawFile);
 
   //: Destructor
-  virtual ~bil_raw_image_istream() { close(); }
+  ~bil_raw_image_istream() override { close(); }
 
   //: Open a new stream using a file glob (see vul_file_iterator)
   // \note files are loaded in alphanumeric order by path name

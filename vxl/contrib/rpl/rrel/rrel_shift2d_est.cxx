@@ -1,13 +1,16 @@
-#include <iostream>
 #include <cmath>
+#include <iostream>
+#include <utility>
 #include "rrel_shift2d_est.h"
 
 #include <vgl/vgl_homg_point_2d.h>
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_math.h>
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 rrel_shift2d_est::rrel_shift2d_est(
     const std::vector< vgl_homg_point_2d<double> > & from_pts,
@@ -33,10 +36,10 @@ rrel_shift2d_est::rrel_shift2d_est(
 }
 
 rrel_shift2d_est::rrel_shift2d_est(
-    const std::vector< vnl_vector<double> > & from_pts,
-    const std::vector< vnl_vector<double> > & to_pts )
+    std::vector< vnl_vector<double> >  from_pts,
+    std::vector< vnl_vector<double> >  to_pts )
     : rrel_estimation_problem( 2 /*dof*/, 1 /*points to instantiate*/ ),
-      from_pts_( from_pts ), to_pts_( to_pts )
+      from_pts_(std::move( from_pts )), to_pts_(std::move( to_pts ))
 {
   assert( from_pts_.size() == to_pts_.size() );
   for ( unsigned int i=0; i<from_pts_.size(); ++i ) {
@@ -46,9 +49,7 @@ rrel_shift2d_est::rrel_shift2d_est(
   compute_del_pts ();
 }
 
-rrel_shift2d_est::~rrel_shift2d_est()
-{
-}
+rrel_shift2d_est::~rrel_shift2d_est() = default;
 
 unsigned int
 rrel_shift2d_est::num_samples( ) const

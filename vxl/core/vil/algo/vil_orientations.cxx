@@ -5,8 +5,10 @@
 // \brief Functions to compute orientations and gradient magnitude
 // \author Tim Cootes
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Compute orientation (in radians) and gradient magnitude at each pixel
 void vil_orientations(const vil_image_view<float>& grad_i,

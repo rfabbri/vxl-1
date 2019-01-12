@@ -12,7 +12,9 @@
 
 //=======================================================================
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_binary_io.h>
 #include <clsfy/clsfy_binary_threshold_1d.h>
 
@@ -74,4 +76,3 @@ void clsfy_binary_1d_wrapper::b_read(vsl_b_istream& bfs)
       bfs.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
   }
 }
-

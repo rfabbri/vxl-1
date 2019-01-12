@@ -9,7 +9,9 @@
 // \author Daniel Crispell
 // \date Mar 5, 2012
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/view/boxm2_trajectory.h>
 #include <vpgl/vpgl_camera_double_sptr.h>
 
@@ -18,8 +20,8 @@
 
 namespace boxm2_view_trajectory_direct_process_globals
 {
-  const unsigned n_inputs_ = 2;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 2;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 bool boxm2_view_trajectory_direct_process_cons(bprb_func_process& pro)

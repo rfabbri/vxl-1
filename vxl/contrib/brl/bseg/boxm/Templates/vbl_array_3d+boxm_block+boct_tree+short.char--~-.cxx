@@ -1,10 +1,11 @@
 #include <iostream>
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_array_3d.hxx>
 #include <boxm/boxm_block.hxx>
 #include <boct/boct_tree.hxx>
 
 typedef boct_tree<short, char > tree_type;
 VBL_ARRAY_3D_INSTANTIATE(boxm_block<tree_type>*);
-

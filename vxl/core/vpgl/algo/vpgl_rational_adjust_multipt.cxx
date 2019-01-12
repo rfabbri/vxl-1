@@ -1,9 +1,10 @@
 #include <cmath>
 #include <limits>
+#include <utility>
 #include "vpgl_rational_adjust_multipt.h"
 //:
 // \file
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vgl/vgl_point_3d.h>
 #include <vnl/vnl_numeric_traits.h>
 #include <vnl/algo/vnl_levenberg_marquardt.h>
@@ -11,13 +12,15 @@
 #include <vpgl/algo/vpgl_ray_intersect.h>
 #include <vpgl/algo/vpgl_rational_adjust_onept.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 double compute_projection_error(std::vector<vpgl_rational_camera<double> > const& cams,
                                 std::vector<vgl_point_2d<double> > const& corrs, vgl_point_3d<double>& intersection)
 {
-  std::vector<vpgl_rational_camera<double> >::const_iterator cit = cams.begin();
-  std::vector<vgl_point_2d<double> >::const_iterator rit = corrs.begin();
+  auto cit = cams.begin();
+  auto rit = corrs.begin();
   double error = 0.0;
   for (; cit!=cams.end() && rit!=corrs.end(); ++cit, ++rit)
   {
@@ -91,8 +94,8 @@ void re_projection_error(std::vector<vpgl_rational_camera<double> > const& cams,
 
 void print_perm(std::vector<unsigned>& params_indices)
 {
-  for (unsigned int i = 0; i < params_indices.size(); ++i)
-    std::cout << params_indices[i] << ' ';
+  for (unsigned int params_indice : params_indices)
+    std::cout << params_indice << ' ';
   std::cout << std::endl;
 }
 
@@ -139,7 +142,7 @@ adjust(std::vector<vpgl_rational_camera<double> > const& cams,
     return false;
   if (!corrs[0].size())
     return false;
-  unsigned int cnt_corrs_for_each_cam = (unsigned)corrs[0].size();
+  auto cnt_corrs_for_each_cam = (unsigned)corrs[0].size();
   for (unsigned int i = 1; i < corrs.size(); ++i)
     if (corrs[i].size() != cnt_corrs_for_each_cam)  // there needs to be same number of corrs for each cam
       return false;
@@ -154,9 +157,9 @@ adjust(std::vector<vpgl_rational_camera<double> > const& cams,
   }
   // find the best intersections for all the correspondences using the given cameras to compute good initial estimates for z of each correspondence
   std::vector<vgl_point_3d<double> > intersections_initial;
-  for (unsigned int i = 0; i < corrs_reformatted.size(); ++i) {
+  for (const auto & i : corrs_reformatted) {
     vgl_point_3d<double> pt;
-    if (!vpgl_rational_adjust_onept::find_intersection_point(cams, cam_weights, corrs_reformatted[i], pt))
+    if (!vpgl_rational_adjust_onept::find_intersection_point(cams, cam_weights, i, pt))
       return false;
     intersections_initial.push_back(pt);
   }
@@ -170,8 +173,8 @@ adjust(std::vector<vpgl_rational_camera<double> > const& cams,
     param_values.push_back(i*increment);
     param_values.push_back(-i*increment);
   }
-  for (unsigned int i = 0; i < param_values.size(); ++i)
-    std::cout << param_values[i] << ' ';
+  for (double param_value : param_values)
+    std::cout << param_value << ' ';
   std::cout << '\n';
 
   // now for each param go through all possible param values
@@ -228,13 +231,13 @@ adjust(std::vector<vpgl_rational_camera<double> > const& cams,
 
 vpgl_cam_trans_search_lsqr::
 vpgl_cam_trans_search_lsqr(std::vector<vpgl_rational_camera<double> > const& cams,
-                           std::vector<float> const& cam_weights,
+                           std::vector<float>  cam_weights,
                            std::vector< std::vector<vgl_point_2d<double> > > const& image_pts,  // for each 3D corr, an array of 2D corrs for each camera
-                           std::vector< vgl_point_3d<double> > const& initial_pts)
+                           std::vector< vgl_point_3d<double> >  initial_pts)
   :  vnl_least_squares_function(2*(unsigned)cams.size(), (unsigned)(cams.size()*image_pts.size()), vnl_least_squares_function::no_gradient),
-     initial_pts_(initial_pts),
+     initial_pts_(std::move(initial_pts)),
      cameras_(cams),
-     cam_weights_(cam_weights),
+     cam_weights_(std::move(cam_weights)),
      corrs_(image_pts)
 {}
 
@@ -274,7 +277,7 @@ bool vpgl_rational_adjust_multiple_pts::
     return false;
   if (!corrs[0].size())
     return false;
-  unsigned int cnt_corrs_for_each_cam = (unsigned)corrs[0].size();
+  auto cnt_corrs_for_each_cam = (unsigned)corrs[0].size();
   for (unsigned int i = 1; i < corrs.size(); ++i)
     if (corrs[i].size() != cnt_corrs_for_each_cam)  // there needs to be same number of corrs for each cam
       return false;
@@ -289,9 +292,9 @@ bool vpgl_rational_adjust_multiple_pts::
   }
   // find the best intersections for all the correspondences using the given cameras to compute good initial estimates for z of each correspondence
   std::vector<vgl_point_3d<double> > intersections_initial;
-  for (unsigned int i = 0; i < corrs_reformatted.size(); ++i) {
+  for (const auto & i : corrs_reformatted) {
     vgl_point_3d<double> pt;
-    if (!vpgl_rational_adjust_onept::find_intersection_point(cams, cam_weights, corrs_reformatted[i], pt))
+    if (!vpgl_rational_adjust_onept::find_intersection_point(cams, cam_weights, i, pt))
       return false;
     intersections_initial.push_back(pt);
   }
@@ -302,8 +305,8 @@ bool vpgl_rational_adjust_multiple_pts::
       return false;
     intersections_initial[i] = final;
   }
-  for (unsigned int i = 0; i < intersections_initial.size(); ++i)
-    std::cout << "before adjustment initial 3D intersection point: " << intersections_initial[i] << std::endl;
+  for (const auto & i : intersections_initial)
+    std::cout << "before adjustment initial 3D intersection point: " << i << std::endl;
 
   // search the camera translation space using Lev-Marq
   vpgl_cam_trans_search_lsqr transsf(cams, cam_weights, corrs_reformatted, intersections_initial);
@@ -365,7 +368,7 @@ bool vpgl_rational_adjust_multiple_pts::adjust_lev_marq(std::vector<vpgl_rationa
     return false;
   if (!corrs[0].size())
     return false;
-  unsigned int cnt_corrs_for_each_cam = (unsigned)corrs[0].size();
+  auto cnt_corrs_for_each_cam = (unsigned)corrs[0].size();
   for (unsigned i = 1; i < corrs.size(); ++i)
     if (corrs[i].size() != cnt_corrs_for_each_cam)
       return false;
@@ -380,9 +383,9 @@ bool vpgl_rational_adjust_multiple_pts::adjust_lev_marq(std::vector<vpgl_rationa
   }
   // find the best 3-d intersections for all the correspondences using the given cameras to compute good initial estimates for z of each correspondence
   std::vector<vgl_point_3d<double> > intersections_initial;
-  for (unsigned i = 0; i < corrs_reformatted.size(); i++) {
+  for (const auto & i : corrs_reformatted) {
     vgl_point_3d<double> pt;
-    if (!vpgl_rational_adjust_onept::find_intersection_point(cams, cam_weights, corrs_reformatted[i], initial_pt, zmin, zmax, pt, relative_diameter))
+    if (!vpgl_rational_adjust_onept::find_intersection_point(cams, cam_weights, i, initial_pt, zmin, zmax, pt, relative_diameter))
       return false;
     intersections_initial.push_back(pt);
   }
@@ -394,8 +397,8 @@ bool vpgl_rational_adjust_multiple_pts::adjust_lev_marq(std::vector<vpgl_rationa
       return false;
     intersections_initial[i] = final;
   }
-  for (unsigned int i = 0; i < intersections_initial.size(); ++i)
-    std::cout << "before adjustment initial 3D intersection point: " << intersections_initial[i] << std::endl;
+  for (const auto & i : intersections_initial)
+    std::cout << "before adjustment initial 3D intersection point: " << i << std::endl;
 
   // search the camera translation space using Lev-Marq
   vpgl_cam_trans_search_lsqr transsf(cams, cam_weights, corrs_reformatted, intersections_initial);

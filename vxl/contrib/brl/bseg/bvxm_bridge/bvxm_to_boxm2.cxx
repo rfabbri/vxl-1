@@ -3,7 +3,9 @@
 #include "bvxm_to_boxm2.h"
 //:
 // \file
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //executable args
 #include <vul/vul_arg.h>
@@ -28,7 +30,7 @@
 
 
 // this method creates a regular boxm2 world, i.e. each subblock/octree is one voxel of the bvxm_world, octrees are not refined/sub-divided.
-void create_regular_world_scene_xml(boxm2_scene& new_scene, bvxm_world_params_sptr params, bvxm_voxel_world_sptr world, int max_level)
+void create_regular_world_scene_xml(boxm2_scene& new_scene, const bvxm_world_params_sptr& params, const bvxm_voxel_world_sptr&  /*world*/, int max_level)
 {
   std::cout << "boxm2 scene directory: " << new_scene.data_path() << std::endl;
   std::cout << "setting 1 block only. number of subblocks, dimx: " << params->num_voxels().x() << " dimy: " << params->num_voxels().y() << " dimz: " << params->num_voxels().z() << std::endl;
@@ -53,12 +55,12 @@ void create_regular_world_scene_xml(boxm2_scene& new_scene, bvxm_world_params_sp
 }
 
 // this method creates a regular boxm2 world, i.e. each subblock/octree is one voxel of the bvxm_world, octrees are not refined/sub-divided.
-void initialize_regular_world_scene(boxm2_scene_sptr new_scene, boxm2_cache_sptr cache, bvxm_world_params_sptr params, bvxm_voxel_world_sptr world)
+void initialize_regular_world_scene(boxm2_scene_sptr new_scene, const boxm2_cache_sptr& cache, const bvxm_world_params_sptr&  /*params*/, const bvxm_voxel_world_sptr& world)
 {
 
   typedef bvxm_voxel_traits<OCCUPANCY>::voxel_datatype ocp_datatype;
   bvxm_voxel_grid_base_sptr ocp_grid_base = world->get_grid<OCCUPANCY>(0,0);
-  bvxm_voxel_grid<ocp_datatype> *ocp_grid  = static_cast<bvxm_voxel_grid<ocp_datatype>*>(ocp_grid_base.ptr());
+  auto *ocp_grid  = static_cast<bvxm_voxel_grid<ocp_datatype>*>(ocp_grid_base.ptr());
 
   // iterate over each subblock (tree) and create alpha values according to surface occupancy probabilities read from corresponding voxels in bvxm world
   typedef vnl_vector_fixed<unsigned char, 16> uchar16;
@@ -81,7 +83,7 @@ void initialize_regular_world_scene(boxm2_scene_sptr new_scene, boxm2_cache_sptr
     //3d array of trees
     const boxm2_array_3d<uchar16> trees = cache->get_block(new_scene, id)->trees();
 
-    boxm2_data_traits<BOXM2_ALPHA>::datatype * alpha_data = (boxm2_data_traits<BOXM2_ALPHA>::datatype*) alpha->data_buffer();
+    auto * alpha_data = (boxm2_data_traits<BOXM2_ALPHA>::datatype*) alpha->data_buffer();
     // check for invalid parameters
     if( alphaTypeSize == 0 ) //This should never happen, it will result in division by zero later
     {
@@ -160,8 +162,8 @@ int main(int argc, char** argv)
   new_scene.set_lvcs(*(params->lvcs()));
   new_scene.set_xml_path(out_dir()+"/scene.xml");
   std::vector<std::string> apps;
-  apps.push_back("boxm2_mog3_grey");
-  apps.push_back("boxm2_num_obs");
+  apps.emplace_back("boxm2_mog3_grey");
+  apps.emplace_back("boxm2_num_obs");
   new_scene.set_appearances(apps);
 
   int max_level = 1;

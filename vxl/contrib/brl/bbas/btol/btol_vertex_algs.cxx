@@ -4,7 +4,9 @@
 #include "btol_vertex_algs.h"
 //:
 // \file
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include "btol_edge_algs.h"
 #include <vtol/vtol_vertex.h>
 #include <vtol/vtol_vertex_2d.h>
@@ -12,8 +14,7 @@
 
 //: Destructor
 btol_vertex_algs::~btol_vertex_algs()
-{
-}
+= default;
 
 //:
 //-----------------------------------------------------------------------------
@@ -27,9 +28,8 @@ bool btol_vertex_algs::merge_superiors(vtol_vertex_sptr& va,
   if (!va||!vb)
     return false;
   std::vector<vtol_edge_sptr> edges; va->edges(edges);
-  for (std::vector<vtol_edge_sptr>::iterator eit = edges.begin();
-       eit != edges.end(); eit++)
-    btol_edge_algs::subst_vertex_on_edge(va, vb, *eit);
+  for (auto & edge : edges)
+    btol_edge_algs::subst_vertex_on_edge(va, vb, edge);
   return true;
 }
 
@@ -53,8 +53,7 @@ transform(vtol_vertex_2d_sptr const& v,
   vnl_vector_fixed<double,3> P(v->x(), v->y(), 1.0);
   vnl_vector_fixed<double,3> p = T*P;
   if (std::fabs(p[2])<1e-06)
-    return VXL_NULLPTR;
+    return nullptr;
   else
     return new vtol_vertex_2d(p[0]/p[2], p[1]/p[2]);
 }
-

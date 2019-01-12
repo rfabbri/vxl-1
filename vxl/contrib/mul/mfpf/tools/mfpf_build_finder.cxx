@@ -43,8 +43,10 @@
 #include <vimt/vimt_gaussian_pyramid_builder_2d.h>
 
 #include <msm/msm_points.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 //: Structure to hold parameters
 struct tool_params
@@ -59,7 +61,7 @@ struct tool_params
   unsigned pt_index;
 
   //: Object to build patch model
-  vcl_unique_ptr<mfpf_point_finder_builder> patch_builder;
+  std::unique_ptr<mfpf_point_finder_builder> patch_builder;
 
   //: Image directory
   std::string image_dir;
@@ -81,9 +83,7 @@ struct tool_params
   void read_from_file(const std::string& path);
 };
 
-tool_params::tool_params()
-{
-}
+tool_params::tool_params() = default;
 
 //: Parse named text file to read in data
 //  Throws a upf_exception_parse_error if fails
@@ -186,7 +186,7 @@ int main(int argc, char** argv)
     assert(int(params.res_level)<=image_pyr.hi());
 
     // Select relevant level from pyramid
-    const vimt_image_2d_of<float>& imageL
+    const auto& imageL
       = static_cast<const vimt_image_2d_of<float>&>(image_pyr(params.res_level));
 
     // Load in points
@@ -223,4 +223,3 @@ int main(int argc, char** argv)
 
   return 0;
 }
-

@@ -8,7 +8,9 @@
 #include <vector>
 #include <vcsl/vcsl_matrix_param_sptr.h>
 #include <vbl/vbl_ref_count.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Auxiliary class for vcsl_matrix
 class vcsl_matrix_param : public vbl_ref_count

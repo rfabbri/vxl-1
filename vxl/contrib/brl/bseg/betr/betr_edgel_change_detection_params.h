@@ -22,7 +22,9 @@
 //
 #include <string>
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include "betr_params.h"
 #include <sdet/sdet_detector_params.h>
 #include "betr_edgel_factory_params.h"
@@ -36,9 +38,9 @@ class betr_edgel_change_detection_params : public betr_params
  }
 
   //: check values of parameters to flag illegal values
-  virtual bool sanity_check(std::string& errors) const;
+  bool sanity_check(std::string& errors) const override;
 
-  virtual void serialize( Json::Value& root ) const{
+  void serialize( Json::Value& root ) const override{
     root["sigma"] = sigma_;
     root["noise_mul"] = noise_mul_;
     Json::Value factory_params;
@@ -46,7 +48,7 @@ class betr_edgel_change_detection_params : public betr_params
     efparams->serialize(factory_params);
     root["edgel_factory_params"]=factory_params;
   }
-  virtual void deserialize( Json::Value& root){
+  void deserialize( Json::Value& root) override{
     Json::Value null;
     Json::Value factory_params = root.get("edgel_factory_params",null);
     if(!factory_params.isNull()){
@@ -65,4 +67,3 @@ class betr_edgel_change_detection_params : public betr_params
 std::ostream&  operator<<(std::ostream& s, betr_edgel_change_detection_params const& ecdp);
 std::istream&  operator>>(std::istream& s, betr_edgel_change_detection_params& ecdp);
 #endif   // DO NOT ADD CODE AFTER THIS LINE! END OF DEFINITION FOR CLASS betr_edgel_change_detection_params.
-

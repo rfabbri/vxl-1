@@ -1,9 +1,6 @@
 // This is core/vil/vil_image_list.h
 #ifndef vil_image_list_h_
 #define vil_image_list_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author J.L. Mundy  March 22, 2006
@@ -15,14 +12,16 @@
 //
 #include <string>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_image_resource_sptr.h>
 
 class vil_image_list
 {
  public:
   vil_image_list(char const* directory):directory_(directory){}
-  ~vil_image_list(){}
+  ~vil_image_list()= default;
 
   //: finds all the files in the directory, regardless of extension
   std::vector<std::string> files();

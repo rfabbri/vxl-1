@@ -5,12 +5,12 @@
 #include <iostream>
 #include "vpyr_2_tpyramid.h"
 #include <vmap/vbl_controlled_partition.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 template <class TLevel>
-vpyr_2_tpyramid<TLevel>::vpyr_2_tpyramid()
-{
-}
+vpyr_2_tpyramid<TLevel>::vpyr_2_tpyramid() = default;
 
 #if 0
 template <class TLevel>
@@ -21,9 +21,7 @@ vpyr_2_tpyramid<TLevel>::vpyr_2_tpyramid(const self_type &pyr)
 #endif // 0
 
 template <class TLevel>
-vpyr_2_tpyramid<TLevel>::~vpyr_2_tpyramid()
-{
-}
+vpyr_2_tpyramid<TLevel>::~vpyr_2_tpyramid() = default;
 
 #if 0
 template <class TLevel>

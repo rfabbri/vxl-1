@@ -6,7 +6,9 @@
 #include <vimt/vimt_scale_pyramid_builder_2d.h>
 #include <vimt/vimt_image_pyramid.h>
 #include <vimt/vimt_image_2d_of.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vxl_config.h>
 #include <vpl/vpl.h> // vpl_unlink()
 #include <vsl/vsl_binary_loader.h>
@@ -21,8 +23,8 @@ static void test_scale_pyramid_builder_2d(unsigned int nx, unsigned int ny)
            << " Testing vimt_scale_pyramid_builder_2d (byte)(nx="<<nx<<", ny="<<ny<<")\n"
            << "************************************************************\n";
 
-  const double scale_step = 1.2;
-  const unsigned int nx_scaled = (unsigned int)(nx/scale_step+0.5), // round
+  constexpr double scale_step = 1.2;
+  const auto nx_scaled = (unsigned int)(nx/scale_step+0.5), // round
                      ny_scaled = (unsigned int)(ny/scale_step+0.5);
 
   vimt_image_2d_of<vxl_byte> image0;
@@ -50,7 +52,7 @@ static void test_scale_pyramid_builder_2d(unsigned int nx, unsigned int ny)
 
   TEST("Found correct number of levels", image_pyr.n_levels(), 2);
 
-  const vimt_image_2d_of<vxl_byte>& image1 =
+  const auto& image1 =
     static_cast<const vimt_image_2d_of<vxl_byte>&>(image_pyr(1));
   TEST("Level 1 size x",image1.image().ni(),nx_scaled);
   TEST("Level 1 size y",image1.image().nj(),ny_scaled);
@@ -104,7 +106,7 @@ static void test_scale_pyramid_builder_2d(unsigned int nx, unsigned int ny)
   bfs_out.close();
 
   vimt_scale_pyramid_builder_2d<vxl_byte> builder_in;
-  vimt_image_pyramid_builder* ptr_in=VXL_NULLPTR;
+  vimt_image_pyramid_builder* ptr_in=nullptr;
 
   vsl_b_ifstream bfs_in(test_path);
   TEST(("Opened " + test_path + " for reading").c_str(), (!bfs_in), false);

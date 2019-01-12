@@ -1,7 +1,4 @@
 // This is core/vgui/vgui_easy3D_tableau.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Philip C. Pritchett, RRG, University of Oxford
@@ -104,4 +101,3 @@ set_point_radius(float r)
   style_ = vgui_style::new_style( style_ );
   style_->point_size = r;
 }
-

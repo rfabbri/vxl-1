@@ -3,9 +3,11 @@
 #include "bundler.h"
 //
 #include <bundler/bundler_inters.h>
-#include <vcl_cassert.h>
+#include <cassert>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 bool bundler_driver(
     const bundler_routines &routines,
@@ -344,4 +346,3 @@ bool bundler_sfm::run_sfm_stage(
 
     return true;
 }
-

@@ -3,7 +3,9 @@
 #include <testlib/testlib_test.h>
 #include <bxml/bxml_read.h>
 #include <bxml/bxml_write.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 bxml_document make_simple_doc()
@@ -91,7 +93,7 @@ static void test_io(int argc, char* argv[])
 
     //std::ifstream file("text_out.xml");
     unsigned int depth = 0;
-    bxml_data_sptr data = VXL_NULLPTR;
+    bxml_data_sptr data = nullptr;
     bool fail = false;
     int count = 0;
     while ((data = str_reader.next_element(s, depth))) { // assignment, no comparison
@@ -100,7 +102,7 @@ static void test_io(int argc, char* argv[])
           fail = true;
           break;
         }
-        bxml_element* el = static_cast<bxml_element*>(data.ptr());
+        auto* el = static_cast<bxml_element*>(data.ptr());
         if (el->name() != "frame") {
           fail = true;
           break;

@@ -1,7 +1,4 @@
 // This is core/vgui/internals/vgui_accelerate.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author David Capel
@@ -22,7 +19,7 @@ bool vgui_accelerate::vgui_mfc_acceleration = false;
 bool vgui_accelerate::vgui_doublebuffer = true;
 
 static int accelerator_level = 0;
-static vgui_accelerate* vgui_accelerator = VXL_NULLPTR;
+static vgui_accelerate* vgui_accelerator = nullptr;
 vgui_accelerate* vgui_accelerate::instance()
 {
   if (!vgui_accelerator) vgui_accelerator = new vgui_accelerate;

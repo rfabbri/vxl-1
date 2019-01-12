@@ -5,15 +5,17 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpgl/vpgl_camera.h>
 #include <vpgl/vpgl_perspective_camera.h>
 
 // compute the distance between two distance cameras as the angle between their principle axis vectors
 namespace vpgl_persp_cam_distance_process_globals
 {
-  const unsigned n_inputs_ = 2;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 2;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 //: Init function
@@ -46,12 +48,12 @@ bool vpgl_persp_cam_distance_process(bprb_func_process& pro)
   vpgl_camera_double_sptr cam1_ptr = pro.get_input<vpgl_camera_double_sptr>(i++);
   vpgl_camera_double_sptr cam2_ptr = pro.get_input<vpgl_camera_double_sptr>(i++);
 
-  vpgl_perspective_camera<double>* cam1 = dynamic_cast<vpgl_perspective_camera<double>*>(cam1_ptr.ptr());
+  auto* cam1 = dynamic_cast<vpgl_perspective_camera<double>*>(cam1_ptr.ptr());
   if (!cam1) {
     std::cerr << "vpgl_persp_cam_distance_process: couldn't cast camera\n";
     return false;
   }
-  vpgl_perspective_camera<double>* cam2 = dynamic_cast<vpgl_perspective_camera<double>*>(cam2_ptr.ptr());
+  auto* cam2 = dynamic_cast<vpgl_perspective_camera<double>*>(cam2_ptr.ptr());
   if (!cam2) {
     std::cerr << "vpgl_persp_cam_distance_process: couldn't cast camera\n";
     return false;
@@ -60,4 +62,3 @@ bool vpgl_persp_cam_distance_process(bprb_func_process& pro)
   pro.set_output_val<float>(0, (float)dist);
   return true;
 }
-

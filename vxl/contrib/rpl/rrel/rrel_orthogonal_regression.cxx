@@ -7,8 +7,10 @@
 #include <vnl/vnl_vector.h>
 #include <vnl/algo/vnl_svd.h>
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 rrel_orthogonal_regression::rrel_orthogonal_regression( const vnl_matrix<double>& pts )
   : vars_( pts )
@@ -40,9 +42,7 @@ rrel_orthogonal_regression::rrel_orthogonal_regression( const std::vector<vnl_ve
 }
 
 
-rrel_orthogonal_regression::~rrel_orthogonal_regression()
-{
-}
+rrel_orthogonal_regression::~rrel_orthogonal_regression() = default;
 
 unsigned int
 rrel_orthogonal_regression::num_samples( ) const

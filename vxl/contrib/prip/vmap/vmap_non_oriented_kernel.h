@@ -16,7 +16,9 @@
 #include <iostream>
 #include <vector>
 #include "vmap_types.h" // for vmap_dart_index
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: A wrapper to an existing kernel which manages darts in a non oriented manager and avoids having loops in the resulting kernel.
 // The darts added to the kernel using the function "add" are added if the resulting edge graph is a tree.
@@ -55,7 +57,7 @@ class vmap_non_oriented_kernel : public TKernel
   vmap_non_oriented_kernel(map_type & arg) : Base_(arg) {}
 
   //:
-  ~vmap_non_oriented_kernel() {}
+  ~vmap_non_oriented_kernel() = default;
 
   //: Before any addition/test
   void initialise() ;

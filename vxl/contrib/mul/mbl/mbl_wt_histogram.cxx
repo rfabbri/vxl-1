@@ -7,8 +7,10 @@
 // \brief Simple object to build histogram from supplied data, with weights
 // \author Tim Cootes
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vsl/vsl_vector_io.h>
 
 mbl_wt_histogram::mbl_wt_histogram()
@@ -41,7 +43,7 @@ void mbl_wt_histogram::clear()
   total_wt_=0.0;
   wt_below_ = 0;
   wt_above_ = 0;
-  for (unsigned int i=0;i<wt_sum_.size();++i) wt_sum_[i]=0;
+  for (double & i : wt_sum_) i=0;
 }
 
 void mbl_wt_histogram::obs(double v, double wt)
@@ -55,7 +57,7 @@ void mbl_wt_histogram::obs(double v, double wt)
   }
 
   // v-xlo_ >= 0
-  unsigned int i = (unsigned int)((v-xlo_)/dx_);
+  auto i = (unsigned int)((v-xlo_)/dx_);
 
   if (i<wt_sum_.size()) wt_sum_[i]+=wt;
   else                  wt_above_+=wt;

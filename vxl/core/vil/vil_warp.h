@@ -1,9 +1,6 @@
 // This is core/vil/vil_warp.h
 #ifndef vil_warp_h_
 #define vil_warp_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Warp an image.
@@ -15,7 +12,10 @@
 // \endverbatim
 
 #include <vil/vil_fwd.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Warp an image under a 2D map.
 // The size of the output map and the mapper defines the region of

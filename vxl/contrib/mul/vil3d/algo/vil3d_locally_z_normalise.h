@@ -9,7 +9,10 @@
 #include <vil3d/vil3d_image_view.h>
 #include <vil3d/vil3d_math.h>
 #include <vil3d/algo/vil3d_exp_filter.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Locally apply z-normalisation to images
 // The mean and standard deviation over a window around each voxel.

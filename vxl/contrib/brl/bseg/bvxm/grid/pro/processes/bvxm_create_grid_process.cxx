@@ -13,7 +13,9 @@
 
 #include <iostream>
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bprb/bprb_func_process.h>
 #include <bprb/bprb_parameters.h>
 #include <bvxm/grid/bvxm_voxel_grid_base.h>
@@ -29,8 +31,8 @@
 #include <bsta/bsta_gaussian_indep.h>
 namespace bvxm_create_grid_process_globals
 {
-  const unsigned n_inputs_ = 5;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 5;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 
@@ -67,9 +69,9 @@ bool bvxm_create_grid_process(bprb_func_process& pro)
 
   std::string input_path = pro.get_input<std::string>(0);
   std::string datatype =  pro.get_input<std::string>(1);
-  unsigned dim_x =  pro.get_input<unsigned>(2);
-  unsigned dim_y =  pro.get_input<unsigned>(3);
-  unsigned dim_z =  pro.get_input<unsigned>(4);
+  auto dim_x =  pro.get_input<unsigned>(2);
+  auto dim_y =  pro.get_input<unsigned>(3);
+  auto dim_z =  pro.get_input<unsigned>(4);
 
 
   if (vul_file::is_directory(input_path) ) {

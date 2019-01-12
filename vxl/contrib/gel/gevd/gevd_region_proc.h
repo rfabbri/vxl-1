@@ -24,7 +24,9 @@
 //-------------------------------------------------------------------------
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <gevd/gevd_bufferxy.h>
 #include <vil1/vil1_image.h>
 #include <vdgl/vdgl_digital_region.h>
@@ -36,7 +38,7 @@ public:
   //Constructors/destructor
   gevd_region_proc();
 
-  ~gevd_region_proc();
+  ~gevd_region_proc() override;
   //Accessors
   void set_image(vil1_image& image);
 //  void set_roi_proc(lung_roi_proc_ref& roi_proc){roi_proc_ = roi_proc;}

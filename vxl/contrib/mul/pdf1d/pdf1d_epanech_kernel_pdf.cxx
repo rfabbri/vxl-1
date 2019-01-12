@@ -11,16 +11,16 @@
 #include <cmath>
 #include "pdf1d_epanech_kernel_pdf.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <pdf1d/pdf1d_epanech_kernel_pdf_sampler.h>
 #include <pdf1d/pdf1d_sampler.h>
 
 //=======================================================================
 
-pdf1d_epanech_kernel_pdf::pdf1d_epanech_kernel_pdf()
-{
-}
+pdf1d_epanech_kernel_pdf::pdf1d_epanech_kernel_pdf() = default;
 
 //: Define n kernels centred at i*sep (i=0..n-1)
 pdf1d_epanech_kernel_pdf::pdf1d_epanech_kernel_pdf(
@@ -33,16 +33,14 @@ pdf1d_epanech_kernel_pdf::pdf1d_epanech_kernel_pdf(
 
 //=======================================================================
 
-pdf1d_epanech_kernel_pdf::~pdf1d_epanech_kernel_pdf()
-{
-}
+pdf1d_epanech_kernel_pdf::~pdf1d_epanech_kernel_pdf() = default;
 
 //=======================================================================
 
 
 pdf1d_sampler* pdf1d_epanech_kernel_pdf::new_sampler() const
 {
-  pdf1d_epanech_kernel_pdf_sampler *i = new pdf1d_epanech_kernel_pdf_sampler;
+  auto *i = new pdf1d_epanech_kernel_pdf_sampler;
   i->set_model(*this);
   return i;
 }

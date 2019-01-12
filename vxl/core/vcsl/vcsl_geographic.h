@@ -37,7 +37,7 @@ class vcsl_geographic
 
  public:
   // Destructor
-  virtual ~vcsl_geographic() {}
+  ~vcsl_geographic() override = default;
 
   //***************************************************************************
   // Status report

@@ -10,7 +10,9 @@
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_vector_3d.h>
 #include <vbl/vbl_array_2d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 static void simple_test()
 {
@@ -98,22 +100,22 @@ static void proj_test()
 
 
   std::vector<vgl_point_2d<double> > test_pts1;
-  test_pts1.push_back(vgl_point_2d<double>(639.496, 97.5777));
-  test_pts1.push_back(vgl_point_2d<double>(280.9, 1.9)); // original failing point (interior)
+  test_pts1.emplace_back(639.496, 97.5777);
+  test_pts1.emplace_back(280.9, 1.9); // original failing point (interior)
   // exterior points
-  test_pts1.push_back(vgl_point_2d<double>(0.5, -0.5));
-  test_pts1.push_back(vgl_point_2d<double>(-0.5, -0.5));
-  test_pts1.push_back(vgl_point_2d<double>(-0.5, 0.5));
-  test_pts1.push_back(vgl_point_2d<double>(638.5, -0.5));
-  test_pts1.push_back(vgl_point_2d<double>(639.5, -0.5));
-  test_pts1.push_back(vgl_point_2d<double>(639.5, 0.0));
-  test_pts1.push_back(vgl_point_2d<double>(639.5, 0.5));
-  test_pts1.push_back(vgl_point_2d<double>(-0.5, 478.5));
-  test_pts1.push_back(vgl_point_2d<double>(-0.5, 479.5));
-  test_pts1.push_back(vgl_point_2d<double>(0.5, 479.5));
-  test_pts1.push_back(vgl_point_2d<double>(638.5, 479.5));
-  test_pts1.push_back(vgl_point_2d<double>(639.5, 479.5));
-  test_pts1.push_back(vgl_point_2d<double>(638.5, 479.5));
+  test_pts1.emplace_back(0.5, -0.5);
+  test_pts1.emplace_back(-0.5, -0.5);
+  test_pts1.emplace_back(-0.5, 0.5);
+  test_pts1.emplace_back(638.5, -0.5);
+  test_pts1.emplace_back(639.5, -0.5);
+  test_pts1.emplace_back(639.5, 0.0);
+  test_pts1.emplace_back(639.5, 0.5);
+  test_pts1.emplace_back(-0.5, 478.5);
+  test_pts1.emplace_back(-0.5, 479.5);
+  test_pts1.emplace_back(0.5, 479.5);
+  test_pts1.emplace_back(638.5, 479.5);
+  test_pts1.emplace_back(639.5, 479.5);
+  test_pts1.emplace_back(638.5, 479.5);
 
   for (std::vector<vgl_point_2d<double> >::const_iterator pit = test_pts1.begin();
        pit != test_pts1.end(); ++pit) {
@@ -151,4 +153,3 @@ static void test_generic_camera()
 }
 
 TESTMAIN(test_generic_camera);
-

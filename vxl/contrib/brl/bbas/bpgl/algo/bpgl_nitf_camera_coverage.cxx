@@ -4,15 +4,17 @@
 
 #include <vpgl/file_formats/vpgl_nitf_rational_camera.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vul/vul_awk.h>
 
 #include <vgl/vgl_polygon.h>
 
 bool bpgl_nitf_camera_coverage::coverage_list(std::vector<vgl_point_2d<double> > geo_pts,
-                                              std::string img_list,
-                                              std::string img_coverage_list)
+                                              const std::string& img_list,
+                                              const std::string& img_coverage_list)
 {
   std::ifstream ifs( img_list.c_str() );
   std::ofstream ofs( img_coverage_list.c_str() );
@@ -35,7 +37,7 @@ bool bpgl_nitf_camera_coverage::coverage_list(std::vector<vgl_point_2d<double> >
     std::string img_file = awk.line();
 
     //load rational camera from image file
-    vpgl_nitf_rational_camera *nitf_cam = new vpgl_nitf_rational_camera(img_file);
+    auto *nitf_cam = new vpgl_nitf_rational_camera(img_file);
 
     if (!nitf_cam)
     {
@@ -52,10 +54,10 @@ bool bpgl_nitf_camera_coverage::coverage_list(std::vector<vgl_point_2d<double> >
 
     bool contain = true;
 
-    for ( unsigned i = 0; i<geo_pts.size(); i++)
+    for (auto & geo_pt : geo_pts)
     {
       contain = contain && poly_region.contains( vgl_point_2d<double>(
-        geo_pts[i].x(), geo_pts[i].y() ) );
+        geo_pt.x(), geo_pt.y() ) );
     }
 
     //If all the points aren't contained within the image region, continue to next image
@@ -69,7 +71,7 @@ bool bpgl_nitf_camera_coverage::coverage_list(std::vector<vgl_point_2d<double> >
 }
 
 //Not implemented yet
-bool bpgl_nitf_camera_coverage::compute_coverage_region(std::string /*camera_list*/, std::string /*out_imfile*/)
+bool bpgl_nitf_camera_coverage::compute_coverage_region(const std::string& /*camera_list*/, const std::string& /*out_imfile*/)
 {
   return true;
 }

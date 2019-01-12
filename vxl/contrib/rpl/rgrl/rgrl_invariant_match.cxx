@@ -1,10 +1,13 @@
 #include "rgrl_invariant_match.h"
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 rgrl_invariant_match::
-rgrl_invariant_match( rgrl_invariant_sptr from,
-                      rgrl_invariant_sptr to)
+rgrl_invariant_match( const rgrl_invariant_sptr& from,
+                      const rgrl_invariant_sptr& to)
   : from_(from),
     to_(to),
     is_estimate_set_(false)
@@ -92,4 +95,3 @@ bool dist_greater (const vbl_smart_ptr<rgrl_invariant_match>& left,
 {
   return left->distance() > right->distance();
 }
-

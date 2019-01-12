@@ -27,7 +27,9 @@
 #include <iosfwd>
 #include <vector>
 #include <utility>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vxl_config.h>
 #include <vil1/vil1_memory_image_of.h>
 #include <osl/osl_harris_params.h>

@@ -8,13 +8,13 @@
 #include <iostream>
 #include <algorithm>
 #include "rgrl_set_of.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 template<typename T>
 rgrl_set_of<T>::
-rgrl_set_of()
-{
-}
+rgrl_set_of() = default;
 
 
 template<typename T>

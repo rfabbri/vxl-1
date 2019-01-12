@@ -20,7 +20,9 @@
 class wxMenu;
 class wxMenuBar;
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //-------------------------------------------------------------------------
 //: The wxWidgets mapping of the vgui_menu.

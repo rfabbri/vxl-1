@@ -1,17 +1,14 @@
 // This is core/vil/vil_file_format.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 #include <cstdlib>
 #include "vil_file_format.h"
 
-vil_file_format::~vil_file_format()
-{
-}
+vil_file_format::~vil_file_format() = default;
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_config.h> // for list of configured file formats
 #include <vil/vil_exception.h>
 
@@ -80,7 +77,7 @@ vil_file_format::~vil_file_format()
 #include <vil/file_formats/vil_sgi.h>
 #endif
 
-const unsigned MAX_FILE_FORMATS=256;
+//constexpr unsigned MAX_FILE_FORMATS = 256;
 //: Local class to hold file format list
 // Clears list on deletion.
 struct vil_file_format_storage
@@ -152,11 +149,11 @@ struct vil_file_format_storage
 
   ~vil_file_format_storage()
   {
-    for(std::list<vil_file_format*>::iterator i = l.begin(); i != l.end(); ++i)
+    for(auto & i : l)
     {
-      if(*i)
+      if(i)
       {
-        delete *i;
+        delete i;
       }
     }
   }

@@ -18,7 +18,9 @@
 #include <vbl/vbl_ref_count.h>
 #include <vbl/vbl_smart_ptr.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_double_2.h>
 #include <vsl/vsl_binary_io.h>
 #include <vsl/vsl_vector_io.h>
@@ -37,9 +39,9 @@ class brad_image_metadata : public vbl_ref_count
 
   //: Default constructor
   brad_image_metadata() :
-    verbose_(false),
     n_bands_(0),
-    gsd_(-1.0)
+    gsd_(-1.0),
+    verbose_(false)
   {}
 
   // position of sun relative to imaged location

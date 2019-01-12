@@ -14,7 +14,9 @@
 
 #include <iosfwd>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vpgl/vpgl_lvcs_sptr.h>
 #include <vpgl/vpgl_lvcs.h>
@@ -41,36 +43,36 @@ class vpgl_geo_camera : public vpgl_camera<double>
   vpgl_geo_camera(vpgl_camera<double> const& rhs);
 
   //: uses lvcs to convert local x-y to global longitude and latitude
-  static bool init_geo_camera(vil_image_resource_sptr const geotiff_img,
-                              vpgl_lvcs_sptr lvcs,
+  static bool init_geo_camera(vil_image_resource_sptr const& geotiff_img,
+                              const vpgl_lvcs_sptr& lvcs,
                               vpgl_geo_camera*& camera);
 
   //: Assumes geographic coordinates are global
   static bool init_geo_camera(vil_image_resource_sptr const geotiff_img,
                               vpgl_geo_camera*& camera){
-    vpgl_lvcs_sptr lvcs = VXL_NULLPTR;
+    vpgl_lvcs_sptr lvcs = nullptr;
     return init_geo_camera(geotiff_img, lvcs, camera);
   }
 
   //: warning, use this camera cautiously, the output of img_to_global method needs to be adjusted sign wise
   //  for 'S' use -lat and for 'W' -lon
   //  TODO: generalize geo_camera so that img_to_global method makes this adjustment internally if camera is created using this method
-  static bool init_geo_camera(std::string img_name, unsigned ni, unsigned nj, vpgl_lvcs_sptr lvcs, vpgl_geo_camera*& camera);
+  static bool init_geo_camera(const std::string& img_name, unsigned ni, unsigned nj, const vpgl_lvcs_sptr& lvcs, vpgl_geo_camera*& camera);
 
   // loads a geo_camera from the file and uses global WGS84 coordinates, so no need to convert negative values to positives in the global_to_img method as in the previous method
-  static bool init_geo_camera_from_filename(std::string img_name, unsigned ni, unsigned nj, vpgl_lvcs_sptr lvcs, vpgl_geo_camera*& camera);
+  static bool init_geo_camera_from_filename(const std::string& img_name, unsigned ni, unsigned nj, const vpgl_lvcs_sptr& lvcs, vpgl_geo_camera*& camera);
 
   //: init using a tfw file, reads the transformation matrix from the tfw
-  static bool init_geo_camera(std::string tfw_name, vpgl_lvcs_sptr lvcs, int utm_zone, unsigned northing, vpgl_geo_camera*& camera);
+  static bool init_geo_camera(const std::string& tfw_name, const vpgl_lvcs_sptr& lvcs, int utm_zone, unsigned northing, vpgl_geo_camera*& camera);
 
   //: init without lvcs. Assumes geographic coordinates are global
   static bool init_geo_camera(std::string tfw_name,  int utm_zone, unsigned northing, vpgl_geo_camera*& camera){
-    vpgl_lvcs_sptr lvcs = VXL_NULLPTR;
+    vpgl_lvcs_sptr lvcs = nullptr;
     return init_geo_camera(tfw_name, lvcs, utm_zone, northing, camera);
   }
-  ~vpgl_geo_camera() {}
+  ~vpgl_geo_camera() override = default;
 
-  virtual std::string type_name() const { return "vpgl_geo_camera"; }
+  std::string type_name() const override { return "vpgl_geo_camera"; }
 
   //northing=0 means North, 1 is south
   void set_utm(int utm_zone, unsigned northing) { is_utm=true, utm_zone_=utm_zone; northing_=northing; }
@@ -83,7 +85,7 @@ class vpgl_geo_camera : public vpgl_camera<double>
 
   //: Implementing the generic camera interface of vpgl_camera.
   //  x,y,z are in local coordinates, u represents image column, v image row
-  void project(const double x, const double y, const double z, double& u, double& v) const;
+  void project(const double x, const double y, const double z, double& u, double& v) const override;
 
   //: backprojects an image point into local coordinates (based on lvcs_)
   void backproject(const double u, const double v, double& x, double& y, double& z);

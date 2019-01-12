@@ -31,7 +31,9 @@
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_vector_3d.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class bvxm_synth_world_generator
 {
@@ -98,7 +100,7 @@ class bvxm_synth_world_generator
   std::vector<vpgl_camera_double_sptr > generate_cameras_yz(vgl_box_3d<double>& world);
   std::vector<vpgl_camera_double_sptr > generate_cameras_z(vgl_box_3d<double>& world);
   bool update(vgl_vector_3d<unsigned> grid_size,
-              bvxm_voxel_world_sptr world,
+              const bvxm_voxel_world_sptr& world,
               bvxm_voxel_grid<float>* intensity_grid,
               bvxm_voxel_grid<float>* ocp_grid,
               bvxm_voxel_grid<apm_datatype>* apm_grid,
@@ -126,7 +128,7 @@ class bvxm_synth_world_generator
                              bvxm_voxel_grid<float>* intensity_grid,
                              unsigned nx, unsigned ny, unsigned nz);
 
-  bool gen_lidar_2box( vgl_vector_3d<unsigned> grid_size,bvxm_voxel_world_sptr world);
+  bool gen_lidar_2box( vgl_vector_3d<unsigned> grid_size,const bvxm_voxel_world_sptr& world);
 };
 
 #endif

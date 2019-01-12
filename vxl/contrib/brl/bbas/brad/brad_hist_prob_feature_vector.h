@@ -16,7 +16,9 @@
 // \endverbatim
 
 #include <iostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_vector.h>
 #include <vil/vil_image_view.h>
 #include <vsl/vsl_binary_io.h>
@@ -24,12 +26,12 @@
 class brad_hist_prob_feature_vector
 {
  public:
-  brad_hist_prob_feature_vector(){}
+  brad_hist_prob_feature_vector()= default;
 
   brad_hist_prob_feature_vector(float minval, float maxval, unsigned nbins)
     : min_(minval), max_(maxval), nbins_(nbins) {};
 
-  ~brad_hist_prob_feature_vector(){};
+  ~brad_hist_prob_feature_vector()= default;;
 
   //: vector of histogram probabilities computed from the input view, plus entropy
   vnl_vector<double> operator() (vil_image_view<float> const& view) const;

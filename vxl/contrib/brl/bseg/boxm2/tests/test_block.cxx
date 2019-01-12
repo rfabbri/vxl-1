@@ -16,7 +16,9 @@
 #include <boxm2/io/boxm2_sio_mgr.h>
 #include <vnl/vnl_vector_fixed.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 void test_block_id()
 {
@@ -64,7 +66,6 @@ void test_block()
 {
     typedef vnl_vector_fixed<unsigned char, 16> uchar16;
     typedef vnl_vector_fixed<unsigned short, 2> ushort2;
-    typedef unsigned short                      ushort;
 
     //test xml file
     std::string root_dir  = testlib_root_dir();

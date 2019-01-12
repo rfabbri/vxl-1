@@ -4,7 +4,9 @@
 // \file
 #include <iostream>
 #include <bprb/bprb_func_process.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bbgm/bbgm_image_of.h>
 #include <bbgm/bbgm_image_sptr.h>
 #include <bbgm/bbgm_update.h>
@@ -168,4 +170,3 @@ bool bbgm_display_dist_image_process(bprb_func_process& pro)
   pro.set_output(0, output0);
   return true;
 }
-

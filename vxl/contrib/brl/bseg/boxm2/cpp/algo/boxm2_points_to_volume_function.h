@@ -16,7 +16,9 @@
 #include <bvgl/bvgl_triangle_3d.h>
 #include <vnl/vnl_vector_fixed.h>
 #include <vgl/vgl_box_3d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class boxm2_points_to_volume
 {
@@ -28,8 +30,8 @@ class boxm2_points_to_volume
   typedef vnl_vector_fixed<ushort, 4> ushort4;
 
   //: "default" constructor
-  boxm2_points_to_volume(boxm2_scene_sptr scene,
-                         boxm2_cache_sptr cache,
+  boxm2_points_to_volume(const boxm2_scene_sptr& scene,
+                         const boxm2_cache_sptr& cache,
                          imesh_mesh& points);
 
   //: fillVolume function

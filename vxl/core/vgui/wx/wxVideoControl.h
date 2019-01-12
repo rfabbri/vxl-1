@@ -11,7 +11,9 @@
 #include <vector>
 #include <wx/panel.h>
 #include <vgui/vgui_observable.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 // forward declarations
 class wxBitmapButton;

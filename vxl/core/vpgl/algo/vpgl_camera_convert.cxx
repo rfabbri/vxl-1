@@ -8,12 +8,15 @@
 #include "vpgl_camera_convert.h"
 //:
 // \file
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_numeric_traits.h>
 #include <vnl/vnl_det.h>
 #include <vnl/vnl_vector_fixed.h>
 #include <vnl/vnl_matrix_fixed.h>
+#include <vnl/vnl_random.h>
 #include <vnl/algo/vnl_svd.h>
 #include <vnl/algo/vnl_qr.h>
 #include <vgl/algo/vgl_rotation_3d.h>
@@ -365,8 +368,8 @@ convert( vpgl_rational_camera<double> const& rat_cam,
     rat_cam.scl_off(vpgl_rational_camera<double>::Y_INDX);
   vpgl_scale_offset<double> soz =
     rat_cam.scl_off(vpgl_rational_camera<double>::Z_INDX);
-  unsigned ni = static_cast<unsigned>(2*sou.scale());//# image columns
-  unsigned nj = static_cast<unsigned>(2*sov.scale());//# image rows
+  auto ni = static_cast<unsigned>(2*sou.scale());//# image columns
+  auto nj = static_cast<unsigned>(2*sov.scale());//# image rows
   norm_trans.set_identity();
   norm_trans.set(0,0,1/sox.scale()); norm_trans.set(1,1,1/soy.scale());
   norm_trans.set(2,2,1/soz.scale());
@@ -403,7 +406,7 @@ convert( vpgl_rational_camera<double> const& rat_cam,
   //Normalize world and image points to the range [-1,1]
   std::vector<vgl_point_3d<double> > norm_world_pts;
   std::vector<vgl_point_2d<double> > image_pts, norm_image_pts;
-  unsigned N = world_pts.size();
+  auto N = static_cast<unsigned int>(world_pts.size());
   for (unsigned i = 0; i<N; ++i)
   {
     vgl_point_3d<double> wp = world_pts[i];
@@ -532,8 +535,8 @@ convert_local( vpgl_rational_camera<double> const& rat_cam,
   vpgl_scale_offset<double> soz =
     rat_cam.scl_off(vpgl_rational_camera<double>::Z_INDX);
 #endif
-  unsigned ni = static_cast<unsigned>(2*sou.scale());//# image columns
-  unsigned nj = static_cast<unsigned>(2*sov.scale());//# image rows
+  auto ni = static_cast<unsigned>(2*sou.scale());//# image columns
+  auto nj = static_cast<unsigned>(2*sov.scale());//# image rows
 
   vgl_point_3d<double> minp = approximation_volume.min_point();
   vgl_point_3d<double> maxp = approximation_volume.max_point();
@@ -565,7 +568,7 @@ convert_local( vpgl_rational_camera<double> const& rat_cam,
   //Normalize world and image points to the range [-1,1]
   std::vector<vgl_point_3d<double> > norm_world_pts;
   std::vector<vgl_point_2d<double> > image_pts, norm_image_pts;
-  unsigned N = world_pts.size();
+  auto N = static_cast<unsigned int>(world_pts.size());
   for (unsigned i = 0; i<N; ++i)
   {
     vgl_point_3d<double> wp = world_pts[i];
@@ -583,7 +586,7 @@ convert_local( vpgl_rational_camera<double> const& rat_cam,
     assert(   std::fabs(nwp.x()) <= 1
            && std::fabs(nwp.y()) <= 1
            && std::fabs(nwp.z()) <= 1 );
-    norm_world_pts.push_back(vgl_point_3d<double>(nwp) );
+    norm_world_pts.emplace_back(nwp );
   }
   //Assume identity calibration matrix initially, since image point
   //normalization remove any scale and offset from image coordinates
@@ -648,7 +651,7 @@ convert_local( vpgl_rational_camera<double> const& rat_cam,
 static bool interp_ray(std::vector<vgl_ray_3d<double> > const& ray_nbrs,
                        vgl_ray_3d<double> & intrp_ray)
 {
-  unsigned nrays = ray_nbrs.size();
+  auto nrays = static_cast<unsigned int>(ray_nbrs.size());
   if (nrays!=4) return false;
   vgl_ray_3d<double> r0 = ray_nbrs[0], r1 = ray_nbrs[1];
   vgl_ray_3d<double> r2 = ray_nbrs[2], r3 = ray_nbrs[3];
@@ -721,7 +724,7 @@ upsample_rays(std::vector<vgl_ray_3d<double> > const& ray_nbrs,
               vgl_ray_3d<double> const& ray,
               std::vector<vgl_ray_3d<double> >& interp_rays)
 {
-  unsigned nrays = ray_nbrs.size();
+  auto nrays = static_cast<unsigned int>(ray_nbrs.size());
   if (nrays!=4) return false;
   vgl_ray_3d<double> r00 = ray_nbrs[0],
                      r01 = ray_nbrs[1];
@@ -891,7 +894,7 @@ convert( vpgl_local_rational_camera<double> const& rat_cam,
           double ray_len = (local_z_min - prev_org.z()) / prev_dir.z();
           prev_endpt = prev_org + (prev_dir * ray_len);
         }
-        const double error_tol = 0.25; // allow projection error of 0.25 pixel
+        constexpr double error_tol = 0.25; // allow projection error of 0.25 pixel
         if (!vpgl_backproject::bproj_plane(&rat_cam, ip, high, prev_org, org, error_tol))
           return false;
         if (!vpgl_backproject::bproj_plane(&rat_cam, ip, low, prev_endpt, endpt, error_tol))
@@ -1026,7 +1029,7 @@ bool vpgl_generic_camera_convert::pyramid_est(vpgl_local_rational_camera<double>
                   double ray_len = (local_z_min - prev_org.z()) / prev_dir.z();
                   prev_endpt = prev_org + (prev_dir * ray_len);
               }
-              const double error_tol = 0.5; // allow projection error of 0.25 pixel
+              constexpr double error_tol = 0.5; // allow projection error of 0.25 pixel
               if (!vpgl_backproject::bproj_plane(&rat_cam, ip, high, prev_org, org, error_tol))
                   return false;
               if (!vpgl_backproject::bproj_plane(&rat_cam, ip, low, prev_endpt, endpt, error_tol))
@@ -1189,7 +1192,7 @@ convert( vpgl_local_rational_camera<double> const& rat_cam,
 bool vpgl_generic_camera_convert::
 convert_bruteforce( vpgl_local_rational_camera<double> const& rat_cam,
          int gni, int gnj, vpgl_generic_camera<double> & gen_cam,
-         double local_z_min, double local_z_max, unsigned level)
+         double local_z_min, double local_z_max, unsigned  /*level*/)
 {
   vgl_plane_3d<double> high(0.0, 0.0, 1.0, -local_z_max);
   vgl_plane_3d<double> low(0.0, 0.0, 1.0, -local_z_min);
@@ -1204,7 +1207,7 @@ convert_bruteforce( vpgl_local_rational_camera<double> const& rat_cam,
       for(unsigned j = 0 ; j < gnj; j++)
       {
           vgl_point_2d<double> ip(i,j);
-          const double error_tol = 0.5; // allow projection error of 0.25 pixel
+          constexpr double error_tol = 0.5; // allow projection error of 0.25 pixel
           if (!vpgl_backproject::bproj_plane(&rat_cam, ip, high, org, org, error_tol))
               return false;
           if (!vpgl_backproject::bproj_plane(&rat_cam, ip, low, endpt, endpt, error_tol))
@@ -1327,20 +1330,20 @@ bool vpgl_generic_camera_convert::
 convert( vpgl_camera_double_sptr const& camera, int ni, int nj,
          vpgl_generic_camera<double> & gen_cam, unsigned level)
 {
-  if (vpgl_local_rational_camera<double>* cam =
+  if (auto* cam =
       dynamic_cast<vpgl_local_rational_camera<double>*>(camera.ptr()))
     return vpgl_generic_camera_convert::convert(*cam, ni, nj, gen_cam, level);
 
-  if (vpgl_perspective_camera<double>* cam =
+  if (auto* cam =
       dynamic_cast<vpgl_perspective_camera<double>*>(camera.ptr())) {
     return vpgl_generic_camera_convert::convert(*cam, ni, nj, gen_cam, level);
   }
 
-  if (vpgl_affine_camera<double>* cam =
+  if (auto* cam =
       dynamic_cast<vpgl_affine_camera<double>*>(camera.ptr()))
     return vpgl_generic_camera_convert::convert(*cam, ni, nj, gen_cam, level);
 
-  if (vpgl_proj_camera<double>* cam =
+  if (auto* cam =
       dynamic_cast<vpgl_proj_camera<double>*>(camera.ptr())) {
     return vpgl_generic_camera_convert::convert(*cam, ni, nj, gen_cam, level);
   }
@@ -1394,6 +1397,47 @@ bool vpgl_generic_camera_convert::convert( vpgl_geo_camera& geocam, int ni, int 
   return true;
 }
 
+bool vpgl_affine_camera_convert::
+convert( vpgl_local_rational_camera<double> const& camera_in,
+         vgl_box_3d<double> const& region_of_interest,
+         vpgl_affine_camera<double>& camera_out,
+         unsigned int num_points)
+{
+  vnl_random rng;
+  const double width = region_of_interest.width();
+  const double height = region_of_interest.height();
+  const double depth = region_of_interest.depth();
+  double min_x = region_of_interest.min_x();
+  double min_y = region_of_interest.min_y();
+  double min_z = region_of_interest.min_z();
+
+  std::vector< vgl_point_2d<double> > image_pts;
+  std::vector< vgl_point_3d<double> > world_pts;
+  for (unsigned i=0; i<num_points; ++i) {
+    double x = rng.drand64()*width + min_x;  // sample in local coords
+    double y = rng.drand64()*depth + min_y;
+    double z = rng.drand64()*height + min_z;
+    world_pts.emplace_back(x,y,z);
+    double u, v;
+    camera_in.project(x,y,z,u,v);  // local rational camera has an lvcs, so it handles, local coord to global to image point projection internally
+    image_pts.emplace_back(u,v);
+  }
+
+  bool success = vpgl_affine_camera_compute::compute(image_pts, world_pts, camera_out);
+  // it is assumed that the camera is above the region of interest
+  camera_out.set_viewing_distance(height*10);
+  camera_out.orient_ray_direction(vgl_vector_3d<double>(0,0,-1));
+  return success;
+}
+#else
+bool vpgl_affine_camera_convert::
+convert(vpgl_local_rational_camera<double> const& camera_in,
+  vgl_box_3d<double> const& region_of_interest,
+  vpgl_affine_camera<double>& camera_out,
+  unsigned int num_points)
+{
+  return false; //Always report failure if GEOTIFF not available.
+}
 #endif // HAS_GEOTIFF
 
 #endif // vpgl_camera_convert_cxx_

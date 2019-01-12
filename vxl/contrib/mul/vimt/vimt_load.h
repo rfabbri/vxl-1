@@ -12,7 +12,9 @@
 #include <vil/vil_load.h>
 #include <vil/vil_flatten.h>
 #include <vimt/vimt_image_2d_of.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Create a transform from the properties of image resource.
 // \param unit_scaling is to convert from metres to desired world units (e.g. 1000 for mm)
@@ -51,7 +53,7 @@ void vimt_load(const std::string& path,
                float unit_scaling=1.0f)
 {
   vil_image_resource_sptr ir = vil_load_image_resource(path.c_str());
-  if (ir.ptr()==VXL_NULLPTR)
+  if (ir.ptr()==nullptr)
   {
     image.image().set_size(0,0);
     return;
@@ -70,7 +72,7 @@ void vimt_load_as_grey_or_rgb(const std::string& path,
 {
   vil_image_resource_sptr ir = vil_load_image_resource(path.c_str());
 
-  if (ir.ptr()==VXL_NULLPTR)
+  if (ir.ptr()==nullptr)
   {
     image.image().set_size(0,0);
     return;
@@ -107,7 +109,7 @@ void vimt_load_right_hand(const std::string& path,
                           float unit_scaling=1.0f)
 {
   vil_image_resource_sptr ir = vil_load_image_resource(path.c_str());
-  if (ir.ptr()==VXL_NULLPTR)
+  if (ir.ptr()==nullptr)
   {
     image.image().set_size(0,0);
     return;

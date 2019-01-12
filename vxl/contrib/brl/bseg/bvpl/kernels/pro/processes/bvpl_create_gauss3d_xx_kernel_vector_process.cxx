@@ -18,8 +18,8 @@
 
 namespace bvpl_create_gauss3d_xx_kernel_vector_process_globals
 {
-  const unsigned n_inputs_ = 3;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 3;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 
@@ -70,4 +70,3 @@ bool bvpl_create_gauss3d_xx_kernel_vector_process(bprb_func_process& pro)
 
   return true;
 }
-

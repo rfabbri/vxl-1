@@ -9,7 +9,9 @@
 #include "bsta_gaussian_updater.h"
 #include "bsta_gaussian_stats.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 // The update equations used here are based on the following
 // paper that extends the Stauffer-Grimson approach.
@@ -64,17 +66,14 @@ bsta_mg_statistical_updater<mix_dist_>::update( mix_dist_& mix, const vector_& s
     }
     else {
       // compute probabilites for each match
-      typedef typename std::vector<unsigned int>::iterator m_itr;
       T sum_probs = T(0);
-      for (m_itr itr = matched.begin(); itr != matched.end(); ++itr) {
-        const unsigned int i = *itr;
+      for (unsigned int i : matched) {
         obs_gaussian_& g = mix.distribution(i);
         probs[i] = g.dist_prob_density(probs[i]) * mix.weight(i);
         sum_probs += probs[i];
       }
       // update each match
-      for (m_itr itr = matched.begin(); itr != matched.end(); ++itr) {
-        const unsigned int i = *itr;
+      for (unsigned int i : matched) {
         if (sum_probs != 0) {
           probs[i] /= sum_probs;
         }

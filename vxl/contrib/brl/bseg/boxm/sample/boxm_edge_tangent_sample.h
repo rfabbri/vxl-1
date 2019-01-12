@@ -5,7 +5,9 @@
 
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_binary_io.h>
 #include "boxm_plane_obs.h"
 #include <boxm/boxm_aux_traits.h>
@@ -15,8 +17,8 @@ template <class T>
 class boxm_edge_tangent_sample
 {
  public:
-  boxm_edge_tangent_sample() {}
-  ~boxm_edge_tangent_sample() {}
+  boxm_edge_tangent_sample() = default;
+  ~boxm_edge_tangent_sample() = default;
   static short version_no() { return 1; }
   void print(std::ostream& os) const;
 

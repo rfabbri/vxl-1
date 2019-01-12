@@ -1,7 +1,9 @@
 #include <iostream>
 #include <list>
 #include "boxm2_merge_block_function.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //:
 // \file
@@ -92,7 +94,7 @@ bool boxm2_merge_block_function::merge(std::vector<boxm2_data_base*>& datas)
 
   //1. loop over each tree, refine it in place (keep a vector of locations for
   boxm2_array_3d<uchar16>  trees = blk_->trees_copy();  //trees to refine
-  uchar16* trees_copy = new uchar16[trees.size()];  //copy of those trees
+  auto* trees_copy = new uchar16[trees.size()];  //copy of those trees
   int* dataIndex = new int[trees.size()];           //data index for each new tree
   int currIndex = 0;                                //curr tree being looked at
   int dataSize = 0;                                 //running sum of data size
@@ -121,9 +123,9 @@ bool boxm2_merge_block_function::merge(std::vector<boxm2_data_base*>& datas)
   boxm2_data_base* newA = new boxm2_data_base(new char[dataSize * sizeof(float) ], dataSize * sizeof(float), id);
   boxm2_data_base* newM = new boxm2_data_base(new char[dataSize * sizeof(uchar8)], dataSize * sizeof(uchar8), id);
   boxm2_data_base* newN = new boxm2_data_base(new char[dataSize * sizeof(ushort4)], dataSize * sizeof(ushort4), id);
-  float*   alpha_cpy = (float*) newA->data_buffer();
-  uchar8*  mog_cpy   = (uchar8*) newM->data_buffer();
-  ushort4* num_obs_cpy = (ushort4*) newN->data_buffer();
+  auto*   alpha_cpy = (float*) newA->data_buffer();
+  auto*  mog_cpy   = (uchar8*) newM->data_buffer();
+  auto* num_obs_cpy = (ushort4*) newN->data_buffer();
 
   //3. loop through tree again, putting the data in the right place
   std::cout<<"Swapping data into new blocks..."<<std::endl;
@@ -228,8 +230,8 @@ boct_bit_tree boxm2_merge_block_function::merge_bit_tree(boct_bit_tree& unrefine
     if (genCounter >= 8) {
       //calculate if all cells fall below threshold
       bool allBelow = true;
-      for (int i=0; i<8; ++i) {
-        allBelow = allBelow && (probs[i] < prob_thresh);
+      for (float prob : probs) {
+        allBelow = allBelow && (prob < prob_thresh);
       }
 
       //if all are leaves and all below, then reset the parent index to 0 (merge)
@@ -324,11 +326,11 @@ int boxm2_merge_block_function::move_data( boct_bit_tree& old_tree,
 ////////////////////////////////////////////////////////////////////////////////
 //MAIN REFINE FUNCTION
 ////////////////////////////////////////////////////////////////////////////////
-void boxm2_merge_block( boxm2_scene_sptr scene,
+void boxm2_merge_block( const boxm2_scene_sptr& scene,
                         boxm2_block* blk,
                         std::vector<boxm2_data_base*> & datas,
                         float prob_thresh,
-                        bool is_random)
+                        bool  /*is_random*/)
 {
   boxm2_merge_block_function merge_block(scene);
   merge_block.init_data(blk, datas, prob_thresh);

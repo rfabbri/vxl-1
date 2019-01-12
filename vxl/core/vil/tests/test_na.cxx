@@ -2,7 +2,9 @@
 #include <iomanip>
 #include <sstream>
 #include <limits>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_na.h>
 #include <testlib/testlib_test.h>
 

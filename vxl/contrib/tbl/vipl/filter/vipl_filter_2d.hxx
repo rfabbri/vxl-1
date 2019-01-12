@@ -4,8 +4,9 @@
 
 #include <iostream>
 #include "vipl_filter_2d.h"
-#include <vcl_compiler.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 // Main constructor for this abstract class. If dst_image
 // (by default) the output will be generated automatically when
@@ -24,7 +25,7 @@ template < class ImgIn,class ImgOut,class DataIn,class DataOut, class PixelItr >
                    int ninputs,
                    int img_border ,
                    DataOut fill_val)
-    : vipl_filter<ImgIn, ImgOut, DataIn, DataOut, 2 VCL_DFL_TMPL_ARG(vipl_trivial_pixeliter)>
+    : vipl_filter<ImgIn, ImgOut, DataIn, DataOut, 2, vipl_trivial_pixeliter>
       (src_img, dst_img, ninputs, img_border, fill_val)
 {}
 
@@ -43,7 +44,7 @@ template < class ImgIn,class ImgOut,class DataIn,class DataOut, class PixelItr >
                 int ninputs,
                 int img_border ,
                 DataOut fill_val)
-     : vipl_filter<ImgIn, ImgOut, DataIn, DataOut, 2 VCL_DFL_TMPL_ARG(vipl_trivial_pixeliter)>
+     : vipl_filter<ImgIn, ImgOut, DataIn, DataOut, 2, vipl_trivial_pixeliter>
        (src_img, dst_img, ninputs, img_border, fill_val)
 {}
 
@@ -51,7 +52,7 @@ template < class ImgIn,class ImgOut,class DataIn,class DataOut, class PixelItr >
   vipl_filter_2d< ImgIn,ImgOut,DataIn,DataOut,PixelItr >
   ::vipl_filter_2d(const vipl_filter_2d< ImgIn,ImgOut,DataIn,DataOut,PixelItr > &t)
   :
-  vipl_filter< ImgIn, ImgOut, DataIn, DataOut, 2 VCL_DFL_TMPL_ARG(vipl_trivial_pixeliter)> (t)
+  vipl_filter< ImgIn, ImgOut, DataIn, DataOut, 2, vipl_trivial_pixeliter> (t)
 // C++ special low-level copy constructor
 {}
 
@@ -72,14 +73,14 @@ template < class ImgIn,class ImgOut,class DataIn,class DataOut, class PixelItr >
   // the name of the section container generator.
   // do not generate a new one if there is one already.
   if (!this->ref_dst_section()) {
-    this->ref_dst_section() = vipl_filterable_section_container_generator(*this->ref_outf(),(DataOut*)VXL_NULLPTR);
+    this->ref_dst_section() = vipl_filterable_section_container_generator(*this->ref_outf(),(DataOut*)nullptr);
   }
   if (!this->ref_dst_section()) {
     std::cerr << "Warning: empty dst section in vipl_filter_2d::applyop, returning without processing\n";
     return false;
   }
   if (!this->ref_src_section()) {
-    this->ref_src_section() = vipl_filterable_section_container_generator(*this->ref_inf()[0],(DataIn*)VXL_NULLPTR);
+    this->ref_src_section() = vipl_filterable_section_container_generator(*this->ref_inf()[0],(DataIn*)nullptr);
   }
   if (!this->ref_src_section()) {
     std::cerr << "Warning: empty src section in vipl_filter_2d::applyop, presuming output driving but cannot be ptr safe\n";

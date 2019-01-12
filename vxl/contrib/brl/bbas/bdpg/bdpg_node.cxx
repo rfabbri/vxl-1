@@ -3,7 +3,9 @@
 #include "bdpg_node.h"
 //:
 // \file
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_numeric_traits.h>
 
 bdpg_node::bdpg_node() :
@@ -13,8 +15,7 @@ bdpg_node::bdpg_node() :
 }
 
 bdpg_node::~bdpg_node()
-{
-}
+= default;
 
 void bdpg_node::set_prior_prob(const double p)
 {

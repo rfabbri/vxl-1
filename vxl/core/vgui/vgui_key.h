@@ -1,15 +1,14 @@
 // This is core/vgui/vgui_key.h
 #ifndef vgui_key_h_
 #define vgui_key_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Enumeration of possible key strokes.
 
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Enumeration of possible key strokes.
 enum vgui_key

@@ -7,12 +7,14 @@
 #include <iostream>
 #include <vector>
 #include "vsl_binary_loader.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 template<class BaseClass>
 vsl_binary_loader<BaseClass>& vsl_binary_loader<BaseClass>::instance()
 {
-  if (instance_ == VXL_NULLPTR)
+  if (instance_ == nullptr)
   {
     instance_ = new vsl_binary_loader<BaseClass>;
 
@@ -34,7 +36,7 @@ template<class BaseClass>
 vsl_binary_loader<BaseClass>::~vsl_binary_loader()
 {
   make_empty();
-  instance_=VXL_NULLPTR;
+  instance_=nullptr;
 }
 
 // IO for  pointers to BaseClass:
@@ -55,7 +57,7 @@ void vsl_binary_loader<BaseClass>::load_object( vsl_b_istream& is, BaseClass*& b
   if (name=="VSL_NULL_PTR")
   {
     // Zero pointer
-    b=VXL_NULLPTR;
+    b=nullptr;
     return;
   }
 
@@ -93,7 +95,7 @@ void vsl_b_write(vsl_b_ostream& bfs, const BaseClass* b)
 }
 
 template <class BaseClass>
-vsl_binary_loader<BaseClass>* vsl_binary_loader<BaseClass>::instance_ = VXL_NULLPTR;
+vsl_binary_loader<BaseClass>* vsl_binary_loader<BaseClass>::instance_ = nullptr;
 
 
 #undef VSL_BINARY_LOADER_INSTANTIATE
@@ -103,7 +105,7 @@ template <> std::string vsl_binary_loader<T >::is_a() const \
 template class vsl_binary_loader<T >
 #define VSL_BINARY_LOADER_INSTANTIATE(T) \
 VSL_BINARY_LOADER_WITH_SPECIALIZATION_INSTANTIATE(T); \
-VCL_INSTANTIATE_INLINE(void vsl_b_read( vsl_b_istream& bfs, (T)*& b)); \
+/*template void vsl_b_read( vsl_b_istream& bfs, (T)*& b) ; */ \
 template void vsl_b_write(vsl_b_ostream& bfs, const T* b)
 
 #endif // vsl_binary_loader_hxx_

@@ -5,8 +5,10 @@
 
 #include <rrel/rrel_wls_obj.h>
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 rrel_estimation_problem::rrel_estimation_problem( unsigned int dof,
                                                   unsigned int num_samples_for_fit )
@@ -14,14 +16,14 @@ rrel_estimation_problem::rrel_estimation_problem( unsigned int dof,
     num_samples_for_fit_( num_samples_for_fit ),
     scale_type_( NONE ),
     single_scale_( 0 ),
-    multiple_scales_( VXL_NULLPTR )
+    multiple_scales_( nullptr )
 {
 }
 
 rrel_estimation_problem::rrel_estimation_problem( )
   : scale_type_( NONE ),
     single_scale_( 0 ),
-    multiple_scales_( VXL_NULLPTR )
+    multiple_scales_( nullptr )
 {
 }
 

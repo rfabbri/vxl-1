@@ -8,8 +8,10 @@
 #include "msm_translation_aligner.h"
 #include <vnl/vnl_vector.h>
 #include <vsl/vsl_binary_loader.h>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //=======================================================================
 
@@ -30,7 +32,7 @@ void msm_translation_aligner::apply_transform(const msm_points& points,
 
 
 //: Return scaling applied by the transform with given parameters.
-double msm_translation_aligner::scale(const vnl_vector<double>& trans) const
+double msm_translation_aligner::scale(const vnl_vector<double>&  /*trans*/) const
 {
   return 1.0;
 }
@@ -47,7 +49,7 @@ double msm_translation_aligner::scale(const vnl_vector<double>& trans) const
   //  to compute the optimal shape and pose parameters, rather than an iterative
   //  method which is required where the orthogonality properties do not hold,
   //  or where weights are considered.
-void msm_translation_aligner::calc_transform_from_ref(const msm_points& ref_pts,
+void msm_translation_aligner::calc_transform_from_ref(const msm_points&  /*ref_pts*/,
                                                       const msm_points& pts2,
                                                       vnl_vector<double>& trans) const
 {
@@ -84,7 +86,7 @@ inline vgl_point_2d<double> msm_wtd_cog(const msm_points& pts,
   { cx+=w[0]*v[0]; cy+=w[0]*v[1]; w_sum+=w[0]; }
 
   if (w_sum>0) { cx/=w_sum; cy/=w_sum; }
-  return vgl_point_2d<double>(cx,cy);
+  return {cx,cy};
 }
 
   //: Estimate parameters which map points1 to points2 allowing for weights
@@ -120,7 +122,7 @@ void msm_translation_aligner::calc_transform_wt_mat(const msm_points& pts1,
   const double* p1 = pts1.vector().begin();
   const double* p2 = pts2.vector().begin();
   const double* p1_end = pts1.vector().end();
-  std::vector<msm_wt_mat_2d>::const_iterator w=wt_mat.begin();
+  auto w=wt_mat.begin();
   for (;p1!=p1_end;p1+=2,p2+=2,++w)
   {
     double wa=w->m11(), wb=w->m12(), wc=w->m22();
@@ -142,7 +144,7 @@ void msm_translation_aligner::calc_transform_wt_mat(const msm_points& pts1,
 
   //: Apply transform to weight matrices (ie ignore translation component)
 void msm_translation_aligner::transform_wt_mat(const std::vector<msm_wt_mat_2d>& wt_mat,
-                                               const vnl_vector<double>& trans,
+                                               const vnl_vector<double>&  /*trans*/,
                                                std::vector<msm_wt_mat_2d>& new_wt_mat) const
 {
   new_wt_mat = wt_mat;
@@ -193,6 +195,12 @@ void msm_translation_aligner::align_set(const std::vector<msm_points>& points,
 
   for (unsigned i=0;i<n_shapes;++i)
   {
+    if (points[i].size()!=ref_mean_shape.size())
+    {
+      std::cerr<<"msm_translation_aligner::align_set() shape "<<i
+                <<" has different number of points to first shape"<<std::endl;
+      std::abort();
+    }
     calc_transform_from_ref(ref_mean_shape,points[i],pose_from_ref);
     pose_to_ref[i]=inverse(pose_from_ref);
     average_pose+=pose_from_ref;
@@ -214,5 +222,3 @@ msm_aligner* msm_translation_aligner::clone() const
 {
   return new msm_translation_aligner(*this);
 }
-
-

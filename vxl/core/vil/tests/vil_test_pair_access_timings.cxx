@@ -7,15 +7,17 @@
 
 #include <ctime>
 #include <iostream>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vxl_config.h> // for vxl_byte
 #include <vil/vil_image_view.h>
 #include <mbl/mbl_stats_1d.h>
 
-const unsigned NI=256;
-const unsigned NJ=256;
-const unsigned NP=3;
+constexpr unsigned NI = 256;
+constexpr unsigned NJ = 256;
+constexpr unsigned NP = 3;
 
 template <class imT>
 double method1(const vil_image_view<imT>& src_image,

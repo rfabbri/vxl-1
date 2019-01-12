@@ -6,8 +6,10 @@
 #include <vil/vil_stream.h>
 #include <dcerror.h>
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 // ===========================================================================
 //                                                             stream producer

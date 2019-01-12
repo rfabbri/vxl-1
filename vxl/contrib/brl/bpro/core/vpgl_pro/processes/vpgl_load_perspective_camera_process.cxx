@@ -5,7 +5,9 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpgl/vpgl_camera_double_sptr.h>
 #include <vpgl/vpgl_perspective_camera.h>
 #include <vpgl/io/vpgl_io_perspective_camera.h>
@@ -18,12 +20,12 @@ bool vpgl_load_perspective_camera_process_cons(bprb_func_process& pro)
   //this process takes one input: the filename
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("vcl_string");
+  input_types.emplace_back("vcl_string");
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   std::vector<std::string> output_types;
-  output_types.push_back("vpgl_camera_double_sptr");  // label image
+  output_types.emplace_back("vpgl_camera_double_sptr");  // label image
   ok = pro.set_output_types(output_types);
   if (!ok) return ok;
 
@@ -47,7 +49,7 @@ bool vpgl_load_perspective_camera_process(bprb_func_process& pro)
     std::cerr << "Failed to open file " << camera_filename << '\n';
     return false;
   }
-  vpgl_perspective_camera<double>* pcam =new vpgl_perspective_camera<double>;
+  auto* pcam =new vpgl_perspective_camera<double>;
   std::string ext = vul_file_extension(camera_filename);
   if (ext == ".vsl") // binary form
   {
@@ -97,11 +99,11 @@ bool vpgl_load_perspective_camera_from_kml_file_process(bprb_func_process& pro)
     return false;
   }
   // get the inputs
-  unsigned ni = pro.get_input<unsigned>(0);
-  unsigned nj = pro.get_input<unsigned>(1);
+  auto ni = pro.get_input<unsigned>(0);
+  auto nj = pro.get_input<unsigned>(1);
   std::string name = pro.get_input<std::string>(2);
 
-  bkml_parser* parser = new bkml_parser();
+  auto* parser = new bkml_parser();
   std::FILE* xmlFile = std::fopen(name.c_str(), "r");
   if (!xmlFile) {
     std::cerr << name.c_str() << " error on opening\n";
@@ -118,12 +120,10 @@ bool vpgl_load_perspective_camera_from_kml_file_process(bprb_func_process& pro)
   vpgl_perspective_camera<double> out_cam =
     bpgl_camera_utils::camera_from_kml((double)ni, (double)nj, parser->right_fov_, parser->top_fov_, parser->altitude_, parser->heading_, parser->tilt_, parser->roll_);
 
-  vpgl_perspective_camera<double>* ncam = new vpgl_perspective_camera<double>(out_cam);
+  auto* ncam = new vpgl_perspective_camera<double>(out_cam);
   pro.set_output_val<vpgl_camera_double_sptr>(0, ncam);
   pro.set_output_val<double>(1, parser->longitude_);
   pro.set_output_val<double>(2, parser->latitude_);
   pro.set_output_val<double>(3, parser->altitude_);
   return true;
 }
-
-

@@ -13,16 +13,16 @@ bool vil_crop_image_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("vil_image_view_base_sptr");
-  input_types.push_back("unsigned");
-  input_types.push_back("unsigned");
-  input_types.push_back("unsigned");
-  input_types.push_back("unsigned");
+  input_types.emplace_back("vil_image_view_base_sptr");
+  input_types.emplace_back("unsigned");
+  input_types.emplace_back("unsigned");
+  input_types.emplace_back("unsigned");
+  input_types.emplace_back("unsigned");
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   std::vector<std::string> output_types;
-  output_types.push_back("vil_image_view_base_sptr");
+  output_types.emplace_back("vil_image_view_base_sptr");
   ok = pro.set_output_types(output_types);
   if (!ok) return ok;
   return true;
@@ -44,10 +44,10 @@ bool vil_crop_image_process(bprb_func_process& pro)
   vil_image_resource_sptr image_ptr = vil_new_image_resource_of_view(*image);
 
   //Retrieve limits
-  unsigned i0= pro.get_input<unsigned>(i++);
-  unsigned j0= pro.get_input<unsigned>(i++);
-  unsigned ni= pro.get_input<unsigned>(i++);
-  unsigned nj= pro.get_input<unsigned>(i++);
+  auto i0= pro.get_input<unsigned>(i++);
+  auto j0= pro.get_input<unsigned>(i++);
+  auto ni= pro.get_input<unsigned>(i++);
+  auto nj= pro.get_input<unsigned>(i++);
 
   vil_image_resource_sptr out_img = vil_crop(image_ptr, i0, ni, j0, nj);
   vil_image_view_base_sptr out_sptr = vil_new_image_view_base_sptr(*(out_img->get_view()));
@@ -59,8 +59,8 @@ bool vil_crop_image_process(bprb_func_process& pro)
 //: A crop process that takes vil_image_resource as input to crop the image
 namespace vil_crop_image_res_process_globals
 {
-  const unsigned n_inputs_  = 5;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 5;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 bool vil_crop_image_res_process_cons(bprb_func_process& pro)
@@ -91,10 +91,10 @@ bool vil_crop_image_res_process(bprb_func_process& pro)
   // get the inputs
   unsigned i = 0;
   vil_image_resource_sptr img_res_sptr = pro.get_input<vil_image_resource_sptr>(i++);
-  unsigned i0 = pro.get_input<unsigned>(i++);
-  unsigned j0 = pro.get_input<unsigned>(i++);
-  unsigned ni = pro.get_input<unsigned>(i++);
-  unsigned nj = pro.get_input<unsigned>(i++);
+  auto i0 = pro.get_input<unsigned>(i++);
+  auto j0 = pro.get_input<unsigned>(i++);
+  auto ni = pro.get_input<unsigned>(i++);
+  auto nj = pro.get_input<unsigned>(i++);
 
   vil_image_resource_sptr out_img = vil_crop(img_res_sptr, i0, ni, j0, nj);
   vil_image_view_base_sptr out_sptr = vil_new_image_view_base_sptr(*(out_img->get_view()));

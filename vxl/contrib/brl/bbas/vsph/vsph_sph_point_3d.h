@@ -4,7 +4,9 @@
 // \file
 #include <iostream>
 #include <vsl/vsl_binary_io.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: a point in the spherical coordinate system
 // theta is elevation with zero at the North pole
@@ -18,7 +20,7 @@ class vsph_sph_point_3d
 
   vsph_sph_point_3d(double r, double theta, double phi) : radius_(r), theta_(theta), phi_(phi) {}
 
-  ~vsph_sph_point_3d() {}
+  ~vsph_sph_point_3d() = default;
 
   void set(double r, double theta, double phi) { radius_=r; theta_=theta; phi_=phi; }
 

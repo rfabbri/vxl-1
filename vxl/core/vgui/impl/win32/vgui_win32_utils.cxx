@@ -3,8 +3,10 @@
 #include <iostream>
 #include <cstddef>
 #include "vgui_win32_utils.h"
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 // (Create if necessary and) return singleton instance of this class.
 vgui_win32_utils* vgui_win32_utils::instance()

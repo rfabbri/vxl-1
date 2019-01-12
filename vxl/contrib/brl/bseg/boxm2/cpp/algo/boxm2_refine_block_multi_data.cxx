@@ -1,7 +1,9 @@
 #include <iostream>
 #include <algorithm>
 #include "boxm2_refine_block_multi_data.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/boxm2_data_traits.h>
 //:
 // \file
@@ -42,7 +44,7 @@ uchar16 boxm2_refine_block_multi_data::fully_refined(int depth, int& data_size){
 }
 
 //: initialize data base pointers and associated data buffers for each prefix (data type)
-bool boxm2_refine_block_multi_data::init_data(boxm2_scene_sptr scene, boxm2_block_sptr blk, std::vector<std::string> const& prefixes, float prob_thresh)
+bool boxm2_refine_block_multi_data::init_data(boxm2_scene_sptr scene, const boxm2_block_sptr& blk, std::vector<std::string> const& prefixes, float prob_thresh)
 {
   //the prefix set must include "alpha" , occupation density
   std::vector<std::string>::const_iterator pit;
@@ -62,9 +64,9 @@ bool boxm2_refine_block_multi_data::init_data(boxm2_scene_sptr scene, boxm2_bloc
   // cache the databases and data buffers before refine
   dbs_.clear();
   old_bufs_.clear();
-  for(std::vector<std::string>::const_iterator pit = prefixes.begin(); pit != prefixes.end(); ++pit){
-    boxm2_data_base* db = boxm2_cache::instance()->get_data_base(scene,id,*pit);
-    if(*pit == "alpha")
+  for(const auto & prefixe : prefixes){
+    boxm2_data_base* db = boxm2_cache::instance()->get_data_base(scene,id,prefixe);
+    if(prefixe == "alpha")
       alpha_   = (float*)   db->data_buffer();
     db->enable_write();
     dbs_.push_back(db);
@@ -120,7 +122,7 @@ bool boxm2_refine_block_multi_data::refine_deterministic(std::vector<std::string
   // get a copy of the blocks's trees
   //loop over each tree, refine it in place
   boxm2_array_3d<uchar16> trees = blk_->trees_copy();  //trees to refine
-  uchar16* trees_copy = new uchar16[trees.size()];  //copy of those trees
+  auto* trees_copy = new uchar16[trees.size()];  //copy of those trees
   int* dataIndex = new int[trees.size()];           //data index for each new tree
   int currIndex = 0;                                //curr tree being looked at
   int dataSize = 0;                                 //running sum of data size
@@ -151,8 +153,8 @@ bool boxm2_refine_block_multi_data::refine_deterministic(std::vector<std::string
   std::vector<std::size_t> type_sizes;
   // get data buffers for old and new databases
   std::vector<char*> new_bufs;
-  std::vector<std::string>::const_iterator pit = prefixes.begin();
-  std::vector<boxm2_data_base *>::iterator dit = dbs_.begin();
+  auto pit = prefixes.begin();
+  auto dit = dbs_.begin();
   for(; dit!=dbs_.end(); ++dit, ++pit){
     std::size_t type_size = boxm2_data_info::datasize(*pit);
     type_sizes.push_back(type_size);
@@ -207,7 +209,7 @@ bool boxm2_refine_block_multi_data::refine_deterministic(std::vector<std::string
 // on the global level, so buffers, offsets are used
 /////////////////////////////////////////////////////////////////
 boct_bit_tree boxm2_refine_block_multi_data::refine_bit_tree(boct_bit_tree& unrefined_tree,
-                                                                      int buff_offset)
+                                                                      int  /*buff_offset*/)
 {
   //initialize tree to return
   boct_bit_tree refined_tree(unrefined_tree.get_bits(), max_level_);
@@ -294,8 +296,8 @@ bool boxm2_refine_block_multi_data::match_refine(std::vector<std::string> const&
   std::vector<std::size_t> type_sizes;
   // get data buffers for old and new databases
   std::vector<char*> new_bufs;
-  std::vector<std::string>::const_iterator pit = prefixes.begin();
-  std::vector<boxm2_data_base *>::iterator dit = dbs_.begin();
+  auto pit = prefixes.begin();
+  auto dit = dbs_.begin();
   for(; dit!=dbs_.end(); ++dit, ++pit){
     std::size_t type_size = boxm2_data_info::datasize(*pit);
     type_sizes.push_back(type_size);
@@ -389,7 +391,7 @@ int boxm2_refine_block_multi_data::move_data(boct_bit_tree& unrefined_tree,
       int parentLevel = unrefined_tree.depth_at(pj);
       double side_len = block_len_ / double(1<<parentLevel);
       int dataIndex = unrefined_tree.get_data_index(pj, false);
-      float nalpha = static_cast<float>(max_alpha_int_ / side_len);
+      auto nalpha = static_cast<float>(max_alpha_int_ / side_len);
       char* new_alpha = reinterpret_cast<char*>(&nalpha);
 #if COPY_PARENT_DATA
       for(int i = 0; i<static_cast<int>(n); ++i){
@@ -442,8 +444,8 @@ int boxm2_refine_block_multi_data::free_space(int startPtr, int endPtr)
 ////////////////////////////////////////////////////////////////////////////////
 //REFINE FUNCTION BASED ON ALPHA
 ////////////////////////////////////////////////////////////////////////////////
-void boxm2_refine_block_multi_data_function( boxm2_scene_sptr scene,
-                                             boxm2_block_sptr blk,
+void boxm2_refine_block_multi_data_function( const boxm2_scene_sptr& scene,
+                                             const boxm2_block_sptr& blk,
                                              std::vector<std::string> const& prefixes,
                                              float prob_thresh)
 {
@@ -456,8 +458,8 @@ void boxm2_refine_block_multi_data_function( boxm2_scene_sptr scene,
 //REFINE FUNCTION TO MATCH SPECIFIED DEPTHS
 ////////////////////////////////////////////////////////////////////////////////
 
-void boxm2_refine_block_multi_data_function( boxm2_scene_sptr scene,
-                                             boxm2_block_sptr blk,
+void boxm2_refine_block_multi_data_function( const boxm2_scene_sptr& scene,
+                                             const boxm2_block_sptr& blk,
                                              std::vector<std::string> const& prefixes,
                                              vbl_array_3d<int> const& depths_to_match){
   boxm2_refine_block_multi_data refine_block;

@@ -14,6 +14,7 @@
 
 #include <list>
 #include <iostream>
+#include <utility>
 #include <vgl/vgl_box_3d.h>
 
 #include <boxm/boxm_scene.h>
@@ -23,7 +24,9 @@
 #include <vnl/vnl_vector.h>
 #include <vnl/algo/vnl_svd.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <bvpl/bvpl_octree/sample/bvpl_pca_basis_sample.h>
 
@@ -39,8 +42,8 @@ class bvpl_discover_pca_kernels: public vbl_ref_count
 {
  public:
   //: Constructor from neighborhood bounding boxm, number of samples to be drawn, scene and flag to indicate whether to use evd or svd
-  bvpl_discover_pca_kernels(vgl_box_3d<int> nbbox, unsigned long long nsamples, boxm_scene<boct_tree<short,float> > *scene, const std::string& path_out=".", bool use_evd = true):
-  nbbox_(nbbox), nsamples_(nsamples), path_out_(path_out)
+  bvpl_discover_pca_kernels(vgl_box_3d<int> nbbox, unsigned long long nsamples, boxm_scene<boct_tree<short,float> > *scene, std::string  path_out=".", bool use_evd = true):
+  nbbox_(nbbox), nsamples_(nsamples), path_out_(std::move(path_out))
   {
     scene_path_ = scene->filename();
     std::cout << "Scene path: " << scene->filename()<< std::endl;;
@@ -96,7 +99,7 @@ class bvpl_discover_pca_kernels: public vbl_ref_count
   void compute_testing_error(vnl_vector<double> &proj_error);
 
   //: Reconstructions error on testing samples. By block. Error is given as average error per sample
-  void compute_testing_error(boxm_scene_base_sptr error_scene_base, unsigned ncomponents,
+  void compute_testing_error(const boxm_scene_base_sptr& error_scene_base, unsigned ncomponents,
                              int block_i, int block_j, int block_k);
 
 #if BVPL_OCTREE_HAS_PTHREADS

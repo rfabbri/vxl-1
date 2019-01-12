@@ -6,8 +6,10 @@
 #include "brad_eigenspace.h"
 //:
 // \file
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vil/vil_convert.h>
 #include <vil/vil_new.h>
 #include <vnl/algo/vnl_symmetric_eigensystem.h>
@@ -524,7 +526,7 @@ bool get_view(vil_image_resource_sptr const& ir,
   static unsigned i0 = 0, j0 = 0;
   static unsigned bi = 0, bj = 0;
   static vil_image_view<float> cblock;
-  static vil_blocked_image_resource_sptr bif = VXL_NULLPTR;
+  static vil_blocked_image_resource_sptr bif = nullptr;
   if (first) {
     unsigned si = ni*16, sj = nj*16;
     bif = vil_new_blocked_image_facade(ir, si, sj);
@@ -661,9 +663,8 @@ init_histogram(std::vector<vil_image_resource_sptr> const& rescs,
   vnl_vector<double> v0 = eigenvectors_.get_column(n-1);
   vnl_vector<double> v1 = eigenvectors_.get_column(n-2);
   vnl_vector<double> v2 = eigenvectors_.get_column(n-3);
-  for (std::vector<vil_image_resource_sptr>::const_iterator rit = rescs.begin();
-       rit != rescs.end(); ++rit) {
-    unsigned ni = (*rit)->ni(), nj = (*rit)->nj();
+  for (const auto & resc : rescs) {
+    unsigned ni = resc->ni(), nj = resc->nj();
     if (ni==0||nj==0||ni<nib_||nj<njb_) return false;
     unsigned nbi = ni/nib_, nbj = nj/njb_;
     unsigned i0 = 0, j0 = 0;
@@ -672,7 +673,7 @@ init_histogram(std::vector<vil_image_resource_sptr> const& rescs,
       for (unsigned c = 0; c<nbi; ++c, i0+=nib_)
       {
         vil_image_view_base_sptr view_ptr =
-          (*rit)->get_view(i0, nib_, j0, njb_);
+          resc->get_view(i0, nib_, j0, njb_);
         vil_image_view<float> fview = vil_convert_cast(float(), view_ptr);
         vnl_vector<double> v = funct_(fview);
         float eig0 = static_cast<float>(dot_product(v, v0));
@@ -705,9 +706,8 @@ bool brad_eigenspace<T>::
 update_histogram(std::vector<vil_image_resource_sptr> const& rescs,
                  bsta_joint_histogram_3d<float>& hist)
 {
-  for (std::vector<vil_image_resource_sptr>::const_iterator rit = rescs.begin();
-       rit != rescs.end(); ++rit)
-    if (!this->update_histogram((*rit), hist))
+  for (const auto & resc : rescs)
+    if (!this->update_histogram(resc, hist))
       return false;
   return true;
 }
@@ -816,13 +816,12 @@ init_histogram_blocked(std::vector<vil_image_resource_sptr> const& rescs,
   vnl_vector<double> v0 = eigenvectors_.get_column(n-1);
   vnl_vector<double> v1 = eigenvectors_.get_column(n-2);
   vnl_vector<double> v2 = eigenvectors_.get_column(n-3);
-  for (std::vector<vil_image_resource_sptr>::const_iterator rit = rescs.begin();
-       rit != rescs.end(); ++rit) {
-    unsigned ni = (*rit)->ni(), nj = (*rit)->nj();
+  for (const auto & resc : rescs) {
+    unsigned ni = resc->ni(), nj = resc->nj();
     if (ni==0||nj==0||ni<nib_||nj<njb_) return false;
     unsigned nbi = ni/nib_, nbj = nj/njb_;
     vil_blocked_image_resource_sptr bresc =
-      vil_new_blocked_image_facade(*rit, nit, njt);
+      vil_new_blocked_image_facade(resc, nit, njt);
     vil_blocked_image_resource_sptr cbresc =
       vil_new_cached_image_resource(bresc);
     unsigned i0 = 0, j0 = 0;
@@ -932,10 +931,9 @@ bool brad_eigenspace<T>::
 update_histogram_blocked(std::vector<vil_image_resource_sptr> const& rescs,
                          bsta_joint_histogram_3d<float>& hist,
                          unsigned nit, unsigned njt) {
-  for (std::vector<vil_image_resource_sptr>::const_iterator rit = rescs.begin();
-       rit != rescs.end(); ++rit) {
+  for (const auto & resc : rescs) {
     vil_blocked_image_resource_sptr bresc =
-      vil_new_blocked_image_facade(*rit, nit, njt);
+      vil_new_blocked_image_facade(resc, nit, njt);
     vil_blocked_image_resource_sptr cbresc =
       vil_new_cached_image_resource(bresc);
     if (!eigensystem_valid_)
@@ -947,7 +945,7 @@ update_histogram_blocked(std::vector<vil_image_resource_sptr> const& rescs,
     vnl_vector<double> v0 = eigenvectors_.get_column(n-1);
     vnl_vector<double> v1 = eigenvectors_.get_column(n-2);
     vnl_vector<double> v2 = eigenvectors_.get_column(n-3);
-    unsigned ni = (*rit)->ni(), nj = (*rit)->nj();
+    unsigned ni = resc->ni(), nj = resc->nj();
     if (ni==0||nj==0||ni<nib_||nj<njb_) return false;
     unsigned nbi = ni/nib_, nbj = nj/njb_;
     unsigned i0 = 0, j0 = 0;

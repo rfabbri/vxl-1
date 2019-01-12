@@ -12,7 +12,9 @@
 #include <boxm2/basic/boxm2_array_1d.h>
 #include <boxm2/boxm2_data_traits.h>
 #include <boxm2/boxm2_block_metadata.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //smart ptr includes
 #include <vbl/vbl_ref_count.h>
@@ -31,12 +33,12 @@ class boxm2_data_base : public vbl_ref_count
     : read_only_(read_only), id_(id), data_buffer_(data_buffer), buffer_length_(length) {}
 
     //: initializes empty data buffer
-    boxm2_data_base(boxm2_block_metadata data, std::string type, bool read_only = true);
+    boxm2_data_base(boxm2_block_metadata data, const std::string& type, bool read_only = true);
 
-    void set_default_value(std::string data_type, boxm2_block_metadata data);
+    void set_default_value(const std::string& data_type, boxm2_block_metadata data);
 
     //: This destructor is correct - by our design the original data_buffer becomes OWNED by the data_base class
-    virtual ~boxm2_data_base() { if (data_buffer_) delete [] data_buffer_; }
+    ~boxm2_data_base() override { if (data_buffer_) delete [] data_buffer_; }
 
     //: accessor for low level byte buffer kept by the data_base
     char *            data_buffer()    { return data_buffer_; }

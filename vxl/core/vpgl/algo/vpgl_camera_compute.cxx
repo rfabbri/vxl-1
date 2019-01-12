@@ -8,8 +8,10 @@
 #include "vpgl_camera_compute.h"
 //:
 // \file
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_numeric_traits.h>
 #include <vnl/vnl_det.h>
 #include <vnl/vnl_inverse.h>
@@ -40,10 +42,12 @@ vpgl_proj_camera_compute::compute(
 {
   std::vector< vgl_homg_point_2d<double> > image_pts2;
   std::vector< vgl_homg_point_3d<double> > world_pts2;
-  for (unsigned int i = 0; i < image_pts.size(); ++i)
-    image_pts2.push_back( vgl_homg_point_2d<double>( image_pts[i] ) );
-  for (unsigned int i = 0; i < world_pts.size(); ++i)
-    world_pts2.push_back( vgl_homg_point_3d<double>( world_pts[i] ) );
+  image_pts2.reserve(image_pts.size());
+for (auto image_pt : image_pts)
+    image_pts2.emplace_back( image_pt );
+  world_pts2.reserve(world_pts.size());
+for (const auto & world_pt : world_pts)
+    world_pts2.emplace_back( world_pt );
   return compute( image_pts2, world_pts2, camera );
 }
 
@@ -55,8 +59,8 @@ vpgl_proj_camera_compute::compute(
                                   const std::vector< vgl_homg_point_3d<double> >& world_pts,
                                   vpgl_proj_camera<double>& camera )
 {
-  unsigned int num_correspondences = image_pts.size();
-  if ( world_pts.size() < num_correspondences ) num_correspondences = world_pts.size();
+  auto num_correspondences = static_cast<unsigned int>(image_pts.size());
+  if ( world_pts.size() < num_correspondences ) num_correspondences = static_cast<unsigned int>(world_pts.size());
   assert( num_correspondences >= 6 );
 
   // Form the solution matrix.
@@ -102,7 +106,7 @@ vpgl_affine_camera_compute::compute(
   assert( image_pts.size() > 3 );
 
   // Form the solution matrix.
-  vnl_matrix<double> A( world_pts.size(), 4, 1 );
+  vnl_matrix<double> A(static_cast<unsigned int>(world_pts.size()), 4, 1 );
   for (unsigned int i = 0; i < world_pts.size(); ++i) {
     A(i,0) = world_pts[i].x(); A(i,1) = world_pts[i].y(); A(i,2) = world_pts[i].z();
   }
@@ -138,7 +142,7 @@ compute( const std::vector< vgl_point_2d<double> >& image_pts,
          const vpgl_calibration_matrix<double>& K,
          vpgl_perspective_camera<double>& camera )
 {
-  unsigned N = world_pts.size();
+  auto N = static_cast<unsigned int>(world_pts.size());
   if (image_pts.size()!=N)
   {
     std::cout << "Unequal points sets in"
@@ -222,7 +226,7 @@ compute( const std::vector< vgl_point_2d<double> >& image_pts,
 
   //Check if depths are all approximately the same (near affine projection)
   double average_depth = 0;
-  unsigned nd = depth.size();
+  auto nd = static_cast<unsigned int>(depth.size());
   for (unsigned i = 0; i<nd; ++i)
     average_depth += depth[i];
   average_depth /= nd;
@@ -276,7 +280,7 @@ compute( const std::vector< vgl_point_2d<double> >& image_pts,
   //perform a final non-linear optimization
   std::vector<vgl_homg_point_3d<double> > h_world_pts;
   for (unsigned i = 0; i<N; ++i)
-    h_world_pts.push_back(vgl_homg_point_3d<double>(world_pts[i]));
+    h_world_pts.emplace_back(world_pts[i]);
   camera = vpgl_optimize_camera::opt_orient_pos_cal(tcam, h_world_pts, image_pts, 0.00005, 20000);
   return true;
 }
@@ -313,7 +317,7 @@ compute_dlt (const std::vector< vgl_point_2d<double> >& image_pts,
   {
     // Two equations for each point, one for the x's, the other for
     // the ys
-    int num_eqns = 2 * image_pts.size();
+    int num_eqns = static_cast<int>(2 * image_pts.size());
 
     // A 3x4 projection matrix has 11 free vars
     int num_vars = 11;
@@ -419,7 +423,7 @@ compute( const std::vector< vgl_point_2d<double> >& image_pts,
          const std::vector< vgl_point_2d<double> >& ground_pts,
          vpgl_perspective_camera<double>& camera )
 {
-  unsigned num_pts = ground_pts.size();
+  auto num_pts = static_cast<unsigned int>(ground_pts.size());
   if (image_pts.size()!=num_pts)
   {
     std::cout << "Unequal points sets in"
@@ -439,8 +443,8 @@ compute( const std::vector< vgl_point_2d<double> >& image_pts,
     std::cout << '('<<image_pts[i].x()<<", "<<image_pts[i].y()<<") -> "
              << '('<<ground_pts[i].x()<<", "<<ground_pts[i].y()<<')'<<std::endl;
 #endif
-    pi.push_back(vgl_homg_point_2d<double>(image_pts[i].x(),image_pts[i].y()));
-    pg.push_back(vgl_homg_point_2d<double>(ground_pts[i].x(),ground_pts[i].y()));
+    pi.emplace_back(image_pts[i].x(),image_pts[i].y());
+    pg.emplace_back(ground_pts[i].x(),ground_pts[i].y());
   }
 
   // compute a homography from the ground plane to image plane
@@ -488,7 +492,7 @@ compute( const std::vector< vgl_point_2d<double> >& image_pts,
   //perform a final non-linear optimization
   std::vector<vgl_homg_point_3d<double> > h_world_pts;
   for (unsigned i = 0; i<num_pts; ++i) {
-    h_world_pts.push_back(vgl_homg_point_3d<double>(ground_pts[i].x(),ground_pts[i].y(),0,1));
+    h_world_pts.emplace_back(ground_pts[i].x(),ground_pts[i].y(),0,1);
     if (camera.is_behind_camera(h_world_pts.back())) {
       std::cout << "behind camera" << std::endl;
       return false;

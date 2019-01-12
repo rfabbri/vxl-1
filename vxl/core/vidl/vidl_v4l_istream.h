@@ -1,9 +1,6 @@
 // This is core/vidl/vidl_v4l_istream.h
 #ifndef vidl_v4l_istream_h_
 #define vidl_v4l_istream_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief A class for input video streams from a video-4-linux device
@@ -12,8 +9,11 @@
 // \date 21 Feb 2006
 
 #include <string>
+#include <cerrno>
 #include "vidl_istream.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 // this is linux specific
 using namespace std;
@@ -27,7 +27,6 @@ extern "C" {
 #include <sys/stat.h>
 
 #include <unistd.h> // for reading/writing to the camera
-#include <errno.h> // for errno
 #include <fcntl.h> // this is for the open, and O_RDWR
 #include <pthread.h> // for threaded approach to the asynch capture
 };

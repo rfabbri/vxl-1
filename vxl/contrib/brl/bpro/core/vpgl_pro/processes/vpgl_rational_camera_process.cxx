@@ -13,7 +13,9 @@
 // \endverbatim
 //
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpgl/vpgl_rational_camera.h>
 #include <vpgl/vpgl_local_rational_camera.h>
 
@@ -26,8 +28,8 @@
 //: global variables and functions
 namespace vpgl_rational_cam_img_to_global_process_globals
 {
-  const unsigned n_inputs_ = 8;
-  const unsigned n_outputs_ = 3;
+  constexpr unsigned n_inputs_ = 8;
+  constexpr unsigned n_outputs_ = 3;
 }
 //: initialization
 bool vpgl_rational_cam_img_to_global_process_cons(bprb_func_process& pro)
@@ -63,16 +65,16 @@ bool vpgl_rational_cam_img_to_global_process(bprb_func_process& pro)
   // get the inputs
   unsigned i = 0;
   vpgl_camera_double_sptr cam_sptr = pro.get_input<vpgl_camera_double_sptr>(i++);  // rational camera
-  unsigned img_i   = pro.get_input<unsigned>(i++);                              // image point i
-  unsigned img_j   = pro.get_input<unsigned>(i++);                              // image point j
-  double init_lon  = pro.get_input<double>(i++);                                // initial gauss lon
-  double init_lat  = pro.get_input<double>(i++);                                // initial gauss lat
-  double init_elev = pro.get_input<double>(i++);                                // initial gauss elev
-  double pl_elev   = pro.get_input<double>(i++);                                // point plane height
-  double error_tol = pro.get_input<double>(i++);                                // error tolerance
+  auto img_i = pro.get_input<unsigned>(i++);                              // image point i
+  auto img_j = pro.get_input<unsigned>(i++);                              // image point j
+  auto init_lon = pro.get_input<double>(i++);                                // initial gauss lon
+  auto init_lat = pro.get_input<double>(i++);                                // initial gauss lat
+  auto init_elev = pro.get_input<double>(i++);                                // initial gauss elev
+  auto pl_elev = pro.get_input<double>(i++);                                // point plane height
+  auto error_tol = pro.get_input<double>(i++);                                // error tolerance
 
   // get rational camera
-  vpgl_rational_camera<double>* rat_cam = dynamic_cast<vpgl_rational_camera<double>*>(cam_sptr.as_pointer());
+  auto* rat_cam = dynamic_cast<vpgl_rational_camera<double>*>(cam_sptr.as_pointer());
   if (!rat_cam) {
     std::cerr << pro.name() << ": the input camera is not a rational camera" << std::endl;
     return false;
@@ -83,8 +85,8 @@ bool vpgl_rational_cam_img_to_global_process(bprb_func_process& pro)
   // use camera offset if initial gauss is not given
   if (init_lon < 0.0) {
     // generate the initial from camera offset
-    init_lon  = rat_cam->offset(vpgl_rational_camera<double>::X_INDX);
-    init_lat  = rat_cam->offset(vpgl_rational_camera<double>::Y_INDX);
+    init_lon = rat_cam->offset(vpgl_rational_camera<double>::X_INDX);
+    init_lat = rat_cam->offset(vpgl_rational_camera<double>::Y_INDX);
     init_elev = rat_cam->offset(vpgl_rational_camera<double>::Z_INDX);
   }
   // use init_elev as point plane height is pl_elev is not given
@@ -141,12 +143,12 @@ bool vpgl_rational_cam_nadirness_process(bprb_func_process& pro)
   // get the inputs
   unsigned i = 0;
   vpgl_camera_double_sptr cam_sptr = pro.get_input<vpgl_camera_double_sptr>(i++);  // rational camera
-  double lat  = pro.get_input<double>(i++);
-  double lon  = pro.get_input<double>(i++);
-  double elev = pro.get_input<double>(i++);
+  auto lat = pro.get_input<double>(i++);
+  auto lon = pro.get_input<double>(i++);
+  auto elev = pro.get_input<double>(i++);
 
   // get rational camera
-  vpgl_rational_camera<double>* rat_cam = dynamic_cast<vpgl_rational_camera<double>*>(cam_sptr.as_pointer());
+  auto* rat_cam = dynamic_cast<vpgl_rational_camera<double>*>(cam_sptr.as_pointer());
   if (!rat_cam) {
     std::cerr << pro.name() << ": the input camera is not a rational camera" << std::endl;
     return false;
@@ -180,7 +182,7 @@ bool vpgl_rational_cam_rotation_to_north_process(bprb_func_process& pro)
   }
   // get the input
   vpgl_camera_double_sptr cam_sptr = pro.get_input<vpgl_camera_double_sptr>(0);  // input rational camera
-  vpgl_rational_camera<double>* rat_cam = dynamic_cast<vpgl_rational_camera<double>*>(cam_sptr.as_pointer());
+  auto* rat_cam = dynamic_cast<vpgl_rational_camera<double>*>(cam_sptr.as_pointer());
   if (!rat_cam) {
     std::cerr << pro.name() << ": the input camera is not a rational camera!!\n";
     return false;
@@ -223,7 +225,7 @@ bool vpgl_rational_cam_rotation_to_up_vector_process(bprb_func_process& pro)
   }
   // get the input
   vpgl_camera_double_sptr cam_sptr = pro.get_input<vpgl_camera_double_sptr>(0);  // input rational camera
-  vpgl_rational_camera<double>* rat_cam = dynamic_cast<vpgl_rational_camera<double>*>(cam_sptr.as_pointer());
+  auto* rat_cam = dynamic_cast<vpgl_rational_camera<double>*>(cam_sptr.as_pointer());
   if (!rat_cam) {
     std::cerr << pro.name() << ": the input camera is not a rational camera!!\n";
     return false;
@@ -242,4 +244,3 @@ bool vpgl_rational_cam_rotation_to_up_vector_process(bprb_func_process& pro)
   pro.set_output_val<double>(1, v2-v1);
   return true;
 }
-

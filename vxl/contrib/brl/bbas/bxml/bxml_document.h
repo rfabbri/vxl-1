@@ -1,9 +1,6 @@
 // This is brl/bbas/bxml/bxml_document.h
 #ifndef bxml_document_h_
 #define bxml_document_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief An XML document representation
@@ -20,8 +17,11 @@
 #include <sstream>
 #include <iostream>
 #include <map>
+#include <utility>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_ref_count.h>
 #include <vbl/vbl_smart_ptr.h>
 #include <vsl/vsl_binary_io.h>
@@ -34,7 +34,7 @@ class bxml_data : public vbl_ref_count
  public:
   enum datatype {TEXT, ELEMENT};
 
-  virtual ~bxml_data() {}
+  ~bxml_data() override = default;
 
   //: Return the type of XML data
   virtual datatype type() const = 0;
@@ -52,13 +52,13 @@ class bxml_text : public bxml_data
 {
  public:
   //: Constructor
-  bxml_text(const std::string& data) : data_(data) {}
+  bxml_text(std::string  data) : data_(std::move(data)) {}
 
   //: Destructor
-  virtual ~bxml_text() {}
+  ~bxml_text() override = default;
 
   //: Return the type of XML data
-  datatype type() const { return TEXT; }
+  datatype type() const override { return TEXT; }
 
   //: Access the text data
   std::string data() const { return data_; }
@@ -79,16 +79,16 @@ class bxml_element : public bxml_data
   typedef std::map<std::string,std::string>::const_iterator const_attr_iterator;
 
   //: Constructor - default
-  bxml_element() {}
+  bxml_element() = default;
 
   //: Constructor
-  bxml_element(const std::string& name) : name_(name) {}
+  bxml_element(std::string  name) : name_(std::move(name)) {}
 
   //: Destructor
-  virtual ~bxml_element() {}
+  ~bxml_element() override = default;
 
   //: Return the type of XML data
-  datatype type() const { return ELEMENT; }
+  datatype type() const override { return ELEMENT; }
 
   //: Return the name of the element
   std::string name() const { return name_; }
@@ -133,8 +133,8 @@ class bxml_element : public bxml_data
   {
     values.clear();
     std::vector<std::string> values_str = attributes(attr_name);
-    for (unsigned vi=0; vi<values_str.size(); vi++) {
-      std::stringstream s(values_str[vi]);
+    for (const auto & vi : values_str) {
+      std::stringstream s(vi);
       if (s.str() == "")
         return false;
       T value_t;
@@ -207,7 +207,7 @@ class bxml_document : public vbl_ref_count
   bxml_document();
 
   //: Destructor
-  ~bxml_document(){}
+  ~bxml_document() override= default;
 
   //: Return the root element
   bxml_data_sptr root_element() const {return root_element_;}

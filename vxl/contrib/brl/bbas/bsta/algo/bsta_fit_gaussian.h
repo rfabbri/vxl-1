@@ -19,7 +19,9 @@
 #include <bsta/bsta_gaussian_full.h>
 #include <bsta/bsta_mixture.h>
 #include <bsta/bsta_attributes.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: fit a 1D Gaussian distribution to a set of weighted samples
 template <class T>
@@ -265,7 +267,7 @@ void bsta_fit_gaussian(std::vector<typename gauss_type::vector_type> const& samp
   std::vector<T> sample_weights = sample_probs;
   bsta_fit_gaussian(samples, sample_weights, gaussian);
 
-  const unsigned int max_its = 100;
+  constexpr unsigned int max_its = 100;
   const T max_converged_weight_change = 1e-4f;
   for (unsigned int i=0; i<max_its; ++i)
   {

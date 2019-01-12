@@ -9,7 +9,9 @@
 #include <vector>
 #include <iostream>
 #include <vsl/vsl_binary_io.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil3d/vil3d_image_view.h>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_box_3d.h>
@@ -107,7 +109,7 @@ inline void vsl_b_write(vsl_b_ostream& bfs,
                         const std::vector<vil3d_chord>& t)
 {
   vsl_b_write(bfs,unsigned(t.size()));
-  for (unsigned i=0;i<t.size();++i) t[i].b_write(bfs);
+  for (auto i : t) i.b_write(bfs);
 }
 
 //: Load
@@ -133,7 +135,7 @@ inline void vsl_print_summary(std::ostream& os, const vil3d_chord& t)
 }
 
 //: Represent a 3D voxel region as a vector of chords.
-class vil3d_region : public vcl_vector<vil3d_chord>
+class vil3d_region : public std::vector<vil3d_chord>
 {
 public:
   //: Number of voxels in region

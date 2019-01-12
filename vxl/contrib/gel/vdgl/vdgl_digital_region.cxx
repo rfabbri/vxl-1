@@ -5,8 +5,10 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vnl/algo/vnl_svd.h>
 #include <vnl/vnl_float_3.h>
 
@@ -26,7 +28,7 @@ vsol_spatial_object_2d* vdgl_digital_region::clone() const
 //
 vdgl_digital_region::vdgl_digital_region(vdgl_digital_region const& r)
   : vsol_region_2d(r),
-    npts_given_(false), npts_(0), pixel_size_(1.f), xp_(VXL_NULLPTR), yp_(VXL_NULLPTR), pix_(VXL_NULLPTR),
+    npts_given_(false), npts_(0), pixel_size_(1.f), xp_(nullptr), yp_(nullptr), pix_(nullptr),
     max_(0), min_((unsigned short)(-1)), xo_(0.f), yo_(0.f),
     io_(0.f), io_stdev_(0.0f), pix_index_(0),
     fit_valid_(false), scatter_matrix_valid_(false),
@@ -45,7 +47,7 @@ vdgl_digital_region::vdgl_digital_region(vdgl_digital_region const& r)
 vdgl_digital_region::vdgl_digital_region(int npts, const float* xp, const float* yp,
                                          const unsigned short *pix)
   : vsol_region_2d(),
-    npts_given_(false), npts_(0), pixel_size_(1.f), xp_(VXL_NULLPTR), yp_(VXL_NULLPTR), pix_(VXL_NULLPTR),
+    npts_given_(false), npts_(0), pixel_size_(1.f), xp_(nullptr), yp_(nullptr), pix_(nullptr),
     max_(0), min_((unsigned short)(-1)), xo_(0.f), yo_(0.f),
     io_(0.f), io_stdev_(0.0f), pix_index_(0),
     fit_valid_(false), scatter_matrix_valid_(false),
@@ -135,9 +137,9 @@ void vdgl_digital_region::set_I(unsigned short I)
 void vdgl_digital_region::ResetPixelData()
 {
   npts_ = 0;
-  delete [] xp_; xp_ = VXL_NULLPTR;
-  delete [] yp_; yp_ = VXL_NULLPTR;
-  delete [] pix_; pix_ = VXL_NULLPTR;
+  delete [] xp_; xp_ = nullptr;
+  delete [] yp_; yp_ = nullptr;
+  delete [] pix_; pix_ = nullptr;
   xo_ = yo_ = io_ = io_stdev_=0.0f;
 }
 
@@ -503,7 +505,7 @@ float vdgl_digital_region::Ir() const
     this->DoPlaneFit();
     pix_index_ = initial_pix_index;//Restore the pix_index_ state
   }
-  float val = float(this->I());
+  auto val = float(this->I());
   float io = this->Io(),
         ix = float(this->Ix()), x = this->X(), xo = this->Xo(),
         iy = float(this->Iy()), y = this->Y(), yo = this->Yo();
@@ -574,12 +576,12 @@ std::vector<unsigned int> vdgl_digital_region::residual_histogram(int nbins,
 void merge(vdgl_digital_region* r1, vdgl_digital_region* r2, vdgl_digital_region*& r12 )
 {
   if(!r1 || !r2){
-    r12 = VXL_NULLPTR;
+    r12 = nullptr;
     return;
   }
   unsigned int n1 = r1->Npix(), n2 = r2->Npix();
   if(n1 == 0 && n2 == 0){
-    r12 = VXL_NULLPTR;
+    r12 = nullptr;
     return;
   }
   if (n1==0)
@@ -611,7 +613,7 @@ void merge(vdgl_digital_region* r1, vdgl_digital_region* r2, vdgl_digital_region
 }
 
 vdgl_digital_region_sptr merge(vdgl_digital_region_sptr const& r1, vdgl_digital_region_sptr const& r2){
-  vdgl_digital_region* r12 = new vdgl_digital_region();
+  auto* r12 = new vdgl_digital_region();
   merge(r1.ptr(), r2.ptr(), r12);
   return r12;
 }

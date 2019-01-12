@@ -1,7 +1,4 @@
 // This is core/vgui/vgui_tableau.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Philip C. Pritchett, Robotics Research Group, University of Oxford
@@ -19,8 +16,10 @@
 #include <algorithm>
 #include "vgui_tableau.h"
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vgui/vgui_macro.h>
 #include <vgui/vgui_event.h>
@@ -33,7 +32,7 @@
 //------------
 // Every tableau is on this array.
 // It must be a ptr as must live longer than any vgui_tableau_sptr
-static vgui_DLLDATA std::vector<vgui_tableau*>* all = VXL_NULLPTR;
+static vgui_DLLDATA std::vector<vgui_tableau*>* all = nullptr;
 
 //-----------------------------------------------------------------------------
 //: Constructor.
@@ -46,7 +45,7 @@ vgui_tableau::vgui_tableau()
   std::cerr << "vgui_tableau constructor: this = " << (void*)this << '\n';
 #endif
   // register :
-  if (all == VXL_NULLPTR) {
+  if (all == nullptr) {
     all = new std::vector<vgui_tableau*>;
   }
   all->push_back(this);
@@ -71,7 +70,7 @@ vgui_tableau::~vgui_tableau()
   if (all->size() == 0)
   {
     delete all;
-    all = VXL_NULLPTR;
+    all = nullptr;
   }
 }
 

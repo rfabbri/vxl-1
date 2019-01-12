@@ -16,7 +16,9 @@
 // \endverbatim
 
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_homg_point_3d.h>
 #include <vgl/algo/vgl_h_matrix_3d.h>
 
@@ -24,7 +26,7 @@ class vgl_h_matrix_3d_compute
 {
  public:
   vgl_h_matrix_3d_compute() : verbose_(false) {}
-  virtual ~vgl_h_matrix_3d_compute() {}
+  virtual ~vgl_h_matrix_3d_compute() = default;
 
   // set this to true for verbose run-time information
   void verbose(bool v) { verbose_ = v; }

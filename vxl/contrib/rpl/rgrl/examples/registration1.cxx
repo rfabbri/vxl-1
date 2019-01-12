@@ -16,7 +16,9 @@
 
 #include <iostream>
 #include <fstream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_vector_fixed.h>
 #include <testlib/testlib_test.h>
 void testlib_enter_stealth_mode(); // defined in core/testlib/testlib_main.cxx
@@ -45,14 +47,14 @@ void testlib_enter_stealth_mode(); // defined in core/testlib/testlib_main.cxx
 class command_iteration_update: public rgrl_command
 {
  public:
-  void execute(rgrl_object* caller, const rgrl_event & event )
+  void execute(rgrl_object* caller, const rgrl_event & event ) override
   {
     execute( (const rgrl_object*) caller, event );
   }
 
-  void execute(const rgrl_object* caller, const rgrl_event & /*event*/ )
+  void execute(const rgrl_object* caller, const rgrl_event & /*event*/ ) override
   {
-    const rgrl_feature_based_registration* reg_engine =
+    const auto* reg_engine =
       dynamic_cast<const rgrl_feature_based_registration*>(caller);
     rgrl_transformation_sptr trans = reg_engine->current_transformation();
     rgrl_trans_translation* xform = rgrl_cast<rgrl_trans_translation*>(trans);
@@ -115,7 +117,7 @@ main( int argc, char* argv[] )
   vector_2d direction;
 
   // BeginCodeSnippet
-  const unsigned int dimension = 2;
+  constexpr unsigned int dimension = 2;
   bool done = false;
   while ( !done && istr ) {
     if ( !(istr >> location[0] >> location[1] >> direction[0] >> direction[1]) )
@@ -170,7 +172,7 @@ main( int argc, char* argv[] )
   vector_2d x0(0,0);          //upper left corner
   vector_2d x1(1023,1023);    //bottom right corner
   rgrl_mask_sptr moving_image_roi = new rgrl_mask_box(x0.as_ref(), x1.as_ref());
-  rgrl_mask_sptr fixed_image_roi = moving_image_roi; // assume two are identical
+  const rgrl_mask_sptr& fixed_image_roi = moving_image_roi; // assume two are identical
   rgrl_initializer_sptr initializer =
     new rgrl_initializer_prior(moving_image_roi,
                                fixed_image_roi,

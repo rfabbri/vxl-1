@@ -16,14 +16,15 @@
 #include <cstddef>
 #include "rgtl_serialize_direction.h"
 
-#include <vcl_compiler.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Serialization save object that writes to a stream.
 //  See rgtl_serialize.txt for serialization interface details.
 class rgtl_serialize_ostream
 {
-  VCL_SAFE_BOOL_DEFINE;
+
  public:
   //: Mark this class as a serialization save direction.
   typedef rgtl_serialize_direction_save serialize_direction;
@@ -32,8 +33,8 @@ class rgtl_serialize_ostream
   rgtl_serialize_ostream(std::ostream& is): stream_(is) {}
 
   //: Safe conversion to a boolean type.
-  operator safe_bool() const
-  { return this->okay()? VCL_SAFE_BOOL_TRUE : 0; }
+  explicit operator bool() const
+  { return this->okay()? true : false; }
 
   //: Write data to the output stream.
   rgtl_serialize_ostream& write(void const* data, std::size_t length);

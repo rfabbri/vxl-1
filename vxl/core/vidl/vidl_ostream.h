@@ -1,9 +1,6 @@
 // This is core/vidl/vidl_ostream.h
 #ifndef vidl_ostream_h_
 #define vidl_ostream_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief A base class for output video streams
@@ -21,7 +18,7 @@ class vidl_ostream
   //: Constructor
   vidl_ostream() : ref_count_(0) {}
   //: Destructor
-  virtual ~vidl_ostream() {}
+  virtual ~vidl_ostream() = default;
 
   //: Close the stream
   virtual void close() = 0;

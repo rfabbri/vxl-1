@@ -1,7 +1,4 @@
 // This is core/vil1/vil1_save.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 
@@ -9,7 +6,9 @@
 #include <iostream>
 #include "vil1_save.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vil1/vil1_new.h>
 #include <vil1/vil1_open.h>
@@ -118,7 +117,7 @@ static inline
 void vil1_save_rgb_template(T const* p, int w, int h, std::string const& fn)
 {
   vil1_memory_image_of<vil1_rgb<unsigned char> > out(w,h);
-  unsigned char* o = (unsigned char*)out.get_buffer();
+  auto* o = (unsigned char*)out.get_buffer();
   T const* p_end = p + w*h*3;
   while (p != p_end)
     // possible loss of data! (e.g. clipping)

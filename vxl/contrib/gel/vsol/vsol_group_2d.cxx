@@ -2,7 +2,10 @@
 #include "vsol_group_2d.h"
 //:
 // \file
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_string_io.h>
 #include <vsl/vsl_vector_io.h>
 
@@ -60,7 +63,7 @@ vsol_spatial_object_2d_sptr vsol_group_2d::object(unsigned int i) const
   // require
   assert(i<size());
 
-  std::vector<vsol_spatial_object_2d_sptr>::iterator j = storage_->begin();
+  auto j = storage_->begin();
   for (unsigned int k=0;k<i;++k)
     ++j;
   return *j;
@@ -88,7 +91,7 @@ void vsol_group_2d::compute_bounding_box(void) const
   // require
   assert(size()>0);
 
-  std::vector<vsol_spatial_object_2d_sptr>::iterator i = storage_->begin();
+  auto i = storage_->begin();
   set_bounding_box(   (*i)->get_min_x(), (*i)->get_min_y());
   add_to_bounding_box((*i)->get_max_x(), (*i)->get_max_y());
   for (++i; i!=storage_->end(); ++i)
@@ -108,7 +111,7 @@ unsigned int vsol_group_2d::deep_size(void) const
   for (i=storage_->begin();i!=storage_->end();++i)
   {
     vsol_group_2d const* g=(*i)->cast_to_group();
-    if (g!=VXL_NULLPTR)
+    if (g!=nullptr)
       result+=g->deep_size();
     else
       ++result;
@@ -145,7 +148,7 @@ void vsol_group_2d::remove_object(unsigned int i)
   // require
   assert(i<size());
 
-  std::vector<vsol_spatial_object_2d_sptr>::iterator j = storage_->begin();
+  auto j = storage_->begin();
   for (unsigned int k=0;k<i;++k)
     ++j;
   storage_->erase(j);
@@ -163,7 +166,7 @@ vsol_group_2d::is_child(const vsol_spatial_object_2d_sptr &new_object) const
     if ((*i).ptr()==new_object.ptr())
       return true;
     vsol_group_2d const* g=(*i)->cast_to_group();
-    if (g!=VXL_NULLPTR && g->is_child(new_object))
+    if (g!=nullptr && g->is_child(new_object))
       return true;
   }
   return false;
@@ -389,6 +392,5 @@ vsl_b_read(vsl_b_istream &is, vsol_group_2d* &g)
     g->b_read(is);
   }
   else
-    g = VXL_NULLPTR;
+    g = nullptr;
 }
-

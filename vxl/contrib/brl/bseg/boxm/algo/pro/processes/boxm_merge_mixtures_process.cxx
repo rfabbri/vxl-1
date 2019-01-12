@@ -19,8 +19,8 @@
 
 namespace boxm_merge_mixtures_process_globals
 {
-  const unsigned n_inputs_ = 1;
-  const unsigned n_outputs_ = 1;
+  constexpr unsigned n_inputs_ = 1;
+  constexpr unsigned n_outputs_ = 1;
 }
 
 //: process takes 1 input and 1 output.
@@ -67,7 +67,7 @@ bool boxm_merge_mixtures_process(bprb_func_process& pro)
   typedef bsta_num_obs<bsta_gauss_sf1> gauss_type;
   typedef boct_tree<short, gauss_type> gauss_tree_type;
 
-  boxm_scene<mog_tree_type> *mog_scene = dynamic_cast<boxm_scene<mog_tree_type>* > (scene_base.as_pointer());
+  auto *mog_scene = dynamic_cast<boxm_scene<mog_tree_type>* > (scene_base.as_pointer());
 
   //check input's validity
   if (!mog_scene) {
@@ -88,4 +88,3 @@ bool boxm_merge_mixtures_process(bprb_func_process& pro)
 
   return true;
 }
-

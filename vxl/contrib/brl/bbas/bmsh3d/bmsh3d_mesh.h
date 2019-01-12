@@ -19,8 +19,10 @@
 #include <iosfwd>
 #include <map>
 #include <utility>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 #include <vgl/vgl_point_3d.h>
@@ -86,7 +88,7 @@ class bmsh3d_ifs_mesh : public bmsh3d_pt_set
     }
   }
 
-  virtual ~bmsh3d_ifs_mesh() {
+  ~bmsh3d_ifs_mesh() override {
     _clear_facemap();
   }
 
@@ -97,7 +99,7 @@ class bmsh3d_ifs_mesh : public bmsh3d_pt_set
   bmsh3d_face* facemap(const int i) {
     std::map<int, bmsh3d_face*>::iterator it = facemap_.find(i);
     if (it == facemap_.end())
-      return VXL_NULLPTR;
+      return nullptr;
     return (*it).second;
   }
   int face_id_counter() const {
@@ -119,7 +121,7 @@ class bmsh3d_ifs_mesh : public bmsh3d_pt_set
 
   bool next_face(bmsh3d_face* &face) {
     if (this->face_traversal_pos_ == this->facemap_.end()) {
-      face = VXL_NULLPTR;
+      face = nullptr;
       return false;
     }
     face = (this->face_traversal_pos_->second);
@@ -133,18 +135,18 @@ class bmsh3d_ifs_mesh : public bmsh3d_pt_set
   //###### Connectivity Modification Functions ######
 
   //: new/delete function of the class hierarchy
-  virtual bmsh3d_vertex* _new_vertex()
+  bmsh3d_vertex* _new_vertex() override
   {
     return new bmsh3d_vertex(vertex_id_counter_++);
   }
-  virtual bmsh3d_vertex* _new_vertex(const int id)
+  bmsh3d_vertex* _new_vertex(const int id) override
   {
     if (vertex_id_counter_ <= id)
       vertex_id_counter_ = id+1;
     return new bmsh3d_vertex(id);
   }
 
-  virtual void _del_vertex(bmsh3d_vertex* V) { delete V; }
+  void _del_vertex(bmsh3d_vertex* V) override { delete V; }
 
   //: new/delete function of the class hierarchy
   virtual bmsh3d_face* _new_face() { return new bmsh3d_face(face_id_counter_++); }
@@ -261,7 +263,7 @@ class bmsh3d_mesh : public bmsh3d_ifs_mesh
     }
   }
 
-  virtual ~bmsh3d_mesh()
+  ~bmsh3d_mesh() override
   {
     //Note that in some case the object is already released.
     //In this case, we don't need to free the memory.
@@ -286,7 +288,7 @@ class bmsh3d_mesh : public bmsh3d_ifs_mesh
   {
     std::map<int, bmsh3d_edge*>::iterator it = edgemap_.find(i);
     if (it == edgemap_.end())
-      return VXL_NULLPTR;
+      return nullptr;
     return (*it).second;
   }
 
@@ -311,7 +313,7 @@ class bmsh3d_mesh : public bmsh3d_ifs_mesh
   {
     if (this->edge_traversal_pos_ == this->edgemap_.end())
     {
-      E = VXL_NULLPTR;
+      E = nullptr;
       return false;
     }
     E = (this->edge_traversal_pos_->second);
@@ -320,7 +322,7 @@ class bmsh3d_mesh : public bmsh3d_ifs_mesh
   }
 
   //###### Connectivity Query Functions ######
-  virtual double get_avg_edge_len_from_F();
+  double get_avg_edge_len_from_F() override;
 
   //: Count the size of mesh faces indices for visualization using SoIndexedFaceSet.
   unsigned int count_faces_indices();
@@ -370,7 +372,7 @@ class bmsh3d_mesh : public bmsh3d_ifs_mesh
   void _disconnect_edge_vertex(bmsh3d_edge* E, const unsigned int vidx)
   {
     E->vertices(vidx)->del_incident_E(E);
-    E->set_vertex(vidx, VXL_NULLPTR);
+    E->set_vertex(vidx, nullptr);
   }
 
   void _disconnect_vertex_edge(bmsh3d_vertex* V, bmsh3d_edge* E)
@@ -396,7 +398,7 @@ class bmsh3d_mesh : public bmsh3d_ifs_mesh
     return V;
   }
 
-  virtual void remove_vertex(bmsh3d_vertex* V)
+  void remove_vertex(bmsh3d_vertex* V) override
   {
     //Delete a vertex only when there's no incident edges or faces.
     assert(! V->has_incident_Es());
@@ -406,7 +408,7 @@ class bmsh3d_mesh : public bmsh3d_ifs_mesh
   }
 
   //: delete vertex from the map and release its memory
-  virtual void remove_vertex(int id)
+  void remove_vertex(int id) override
   {
     bmsh3d_vertex* V = vertexmap(id);
     remove_vertex(V);

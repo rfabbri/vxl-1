@@ -4,7 +4,9 @@
 #include <iostream>
 #include <algorithm>
 #include "vipl_erode_disk.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 template <class ImgIn,class ImgOut,class DataIn,class DataOut,class PixelItr>
 bool vipl_erode_disk <ImgIn,ImgOut,DataIn,DataOut,PixelItr> :: section_applyop()
@@ -62,7 +64,7 @@ bool vipl_erode_disk <ImgIn,ImgOut,DataIn,DataOut,PixelItr> :: preop()
   int size = (radius() < 0) ? 0 : int(radius());
   float rs = (radius() < 0) ? 0 : radius() * radius();
   typedef bool* boolptr;
-  if (mask() == VXL_NULLPTR) {
+  if (mask() == nullptr) {
 #ifdef DEBUG
     std::cout << " allocate mask ...";
 #endif
@@ -107,7 +109,7 @@ bool vipl_erode_disk <ImgIn,ImgOut,DataIn,DataOut,PixelItr> :: postop()
     for (int x=0; x<=size; ++x)
       if (mask()[x]) delete[] ref_mask()[x];
     delete[] ref_mask();
-    ref_mask()=VXL_NULLPTR;
+    ref_mask()=nullptr;
   }
 #ifdef DEBUG
   std::cout << " done\n";

@@ -3,7 +3,9 @@
 #include <complex>
 #include <testlib/testlib_test.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vxl_config.h>
 #include <vpl/vpl.h> // vpl_unlink()
 #include <vil/vil_image_view.h>

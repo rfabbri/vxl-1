@@ -1,7 +1,9 @@
 // This is rpl/rrel/tests/test_m_est_obj.cxx
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <testlib/testlib_test.h>
 #include <vnl/vnl_math.h>
 
@@ -11,9 +13,9 @@
 
 static void test_m_est_obj()
 {
-  const double c=4.0;
+  constexpr double c = 4.0;
   rrel_m_est_obj * m_est = new rrel_tukey_obj( c);
-  const double sigma=2.5;
+  constexpr double sigma = 2.5;
 
   //
   // Test the functions specific to the Beaton-Tukey biweight rho function.
@@ -45,7 +47,7 @@ static void test_m_est_obj()
     m_est->rho( res[0] / sigma ) + m_est->rho( res[1] / sigma ) +
     m_est->rho( res[2] / sigma ) + m_est->rho( res[3] / sigma ) +
     m_est->rho( res[4] / sigma ) + m_est->rho( res[5] / sigma );
-  double obj = m_est->fcn( res.begin(), res.end(), sigma, VXL_NULLPTR );
+  double obj = m_est->fcn( res.begin(), res.end(), sigma, nullptr );
   TEST_NEAR("Objective function", obj, hand_obj, 1e-6);
 
   std::vector<double> weights(num_res);

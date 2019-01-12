@@ -44,15 +44,15 @@ estimate( rgrl_set_of<rgrl_match_set_sptr> const& matches,
 
   if ( cur_transform.is_type( rgrl_trans_homo2d_proj_rad::type_id() ) )
   {
-    rgrl_trans_homo2d_proj_rad const& trans = static_cast<rgrl_trans_homo2d_proj_rad const&>( cur_transform );
+    auto const& trans = static_cast<rgrl_trans_homo2d_proj_rad const&>( cur_transform );
     init_H = trans.H();
-    const std::vector<double> k = trans.normalized_radial_params();
+    const std::vector<double>& k = trans.normalized_radial_params();
     for ( unsigned int i=0; i<k.size()&&i<camera_dof_; ++i )
       radk[i] = k[i];
   }
   else if ( cur_transform.is_type( rgrl_trans_rad_dis_homo2d::type_id() ) )
   {
-    rgrl_trans_rad_dis_homo2d const& trans = static_cast<rgrl_trans_rad_dis_homo2d const&>( cur_transform );
+    auto const& trans = static_cast<rgrl_trans_rad_dis_homo2d const&>( cur_transform );
     init_H = trans.uncenter_H_matrix();
     const double k1_to   = trans.k1_to();
     radk[0] = k1_to;
@@ -66,8 +66,8 @@ estimate( rgrl_set_of<rgrl_match_set_sptr> const& matches,
       rgrl_est_homography2d est_homo;
       rgrl_transformation_sptr tmp_trans= est_homo.estimate( matches, cur_transform );
       if ( !tmp_trans )
-        return VXL_NULLPTR;
-      rgrl_trans_homography2d const& trans = static_cast<rgrl_trans_homography2d const&>( *tmp_trans );
+        return nullptr;
+      auto const& trans = static_cast<rgrl_trans_homography2d const&>( *tmp_trans );
       init_H = trans.uncenter_H_matrix();
     }
   }
@@ -85,7 +85,7 @@ estimate( rgrl_set_of<rgrl_match_set_sptr> const& matches,
                                        from_centre, to_centre,
                                        to_camera_centre_ ) ) {
     WarningMacro( "L-M estimation failed." << std::endl );
-    return VXL_NULLPTR;
+    return nullptr;
   }
 
   return new rgrl_trans_homo2d_proj_rad( radk,

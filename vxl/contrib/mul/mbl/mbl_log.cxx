@@ -11,17 +11,19 @@
 
 #include <cstddef>
 #include <fstream>
-#include <vcl_memory.h>
 #include <iostream>
+#include <memory>
 #include <algorithm>
 #include <sstream>
 #include <utility>
-#include "mbl_log.h"
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_string.h>
 #include <mbl/mbl_read_props.h>
 #include <mbl/mbl_exception.h>
+#include "mbl_log.h"
 
 std::ostream& operator<<(std::ostream&os, mbl_logger::levels level)
 {
@@ -189,7 +191,7 @@ void mbl_log_output_stream::start()
 
 //: Start a new log entry, with id info.
 // Future calls to terminate_flush will be ignored.
-void mbl_log_output_stream::start_with_manual_termination(int level, const char *srcfile, int srcline)
+void mbl_log_output_stream::start_with_manual_termination(int level, const char * /*srcfile*/, int  /*srcline*/)
 {
   ignore_flush_=true;
   start();
@@ -198,7 +200,7 @@ void mbl_log_output_stream::start_with_manual_termination(int level, const char 
 
 //: Start a new log entry, with id info.
 // Future calls to terminate_flush will be honoured.
-void mbl_log_output_stream::start_with_flush_termination(int level, const char *srcfile, int srcline)
+void mbl_log_output_stream::start_with_flush_termination(int level, const char * /*srcfile*/, int  /*srcline*/)
 {
   ignore_flush_=false;
   start();
@@ -254,7 +256,7 @@ void mbl_log_output_file::start()
 
 //: Start a new log entry, with id info.
 // Future calls to terminate_flush will be ignored.
-void mbl_log_output_file::start_with_manual_termination(int level, const char *srcfile, int srcline)
+void mbl_log_output_file::start_with_manual_termination(int level, const char * /*srcfile*/, int  /*srcline*/)
 {
   ignore_flush_=true;
   start();
@@ -263,7 +265,7 @@ void mbl_log_output_file::start_with_manual_termination(int level, const char *s
 
 //: Start a new log entry, with id info.
 // Future calls to terminate_flush will be honoured.
-void mbl_log_output_file::start_with_flush_termination(int level, const char *srcfile, int srcline)
+void mbl_log_output_file::start_with_flush_termination(int level, const char * /*srcfile*/, int  /*srcline*/)
 {
   ignore_flush_=false;
   start();
@@ -313,7 +315,7 @@ static mbl_logger& local_logger()
 #endif
 
 mbl_logger::mbl_logger(const char *id):
-  output_(VXL_NULLPTR),
+  output_(nullptr),
   streambuf_(this),
   logstream_(&streambuf_),
   mt_logstream_(&logstream_)
@@ -404,10 +406,10 @@ void mbl_logger::mtstop()
 
 mbl_logger_root &mbl_logger::root()
 {
-  static vcl_unique_ptr<mbl_logger_root> root_;
+  static std::unique_ptr<mbl_logger_root> root_;
 
   if (!root_.get())
-    root_ = vcl_unique_ptr<mbl_logger_root>(new mbl_logger_root());
+    root_ = std::unique_ptr<mbl_logger_root>(new mbl_logger_root());
   return *root_;
 }
 
@@ -486,9 +488,8 @@ void mbl_logger_root::load_log_config(std::istream& is,
 void mbl_logger_root::update_all_loggers()
 {
 #ifndef MBL_LOG_DISABLE_ALL_LOGGING
-  for (std::set<mbl_logger *>::iterator it=all_loggers_.begin(),
-       end=all_loggers_.end(); it!=end; ++it)
-    (*it)->reinitialise();
+  for (auto all_logger : all_loggers_)
+    all_logger->reinitialise();
 #endif
 }
 
@@ -559,7 +560,7 @@ inline mbl_log_categories::cat_spec parse_cat_spec(const std::string &str,
     std::string s = props["stream_output"];
     spec.output = mbl_log_categories::cat_spec::NAMED_STREAM;
     spec.name = s;
-    stream_names_t::const_iterator it = stream_names.find(s);
+    auto it = stream_names.find(s);
 
     if (s == "cout" || s == "std::cout" || s == "std::cout")
       spec.stream = &std::cout;
@@ -598,7 +599,7 @@ void mbl_log_categories::config(std::istream&s, const stream_names_t& stream_nam
   mbl_read_props_type props = mbl_read_props_ws(s);
 
   //Deal with "root" special case.
-  mbl_read_props_type::iterator it1=props.find("root");
+  auto it1=props.find("root");
   if (it1 == props.end())
     it1 = props.find("ROOT");
   if (it1 != props.end())
@@ -633,7 +634,7 @@ void mbl_log_categories::clear()
 struct mbl_log_prefix_comp
 {
   std::string s2;
-  mbl_log_prefix_comp(const std::string& s): s2(s) {}
+  mbl_log_prefix_comp(std::string  s): s2(std::move(s)) {}
 
   bool operator() (const std::pair<std::string, mbl_log_categories::cat_spec>& s1)
   {
@@ -657,7 +658,7 @@ const mbl_log_categories::cat_spec&
 {
   typedef std::map<std::string, cat_spec>::const_reverse_iterator iter;
 
-  iter it = std::find_if(cat_list_.rbegin(), cat_list_.rend(),
+  auto it = std::find_if(cat_list_.rbegin(), cat_list_.rend(),
                         mbl_log_prefix_comp(category));
   // The search shouldn't get past the first (root) entry.
   assert(it != cat_list_.rend());
@@ -669,10 +670,9 @@ const mbl_log_categories::cat_spec&
 
 void mbl_log_categories::print(std::ostream& os) const
 {
-  typedef std::map<std::string, cat_spec>::const_iterator iter;
   assert(!cat_list_.empty());
 
-  iter it = cat_list_.begin(), end = cat_list_.end();
+  auto it = cat_list_.begin(), end = cat_list_.end();
   assert(it->first.empty());
 
   os << "root:\n  " << it->second << '\n';

@@ -8,7 +8,9 @@
 #include <iostream>
 #include <vector>
 #include <vil/vil_image_view.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Trace 4-connected boundary around region in boolean image
 //  Assumes that (i0,j0) is a boundary point.

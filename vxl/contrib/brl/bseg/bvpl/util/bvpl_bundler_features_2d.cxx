@@ -7,7 +7,9 @@
 #include <vgl/io/vgl_io_point_3d.h>
 #include <vnl/io/vnl_io_vector.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 void bvpl_bundler_features_2d::write_feature_txt( std::string const& filename ) const
 {
@@ -87,7 +89,7 @@ void bvpl_bundler_features_2d::write_txt( std::string const& filename ) const
 
 void bvpl_bundler_features_2d::b_write( vsl_b_ostream& os ) const
 {
-  const short version_no = 1;
+  constexpr short version_no = 1;
   vsl_b_write(os, version_no);
 
   //write the number of points

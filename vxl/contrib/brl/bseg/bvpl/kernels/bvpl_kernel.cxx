@@ -6,7 +6,9 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <bxml/bxml_find.h>
 
@@ -21,7 +23,7 @@ unsigned bvpl_kernel::get_next_id()
 }
 
 //: Saves the kernel to ascii file
-void bvpl_kernel::print_to_file(std::string filename)
+void bvpl_kernel::print_to_file(const std::string& filename)
 {
   std::fstream ofs(filename.c_str(), std::ios::out);
   if (!ofs.is_open()) {
@@ -43,7 +45,7 @@ void bvpl_kernel::print_to_file(std::string filename)
 //: Saves the kernel to Drishti .raw data format.
 // The kernel does not occupy the entire volume, so the empty voxels are set to 0.
 // The size of the box is max(x,y,z) * max(x,y,z) * max(x,y,z)
-bool bvpl_kernel::save_raw(std::string filename)
+bool bvpl_kernel::save_raw(const std::string& filename)
 {
   std::fstream ofs(filename.c_str(), std::ios::binary | std::ios::out);
   if (!ofs.is_open()) {
@@ -67,7 +69,7 @@ bool bvpl_kernel::save_raw(std::string filename)
   // write data
   // iterate through slabs and fill in memory array
   unsigned size = nx*ny*nz;
-  float *data_array = new float[size];
+  auto *data_array = new float[size];
 
   kernel_.begin();
   if (!kernel_.isDone())
@@ -139,7 +141,7 @@ bxml_data_sptr bvpl_kernel::xml_element()
   bxml_element *kernel = new bxml_element("bvpl_kernel");
   kernel->append_text("\n");
   if(!factory_data_)
-    return VXL_NULLPTR;
+    return nullptr;
   //bxml_data_sptr factory_data = factory_->xml_element();
   kernel->append_data(factory_data_);
   kernel->append_text("\n");
@@ -148,22 +150,22 @@ bxml_data_sptr bvpl_kernel::xml_element()
   return kernel;
 }
 
-bvpl_kernel_sptr bvpl_kernel::parse_xml_element(bxml_data_sptr d)
+bvpl_kernel_sptr bvpl_kernel::parse_xml_element(const bxml_data_sptr& d)
 {
   bxml_element query("bvpl_kernel");
 
   bxml_data_sptr root = bxml_find_by_name(d, query);
   if (!root || root->type() != bxml_data::ELEMENT) {
-    return VXL_NULLPTR;
+    return nullptr;
   }
-  bxml_element* gp_root = dynamic_cast<bxml_element*>(root.ptr());
+  auto* gp_root = dynamic_cast<bxml_element*>(root.ptr());
 
   //get the variables
   double voxel_length =0.0f;
 
   gp_root->get_attribute("voxel_length", voxel_length );
   //try each factory
-  bvpl_kernel_sptr kernel = VXL_NULLPTR;
+  bvpl_kernel_sptr kernel = nullptr;
 
   kernel = bvpl_edge3d_kernel_factory::parse_xml_element(d);
 
@@ -172,7 +174,7 @@ bvpl_kernel_sptr bvpl_kernel::parse_xml_element(bxml_data_sptr d)
     return kernel;
   }
   else
-    return VXL_NULLPTR;
+    return nullptr;
 
 
 }

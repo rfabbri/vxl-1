@@ -24,7 +24,9 @@
 #include <cstdio>
 #include <algorithm>
 #include "image_database.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpl/vpl.h> // for vpl_mkdir
 #include <vil1/vil1_load.h>
 #include <vil1/vil1_save.h>
@@ -53,9 +55,9 @@ ImageDatabase::~ImageDatabase()
 //----------------------------------------------------------------------
 void ImageDatabase::clear()
 {
-  for (iterator i=begin(); i!=end(); i++)
+  for (auto & i : *this)
   {
-    delete (*i).second;
+    delete i.second;
   }
   image_db.clear();
 }
@@ -100,14 +102,14 @@ bool ImageDatabase::save(const char *name, const char *imagetype)
   }
 
   int index=0;
-  for (iterator i=begin(); i!=end(); i++)
+  for (auto & i : *this)
   {
     char filename[200];
-    std::sprintf(filename, "%s/%s_%03d.%s", dirname, (*i).first, index++, imagetype);
-    vil1_save(*((*i).second), filename);
+    std::sprintf(filename, "%s/%s_%03d.%s", dirname, i.first, index++, imagetype);
+    vil1_save(*(i.second), filename);
 
-    std::printf("db: %s %s\n", (*i).first, filename);
-    std::fprintf(dbfile, "%s %s\n", (*i).first, filename);
+    std::printf("db: %s %s\n", i.first, filename);
+    std::fprintf(dbfile, "%s %s\n", i.first, filename);
   }
   std::fclose(dbfile);
   return true;
@@ -139,7 +141,7 @@ bool ImageDatabase::load(const char *name)
   {
     vil1_image im = vil1_load(filename);
     if (!im) return false;
-    vil1_memory_image *image = new vil1_memory_image(im);
+    auto *image = new vil1_memory_image(im);
     insert(label, image);
   }
   std::fclose(db);

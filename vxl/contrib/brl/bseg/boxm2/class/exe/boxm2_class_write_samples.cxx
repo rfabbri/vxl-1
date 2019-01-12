@@ -11,7 +11,9 @@
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_util.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //check dirs, exit if not exist
 void check_dir(std::string& dir)
@@ -64,7 +66,7 @@ int main(int argc, char ** argv)
           <<"  num ir: "<<irImgs.size()<<std::endl;
 
   //set the number of samples K to take from each image
-  std::size_t K = std::size_t(sparse() ? 10000 : 0x7fffffff);
+  auto K = std::size_t(sparse() ? 10000 : 0x7fffffff);
 
   //boxm2_class_generate_samples sampler(;a
   std::vector<vnl_vector_fixed<float,4> > allInts;
@@ -80,7 +82,7 @@ int main(int argc, char ** argv)
 
     std::vector<vnl_vector_fixed<float,4> > feats;
     for (unsigned int i=0; i<r.size(); ++i)
-      feats.push_back( vnl_vector_fixed<float,4>(ints[i],r[i],g[i],b[i]) );
+      feats.emplace_back(ints[i],r[i],g[i],b[i] );
 
     //stack
     push_back(allInts, feats);
@@ -92,4 +94,3 @@ int main(int argc, char ** argv)
     std::cout<<allClasses[i]<<"  "<<allInts[i]<<std::endl;
   }
 }
-

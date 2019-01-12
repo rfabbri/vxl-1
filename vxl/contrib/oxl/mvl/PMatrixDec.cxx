@@ -1,7 +1,4 @@
 // This is oxl/mvl/PMatrixDec.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 //  \file
 
@@ -9,7 +6,9 @@
 #include <cmath>
 #include "PMatrixDec.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //--------------------------------------------------------------
 //: Constructor
@@ -26,7 +25,7 @@ PMatrixDec::PMatrixDec(const vnl_matrix<double>& p_matrix)
 //--------------------------------------------------------------
 //: Destructor
 
-PMatrixDec::~PMatrixDec() {}
+PMatrixDec::~PMatrixDec() = default;
 
 
 //--------------------------------------------------------------

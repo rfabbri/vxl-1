@@ -3,7 +3,9 @@
 #include <iostream>
 #include <testlib/testlib_test.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 // These are "dummy" operator< for complex<T>.  These functions are never
 // to be actually called, but declaring these makes it possible to use a
@@ -24,7 +26,7 @@ static inline bool operator> (std::complex<double>const&, std::complex<double>co
 #include <vil/vil_decimate.h>
 
 template <class T>
-void test_image_resource(std::string type, vil_pixel_format format, T /*dummy*/)
+void test_image_resource(const std::string& type, vil_pixel_format format, T /*dummy*/)
 {
   std::cout << "*****************************************************************\n"
            << " Testing vil_image_resource objects with pixel type = " << type << '\n'

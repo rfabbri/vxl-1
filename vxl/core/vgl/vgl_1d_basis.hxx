@@ -4,8 +4,10 @@
 
 #include <iostream>
 #include "vgl_1d_basis.h"
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 template <class T>
 vgl_1d_basis<T>::vgl_1d_basis(T const& o, T const& u, T const& i)
@@ -27,13 +29,13 @@ vgl_homg_point_1d<double> vgl_1d_basis<T>::project(T const& p)
   if (affine_) // In this case, do not use the uninitialised inf_pt_
   {
     double d = ratio(origin_,unity_,p);
-    return vgl_homg_point_1d<double>(d,1);
+    return {d,1};
   }
   else // !affine_
   {
-    if (p == inf_pt_) return vgl_homg_point_1d<double>(1,0);
+    if (p == inf_pt_) return {1,0};
     double d = cross_ratio(inf_pt_,origin_,unity_,p);
-    return vgl_homg_point_1d<double>(d,1);
+    return {d,1};
   }
 }
 

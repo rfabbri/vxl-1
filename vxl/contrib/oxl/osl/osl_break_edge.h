@@ -1,9 +1,6 @@
 // This is oxl/osl/osl_break_edge.h
 #ifndef osl_break_edge_h_
 #define osl_break_edge_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author fsm
@@ -12,7 +9,9 @@ class osl_edge;
 #include <iostream>
 #include <list>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Break the given edge at the positions indicated.
 //

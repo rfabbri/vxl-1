@@ -15,7 +15,9 @@
 #include <vgl/vgl_point_3d.h>
 #include <vbl/vbl_ref_count.h>
 #include <vsl/vsl_binary_io.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 //: 3D coordinate system specified by distance rho, angles theta (elevation) and phi (azimuth).
@@ -40,7 +42,7 @@ class vsph_spherical_coord : public vbl_ref_count
     : vbl_ref_count(), radius_(rhs.radius_), origin_(rhs.origin_) {}
 
   // Destructor
-  virtual ~vsph_spherical_coord() {}
+  ~vsph_spherical_coord() override = default;
 
   //***************************************************************************
   // Methods

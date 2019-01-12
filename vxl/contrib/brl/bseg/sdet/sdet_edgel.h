@@ -24,7 +24,9 @@
 #include <deque>
 #include <list>
 #include <vbl/vbl_ref_count.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vgl/vgl_point_2d.h>
 
@@ -101,7 +103,7 @@ public:
 
   //: constructor
   sdet_edgel_chain(): edgels(0), temp(false){}
-  ~sdet_edgel_chain(){}
+  ~sdet_edgel_chain()= default;
 
   //: copy constructor
   sdet_edgel_chain(const sdet_edgel_chain& chain):
@@ -129,8 +131,8 @@ public:
 
   void append(std::vector<sdet_edgel*>& n_chain)
   {
-    for (unsigned i=0; i<n_chain.size(); i++)
-      edgels.push_back(n_chain[i]);
+    for (auto i : n_chain)
+      edgels.push_back(i);
   }
 
   void append(sdet_edgel_list& n_chain)

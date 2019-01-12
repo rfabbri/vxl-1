@@ -1,9 +1,6 @@
 // This is core/vgui/vgui_cache_wizard.h
 #ifndef vgui_cache_wizard_h_
 #define vgui_cache_wizard_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author Marko Bacic
@@ -21,7 +18,9 @@
 #include <vector>
 #include <list>
 #include <utility>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vil1/vil1_image.h>
 #include <vgui/vgui_gl.h>

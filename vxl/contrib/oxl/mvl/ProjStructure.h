@@ -1,9 +1,6 @@
 // This is oxl/mvl/ProjStructure.h
 #ifndef ProjStructure_h_
 #define ProjStructure_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 //  \file
 // \author awf@robots.ox.ac.uk
@@ -11,7 +8,9 @@
 
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <mvl/ImageMetric.h>
 #include <mvl/PMatrix.h>

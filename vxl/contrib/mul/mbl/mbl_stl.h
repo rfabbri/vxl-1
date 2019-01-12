@@ -21,7 +21,9 @@
 #include <vector>
 #include <ostream>
 #include <utility>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Fill an output sequence with incrementing values.
 // A bit like std::fill, but after each assignment, the value is incremented.
@@ -77,7 +79,7 @@ inline void mbl_stl_clean(iterType first, iterType last)
   for (; first != last; ++first)
   {
     delete *first;
-    *first=VXL_NULLPTR;
+    *first=nullptr;
   }
 }
 

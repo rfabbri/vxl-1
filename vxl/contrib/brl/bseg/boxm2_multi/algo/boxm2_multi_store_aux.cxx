@@ -12,7 +12,9 @@
 #include <bocl/bocl_device.h>
 #include <bocl/bocl_kernel.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_util.h>
 #include <boxm2/ocl/boxm2_ocl_util.h>
@@ -31,7 +33,7 @@ std::map<std::string, bocl_kernel*> boxm2_multi_store_aux::kernels_;
 //-------------------------------------------------------------
 float boxm2_multi_store_aux::store_aux(boxm2_multi_cache&       cache,
                                        vil_image_view<float>&   img,
-                                       vpgl_camera_double_sptr  cam,
+                                       const vpgl_camera_double_sptr&  cam,
                                        boxm2_multi_update_helper& helper)
 {
   std::cout<<"  -- boxm2_multi_store_aux store aux --"<<std::endl;
@@ -77,9 +79,8 @@ float boxm2_multi_store_aux::store_aux(boxm2_multi_cache&       cache,
                              tnearfarptrs = helper.tnearfarptrs_;
 
   std::vector<boxm2_opencl_cache1*>& ocl_caches = helper.vis_caches_;
-  for (unsigned int i=0; i<ocl_caches.size(); ++i) {
+  for (auto ocl_cache : ocl_caches) {
     //grab sub scene and its cache
-    boxm2_opencl_cache1* ocl_cache = ocl_caches[i];
     boxm2_scene_sptr    sub_scene = ocl_cache->get_scene();
     bocl_device_sptr    device    = ocl_cache->get_device();
 
@@ -97,12 +98,11 @@ float boxm2_multi_store_aux::store_aux(boxm2_multi_cache&       cache,
   std::cout<<"Group list size; "<<grp.size()<<std::endl;
   vul_timer t; t.mark();
   float transfer_time = 0.0f;
-  for (unsigned int grpId=0; grpId<grp.size(); ++grpId) {
-    boxm2_multi_cache_group& group = *grp[grpId];
+  for (auto & grpId : grp) {
+    boxm2_multi_cache_group& group = *grpId;
     std::vector<boxm2_block_id>& ids = group.ids();
     std::vector<int> indices = group.order_from_cam(cam);
-    for (unsigned int idx=0; idx<indices.size(); ++idx) {
-      int i = indices[idx];
+    for (int i : indices) {
       //grab sub scene and its cache
       boxm2_opencl_cache1* ocl_cache = ocl_caches[i];
       boxm2_scene_sptr    sub_scene = ocl_cache->get_scene();
@@ -119,8 +119,7 @@ float boxm2_multi_store_aux::store_aux(boxm2_multi_cache&       cache,
     }
 
     //finish
-    for (unsigned int idx=0; idx<indices.size(); ++idx) {
-      int i = indices[idx];
+    for (int i : indices) {
       clFinish(queues[i]);
     }
   }
@@ -146,7 +145,7 @@ void boxm2_multi_store_aux::read_aux(boxm2_block_id const& id,
   //calc data buffer length
   bocl_mem* alpha = opencl_cache->get_data<BOXM2_ALPHA>(id,0,false);
   std::size_t alphaTypeSize = boxm2_data_traits<BOXM2_ALPHA>::datasize();
-  std::size_t dataLen = (std::size_t) (alpha->num_bytes() / alphaTypeSize);
+  auto dataLen = (std::size_t) (alpha->num_bytes() / alphaTypeSize);
 
   //grab an appropriately sized AUX data buffer
   bocl_mem *aux0 = opencl_cache->get_data<BOXM2_AUX0>(id, dataLen*boxm2_data_traits<BOXM2_AUX0>::datasize());
@@ -157,7 +156,7 @@ void boxm2_multi_store_aux::read_aux(boxm2_block_id const& id,
 
 //: helper to call ocl kernel - stores aux per block
 void boxm2_multi_store_aux::store_aux_per_block(boxm2_block_id const& id,
-                                                boxm2_scene_sptr      scene,
+                                                const boxm2_scene_sptr&      scene,
                                                 boxm2_opencl_cache1*   opencl_cache,
                                                 cl_command_queue&     queue,
                                                 bocl_kernel*          kernel,
@@ -184,10 +183,10 @@ void boxm2_multi_store_aux::store_aux_per_block(boxm2_block_id const& id,
 
   //calc data buffer length
   std::size_t alphaTypeSize = boxm2_data_traits<BOXM2_ALPHA>::datasize();
-  std::size_t dataLen = (std::size_t) (alpha->num_bytes() / alphaTypeSize);
+  auto dataLen = (std::size_t) (alpha->num_bytes() / alphaTypeSize);
 
   //store len in info buffer
-  boxm2_scene_info* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
+  auto* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
   info_buffer->data_buffer_length = dataLen;
   blk_info->write_to_buffer(queue);
 
@@ -235,7 +234,7 @@ void boxm2_multi_store_aux::store_aux_per_block(boxm2_block_id const& id,
 //-----------------------------------------------------------------
 // returns vector of bocl_kernels for this specific device
 //-----------------------------------------------------------------
-bocl_kernel* boxm2_multi_store_aux::get_kernels(bocl_device_sptr device, std::string opts)
+bocl_kernel* boxm2_multi_store_aux::get_kernels(const bocl_device_sptr& device, const std::string& opts)
 {
   // check to see if this device has compiled kernels already
   std::string identifier = device->device_identifier()+opts;
@@ -264,7 +263,7 @@ bocl_kernel* boxm2_multi_store_aux::get_kernels(bocl_device_sptr device, std::st
   std::string options = opts + "";
 
   //create all passes
-  bocl_kernel* seg_len = new bocl_kernel();
+  auto* seg_len = new bocl_kernel();
   std::string seg_opts = options + "-D SEGLEN -D STEP_CELL=step_cell_seglen(aux_args,data_ptr,llid,d) ";
   seg_len->create_kernel(&device->context(),device->device_id(), src_paths, "seg_len_main", seg_opts, "update::seg_len");
 
@@ -274,7 +273,7 @@ bocl_kernel* boxm2_multi_store_aux::get_kernels(bocl_device_sptr device, std::st
 }
 
 
-bocl_kernel* boxm2_multi_store_aux::get_kernels_color(bocl_device_sptr device, std::string opts)
+bocl_kernel* boxm2_multi_store_aux::get_kernels_color(const bocl_device_sptr& device, const std::string& opts)
 {
   // compile kernels if not already compiled
   std::string identifier = device->device_identifier() + opts + "_color";
@@ -304,12 +303,12 @@ bocl_kernel* boxm2_multi_store_aux::get_kernels_color(bocl_device_sptr device, s
   options += opts;
 
   //seg len pass
-  bocl_kernel* seg_len = new bocl_kernel();
+  auto* seg_len = new bocl_kernel();
   std::string seg_opts = options + " -D SEGLEN -D STEP_CELL=step_cell_seglen(aux_args,data_ptr,llid,d) ";
   seg_len->create_kernel(&device->context(), device->device_id(), src_paths, "seg_len_main", seg_opts, "update_color::seg_len");
 
   //create  compress rgb pass
-  bocl_kernel* comp = new bocl_kernel();
+  auto* comp = new bocl_kernel();
   std::string comp_opts = options + " -D COMPRESS_RGB ";
   comp->create_kernel(&device->context(), device->device_id(), non_ray_src, "compress_rgb", comp_opts, "update_color::compress_rgb");
 

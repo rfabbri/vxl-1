@@ -11,7 +11,9 @@
 // \endverbatim
 //
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpgl/vpgl_lvcs.h>
 #include <vpgl/vpgl_lvcs_sptr.h>
 #include <vul/vul_file.h>
@@ -25,8 +27,8 @@
 //: global variables and functions
 namespace volm_find_intersecting_sat_resources_process_globals
 {
-  const unsigned n_inputs_  = 4;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 4;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 //: constructor
@@ -60,7 +62,7 @@ bool volm_find_intersecting_sat_resources_process(bprb_func_process& pro)
   unsigned in_i = 0;
   volm_satellite_resources_sptr res = pro.get_input<volm_satellite_resources_sptr>(0);
   std::string kml_file = pro.get_input<std::string>(1);
-  float max_intersecting_resources = pro.get_input<float>(2);
+  auto max_intersecting_resources = pro.get_input<float>(2);
   std::string out_file = pro.get_input<std::string>(3);
 
   std::vector<std::string> intersecting_res;
@@ -76,8 +78,8 @@ bool volm_find_intersecting_sat_resources_process(bprb_func_process& pro)
     std::cerr << pro.name() << " ERROR: cannot open file: " << out_file << std::endl;
     return false;
   }
-  for (unsigned i = 0; i < intersecting_res.size(); i++)
-    ofs << intersecting_res[i] << '\n';
+  for (const auto & intersecting_re : intersecting_res)
+    ofs << intersecting_re << '\n';
   ofs.close();
 
   return true;

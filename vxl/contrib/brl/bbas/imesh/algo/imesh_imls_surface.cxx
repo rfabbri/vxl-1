@@ -9,8 +9,10 @@
 #include <imesh/imesh_operations.h>
 #include <imesh/algo/imesh_intersect.h>
 #include <imesh/algo/imesh_kd_tree.hxx>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_double_3.h>
@@ -38,19 +40,19 @@ imesh_imls_surface::imesh_imls_surface(const imesh_mesh& mesh, double eps, doubl
   {
     // build enclosure
     vgl_box_3d<double> box;
-    for (unsigned int i=0; i<verts_.size(); ++i) {
-      box.add(verts_[i]);
+    for (const auto & vert : verts_) {
+      box.add(vert);
     }
     box.expand_about_centroid(1);
     unsigned int base = verts_.size();
-    verts_.push_back(vgl_point_3d<double>(box.min_x(),box.min_y(),box.min_z()));
-    verts_.push_back(vgl_point_3d<double>(box.min_x(),box.min_y(),box.max_z()));
-    verts_.push_back(vgl_point_3d<double>(box.min_x(),box.max_y(),box.min_z()));
-    verts_.push_back(vgl_point_3d<double>(box.min_x(),box.max_y(),box.max_z()));
-    verts_.push_back(vgl_point_3d<double>(box.max_x(),box.min_y(),box.min_z()));
-    verts_.push_back(vgl_point_3d<double>(box.max_x(),box.min_y(),box.max_z()));
-    verts_.push_back(vgl_point_3d<double>(box.max_x(),box.max_y(),box.min_z()));
-    verts_.push_back(vgl_point_3d<double>(box.max_x(),box.max_y(),box.max_z()));
+    verts_.emplace_back(box.min_x(),box.min_y(),box.min_z());
+    verts_.emplace_back(box.min_x(),box.min_y(),box.max_z());
+    verts_.emplace_back(box.min_x(),box.max_y(),box.min_z());
+    verts_.emplace_back(box.min_x(),box.max_y(),box.max_z());
+    verts_.emplace_back(box.max_x(),box.min_y(),box.min_z());
+    verts_.emplace_back(box.max_x(),box.min_y(),box.max_z());
+    verts_.emplace_back(box.max_x(),box.max_y(),box.min_z());
+    verts_.emplace_back(box.max_x(),box.max_y(),box.max_z());
     triangles_->push_back(imesh_tri(base+0,base+1,base+2));
     triangles_->push_back(imesh_tri(base+1,base+3,base+2));
     triangles_->push_back(imesh_tri(base+0,base+6,base+4));
@@ -96,10 +98,10 @@ imesh_imls_surface::imesh_imls_surface(const imesh_imls_surface& other)
   : verts_(other.verts_),
     triangles_(other.triangles_.get() ?
                new imesh_regular_face_array<3>(*other.triangles_) :
-               VXL_NULLPTR),
+               nullptr),
     kd_tree_(other.kd_tree_.get() ?
              new imesh_kd_tree_node(*other.kd_tree_) :
-             VXL_NULLPTR),
+             nullptr),
     phi_(other.phi_),
     area_(other.area_),
     unweighted_(other.unweighted_),
@@ -117,8 +119,8 @@ imesh_imls_surface::imesh_imls_surface(const imesh_imls_surface& other)
 void imesh_imls_surface::compute_iso_level()
 {
   double mean = 0.0;
-  for (unsigned int i=0; i<verts_.size(); ++i)
-    mean += (*this)(verts_[i]);
+  for (const auto & vert : verts_)
+    mean += (*this)(vert);
   iso_level_ = mean / verts_.size();
 }
 
@@ -137,7 +139,7 @@ void imesh_imls_surface::compute_enclosing_phi()
     double val = (*this)(verts_[i]);
     mean += val;
     if (val > 0)
-      outside.push_back(pair_id(i,val));
+      outside.emplace_back(i,val);
   }
   iso_level_ = mean / verts_.size();
 
@@ -153,7 +155,7 @@ void imesh_imls_surface::compute_enclosing_phi()
          i!=outside.end(); ++i) {
       double val = (*this)(verts_[i->first]);
       if (val > std::abs(std::numeric_limits<double>::epsilon()*phi_[i->first])) {
-        next_outside.push_back(pair_id(i->first,val));
+        next_outside.emplace_back(i->first,val);
       }
     }
     outside.swap(next_outside);
@@ -163,7 +165,7 @@ void imesh_imls_surface::compute_enclosing_phi()
 
 //: recursively compute the area weighted centroids
 void imesh_imls_surface::
-compute_centroids_rec(const vcl_unique_ptr<imesh_kd_tree_node>& node,
+compute_centroids_rec(const std::unique_ptr<imesh_kd_tree_node>& node,
                       const std::set<unsigned int>& no_normal_faces)
 {
   const unsigned int& i = node->index_;
@@ -207,7 +209,7 @@ compute_centroids_rec(const vcl_unique_ptr<imesh_kd_tree_node>& node,
 
 //: recursively compute the unweighted integrals
 void imesh_imls_surface::
-compute_unweighed_rec(const vcl_unique_ptr<imesh_kd_tree_node>& node)
+compute_unweighed_rec(const std::unique_ptr<imesh_kd_tree_node>& node)
 {
   const unsigned int& i = node->index_;
   if (node->is_leaf()) {
@@ -242,8 +244,8 @@ void imesh_imls_surface::set_epsilon(double eps)
   iso_level_ = 0.0;
 
   // reset the phi values at each vertex
-  for (unsigned i=0; i<phi_.size(); ++i)
-    phi_[i] = 0.0;
+  for (double & i : phi_)
+    i = 0.0;
 
   compute_unweighed_rec(kd_tree_);
 
@@ -297,7 +299,7 @@ double imesh_imls_surface::operator() (const vgl_point_3d<double>& p) const
 
   // compute the (negative) maximum error of integration
   // stored negative so that the max error is first when sorted by <
-  std::vector<imesh_kd_tree_queue_entry>::iterator itr = remain.begin();
+  auto itr = remain.begin();
   for (; itr != remain.end(); ++itr) {
     double min = w2(itr->val_);
     double max = w2(imesh_max_sq_dist(p,itr->node_->inner_box_));
@@ -335,14 +337,14 @@ double imesh_imls_surface::operator() (const vgl_point_3d<double>& p) const
     {
       double min = w2(imesh_min_sq_dist(p,current->left_->inner_box_));
       double max = w2(imesh_max_sq_dist(p,current->left_->inner_box_));
-      remain.push_back(imesh_kd_tree_queue_entry((max - min)*area_[current->left_->index_],
-                                                 current->left_.get()));
+      remain.emplace_back((max - min)*area_[current->left_->index_],
+                                                 current->left_.get());
       std::push_heap(remain.begin(), remain.end());
 
       min = w2(imesh_min_sq_dist(p,current->right_->inner_box_));
       max = w2(imesh_max_sq_dist(p,current->right_->inner_box_));
-      remain.push_back(imesh_kd_tree_queue_entry((max - min)*area_[current->right_->index_],
-                                                 current->right_.get()));
+      remain.emplace_back((max - min)*area_[current->right_->index_],
+                                                 current->right_.get());
       std::push_heap(remain.begin(), remain.end());
     }
     if (!remain.empty())
@@ -378,7 +380,7 @@ double imesh_imls_surface::deriv(const vgl_point_3d<double>& p,
 
   // compute the (negative) maximum error of integration
   // stored negative so that the max error is first when sorted by <
-  std::vector<imesh_kd_tree_queue_entry>::iterator itr = remain.begin();
+  auto itr = remain.begin();
   for (; itr != remain.end(); ++itr) {
     double min = w2(itr->val_);
     double max = w2(imesh_max_sq_dist(p,itr->node_->inner_box_));
@@ -424,14 +426,14 @@ double imesh_imls_surface::deriv(const vgl_point_3d<double>& p,
     {
       double min = w2(imesh_min_sq_dist(p,current->left_->inner_box_));
       double max = w2(imesh_max_sq_dist(p,current->left_->inner_box_));
-      remain.push_back(imesh_kd_tree_queue_entry((max - min)*area_[current->left_->index_],
-                                                 current->left_.get()));
+      remain.emplace_back((max - min)*area_[current->left_->index_],
+                                                 current->left_.get());
       std::push_heap(remain.begin(), remain.end());
 
       min = w2(imesh_min_sq_dist(p,current->right_->inner_box_));
       max = w2(imesh_max_sq_dist(p,current->right_->inner_box_));
-      remain.push_back(imesh_kd_tree_queue_entry((max - min)*area_[current->right_->index_],
-                                                 current->right_.get()));
+      remain.emplace_back((max - min)*area_[current->right_->index_],
+                                                 current->right_.get());
       std::push_heap(remain.begin(), remain.end());
     }
     if (!remain.empty())
@@ -634,7 +636,7 @@ imesh_imls_surface::split_triangle_quadrature(const vgl_point_3d<double>& x,
   // early exit if triangle flat
   double height = t4/t1 - t2*t2/(t1*t1);
   if (!(height > 0.0))
-    return vgl_vector_2d<double>(0,0);
+    return {0,0};
   height = std::sqrt(height)/2.0;
 
   double vt1 = vn-vm;
@@ -677,7 +679,7 @@ imesh_imls_surface::split_triangle_quadrature(const vgl_point_3d<double>& x,
   sum2 *= height;
 
 
-  return vgl_vector_2d<double>(sum1,sum2);
+  return {sum1,sum2};
 }
 
 
@@ -718,7 +720,7 @@ split_triangle_quadrature_with_deriv(const vgl_point_3d<double>& x,
   // early exit if triangle flat
   double height = t4/t1 - t2*t2/(t1*t1);
   if (!(height > 0.0))
-    return integral_data();
+    return {};
   height = std::sqrt(height)/2.0;
 
   double vt1 = vn-vm;
@@ -730,7 +732,7 @@ split_triangle_quadrature_with_deriv(const vgl_point_3d<double>& x,
   double I1,Ix,dI1,dIx,dIx2,u_1,denom,k1,k2;
   double u = alpha;
   // integrate using the trapezoid rule with non-uniform sampling
-  const double lower_bound = 0.01;//((t6<t4)?(t6/t4):1.0) * 0.01;
+  constexpr double lower_bound = 0.01;//((t6<t4)?(t6/t4):1.0) * 0.01;
   for (; u>lower_bound; u*=alpha) {
     i_data += last_i_data;
     u_1 = 1.0-u;
@@ -881,7 +883,7 @@ vgl_vector_3d<double> dfunc(const vgl_vector_3d<double>& n,
   vnl_double_3 df = (2*v/sqr_len)*ndp;
   df += ddp.transpose() * ( ((-2*v*v/(sqr_len*sqr_len))*ndp) +
                             (2/len*(n_dot_dp/len - 1)*(nn - (n_dot_dp/sqr_len)*ndp)) );
-  return vgl_vector_3d<double>(df[0],df[1],df[2]);
+  return {df[0],df[1],df[2]};
 }
 // end of namespace
 }

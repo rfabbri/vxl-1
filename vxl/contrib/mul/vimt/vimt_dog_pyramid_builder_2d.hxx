@@ -12,9 +12,11 @@
 #include "vimt_dog_pyramid_builder_2d.h"
 #include "vimt_image_pyramid.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vnl/vnl_math.h> // for sqrt2
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_vector_2d.h>
@@ -34,9 +36,7 @@ vimt_dog_pyramid_builder_2d<T>::vimt_dog_pyramid_builder_2d()
 //=======================================================================
 
 template<class T>
-vimt_dog_pyramid_builder_2d<T>::~vimt_dog_pyramid_builder_2d()
-{
-}
+vimt_dog_pyramid_builder_2d<T>::~vimt_dog_pyramid_builder_2d() = default;
 
 //=======================================================================
 //: Define maximum number of levels to build

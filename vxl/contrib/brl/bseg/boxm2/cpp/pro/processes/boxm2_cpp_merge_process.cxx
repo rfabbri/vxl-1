@@ -9,7 +9,9 @@
 // \author Vishal Jain
 // \date Mar 10, 2011
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/io/boxm2_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -24,8 +26,8 @@
 
 namespace boxm2_cpp_merge_process_globals
 {
-  const unsigned n_inputs_ =  3;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 3;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool boxm2_cpp_merge_process_cons(bprb_func_process& pro)
@@ -57,21 +59,21 @@ bool boxm2_cpp_merge_process(bprb_func_process& pro)
   boxm2_scene_sptr scene = pro.get_input<boxm2_scene_sptr>(i++);
   boxm2_cache_sptr cache = pro.get_input<boxm2_cache_sptr>(i++);
   std::cout<<"Getting thresh input"<<std::endl;
-  float thresh = pro.get_input<float>(i++);
+  auto thresh = pro.get_input<float>(i++);
 
   //check datatype
   bool foundDataType = false;
   std::string data_type;
   std::vector<std::string> apps = scene->appearances();
-  for (unsigned int i=0; i<apps.size(); ++i) {
-    if ( apps[i] == boxm2_data_traits<BOXM2_MOG3_GREY>::prefix() )
+  for (const auto & app : apps) {
+    if ( app == boxm2_data_traits<BOXM2_MOG3_GREY>::prefix() )
     {
-      data_type = apps[i];
+      data_type = app;
       foundDataType = true;
     }
-    else if ( apps[i] == boxm2_data_traits<BOXM2_MOG3_GREY_16>::prefix() )
+    else if ( app == boxm2_data_traits<BOXM2_MOG3_GREY_16>::prefix() )
     {
-      data_type = apps[i];
+      data_type = app;
       foundDataType = true;
     }
   }
@@ -87,9 +89,9 @@ bool boxm2_cpp_merge_process(bprb_func_process& pro)
   {
     boxm2_block_id id = blk_iter->first;
     std::cout<<"Merging Block: "<<id<<std::endl;
-    boxm2_block *     blk     = cache->get_block(scene, id);
-    boxm2_data_base * alph    = cache->get_data_base(scene,id,boxm2_data_traits<BOXM2_ALPHA>::prefix(), 0, false);
-    boxm2_data_base * mog     = cache->get_data_base(scene,id,data_type, 0, false);
+    boxm2_block *     blk = cache->get_block(scene, id);
+    boxm2_data_base * alph = cache->get_data_base(scene,id,boxm2_data_traits<BOXM2_ALPHA>::prefix(), 0, false);
+    boxm2_data_base * mog = cache->get_data_base(scene,id,data_type, 0, false);
     boxm2_data_base * num_obs = cache->get_data_base(scene,id,boxm2_data_traits<BOXM2_NUM_OBS>::prefix(), 0, false);
 
     std::vector<boxm2_data_base*> datas;

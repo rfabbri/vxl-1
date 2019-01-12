@@ -9,10 +9,14 @@
 // \author Raphael Kargon
 // \date 04 Aug 2017
 
-#include <vcl_map.h>
-#include <vcl_string.h>
-#include <vcl_utility.h>
-#include <vcl_vector.h>
+#include <iostream>
+#include <map>
+#include <string>
+#include <utility>
+#include <vector>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_box_3d.h>
 
 #include <bprb/bprb_func_process.h>
@@ -21,12 +25,12 @@
 #include <bstm_multi/space_time_scene.h>
 
 namespace {
-const unsigned n_inputs_ = 21;
-const unsigned n_outputs_ = 0;
+constexpr unsigned n_inputs_ = 21;
+constexpr unsigned n_outputs_ = 0;
 }
 
 bool bstm_add_block_process_cons(bprb_func_process &pro) {
-  vcl_vector<vcl_string> input_types_(::n_inputs_);
+  std::vector<std::string> input_types_(::n_inputs_);
   int i = 0;
   input_types_[i++] = "bstm_multi_scene_sptr";
 
@@ -52,7 +56,7 @@ bool bstm_add_block_process_cons(bprb_func_process &pro) {
   input_types_[i++] = "unsigned";   // init tree depth
   input_types_[i++] = "unsigned";   // init time tree depth
 
-  vcl_vector<vcl_string> output_types_(::n_outputs_);
+  std::vector<std::string> output_types_(::n_outputs_);
 
   return pro.set_input_types(input_types_) &&
          pro.set_output_types(output_types_);
@@ -60,8 +64,8 @@ bool bstm_add_block_process_cons(bprb_func_process &pro) {
 
 bool bstm_add_block_process(bprb_func_process &pro) {
   if (pro.n_inputs() < ::n_inputs_) {
-    vcl_cout << pro.name() << ": The input number should be " << ::n_inputs_
-             << vcl_endl;
+    std::cout << pro.name() << ": The input number should be " << ::n_inputs_
+             << std::endl;
     return false;
   }
   // get the inputs
@@ -73,33 +77,33 @@ bool bstm_add_block_process(bprb_func_process &pro) {
   int index_t = pro.get_input<int>(i++);
 
   // Scene bounds
-  double min_x = pro.get_input<double>(i++);
-  double min_y = pro.get_input<double>(i++);
-  double min_z = pro.get_input<double>(i++);
-  double min_t = pro.get_input<double>(i++);
+  auto min_x = pro.get_input<double>(i++);
+  auto min_y = pro.get_input<double>(i++);
+  auto min_z = pro.get_input<double>(i++);
+  auto min_t = pro.get_input<double>(i++);
 
-  double max_x = pro.get_input<double>(i++);
-  double max_y = pro.get_input<double>(i++);
-  double max_z = pro.get_input<double>(i++);
-  double max_t = pro.get_input<double>(i++);
+  auto max_x = pro.get_input<double>(i++);
+  auto max_y = pro.get_input<double>(i++);
+  auto max_z = pro.get_input<double>(i++);
+  auto max_t = pro.get_input<double>(i++);
 
-  vcl_string subdivisions_str = pro.get_input<vcl_string>(i++);
-  vcl_vector<space_time_enum> subdivisions =
+  std::string subdivisions_str = pro.get_input<std::string>(i++);
+  std::vector<space_time_enum> subdivisions =
       parse_subdivisions(subdivisions_str);
 
-  float max_data_size = pro.get_input<float>(i++);
-  float p_init = pro.get_input<float>(i++);
+  auto max_data_size = pro.get_input<float>(i++);
+  auto p_init = pro.get_input<float>(i++);
 
   bstm_block_id id(index_i, index_j, index_k, index_t);
-  vcl_map<bstm_block_id, bstm_multi_block_metadata> &blks = scene->blocks();
+  std::map<bstm_block_id, bstm_multi_block_metadata> &blks = scene->blocks();
   if (blks.count(id)) {
-    vcl_cout << "block already exists" << vcl_endl;
+    std::cout << "block already exists" << std::endl;
     return false;
   }
   blks[id] = bstm_multi_block_metadata(
       id,
       vgl_box_3d<double>(min_x, min_y, min_z, max_x, max_y, max_z),
-      vcl_pair<double, double>(min_t, max_t),
+      std::pair<double, double>(min_t, max_t),
       max_data_size,
       p_init,
       subdivisions,

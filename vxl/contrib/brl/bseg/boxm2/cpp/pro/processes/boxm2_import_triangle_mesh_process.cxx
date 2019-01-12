@@ -16,8 +16,8 @@
 
 namespace boxm2_import_triangle_mesh_process_globals
 {
-  const unsigned n_inputs_ = 4;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 4;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool boxm2_import_triangle_mesh_process_cons(bprb_func_process& pro)
@@ -50,7 +50,7 @@ bool boxm2_import_triangle_mesh_process(bprb_func_process& pro)
   boxm2_scene_sptr scene = pro.get_input<boxm2_scene_sptr>(0);
   boxm2_cache_sptr cache = pro.get_input<boxm2_cache_sptr>(1);
   std::string mesh_filename = pro.get_input<std::string>(2);
-  float occupied_prob = pro.get_input<float>(3);
+  auto occupied_prob = pro.get_input<float>(3);
 
 #if 0
   bmsh3d_mesh  mesh;

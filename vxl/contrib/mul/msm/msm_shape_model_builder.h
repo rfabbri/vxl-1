@@ -8,8 +8,10 @@
 #include <iostream>
 #include <iosfwd>
 #include <string>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_fwd.h>
 #include <msm/msm_shape_model.h>
 #include <msm/msm_param_limiter.h>

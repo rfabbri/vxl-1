@@ -3,7 +3,9 @@
 #include <cmath>
 #include <testlib/testlib_test.h>
 #include <vpl/vpl.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpgl/vpgl_rational_camera.h>
 #include <vnl/vnl_matrix_fixed.h>
 
@@ -158,5 +160,3 @@ static void test_rational_camera()
 }
 
 TESTMAIN(test_rational_camera);
-
-

@@ -2,13 +2,15 @@
 // J.L. Mundy Dec. 2016
 #include <iostream>
 #include <sstream>
+#include <cmath>
 #include <testlib/testlib_test.h>
 #include <vgl/vgl_oriented_box_2d.h>
 #include <vgl/vgl_area.h>
 #include <vgl/vgl_box_2d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_fit_oriented_box_2d.h>
-#include <math.h>
 
 static void test_oriented_box_2d()
 {
@@ -50,9 +52,8 @@ static void test_oriented_box_2d()
   vgl_oriented_box_2d<float> ob0(pmaj1a,pmaj2a, 150.0f);
   std::vector<vgl_point_2d<float> > corns = ob0.corners();
   std::cout << "Corners" << std::endl;
-  for(std::vector<vgl_point_2d<float> >::iterator cit = corns.begin();
-      cit != corns.end(); ++cit)
-    std::cout << *cit << std::endl;
+  for(auto & corn : corns)
+    std::cout << corn << std::endl;
   float width = ob.width();
   float height = ob.height();
   vgl_point_2d<float> p(25.0, 25.0);
@@ -141,8 +142,8 @@ static void test_oriented_box_2d()
   vgl_fit_oriented_box_2d<double> fob30(pts);
   vgl_oriented_box_2d<double> obf30 = fob30.fitted_box();
   std::vector<vgl_point_2d<double> > cns = obf30.corners();
-  for(size_t i = 0; i<cns.size(); ++i)
-          std::cout << cns[i].x() << ' ' << cns[i].y() << std::endl;
+  for(auto & cn : cns)
+          std::cout << cn.x() << ' ' << cn.y() << std::endl;
   double arear = vgl_area(obf30);
   TEST_NEAR("real obox fit" , arear, 78.59471308, 1e-04);
   // second real fit

@@ -6,7 +6,9 @@
 // \file
 // this process is the companion to vil_resample_image_process and
 // adjusts the calibration matrix to correspond to the resampled image
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpgl/vpgl_camera.h>
 #include <vpgl/vpgl_perspective_camera.h>
 #include <vpgl/vpgl_calibration_matrix.h>
@@ -44,12 +46,12 @@ bool vpgl_resample_perspective_camera_process(bprb_func_process& pro)
   }
   // get the inputs
   vpgl_camera_double_sptr cam_ptr = pro.get_input<vpgl_camera_double_sptr>(0);
-  vpgl_perspective_camera<double>* cam = dynamic_cast<vpgl_perspective_camera<double>*>(cam_ptr.ptr());
+  auto* cam = dynamic_cast<vpgl_perspective_camera<double>*>(cam_ptr.ptr());
   if (!cam) {
     std::cerr << "vpgl_resample_perspective_camera_process: couldn't cast camera\n";
     return false;
   }
-  vpgl_perspective_camera<double>* ncam =
+  auto* ncam =
     new vpgl_perspective_camera<double>(*cam);
   //cast image sizes to double for scale computation
   double ni_orig = pro.get_input<int>(1), nj_orig = pro.get_input<int>(2);
@@ -78,4 +80,3 @@ bool vpgl_resample_perspective_camera_process(bprb_func_process& pro)
 
   return true;
 }
-

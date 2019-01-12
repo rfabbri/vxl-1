@@ -7,7 +7,9 @@
 #include <cmath>
 #include "bvpl_algebraic_functor.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 // Default constructor
@@ -38,4 +40,3 @@ float bvpl_algebraic_functor::result()
 
   return result;
 }
-

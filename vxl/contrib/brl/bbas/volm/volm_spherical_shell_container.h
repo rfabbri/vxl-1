@@ -29,7 +29,9 @@
 #include <iostream>
 #include <cstddef>
 #include <vbl/vbl_ref_count.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_point_3d.h>
 #include <vsph/vsph_spherical_coord_sptr.h>
 #include <vsph/vsph_spherical_coord.h>
@@ -41,7 +43,7 @@ class volm_spherical_shell_container : public vbl_ref_count
 {
  public:
   //: Default constructor
-  volm_spherical_shell_container() {}
+  volm_spherical_shell_container() = default;
   //: Legacy Constructor
   volm_spherical_shell_container(double radius, float cap_angle, float point_angle, float top_angle, float bottom_angle);
   //: Minimal constructor (to internally construct vsph_unit_sphere)
@@ -58,7 +60,7 @@ class volm_spherical_shell_container : public vbl_ref_count
   double point_angle() const { return usph_->point_angle(); }
   double top_angle() const { return usph_->min_theta(); }
   double bottom_angle() const {return 180.0 - usph_->max_theta(); }
-  vgl_point_3d<double> cent() const { return vgl_point_3d<double>(0.0, 0.0, 0.0); }
+  vgl_point_3d<double> cent() const { return {0.0, 0.0, 0.0}; }
   std::vector<vgl_point_3d<double> > cart_points() const;
 
   std::vector<vsph_sph_point_3d> sph_points() const;
@@ -67,9 +69,9 @@ class volm_spherical_shell_container : public vbl_ref_count
 
   std::size_t get_container_size() const { return usph_->size(); }
 
-  void draw_template(std::string vrml_file_name);
+  void draw_template(const std::string& vrml_file_name);
   //: draw each disk with a color with respect to the values, the size and order of the values should be the size and order of the cart_points
-  void draw_template(std::string vrml_file_name, std::vector<unsigned char>& values, unsigned char special);
+  void draw_template(const std::string& vrml_file_name, std::vector<unsigned char>& values, unsigned char special);
 
   //: generate panaroma image
   void panaroma_img(vil_image_view<vil_rgb<vxl_byte> >& img, std::vector<unsigned char>& values);

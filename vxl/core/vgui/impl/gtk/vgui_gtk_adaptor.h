@@ -1,9 +1,6 @@
 // This is core/vgui/impl/gtk/vgui_gtk_adaptor.h
 #ifndef vgui_gtk_adaptor_h_
 #define vgui_gtk_adaptor_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author Philip C. Pritchett, Robotics Research Group, University of Oxford
@@ -13,7 +10,9 @@
 #include <map>
 #include <vgui/vgui_adaptor.h>
 #include <vgui/internals/vgui_adaptor_mixin.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <gtk/gtk.h>
 
 struct vgui_overlay_helper;

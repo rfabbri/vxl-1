@@ -19,21 +19,23 @@
 #include <iostream>
 #include <algorithm>
 #include "vil3d_image_view.h"
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_pixel_format.h>
 
 //=======================================================================
 
 template<class T>
 vil3d_image_view<T>::vil3d_image_view()
-: top_left_(VXL_NULLPTR),istep_(0),jstep_(0),kstep_(0),planestep_(0)
+: top_left_(nullptr),istep_(0),jstep_(0),kstep_(0),planestep_(0)
 {}
 
 template<class T>
 vil3d_image_view<T>::vil3d_image_view(unsigned ni, unsigned nj,
                                       unsigned nk, unsigned n_planes)
-: top_left_(VXL_NULLPTR),istep_(1),jstep_(0),kstep_(0)
+: top_left_(nullptr),istep_(1),jstep_(0),kstep_(0)
 {
   set_size(ni,nj,nk,n_planes);
 }
@@ -93,7 +95,7 @@ vil3d_image_view<T>::vil3d_image_view(const vil3d_image_view<T>& im)
 //  Sets to empty image if target is of different pixel type
 template<class T>
 vil3d_image_view<T>::vil3d_image_view(const vil3d_image_view_base& base_ref)
-  : top_left_(VXL_NULLPTR),istep_(0),jstep_(0),kstep_(0),planestep_(0)
+  : top_left_(nullptr),istep_(0),jstep_(0),kstep_(0),planestep_(0)
 {
   operator=(base_ref);
 }
@@ -102,7 +104,7 @@ vil3d_image_view<T>::vil3d_image_view(const vil3d_image_view_base& base_ref)
 //  Sets to empty image if target is of different pixel type
 template<class T>
 vil3d_image_view<T>::vil3d_image_view(const vil3d_image_view_base_sptr& base_sptr)
-  : top_left_(VXL_NULLPTR),istep_(0),jstep_(0),kstep_(0),planestep_(0)
+  : top_left_(nullptr),istep_(0),jstep_(0),kstep_(0),planestep_(0)
 {
   operator=(base_sptr);
 }

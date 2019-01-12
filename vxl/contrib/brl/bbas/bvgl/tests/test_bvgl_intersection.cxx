@@ -3,7 +3,9 @@
 #include <iostream>
 #include <testlib/testlib_test.h>
 #include <bvgl/bvgl_intersection.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Test changes
 static void test_bvgl_intersection()
@@ -73,5 +75,3 @@ static void test_bvgl_intersection()
 }
 
 TESTMAIN( test_bvgl_intersection );
-
-

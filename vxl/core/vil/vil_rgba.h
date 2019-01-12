@@ -1,9 +1,6 @@
 // This is core/vil/vil_rgba.h
 #ifndef vil_rgba_h_
 #define vil_rgba_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Templated four-value colour cell
@@ -21,7 +18,9 @@
 //    -#  min and max of vil_rgba<byte>  values, useful for morphological operations.
 //    -#  arithmetic operations
 
-#include <vcl_config_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 template <class T>
 struct vil_rgba
@@ -36,7 +35,7 @@ struct vil_rgba
   inline T B() const { return b; }
   inline T A() const { return a; }
 
-  vil_rgba() {}
+  vil_rgba() = default;
 
   //: Create grey (v,v,v,1) vil_rgba cell from value v.
   // This provides a conversion from T to vil_rgba<T>, needed by e.g. two constructors in IUE_filter.h.

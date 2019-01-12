@@ -13,7 +13,9 @@
 // \endverbatim
 #include <iostream>
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bprb/bprb_process.h>
 
 #include <vil/vil_image_view.h>
@@ -30,16 +32,16 @@ class breg3d_ekf_camera_optimize_process : public bprb_process
   //: Copy Constructor (no local data)
   breg3d_ekf_camera_optimize_process(const breg3d_ekf_camera_optimize_process& other): bprb_process(*static_cast<const bprb_process*>(&other)) {}
 
-  ~breg3d_ekf_camera_optimize_process() {}
+  ~breg3d_ekf_camera_optimize_process() override = default;
 
   //: Clone the process
-  virtual breg3d_ekf_camera_optimize_process* clone() const {return new breg3d_ekf_camera_optimize_process(*this);}
+  breg3d_ekf_camera_optimize_process* clone() const override {return new breg3d_ekf_camera_optimize_process(*this);}
 
-  virtual std::string name() const {return "breg3dEkfCameraOptimize";}
+  std::string name() const override {return "breg3dEkfCameraOptimize";}
 
-  bool init() { return true; }
-  bool execute();
-  bool finish() { return true; }
+  bool init() override { return true; }
+  bool execute() override;
+  bool finish() override { return true; }
 
  private:
 

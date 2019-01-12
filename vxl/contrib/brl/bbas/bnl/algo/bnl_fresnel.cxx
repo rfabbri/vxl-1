@@ -5,7 +5,9 @@
 #include <iostream>
 #include <complex>
 #include "bnl_fresnel.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h>
 
 // Fresnel Integral computation adapted from Numerical recipes in C

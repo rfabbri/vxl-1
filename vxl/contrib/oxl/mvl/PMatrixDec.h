@@ -1,9 +1,6 @@
 // This is oxl/mvl/PMatrixDec.h
 #ifndef PMatrixDec_h_
 #define PMatrixDec_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 //
@@ -38,7 +35,9 @@
 #include <iosfwd>
 #include <vnl/vnl_matrix.h>
 #include <mvl/PMatrix.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class PMatrixDec : public PMatrix
 {
@@ -51,7 +50,7 @@ class PMatrixDec : public PMatrix
  public:
   // Constructors/Initializers/Destructors----------------------------------
   PMatrixDec(const vnl_matrix<double>& p_matrix);
-  ~PMatrixDec();
+  ~PMatrixDec() override;
 
   // Data Access------------------------------------------------------------
   const vnl_matrix<double>& IntrinsicParameters () { return j_matrix_; }

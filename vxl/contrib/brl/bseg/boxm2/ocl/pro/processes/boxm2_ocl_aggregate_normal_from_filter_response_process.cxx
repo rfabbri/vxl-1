@@ -1,7 +1,8 @@
 // This is brl/bseg/boxm2/ocl/pro/processes/boxm2_ocl_aggregate_normal_from_filter_response_process.cxx
-#include <iostream>
-#include <fstream>
 #include <bprb/bprb_func_process.h>
+#include <fstream>
+#include <iostream>
+#include <utility>
 //:
 // \file
 // \brief A process to take in filter responses (from boxm2CppFilterResponseProcess) and aggregate them to a gradient direction.
@@ -13,7 +14,9 @@
 // \author Ali Osman Ulusoy
 // \date Feb 13, 2011
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/ocl/boxm2_opencl_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -28,13 +31,13 @@
 
 namespace boxm2_ocl_aggregate_normal_from_filter_process_globals
 {
-  const unsigned n_inputs_ =  4;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 4;
+  constexpr unsigned n_outputs_ = 0;
 
   //declare the response data type used to store in boxm2CppFilterResponseProcess.
   typedef boxm2_data_traits<BOXM2_FLOAT> RESPONSE_DATATYPE;
 
-  void compile_kernel(bocl_device_sptr device,std::vector<bocl_kernel*> & vec_kernels,std::string opts)
+  void compile_kernel(const bocl_device_sptr& device,std::vector<bocl_kernel*> & vec_kernels,std::string opts)
   {
     std::vector<std::string> src_paths;
     std::string source_dir = boxm2_ocl_util::ocl_src_root();
@@ -42,9 +45,9 @@ namespace boxm2_ocl_aggregate_normal_from_filter_process_globals
     src_paths.push_back(source_dir + "aggregate_filter_response.cl");
 
     //compilation options
-    std::string options = opts;
+    const std::string& options = std::move(opts);
 
-    bocl_kernel* compute_vis = new bocl_kernel();
+    auto* compute_vis = new bocl_kernel();
     std::string seg_opts = options + " -D DODECAHEDRON";
     compute_vis->create_kernel(&device->context(),device->device_id(), src_paths, "aggregate", seg_opts, "aggregate");
     vec_kernels.push_back(compute_vis);
@@ -81,10 +84,10 @@ bool boxm2_ocl_aggregate_normal_from_filter_process(bprb_func_process& pro)
   //get the inputs
   unsigned i = 0;
 
-  bocl_device_sptr         device       = pro.get_input<bocl_device_sptr>(i++);
-  boxm2_scene_sptr         scene        = pro.get_input<boxm2_scene_sptr>(i++);
+  bocl_device_sptr         device = pro.get_input<bocl_device_sptr>(i++);
+  boxm2_scene_sptr         scene = pro.get_input<boxm2_scene_sptr>(i++);
   boxm2_opencl_cache_sptr  opencl_cache = pro.get_input<boxm2_opencl_cache_sptr>(i++);
-  unsigned num_kernels = pro.get_input<unsigned>(i++);
+  auto num_kernels = pro.get_input<unsigned>(i++);
 
   //cache size sanity check
   long binCache = opencl_cache.ptr()->bytes_in_cache();
@@ -144,16 +147,16 @@ bool boxm2_ocl_aggregate_normal_from_filter_process(bprb_func_process& pro)
     boxm2_block_metadata data = blk_iter->second;
     vul_timer transfer;
     /* bocl_mem* blk = */ opencl_cache->get_block(scene,blk_iter->first);
-    bocl_mem* blk_info  = opencl_cache->loaded_block_info();
-    bocl_mem* alpha     = opencl_cache->get_data<BOXM2_ALPHA>(scene,blk_iter->first,0,true);
-    boxm2_scene_info* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
+    bocl_mem* blk_info = opencl_cache->loaded_block_info();
+    bocl_mem* alpha = opencl_cache->get_data<BOXM2_ALPHA>(scene,blk_iter->first,0,true);
+    auto* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
     int alphaTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_ALPHA>::prefix());
     info_buffer->data_buffer_length = (int) (alpha->num_bytes()/alphaTypeSize);
     blk_info->write_to_buffer((queue));
 
     //store normals locations
     std::size_t normalsTypeSize = boxm2_data_info::datasize(boxm2_data_traits<BOXM2_NORMAL>::prefix());
-    bocl_mem * normals    = opencl_cache->get_data(scene,id,boxm2_data_traits<BOXM2_NORMAL>::prefix(), info_buffer->data_buffer_length*normalsTypeSize,false);
+    bocl_mem * normals = opencl_cache->get_data(scene,id,boxm2_data_traits<BOXM2_NORMAL>::prefix(), info_buffer->data_buffer_length*normalsTypeSize,false);
 
 #if 0 // unused
     //get response type
@@ -173,7 +176,7 @@ bool boxm2_ocl_aggregate_normal_from_filter_process(bprb_func_process& pro)
     kern->set_arg( normals );
     for (unsigned i = 0; i < num_kernels; i++) {
       std::stringstream ss; ss << i;
-      bocl_mem * response    = opencl_cache->get_data(scene,id,RESPONSE_DATATYPE::prefix(ss.str()), 0, true);
+      bocl_mem * response = opencl_cache->get_data(scene,id,RESPONSE_DATATYPE::prefix(ss.str()), 0, true);
       kern->set_arg( response );
     }
 

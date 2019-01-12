@@ -18,10 +18,12 @@
 #include <vidl/vidl_istream_sptr.h>
 #include <vidl/vidl_frame.h>
 #include <vidl/vidl_convert.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 namespace {
-  vidl_istream_sptr istr = VXL_NULLPTR;
+  vidl_istream_sptr istr = nullptr;
   unsigned ni = 0;
   unsigned nj = 0;
 };
@@ -66,7 +68,7 @@ bool bbgm_update_dist_image_stream_process_init(bprb_func_process& pro)
   std::cout << " initialized, stream frame size: " << ni << ", " << nj << ", stream at frame # " << istr->frame_number() << std::endl;
   std::cout.flush();
 
-  pro.set_input(0, new brdb_value_t<bbgm_image_sptr>(VXL_NULLPTR));
+  pro.set_input(0, new brdb_value_t<bbgm_image_sptr>(nullptr));
 
   return true;
 }
@@ -91,13 +93,13 @@ bool bbgm_update_dist_image_stream_process(bprb_func_process& pro)
   int window_size = pro.get_input<int>(3);
 
   //Retrieve initial_variance
-  float initial_variance = pro.get_input<float>(4);
+  auto initial_variance = pro.get_input<float>(4);
 
   //Retrieve g_thresh
-  float g_thresh = pro.get_input<float>(5);
+  auto g_thresh = pro.get_input<float>(5);
 
   //Retrieve min_stdev
-  float min_stdev = pro.get_input<float>(6);
+  auto min_stdev = pro.get_input<float>(6);
 
   //Retrieve start frame number
   int start_frame = pro.get_input<int>(7);
@@ -121,7 +123,7 @@ bool bbgm_update_dist_image_stream_process(bprb_func_process& pro)
     std::cout.flush();
   }
   else model_sptr = bgm;
-  bbgm_image_of<obs_mix_gauss_type> *model =
+  auto *model =
     static_cast<bbgm_image_of<obs_mix_gauss_type>*>(model_sptr.ptr());
 
   bsta_gauss_t init_gauss(vector_(0.0f), vector_(initial_variance) );
@@ -160,4 +162,3 @@ bool bbgm_update_dist_image_stream_process(bprb_func_process& pro)
   pro.set_output(0, output);
   return true;
 }
-

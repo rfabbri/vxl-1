@@ -9,7 +9,9 @@
 #include <iostream>
 #include <testlib/testlib_test.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <brdb/brdb_value.h>
 #include <brdb/brdb_selection.h>
@@ -46,14 +48,14 @@ vil_image_view_base_sptr test_process(vil_image_view_base_sptr const &ref_img, u
   TEST("run vil_crop_image_process", good ,true);
 
   brdb_query_aptr Q_img = brdb_query_comp_new("id", brdb_query::EQ, id_img);
-  brdb_selection_sptr S_img = DATABASE->select("vil_image_view_base_sptr_data", vcl_move(Q_img));
+  brdb_selection_sptr S_img = DATABASE->select("vil_image_view_base_sptr_data", std::move(Q_img));
   TEST("output image is in db", S_img->size(), 1);
 
   brdb_value_sptr value_img;
   TEST("output image is in db", S_img->get_value(std::string("value"), value_img), true);
-  TEST("output image is non-null", (value_img != VXL_NULLPTR) ,true);
+  TEST("output image is non-null", (value_img != nullptr) ,true);
 
-  brdb_value_t<vil_image_view_base_sptr>* result =
+  auto* result =
     static_cast<brdb_value_t<vil_image_view_base_sptr>* >(value_img.ptr());
   vil_image_view_base_sptr out_img_base = result->value();
 

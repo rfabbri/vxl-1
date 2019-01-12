@@ -17,8 +17,10 @@
 #include <algorithm>
 #include "bsta_distribution.h"
 #include "bsta_sampler.h"
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpdl/vpdt/vpdt_dist_traits.h>
 #include <vnl/vnl_random.h>
 
@@ -99,8 +101,7 @@ class bsta_mixture_fixed : public bsta_distribution<typename dist_::math_type,
 
   // Destructor
   ~bsta_mixture_fixed<dist_,s>()
-  {
-  }
+  = default;
 
   //: Assignment operator
   bsta_mixture_fixed<dist_,s>& operator= (const bsta_mixture_fixed<dist_,s>& rhs)

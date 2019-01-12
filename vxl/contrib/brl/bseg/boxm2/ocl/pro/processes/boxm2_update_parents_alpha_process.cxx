@@ -9,7 +9,9 @@
 // \author Vishal Jain
 // \date Apr 23, 2013
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/ocl/boxm2_opencl_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -27,9 +29,9 @@
 
 namespace boxm2_ocl_update_parents_alpha_process_globals
 {
-    const unsigned n_inputs_ = 3;
-    const unsigned n_outputs_ = 0;
-    void compile_kernel(bocl_device_sptr device, bocl_kernel* merge_kernel)
+    constexpr unsigned n_inputs_ = 3;
+    constexpr unsigned n_outputs_ = 0;
+    void compile_kernel(const bocl_device_sptr& device, bocl_kernel* merge_kernel)
     {
         //gather all render sources... seems like a lot for rendering...
         std::vector<std::string> src_paths;
@@ -96,13 +98,13 @@ bool boxm2_ocl_update_parents_alpha_process(bprb_func_process& pro)
     if (kernels.find(identifier)==kernels.end())
     {
         std::cout<<"===========Compiling kernels==========="<<std::endl;
-        bocl_kernel * kernel=new bocl_kernel();
+        auto * kernel=new bocl_kernel();
         compile_kernel(device,kernel);
         kernels[identifier]=kernel;
     }
 
     float output_arr[100];
-    for (int i=0; i<100; ++i) output_arr[i] = 0.0f;
+    for (float & i : output_arr) i = 0.0f;
     bocl_mem_sptr  cl_output=new bocl_mem(device->context(), output_arr, sizeof(float)*100, "output buffer");
     cl_output->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
     // bit lookup buffer
@@ -126,9 +128,9 @@ bool boxm2_ocl_update_parents_alpha_process(bprb_func_process& pro)
 
         //write the image values to the buffer
         vul_timer transfer;
-        bocl_mem* blk       = opencl_cache->get_block(scene,id);
-        bocl_mem* alpha     = opencl_cache->get_data<BOXM2_ALPHA>(scene,id);
-        bocl_mem* blk_info  = opencl_cache->loaded_block_info();
+        bocl_mem* blk = opencl_cache->get_block(scene,id);
+        bocl_mem* alpha = opencl_cache->get_data<BOXM2_ALPHA>(scene,id);
+        bocl_mem* blk_info = opencl_cache->loaded_block_info();
         transfer_time += (float) transfer.all();
         std::size_t lThreads[] = {16, 1};
         std::size_t gThreads[] = {RoundUp(numTrees,lThreads[0]), 1};
@@ -157,4 +159,3 @@ bool boxm2_ocl_update_parents_alpha_process(bprb_func_process& pro)
     std::cout<<"Update Parents Alpha: "<<gpu_time<<std::endl;
     return true;
 }
-

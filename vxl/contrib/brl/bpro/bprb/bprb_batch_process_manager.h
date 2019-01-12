@@ -15,7 +15,9 @@
 #include <vector>
 #include <iostream>
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bprb/bprb_process_sptr.h>
 #include <bprb/bprb_process_manager.h>
 #include <brdb/brdb_value_sptr.h>
@@ -25,7 +27,7 @@ class bprb_batch_process_manager : public bprb_process_manager<bprb_batch_proces
 {
  public:
   // Destructor
-  virtual ~bprb_batch_process_manager();
+  ~bprb_batch_process_manager() override;
 
   //: clear the database for new script processing
   bool clear();
@@ -45,7 +47,7 @@ class bprb_batch_process_manager : public bprb_process_manager<bprb_batch_proces
   //: set primitive data type input on current process
   bool set_input(unsigned i, brdb_value_sptr const& input);
 
-  bool set_input_from_db(unsigned i, unsigned id, std::string type);
+  bool set_input_from_db(unsigned i, unsigned id, const std::string& type);
 
   //: set input from the database
   bool set_input_from_db(unsigned i, unsigned id);
@@ -82,7 +84,7 @@ class bprb_batch_process_manager : public bprb_process_manager<bprb_batch_proces
 
   //: Set stdout
   // \return false on failure
-  bool set_stdout(std::string file);
+  bool set_stdout(const std::string& file);
 
   //: Reset stdout back to the console
   // \return false on failure

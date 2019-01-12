@@ -12,8 +12,10 @@
 #include <cstddef>
 #include "rsdl_bins.h"
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //:
 // This class is used in n_nearest_impl. It stores a pointer to an
@@ -130,7 +132,7 @@ n_nearest( point_type const& pt,
            unsigned n,
            std::vector< value_type >& values ) const
 {
-  n_nearest_impl( pt, n, values, VXL_NULLPTR );
+  n_nearest_impl( pt, n, values, nullptr );
 }
 
 
@@ -153,7 +155,7 @@ n_nearest_exhaustive( point_type const& pt,
                       unsigned n,
                       std::vector< value_type >& values ) const
 {
-  n_nearest_exhaustive_impl( pt, n, values, VXL_NULLPTR );
+  n_nearest_exhaustive_impl( pt, n, values, nullptr );
 }
 
 
@@ -192,7 +194,7 @@ points_within_radius( point_type const& pt,
                       coord_type const& radius,
                       std::vector< value_type >& values ) const
 {
-  points_within_radius_impl( pt, radius, values, VXL_NULLPTR );
+  points_within_radius_impl( pt, radius, values, nullptr );
 }
 
 
@@ -215,7 +217,7 @@ points_in_bounding_box( point_type const& min_pt,
                         point_type const& max_pt,
                         std::vector< value_type >& values ) const
 {
-  points_in_bounding_box_impl( min_pt, max_pt, values, VXL_NULLPTR );
+  points_in_bounding_box_impl( min_pt, max_pt, values, nullptr );
 }
 
 
@@ -438,7 +440,7 @@ n_nearest_impl( point_type const& pt,
       coord_type face_dist = 0; // not-squared distance to closest side of rectangular region of bins searched
       bool face_inf_dist;       // is this distance infinite?
       closest_face (pt, bin_rng_lo, bin_rng_hi,
-                    VXL_NULLPTR, VXL_NULLPTR, &face_dist, face_inf_dist);
+                    nullptr, nullptr, &face_dist, face_inf_dist);
 
       if ( face_inf_dist || nth_dist_sqr <= face_dist*face_dist )
         done = true;
@@ -475,7 +477,7 @@ n_nearest_impl( point_type const& pt,
         bool face_inf_dist;
 
         closest_face (pt, bin_rng_lo, bin_rng_hi,
-                      &face_dim, &face_dir, VXL_NULLPTR, face_inf_dist);
+                      &face_dim, &face_dir, nullptr, face_inf_dist);
 
         if ( ! face_inf_dist )
         {

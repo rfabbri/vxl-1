@@ -1,20 +1,17 @@
 // This is oxl/mvl/HomgInterestPoint.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 //  \file
 
 #include <iostream>
 #include "HomgInterestPoint.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h>
 #include <mvl/HomgMetric.h>
 
-HomgInterestPoint::HomgInterestPoint()
-{
-}
+HomgInterestPoint::HomgInterestPoint() = default;
 
 //: Create from vgl_homg_point_2d<double> in conditioned coordinates.
 // Using the given metric to convert back to image coordinates.
@@ -64,26 +61,11 @@ HomgInterestPoint::HomgInterestPoint(double x, double y, const HomgMetric& c, fl
 {
 }
 
-HomgInterestPoint::HomgInterestPoint(const HomgInterestPoint& that):
-  homg_(that.homg_),
-  double2_(that.double2_),
-  int2_(that.int2_),
-  mean_intensity_(that.mean_intensity_)
-{
-}
+HomgInterestPoint::HomgInterestPoint(const HomgInterestPoint& that) = default;
 
-HomgInterestPoint& HomgInterestPoint::operator=(const HomgInterestPoint& that)
-{
-  homg_ = that.homg_;
-  double2_ = that.double2_;
-  int2_ = that.int2_;
-  mean_intensity_ = that.mean_intensity_;
-  return *this;
-}
+HomgInterestPoint& HomgInterestPoint::operator=(const HomgInterestPoint& that) = default;
 
-HomgInterestPoint::~HomgInterestPoint()
-{
-}
+HomgInterestPoint::~HomgInterestPoint() = default;
 
 std::ostream& operator<<(std::ostream& s, const HomgInterestPoint&)
 {

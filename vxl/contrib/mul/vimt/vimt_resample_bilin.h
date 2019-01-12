@@ -5,7 +5,10 @@
 // \brief Sample grid of points in one image and place in another
 // \author Tim Cootes
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_resample_bilin.h>
 #include <vil/algo/vil_gauss_reduce.h>
 #include <vgl/vgl_point_2d.h>

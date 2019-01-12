@@ -7,7 +7,9 @@
 // \author Tim Cootes
 
 #include <vsl/vsl_binary_loader.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vimt/vimt_sample_profile_bilin.h>
 #include <vnl/io/vnl_io_vector.h>
@@ -39,9 +41,7 @@ void mfpf_profile_pdf::set_defaults()
 // Destructor
 //=======================================================================
 
-mfpf_profile_pdf::~mfpf_profile_pdf()
-{
-}
+mfpf_profile_pdf::~mfpf_profile_pdf() = default;
 
 //: Define filter kernel to search with
 void mfpf_profile_pdf::set(int ilo, int ihi, const vpdfl_pdf_base& pdf)
@@ -188,7 +188,7 @@ void mfpf_profile_pdf::print_summary(std::ostream& os) const
 {
   os<< "{  size: [" << ilo_ << ',' << ihi_<< ']'
     << " PDF: ";
-  if (pdf_.ptr()==VXL_NULLPTR) os << "--";
+  if (pdf_.ptr()==nullptr) os << "--";
   else               os << pdf_;
   mfpf_point_finder::print_summary(os);
   os << " }";
@@ -243,4 +243,3 @@ bool mfpf_profile_pdf::operator==(const mfpf_profile_pdf& nc) const
   // Doesn't check pdf, though it should.
   return true;
 }
-

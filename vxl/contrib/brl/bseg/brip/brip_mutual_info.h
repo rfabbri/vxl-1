@@ -11,7 +11,9 @@
 #include <iostream>
 #include <cmath>
 #include <vil/vil_image_view.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h>
 
 
@@ -27,9 +29,8 @@ inline
 double brip_hist_entropy(const std::vector<double>& histogram, double mag)
 {
   double entropy = 0.0;
-  for ( std::vector<double>::const_iterator h_itr = histogram.begin();
-        h_itr != histogram.end(); ++h_itr ){
-    double prob = (*h_itr)/mag;
+  for (double h_itr : histogram){
+    double prob = h_itr/mag;
     entropy += -(prob?prob*std::log(prob):0); // if prob=0 this value is defined as 0
   }
   return entropy/vnl_math::ln2; // divide by ln(2) to convert this measure to base 2
@@ -41,9 +42,8 @@ inline
 double brip_hist_entropy(const std::vector<std::vector<double> >& histogram, double mag)
 {
   double entropy = 0.0;
-  for ( std::vector<std::vector<double> >::const_iterator h_itr = histogram.begin();
-        h_itr != histogram.end(); ++h_itr ){
-    entropy += brip_hist_entropy(*h_itr,mag);
+  for (const auto & h_itr : histogram){
+    entropy += brip_hist_entropy(h_itr,mag);
   }
   return entropy;
 }

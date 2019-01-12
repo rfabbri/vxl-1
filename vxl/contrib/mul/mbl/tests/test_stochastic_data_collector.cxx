@@ -7,7 +7,9 @@
 // \author Ian Scott
 // \brief test vpdfl_pc_gaussian, building, sampling, saving etc.
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpl/vpl.h> // vpl_unlink()
 #include <vsl/vsl_binary_loader.h>
 #include <vnl/io/vnl_io_vector.h>
@@ -42,7 +44,7 @@ void test_stochastic_data_collector()
 
   std::cout << "===========Generate data\n";
   std::vector<unsigned> hist(10, 0u);
-  const int n_expts = 50;
+  constexpr int n_expts = 50;
   for (int i=0;i<n_expts;++i)
   {
     vnl_vector<double> v(1);
@@ -77,7 +79,7 @@ void test_stochastic_data_collector()
   std::cout << "=========Testing IO\n";
 
   mbl_stochastic_data_collector<vnl_vector<double> > collector2;
-  mbl_data_collector_base *collector3=VXL_NULLPTR;
+  mbl_data_collector_base *collector3=nullptr;
 
   std::string path = "test_stochastic_data_collector.bvl.tmp";
   std::cout<<"Saving : "<<collector<<'\n';

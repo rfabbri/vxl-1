@@ -7,7 +7,9 @@
 #include <boxm2/boxm2_data_traits.h>
 #include <vgl/vgl_vector_3d.h>
 #include <vnl/vnl_math.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_erf.h>
 
 #include <brad/brad_image_metadata.h>
@@ -18,7 +20,7 @@
 
 bool boxm2_compute_normal_albedo_functor::init_data(std::vector<brad_image_metadata> const& metadata,
                                                     std::vector<brad_atmospheric_parameters> const& atm_params,
-                                                    boxm2_stream_cache_sptr str_cache,
+                                                    const boxm2_stream_cache_sptr& str_cache,
                                                     boxm2_data_base * alpha_data,
                                                     boxm2_data_base * normal_albedo_model)
 {
@@ -99,7 +101,7 @@ bool boxm2_compute_normal_albedo_functor::init_data(std::vector<brad_image_metad
 }
 
 
-bool boxm2_compute_normal_albedo_functor::process_cell(unsigned int index, bool is_leaf, float side_len)
+bool boxm2_compute_normal_albedo_functor::process_cell(unsigned int index, bool  /*is_leaf*/, float  /*side_len*/)
 {
    if (index >= naa_model_data_->data().size()) {
       std::cerr << "ERROR: index = " << index << ", naa_model_data_->data().size = " << naa_model_data_->data().size() << '\n'
@@ -202,7 +204,7 @@ bool boxm2_compute_normal_albedo_functor::process_cell(unsigned int index, bool 
          double airlight_mean = radiance_offsets_[m][n];
          double marginal_density;
          if (radiance_scales_[m][n] > 1.0) {
-            const double Lmin = 0;
+            constexpr double Lmin = 0;
             const double Lmax = radiance_scales_[m][n];
             // assume radiance is a sum of uniform random variable (function of albedo) + gaussian distributed variable (airlight)
             //marginal_density = (vnl_erf(vnl_math::sqrt2*(Lmin + airlight_mean - radiance)/(2.0*boxm2_normal_albedo_array_constants::sigma_airlight)) - vnl_erf(vnl_math::sqrt2*(Lmax + airlight_mean - radiance)/(2.0*boxm2_normal_albedo_array_constants::sigma_airlight)))/(2.0*(Lmax-Lmin));
@@ -256,5 +258,3 @@ bool boxm2_compute_normal_albedo_functor::process_cell(unsigned int index, bool 
 #endif
    return true;
 }
-
-

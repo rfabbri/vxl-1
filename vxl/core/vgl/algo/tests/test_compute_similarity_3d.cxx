@@ -2,20 +2,22 @@
 #include <testlib/testlib_test.h>
 #include <vgl/algo/vgl_compute_similarity_3d.h>
 #include <vgl/vgl_vector_3d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_random.h>
 
 
 std::vector<vgl_point_3d<double> >
 transform_points(const std::vector<vgl_point_3d<double> >& points,
                  double s,
-                 vgl_rotation_3d<double> R,
+                 const vgl_rotation_3d<double>& R,
                  vgl_vector_3d<double> t)
 {
   std::vector<vgl_point_3d<double> > t_pts;
-  for (unsigned i=0; i<points.size(); ++i)
+  for (const auto & point : points)
   {
-    vgl_point_3d<double> p = R*points[i];
+    vgl_point_3d<double> p = R*point;
     p.set(s*p.x(), s*p.y(), s*p.z());
     p += t;
     t_pts.push_back(p);
@@ -26,10 +28,10 @@ transform_points(const std::vector<vgl_point_3d<double> >& points,
 void add_noise(std::vector<vgl_point_3d<double> >& points, double sigma)
 {
   vnl_random r;
-  for ( unsigned i=0; i<points.size(); ++i )
+  for (auto & point : points)
   {
     vgl_vector_3d<double> e(r.normal(),r.normal(),r.normal());
-    points[i] += e*sigma;
+    point += e*sigma;
   }
 }
 
@@ -49,12 +51,12 @@ double alignment_error(const std::vector<vgl_point_3d<double> >& points1,
 static void test_compute_similarity_3d()
 {
   std::vector<vgl_point_3d<double> > points1;
-  points1.push_back(vgl_point_3d<double>(10.5, 200.0, -340.5));
-  points1.push_back(vgl_point_3d<double>(23.0, 250.0, -310.2));
-  points1.push_back(vgl_point_3d<double>(15.0, 260.0, -315.7));
-  points1.push_back(vgl_point_3d<double>(50.0, 230.0, -332.1));
-  points1.push_back(vgl_point_3d<double>(42.3, 205.0, -325.0));
-  points1.push_back(vgl_point_3d<double>(-5.0, 265.0, -305.0));
+  points1.emplace_back(10.5, 200.0, -340.5);
+  points1.emplace_back(23.0, 250.0, -310.2);
+  points1.emplace_back(15.0, 260.0, -315.7);
+  points1.emplace_back(50.0, 230.0, -332.1);
+  points1.emplace_back(42.3, 205.0, -325.0);
+  points1.emplace_back(-5.0, 265.0, -305.0);
 
   double s = 3.0;
   vgl_vector_3d<double> t(100, -200, 200);

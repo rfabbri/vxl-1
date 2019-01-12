@@ -6,8 +6,10 @@
 // \author Chuck Stewart
 // \date   Feb 2003
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vnl/vnl_matrix.h>
 #include <vnl/vnl_math.h>
 #include <rrel/rrel_m_est_obj.h>
@@ -17,10 +19,10 @@
 #include "rgrl_transformation.h"
 
 rgrl_weighter_m_est::
-rgrl_weighter_m_est( vcl_unique_ptr<rrel_m_est_obj>  m_est,
+rgrl_weighter_m_est( std::unique_ptr<rrel_m_est_obj>  m_est,
                      bool                          use_signature_error,
                      bool                          use_precomputed_signature_wgt )
-  : m_est_( vcl_move(m_est) ),
+  : m_est_( std::move(m_est) ),
     use_signature_error_( use_signature_error ),
     signature_precomputed_( use_precomputed_signature_wgt ),
     weight_more_on_distinct_match_( true )
@@ -29,9 +31,7 @@ rgrl_weighter_m_est( vcl_unique_ptr<rrel_m_est_obj>  m_est,
 
 
 rgrl_weighter_m_est::
-~rgrl_weighter_m_est()
-{
-}
+~rgrl_weighter_m_est() = default;
 
 
 void
@@ -219,7 +219,6 @@ aux_neg_log_likelihood( rgrl_scale const&  scale,
                         rgrl_transformation const&  xform )
 {
   typedef rgrl_match_set::from_iterator  from_iter;
-  typedef from_iter::to_iterator         to_iter;
 
   int n = 0;
 
@@ -242,7 +241,6 @@ aux_avg_neg_log_likelihood( rgrl_scale const&  scale,
                             rgrl_transformation const&  xform )
 {
   typedef rgrl_match_set::from_iterator  from_iter;
-  typedef from_iter::to_iterator         to_iter;
 
   int n = 0;
 

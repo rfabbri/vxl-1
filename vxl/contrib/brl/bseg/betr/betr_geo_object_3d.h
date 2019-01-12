@@ -19,14 +19,17 @@
 class betr_geo_object_3d : public vbl_ref_count
 {
  public:
-  betr_geo_object_3d(){}
+  betr_geo_object_3d()= default;
   betr_geo_object_3d(const vpgl_lvcs& lvcs):lvcs_(lvcs){}
- betr_geo_object_3d(vsol_spatial_object_3d_sptr so, vpgl_lvcs const& lvcs):so_(so), lvcs_(lvcs){}
+  betr_geo_object_3d(vsol_spatial_object_3d_sptr so, vpgl_lvcs const& lvcs)
+   : lvcs_(lvcs)
+   , so_(so)
+  {}
 
   betr_geo_object_3d(betr_geo_object_3d const& go){
     *this = go;}//maybe change later
 
-  ~betr_geo_object_3d(){}
+  ~betr_geo_object_3d() override= default;
   // Data Access
   int id() const {return id_;}
   vsol_spatial_object_3d_sptr obj()const {return so_;}
@@ -48,7 +51,7 @@ class betr_geo_object_3d : public vbl_ref_count
   vsol_polygon_3d_sptr base_polygon();
   friend std::ostream& operator << (std::ostream& os, const betr_geo_object_3d& geo_obj);
 protected:
-  void update_box_from_from_vsol_box(vsol_box_3d_sptr sbox, betr_geo_box_3d& box) const;
+  void update_box_from_from_vsol_box(const vsol_box_3d_sptr& sbox, betr_geo_box_3d& box) const;
   //Members
   int id_;
   vpgl_lvcs lvcs_;     // Local Vertical Coordinate System

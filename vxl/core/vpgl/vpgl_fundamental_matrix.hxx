@@ -22,14 +22,16 @@
 #include <vgl/vgl_homg_point_2d.h>
 #include <vgl/vgl_homg_line_2d.h>
 #include <vgl/algo/vgl_homg_operators_2d.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 
 //---------------------------------
 template <class T>
 vpgl_fundamental_matrix<T>::vpgl_fundamental_matrix()
-  : cached_svd_(VXL_NULLPTR)
+  : cached_svd_(nullptr)
 {
   vnl_matrix_fixed<T,3,3> default_matrix( (T)0 );
   default_matrix(0,0) = default_matrix(1,1) = (T)1;
@@ -41,7 +43,7 @@ vpgl_fundamental_matrix<T>::vpgl_fundamental_matrix()
 template <class T>
 vpgl_fundamental_matrix<T>::vpgl_fundamental_matrix(
   const vpgl_fundamental_matrix<T>& other)
-  : cached_svd_(VXL_NULLPTR)
+  : cached_svd_(nullptr)
 {
   set_matrix( other.F_ );
 }
@@ -54,7 +56,7 @@ vpgl_fundamental_matrix<T>::vpgl_fundamental_matrix(
     const vpgl_calibration_matrix<T> &kr,
     const vpgl_calibration_matrix<T> &kl,
     const vpgl_essential_matrix<T>   &em)
-  : cached_svd_(VXL_NULLPTR)
+  : cached_svd_(nullptr)
 {
   vnl_matrix_fixed<T, 3, 3> kl_tinv = vnl_inverse(kl.get_matrix().transpose());
   vnl_matrix_fixed<T, 3, 3> kr_inv = vnl_inverse(kr.get_matrix());
@@ -197,7 +199,7 @@ vpgl_proj_camera<T> vpgl_fundamental_matrix<T>::extract_left_camera(
   elxF.put( 2, 0, -el.y() ); elxF.put( 2, 1, el.x() );
   elxF*=F_;
 
-  vnl_matrix<T> A( 3*image_points.size(), 4 );
+  vnl_matrix<T> A(static_cast<unsigned int>(3 * image_points.size()), 4 );
   vnl_vector<T> y( 3*image_points.size() );
   for ( unsigned p = 0; p < image_points.size(); p++ ) {
     vnl_vector_fixed<T,3> wp_vnl(
@@ -248,7 +250,7 @@ template <class T>
 void vpgl_fundamental_matrix<T>::set_matrix( const vnl_matrix_fixed<T,3,3>& F )
 {
   F_ = vnl_svd<T>( F.as_ref() ).recompose(2);
-  if ( cached_svd_ != VXL_NULLPTR ) delete cached_svd_;
+  if ( cached_svd_ != nullptr ) delete cached_svd_;
   cached_svd_ = new vnl_svd<T>( F_.as_ref() );
 }
 

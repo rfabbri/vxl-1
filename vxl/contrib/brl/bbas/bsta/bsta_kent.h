@@ -21,7 +21,9 @@
 #include <vgl/vgl_plane_3d.h>
 #endif
 #include <vsl/vsl_binary_io.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 template <class T>
 class bsta_kent // : public bsta_distribution<T,1>
@@ -46,7 +48,7 @@ class bsta_kent // : public bsta_distribution<T,1>
   //: construct from a 3x3 matrix
   bsta_kent(vnl_matrix_fixed<T,3,3> const& m);
 
-  ~bsta_kent() {}
+  ~bsta_kent() = default;
 
   T kappa() const { return kappa_; }
   T beta() const { return beta_; }

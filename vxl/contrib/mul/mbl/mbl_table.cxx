@@ -8,7 +8,9 @@
 // \date 05-Aug-2004
 // \brief Container for tabulated data suitable for reading/writing to delimited text files
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 // Tolerance used to determine whether table entries are equal
@@ -78,7 +80,7 @@ unsigned mbl_table::num_rows() const
 bool mbl_table::column_exists(const std::string& header) const
 {
     // Does the map contain this header?
-    std::map<std::string, unsigned>::const_iterator iter =
+    auto iter =
         header_to_column_index_.find(header);
 
     return  iter != header_to_column_index_.end();
@@ -94,7 +96,7 @@ bool mbl_table::get_column(const std::string& header,
   column.clear();
 
   // Does the map contain this header?
-  std::map<std::string, unsigned>::const_iterator iter =
+  auto iter =
     header_to_column_index_.find(header);
 
   if (iter != header_to_column_index_.end())
@@ -202,7 +204,7 @@ double mbl_table::get_element(const std::string& header,
     *success = false;
 
   // Does the map contain this column header?
-  std::map<std::string, unsigned>::const_iterator iter =
+  auto iter =
     header_to_column_index_.find(header);
 
   if (iter != header_to_column_index_.end())
@@ -280,7 +282,7 @@ bool mbl_table::append_column(const std::string& header,
     column_headers_.push_back(header);
     unsigned c = columns_.size();
     header_to_column_index_[header] = c;
-    columns_.push_back(std::vector<double>());
+    columns_.emplace_back();
     columns_[c].resize(num_rows(), val);
     return true;
   }
@@ -356,7 +358,7 @@ bool mbl_table::read(std::istream& is)
         // Create an empty column vector and enter it into the map
         column_headers_.push_back(str);
         header_to_column_index_[str] = col;
-        columns_.push_back(std::vector<double>(0));
+        columns_.emplace_back(0);
 
         col++;
       }
@@ -434,15 +436,15 @@ bool mbl_table::subtable(mbl_table &new_table,  const std::vector<std::string> &
 
 
     // Write column headers row
-    for (unsigned c=0; c<headers.size(); ++c)
+    for (const auto & header : headers)
     {
         // get the column for the header if available
-        std::map<std::string, unsigned>::const_iterator iter =
-            header_to_column_index_.find(headers[c]);
+        auto iter =
+            header_to_column_index_.find(header);
 
         if (iter != header_to_column_index_.end())
         {
-            new_table.append_column(headers[c],columns_[iter->second]);
+            new_table.append_column(header,columns_[iter->second]);
         }
         else
         {

@@ -9,7 +9,9 @@
 
 #include <iostream>
 #include <vul/vul_arg.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vimt3d/vimt3d_load.h>
 #include <vil3d/vil3d_slice.h>
 #include <vil3d/vil3d_resample_trilinear.h>
@@ -52,8 +54,6 @@ void i_axis_max_projection(const vil3d_image_view<T>& im3d,
                        vil_image_view<vxl_byte>& byte_image)
 {
   unsigned ni=im3d.ni();
-  unsigned nj=im3d.nj();
-  unsigned nk=im3d.nk();
 
   vil_image_view<float> max_image;
   max_image.deep_copy(vil3d_slice_jk(im3d,0));
@@ -155,9 +155,9 @@ int main(int argc, char** argv)
   double wz = dz*image3d.image().nk();
 
   // Size of image with cubic voxels covering same region
-  unsigned ni=unsigned((1-2*bx())*wx/d+0.5);
-  unsigned nj=unsigned((1-2*by())*wy/d+0.5);
-  unsigned nk=unsigned((1-2*bz())*wz/d+0.5);
+  auto ni=unsigned((1-2*bx())*wx/d+0.5);
+  auto nj=unsigned((1-2*by())*wy/d+0.5);
+  auto nk=unsigned((1-2*bz())*wz/d+0.5);
   std::cout<<"Resampled image: "<<ni<<"x"<<nj<<"x"<<nk<<std::endl;
 
   float min_v,max_v;

@@ -11,7 +11,9 @@
 #include <vector>
 #include <string>
 #include <vgl/vgl_fwd.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_binary_io.h>
 #include <vnl/vnl_fwd.h>
 #include <vpgl/vpgl_camera.h>
@@ -21,11 +23,11 @@ class bpgl_rolling_shutter_camera : public vpgl_camera<T>
 {
  public:
   //: default constructor
-  bpgl_rolling_shutter_camera(){}
+  bpgl_rolling_shutter_camera()= default;
 
-  virtual ~bpgl_rolling_shutter_camera() {}
+  ~bpgl_rolling_shutter_camera() override = default;
 
-  virtual std::string type_name() const { return "bpgl_rolling_shutter_camera"; }
+  std::string type_name() const override { return "bpgl_rolling_shutter_camera"; }
 
   //: Clone `this': creation of a new object and initialization
   //  See Prototype pattern

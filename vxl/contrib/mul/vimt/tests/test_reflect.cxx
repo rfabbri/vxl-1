@@ -4,7 +4,9 @@
 #include <cmath>
 #include <ctime>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vxl_config.h>
 #include <vimt/vimt_reflect.h>
 #include <vul/vul_ios_state.h>
@@ -22,8 +24,8 @@ static void test_reflect_int()
            << " Testing vimt_reflect<vxl_int_32>\n"
            << "***********************************\n";
 
-  const unsigned ni = 5;
-  const unsigned nj = 5;
+  constexpr unsigned ni = 5;
+  constexpr unsigned nj = 5;
 
   vimt_image_2d_of<vxl_int_32> image(ni, nj);
   for (unsigned j=0; j<nj; ++j)

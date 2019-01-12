@@ -1,7 +1,4 @@
 // This is core/vil1/file_formats/vil1_iris.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //
 // Author: Joris Schouteden
 // Created: 17 Feb 2000
@@ -12,8 +9,10 @@
 #include <iostream>
 #include "vil1_iris.h"
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vil1/vil1_stream.h>
 #include <vil1/vil1_image_impl.h>
@@ -55,12 +54,12 @@ vil1_image_impl* vil1_iris_file_format::make_input_image(vil1_stream* is)
 
   colormap_ = get_long(is);
 
-  if (magic_ != 474) return VXL_NULLPTR;
-  if (storage_ != 0 && storage_ != 1) return VXL_NULLPTR;
-  if (colormap_ == 3) return VXL_NULLPTR;
-  if (dimension_ == 3 && colormap_ != 0) return VXL_NULLPTR;
-  if (dimension_ > 3 || dimension_ < 1) return VXL_NULLPTR;
-  if (bytes_per_component_ < 1 || bytes_per_component_ > 2) return VXL_NULLPTR;
+  if (magic_ != 474) return nullptr;
+  if (storage_ != 0 && storage_ != 1) return nullptr;
+  if (colormap_ == 3) return nullptr;
+  if (dimension_ == 3 && colormap_ != 0) return nullptr;
+  if (dimension_ > 3 || dimension_ < 1) return nullptr;
+  if (bytes_per_component_ < 1 || bytes_per_component_ > 2) return nullptr;
 
   return new vil1_iris_generic_image(is,imagename);
 }
@@ -83,7 +82,7 @@ char const* vil1_iris_file_format::tag() const
 /////////////////////////////////////////////////////////////////////////////
 
 vil1_iris_generic_image::vil1_iris_generic_image(vil1_stream* is, char const* imagename):
-  starttab_(VXL_NULLPTR), lengthtab_(VXL_NULLPTR), is_(is)
+  starttab_(nullptr), lengthtab_(nullptr), is_(is)
 {
   is_->ref();
   read_header();
@@ -112,7 +111,7 @@ vil1_iris_generic_image::vil1_iris_generic_image(vil1_stream* is, int planes,
                                                  int components,
                                                  int bits_per_component,
                                                  vil1_component_format /*format*/):
-  starttab_(VXL_NULLPTR), lengthtab_(VXL_NULLPTR), is_(is)
+  starttab_(nullptr), lengthtab_(nullptr), is_(is)
 {
   is_->ref();
 
@@ -252,7 +251,7 @@ vil1_image vil1_iris_generic_image::get_plane(unsigned int plane) const
 {
   assert((int)plane < planes_);
   std::cerr << __FILE__ ": do something for vil1_iris_generic_image::get_plane\n";
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 
@@ -278,7 +277,7 @@ bool vil1_iris_generic_image::get_section_verbatim(void* ib, int x0, int y0, int
 {
   int row_len = xs * bytes_per_component_;
 
-  unsigned char* dp = (unsigned char*)ib;
+  auto* dp = (unsigned char*)ib;
 
   for (int channel=0; channel<planes_; ++channel)
   {
@@ -307,8 +306,8 @@ bool vil1_iris_generic_image::get_section_rle(void* ib, int x0, int y0, int xs, 
 {
   int row_len = xs * bytes_per_component_;
 
-  unsigned char* dp = (unsigned char*)ib;
-  unsigned char* exrow = new unsigned char[width_];
+  auto* dp = (unsigned char*)ib;
+  auto* exrow = new unsigned char[width_];
 
   // for each channel
   for (int channel=0; channel<planes_; ++channel)
@@ -325,7 +324,7 @@ bool vil1_iris_generic_image::get_section_rle(void* ib, int x0, int y0, int xs, 
       unsigned long rlelength = lengthtab_[rowno+channel*height_];
 
       // read rle row into array
-      unsigned char* rlerow = new unsigned char[rlelength];
+      auto* rlerow = new unsigned char[rlelength];
       is_->seek(rleoffset);
       is_->read((void*)rlerow, rlelength);
 

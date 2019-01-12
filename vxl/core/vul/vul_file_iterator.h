@@ -1,9 +1,6 @@
 // This is core/vul/vul_file_iterator.h
 #ifndef vul_file_iterator_h_
 #define vul_file_iterator_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief class to iterate through directories and/or "glob" patterns (*.*)
@@ -18,7 +15,9 @@
 // \endverbatim
 
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 struct vul_file_iterator_data;
 
@@ -47,10 +46,10 @@ struct vul_file_iterator_data;
 // if you want to process files in (for example) alphanumeric order.
 class vul_file_iterator
 {
-  VCL_SAFE_BOOL_DEFINE;
+
  public:
 
-  vul_file_iterator() : p(VXL_NULLPTR) {}
+  vul_file_iterator() : p(nullptr) {}
 
   //: Initialize, and scan to get first file from "glob"
   vul_file_iterator(char const* glob);
@@ -62,7 +61,7 @@ class vul_file_iterator
 
   //: Ask if done.
   // Won't spin the disk
-  operator safe_bool() const;
+  explicit operator bool() const;
 
   //: Inverse boolean value
   bool operator!() const;

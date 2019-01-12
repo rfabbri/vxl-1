@@ -9,8 +9,10 @@
 #include <algorithm>
 #include <cstring>
 #include <iostream>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vil/vil_image_view.h>
 #include <vil/vil_image_resource.h>
 #include <vil/vil_property.h>
@@ -118,6 +120,7 @@ vil_image_resource_sptr vil_correlate_1d(
 template <class kernelT, class accumT, class destT>
 class vil_correlate_1d_resource : public vil_image_resource
 {
+ public:
   //: Construct a correlate filter.
   // You can't create one of these directly, use vil_correlate_1d instead
   vil_correlate_1d_resource(const vil_image_resource_sptr& src,
@@ -132,17 +135,17 @@ class vil_correlate_1d_resource : public vil_image_resource
               end_option != vil_convolve_periodic_extend);
     }
 
-  friend vil_image_resource_sptr vil_correlate_1d VCL_NULL_TMPL_ARGS (
+  friend vil_image_resource_sptr vil_correlate_1d <> (
     const vil_image_resource_sptr& src_im, const destT dt, const kernelT* kernel,
     std::ptrdiff_t k_lo, std::ptrdiff_t k_hi, const accumT ac,
     vil_convolve_boundary_option start_option,
     vil_convolve_boundary_option end_option);
 
  public:
-  virtual vil_image_view_base_sptr get_copy_view(unsigned i0, unsigned ni,
-                                                 unsigned j0, unsigned nj) const
+  vil_image_view_base_sptr get_copy_view(unsigned i0, unsigned ni,
+                                                 unsigned j0, unsigned nj) const override
   {
-    if (i0 + ni > src_->ni() || j0 + nj > src_->nj())  return VXL_NULLPTR;
+    if (i0 + ni > src_->ni() || j0 + nj > src_->nj())  return nullptr;
     const unsigned lsrc = (unsigned)std::max(0,int(i0+klo_)); // lhs of input window
     const unsigned hsrc = std::min(src_->ni(),(unsigned int)(i0+ni-klo_+khi_)); // 1+rhs of input window.
     const unsigned lboundary = std::min((unsigned) -klo_, i0); // width of lhs boundary area.
@@ -170,20 +173,20 @@ class vil_correlate_1d_resource : public vil_image_resource
 // maybe need a better compiler, maybe there is a code fix - IMS
 #undef macro
       default:
-        return VXL_NULLPTR;
+        return nullptr;
     }
   }
 
-  virtual unsigned nplanes() const { return src_->nplanes(); }
-  virtual unsigned ni() const { return src_->ni(); }
-  virtual unsigned nj() const { return src_->nj(); }
+  unsigned nplanes() const override { return src_->nplanes(); }
+  unsigned ni() const override { return src_->ni(); }
+  unsigned nj() const override { return src_->nj(); }
 
-  virtual enum vil_pixel_format pixel_format() const
+  enum vil_pixel_format pixel_format() const override
   { return vil_pixel_format_of(accumT()); }
 
 
   //: Put the data in this view back into the image source.
-  virtual bool put_view(const vil_image_view_base&  /*im*/, unsigned  /*i0*/, unsigned  /*j0*/)
+  bool put_view(const vil_image_view_base&  /*im*/, unsigned  /*i0*/, unsigned  /*j0*/) override
   {
     std::cerr << "WARNING: vil_correlate_1d_resource::put_back\n"
              << "\tYou can't push data back into a correlate filter.\n";
@@ -191,7 +194,7 @@ class vil_correlate_1d_resource : public vil_image_resource
   }
 
   //: Extra property information
-  virtual bool get_property(char const* tag, void* property_value = VXL_NULLPTR) const
+  bool get_property(char const* tag, void* property_value = nullptr) const override
   {
     if (0==std::strcmp(tag, vil_property_read_only))
       return property_value ? (*static_cast<bool*>(property_value)) = true : true;

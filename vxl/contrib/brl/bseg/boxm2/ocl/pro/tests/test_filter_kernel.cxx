@@ -29,7 +29,9 @@
 #include <boxm2/io/boxm2_lru_cache.h>
 #include <boxm2/io/boxm2_sio_mgr.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vnl/vnl_vector_fixed.h>
 #include <brdb/brdb_value.h>
@@ -76,7 +78,7 @@ void print_probs(boxm2_block* blk, const float* alphas, boxm2_block_metadata dat
   }
 }
 
-void print_alphas(boxm2_block* blk, const float* alphas, boxm2_block_metadata /*data*/, int /*dataSize*/)
+void print_alphas(boxm2_block* blk, const float* alphas, const boxm2_block_metadata& /*data*/, int /*dataSize*/)
 {
   //print in 3x3
   typedef vnl_vector_fixed<unsigned char, 16> uchar16;
@@ -125,19 +127,19 @@ void print_alphas(boxm2_block* blk, const float* alphas, boxm2_block_metadata /*
 //
 // Each outer cell will need the sub tree combo of the inner cell - and some
 // will store it as their own (will be the median).
-void test_inner_cluster(boxm2_scene_sptr scene,
+void test_inner_cluster(const boxm2_scene_sptr& scene,
                         boxm2_block* blk,
                         boxm2_block_metadata& data,
                         bocl_device_sptr& device,
                         boxm2_opencl_cache_sptr& opencl_cache,
-                        boxm2_block_id id,
+                        const boxm2_block_id& id,
                         bocl_kernel* kern,
                         cl_command_queue& queue)
 {
   typedef vnl_vector_fixed<unsigned char, 16> uchar16;
 
   int dataSize = 8+9;
-  float* alphas = new float[dataSize]; //8 single cell trees, one 8 leaf + node tree
+  auto* alphas = new float[dataSize]; //8 single cell trees, one 8 leaf + node tree
   boxm2_array_3d<uchar16> trees=blk->trees_copy();
   //set up fake trees
   int count = 0;
@@ -185,7 +187,7 @@ void test_inner_cluster(boxm2_scene_sptr scene,
   bocl_mem* alpha_buffer = new bocl_mem(device->context(), alphas, dataSize*sizeof(float), "old alpha buffer");
   alpha_buffer->create_buffer(CL_MEM_READ_WRITE|CL_MEM_COPY_HOST_PTR);
 
-  float* new_alpha_buffer = new float[ dataSize ];
+  auto* new_alpha_buffer = new float[ dataSize ];
   std::fill(new_alpha_buffer, new_alpha_buffer + dataSize, 100.0f);
   bocl_mem* new_alphas = new bocl_mem(device->context(), new_alpha_buffer,  dataSize*sizeof(float), "filtered alpha buffer ");
   new_alphas->create_buffer(CL_MEM_READ_WRITE|CL_MEM_COPY_HOST_PTR);
@@ -262,18 +264,18 @@ void test_inner_cluster(boxm2_scene_sptr scene,
 // |_|_|_|_|_|_|
 // |_|_|_|_|_|_|
 //
-void test_outer_cluster(boxm2_scene_sptr scene,
+void test_outer_cluster(const boxm2_scene_sptr& scene,
                         boxm2_block* blk,
                         boxm2_block_metadata& data,
                         bocl_device_sptr& device,
                         boxm2_opencl_cache_sptr& opencl_cache,
-                        boxm2_block_id id,
+                        const boxm2_block_id& id,
                         bocl_kernel* kern,
                         cl_command_queue& queue)
 {
   typedef vnl_vector_fixed<unsigned char, 16> uchar16;
   int dataSize = 8*(1+8+64) + 1;
-  float* alphas = new float[dataSize]; //8 single cell trees, one 8 leaf + node tree
+  auto* alphas = new float[dataSize]; //8 single cell trees, one 8 leaf + node tree
 
   //set up fake trees
   int count = 0;
@@ -320,7 +322,7 @@ void test_outer_cluster(boxm2_scene_sptr scene,
   bocl_mem_sptr alpha_buffer = new bocl_mem(device->context(), alphas, dataSize*sizeof(float), "old alpha buffer");
   alpha_buffer->create_buffer(CL_MEM_READ_WRITE|CL_MEM_COPY_HOST_PTR);
 
-  float* new_alpha_buffer = new float[ dataSize ];
+  auto* new_alpha_buffer = new float[ dataSize ];
   std::fill(new_alpha_buffer, new_alpha_buffer + dataSize, 100.0f);
   bocl_mem_sptr new_alphas = new bocl_mem(device->context(), new_alpha_buffer,  dataSize*sizeof(float), "filtered alpha buffer ");
   new_alphas->create_buffer(CL_MEM_READ_WRITE|CL_MEM_COPY_HOST_PTR);
@@ -387,7 +389,6 @@ void test_filter_kernel()
   //----------------------------------------------------------------------------
   //--- BEGIN BOXM2 API EXAMPLE ------------------------------------------------
   //----------------------------------------------------------------------------
-  typedef vnl_vector_fixed<unsigned char, 16> uchar16;
   DECLARE_FUNC_CONS(boxm2_ocl_filter_process);
   REG_PROCESS_FUNC_CONS(bprb_func_process, bprb_batch_process_manager, boxm2_ocl_filter_process, "boxm2OclFilterProcess");
 
@@ -400,7 +401,7 @@ void test_filter_kernel()
     return;
 
   bocl_device_sptr device = mgr.gpus_[0];
-  bocl_kernel* kern = new bocl_kernel();
+  auto* kern = new bocl_kernel();
   boxm2_ocl_filter_process_globals::compile_filter_kernel(device,kern);
 
   // create a command queue.

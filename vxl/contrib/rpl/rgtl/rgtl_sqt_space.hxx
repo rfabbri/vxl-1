@@ -9,8 +9,10 @@
 #include <cmath>
 #include "rgtl_sqt_space.h"
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //----------------------------------------------------------------------------
 template <unsigned int D>

@@ -2,7 +2,10 @@
 //
 #include <bsta/bsta_histogram.h>
 #include <vil/vil_image_view.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 vnl_vector<double> brad_grad_hist_feature_vector::
 operator()(vil_image_view<float> const& view) const

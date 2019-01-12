@@ -1,16 +1,16 @@
 // This is core/vil/vil_crop.h
 #ifndef vil_crop_h_
 #define vil_crop_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author Ian Scott.
 
 #include <vil/vil_image_resource.h>
 #include <vil/vil_image_view.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 
 //: Create a view which is a cropped version of src.
@@ -39,28 +39,28 @@ class vil_crop_image_resource : public vil_image_resource
   vil_crop_image_resource(vil_image_resource_sptr const&, unsigned i0, unsigned n_i,
                           unsigned j0, unsigned n_j);
 
-  virtual unsigned nplanes() const { return src_->nplanes(); }
-  virtual unsigned ni() const { return ni_; }
-  virtual unsigned nj() const { return nj_; }
+  unsigned nplanes() const override { return src_->nplanes(); }
+  unsigned ni() const override { return ni_; }
+  unsigned nj() const override { return nj_; }
 
-  virtual enum vil_pixel_format pixel_format() const { return src_->pixel_format(); }
+  enum vil_pixel_format pixel_format() const override { return src_->pixel_format(); }
 
 
-  virtual vil_image_view_base_sptr get_copy_view(unsigned i0, unsigned n_i,
-                                                 unsigned j0, unsigned n_j) const;
+  vil_image_view_base_sptr get_copy_view(unsigned i0, unsigned n_i,
+                                                 unsigned j0, unsigned n_j) const override;
 
-  virtual vil_image_view_base_sptr get_view(unsigned i0, unsigned n_i,
-                                            unsigned j0, unsigned n_j) const;
+  vil_image_view_base_sptr get_view(unsigned i0, unsigned n_i,
+                                            unsigned j0, unsigned n_j) const override;
 
 
   //: Put the data in this view back into the image source.
-  virtual bool put_view(const vil_image_view_base& im, unsigned i0, unsigned j0)
+  bool put_view(const vil_image_view_base& im, unsigned i0, unsigned j0) override
   {
     return src_->put_view(im, i0+i0_, j0+j0_);
   }
 
   //: Extra property information
-  virtual bool get_property(char const* tag, void* property_value = VXL_NULLPTR) const
+  bool get_property(char const* tag, void* property_value = nullptr) const override
   {
     return src_->get_property(tag, property_value);
   }

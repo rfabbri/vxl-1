@@ -1,7 +1,9 @@
 #include <iostream>
 #include <algorithm>
 #include "bstm_data_base.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 //:
 // \file
 
@@ -45,7 +47,7 @@ void helper(const bstm_block_metadata& data, long& num_cells, double& side_len)
 }
 
 //: allocate an empty data diddy
-bstm_data_base::bstm_data_base(bstm_block_metadata data, const std::string data_type, bool read_only)
+bstm_data_base::bstm_data_base(bstm_block_metadata data, const std::string& data_type, bool read_only)
 {
   read_only_ = read_only;
   id_ = data.id_;
@@ -69,7 +71,7 @@ bstm_data_base::bstm_data_base(bstm_block_metadata data, const std::string data_
   this->set_default_value(data_type, data);
 }
 //: accessor to a portion of the byte buffer
-void bstm_data_base::set_default_value(std::string data_type, bstm_block_metadata data)
+void bstm_data_base::set_default_value(const std::string& data_type, bstm_block_metadata data)
 {
   long num_cells;
   double side_len;
@@ -77,8 +79,8 @@ void bstm_data_base::set_default_value(std::string data_type, bstm_block_metadat
 
   //initialize the data to the correct value
   if (data_type.find(bstm_data_traits<BSTM_ALPHA>::prefix()) != std::string::npos) {
-    const float ALPHA_INIT = float(-std::log(1.0f - data.p_init_) / side_len);
-    float* alphas = (float*) data_buffer_;
+    const auto ALPHA_INIT = float(-std::log(1.0f - data.p_init_) / side_len);
+    auto* alphas = (float*) data_buffer_;
     std::fill(alphas, alphas+num_cells, ALPHA_INIT);
   }
 //  else if (data_type.find(bstm_data_traits<BSTM_GAUSS_RGB>::prefix()) != std::string::npos) {
@@ -86,7 +88,7 @@ void bstm_data_base::set_default_value(std::string data_type, bstm_block_metadat
 //  }
   else if (data_type.find(bstm_data_traits<BSTM_CHANGE>::prefix()) != std::string::npos) {
     const float CHANGE_P_INIT = data.p_init_;
-    float* change_p = (float*) data_buffer_;
+    auto* change_p = (float*) data_buffer_;
 
     int buffer_length = (int)(buffer_length_/ bstm_data_traits<BSTM_CHANGE>::datasize() );
     for (int i=0; i<buffer_length; ++i) change_p[i] = CHANGE_P_INIT;
@@ -106,24 +108,24 @@ char * bstm_data_base::cell_buffer(int i, std::size_t cell_size)
     }
     return out;
   }
-  else return VXL_NULLPTR;
+  else return nullptr;
 }
 
 
 //: Binary write bstm_data_base to stream
-void vsl_b_write(vsl_b_ostream& os, bstm_data_base const& scene) {}
+void vsl_b_write(vsl_b_ostream&  /*os*/, bstm_data_base const&  /*scene*/) {}
 //: Binary write bstm_data_base to stream
-void vsl_b_write(vsl_b_ostream& os, const bstm_data_base* &p) {}
+void vsl_b_write(vsl_b_ostream&  /*os*/, const bstm_data_base* & /*p*/) {}
 //: Binary write bstm_data_base_sptr to stream
-void vsl_b_write(vsl_b_ostream& os, bstm_data_base_sptr& sptr) {}
+void vsl_b_write(vsl_b_ostream&  /*os*/, bstm_data_base_sptr&  /*sptr*/) {}
 //: Binary write bstm_data_base_sptr to stream
-void vsl_b_write(vsl_b_ostream& os, bstm_data_base_sptr const& sptr) {}
+void vsl_b_write(vsl_b_ostream&  /*os*/, bstm_data_base_sptr const&  /*sptr*/) {}
 
 //: Binary load bstm_data_base from stream.
-void vsl_b_read(vsl_b_istream& is, bstm_data_base &scene) {}
+void vsl_b_read(vsl_b_istream&  /*is*/, bstm_data_base & /*scene*/) {}
 //: Binary load bstm_data_base from stream.
-void vsl_b_read(vsl_b_istream& is, bstm_data_base* p) {}
+void vsl_b_read(vsl_b_istream&  /*is*/, bstm_data_base*  /*p*/) {}
 //: Binary load bstm_data_base_sptr from stream.
-void vsl_b_read(vsl_b_istream& is, bstm_data_base_sptr& sptr) {}
+void vsl_b_read(vsl_b_istream&  /*is*/, bstm_data_base_sptr&  /*sptr*/) {}
 //: Binary load bstm_data_base_sptr from stream.
-void vsl_b_read(vsl_b_istream& is, bstm_data_base_sptr const& sptr) {}
+void vsl_b_read(vsl_b_istream&  /*is*/, bstm_data_base_sptr const&  /*sptr*/) {}

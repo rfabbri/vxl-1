@@ -149,7 +149,7 @@ bool volm_desc_matcher::create_prob_map(std::string const& geo_hypo_folder,
   std::vector<volm_score_sptr> scores;
   volm_score::read_scores(scores, score_file.str());
   // refill the image
-  unsigned total_ind = (unsigned)scores.size();
+  auto total_ind = (unsigned)scores.size();
   for (unsigned ii = 0; ii < total_ind; ii++) {
     vgl_point_3d<double> h_pt = leaves[scores[ii]->leaf_id_]->hyps_->locs_[scores[ii]->hypo_id_];
     if (gt_closest == h_pt)
@@ -167,7 +167,7 @@ bool volm_desc_matcher::create_prob_map(std::string const& geo_hypo_folder,
   return true;
 }
 
-bool volm_desc_matcher::create_empty_prob_map(std::string const& out_folder, unsigned tile_id, volm_tile& tile)
+bool volm_desc_matcher::create_empty_prob_map(std::string const& out_folder, unsigned  /*tile_id*/, volm_tile& tile)
 {
   // initialize the probability map image
   vil_image_view<float> tile_img(3601, 3601);
@@ -196,10 +196,10 @@ bool volm_desc_matcher::create_random_prob_map(vnl_random& rng, std::string cons
   tile_img.fill(-1.0f);
 
   // generate a random score for only the pixels where there is a hyp
-  for (unsigned l_idx = 0; l_idx < leaves.size(); l_idx++) {
+  for (auto & leave : leaves) {
       vgl_point_3d<double> h_pt;
       // loop over all locations in current leaf
-      while (leaves[l_idx]->hyps_->get_next(0,1,h_pt)) {
+      while (leave->hyps_->get_next(0,1,h_pt)) {
         unsigned u, v;
         if (tile.global_to_img(h_pt.x(), h_pt.y(), u, v) && tile_img(u,v) < 0) // this method checks the image boundaries
           tile_img(u,v) = (float)rng.drand32();
@@ -215,7 +215,7 @@ bool volm_desc_matcher::create_random_prob_map(vnl_random& rng, std::string cons
 
 bool volm_desc_matcher::create_scaled_prob_map(std::string const& out_folder,
                                                volm_tile tile,
-                                               unsigned const& tile_id,
+                                               unsigned const&  /*tile_id*/,
                                                float const& ku,
                                                float const& kl,
                                                float const& threshold)
@@ -265,7 +265,7 @@ bool volm_desc_matcher::create_candidate_list(std::string const& prob_map_folder
   else {
     return false;
   }
-  unsigned n_tile = (unsigned)tiles.size();
+  auto n_tile = (unsigned)tiles.size();
 
   float thres_scale = thres_ratio;
   double thres_value = volm_io::scale_score_to_0_1_sig(kl, ku, (float)thres_scale, threshold);
@@ -325,7 +325,7 @@ bool volm_desc_matcher::create_candidate_list(std::string const& prob_map_folder
   std::cout << " there are " << cand_map.size() << " candidate regions given threshold = " << threshold << " (likelihood = " << thres_value << ")\n";
   volm_candidate_list::open_kml_document(ofs_kml,kml_name.str(),(float)thres_value);
 
-  std::multimap<unsigned, std::pair<unsigned, unsigned>, std::greater<unsigned> >::iterator mit = cand_map.begin();
+  auto mit = cand_map.begin();
   unsigned rank = 0;
   for (; mit != cand_map.end(); ++mit) {
     unsigned tile_idx = mit->second.first;
@@ -346,7 +346,7 @@ bool volm_desc_matcher::create_candidate_list(std::string const& prob_map_folder
     std::vector<cam_angles> top_cameras;
     std::vector<double> right_fov;
     for (unsigned idx = 0; idx < top_locs.size(); idx++) {
-      top_cameras.push_back(cam_angles(2.64, 15, 334.0, 91.34));
+      top_cameras.emplace_back(2.64, 15, 334.0, 91.34);
       right_fov.push_back(20.0);
     }
     // calculate the likelihood based on the top scores
@@ -362,4 +362,3 @@ bool volm_desc_matcher::create_candidate_list(std::string const& prob_map_folder
   volm_candidate_list::close_kml_document(ofs_kml);
   return true;
 }
-

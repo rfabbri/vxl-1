@@ -4,8 +4,10 @@
 #include "sdet_graph_img_seg.h"
 #include "sdet_graph_img_seg_sptr.h"
 //
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vil/vil_load.h>
 #include <vil/vil_math.h>
 
@@ -103,7 +105,7 @@ void sdet_segment_img2(vil_image_view<float> const& img1, vil_image_view<float> 
     return;
   }
 
-  sdet_graph_img_seg* ss = new sdet_graph_img_seg(img1.ni(), img1.nj(), margin, neigh);
+  auto* ss = new sdet_graph_img_seg(img1.ni(), img1.nj(), margin, neigh);
 
   // smooth the image
   vil_image_view<float> smoothed1, smoothed2;
@@ -127,18 +129,18 @@ void sdet_segment_img2(vil_image_view<float> const& img1, vil_image_view<float> 
 
   // set up the edge costs as difference in color and height space
   std::vector<vbl_edge>& edges = ss->get_edges();
-  for (unsigned i = 0; i < edges.size(); i++) {
-    std::pair<unsigned, unsigned> pix0 = ss->get_pixel(edges[i].v0_);
-    double c0 = (double)smoothed1(pix0.first, pix0.second);
-    std::pair<unsigned, unsigned> pix1 = ss->get_pixel(edges[i].v1_);
-    double c1 = (double)smoothed1(pix1.first, pix1.second);
+  for (auto & edge : edges) {
+    std::pair<unsigned, unsigned> pix0 = ss->get_pixel(edge.v0_);
+    auto c0 = (double)smoothed1(pix0.first, pix0.second);
+    std::pair<unsigned, unsigned> pix1 = ss->get_pixel(edge.v1_);
+    auto c1 = (double)smoothed1(pix1.first, pix1.second);
     double dif = std::abs(c1-c0);
 
-    double h0 = (double)smoothed2(pix0.first, pix0.second);
-    double h1 = (double)smoothed2(pix1.first, pix1.second);
+    auto h0 = (double)smoothed2(pix0.first, pix0.second);
+    auto h1 = (double)smoothed2(pix1.first, pix1.second);
     double dif2 = std::abs(h0-h1);
 
-    edges[i].w_ = (float)std::sqrt(dif*dif + dif2*dif2);
+    edge.w_ = (float)std::sqrt(dif*dif + dif2*dif2);
     /*if (dif < dif2)
       edges[i].w_ = (float)std::sqrt(dif*dif);
     else
@@ -153,10 +155,10 @@ void sdet_segment_img2(vil_image_view<float> const& img1, vil_image_view<float> 
 
   // combine the segments with number of elements less than min_size
   // post process small components
-  for (unsigned int i = 0; i < edges.size(); ++i)
+  for (auto & edge : edges)
     {
-    int v0 = ds.find_set(edges[i].v0_);
-    int v1 = ds.find_set(edges[i].v1_);
+    int v0 = ds.find_set(edge.v0_);
+    int v1 = ds.find_set(edge.v1_);
     if ((v0 != v1) && ((ds.size(v0) < min_size) || (ds.size(v1) < min_size)))
       ds.set_union(v0, v1);
     }
@@ -188,7 +190,7 @@ void sdet_segment_img2_using_edges(vil_image_view<float> const& img1, vil_image_
     return;
   }
 
-  sdet_graph_img_seg* ss = new sdet_graph_img_seg(img1.ni(), img1.nj(), margin, neigh);
+  auto* ss = new sdet_graph_img_seg(img1.ni(), img1.nj(), margin, neigh);
 
   // smooth the image
   vil_image_view<float> smoothed1, smoothed2;
@@ -211,22 +213,22 @@ void sdet_segment_img2_using_edges(vil_image_view<float> const& img1, vil_image_
 
   // set up the edge costs as difference in color and height space
   std::vector<vbl_edge>& edges = ss->get_edges();
-  for (unsigned i = 0; i < edges.size(); i++) {
-    std::pair<unsigned, unsigned> pix0 = ss->get_pixel(edges[i].v0_);
-    double c0 = (double)smoothed1(pix0.first, pix0.second);
-    std::pair<unsigned, unsigned> pix1 = ss->get_pixel(edges[i].v1_);
-    double c1 = (double)smoothed1(pix1.first, pix1.second);
+  for (auto & edge : edges) {
+    std::pair<unsigned, unsigned> pix0 = ss->get_pixel(edge.v0_);
+    auto c0 = (double)smoothed1(pix0.first, pix0.second);
+    std::pair<unsigned, unsigned> pix1 = ss->get_pixel(edge.v1_);
+    auto c1 = (double)smoothed1(pix1.first, pix1.second);
     double dif = c1-c0;
 
-    double h0 = (double)smoothed2(pix0.first, pix0.second);
-    double h1 = (double)smoothed2(pix1.first, pix1.second);
+    auto h0 = (double)smoothed2(pix0.first, pix0.second);
+    auto h1 = (double)smoothed2(pix1.first, pix1.second);
     double dif2 = h0-h1;
 
-    edges[i].w_ = (float)std::sqrt(dif*dif + dif2*dif2);
+    edge.w_ = (float)std::sqrt(dif*dif + dif2*dif2);
 
-    double e0 = (double)edge_img(pix0.first, pix0.second);
-    double e1 = (double)edge_img(pix1.first, pix1.second);
-    edges[i].w_ += ( e0 > e1 ? e0 : e1);
+    auto e0 = (double)edge_img(pix0.first, pix0.second);
+    auto e1 = (double)edge_img(pix1.first, pix1.second);
+    edge.w_ += ( e0 > e1 ? e0 : e1);
     //edges[i].w_ = (float)std::sqrt(dif*dif + dif2*dif2 + 100*(e0-e1)*(e0-e1));
   }
 
@@ -238,10 +240,10 @@ void sdet_segment_img2_using_edges(vil_image_view<float> const& img1, vil_image_
 
   // combine the segments with number of elements less than min_size
   // post process small components
-  for (unsigned int i = 0; i < edges.size(); ++i)
+  for (auto & edge : edges)
     {
-    int v0 = ds.find_set(edges[i].v0_);
-    int v1 = ds.find_set(edges[i].v1_);
+    int v0 = ds.find_set(edge.v0_);
+    int v1 = ds.find_set(edge.v1_);
     if ((v0 != v1) && ((ds.size(v0) < min_size) || (ds.size(v1) < min_size)))
       ds.set_union(v0, v1);
     }
@@ -263,6 +265,3 @@ void sdet_segment_img2_using_edges(vil_image_view<float> const& img1, vil_image_
 
   delete ss;
 }
-
-
-

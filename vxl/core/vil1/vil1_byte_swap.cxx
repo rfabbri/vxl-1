@@ -1,15 +1,14 @@
 // This is core/vil1/vil1_byte_swap.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
 
 #include <cstddef>
 #include "vil1_byte_swap.h"
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 // this is not efficient
 void vil1_byte_swap(void *b_, void *e_)

@@ -5,7 +5,9 @@
 #include <vgl/vgl_homg_point_2d.h>
 #include <vgl/vgl_homg_line_2d.h>
 #include <vgl/algo/vgl_homg_operators_2d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 FMatrixComputeLMedSq::FMatrixComputeLMedSq(bool rank2_truncate, int size)
 {
@@ -15,7 +17,7 @@ FMatrixComputeLMedSq::FMatrixComputeLMedSq(bool rank2_truncate, int size)
   inthresh_ = (2.5*std)*(2.5*std);
 }
 
-FMatrixComputeLMedSq::~FMatrixComputeLMedSq() {}
+FMatrixComputeLMedSq::~FMatrixComputeLMedSq() = default;
 
 double FMatrixComputeLMedSq::calculate_term(std::vector<double>& residuals, std::vector<bool>& inlier_list, int& count)
 {

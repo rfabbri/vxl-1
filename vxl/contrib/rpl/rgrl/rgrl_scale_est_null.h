@@ -18,26 +18,26 @@ public:
 
   rgrl_scale_est_null( );
 
-  ~rgrl_scale_est_null();
+  ~rgrl_scale_est_null() override;
 
   rgrl_scale_sptr
   estimate_unweighted( rgrl_match_set const& match_set,
                        rgrl_scale_sptr const& current_scales,
-                       bool penalize_scaling ) const;
+                       bool penalize_scaling ) const override;
 
   rgrl_scale_sptr
   estimate_weighted( rgrl_match_set const& match_set,
                      rgrl_scale_sptr const& current_scales,
                      bool use_signature_only,
-                     bool penalize_scaling ) const;
+                     bool penalize_scaling ) const override;
 
   // Defines type-related functions
   rgrl_type_macro( rgrl_scale_est_null, rgrl_scale_estimator);
 
 private:
   //disabled
-  rgrl_scale_est_null( rgrl_scale_est_null const& );
-  rgrl_scale_est_null& operator=( rgrl_scale_est_null const& );
+  rgrl_scale_est_null( rgrl_scale_est_null const& ) = delete;
+  rgrl_scale_est_null& operator=( rgrl_scale_est_null const& ) = delete;
 
 };
 

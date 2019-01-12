@@ -11,7 +11,7 @@
 #include <mfpf/mfpf_hog_box_finder.h>
 #include <vsl/vsl_binary_loader.h>
 #include <vul/vul_string.h>
-#include <vcl_cassert.h>
+#include <cassert>
 
 #include <mbl/mbl_parse_block.h>
 #include <mbl/mbl_read_props.h>
@@ -23,7 +23,9 @@
 #include <vil/vil_image_view.h>
 #include <vsl/vsl_vector_io.h>
 #include <vsl/vsl_indent.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <mipa/mipa_orientation_histogram.h>
 #include <mipa/mipa_sample_histo_boxes.h>
@@ -74,9 +76,7 @@ void mfpf_hog_box_finder_builder::set_defaults()
 // Destructor
 //=======================================================================
 
-mfpf_hog_box_finder_builder::~mfpf_hog_box_finder_builder()
-{
-}
+mfpf_hog_box_finder_builder::~mfpf_hog_box_finder_builder() = default;
 
 //: Create new mfpf_hog_box_finder on heap
 mfpf_point_finder* mfpf_hog_box_finder_builder::new_finder() const
@@ -209,7 +209,7 @@ void mfpf_hog_box_finder_builder::add_example(const vimt_image_2d_of<float>& ima
 void mfpf_hog_box_finder_builder::build(mfpf_point_finder& pf)
 {
   assert(pf.is_a()=="mfpf_hog_box_finder");
-  mfpf_hog_box_finder& rp = static_cast<mfpf_hog_box_finder&>(pf);
+  auto& rp = static_cast<mfpf_hog_box_finder&>(pf);
 
   mfpf_vec_cost *cost = cost_builder().new_cost();
 
@@ -254,7 +254,7 @@ bool mfpf_hog_box_finder_builder::set_from_stream(std::istream &is)
   {
     std::istringstream ss2(props["norm"]);
     mbl_read_props_type dummy_extra_props;
-    vcl_unique_ptr<mipa_vector_normaliser> norm = mipa_vector_normaliser::new_normaliser_from_stream(ss2, dummy_extra_props);
+    std::unique_ptr<mipa_vector_normaliser> norm = mipa_vector_normaliser::new_normaliser_from_stream(ss2, dummy_extra_props);
     normaliser_=norm.release();
     reonfigureNormaliser=true;
 #if 0
@@ -298,7 +298,7 @@ bool mfpf_hog_box_finder_builder::set_from_stream(std::istream &is)
   if (props.find("cost_builder")!=props.end())
   {
     std::istringstream b_ss(props["cost_builder"]);
-    vcl_unique_ptr<mfpf_vec_cost_builder> bb =
+    std::unique_ptr<mfpf_vec_cost_builder> bb =
       mfpf_vec_cost_builder::create_from_stream(b_ss);
     cost_builder_ = bb->clone();
     props.erase("cost_builder");
@@ -318,13 +318,13 @@ bool mfpf_hog_box_finder_builder::set_from_stream(std::istream &is)
 void mfpf_hog_box_finder_builder::reconfigure_normaliser()
 {
     mipa_vector_normaliser* pNormaliser=normaliser_.ptr();
-    mipa_block_normaliser* pBlockNormaliser= dynamic_cast<mipa_block_normaliser*>(pNormaliser);
+    auto* pBlockNormaliser= dynamic_cast<mipa_block_normaliser*>(pNormaliser);
     if (pBlockNormaliser)
     {
       pBlockNormaliser->set_region(2*ni_,2*nj_);
       pBlockNormaliser->set_nbins(nA_bins_);
       //Also this builder always uses 2 SIFT scales and a final overall histogram
-      mipa_ms_block_normaliser* pMSBlockNormaliser= dynamic_cast<mipa_ms_block_normaliser*>(pNormaliser);
+      auto* pMSBlockNormaliser= dynamic_cast<mipa_ms_block_normaliser*>(pNormaliser);
       if (pMSBlockNormaliser)
       {
         pMSBlockNormaliser->set_nscales(2);
@@ -371,7 +371,7 @@ void mfpf_hog_box_finder_builder::print_summary(std::ostream& os) const
   //if (norm_method_==0) os<<vsl_indent()<<"norm: none"<<'\n';
   //else                 os<<vsl_indent()<<"norm: linear"<<'\n';
   os <<vsl_indent()<< "cost_builder: ";
-  if (cost_builder_.ptr()==VXL_NULLPTR) os << '-'<<'\n';
+  if (cost_builder_.ptr()==nullptr) os << '-'<<'\n';
   else                       os << cost_builder_<<'\n';
   os <<vsl_indent()<< "nA: " << nA_ << " dA: " << dA_ << ' '<<'\n'
      <<vsl_indent();

@@ -6,7 +6,9 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_timer.h>
 #include <vgl/vgl_point_2d.h>
 #include <vsol/vsol_point_2d.h>
@@ -24,7 +26,7 @@ static bool verbose = false;
 
 //:
 // \todo not yet implemented
-static bool near_equal(vdgl_digital_curve_sptr /*dc1*/, vdgl_digital_curve_sptr /*dc2*/, float /*tolerance*/)
+static bool near_equal(const vdgl_digital_curve_sptr& /*dc1*/, const vdgl_digital_curve_sptr& /*dc2*/, float /*tolerance*/)
 {
   std::cerr << __FILE__ << ": near_equal(dc1,dc2) not yet implemented\n";
   return false; // TODO
@@ -71,14 +73,12 @@ void gevd_clean_edgels::print_protection()
 //:Default Constructor
 gevd_clean_edgels::gevd_clean_edgels()
 {
-  out_edgels_ = VXL_NULLPTR;
+  out_edgels_ = nullptr;
 }
 
 
 //:Default Destructor
-gevd_clean_edgels::~gevd_clean_edgels()
-{
-}
+gevd_clean_edgels::~gevd_clean_edgels() = default;
 
 
 //: The main process method.  The input edgel group is filtered to remove bridges and short edges.
@@ -89,9 +89,8 @@ void gevd_clean_edgels::DoCleanEdgelChains(std::vector<vtol_edge_2d_sptr>& in_ed
   out_edgels_= &out_edgels;
   out_edgels_->clear();
   //Copy the input edges to the output
-  for (std::vector<vtol_edge_2d_sptr>::iterator egit = in_edgels.begin();
-       egit != in_edgels.end(); ++egit)
-    out_edgels_->push_back(*egit);
+  for (auto & in_edgel : in_edgels)
+    out_edgels_->push_back(in_edgel);
   if (steps > 0)
     this->JumpGaps();
   if (steps > 1)
@@ -115,13 +114,13 @@ void gevd_clean_edgels::detect_similar_edges(std::vector<vtol_edge_2d_sptr >& co
                                              std::vector<vtol_edge_2d_sptr >& deleted_edges)
 {
   std::vector<vtol_edge_2d_sptr > temp;
-  for (std::vector<vtol_edge_2d_sptr >::iterator e1it = common_edges.begin();
+  for (auto e1it = common_edges.begin();
        e1it != common_edges.end(); ++e1it)
   {
     vtol_edge_2d_sptr e1 = (*e1it);
     vdgl_digital_curve_sptr dc1 = e1->curve()->cast_to_vdgl_digital_curve();
     if (!dc1) continue;
-    std::vector<vtol_edge_2d_sptr >::iterator e2it = e1it;
+    auto e2it = e1it;
     for (e2it++; e2it != common_edges.end(); ++e2it)
     {
       vtol_edge_2d_sptr e2 = (*e2it);
@@ -130,10 +129,9 @@ void gevd_clean_edgels::detect_similar_edges(std::vector<vtol_edge_2d_sptr >& co
         temp.push_back(e2);
     }
   }
-  for (std::vector<vtol_edge_2d_sptr >::iterator eit = temp.begin();
-       eit != temp.end(); ++eit)
+  for (auto & eit : temp)
   {
-    vtol_edge_2d_sptr e = (*eit);
+    const vtol_edge_2d_sptr& e = eit;
     // e->unlink_all_inferiors(); // -tpk-
     deleted_edges.push_back(e);
   }
@@ -149,11 +147,10 @@ void gevd_clean_edgels::remove_similar_edges(vtol_vertex_2d*& v1, std::vector<vt
   std::vector<vtol_edge_sptr> v1_edges; v1->edges(v1_edges);
   std::vector<vtol_vertex_2d_sptr> opposite_v1_verts;
   // Find all the vertices opposite from v1
-  for (std::vector<vtol_edge_sptr>::iterator eit = v1_edges.begin();
-       eit != v1_edges.end(); ++eit)
+  for (auto & v1_edge : v1_edges)
   {
-    vtol_vertex_2d_sptr v11 = (*eit)->v1()->cast_to_vertex_2d(),
-                        v12 = (*eit)->v2()->cast_to_vertex_2d();
+    vtol_vertex_2d_sptr v11 = v1_edge->v1()->cast_to_vertex_2d(),
+                        v12 = v1_edge->v2()->cast_to_vertex_2d();
     if (v11==v1)
       {opposite_v1_verts.push_back(v12); continue;}
     if (v12==v1)
@@ -162,11 +159,10 @@ void gevd_clean_edgels::remove_similar_edges(vtol_vertex_2d*& v1, std::vector<vt
   }
   //Then get the opposite vertices, v, with more than one edge between v1 and v
   //For these edges merge them into a common edge if they are too close
-  for (std::vector<vtol_vertex_2d_sptr>::iterator vit= opposite_v1_verts.begin();
-       vit != opposite_v1_verts.end(); ++vit)
+  for (auto & opposite_v1_vert : opposite_v1_verts)
   {
     std::vector<vtol_edge_2d_sptr > intersection;
-    this->edge_exists(v1, (*vit), intersection);
+    this->edge_exists(v1, opposite_v1_vert, intersection);
     if (intersection.size()>1)
       this->detect_similar_edges(intersection, tol, deleted_edges);
   }
@@ -174,22 +170,21 @@ void gevd_clean_edgels::remove_similar_edges(vtol_vertex_2d*& v1, std::vector<vt
 
 
 //: Find if an edge already exists between the given vertices
-bool gevd_clean_edgels::edge_exists(vtol_vertex_2d_sptr v1, vtol_vertex_2d_sptr v2, std::vector<vtol_edge_2d_sptr >& intersection)
+bool gevd_clean_edgels::edge_exists(const vtol_vertex_2d_sptr& v1, const vtol_vertex_2d_sptr& v2, std::vector<vtol_edge_2d_sptr >& intersection)
 {
   bool found = false;
   intersection.clear();
 
   std::vector<vtol_edge_sptr> edges; v1->edges(edges);
 
-  for (std::vector<vtol_edge_sptr>::iterator eit = edges.begin();
-       eit != edges.end(); ++eit)
+  for (auto & edge : edges)
   {
-    vtol_edge_2d* e = (*eit)->cast_to_edge_2d();
+    vtol_edge_2d* e = edge->cast_to_edge_2d();
     if (!e) continue;
     if ( (e->v1()->cast_to_vertex_2d() == v1 && e->v2()->cast_to_vertex_2d() == v2) ||
          (e->v1()->cast_to_vertex_2d() == v2 && e->v2()->cast_to_vertex_2d() == v1) )
     {
-      intersection.push_back(e);
+      intersection.emplace_back(e);
       found = true;
     }
   }
@@ -201,10 +196,9 @@ bool gevd_clean_edgels::edge_exists(vtol_vertex_2d_sptr v1, vtol_vertex_2d_sptr 
 void gevd_clean_edgels::remove_connected_edges(vtol_vertex_2d* v, std::vector<vtol_edge_2d_sptr >& edges)
 {
   std::vector<vtol_edge_2d_sptr > tmp;
-  for (std::vector<vtol_edge_2d_sptr >::iterator eit = edges.begin();
-       eit != edges.end(); ++eit)
+  for (auto & edge : edges)
   {
-    vtol_edge_2d_sptr e = (*eit);
+    const vtol_edge_2d_sptr& e = edge;
     if (e->v1() != v && e->v2() != v)
       tmp.push_back(e);
   }
@@ -217,10 +211,10 @@ void gevd_clean_edgels::remove_connected_edges(vtol_vertex_2d* v, std::vector<vt
 //  Otherwise return a vertex which lies on, and interior to, the edge.
 //  Original compared end vertex distances to radius, now with actual
 //  jump span - JLM Sept. 99
-bool gevd_clean_edgels::closest_vertex(vtol_edge_2d_sptr e, vsol_point_2d_sptr p, float radius, vtol_vertex_2d_sptr& v)
+bool gevd_clean_edgels::closest_vertex(const vtol_edge_2d_sptr& e, const vsol_point_2d_sptr& p, float radius, vtol_vertex_2d_sptr& v)
 {
   vdgl_digital_curve_sptr dc = e->curve()->cast_to_vdgl_digital_curve();
-  if (!dc) { v = VXL_NULLPTR; return false; }
+  if (!dc) { v = nullptr; return false; }
   vsol_point_2d_sptr sp = new vsol_point_2d(*p);
   vsol_point_2d_sptr pc = dc->get_interpolator()->closest_point_on_curve( sp );
   double span_sq = p->distance(pc);
@@ -253,7 +247,7 @@ bool gevd_clean_edgels::closest_vertex(vtol_edge_2d_sptr e, vsol_point_2d_sptr p
 
 
 //: Split an edge at a vertex which is assumed geometrically to lie on the edge.
-bool gevd_clean_edgels::split_edge(vtol_edge_2d_sptr e, vtol_vertex_2d_sptr new_v,
+bool gevd_clean_edgels::split_edge(const vtol_edge_2d_sptr& e, const vtol_vertex_2d_sptr& new_v,
                                    vtol_edge_2d_sptr & e1, vtol_edge_2d_sptr & e2)
 {
   if (!e||!new_v)
@@ -290,7 +284,7 @@ bool gevd_clean_edgels::split_edge(vtol_edge_2d_sptr e, vtol_vertex_2d_sptr new_
   vdgl_interpolator_sptr it= new vdgl_interpolator_linear( ec);
   vdgl_digital_curve_sptr dc1 = new vdgl_digital_curve( it);
   edge1->set_curve(*dc1);
-  vdgl_edgel_chain_sptr cxy1= ec;
+  const vdgl_edgel_chain_sptr& cxy1= ec;
 
   for (int k = 0; k < index; k++)
     cxy1->add_edgel( (*cxy)[k] );
@@ -302,7 +296,7 @@ bool gevd_clean_edgels::split_edge(vtol_edge_2d_sptr e, vtol_vertex_2d_sptr new_
 
   // Create second subchain from and including junction pixel.
   vtol_edge_2d_sptr edge2 = new vtol_edge_2d();    // create second subchain
-  vdgl_edgel_chain *ec2= new vdgl_edgel_chain;
+  auto *ec2= new vdgl_edgel_chain;
   vdgl_interpolator *it2= new vdgl_interpolator_linear( ec2);
   vdgl_digital_curve_sptr dc2= new vdgl_digital_curve( it2);
   edge2->set_curve(*dc2);
@@ -353,10 +347,8 @@ void gevd_clean_edgels::JumpGaps()
     verts.push_back( (*eit)->v2()->cast_to_vertex_2d() );
   }
   //Iterate over the vertices and find nearby edgel chains
-  for (std::vector<vtol_vertex_2d*>::iterator vit = verts.begin();
-       vit != verts.end(); ++vit)
+  for (auto v : verts)
   {
-    vtol_vertex_2d* v = (*vit);
     vsol_point_2d_sptr p = v->point();
     //Get the edges within the radius of the vertex
     std::vector<vtol_edge_2d_sptr > near_edges;
@@ -382,7 +374,7 @@ void gevd_clean_edgels::JumpGaps()
     {
       ///      nnn=0;
       vtol_edge_2d_sptr  e = (*eit);
-      vtol_vertex_2d_sptr new_v = VXL_NULLPTR;
+      vtol_vertex_2d_sptr new_v = nullptr;
       //If end_vertex is true, then one of the vertices of e is
       //within the given radius
       bool end_vertex = this->closest_vertex(e, p, radius, new_v);
@@ -391,7 +383,7 @@ void gevd_clean_edgels::JumpGaps()
       {
         //The new vertex is interior to e,
         //so we have to split the edge
-        vtol_edge_2d_sptr e1=VXL_NULLPTR, e2=VXL_NULLPTR;
+        vtol_edge_2d_sptr e1=nullptr, e2=nullptr;
         if (verbose) std::cout << "Splitting " << e->v1()->cast_to_vertex() << e->v2()->cast_to_vertex() << std::endl;
         if (!this->split_edge(e, new_v, e1, e2))
           continue;
@@ -417,7 +409,7 @@ void gevd_clean_edgels::JumpGaps()
       if (verbose) std::cout << "Adding a gap jumping edgel from " << *v << " to " << *new_v << std::endl;
       vtol_edge_2d_sptr new_edge = new vtol_edge_2d(v, new_v);
       // vdgl_digital_curve_sptr dc = new vdgl_digital_curve(v->point(),new_v->point());
-      vdgl_edgel_chain* new_chain = new vdgl_edgel_chain();
+      auto* new_chain = new vdgl_edgel_chain();
       new_chain->add_edgel(vdgl_edgel(v->point()->x(), v->point()->y()));
       new_chain->add_edgel(vdgl_edgel(new_v->point()->x(), new_v->point()->y()));
       vdgl_digital_curve_sptr dc = new vdgl_digital_curve(new vdgl_interpolator_linear(new_chain));
@@ -444,7 +436,7 @@ void gevd_clean_edgels::DeleteShortEdges()
   int N_total=0, N_close=0;
   std::vector<vtol_edge_2d_sptr > deleted_edges;
   int edgelcount = 0;
-  for (std::vector<vtol_edge_2d_sptr >::iterator egit = out_edgels_->begin();
+  for (auto egit = out_edgels_->begin();
        egit != out_edgels_->end(); egit++, ++N_total)
   {
     if ( (edgelcount % 100) == 0 )
@@ -498,12 +490,11 @@ void gevd_clean_edgels::DeleteShortEdges()
       }
     }
   }
-  for (std::vector<vtol_edge_2d_sptr >::iterator eit = deleted_edges.begin();
-       eit != deleted_edges.end(); ++eit)
+  for (auto & deleted_edge : deleted_edges)
   {
     std::vector<vtol_edge_2d_sptr >::iterator f;
     // (*eit)->unlink();
-    f = std::find(out_edgels_->begin(), out_edgels_->end(), *eit);
+    f = std::find(out_edgels_->begin(), out_edgels_->end(), deleted_edge);
     if (f != out_edgels_->end())
       out_edgels_->erase( f );
   }
@@ -535,10 +526,8 @@ void gevd_clean_edgels::RemoveBridges()
     }
     v_one.clear();
     //Collect all the vertices of order one which are not self-loops.
-    for (std::vector<vtol_vertex_2d*>::iterator vit = verts.begin();
-         vit != verts.end(); ++vit)
+    for (auto v : verts)
     {
-      vtol_vertex_2d* v = *vit;
       std::vector<vtol_edge_sptr> edges; v->edges(edges);
       if (edges.size()==1)
       {
@@ -554,10 +543,9 @@ void gevd_clean_edgels::RemoveBridges()
       continue;
     }
     //Remove the Edge(s) attached to order zero vertices
-    for (std::vector<vtol_vertex_2d*>::iterator v1 = v_one.begin();
-         v1 != v_one.end(); ++v1)
+    for (auto & v1 : v_one)
     {
-      std::vector<vtol_edge_sptr> v_edges; (*v1)->edges(v_edges);
+      std::vector<vtol_edge_sptr> v_edges; v1->edges(v_edges);
       int order = v_edges.size();
       if (order<1 )
       {
@@ -601,11 +589,10 @@ void gevd_clean_edgels::RemoveBridges()
 void gevd_clean_edgels::FixDefficientEdgels()
 {
   vul_timer t;
-  for (std::vector<vtol_edge_2d_sptr >::iterator egit = out_edgels_->begin();
-       egit!=out_edgels_->end(); ++egit)
+  for (auto & out_edgel : *out_edgels_)
   {
     bool fix_it = false;
-    vtol_edge_2d_sptr e = (vtol_edge_2d_sptr )(*egit);
+    vtol_edge_2d_sptr e = (vtol_edge_2d_sptr )out_edgel;
     vdgl_digital_curve_sptr dc = e->curve()->cast_to_vdgl_digital_curve();
     fix_it = fix_it || !dc;
     int n_edgels = dc->get_interpolator()->get_edgel_chain()->size();
@@ -637,10 +624,9 @@ void gevd_clean_edgels::FixDefficientEdgels()
 void gevd_clean_edgels::RemoveJaggies()
 {
   vul_timer t;
-  for (std::vector<vtol_edge_2d_sptr >::iterator egit = out_edgels_->begin();
-       egit!=out_edgels_->end(); ++egit)
+  for (auto & out_edgel : *out_edgels_)
   {
-    vtol_edge_2d_sptr e = (vtol_edge_2d_sptr )(*egit);
+    vtol_edge_2d_sptr e = (vtol_edge_2d_sptr )out_edgel;
     vtol_vertex_2d_sptr v1 = e->v1()->cast_to_vertex_2d();
     vtol_vertex_2d_sptr v2 = e->v2()->cast_to_vertex_2d();
     double x1 = v1->x(), y1 = v1->y();
@@ -684,10 +670,9 @@ void gevd_clean_edgels::RemoveLoops()
   vul_timer t;
   float min_loop_length = 4.0f;  //6 is normally used in Clean
   std::vector<vtol_edge_2d_sptr > removed_edges;
-  for (std::vector<vtol_edge_2d_sptr >::iterator egit = out_edgels_->begin();
-       egit!=out_edgels_->end(); ++egit)
+  for (auto & out_edgel : *out_edgels_)
   {
-    vtol_edge_2d_sptr e = (vtol_edge_2d_sptr )(*egit);
+    vtol_edge_2d_sptr e = (vtol_edge_2d_sptr )out_edgel;
     vtol_vertex_2d_sptr v1 = e->v1()->cast_to_vertex_2d();
     vtol_vertex_2d_sptr v2 = e->v2()->cast_to_vertex_2d();
     if (*v1==*v2)//We have a loop
@@ -704,10 +689,9 @@ void gevd_clean_edgels::RemoveLoops()
     }
   }
 
-  for (std::vector<vtol_edge_2d_sptr >::iterator eit = removed_edges.begin();
-       eit != removed_edges.end(); ++eit)
+  for (auto & removed_edge : removed_edges)
   {
-    std::vector<vtol_edge_2d_sptr>::iterator f = std::find(out_edgels_->begin(), out_edgels_->end(), *eit);
+    auto f = std::find(out_edgels_->begin(), out_edgels_->end(), removed_edge);
     if (f != out_edgels_->end())
       out_edgels_->erase(f);
   }

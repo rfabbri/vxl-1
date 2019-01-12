@@ -1,9 +1,6 @@
 // This is core/vgl/vgl_cylinder.h
 #ifndef vgl_cylinder_h_
 #define vgl_cylinder_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief  defines a cylinder in 3D by a center point, radius, length and orientation
@@ -17,7 +14,9 @@
 #include <iosfwd>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_vector_3d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 template <class Type>
 class vgl_cylinder
@@ -43,7 +42,7 @@ class vgl_cylinder
   vgl_cylinder(vgl_point_3d<Type> cntr, Type rad, Type len, vgl_vector_3d<Type> orient)
     :center_(cntr), radius_(rad), length_(len), orient_(orient) {}
 
-  ~vgl_cylinder(void) {}
+  ~vgl_cylinder(void) = default;
 
   //: getters
   vgl_point_3d<Type> center() const { return center_; }

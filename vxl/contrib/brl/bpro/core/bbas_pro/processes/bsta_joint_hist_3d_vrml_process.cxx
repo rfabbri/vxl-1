@@ -11,12 +11,12 @@ bool bsta_joint_hist_3d_vrml_process_cons(bprb_func_process& pro)
   // no inputs
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back("bsta_joint_histogram_3d_base_sptr"); //joint_hist_3d
-  input_types.push_back("vcl_string"); //vrml path
-  input_types.push_back("bool"); //relative probability
-  input_types.push_back("float");// red
-  input_types.push_back("float");// green
-  input_types.push_back("float");// blue
+  input_types.emplace_back("bsta_joint_histogram_3d_base_sptr"); //joint_hist_3d
+  input_types.emplace_back("vcl_string"); //vrml path
+  input_types.emplace_back("bool"); //relative probability
+  input_types.emplace_back("float");// red
+  input_types.emplace_back("float");// green
+  input_types.emplace_back("float");// blue
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
@@ -52,13 +52,12 @@ bool bsta_joint_hist_3d_vrml_process(bprb_func_process& pro)
     return false;
   }
   bool relative_prob = pro.get_input<bool>(i++);
-  float r = pro.get_input<float>(i++);
-  float g = pro.get_input<float>(i++);
-  float b = pro.get_input<float>(i);
+  auto r = pro.get_input<float>(i++);
+  auto g = pro.get_input<float>(i++);
+  auto b = pro.get_input<float>(i);
   //for now only a float type is used
-  bsta_joint_histogram_3d<float>* h3df =
+  auto* h3df =
     dynamic_cast<bsta_joint_histogram_3d<float>*>(jhist3d.ptr());
   h3df->print_to_vrml(os, relative_prob, r, g, b);
   return true;
 }
-

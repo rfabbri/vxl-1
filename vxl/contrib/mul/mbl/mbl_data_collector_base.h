@@ -1,9 +1,6 @@
 // This is mul/mbl/mbl_data_collector_base.h
 #ifndef mbl_data_collector_base_h_
 #define mbl_data_collector_base_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author Tim Cootes
@@ -13,7 +10,9 @@
 #include <iostream>
 #include <iosfwd>
 #include <vsl/vsl_binary_io.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Non-templated base class for mbl_data_collector<T>
 // Provided mainly because the Visual C++ compiler can't cope with

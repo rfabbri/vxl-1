@@ -10,7 +10,9 @@
 #include <iostream>
 #include <limits>
 #include "vpgl_utm.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h>
 #define DBLLONG 4.61168601e18
 #define EPSLN   1.0e-10
@@ -118,7 +120,7 @@ static void UTM_init2(double lat_center2, double r_major, double e, int south_fl
 {
   scale_factor2 = 0.9996;
 
-  es2 = (double) e * (double) e;
+  es2 = e * (double) e;
   e02 = 1.0-0.25*es2*(1.0+es2/16.0*(3.0+1.25*es2));
   e12 = 0.375*es2*(1.0+0.25*es2*(1.0+0.46875*es2));
   e22 = 0.05859375*es2*es2*(1.0+0.75*es2);
@@ -145,12 +147,9 @@ vpgl_utm::vpgl_utm()
   :   a_(6378137), b_(6356752.3142) //WGS-84 by default
 {}
 
-vpgl_utm::vpgl_utm(const vpgl_utm& t)
-  :    a_(t.a_), b_(t.b_)
-{}
+vpgl_utm::vpgl_utm(const vpgl_utm& t) = default;
 
-vpgl_utm::~vpgl_utm()
-{}
+vpgl_utm::~vpgl_utm() = default;
 
 // Applies the transform to the instance of 3d point representing a location in the from_coordinate_system (UTM_coordinate_system) and creates a point represented the transformed location in the to_coordinate_system(geodetic_coordinate_system).
 void vpgl_utm::transform(int utm_zone, double x, double y, double z,

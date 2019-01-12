@@ -13,7 +13,9 @@
 #include <mbl/mbl_exception.h>
 #include <mbl/mbl_parse_colon_pairs_list.h>
 #include <vul/vul_arg.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_quick_file.h>
 #include <msm/msm_shape_model.h>
 #include <msm/msm_shape_instance.h>
@@ -127,9 +129,9 @@ int main(int argc, char** argv)
 
   ofs<<"images: {"<<std::endl;
 
-  for (unsigned i=0;i<params.image_names.size();++i)
+  for (const auto & image_name : params.image_names)
   {
-    ofs<<params.image_names[i]<<std::endl;
+    ofs<<image_name<<std::endl;
   }
   ofs<<"}"<<std::endl;
   ofs.close();

@@ -7,7 +7,9 @@
 // \file
 
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include "vil_nitf2_field_sequence.h"
 #include "vil_nitf2_classification.h"
@@ -60,7 +62,7 @@ class vil_nitf2_image_subheader
   unsigned int get_number_of_bits_per_pixel() const;
   std::string get_image_source() const;
   std::string get_image_type() const;
-  bool has_data_mask_table() const { return data_mask_table() != VXL_NULLPTR; }
+  bool has_data_mask_table() const { return data_mask_table() != nullptr; }
   const vil_nitf2_data_mask_table* data_mask_table() const { return m_data_mask_table; }
 
   //:

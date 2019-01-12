@@ -3,7 +3,9 @@
 #include <brdb/brdb_value.h>
 #include <brdb/brdb_tuple.h>
 #include <brdb/brdb_relation.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 static void test_relation()
 {
@@ -71,7 +73,7 @@ static void test_relation()
   std::vector<brdb_value_t<int> > my_int(4);
   my_relation2.order_by(std::string("frames"), false);
 
-  std::vector<brdb_tuple_sptr>::iterator it = my_relation2.begin();
+  auto it = my_relation2.begin();
 
   for (int i=0; it != my_relation2.end(); ++it, ++i)
     my_relation2.get_value(it, "frames", my_int[i]);

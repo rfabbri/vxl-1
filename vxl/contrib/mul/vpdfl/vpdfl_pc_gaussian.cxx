@@ -1,7 +1,4 @@
 // This is mul/vpdfl/vpdfl_pc_gaussian.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \brief Implementation of Multi-variate principal Component Gaussian PDF.
@@ -17,8 +14,10 @@
 #include <iostream>
 #include <cstdlib>
 #include "vpdfl_pc_gaussian.h"
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vsl/vsl_binary_loader.h>
 #include <vsl/vsl_indent.h>
 #include <vnl/vnl_math.h>
@@ -31,7 +30,7 @@
 
 //: Dflt ctor
 vpdfl_pc_gaussian::vpdfl_pc_gaussian()
-  : partition_(0), log_k_principal_(0.0), partition_chooser_(VXL_NULLPTR)
+  : partition_(0), log_k_principal_(0.0), partition_chooser_(nullptr)
 {
 }
 //=======================================================================
@@ -214,7 +213,7 @@ void vpdfl_pc_gaussian::set(const vnl_vector<double>& mean,  const vnl_matrix<do
 //: Return instance of this PDF
 vpdfl_sampler_base* vpdfl_pc_gaussian::sampler() const
 {
-  vpdfl_gaussian_sampler *i = new vpdfl_gaussian_sampler;
+  auto *i = new vpdfl_gaussian_sampler;
   i->set_model(*this);
   return i;
 }
@@ -297,14 +296,14 @@ void vpdfl_pc_gaussian::b_read(vsl_b_istream& bfs)
       vpdfl_gaussian::b_read(bfs);
       vsl_b_read(bfs,partition_);
       vsl_b_read(bfs,log_k_principal_);
-      partition_chooser_ = VXL_NULLPTR;
+      partition_chooser_ = nullptr;
       break;
     case (2):
       vpdfl_gaussian::b_read(bfs);
       vsl_b_read(bfs,partition_);
       vsl_b_read(bfs,log_k_principal_);
       {
-        vpdfl_builder_base * c = VXL_NULLPTR;
+        vpdfl_builder_base * c = nullptr;
         vsl_b_read(bfs,c);
         assert(!c || c->is_class("vpdfl_pc_gaussian_builder"));
         partition_chooser_ = static_cast<vpdfl_pc_gaussian_builder *>(c);
@@ -334,5 +333,5 @@ void vpdfl_pc_gaussian::set_partition_chooser(
   if (partition_chooser)
     partition_chooser_ = static_cast<vpdfl_pc_gaussian_builder *>(partition_chooser->clone());
   else
-    partition_chooser_ = VXL_NULLPTR;
+    partition_chooser_ = nullptr;
 }

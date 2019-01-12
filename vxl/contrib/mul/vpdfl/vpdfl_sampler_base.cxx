@@ -1,7 +1,4 @@
 // This is mul/vpdfl/vpdfl_sampler_base.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Ian Scott
@@ -11,23 +8,22 @@
 #include "vpdfl_sampler_base.h"
 #include <vpdfl/vpdfl_pdf_base.h>
 #include <vsl/vsl_indent.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //=======================================================================
 // Dflt ctor
 //=======================================================================
 
-vpdfl_sampler_base::vpdfl_sampler_base()
-{
-}
+vpdfl_sampler_base::vpdfl_sampler_base() = default;
 
 //=======================================================================
 // Destructor
 //=======================================================================
 
-vpdfl_sampler_base::~vpdfl_sampler_base()
-{
-}
+vpdfl_sampler_base::~vpdfl_sampler_base() = default;
 
 
 //: Set model for which this is an instance
@@ -39,7 +35,7 @@ void vpdfl_sampler_base::set_model(const vpdfl_pdf_base& model)
 //: PDF of which this is an instance
 const vpdfl_pdf_base& vpdfl_sampler_base::model() const
 {
-  assert (pdf_model_ != VXL_NULLPTR);
+  assert (pdf_model_ != nullptr);
   return *pdf_model_;
 }
 
@@ -125,4 +121,3 @@ void vsl_print_summary(std::ostream& os,const vpdfl_sampler_base* b)
   else
     os << "No vpdfl_sampler_base defined.";
 }
-

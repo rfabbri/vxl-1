@@ -1,7 +1,4 @@
 // This is core/vil/file_formats/vil_jpeg_source_mgr.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
@@ -13,8 +10,10 @@
 #include <cstddef>
 #include <limits>
 #include "vil_jpeg_source_mgr.h"
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil/vil_stream.h>
 
 #define STATIC /*static*/
@@ -40,7 +39,7 @@ STATIC
 void
 vil_jpeg_init_source (j_decompress_ptr cinfo)
 {
-  vil_jpeg_srcptr src = ( vil_jpeg_srcptr )( cinfo->src );
+  auto src = ( vil_jpeg_srcptr )( cinfo->src );
 
 #ifdef DEBUG
   std::cerr << "vil_jpeg_init_source() " << src << '\n';
@@ -86,7 +85,7 @@ STATIC
 jpeg_boolean
 vil_jpeg_fill_input_buffer (j_decompress_ptr cinfo)
 {
-  vil_jpeg_srcptr src = ( vil_jpeg_srcptr )( cinfo->src );
+  auto src = ( vil_jpeg_srcptr )( cinfo->src );
 
   vil_streampos nbytes = src->stream->read(src->buffer, vil_jpeg_INPUT_BUF_SIZE);
 
@@ -122,7 +121,7 @@ STATIC
 void
 vil_jpeg_skip_input_data (j_decompress_ptr cinfo, long num_bytes)
 {
-  vil_jpeg_srcptr src = ( vil_jpeg_srcptr )( cinfo->src );
+  auto src = ( vil_jpeg_srcptr )( cinfo->src );
 
   // Just a dumb implementation for now.  Could use fseek() except
   // it doesn't work on pipes.  Not clear that being smart is worth
@@ -169,7 +168,7 @@ vil_jpeg_stream_src_set (j_decompress_ptr cinfo, vil_stream *vs)
   std::cerr << "vil_jpeg_stream_src_set() : creating new data source\n";
 #endif
 
-  vil_jpeg_srcptr src = (vil_jpeg_srcptr) // allocate
+  auto src = (vil_jpeg_srcptr) // allocate
     (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo,
                                 JPOOL_PERMANENT,
                                 SIZEOF(vil_jpeg_stream_source_mgr));
@@ -199,12 +198,11 @@ void
 vil_jpeg_stream_src_rewind(j_decompress_ptr cinfo, vil_stream *vs)
 {
   // verify
-  assert((vil_jpeg_srcptr)(cinfo->src) != VXL_NULLPTR);
+  assert((vil_jpeg_srcptr)(cinfo->src) != nullptr);
   assert(((vil_jpeg_srcptr)(cinfo->src))->stream == vs);
 
   cinfo->src->bytes_in_buffer = 0; // forces fill_input_buffer on first read
-  cinfo->src->next_input_byte = VXL_NULLPTR; // until buffer loaded
+  cinfo->src->next_input_byte = nullptr; // until buffer loaded
 
   vs->seek(0L);
 }
-

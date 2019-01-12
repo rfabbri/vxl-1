@@ -1,28 +1,23 @@
 // This is mul/mbl/mbl_data_wrapper.hxx
 #ifndef mbl_data_wrapper_hxx_
 #define mbl_data_wrapper_hxx_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 //  \file
 
 #include <iostream>
 #include <cstdlib>
 #include "mbl_data_wrapper.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Default constructor
 template<class T>
-mbl_data_wrapper<T>::mbl_data_wrapper()
-{
-}
+mbl_data_wrapper<T>::mbl_data_wrapper() = default;
 
 //: Default destructor
 template<class T>
-mbl_data_wrapper<T>::~mbl_data_wrapper()
-{
-}
+mbl_data_wrapper<T>::~mbl_data_wrapper() = default;
 
 //: Move to element n
 //  First example has index 0

@@ -9,7 +9,9 @@
 // \author Vishal Jain
 // \date June 3, 2011
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/io/boxm2_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -27,8 +29,8 @@
 
 namespace boxm2_cpp_ray_probe_process_globals
 {
-    const unsigned n_inputs_ = 7;
-    const unsigned n_outputs_ = 7;
+    constexpr unsigned n_inputs_ = 7;
+    constexpr unsigned n_outputs_ = 7;
 }
 
 bool boxm2_cpp_ray_probe_process_cons(bprb_func_process& pro)
@@ -77,18 +79,18 @@ bool boxm2_cpp_ray_probe_process(bprb_func_process& pro)
     boxm2_scene_sptr scene = pro.get_input<boxm2_scene_sptr>(k++);
     boxm2_cache_sptr cache = pro.get_input<boxm2_cache_sptr>(k++);
     vpgl_camera_double_sptr cam= pro.get_input<vpgl_camera_double_sptr>(k++);
-    unsigned pi=pro.get_input<unsigned>(k++);
-    unsigned pj=pro.get_input<unsigned>(k++);
+    auto pi=pro.get_input<unsigned>(k++);
+    auto pj=pro.get_input<unsigned>(k++);
     std::string prefix = pro.get_input<std::string>(k++);
     std::string identifier = pro.get_input<std::string>(k++);
 
     std::string data_type;
     std::vector<std::string> apps = scene->appearances();
-    for (unsigned int i=0; i<apps.size(); ++i) {
-        if ( apps[i] == boxm2_data_traits<BOXM2_MOG3_GREY>::prefix() )
-            data_type = apps[i];
-        else if ( apps[i] == boxm2_data_traits<BOXM2_MOG3_GREY_16>::prefix() )
-            data_type = apps[i];
+    for (const auto & app : apps) {
+        if ( app == boxm2_data_traits<BOXM2_MOG3_GREY>::prefix() )
+            data_type = app;
+        else if ( app == boxm2_data_traits<BOXM2_MOG3_GREY_16>::prefix() )
+            data_type = app;
     }
 
     if (identifier.size() > 0) {
@@ -108,7 +110,7 @@ bool boxm2_cpp_ray_probe_process(bprb_func_process& pro)
     int nelems = 0; // initialise here, in case the "for" loop is empty
     for (id = vis_order.begin(); id != vis_order.end(); ++id)
     {
-        boxm2_block *     blk  =  cache->get_block(scene,*id);
+        boxm2_block *     blk = cache->get_block(scene,*id);
         boxm2_data_base *  alph = cache->get_data_base(scene,*id,boxm2_data_traits<BOXM2_ALPHA>::prefix());
 
         int alphaTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_ALPHA>::prefix());
@@ -123,13 +125,13 @@ bool boxm2_cpp_ray_probe_process(bprb_func_process& pro)
             int dataTypeSize = (int)boxm2_data_info::datasize(name);
             if (identifier!="")
                 name+= ("_"+identifier);
-            boxm2_data_base *  data_of_interest  = cache->get_data_base(scene,*id,name,data_buffer_length*dataTypeSize);
+            boxm2_data_base *  data_of_interest = cache->get_data_base(scene,*id,name,data_buffer_length*dataTypeSize);
 
             datas.push_back(data_of_interest);
         }
         boxm2_ray_probe_functor ray_probe_functor;
         ray_probe_functor.init_data(datas,seg_lengths,abs_depth,alphas,data_to_return, prefix, nelems);
-        boxm2_scene_info_wrapper *scene_info_wrapper=new boxm2_scene_info_wrapper();
+        auto *scene_info_wrapper=new boxm2_scene_info_wrapper();
         scene_info_wrapper->info=scene->get_blk_metadata(*id);
 
         cast_ray_per_block<boxm2_ray_probe_functor>(ray_probe_functor,scene_info_wrapper->info,blk,cam,pi+1,pj+1,pi,pj);

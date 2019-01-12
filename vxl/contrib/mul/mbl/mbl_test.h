@@ -11,7 +11,9 @@
 #include <string>
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_reg_exp.h>
 
 //: Test if the summaries of two objects are the same.
@@ -34,7 +36,7 @@
 // \endcode
 
 template <class S>
-bool mbl_test_summaries_are_equal(const S &a, const S &b, const char **exceptions=VXL_NULLPTR )
+bool mbl_test_summaries_are_equal(const S &a, const S &b, const char **exceptions=nullptr )
 {
   std::stringstream ssa, ssb;
   std::string sa, sb;
@@ -43,7 +45,7 @@ bool mbl_test_summaries_are_equal(const S &a, const S &b, const char **exception
   std::vector<vul_reg_exp> exceptions_re;
   while (exceptions && *exceptions)
   {
-    exceptions_re.push_back(vul_reg_exp(*exceptions));
+    exceptions_re.emplace_back(*exceptions);
     exceptions++;
   }
 
@@ -61,9 +63,8 @@ bool mbl_test_summaries_are_equal(const S &a, const S &b, const char **exception
       bool exception_found = false;
 //      for (const char **it = exceptions; *it!=0; ++it)
 //        if (sa.find(*it)!=std::string::npos && sb.find(*it)!=std::string::npos)
-      for (std::vector<vul_reg_exp>::iterator it=exceptions_re.begin(), end=exceptions_re.end();
-        it != end; ++it)
-        if (it->find(sa) && it->find(sb))
+      for (auto & it : exceptions_re)
+        if (it.find(sa) && it.find(sb))
         {
           exception_found = true;
           break;

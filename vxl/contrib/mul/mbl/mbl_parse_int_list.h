@@ -11,7 +11,9 @@
 #include <iostream>
 #include <cctype>
 #include <mbl/mbl_exception.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Read a list of integers from a stream.
 // This integer list should be space-separated.

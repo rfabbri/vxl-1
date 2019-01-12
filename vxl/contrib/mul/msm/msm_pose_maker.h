@@ -10,7 +10,9 @@
 #include <msm/msm_points.h>
 #include <msm/msm_curve.h>
 #include <vgl/vgl_vector_2d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Compute a direction at each point, usually normal to curve.
 //  Generates a unit direction vector for each point.
@@ -29,7 +31,7 @@ class msm_pose_maker
   std::vector<unsigned> end1_;
 
  public:
-  ~msm_pose_maker() {}
+  ~msm_pose_maker() = default;
 
   //: Set up definitions of directions from the curves.
   //  Where multiple curves pass through a point, the direction

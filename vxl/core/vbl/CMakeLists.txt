@@ -47,10 +47,14 @@ aux_source_directory(Templates vbl_sources)
 vxl_add_library(LIBRARY_NAME ${VXL_LIB_PREFIX}vbl LIBRARY_SOURCES ${vbl_sources})
 target_link_libraries( ${VXL_LIB_PREFIX}vbl ${VXL_LIB_PREFIX}vcl )
 
-if( BUILD_EXAMPLES )
+if( VXL_BUILD_EXAMPLES )
   add_subdirectory(examples)
 endif()
 
 if( BUILD_TESTING )
   add_subdirectory(tests)
+endif()
+
+if (VXL_BUILD_OBJECT_LIBRARIES)
+  add_library(vbl-obj OBJECT ${vbl_sources})
 endif()

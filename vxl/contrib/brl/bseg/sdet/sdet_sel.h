@@ -30,8 +30,10 @@
 #include <sdet/sdet_sel_utils.h>
 #include <sdet/sdet_sel_base.h>
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: A templatized subclass that can work with different curve models
 template <class curve_model>
@@ -51,7 +53,7 @@ public:
   }
 
   //: destructor
-  virtual ~sdet_sel<curve_model>(){}
+  ~sdet_sel<curve_model>() override= default;
 
   //: form a curve hypothesis of the appropriate model given a pair of edgels
   inline curve_model* form_a_hypothesis(sdet_edgel* ref_e, sdet_edgel* e2, bool &ref_first,
@@ -61,7 +63,7 @@ public:
     if (app_usage_==2){
       if (e2->left_app->dist(*(ref_e->left_app))>app_thresh_ ||
           e2->right_app->dist(*(ref_e->right_app))>app_thresh_)
-          return VXL_NULLPTR; //appearance is not consistent
+          return nullptr; //appearance is not consistent
     }
 
     // Do the dot product test to determine if this pair of edgels can produce a valid hypothesis
@@ -111,14 +113,14 @@ public:
         }
       }
     }
-    return VXL_NULLPTR;
+    return nullptr;
   }
 
-  virtual void form_an_edgel_pair(sdet_edgel* ref_e, sdet_edgel* e2);
-  virtual void form_an_edgel_triplet(sdet_curvelet* /*p1*/, sdet_curvelet* /*p2*/){}
-  virtual void form_an_edgel_quad(sdet_curvelet* /*t1*/, sdet_curvelet* /*t2*/){}
-  virtual void build_curvelets_greedy_for_edge(sdet_edgel* eA, unsigned max_size_to_group,
-      bool use_flag=false, bool forward=true,  bool centered=true, bool leading=true);
+  void form_an_edgel_pair(sdet_edgel* ref_e, sdet_edgel* e2) override;
+  void form_an_edgel_triplet(sdet_curvelet* /*p1*/, sdet_curvelet* /*p2*/) override{}
+  void form_an_edgel_quad(sdet_curvelet* /*t1*/, sdet_curvelet* /*t2*/) override{}
+  void build_curvelets_greedy_for_edge(sdet_edgel* eA, unsigned max_size_to_group,
+      bool use_flag=false, bool forward=true,  bool centered=true, bool leading=true) override;
 
   //: check if two curvelets are consistent (is there an intersection in their curve bundles?)
   bool are_curvelets_consistent(sdet_curvelet* cvlet1, sdet_curvelet* cvlet2)
@@ -135,8 +137,8 @@ public:
   }
 
   //: form an edgel grouping from an ordered list of edgemap_->edgels
-  virtual sdet_curvelet* form_an_edgel_grouping(sdet_edgel* ref_e, std::deque<sdet_edgel*> &edgel_chain,
-      bool forward=true,  bool centered=true, bool leading=true);
+  sdet_curvelet* form_an_edgel_grouping(sdet_edgel* ref_e, std::deque<sdet_edgel*> &edgel_chain,
+      bool forward=true,  bool centered=true, bool leading=true) override;
 };
 
 // Caio SOUZA - 2014
@@ -193,8 +195,7 @@ void sdet_sel<curve_model>::build_curvelets_greedy_for_edge(sdet_edgel* eA, unsi
         continue;
 
       //for all the edgels in its neighborhood
-      for (unsigned k=0; k<edgemap_->cell(xx, yy).size(); k++){
-        sdet_edgel* eB = edgemap_->cell(xx, yy)[k];
+      for (auto eB : edgemap_->cell(xx, yy)){
         if (eB == eA) continue;
 
         // 3) do a better check of circular radius because the bucketing neighborhood is very coarse
@@ -313,8 +314,8 @@ void sdet_sel<curve_model>::build_curvelets_greedy_for_edge(sdet_edgel* eA, unsi
   }
 
   // 15) now delete all the hyps for this edgel, before moving on to a new edgel
-  for (unsigned h1=0; h1<eA_hyps.size(); h1++)
-    delete eA_hyps[h1].cm;
+  for (auto & eA_hyp : eA_hyps)
+    delete eA_hyp.cm;
 
   eA_hyps.clear();
 }
@@ -327,7 +328,7 @@ sdet_sel<curve_model>::form_an_edgel_grouping(sdet_edgel* ref_e,
     bool forward,  bool centered, bool leading)
 {
   //1) Go over the edgels in the chain and attempt to form a curvelet from it
-  curve_model* chain_cm=VXL_NULLPTR;
+  curve_model* chain_cm=nullptr;
 
   // 2) form an ordered list based on distance from ref_edgel
   std::map<double, unsigned > dist_order; // ordered list of edgels (closest to furthest)
@@ -367,7 +368,7 @@ sdet_sel<curve_model>::form_an_edgel_grouping(sdet_edgel* ref_e,
           delete new_cm;
 
           if (chain_cm)  delete chain_cm;
-          chain_cm = VXL_NULLPTR;
+          chain_cm = nullptr;
 
           break; //break the for loop (no curve bundle possible)
         }
@@ -378,13 +379,13 @@ sdet_sel<curve_model>::form_an_edgel_grouping(sdet_edgel* ref_e,
       //delete any existing curve bundles
       if (cm)        delete cm;
       if (chain_cm)  delete chain_cm;
-      chain_cm = VXL_NULLPTR;
+      chain_cm = nullptr;
 
       break; //break the for loop (no curve bundle possible)
     }
   }
 
-  sdet_curvelet* new_cvlet=VXL_NULLPTR;
+  sdet_curvelet* new_cvlet=nullptr;
   //if all the pairwise bundles intersect,
   //form a new curvelet and assign the curve bundle and the edgel chain to it...
   if (chain_cm)
@@ -394,8 +395,8 @@ sdet_sel<curve_model>::form_an_edgel_grouping(sdet_edgel* ref_e,
     new_cvlet = new sdet_curvelet(ref_e, chain_cm, forward);
 
     //add edgels
-    for (unsigned i=0; i<edgel_chain.size(); i++)
-      new_cvlet->push_back(edgel_chain[i]);
+    for (auto & i : edgel_chain)
+      new_cvlet->push_back(i);
 
     //compute curvelet quality
     new_cvlet->compute_properties(rad_, token_len_);

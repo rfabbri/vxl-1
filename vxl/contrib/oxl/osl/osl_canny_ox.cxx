@@ -13,8 +13,10 @@
 #include <osl/osl_canny_gradient.h>
 #include <osl/osl_canny_nms.h>
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vnl/vnl_math.h>
 
 //#define proddy(n) { delete [] new char [n]; }
@@ -75,7 +77,7 @@ osl_canny_ox::~osl_canny_ox()
 
 void osl_canny_ox::detect_edges(vil1_image const &image_in, std::list<osl_edge*> *edges)
 {
-  assert(edges!=VXL_NULLPTR);
+  assert(edges!=nullptr);
 
   // Get the image size
   xsize_ = image_in.height();
@@ -99,16 +101,16 @@ void osl_canny_ox::detect_edges(vil1_image const &image_in, std::list<osl_edge*>
              << "\n\n";
 
   // Allocate internal bitmaps ..
-  smooth_ = osl_canny_base_make_raw_image(xsize_, ysize_, (float*)VXL_NULLPTR);
-  dx_     = osl_canny_base_make_raw_image(xsize_, ysize_, (float*)VXL_NULLPTR);
-  dy_     = osl_canny_base_make_raw_image(xsize_, ysize_, (float*)VXL_NULLPTR);
-  grad_   = osl_canny_base_make_raw_image(xsize_, ysize_, (float*)VXL_NULLPTR);
-  thick_  = osl_canny_base_make_raw_image(xsize_, ysize_, (float*)VXL_NULLPTR);
-  thin_   = osl_canny_base_make_raw_image(xsize_, ysize_, (float*)VXL_NULLPTR);
-  theta_  = osl_canny_base_make_raw_image(xsize_, ysize_, (float*)VXL_NULLPTR);
-  junction_ = osl_canny_base_make_raw_image(xsize_, ysize_, (int*)VXL_NULLPTR);
-  jx_       = osl_canny_base_make_raw_image(xsize_, ysize_, (int*)VXL_NULLPTR);
-  jy_       = osl_canny_base_make_raw_image(xsize_, ysize_, (int*)VXL_NULLPTR);
+  smooth_ = osl_canny_base_make_raw_image(xsize_, ysize_, (float*)nullptr);
+  dx_     = osl_canny_base_make_raw_image(xsize_, ysize_, (float*)nullptr);
+  dy_     = osl_canny_base_make_raw_image(xsize_, ysize_, (float*)nullptr);
+  grad_   = osl_canny_base_make_raw_image(xsize_, ysize_, (float*)nullptr);
+  thick_  = osl_canny_base_make_raw_image(xsize_, ysize_, (float*)nullptr);
+  thin_   = osl_canny_base_make_raw_image(xsize_, ysize_, (float*)nullptr);
+  theta_  = osl_canny_base_make_raw_image(xsize_, ysize_, (float*)nullptr);
+  junction_ = osl_canny_base_make_raw_image(xsize_, ysize_, (int*)nullptr);
+  jx_       = osl_canny_base_make_raw_image(xsize_, ysize_, (int*)nullptr);
+  jy_       = osl_canny_base_make_raw_image(xsize_, ysize_, (int*)nullptr);
   //image_ = 0;
 
   // .. and initialize them.
@@ -163,12 +165,12 @@ void osl_canny_ox::detect_edges(vil1_image const &image_in, std::list<osl_edge*>
   int n_edgels_Hysteresis = HysteresisOX(edgels_NMS, status);
   if (verbose) std::cerr << "Number of edgels after Hysteresis = " << n_edgels_Hysteresis << '\n';
 
-  osl_edgel_chain *edgels_Hysteresis = new osl_edgel_chain(n_edgels_Hysteresis);
+  auto *edgels_Hysteresis = new osl_edgel_chain(n_edgels_Hysteresis);
   Get_hysteresis_edgelsOX(edgels_NMS,status,edgels_Hysteresis, x_, y_);
 
   // delete the edgels that are output of Non_maximal_suppression
   fsm_delete_array status;
-  fsm_delete edgels_NMS; edgels_NMS = VXL_NULLPTR;
+  fsm_delete edgels_NMS; edgels_NMS = nullptr;
 
   // delete *x_ and *y_; they are not needed anymore
   fsm_delete_array x_;
@@ -218,7 +220,7 @@ void osl_canny_ox::detect_edges(vil1_image const &image_in, std::list<osl_edge*>
 osl_edgel_chain *osl_canny_ox::Get_NMS_edgelsOX(int n_edgels_NMS, int *x_, int *y_)
 {
   // the number of edges must be given in advance!
-  osl_edgel_chain *edgels_NMS = new osl_edgel_chain(n_edgels_NMS);
+  auto *edgels_NMS = new osl_edgel_chain(n_edgels_NMS);
 
   int i = 0;
 
@@ -261,7 +263,7 @@ int osl_canny_ox::HysteresisOX(osl_edgel_chain *&edgels_NMS,
   std::vector<osl_LINK *> links(n_edgels_NMS);  //
   // .. initialize arrays.
   for (unsigned int i=0; i<n_edgels_NMS; ++i) {
-    links[i]  = VXL_NULLPTR; // null pointer
+    links[i]  = nullptr; // null pointer
     row[i]    = (int) edgels_NMS->GetY(i);
     col[i]    = (int) edgels_NMS->GetX(i);
     status[i] = 0;
@@ -334,12 +336,12 @@ void osl_canny_ox::Add_linkOX(int edgel,
                               int to,
                               osl_LINK *links[])
 {
-  osl_LINK *lptr1=new osl_LINK;
+  auto *lptr1=new osl_LINK;
   lptr1->to=to;
   lptr1->nextl=links[edgel];
   links[edgel]=lptr1;
 
-  osl_LINK *lptr2=new osl_LINK;
+  auto *lptr2=new osl_LINK;
   lptr2->to=edgel;
   lptr2->nextl=links[to];
   links[to]=lptr2;
@@ -533,7 +535,7 @@ osl_edge *osl_canny_ox::NO_FollowerOX(osl_edgel_chain *edgels_Hysteresis)
   // Define a digital curve to store the edgels data
   //  dc only stores the list of edgels after the Hysteresis stage of canny.
   //  dc is used later in this function to define an osl_edge *edge
-  osl_edge *dc = new osl_edge(n_edgels_Hysteresis,
+  auto *dc = new osl_edge(n_edgels_Hysteresis,
                               new osl_Vertex(edgels_Hysteresis->GetX(0)+xstart_,
                                              edgels_Hysteresis->GetY(0)+ystart_),
                               new osl_Vertex(edgels_Hysteresis->GetX(n_edgels_Hysteresis-1)+xstart_,
@@ -559,18 +561,18 @@ osl_edge *osl_canny_ox::NO_FollowerOX(osl_edgel_chain *edgels_Hysteresis)
 // returns 0 if none found.
 osl_Vertex *osl_find(std::list<osl_Vertex*> const *l, osl_Vertex const &v)
 {
-  for (std::list<osl_Vertex*>::const_iterator i=l->begin(); i!=l->end(); ++i)
-    if (v == *(*i))
-      return *i;
-  return VXL_NULLPTR;
+  for (auto i : *l)
+    if (v == *i)
+      return i;
+  return nullptr;
 }
 
 osl_Vertex *osl_find(std::list<osl_Vertex*> const *l, float x, float y)
 {
-  for (std::list<osl_Vertex*>::const_iterator i=l->begin(); i!=l->end(); ++i)
-    if ((*i)->x == x && (*i)->y == y)
-      return *i;
-  return VXL_NULLPTR;
+  for (auto i : *l)
+    if (i->x == x && i->y == y)
+      return i;
+  return nullptr;
 }
 
 
@@ -624,7 +626,7 @@ void osl_canny_ox::FollowerOX(std::list<osl_edge*> *edges)
         continue;
 
       // Create an osl_edgel_chain and add to the list
-      osl_edgel_chain * dc = new osl_edgel_chain(count);
+      auto * dc = new osl_edgel_chain(count);
       float *px = dc->GetX();
       float *py = dc->GetY();
       float *pg = dc->GetGrad();
@@ -664,8 +666,8 @@ void osl_canny_ox::FollowerOX(std::list<osl_edge*> *edges)
       else if ( dc->size() > 1 )
       {
         // Create an edge for the image topology
-        osl_Vertex *v1 = new osl_Vertex(dc->GetX(0),dc->GetY(0));
-        osl_Vertex *v2 = new osl_Vertex(dc->GetX(dc->size()-1),dc->GetY(dc->size()-1));
+        auto *v1 = new osl_Vertex(dc->GetX(0),dc->GetY(0));
+        auto *v2 = new osl_Vertex(dc->GetX(dc->size()-1),dc->GetY(dc->size()-1));
 
         if (junction_option_OX_)
         {
@@ -1048,8 +1050,8 @@ void osl_canny_ox::Find_junction_clustersOX()
 
   // Construct the list of junction cluster centres
   typedef std::list<int>::iterator it;
-  for (it i=xvertices.begin(), j=yvertices.begin(); i!=xvertices.end() && j!=yvertices.end(); ++i, ++j) {
-    osl_Vertex *v = new osl_Vertex( float((*i)+xstart_), float((*j)+ystart_));
+  for (auto i=xvertices.begin(), j=yvertices.begin(); i!=xvertices.end() && j!=yvertices.end(); ++i, ++j) {
+    auto *v = new osl_Vertex( float((*i)+xstart_), float((*j)+ystart_));
     vlist_->push_front(v);
     junction_[*i][*j] = 2;
   }

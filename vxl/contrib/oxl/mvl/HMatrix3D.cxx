@@ -1,14 +1,13 @@
 // This is oxl/mvl/HMatrix3D.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 #include <iostream>
 #include "HMatrix3D.h"
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <vnl/vnl_matlab_print.h>
 #include <vnl/vnl_inverse.h>
@@ -23,15 +22,10 @@
 //--------------------------------------------------------------
 //
 //: Default constructor
-HMatrix3D::HMatrix3D()
-{
-}
+HMatrix3D::HMatrix3D() = default;
 
 //: Copy constructor
-HMatrix3D::HMatrix3D(const HMatrix3D& M):
-  Base(M)
-{
-}
+HMatrix3D::HMatrix3D(const HMatrix3D& M) = default;
 
 //--------------------------------------------------------------
 //
@@ -79,9 +73,7 @@ HMatrix3D::HMatrix3D (const double* t_matrix) :
 }
 
 //: Destructor
-HMatrix3D::~HMatrix3D()
-{
-}
+HMatrix3D::~HMatrix3D() = default;
 
 // == OPERATIONS ==
 

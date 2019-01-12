@@ -15,39 +15,41 @@
 // \endverbatim
 //
 
+#include <utility>
 #include "volm_desc_matcher.h"
 #include "volm_desc_ex_land_only.h"
 #include "volm_desc_indexer.h"
 #include "volm_desc_ex_2d_indexer.h"
 #include <volm/volm_category_io.h>
 
+
 class volm_desc_ex_2d_matcher : public volm_desc_matcher
 {
 public:
   //: Default constructor
-  volm_desc_ex_2d_matcher() {}
+  volm_desc_ex_2d_matcher() = default;
 
   //: Constructor
   volm_desc_ex_2d_matcher(depth_map_scene_sptr const& dms,
-                          std::vector<volm_weight> const& weights,
-                          std::vector<double> const& radius,
+                          std::vector<volm_weight>  weights,
+                          std::vector<double>  radius,
                           unsigned const& nlands = volm_osm_category_io::volm_land_table.size(),
                           unsigned char const& initial_mag = 0)
-                          : dms_(dms), radius_(radius), nlands_(nlands), initial_mag_(initial_mag), weights_(weights) {}
+                          : dms_(dms), radius_(std::move(radius)), nlands_(nlands), initial_mag_(initial_mag), weights_(std::move(weights)) {}
 
   // Destructor
-  ~volm_desc_ex_2d_matcher() {}
+  ~volm_desc_ex_2d_matcher() override = default;
 
   //: check given threshold is valid or not for generate scaled probability map
-  virtual bool check_threshold(volm_desc_sptr const& query, float& thres_value);
+  bool check_threshold(volm_desc_sptr const& query, float& thres_value) override;
 
   //: Compare two descriptor a and b using the similarity method implemented in descriptor a
-  virtual float score(volm_desc_sptr const& query, volm_desc_sptr const& index);
+  float score(volm_desc_sptr const& query, volm_desc_sptr const& index) override;
 
   //: Create a volumetric existence descriptor for the query image
-  virtual volm_desc_sptr create_query_desc();
+  volm_desc_sptr create_query_desc() override;
 
-  virtual std::string get_index_type_str() { return volm_desc_ex_2d_indexer::get_name(); }
+  std::string get_index_type_str() override { return volm_desc_ex_2d_indexer::get_name(); }
 
 private:
     //: query depth_map_scene

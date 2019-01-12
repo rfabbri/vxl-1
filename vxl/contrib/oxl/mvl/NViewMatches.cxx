@@ -1,7 +1,4 @@
 // This is oxl/mvl/NViewMatches.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 //  \file
 
@@ -10,8 +7,10 @@
 #include <fstream>
 #include "NViewMatches.h"
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_awk.h>
 #include <vul/vul_printf.h>
 
@@ -201,9 +200,9 @@ std::vector<int> NViewMatches::get_matches(const NViewMatch& match)
 int NViewMatches::incorporate(const NViewMatch& newtrack)
 {
   int nmatches = 0;
-  iterator merged = end();
+  auto merged = end();
   std::abort(); // This routine is untested.....
-  for (iterator i = begin(); i != end(); ++i) {
+  for (auto i = begin(); i != end(); ++i) {
     if ((*i).matches(newtrack,min_overlap_)) {
       if (nmatches == 0) {
         // This is the first consistent match found for newtrack

@@ -9,7 +9,9 @@
 
 #include <mbl/mbl_random_n_from_m.h>
 #include <vnl/algo/vnl_svd.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Select a subset most suitable for use as a basis set
 //  Data matrix is 2ns x np (ns= number of samples, np = number of points)
@@ -49,8 +51,8 @@ std::vector<unsigned> m23d_select_basis_views(const vnl_matrix<double>& P2D,
   std::sort(best_s.begin(),best_s.end());
   std::cout<<"Quality of selected basis: "<<best_v<<std::endl
           <<"Selected basis: [ ";
-  for (unsigned i=0;i<best_s.size();++i)
-    std::cout<<best_s[i]<<' ';
+  for (unsigned int best_ : best_s)
+    std::cout<<best_<<' ';
   std::cout<<']'<<std::endl;
 
   return best_s;
@@ -83,4 +85,3 @@ double m23d_evaluate_basis(const vnl_matrix<double>& P2D,
   vnl_svd<double> svd(M);
   return svd.W(2*n-1)/svd.W(0);  // Smallest singular value/largest SV
 }
-

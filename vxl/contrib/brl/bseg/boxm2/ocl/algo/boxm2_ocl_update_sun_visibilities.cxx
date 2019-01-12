@@ -3,12 +3,14 @@
 #include "boxm2_ocl_update_sun_visibilities.h"
 #include <boxm2/ocl/boxm2_ocl_util.h>
 #include <boxm2/ocl/algo/boxm2_ocl_camera_converter.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_timer.h>
 
 std::map<std::string, std::vector<bocl_kernel*> > boxm2_ocl_update_sun_visibilities::kernels_;
 
-void boxm2_ocl_update_sun_visibilities::compile_kernel(bocl_device_sptr device,std::vector<bocl_kernel*> & vec_kernels,std::string opts)
+void boxm2_ocl_update_sun_visibilities::compile_kernel(const bocl_device_sptr& device,std::vector<bocl_kernel*> & vec_kernels,const std::string& opts)
 {
     std::vector<std::string> src_paths;
     std::string source_dir = boxm2_ocl_util::ocl_src_root();
@@ -28,27 +30,27 @@ void boxm2_ocl_update_sun_visibilities::compile_kernel(bocl_device_sptr device,s
     //compilation options
     std::string options ="" + opts;
     //seg len pass
-    bocl_kernel* seg_len = new bocl_kernel();
+    auto* seg_len = new bocl_kernel();
     std::string seg_opts = options + " -D SEGLENVIS -D STEP_CELL=step_cell_seglen_vis(aux_args,data_ptr,llid,d*linfo->block_len) ";
     seg_len->create_kernel(&device->context(), device->device_id(), src_paths, "seg_len_and_vis_main", seg_opts, "update::seg_len_vis");
     vec_kernels.push_back(seg_len);
 
     //may need DIFF LIST OF SOURCES FOR THSI GUY TOO
-    bocl_kernel* update = new bocl_kernel();
+    auto* update = new bocl_kernel();
     update->create_kernel(&device->context(), device->device_id(), src_paths2, "update_visibilities_main", " -D UPDATE_SUN_VIS", "update::update_visibilities_main");
     vec_kernels.push_back(update);
 
     return ;
 }
 
-bool boxm2_ocl_update_sun_visibilities::update( boxm2_scene_sptr         scene,
+bool boxm2_ocl_update_sun_visibilities::update( const boxm2_scene_sptr&         scene,
                                                 bocl_device_sptr         device,
-                                                boxm2_opencl_cache_sptr  opencl_cache,
-                                                boxm2_cache_sptr         cache,
+                                                const boxm2_opencl_cache_sptr&  opencl_cache,
+                                                const boxm2_cache_sptr&          /*cache*/,
                                                 vpgl_camera_double_sptr  sun_cam,
                                                 unsigned ni,
                                                 unsigned nj,
-                                                std::string               prefix_name
+                                                const std::string&               prefix_name
                                               )
 {
   float transfer_time=0.0f;
@@ -79,20 +81,20 @@ bool boxm2_ocl_update_sun_visibilities::update( boxm2_scene_sptr         scene,
   std::size_t global_threads[2]={cl_ni, cl_nj};
 
   // create all buffers
-  cl_float* ray_origins    = new cl_float[4*cl_ni*cl_nj];
-  cl_float* ray_directions = new cl_float[4*cl_ni*cl_nj];
+  auto* ray_origins    = new cl_float[4*cl_ni*cl_nj];
+  auto* ray_directions = new cl_float[4*cl_ni*cl_nj];
   bocl_mem_sptr ray_o_buff = opencl_cache->alloc_mem(cl_ni*cl_nj*sizeof(cl_float4), ray_origins,"ray_origins buffer");
   bocl_mem_sptr ray_d_buff = opencl_cache->alloc_mem(cl_ni*cl_nj*sizeof(cl_float4), ray_directions,"ray_directions buffer");
   boxm2_ocl_camera_converter::compute_ray_image( device, queue, sun_cam, cl_ni, cl_nj, ray_o_buff, ray_d_buff);
 
   //create vis, pre, norm and input image buffers
-  float* vis_buff  = new float[cl_ni*cl_nj];
+  auto* vis_buff  = new float[cl_ni*cl_nj];
   std::fill(vis_buff, vis_buff+cl_ni*cl_nj, 1.0f);
 
   bocl_mem_sptr vis_image = opencl_cache->alloc_mem(cl_ni*cl_nj*sizeof(float), vis_buff,"vis image buffer");
   vis_image->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
 
-  float* last_vis_buff  = new float[cl_ni*cl_nj];
+  auto* last_vis_buff  = new float[cl_ni*cl_nj];
   std::fill(last_vis_buff, last_vis_buff+cl_ni*cl_nj, 1.0f);
 
   bocl_mem_sptr last_vis_image = opencl_cache->alloc_mem(cl_ni*cl_nj*sizeof(float), last_vis_buff, "last vis image buffer");
@@ -109,7 +111,7 @@ bool boxm2_ocl_update_sun_visibilities::update( boxm2_scene_sptr         scene,
 
   // Output Array
   float output_arr[100];
-  for (int i=0; i<100; ++i) output_arr[i] = 0.0f;
+  for (float & i : output_arr) i = 0.0f;
   bocl_mem_sptr  cl_output=new bocl_mem(device->context(), output_arr, sizeof(float)*100, "output buffer");
   cl_output->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
 
@@ -137,7 +139,7 @@ bool boxm2_ocl_update_sun_visibilities::update( boxm2_scene_sptr         scene,
       bocl_mem * blk_info  = opencl_cache->loaded_block_info();
 
       //make sure the scene info data size reflects the real data size
-      boxm2_scene_info* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
+      auto* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
       int alphaTypeSize = boxm2_data_info::datasize(boxm2_data_traits<BOXM2_ALPHA>::prefix());
       info_buffer->data_buffer_length = (int) (alpha->num_bytes()/alphaTypeSize);
       blk_info->write_to_buffer((queue));
@@ -218,7 +220,7 @@ bool boxm2_ocl_update_sun_visibilities::update( boxm2_scene_sptr         scene,
       bocl_mem * blk_info  = opencl_cache->loaded_block_info();
 
       bocl_mem* alpha     = opencl_cache->get_data<BOXM2_ALPHA>(scene,*id);
-      boxm2_scene_info* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
+      auto* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
       int alphaTypeSize = boxm2_data_info::datasize(boxm2_data_traits<BOXM2_ALPHA>::prefix());
       info_buffer->data_buffer_length = (int) (alpha->num_bytes()/alphaTypeSize);
       blk_info->write_to_buffer((queue));

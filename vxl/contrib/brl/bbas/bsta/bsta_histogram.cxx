@@ -1,6 +1,8 @@
 #include <iostream>
 #include "bsta_histogram.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 template <>
 void bsta_histogram<char>::pretty_print(std::ostream& os) const
@@ -14,8 +16,7 @@ void bsta_histogram<char>::pretty_print(std::ostream& os) const
   << "min: " << (int)min_ << "\n"
   << "max: " << (int)max_ << "\n"
   << "counts: ";
-  for (unsigned i = 0; i < counts_.size() ; i++)
-    os << (int)counts_[i] << ' ';
+  for (char count : counts_)
+    os << (int)count << ' ';
 
 }
-

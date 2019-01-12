@@ -9,7 +9,9 @@
 #include <algorithm>
 #include <vil3d/algo/vil3d_structuring_element.h>
 #include <vil3d/vil3d_image_view.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Return r-th sorted value of im[offset[k]]
 //  Values im[offset[k]] placed into values[k] then sorted.
@@ -150,4 +152,3 @@ inline void vil3d_median_filter(const vil3d_image_view<T>& src_image,
 }
 
 #endif // vil3d_rank_filter_h_
-

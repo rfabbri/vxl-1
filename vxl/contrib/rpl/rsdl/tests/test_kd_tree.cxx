@@ -2,7 +2,9 @@
 #include <vector>
 #include <algorithm>
 #include <utility>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_random.h>
 #include <testlib/testlib_test.h>
@@ -98,7 +100,7 @@ static void test_kd_tree()
   points.resize( M );
   std::vector< std::pair< double, int > > dist_pairs( M );
   int num_tests = 20;
-  const int n=5;
+  constexpr int n = 5;
   vnl_random mz_rand;
 
   // generate points

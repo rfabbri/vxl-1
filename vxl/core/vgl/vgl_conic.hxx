@@ -7,10 +7,10 @@
 
 #include <cmath>
 #include <iostream>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include "vgl_conic.h"
-
-#include <vcl_compiler.h>
-#include <vcl_compiler.h>
 
 static const char *vgl_conic_name[] =
 {

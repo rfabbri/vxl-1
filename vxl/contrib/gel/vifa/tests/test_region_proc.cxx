@@ -1,7 +1,9 @@
 // This is gel/vifa/tests/test_region_proc.cxx
 #include <iostream>
 #include <ostream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_vector_2d.h>
 #include <testlib/testlib_test.h>
 #include <sdet/sdet_detector_params.h>
@@ -50,7 +52,7 @@ static void test_region_proc(int argc, char* argv[])
 
     // Dump the intensity regions
     std::cout << region_list.size() << " intensity faces found:\n";
-    iface_iterator  ifi = region_list.begin();
+    auto  ifi = region_list.begin();
     for (int i=1; ifi != region_list.end(); ifi++, i++)
     {
       vtol_intensity_face_sptr  face = *ifi;
@@ -64,7 +66,7 @@ static void test_region_proc(int argc, char* argv[])
 #endif
       one_chain_list ocl; face->one_chains(ocl);
 
-      one_chain_list::iterator  ocli = ocl.begin();
+      auto  ocli = ocl.begin();
       double perim1 = 0.0;
       double perim2 = 0.0;
       for (int j=1; ocli != ocl.end(); ++ocli, ++j)

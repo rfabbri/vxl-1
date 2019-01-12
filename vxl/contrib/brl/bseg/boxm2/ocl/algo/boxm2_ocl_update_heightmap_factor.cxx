@@ -1,4 +1,7 @@
 // This is brl/bseg/boxm2/ocl/algo/boxm2_ocl_update_heightmap_factor.cxx
+#include <fstream>
+#include <iostream>
+#include <algorithm>
 #include "boxm2_ocl_update_heightmap_factor.h"
 //:
 // \file
@@ -7,8 +10,9 @@
 // \author Vishal Jain
 // \date Mar 25, 2011
 
-#include <vcl_fstream.h>
-#include <vcl_algorithm.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/ocl/boxm2_opencl_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -26,18 +30,18 @@
 #include <boct/boct_bit_tree.h>
 #include <vnl/vnl_random.h>
 //: Map of kernels should persist between process executions
-vcl_map<vcl_string, vcl_vector<bocl_kernel*> > boxm2_ocl_compute_heightmap_pre_post::pre_kernels_;
-vcl_map<vcl_string, vcl_vector<bocl_kernel*> > boxm2_ocl_compute_heightmap_pre_post::post_kernels_;
-vcl_map<vcl_string, vcl_vector<bocl_kernel*> > boxm2_ocl_update_heightmap_factor::update_heightmap_factor_kernels_;
-vcl_map<vcl_string, vcl_vector<bocl_kernel*> > boxm2_ocl_smooth_heightmap_pdata::smooth_heightmap_pdata_kernels_;
+std::map<std::string, std::vector<bocl_kernel*> > boxm2_ocl_compute_heightmap_pre_post::pre_kernels_;
+std::map<std::string, std::vector<bocl_kernel*> > boxm2_ocl_compute_heightmap_pre_post::post_kernels_;
+std::map<std::string, std::vector<bocl_kernel*> > boxm2_ocl_update_heightmap_factor::update_heightmap_factor_kernels_;
+std::map<std::string, std::vector<bocl_kernel*> > boxm2_ocl_smooth_heightmap_pdata::smooth_heightmap_pdata_kernels_;
 //Main public method, updates color model
-bool boxm2_ocl_compute_heightmap_pre_post::update_pre(boxm2_scene_sptr         scene,
-                                                      bocl_device_sptr         device,
-                                                      boxm2_opencl_cache_sptr  opencl_cache,
-                                                      vil_image_view_base_sptr ximg,
-                                                      vil_image_view_base_sptr yimg,
-                                                      float resnearfactor,
-                                                      float resfarfactor)
+bool boxm2_ocl_compute_heightmap_pre_post::update_pre(const boxm2_scene_sptr&         scene,
+                                                      const bocl_device_sptr&         device,
+                                                      const boxm2_opencl_cache_sptr&  opencl_cache,
+                                                      const vil_image_view_base_sptr& ximg,
+                                                      const vil_image_view_base_sptr& yimg,
+                                                      float  /*resnearfactor*/,
+                                                      float  /*resfarfactor*/)
 {
     enum {
         UPDATE_PRE = 0,
@@ -45,15 +49,15 @@ bool boxm2_ocl_compute_heightmap_pre_post::update_pre(boxm2_scene_sptr         s
     };
     float transfer_time = 0.0f;
     float gpu_time = 0.0f;
-    vcl_size_t local_threads[2] = { 8, 8 };
-    vcl_size_t global_threads[2] = { 8, 8 };
+    std::size_t local_threads[2] = { 8, 8 };
+    std::size_t global_threads[2] = { 8, 8 };
 
     //cache size sanity check
-    vcl_size_t binCache = opencl_cache.ptr()->bytes_in_cache();
-    vcl_cout << "Update MBs in cache: " << binCache / (1024.0*1024.0) << vcl_endl;
+    std::size_t binCache = opencl_cache.ptr()->bytes_in_cache();
+    std::cout << "Update MBs in cache: " << binCache / (1024.0*1024.0) << std::endl;
 
     //make correct data types are here
-    vcl_string data_type, num_obs_type, options;
+    std::string data_type, num_obs_type, options;
     // create a command queue.
     int status = 0;
     cl_command_queue queue = clCreateCommandQueue(device->context(), *(device->device_id()), CL_QUEUE_PROFILING_ENABLE, &status);
@@ -61,16 +65,16 @@ bool boxm2_ocl_compute_heightmap_pre_post::update_pre(boxm2_scene_sptr         s
         return false;
 
     //grab input image, establish cl_ni, cl_nj (so global size is divisible by local size)
-    vil_image_view<float>* ximg_view = static_cast<vil_image_view<float>*>(ximg.ptr());
-    vil_image_view<float>* yimg_view = static_cast<vil_image_view<float>*>(yimg.ptr());
+    auto* ximg_view = static_cast<vil_image_view<float>*>(ximg.ptr());
+    auto* yimg_view = static_cast<vil_image_view<float>*>(yimg.ptr());
 
-    unsigned cl_ni = (unsigned)RoundUp(ximg->ni(), (int)local_threads[0]);
-    unsigned cl_nj = (unsigned)RoundUp(ximg->nj(), (int)local_threads[1]);
+    auto cl_ni = (unsigned)RoundUp(ximg->ni(), (int)local_threads[0]);
+    auto cl_nj = (unsigned)RoundUp(ximg->nj(), (int)local_threads[1]);
     global_threads[0] = cl_ni;
     global_threads[1] = cl_nj;
     //set generic cam
-    cl_float* ray_origins = new cl_float[4 * cl_ni*cl_nj];
-    cl_float* ray_directions = new cl_float[4 * cl_ni*cl_nj];
+    auto* ray_origins = new cl_float[4 * cl_ni*cl_nj];
+    auto* ray_directions = new cl_float[4 * cl_ni*cl_nj];
     vgl_box_3d<double> bbox = scene->bounding_box();
     float z = bbox.max_z();
     int count = 0;
@@ -100,8 +104,8 @@ bool boxm2_ocl_compute_heightmap_pre_post::update_pre(boxm2_scene_sptr         s
     bocl_mem_sptr tnearfar_mem_ptr = opencl_cache->alloc_mem(2 * sizeof(float), tnearfar, "tnearfar  buffer");
     tnearfar_mem_ptr->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
     //Visibility, Preinf, Norm, and input image buffers
-    float* vis_buff = new float[cl_ni*cl_nj];
-    float* pre_buff = new float[cl_ni*cl_nj];
+    auto* vis_buff = new float[cl_ni*cl_nj];
+    auto* pre_buff = new float[cl_ni*cl_nj];
 
     for (unsigned i = 0; i < cl_ni*cl_nj; i++)
     {
@@ -128,7 +132,7 @@ bool boxm2_ocl_compute_heightmap_pre_post::update_pre(boxm2_scene_sptr         s
 
     // Output Array
     float output_arr[100];
-    for (int i = 0; i < 100; ++i) output_arr[i] = 0.0f;
+    for (float & i : output_arr) i = 0.0f;
     bocl_mem_sptr  cl_output = new bocl_mem(device->context(), output_arr, sizeof(float) * 100, "output buffer");
     cl_output->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
 
@@ -139,10 +143,10 @@ bool boxm2_ocl_compute_heightmap_pre_post::update_pre(boxm2_scene_sptr         s
     lookup->create_buffer(CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR);
 
     // compile the kernel if not already compiled
-    vcl_vector<bocl_kernel*>& kernels = get_pre_kernels(device, options);
+    std::vector<bocl_kernel*>& kernels = get_pre_kernels(device, options);
     // set arguments
-    vcl_vector<boxm2_block_id> vis_order = scene->get_block_ids();
-    vcl_vector<boxm2_block_id>::iterator id;
+    std::vector<boxm2_block_id> vis_order = scene->get_block_ids();
+    std::vector<boxm2_block_id>::iterator id;
 
     for (id = vis_order.begin(); id != vis_order.end(); ++id)
     {
@@ -156,7 +160,7 @@ bool boxm2_ocl_compute_heightmap_pre_post::update_pre(boxm2_scene_sptr         s
             bocl_mem* blk = opencl_cache->get_block(scene, *id);
             bocl_mem* blk_info = opencl_cache->loaded_block_info();
             bocl_mem* alpha = opencl_cache->get_data(scene, *id, boxm2_data_traits<BOXM2_ALPHA>::prefix());
-            boxm2_scene_info* info_buffer = (boxm2_scene_info*)blk_info->cpu_buffer();
+            auto* info_buffer = (boxm2_scene_info*)blk_info->cpu_buffer();
             int alphaTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_ALPHA>::prefix());
             info_buffer->data_buffer_length = (int)(alpha->num_bytes() / alphaTypeSize);
             //grab an appropriately sized AUX data buffer
@@ -201,7 +205,7 @@ bool boxm2_ocl_compute_heightmap_pre_post::update_pre(boxm2_scene_sptr         s
             {
                 blk_info->write_to_buffer((queue));
 
-                vcl_size_t lt[1], gt[1];
+                std::size_t lt[1], gt[1];
                 lt[0] = 64;
                 gt[0] = RoundUp(info_buffer->data_buffer_length, lt[0]);
 
@@ -241,19 +245,19 @@ bool boxm2_ocl_compute_heightmap_pre_post::update_pre(boxm2_scene_sptr         s
     opencl_cache->unref_mem(ray_o_buff.ptr());
     opencl_cache->unref_mem(ray_d_buff.ptr());
     opencl_cache->unref_mem(tnearfar_mem_ptr.ptr());
-    vcl_cout << "Gpu time " << gpu_time << " transfer time " << transfer_time << vcl_endl;
+    std::cout << "Gpu time " << gpu_time << " transfer time " << transfer_time << std::endl;
     clReleaseCommandQueue(queue);
     return true;
 }
 
 //Main public method, updates color model
-bool boxm2_ocl_compute_heightmap_pre_post::update_post(boxm2_scene_sptr         scene,
-    bocl_device_sptr         device,
-    boxm2_opencl_cache_sptr  opencl_cache,
-    vil_image_view_base_sptr ximg,
-    vil_image_view_base_sptr yimg,
-    float resnearfactor,
-    float resfarfactor)
+bool boxm2_ocl_compute_heightmap_pre_post::update_post(const boxm2_scene_sptr&         scene,
+    const bocl_device_sptr&         device,
+    const boxm2_opencl_cache_sptr&  opencl_cache,
+    const vil_image_view_base_sptr& ximg,
+    const vil_image_view_base_sptr& yimg,
+    float  /*resnearfactor*/,
+    float  /*resfarfactor*/)
 {
     enum {
         UPDATE_POST = 0,
@@ -261,15 +265,15 @@ bool boxm2_ocl_compute_heightmap_pre_post::update_post(boxm2_scene_sptr         
     };
     float transfer_time = 0.0f;
     float gpu_time = 0.0f;
-    vcl_size_t local_threads[2] = { 8, 8 };
-    vcl_size_t global_threads[2] = { 8, 8 };
+    std::size_t local_threads[2] = { 8, 8 };
+    std::size_t global_threads[2] = { 8, 8 };
 
     //cache size sanity check
-    vcl_size_t binCache = opencl_cache.ptr()->bytes_in_cache();
-    vcl_cout << "Update MBs in cache: " << binCache / (1024.0*1024.0) << vcl_endl;
+    std::size_t binCache = opencl_cache.ptr()->bytes_in_cache();
+    std::cout << "Update MBs in cache: " << binCache / (1024.0*1024.0) << std::endl;
 
     //make correct data types are here
-    vcl_string data_type, num_obs_type, options;
+    std::string data_type, num_obs_type, options;
 
     // create a command queue.
     int status = 0;
@@ -280,15 +284,15 @@ bool boxm2_ocl_compute_heightmap_pre_post::update_post(boxm2_scene_sptr         
     if (status != 0)
         return false;
 
-    vil_image_view<float>* ximg_view = static_cast<vil_image_view<float>*>(ximg.ptr());
-    vil_image_view<float>* yimg_view = static_cast<vil_image_view<float>*>(yimg.ptr());
-    unsigned cl_ni = (unsigned)RoundUp(ximg->ni(), (int)local_threads[0]);
-    unsigned cl_nj = (unsigned)RoundUp(ximg->nj(), (int)local_threads[1]);
+    auto* ximg_view = static_cast<vil_image_view<float>*>(ximg.ptr());
+    auto* yimg_view = static_cast<vil_image_view<float>*>(yimg.ptr());
+    auto cl_ni = (unsigned)RoundUp(ximg->ni(), (int)local_threads[0]);
+    auto cl_nj = (unsigned)RoundUp(ximg->nj(), (int)local_threads[1]);
     global_threads[0] = cl_ni;
     global_threads[1] = cl_nj;
     //set generic cam
-    cl_float* ray_origins = new cl_float[4 * cl_ni*cl_nj];
-    cl_float* ray_directions = new cl_float[4 * cl_ni*cl_nj];
+    auto* ray_origins = new cl_float[4 * cl_ni*cl_nj];
+    auto* ray_directions = new cl_float[4 * cl_ni*cl_nj];
     vgl_box_3d<double> bbox = scene->bounding_box();
     float z = bbox.max_z();
     int count = 0;
@@ -316,8 +320,8 @@ bool boxm2_ocl_compute_heightmap_pre_post::update_post(boxm2_scene_sptr         
     bocl_mem_sptr tnearfar_mem_ptr = opencl_cache->alloc_mem(2 * sizeof(float), tnearfar, "tnearfar  buffer");
     tnearfar_mem_ptr->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
     //Visibility, Preinf, Norm, and input image buffers
-    float* vis_buff = new float[cl_ni*cl_nj];
-    float* post_buff = new float[cl_ni*cl_nj];
+    auto* vis_buff = new float[cl_ni*cl_nj];
+    auto* post_buff = new float[cl_ni*cl_nj];
 
     for (unsigned i = 0; i < cl_ni*cl_nj; i++)
     {
@@ -343,7 +347,7 @@ bool boxm2_ocl_compute_heightmap_pre_post::update_post(boxm2_scene_sptr         
 
     // Output Array
     float output_arr[100];
-    for (int i = 0; i < 100; ++i) output_arr[i] = 0.0f;
+    for (float & i : output_arr) i = 0.0f;
     bocl_mem_sptr  cl_output = new bocl_mem(device->context(), output_arr, sizeof(float) * 100, "output buffer");
     cl_output->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
 
@@ -354,11 +358,11 @@ bool boxm2_ocl_compute_heightmap_pre_post::update_post(boxm2_scene_sptr         
     lookup->create_buffer(CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR);
 
     // compile the kernel if not already compiled
-    vcl_vector<bocl_kernel*>& kernels = get_post_kernels(device, options);
+    std::vector<bocl_kernel*>& kernels = get_post_kernels(device, options);
     // set arguments
-    vcl_vector<boxm2_block_id> vis_order;
+    std::vector<boxm2_block_id> vis_order;
     vis_order = scene->get_block_ids();
-    vcl_vector<boxm2_block_id>::iterator id;
+    std::vector<boxm2_block_id>::iterator id;
     for (unsigned int i = 0; i < kernels.size(); ++i)
     {
         bocl_kernel* kern = kernels[i];
@@ -371,7 +375,7 @@ bool boxm2_ocl_compute_heightmap_pre_post::update_post(boxm2_scene_sptr         
             bocl_mem* blk = opencl_cache->get_block(scene, *id);
             bocl_mem* blk_info = opencl_cache->loaded_block_info();
             bocl_mem* alpha = opencl_cache->get_data<BOXM2_ALPHA>(scene, *id, 0, false);
-            boxm2_scene_info* info_buffer = (boxm2_scene_info*)blk_info->cpu_buffer();
+            auto* info_buffer = (boxm2_scene_info*)blk_info->cpu_buffer();
             int alphaTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_ALPHA>::prefix());
             info_buffer->data_buffer_length = (int)(alpha->num_bytes() / alphaTypeSize);
             // data type string may contain an identifier so determine the buffer size
@@ -417,7 +421,7 @@ bool boxm2_ocl_compute_heightmap_pre_post::update_post(boxm2_scene_sptr         
             {
                 blk_info->write_to_buffer((queue));
 
-                vcl_size_t lt[1], gt[1];
+                std::size_t lt[1], gt[1];
                 lt[0] = 64;
                 gt[0] = RoundUp(info_buffer->data_buffer_length, lt[0]);
 
@@ -456,20 +460,20 @@ bool boxm2_ocl_compute_heightmap_pre_post::update_post(boxm2_scene_sptr         
     opencl_cache->unref_mem(ray_o_buff.ptr());
     opencl_cache->unref_mem(ray_d_buff.ptr());
     opencl_cache->unref_mem(tnearfar_mem_ptr.ptr());
-    vcl_cout << "Gpu time " << gpu_time << " transfer time " << transfer_time << vcl_endl;
+    std::cout << "Gpu time " << gpu_time << " transfer time " << transfer_time << std::endl;
     clReleaseCommandQueue(queue);
 
     return true;
 }
 
 //Main public method, updates color model
-bool boxm2_ocl_compute_heightmap_pre_post::compute_pre_post(boxm2_scene_sptr         scene,
-    bocl_device_sptr         device,
-    boxm2_opencl_cache_sptr  opencl_cache,
-    vil_image_view_base_sptr hmap_mean,
-    vil_image_view_base_sptr hmap_var,
-    vil_image_view_base_sptr ximg,
-    vil_image_view_base_sptr yimg,
+bool boxm2_ocl_compute_heightmap_pre_post::compute_pre_post(const boxm2_scene_sptr&         scene,
+    const bocl_device_sptr&         device,
+    const boxm2_opencl_cache_sptr&  opencl_cache,
+    const vil_image_view_base_sptr& hmap_mean,
+    const vil_image_view_base_sptr& hmap_var,
+    const vil_image_view_base_sptr& ximg,
+    const vil_image_view_base_sptr& yimg,
     int smoothingradius,
     float resnearfactor,
     float resfarfactor)
@@ -479,21 +483,21 @@ bool boxm2_ocl_compute_heightmap_pre_post::compute_pre_post(boxm2_scene_sptr    
     boxm2_ocl_compute_heightmap_pre_post::update_post(scene, device, opencl_cache, ximg, yimg, resnearfactor, resfarfactor);
     return true;
 }
-bool boxm2_ocl_update_heightmap_factor::update_heightmap_factor(boxm2_scene_sptr         scene,
-                                                                bocl_device_sptr         device,
-                                                                boxm2_opencl_cache_sptr  opencl_cache,
+bool boxm2_ocl_update_heightmap_factor::update_heightmap_factor(const boxm2_scene_sptr&         scene,
+                                                                const bocl_device_sptr&         device,
+                                                                const boxm2_opencl_cache_sptr&  opencl_cache,
                                                                 bool add)
 {
     float transfer_time = 0.0f;
     float gpu_time = 0.0f;
-    vcl_size_t local_threads[1] = { 64 };
-    vcl_size_t global_threads[1] = { 64 };
+    std::size_t local_threads[1] = { 64 };
+    std::size_t global_threads[1] = { 64 };
     //cache size sanity check
-    vcl_size_t binCache = opencl_cache.ptr()->bytes_in_cache();
-    vcl_cout << "Update MBs in cache: " << binCache / (1024.0*1024.0) << vcl_endl;
+    std::size_t binCache = opencl_cache.ptr()->bytes_in_cache();
+    std::cout << "Update MBs in cache: " << binCache / (1024.0*1024.0) << std::endl;
 
     //make correct data types are here
-    vcl_string data_type, num_obs_type, options;
+    std::string data_type, num_obs_type, options;
     int does_add_buf = add ? 1 : 0;
     bocl_mem_sptr does_add = new bocl_mem(device->context(), &does_add_buf, sizeof(int) * 1, "add (1) or subtract (0)");
     does_add->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
@@ -505,9 +509,9 @@ bool boxm2_ocl_update_heightmap_factor::update_heightmap_factor(boxm2_scene_sptr
         return false;
     // compile the kernel if not already compiled
     bocl_kernel * kern = get_update_heightmap_factor_kernels(device, options)[0];
-    vcl_vector<boxm2_block_id> blks_order;
+    std::vector<boxm2_block_id> blks_order;
     blks_order = scene->get_block_ids();
-    vcl_vector<boxm2_block_id>::iterator  id;
+    std::vector<boxm2_block_id>::iterator  id;
 
     for (id = blks_order.begin(); id != blks_order.end(); ++id)
     {
@@ -518,7 +522,7 @@ bool boxm2_ocl_update_heightmap_factor::update_heightmap_factor(boxm2_scene_sptr
         bocl_mem* blk = opencl_cache->get_block(scene, *id);
         bocl_mem* blk_info = opencl_cache->loaded_block_info();
         bocl_mem* alpha = opencl_cache->get_data<BOXM2_ALPHA>(scene, *id, 0, false);
-        boxm2_scene_info* info_buffer = (boxm2_scene_info*)blk_info->cpu_buffer();
+        auto* info_buffer = (boxm2_scene_info*)blk_info->cpu_buffer();
         int alphaTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_ALPHA>::prefix());
         info_buffer->data_buffer_length = (int)(alpha->num_bytes() / alphaTypeSize);
         blk_info->write_to_buffer((queue));
@@ -560,17 +564,17 @@ bool boxm2_ocl_update_heightmap_factor::update_heightmap_factor(boxm2_scene_sptr
 }
 
 //Returns vector of color update kernels (and caches them per device
-vcl_vector<bocl_kernel*>& boxm2_ocl_compute_heightmap_pre_post::get_pre_kernels(bocl_device_sptr device, vcl_string opts)
+std::vector<bocl_kernel*>& boxm2_ocl_compute_heightmap_pre_post::get_pre_kernels(const bocl_device_sptr& device, const std::string& opts)
 {
     // compile kernels if not already compiled
-    vcl_string identifier = device->device_identifier() + opts;
+    std::string identifier = device->device_identifier() + opts;
     if (pre_kernels_.find(identifier) != pre_kernels_.end())
         return pre_kernels_[identifier];
 
     //otherwise compile the kernels
-    vcl_cout << "=== boxm2_ocl_update_process::compiling kernels on device " << identifier << "===" << vcl_endl;
-    vcl_vector<vcl_string> src_paths;
-    vcl_string source_dir = boxm2_ocl_util::ocl_src_root();
+    std::cout << "=== boxm2_ocl_update_process::compiling kernels on device " << identifier << "===" << std::endl;
+    std::vector<std::string> src_paths;
+    std::string source_dir = boxm2_ocl_util::ocl_src_root();
     src_paths.push_back(source_dir + "scene_info.cl");
     src_paths.push_back(source_dir + "pixel_conversion.cl");
     src_paths.push_back(source_dir + "bit/bit_tree_library_functions.cl");
@@ -579,21 +583,21 @@ vcl_vector<bocl_kernel*>& boxm2_ocl_compute_heightmap_pre_post::get_pre_kernels(
     src_paths.push_back(source_dir + "statistics_library_functions.cl");
     src_paths.push_back(source_dir + "ray_bundle_library_opt.cl");
     src_paths.push_back(source_dir + "bit/update_bp_kernels.cl");
-    vcl_vector<vcl_string> non_ray_src = vcl_vector<vcl_string>(src_paths);
+    std::vector<std::string> non_ray_src = std::vector<std::string>(src_paths);
     src_paths.push_back(source_dir + "update_functors.cl");
     src_paths.push_back(source_dir + "bit/cast_ray_bit.cl");
 
     //compilation options
-    vcl_string options = "-D ATOMIC_FLOAT ";
+    std::string options = "-D ATOMIC_FLOAT ";
     //populate vector of kernels
-    vcl_vector<bocl_kernel*> vec_kernels;
+    std::vector<bocl_kernel*> vec_kernels;
 
-    bocl_kernel* pre = new bocl_kernel();
-    vcl_string pre_opts = options + " -D PRE_HMAP_CELL  -D STEP_CELL=step_cell_pre_hmap(aux_args,data_ptr,llid,d)";
+    auto* pre = new bocl_kernel();
+    std::string pre_opts = options + " -D PRE_HMAP_CELL  -D STEP_CELL=step_cell_pre_hmap(aux_args,data_ptr,llid,d)";
     pre->create_kernel(&device->context(), device->device_id(), src_paths, "pre_hmap_main", pre_opts, "update::pre_hmap_main");
     vec_kernels.push_back(pre);
-    bocl_kernel* normalize_pre = new bocl_kernel();
-    vcl_string normalize_pre_opts = options + " -D PRE_HMAP_CELL ";
+    auto* normalize_pre = new bocl_kernel();
+    std::string normalize_pre_opts = options + " -D PRE_HMAP_CELL ";
     normalize_pre->create_kernel(&device->context(), device->device_id(), src_paths, "normalize_prehmap_main", pre_opts, "update::normalize_prehmap_main");
     vec_kernels.push_back(normalize_pre);
     //store and return
@@ -601,17 +605,17 @@ vcl_vector<bocl_kernel*>& boxm2_ocl_compute_heightmap_pre_post::get_pre_kernels(
     return pre_kernels_[identifier];
 }
 
-vcl_vector<bocl_kernel*>& boxm2_ocl_compute_heightmap_pre_post::get_post_kernels(bocl_device_sptr device, vcl_string opts)
+std::vector<bocl_kernel*>& boxm2_ocl_compute_heightmap_pre_post::get_post_kernels(const bocl_device_sptr& device, const std::string& opts)
 {
     // compile kernels if not already compiled
-    vcl_string identifier = device->device_identifier() + opts;
+    std::string identifier = device->device_identifier() + opts;
     if (post_kernels_.find(identifier) != post_kernels_.end())
         return post_kernels_[identifier];
 
     //otherwise compile the kernels
-    vcl_cout << "=== boxm2_ocl_update_process::compiling kernels on device " << identifier << "===" << vcl_endl;
-    vcl_vector<vcl_string> src_paths;
-    vcl_string source_dir = boxm2_ocl_util::ocl_src_root();
+    std::cout << "=== boxm2_ocl_update_process::compiling kernels on device " << identifier << "===" << std::endl;
+    std::vector<std::string> src_paths;
+    std::string source_dir = boxm2_ocl_util::ocl_src_root();
     src_paths.push_back(source_dir + "scene_info.cl");
     src_paths.push_back(source_dir + "pixel_conversion.cl");
     src_paths.push_back(source_dir + "bit/bit_tree_library_functions.cl");
@@ -620,22 +624,22 @@ vcl_vector<bocl_kernel*>& boxm2_ocl_compute_heightmap_pre_post::get_post_kernels
     src_paths.push_back(source_dir + "statistics_library_functions.cl");
     src_paths.push_back(source_dir + "ray_bundle_library_opt.cl");
     src_paths.push_back(source_dir + "bit/update_bp_kernels.cl");
-    vcl_vector<vcl_string> non_ray_src = vcl_vector<vcl_string>(src_paths);
+    std::vector<std::string> non_ray_src = std::vector<std::string>(src_paths);
     src_paths.push_back(source_dir + "bit/cast_ray_bit.cl");
 
     //compilation options
-    vcl_string options = "-D ATOMIC_FLOAT  -D REVERSE";
+    std::string options = "-D ATOMIC_FLOAT  -D REVERSE";
     //populate vector of kernels
-    vcl_vector<bocl_kernel*> vec_kernels;
+    std::vector<bocl_kernel*> vec_kernels;
     //seg len pass
 
-    bocl_kernel* post = new bocl_kernel();
-    vcl_string post_opts = options + " -D POST_HMAP_CELL  -D STEP_CELL=step_cell_post_hmap(aux_args,data_ptr,llid,d)";
+    auto* post = new bocl_kernel();
+    std::string post_opts = options + " -D POST_HMAP_CELL  -D STEP_CELL=step_cell_post_hmap(aux_args,data_ptr,llid,d)";
     post->create_kernel(&device->context(), device->device_id(), src_paths, "post_hmap_main", post_opts, "update::post_Cell");
     vec_kernels.push_back(post);
 
-    bocl_kernel* normalize_post = new bocl_kernel();
-    vcl_string normalize_post_opts = options + " -D NORMALIZE_POST_CELL ";
+    auto* normalize_post = new bocl_kernel();
+    std::string normalize_post_opts = options + " -D NORMALIZE_POST_CELL ";
     normalize_post->create_kernel(&device->context(), device->device_id(), non_ray_src, "normalize_post_cell", normalize_post_opts, "update::normalize_post_cell");
     vec_kernels.push_back(normalize_post);
     //store and return
@@ -643,17 +647,17 @@ vcl_vector<bocl_kernel*>& boxm2_ocl_compute_heightmap_pre_post::get_post_kernels
     return post_kernels_[identifier];
 }
 
-vcl_vector<bocl_kernel*>& boxm2_ocl_update_heightmap_factor::get_update_heightmap_factor_kernels(bocl_device_sptr device, vcl_string opts)
+std::vector<bocl_kernel*>& boxm2_ocl_update_heightmap_factor::get_update_heightmap_factor_kernels(const bocl_device_sptr& device, const std::string& opts)
 {
     // compile kernels if not already compiled
-    vcl_string identifier = device->device_identifier() + opts;
+    std::string identifier = device->device_identifier() + opts;
     if (update_heightmap_factor_kernels_.find(identifier) != update_heightmap_factor_kernels_.end())
         return update_heightmap_factor_kernels_[identifier];
 
     //otherwise compile the kernels
-    vcl_cout << "=== boxm2_ocl_update_process::compiling kernels on device " << identifier << "===" << vcl_endl;
-    vcl_vector<vcl_string> src_paths;
-    vcl_string source_dir = boxm2_ocl_util::ocl_src_root();
+    std::cout << "=== boxm2_ocl_update_process::compiling kernels on device " << identifier << "===" << std::endl;
+    std::vector<std::string> src_paths;
+    std::string source_dir = boxm2_ocl_util::ocl_src_root();
     src_paths.push_back(source_dir + "scene_info.cl");
     src_paths.push_back(source_dir + "pixel_conversion.cl");
     src_paths.push_back(source_dir + "bit/bit_tree_library_functions.cl");
@@ -664,11 +668,11 @@ vcl_vector<bocl_kernel*>& boxm2_ocl_update_heightmap_factor::get_update_heightma
     src_paths.push_back(source_dir + "bit/update_bp_kernels.cl");
 
     //compilation options
-    vcl_string options = "-D ATOMIC_FLOAT -D ADD_SUBTRACT_FACTOR";
+    std::string options = "-D ATOMIC_FLOAT -D ADD_SUBTRACT_FACTOR";
     //populate vector of kernels
-    vcl_vector<bocl_kernel*> vec_kernels;
-    bocl_kernel* computez = new bocl_kernel();
-    vcl_string computez_opts = options;
+    std::vector<bocl_kernel*> vec_kernels;
+    auto* computez = new bocl_kernel();
+    const std::string& computez_opts = options;
     computez->create_kernel(&device->context(), device->device_id(), src_paths, "add_subtract_factor_main", computez_opts, "update::add_subtract_factor_main");
     vec_kernels.push_back(computez);
 
@@ -680,28 +684,28 @@ vcl_vector<bocl_kernel*>& boxm2_ocl_update_heightmap_factor::get_update_heightma
 
 bool boxm2_ocl_smooth_heightmap_pdata::
 compute_smooth_heightmap_pdata(boxm2_scene_sptr         scene,
-                                bocl_device_sptr         device,
-                                boxm2_opencl_cache_sptr  opencl_cache,
-                                vil_image_view_base_sptr hmap_mean,
-                                vil_image_view_base_sptr hmap_var,
-                                vil_image_view_base_sptr ximg,
-                                vil_image_view_base_sptr yimg,
+                                const bocl_device_sptr&         device,
+                                const boxm2_opencl_cache_sptr&  opencl_cache,
+                                const vil_image_view_base_sptr& hmap_mean,
+                                const vil_image_view_base_sptr& hmap_var,
+                                const vil_image_view_base_sptr& ximg,
+                                const vil_image_view_base_sptr& yimg,
                                 int smoothingradius = 16,
-                                float resnearfactor,
-                                float resfarfactor)
+                                float  /*resnearfactor*/,
+                                float  /*resfarfactor*/)
 {
 
     float transfer_time = 0.0f;
     float gpu_time = 0.0f;
-    vcl_size_t local_threads[2] = { 8, 8 };
-    vcl_size_t global_threads[2] = { 8, 8 };
+    std::size_t local_threads[2] = { 8, 8 };
+    std::size_t global_threads[2] = { 8, 8 };
 
     //cache size sanity check
-    vcl_size_t binCache = opencl_cache.ptr()->bytes_in_cache();
-    vcl_cout << "Update MBs in cache: " << binCache / (1024.0*1024.0) << vcl_endl;
+    std::size_t binCache = opencl_cache.ptr()->bytes_in_cache();
+    std::cout << "Update MBs in cache: " << binCache / (1024.0*1024.0) << std::endl;
 
     //make correct data types are here
-    vcl_string data_type, num_obs_type, options;
+    std::string data_type, num_obs_type, options;
 
     // create a command queue.
     int status = 0;
@@ -714,18 +718,18 @@ compute_smooth_heightmap_pdata(boxm2_scene_sptr         scene,
 
     //grab input image, establish cl_ni, cl_nj (so global size is divisible by local size)
 
-    vil_image_view<float>* hmap_mean_view = static_cast<vil_image_view<float>*>(hmap_mean.ptr());
-    vil_image_view<float>* hmap_var_view = static_cast<vil_image_view<float>*>(hmap_var.ptr());
-    vil_image_view<float>* ximg_view = static_cast<vil_image_view<float>*>(ximg.ptr());
-    vil_image_view<float>* yimg_view = static_cast<vil_image_view<float>*>(yimg.ptr());
+    auto* hmap_mean_view = static_cast<vil_image_view<float>*>(hmap_mean.ptr());
+    auto* hmap_var_view = static_cast<vil_image_view<float>*>(hmap_var.ptr());
+    auto* ximg_view = static_cast<vil_image_view<float>*>(ximg.ptr());
+    auto* yimg_view = static_cast<vil_image_view<float>*>(yimg.ptr());
 
-    unsigned cl_ni = (unsigned)RoundUp(hmap_mean_view->ni(), (int)local_threads[0]);
-    unsigned cl_nj = (unsigned)RoundUp(hmap_mean_view->nj(), (int)local_threads[1]);
+    auto cl_ni = (unsigned)RoundUp(hmap_mean_view->ni(), (int)local_threads[0]);
+    auto cl_nj = (unsigned)RoundUp(hmap_mean_view->nj(), (int)local_threads[1]);
     global_threads[0] = cl_ni;
     global_threads[1] = cl_nj;
     //set generic cam
-    cl_float* ray_origins = new cl_float[4 * cl_ni*cl_nj];
-    cl_float* ray_directions = new cl_float[4 * cl_ni*cl_nj];
+    auto* ray_origins = new cl_float[4 * cl_ni*cl_nj];
+    auto* ray_directions = new cl_float[4 * cl_ni*cl_nj];
     vgl_box_3d<double> bbox = scene->bounding_box();
     float z = bbox.max_z();
     int count = 0;
@@ -753,8 +757,8 @@ compute_smooth_heightmap_pdata(boxm2_scene_sptr         scene,
     bocl_mem_sptr tnearfar_mem_ptr = opencl_cache->alloc_mem(2 * sizeof(float), tnearfar, "tnearfar  buffer");
     tnearfar_mem_ptr->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
     //Visibility, Preinf, Norm, and input image buffers
-    float* hmean_buff = new float[cl_ni*cl_nj];
-    float* hvar_buff = new float[cl_ni*cl_nj];
+    auto* hmean_buff = new float[cl_ni*cl_nj];
+    auto* hvar_buff = new float[cl_ni*cl_nj];
 
     //copy input vals into image
     count = 0;
@@ -786,7 +790,7 @@ compute_smooth_heightmap_pdata(boxm2_scene_sptr         scene,
 
     // Output Array
     float output_arr[100];
-    for (int i = 0; i < 100; ++i) output_arr[i] = 0.0f;
+    for (float & i : output_arr) i = 0.0f;
     bocl_mem_sptr  cl_output = new bocl_mem(device->context(), output_arr, sizeof(float) * 100, "output buffer");
     cl_output->create_buffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR);
 
@@ -799,7 +803,7 @@ compute_smooth_heightmap_pdata(boxm2_scene_sptr         scene,
     vnl_random rand;
     int numsamples = 16;
     int rad = smoothingradius;
-    float * weights = new float[numsamples];
+    auto * weights = new float[numsamples];
     int * pts = new int[2 * numsamples];
     for (int i = 0; i < numsamples;)
     {
@@ -808,16 +812,16 @@ compute_smooth_heightmap_pdata(boxm2_scene_sptr         scene,
         if (x == 0 && y == 0) x = 1;
         pts[2 * i] = x;
         pts[2 * i + 1] = y;
-        weights[i] = 1 - vcl_sqrt(float(x*x + y*y)) / (float(rad));
+        weights[i] = 1 - std::sqrt(float(x*x + y*y)) / (float(rad));
         i++;
     }
     typedef vnl_vector_fixed<unsigned char, 16> uchar16;
     // compile the kernel if not already compiled
-    vcl_vector<bocl_kernel*>& kernels = get_smooth_heightmap_pdata_kernels(device, options);
+    std::vector<bocl_kernel*>& kernels = get_smooth_heightmap_pdata_kernels(device, options);
     // set arguments
-    vcl_vector<boxm2_block_id> vis_order;
+    std::vector<boxm2_block_id> vis_order;
     vis_order = scene->get_block_ids();
-    vcl_vector<boxm2_block_id>::iterator id;
+    std::vector<boxm2_block_id>::iterator id;
     bocl_kernel* kern = kernels[0];
     for (id = vis_order.begin(); id != vis_order.end(); ++id)
     {
@@ -866,9 +870,9 @@ compute_smooth_heightmap_pdata(boxm2_scene_sptr         scene,
         boxm2_data_base * aux1_ph_smooth_b = opencl_cache->get_cpu_cache()->get_data_base(scene, *id, boxm2_data_traits<BOXM2_AUX1>::prefix("pheight_smooth"), 0, false);
         //3d array of trees
         const boxm2_array_3d<uchar16>& trees = cblk->trees();
-        boxm2_data_traits<BOXM2_AUX0>::datatype * aux0_len = (boxm2_data_traits<BOXM2_AUX0>::datatype*) aux0_len_b->data_buffer();
-        boxm2_data_traits<BOXM2_AUX1>::datatype * aux1_ph = (boxm2_data_traits<BOXM2_AUX1>::datatype*) aux1_ph_b->data_buffer();
-        boxm2_data_traits<BOXM2_AUX1>::datatype * aux1_ph_smooth = (boxm2_data_traits<BOXM2_AUX1>::datatype*) aux1_ph_smooth_b->data_buffer();
+        auto * aux0_len = (boxm2_data_traits<BOXM2_AUX0>::datatype*) aux0_len_b->data_buffer();
+        auto * aux1_ph = (boxm2_data_traits<BOXM2_AUX1>::datatype*) aux1_ph_b->data_buffer();
+        auto * aux1_ph_smooth = (boxm2_data_traits<BOXM2_AUX1>::datatype*) aux1_ph_smooth_b->data_buffer();
 
         //iterate through each tree
         for (unsigned int x = 0; x < trees.get_row1_count(); ++x) {
@@ -878,8 +882,8 @@ compute_smooth_heightmap_pdata(boxm2_scene_sptr         scene,
                     uchar16 tree = trees(x, y, z);
                     boct_bit_tree bit_tree((unsigned char*)tree.data_block(), mdata.max_level_);
                     //iterate through leaves of the tree
-                    vcl_vector<int> leafBits = bit_tree.get_leaf_bits(0);
-                    vcl_vector<int>::iterator iter;
+                    std::vector<int> leafBits = bit_tree.get_leaf_bits(0);
+                    std::vector<int>::iterator iter;
                     for (iter = leafBits.begin(); iter != leafBits.end(); ++iter)
                     {
                         int currIdx = bit_tree.get_data_index((*iter)); //data index
@@ -927,25 +931,25 @@ compute_smooth_heightmap_pdata(boxm2_scene_sptr         scene,
     opencl_cache->unref_mem(ray_o_buff.ptr());
     opencl_cache->unref_mem(ray_d_buff.ptr());
     opencl_cache->unref_mem(tnearfar_mem_ptr.ptr());
-    vcl_cout << "Gpu time " << gpu_time << " transfer time " << transfer_time << vcl_endl;
+    std::cout << "Gpu time " << gpu_time << " transfer time " << transfer_time << std::endl;
     clReleaseCommandQueue(queue);
 
     delete[] weights;
     delete[] pts;
     return true;
 }
-vcl_vector<bocl_kernel*>& boxm2_ocl_smooth_heightmap_pdata::
-get_smooth_heightmap_pdata_kernels(bocl_device_sptr device, vcl_string opts)
+std::vector<bocl_kernel*>& boxm2_ocl_smooth_heightmap_pdata::
+get_smooth_heightmap_pdata_kernels(const bocl_device_sptr& device, const std::string& opts)
 {
     // compile kernels if not already compiled
-    vcl_string identifier = device->device_identifier() + opts;
+    std::string identifier = device->device_identifier() + opts;
     if (smooth_heightmap_pdata_kernels_.find(identifier) != smooth_heightmap_pdata_kernels_.end())
         return smooth_heightmap_pdata_kernels_[identifier];
 
     //otherwise compile the kernels
-    vcl_cout << "=== boxm2_ocl_update_process::compiling kernels on device " << identifier << "===" << vcl_endl;
-    vcl_vector<vcl_string> src_paths;
-    vcl_string source_dir = boxm2_ocl_util::ocl_src_root();
+    std::cout << "=== boxm2_ocl_update_process::compiling kernels on device " << identifier << "===" << std::endl;
+    std::vector<std::string> src_paths;
+    std::string source_dir = boxm2_ocl_util::ocl_src_root();
     src_paths.push_back(source_dir + "scene_info.cl");
     src_paths.push_back(source_dir + "pixel_conversion.cl");
     src_paths.push_back(source_dir + "bit/bit_tree_library_functions.cl");
@@ -954,17 +958,17 @@ get_smooth_heightmap_pdata_kernels(bocl_device_sptr device, vcl_string opts)
     src_paths.push_back(source_dir + "statistics_library_functions.cl");
     src_paths.push_back(source_dir + "ray_bundle_library_opt.cl");
     src_paths.push_back(source_dir + "bit/update_bp_kernels.cl");
-    vcl_vector<vcl_string> non_ray_src = vcl_vector<vcl_string>(src_paths);
+    std::vector<std::string> non_ray_src = std::vector<std::string>(src_paths);
     src_paths.push_back(source_dir + "update_functors.cl");
     src_paths.push_back(source_dir + "bit/cast_ray_bit.cl");
 
     //compilation options
-    vcl_string options = "-D ATOMIC_FLOAT ";
+    std::string options = "-D ATOMIC_FLOAT ";
     //populate vector of kernels
-    vcl_vector<bocl_kernel*> vec_kernels;
+    std::vector<bocl_kernel*> vec_kernels;
     //seg len pass
-    bocl_kernel* seg_len = new bocl_kernel();
-    vcl_string seg_opts = options + " -D HMAP_DENSITY_CELL  -D STEP_CELL=step_cell_hmap_density(aux_args,data_ptr,llid,d,tblock)";
+    auto* seg_len = new bocl_kernel();
+    std::string seg_opts = options + " -D HMAP_DENSITY_CELL  -D STEP_CELL=step_cell_hmap_density(aux_args,data_ptr,llid,d,tblock)";
     seg_len->create_kernel(&device->context(), device->device_id(), src_paths, "compute_hmap_density_main", seg_opts, "update::hmap_density_main");
     vec_kernels.push_back(seg_len);
 

@@ -16,7 +16,9 @@
 #include <iostream>
 #include <set>
 #include <imesh/imesh_mesh.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_vector_3d.h>
 
 
@@ -27,7 +29,7 @@ std::set<unsigned int>
 imesh_detect_exterior_faces(const imesh_mesh& mesh,
                             const vgl_vector_3d<double>& dir,
                             unsigned int img_size = 1000,
-                            std::set<unsigned int> *backfacing = VXL_NULLPTR);
+                            std::set<unsigned int> *backfacing = nullptr);
 
 
 //: Return the set of triangles that are visible in some of the many sample view directions

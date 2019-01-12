@@ -1,9 +1,6 @@
 // This is core/vil1/vil1_image_impl.h
 #ifndef vil1_image_impl_h_
 #define vil1_image_impl_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Representation of a generic image
@@ -20,8 +17,10 @@
 // \endverbatim
 
 #include <string>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class vil1_image;
 
@@ -91,7 +90,7 @@ class vil1_image_impl
   //:
   // the reference count starts at 0.
   vil1_image_impl() : reference_count(0) {}
-  virtual ~vil1_image_impl() {}
+  virtual ~vil1_image_impl() = default;
 
   //: Dimensions:  Planes x W x H x Components
   virtual int planes() const = 0;
@@ -133,11 +132,11 @@ class vil1_image_impl
 
   //: Return a string describing the file format.
   // Only file images have a format, others return 0
-  virtual char const* file_format() const { return VXL_NULLPTR; }
+  virtual char const* file_format() const { return nullptr; }
 
   //: Extra property information
-  virtual bool get_property(char const* tag, void* property_value = VXL_NULLPTR) const;
-  virtual bool set_property(char const* tag, void const* property_value = VXL_NULLPTR) const;
+  virtual bool get_property(char const* tag, void* property_value = nullptr) const;
+  virtual bool set_property(char const* tag, void const* property_value = nullptr) const;
 
   //: Return the name of the class;
   virtual std::string is_a() const { return "vil1_image_impl"; }

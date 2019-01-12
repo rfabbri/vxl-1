@@ -11,15 +11,15 @@
 #include <vgl/vgl_distance.h>
 #include <vnl/vnl_math.h>
 #include <vnl/algo/vnl_symmetric_eigensystem.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //=======================================================================
 // Dflt ctor
 //=======================================================================
 
-mbl_correspond_points::mbl_correspond_points()
-{
-}
+mbl_correspond_points::mbl_correspond_points() = default;
 
 //: Return index of row in H2 most similar to row i of H1
 unsigned mbl_correspond_points::closest_row(const vnl_matrix<double>& H1,

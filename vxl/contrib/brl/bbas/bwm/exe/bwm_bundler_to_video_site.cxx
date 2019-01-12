@@ -10,7 +10,7 @@
 #include <bwm/video/bwm_video_corr.h>
 #include <bwm/video/bwm_video_site_io.h>
 
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vul/vul_arg.h>
 #include <vul/vul_file.h>
 #include <vgl/algo/vgl_fit_plane_3d.h>
@@ -34,7 +34,9 @@
 
 #include <vil/vil_image_view.h>
 #include <vil/vil_save.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bwm/bwm_site_mgr.h>
 
 #include <bxml/bxml_write.h>

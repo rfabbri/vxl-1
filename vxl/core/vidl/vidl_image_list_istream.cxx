@@ -1,7 +1,4 @@
 // This is core/vidl/vidl_image_list_istream.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author Matt Leotta
@@ -13,7 +10,9 @@
 #include "vidl_image_list_istream.h"
 #include "vidl_frame.h"
 #include "vidl_convert.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_file_iterator.h>
 #include <vul/vul_file.h>
 #include <vil/vil_image_resource_sptr.h>
@@ -33,7 +32,7 @@ vidl_image_list_istream()
   : index_(INIT_INDEX),
     ni_(0), nj_(0),
     format_(VIDL_PIXEL_FORMAT_UNKNOWN),
-    current_frame_(VXL_NULLPTR) {}
+    current_frame_(nullptr) {}
 
 
 //: Constructor
@@ -42,7 +41,7 @@ vidl_image_list_istream(const std::string& glob)
   : index_(INIT_INDEX),
     ni_(0), nj_(0),
     format_(VIDL_PIXEL_FORMAT_UNKNOWN),
-    current_frame_(VXL_NULLPTR)
+    current_frame_(nullptr)
 {
   open(glob);
 }
@@ -53,7 +52,7 @@ vidl_image_list_istream(const std::vector<std::string>& paths)
   : index_(INIT_INDEX),
     ni_(0), nj_(0),
     format_(VIDL_PIXEL_FORMAT_UNKNOWN),
-    current_frame_(VXL_NULLPTR)
+    current_frame_(nullptr)
 {
   open(paths);
 }
@@ -70,7 +69,7 @@ open(const std::string& glob)
     // check to see if file is a directory.
     if (vul_file::is_directory(fit()))
       continue;
-    filenames.push_back(fit());
+    filenames.emplace_back(fit());
   }
 
   // no matching filenames
@@ -86,9 +85,8 @@ open(const std::string& glob)
 
   if (!can_open) {
     std::cerr << "In vidl_image_list_istream(.) -can't open files as images\n";
-    for (std::vector<std::string>::iterator fit = filenames.begin();
-         fit != filenames.end(); ++fit)
-      std::cerr << *fit << '\n';
+    for (auto & filename : filenames)
+      std::cerr << filename << '\n';
     return false;
   }
   this->image_paths_ = filenames;
@@ -103,9 +101,9 @@ open(const std::vector<std::string>& paths)
 {
   image_paths_.clear();
   // test each file to ensure it exists and is a supported image format
-  for (std::vector<std::string>::const_iterator i = paths.begin(); i!=paths.end(); ++i)
+  for (const auto & path : paths)
   {
-    vil_image_resource_sptr img = vil_load_image_resource(i->c_str());
+    vil_image_resource_sptr img = vil_load_image_resource(path.c_str());
     if (img)
     {
       if (ni_ == 0 || nj_ == 0)
@@ -117,11 +115,11 @@ open(const std::vector<std::string>& paths)
       }
       else if (ni_ != img->ni() || nj_ != img->nj())
         continue;
-      image_paths_.push_back(*i);
+      image_paths_.push_back(path);
     }
   }
   index_ = INIT_INDEX;
-  current_frame_ = VXL_NULLPTR;
+  current_frame_ = nullptr;
   return !image_paths_.empty();
 }
 
@@ -133,7 +131,7 @@ close()
 {
   image_paths_.clear();
   index_ = INIT_INDEX;
-  current_frame_ = VXL_NULLPTR;
+  current_frame_ = nullptr;
   ni_ = 0;
   nj_ = 0;
   format_ = VIDL_PIXEL_FORMAT_UNKNOWN;
@@ -145,7 +143,7 @@ bool
 vidl_image_list_istream::
 advance()
 {
-  current_frame_ = VXL_NULLPTR;
+  current_frame_ = nullptr;
   if (index_ < image_paths_.size() || index_ == INIT_INDEX )
     return ++index_ < image_paths_.size();
 
@@ -173,7 +171,7 @@ vidl_image_list_istream::current_frame()
     }
     return current_frame_;
   }
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 
@@ -196,10 +194,9 @@ seek_frame(unsigned int frame_nr)
 {
   if (is_open() && frame_nr < image_paths_.size()) {
     if (index_ != frame_nr)
-      current_frame_ = VXL_NULLPTR;
+      current_frame_ = nullptr;
     index_ = frame_nr;
     return true;
   }
   return false;
 }
-

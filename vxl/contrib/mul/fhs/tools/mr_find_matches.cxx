@@ -45,16 +45,16 @@ void draw_tree(vil_image_view<vxl_byte>& image,
                const std::vector<std::pair<int,int> >& pairs)
 {
   // Draw tree into image for display purposes
-  for (unsigned i=0;i<pairs.size();++i)
+  for (const auto & pair : pairs)
     mbl_draw_line(image,
-                  pts[pairs[i].first],
-                  pts[pairs[i].second],vxl_byte(255));
+                  pts[pair.first],
+                  pts[pair.second],vxl_byte(255));
 
   // Write position of selected points into the original image
   // for display purposes.
-  for (unsigned i=0;i<pts.size();++i)
+  for (auto pt : pts)
   {
-    vil_fill_disk(image,pts[i].x(),pts[i].y(),4,vxl_byte(255));
+    vil_fill_disk(image,pt.x(),pt.y(),4,vxl_byte(255));
   }
 }
 
@@ -63,7 +63,7 @@ void get_strongest_corners(const vimt_image& image,
                            std::vector<vgl_point_2d<double> >& pts,
                            unsigned max_n)
 {
-  const vimt_image_2d_of<vxl_byte>& byte_im =
+  const auto& byte_im =
                static_cast<const vimt_image_2d_of<vxl_byte>&>(image);
   vimt_image_2d_of<float> corner_im;
   corner_im.set_world2im(byte_im.world2im());
@@ -104,7 +104,7 @@ void extract_normalised_patches(const vimt_image& image,
                                 std::vector<vil_image_view<float> >& patch,
                                 std::vector<vgl_point_2d<double> >& ref_pts)
 {
-  const vimt_image_2d_of<vxl_byte>& byte_im =
+  const auto& byte_im =
                static_cast<const vimt_image_2d_of<vxl_byte>&>(image);
   int ni = byte_im.image().ni();
   int nj = byte_im.image().nj();
@@ -124,7 +124,7 @@ void extract_normalised_patches(const vimt_image& image,
     // Compute position of reference point relative to corner
     int kx = px-ilo;
     int ky = py-jlo;
-    ref_pts.push_back(vgl_point_2d<double>(kx,ky));
+    ref_pts.emplace_back(kx,ky);
     vil_image_view<float> patch1;
     vil_convert_cast(vil_crop(byte_im.image(),ilo,1+ihi-ilo, jlo,1+jhi-jlo),
                      patch1);
@@ -247,7 +247,6 @@ int main( int argc, char* argv[] )
 
   // Generate more points at each level
   int max_pts = nc();
-  unsigned i0 = 0;          // Record index of first point at level above
   unsigned i1 = pts.size()-1; // Record index of last point at level above
   for (int L=level_hi()-1;L>=level_lo();--L)
   {
@@ -262,11 +261,11 @@ int main( int argc, char* argv[] )
 
     // For each new point, find the closest point in the levels above
     // Change 0,i1 to i0,i1 to consider only level above
-    for (unsigned i=0;i<L_pts.size();++i)
+    for (auto L_pt : L_pts)
     {
-      pts.push_back(L_pts[i]);
+      pts.push_back(L_pt);
       std::pair<int,int> pair_i(pts.size()-1,
-                               closest_pt_index(pts,0,i1,L_pts[i]));
+                               closest_pt_index(pts,0,i1,L_pt));
       pairs.push_back(pair_i);
       im_level.push_back(L);
     }
@@ -307,7 +306,7 @@ int main( int argc, char* argv[] )
   std::vector<vimt_image_2d_of<float> > feature_response(pts.size());
   for (unsigned i=0;i<pts.size();++i)
   {
-    const vimt_image_2d_of<vxl_byte>& byte_im =
+    const auto& byte_im =
        static_cast<const vimt_image_2d_of<vxl_byte>&>(image_pyr2(im_level[i]));
 
     // Compute region over which to search (20% of image, centered on point)

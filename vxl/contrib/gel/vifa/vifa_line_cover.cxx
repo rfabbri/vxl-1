@@ -5,7 +5,9 @@
 //:
 // \file
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_vector_2d.h>
 
@@ -15,15 +17,15 @@
 vifa_line_cover::
 vifa_line_cover()
 {
-  line_ = VXL_NULLPTR;
-  index_ = VXL_NULLPTR;
-  max_extent_ = VXL_NULLPTR;
-  min_extent_ = VXL_NULLPTR;
+  line_ = nullptr;
+  index_ = nullptr;
+  max_extent_ = nullptr;
+  min_extent_ = nullptr;
   dim_ =0;
 }
 
 vifa_line_cover::
-vifa_line_cover(imp_line_sptr  prototype_line,
+vifa_line_cover(const imp_line_sptr&  prototype_line,
                 int            indexdimension)
 {
   line_ = prototype_line;
@@ -52,7 +54,7 @@ vifa_line_cover::
 //------------------------------------------------------------
 //: Insert a line in the index. The line is inserted in each index bin it covers.
 void vifa_line_cover::
-InsertLine(imp_line_sptr  l)
+InsertLine(const imp_line_sptr&  l)
 {
   int  rdim1 = dim_ - 1;
 
@@ -129,7 +131,7 @@ double vifa_line_cover::
 GetDenseCoverage()
 {
   double  cov = this->GetCoverage();
-  double  cover_extent = double(this->get_index_max() - this->get_index_min());
+  auto  cover_extent = double(this->get_index_max() - this->get_index_min());
   if (cover_extent <= 0)
     return 0.0;
   else
@@ -157,8 +159,8 @@ GetExtent(imp_line_sptr&  lmin,
 {
   if (!line_)
   {
-    lmin = VXL_NULLPTR;
-    lmax = VXL_NULLPTR;
+    lmin = nullptr;
+    lmax = nullptr;
     return;
   }
 

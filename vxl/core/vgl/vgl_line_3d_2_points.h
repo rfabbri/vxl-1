@@ -1,9 +1,6 @@
 // This is core/vgl/vgl_line_3d_2_points.h
 #ifndef vgl_line_3d_2_points_h_
 #define vgl_line_3d_2_points_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief non-homogeneous 3D line, represented by 2 points.
@@ -16,8 +13,10 @@
 // \endverbatim
 
 #include <iosfwd>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vgl/vgl_point_3d.h> // data member of this class
 #include <vgl/vgl_vector_3d.h>
 

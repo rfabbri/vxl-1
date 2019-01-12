@@ -11,7 +11,9 @@
 // \author Daniel Crispell
 // \date November 8, 2011
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boct/boct_bit_tree.h>
 #include <boxm2/ocl/boxm2_opencl_cache.h>
 #include <boxm2/boxm2_scene.h>
@@ -89,10 +91,10 @@ class alpha_update_from_opinion_functor
 
 namespace boxm2_ocl_ingest_buckeye_dem_process_globals
 {
-  const unsigned n_inputs_  = 7;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 7;
+  constexpr unsigned n_outputs_ = 0;
   std::size_t local_threads[2]={8,8};
-  void compile_kernel(bocl_device_sptr device,std::vector<bocl_kernel*> & vec_kernels, std::string options)
+  void compile_kernel(const bocl_device_sptr& device,std::vector<bocl_kernel*> & vec_kernels, std::string options)
   {
     //gather all render sources... seems like a lot for rendering...
     std::vector<std::string> src_paths;
@@ -109,7 +111,7 @@ namespace boxm2_ocl_ingest_buckeye_dem_process_globals
     options += " -D STEP_CELL=step_cell_ingest_buckeye_dem(aux_args,data_ptr,(t_vox_exit-d)*linfo->block_len,t_vox_exit*linfo->block_len)";
     std::cout << "Kernel Options = [" << options << ']' << std::endl;
     //have kernel construct itself using the context and device
-    bocl_kernel * ray_trace_kernel=new bocl_kernel();
+    auto * ray_trace_kernel=new bocl_kernel();
 
     ray_trace_kernel->create_kernel( &device->context(),
                                      device->device_id(),
@@ -142,7 +144,7 @@ bool boxm2_ocl_ingest_buckeye_dem_process_cons(bprb_func_process& pro)
   bool good =  pro.set_input_types(input_types_) && pro.set_output_types(output_types_);
 
  //set defaults inputs
- brdb_value_sptr cam    = new brdb_value_t<vpgl_camera_double_sptr>(VXL_NULLPTR);
+ brdb_value_sptr cam = new brdb_value_t<vpgl_camera_double_sptr>(nullptr);
 
   pro.set_input(6, cam);
 
@@ -176,7 +178,7 @@ bool boxm2_ocl_ingest_buckeye_dem_process(bprb_func_process& pro)
 
   vpgl_lvcs_sptr lvcs = new vpgl_lvcs(scene->lvcs());
 
-  vpgl_geo_camera* geocam = VXL_NULLPTR;
+  vpgl_geo_camera* geocam = nullptr;
   if (geocam_in->is_a()=="vpgl_geo_camera")
   {
     std::cout<<"LOADING EXTERNAL CAMERA"<<std::endl;
@@ -213,25 +215,25 @@ bool boxm2_ocl_ingest_buckeye_dem_process(bprb_func_process& pro)
   vil_image_view_base_sptr a1_view_base = a1_res->get_view((unsigned int)min_i, ni, (unsigned int)min_j, nj);
   vil_image_view_base_sptr a2_view_base = a2_res->get_view((unsigned int)min_i, ni, (unsigned int)min_j, nj);
 
-  vil_image_view<float>* a1_view = dynamic_cast<vil_image_view<float>*>(a1_view_base.ptr());
+  auto* a1_view = dynamic_cast<vil_image_view<float>*>(a1_view_base.ptr());
   if (!a1_view) {
       std::cerr << "Error: boxm2_ocl_ingest_buckeye_dem_process: could not cast first return image to a vil_image_view<float>\n";
       return false;
   }
-  vil_image_view<float>* a2_view = dynamic_cast<vil_image_view<float>*>(a2_view_base.ptr());
+  auto* a2_view = dynamic_cast<vil_image_view<float>*>(a2_view_base.ptr());
   if (!a2_view) {
       std::cerr << "Error: boxm2_ocl_ingest_buckeye_dem_process: could not cast last return image to a vil_image_view<float>\n";
       return false;
   }
 
-  unsigned int cl_ni  = RoundUp(ni,8);
-  unsigned int cl_nj  = RoundUp(nj,8);
+  unsigned int cl_ni = RoundUp(ni,8);
+  unsigned int cl_nj = RoundUp(nj,8);
 
   // form the ray buffer
-  cl_float* ray_origins    = new float[4*cl_ni*cl_nj];
-  cl_float* a1_img         = new float[cl_ni*cl_nj];
-  cl_float* a2_img         = new float[cl_ni*cl_nj];
-  //cl_float* outimg         = new float[cl_ni*cl_nj];
+  auto* ray_origins = new float[4*cl_ni*cl_nj];
+  auto* a1_img = new float[cl_ni*cl_nj];
+  auto* a2_img = new float[cl_ni*cl_nj];
+  //cl_float* outimg = new float[cl_ni*cl_nj];
 
   // initialize ray origin buffer, first and last return buffers
   int count=0;
@@ -333,10 +335,10 @@ bool boxm2_ocl_ingest_buckeye_dem_process(bprb_func_process& pro)
 
     //write the image values to the buffer
     vul_timer transfer;
-    bocl_mem * blk           = opencl_cache->get_block(scene, *id);
-    bocl_mem * blk_info      = opencl_cache->loaded_block_info();
-    bocl_mem* alpha     = opencl_cache->get_data<BOXM2_ALPHA>(scene, *id,0,false);
-    boxm2_scene_info* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
+    bocl_mem * blk = opencl_cache->get_block(scene, *id);
+    bocl_mem * blk_info = opencl_cache->loaded_block_info();
+    bocl_mem* alpha = opencl_cache->get_data<BOXM2_ALPHA>(scene, *id,0,false);
+    auto* info_buffer = (boxm2_scene_info*) blk_info->cpu_buffer();
     int alphaTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_ALPHA>::prefix());
     info_buffer->data_buffer_length = (int) (alpha->num_bytes()/alphaTypeSize);
 
@@ -348,7 +350,7 @@ bool boxm2_ocl_ingest_buckeye_dem_process(bprb_func_process& pro)
     bocl_mem *aux0 = opencl_cache->get_data(scene, *id, boxm2_data_traits<BOXM2_AUX0>::prefix(), info_buffer->data_buffer_length*auxTypeSize, false);
     // aux1 for occupancy "uncertainty"
     auxTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_AUX1>::prefix());
-    //bocl_mem *aux1   = opencl_cache->get_data<BOXM2_AUX1>(scene,*id, info_buffer->data_buffer_length*auxTypeSize, false);
+    //bocl_mem *aux1 = opencl_cache->get_data<BOXM2_AUX1>(scene,*id, info_buffer->data_buffer_length*auxTypeSize, false);
     bocl_mem *aux1 = opencl_cache->get_data(scene, *id, boxm2_data_traits<BOXM2_AUX1>::prefix(),info_buffer->data_buffer_length*auxTypeSize, false);
 
     // initialize belief values to 0.0

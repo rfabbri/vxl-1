@@ -11,8 +11,10 @@
 #include <vil3d/algo/vil3d_threshold.h>
 #include <vil3d/vil3d_slice.h>
 #include <vil/vil_fill.h>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Compute signed distance transform in 3d from zeros in original image.
 //  Image is assumed to be filled with max_dist
@@ -690,4 +692,3 @@ void vil3d_distance_transform(const vil3d_image_view<bool>& mask,
 
   vil3d_distance_transform(distance_image);
 }
-

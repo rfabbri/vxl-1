@@ -6,7 +6,9 @@
 // \brief Class to independently normalise sub-blocks with a region at several (SIFT-like) scales
 // \author Martin Roberts
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_binary_loader.h>
 #include <vsl/vsl_vector_io.h>
 #include <vnl/vnl_vector_ref.h>
@@ -28,9 +30,9 @@ void mipa_ms_block_normaliser::normalise(vnl_vector<double>& v) const
     unsigned ni_region_low=ni_region_;
     unsigned nj_region_low=nj_region_;
     unsigned nc_per_block_low=nc_per_block_;
-    unsigned& ni_region=const_cast<unsigned&>(this->ni_region_);
-    unsigned& nj_region=const_cast<unsigned&>(this->nj_region_);
-    unsigned& nc_per_block=const_cast<unsigned&>(this->nc_per_block_);
+    auto& ni_region=const_cast<unsigned&>(this->ni_region_);
+    auto& nj_region=const_cast<unsigned&>(this->nj_region_);
+    auto& nc_per_block=const_cast<unsigned&>(this->nc_per_block_);
     for (unsigned iscale=0;iscale<nscales_;++iscale)
     {
         //Do each scale
@@ -89,7 +91,7 @@ void mipa_ms_block_normaliser::print_summary(std::ostream& os) const
 // required if data is present in this base class
 void mipa_ms_block_normaliser::b_write(vsl_b_ostream& bfs) const
 {
-    const short version_no=1;
+    constexpr short version_no = 1;
     vsl_b_write(bfs, version_no);
 
     vsl_b_write(bfs, nscales_);
@@ -183,4 +185,3 @@ void mipa_ms_block_normaliser::config_from_stream(
     std::istringstream ssDummy(dummy);
     mipa_block_normaliser::config_from_stream(ssDummy,props);
 }
-

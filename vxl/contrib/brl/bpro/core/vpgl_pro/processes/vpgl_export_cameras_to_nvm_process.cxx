@@ -5,7 +5,9 @@
 // \file
 // \brief A process to KRT cameras to a NVM file ( input for Viosual SFM)
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpgl/vpgl_perspective_camera.h>
 #include <vnl/vnl_quaternion.h>
 #include <vul/vul_file_iterator.h>
@@ -16,10 +18,10 @@ bool vpgl_export_cameras_to_nvm_process_cons(bprb_func_process& pro)
   //this process takes 6 inputs and has 3 outputs:
 
   std::vector<std::string> input_types;
-  input_types.push_back("vcl_string"); // folder for cameras
-  input_types.push_back("vcl_string"); // folder for images
+  input_types.emplace_back("vcl_string"); // folder for cameras
+  input_types.emplace_back("vcl_string"); // folder for images
 
-  input_types.push_back("vcl_string");// output nvm file
+  input_types.emplace_back("vcl_string");// output nvm file
   bool ok = pro.set_input_types(input_types);
 
 
@@ -56,12 +58,12 @@ bool vpgl_export_cameras_to_nvm_process(bprb_func_process& pro)
   ofile<<"NVM_V3"<<std::endl;
   ofile<<std::endl;
   ofile<<cams.size()<<std::endl;
-  for(unsigned k = 0 ; k <cams.size(); k++)
+  for(auto & cam : cams)
   {
-      double f = cams[k]->get_calibration().focal_length()
-                *cams[k]->get_calibration().x_scale();
-      vnl_quaternion<double> q = cams[k]->get_rotation().as_quaternion();
-      vgl_point_3d<double> cc = cams[k]->get_camera_center();
+      double f = cam->get_calibration().focal_length()
+                *cam->get_calibration().x_scale();
+      vnl_quaternion<double> q = cam->get_rotation().as_quaternion();
+      vgl_point_3d<double> cc = cam->get_camera_center();
 
       ofile<<img_iter()<<" "<<f<<" "<<q.r()<<" "<<q.x()<<" "<<q.y()<<" "<<q.z()<<" "<<cc.x()<<" "<<cc.y()<<" "<<cc.z()<<" "<<0<<" "<<0<<std::endl;
 
@@ -71,4 +73,3 @@ bool vpgl_export_cameras_to_nvm_process(bprb_func_process& pro)
   ofile.close();
   return true;
 }
-

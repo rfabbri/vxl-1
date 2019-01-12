@@ -13,7 +13,7 @@
 #include <vul/vul_timer.h>
 #include <bpgl/algo/bpgl_fm_compute_ransac.h>
 
-void draw_keypoint(vil_image_view<vxl_byte>& img, bapl_keypoint_sptr k)
+void draw_keypoint(vil_image_view<vxl_byte>& img, const bapl_keypoint_sptr& k)
 {
   bapl_lowe_keypoint_sptr kp;
   kp.vertical_cast(k);
@@ -34,7 +34,7 @@ static void test_match_keypoints(int argc, char* argv[])
 
   if ( argc >= 2 ) {
     dir_base = argv[1];
-#ifdef VCL_WIN32
+#ifdef _WIN32
     dir_base += "\\";
 #else
     dir_base += "/";

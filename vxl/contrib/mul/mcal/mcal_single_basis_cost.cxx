@@ -3,7 +3,9 @@
 #include <iostream>
 #include <cstdlib>
 #include "mcal_single_basis_cost.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <mbl/mbl_exception.h>
 #include <mbl/mbl_cloneables_factory.h>
 #include <mbl/mbl_parse_block.h>
@@ -12,15 +14,11 @@
 
 //=======================================================================
 
-mcal_single_basis_cost::mcal_single_basis_cost()
-{
-}
+mcal_single_basis_cost::mcal_single_basis_cost() = default;
 
 //=======================================================================
 
-mcal_single_basis_cost::~mcal_single_basis_cost()
-{
-}
+mcal_single_basis_cost::~mcal_single_basis_cost() = default;
 
 
 //=======================================================================
@@ -46,13 +44,13 @@ std::string  mcal_single_basis_cost::is_a() const
 
 
 //: Create a concrete mcal_single_basis_cost object, from a text specification.
-vcl_unique_ptr<mcal_single_basis_cost>
+std::unique_ptr<mcal_single_basis_cost>
   mcal_single_basis_cost::create_from_stream(std::istream &is)
 {
   std::string name;
   is >> name;
 
-  vcl_unique_ptr<mcal_single_basis_cost> pvmb;
+  std::unique_ptr<mcal_single_basis_cost> pvmb;
   try
   {
     pvmb = mbl_cloneables_factory<mcal_single_basis_cost>::get_clone(name);

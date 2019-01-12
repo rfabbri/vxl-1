@@ -9,7 +9,9 @@
 #include <string>
 #include "pdf1d_compare_to_pdf_bhat.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <pdf1d/pdf1d_gaussian.h>
 #include <pdf1d/pdf1d_gaussian_kernel_pdf_builder.h>
@@ -30,7 +32,7 @@ bool use_integration_for_gaussian=true;
 pdf1d_compare_to_pdf_bhat::pdf1d_compare_to_pdf_bhat()
   : n_per_point_(3)
 {
-  pdf1d_gaussian_kernel_pdf_builder *gk_builder = new pdf1d_gaussian_kernel_pdf_builder;
+  auto *gk_builder = new pdf1d_gaussian_kernel_pdf_builder;
   gk_builder->set_use_width_from_separation();
   builder_ = gk_builder;
 }
@@ -48,9 +50,7 @@ pdf1d_compare_to_pdf_bhat::pdf1d_compare_to_pdf_bhat(const pdf1d_builder& builde
 // Destructor
 //=======================================================================
 
-pdf1d_compare_to_pdf_bhat::~pdf1d_compare_to_pdf_bhat()
-{
-}
+pdf1d_compare_to_pdf_bhat::~pdf1d_compare_to_pdf_bhat() = default;
 
 //: Define method of building pdf from data
 void pdf1d_compare_to_pdf_bhat::set_builder(const pdf1d_builder& b)
@@ -229,4 +229,3 @@ void pdf1d_compare_to_pdf_bhat::b_read(vsl_b_istream& bfs)
       return;
   }
 }
-

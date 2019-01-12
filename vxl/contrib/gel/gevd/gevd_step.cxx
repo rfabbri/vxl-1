@@ -24,7 +24,9 @@
 //
 //\endverbatim
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h>
 #include <gevd/gevd_noise.h>
 #include <gevd/gevd_float_operators.h>
@@ -44,7 +46,7 @@ const int DJS[] = { 0, 1, 1, 1, 0,-1,-1,-1,
 const int RDS[] = {0,-1, 1,-2, 2,-3, 3,-4, 4,-5, 5}; // radial search
 
 // const unsigned char DIR0 = 8, DIR1 = 9, DIR2 = 10, DIR3 = 11;
-const int FRAME = 4; // 3 for NMS and extension, 4 for contour
+constexpr int FRAME = 4; // 3 for NMS and extension, 4 for contour
 
 //: Save parameters and create workspace for detecting step profiles.
 // High frequency features are smoothed away by smooth_sigma.
@@ -101,7 +103,7 @@ gevd_step::gevd_step(float smooth_sigma, // width of filter dG
 
 
 //: Free space allocated for detecting step profiles.  Does nothing.
-gevd_step::~gevd_step() {}
+gevd_step::~gevd_step() = default;
 
 //: Detect step profiles with Canny edge detector.
 // The image is convolved with a Gaussian to smooth away
@@ -135,13 +137,13 @@ gevd_step::DetectEdgels(const gevd_bufferxy& image,
   // -tpk @@ missing check if the requested buffer size is too small to contain the convolution operations
 
   // 1. Smooth image to regularize data, before taking derivatives
-  gevd_bufferxy* smooth = VXL_NULLPTR;      // Gaussian smoothed image
+  gevd_bufferxy* smooth = nullptr;      // Gaussian smoothed image
   // use float to avoid overflow/truncation
   filterFactor = gevd_float_operators::Gaussian((gevd_bufferxy&)image, // well-condition before
                                                 smooth, smoothSigma); // 1st-difference
 
   // 2. Use 1st-difference to estimate local slope, filter is dG.
-  gevd_bufferxy *slope = VXL_NULLPTR, *dirx=VXL_NULLPTR, *diry=VXL_NULLPTR;
+  gevd_bufferxy *slope = nullptr, *dirx=nullptr, *diry=nullptr;
   filterFactor *= gevd_float_operators::Gradient(*smooth, // directional 1st-difference
                                                  slope, dirx, diry); // mult factor returned
   delete smooth;
@@ -309,7 +311,7 @@ BestStepExtension(const gevd_bufferxy& smooth,
       int dj = DJS[dir];
       float pix_m = floatPixel(smooth, ni-di, nj-dj);
       float pix_p = floatPixel(smooth, ni+di, nj+dj);
-      float slope = (float)std::fabs(pix_p - pix_m);
+      auto slope = (float)std::fabs(pix_p - pix_m);
       float max_s = (dir%HALFPI)? best_s*(float)std::sqrt(2.0): best_s;
       if (slope > max_s) {      // find best strength
         int di2 = 2*di;
@@ -327,8 +329,8 @@ BestStepExtension(const gevd_bufferxy& smooth,
   if (best_s > threshold) {     // interpolate with parabola
     float pix = floatPixel(smooth, best_i, best_j);
     int di2 = 2 * DIS[best_d], dj2 = 2 * DJS[best_d];
-    float s_m = (float)std::fabs(pix - floatPixel(smooth, best_i-di2, best_j-dj2));
-    float s_p = (float)std::fabs(pix - floatPixel(smooth, best_i+di2, best_j+dj2));
+    auto s_m = (float)std::fabs(pix - floatPixel(smooth, best_i-di2, best_j-dj2));
+    auto s_p = (float)std::fabs(pix - floatPixel(smooth, best_i+di2, best_j+dj2));
     if (best_d%HALFPI) {
       s_m /= (float)std::sqrt(2.0);
       s_p /= (float)std::sqrt(2.0);
@@ -396,7 +398,7 @@ gevd_step::RecoverJunctions(const gevd_bufferxy& image,
   if (!length) return 0;        // no end points exist
 
   // 2. Extend from end points until they touch other contours
-  gevd_bufferxy* smooth = VXL_NULLPTR;
+  gevd_bufferxy* smooth = nullptr;
   gevd_float_operators::Gaussian((gevd_bufferxy&)image, smooth, smoothSigma/2); // avoid oversmoothing
   const bool shortp = true;     // short contours
   const float threshold = NoiseThreshold(shortp);

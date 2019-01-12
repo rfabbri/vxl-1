@@ -2,7 +2,9 @@
 #include <iostream>
 #include <functional>
 #include <testlib/testlib_test.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vxl_config.h> // for vxl_int_32
 #include <vil3d/vil3d_print.h>
 #include <vil3d/vil3d_plane.h>
@@ -63,7 +65,7 @@ static void test_image_view_int()
 
   {
     // Test the shallow copy by smart pointer
-    vil3d_image_view<vxl_int_32> *image_ptr = new vil3d_image_view<vxl_int_32>;
+    auto *image_ptr = new vil3d_image_view<vxl_int_32>;
     image_ptr->deep_copy(image0);
 
     vil3d_image_view_base_sptr image_sptr = image_ptr;

@@ -6,7 +6,9 @@
 #include "breg3d_gdbicp_homography_generator.h"
 
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vul/vul_file.h>
 #include <vil/vil_image_view.h>
@@ -102,7 +104,7 @@ ihog_transform_2d breg3d_gdbicp_homography_generator::compute_homography()
   return xform;
 }
 
-ihog_transform_2d breg3d_gdbicp_homography_generator::parse_gdbicp_output(std::string filename)
+ihog_transform_2d breg3d_gdbicp_homography_generator::parse_gdbicp_output(const std::string& filename)
 {
   std::ifstream ifs(filename.c_str());
 

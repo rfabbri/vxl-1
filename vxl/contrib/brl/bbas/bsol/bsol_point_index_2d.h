@@ -17,13 +17,15 @@
 
 #include <iostream>
 #include <vector>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsol/vsol_box_2d_sptr.h>
 #include <vsol/vsol_point_2d_sptr.h>
 
 class bsol_point_index_2d
 {
-  bsol_point_index_2d() {} //not meaningful
+  bsol_point_index_2d() = default; //not meaningful
  public:
   bsol_point_index_2d(int nrows, int ncols, vsol_box_2d_sptr const& bb);
   bsol_point_index_2d(int nrows, int ncols,

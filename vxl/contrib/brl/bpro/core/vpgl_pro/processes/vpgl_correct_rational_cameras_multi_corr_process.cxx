@@ -6,7 +6,9 @@
 //:
 // \file
 #include <bprb/bprb_parameters.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vpgl/vpgl_rational_camera.h>
 #include <vul/vul_file.h>
 #include <vul/vul_awk.h>
@@ -21,7 +23,7 @@ bool vpgl_correct_rational_cameras_mult_corr_process_cons(bprb_func_process& pro
 {
   //this process takes 4 inputs and has no outputs
   std::vector<std::string> input_types;
-  input_types.push_back("vcl_string");  // a file that lists the path to a camera on each line and i and j coordinate of the 3D world point
+  input_types.emplace_back("vcl_string");  // a file that lists the path to a camera on each line and i and j coordinate of the 3D world point
                                     // format of the file:
                                     // n  # number of correspondences for each frame,
                                     // full_path_cam_name_1 i_11 j_11 i_12 j_12 ... i_1n j_1n
@@ -29,9 +31,9 @@ bool vpgl_correct_rational_cameras_mult_corr_process_cons(bprb_func_process& pro
                                     // .
                                     // .
                                     // .
-  input_types.push_back("vcl_string"); // output path to save the corrected cams, names will be input_cam_name_corrected.rpb
-  input_types.push_back("float"); // radius in terms of pixels to search for camera translations
-  input_types.push_back("int");   // number of intervals to break the radius into to generate the search space
+  input_types.emplace_back("vcl_string"); // output path to save the corrected cams, names will be input_cam_name_corrected.rpb
+  input_types.emplace_back("float"); // radius in terms of pixels to search for camera translations
+  input_types.emplace_back("int");   // number of intervals to break the radius into to generate the search space
   std::vector<std::string> output_types;
   return pro.set_input_types(input_types)
       && pro.set_output_types(output_types);
@@ -48,7 +50,7 @@ bool vpgl_correct_rational_cameras_mult_corr_process(bprb_func_process& pro)
   // get the inputs
   std::string input_cams = pro.get_input<std::string>(0);
   std::string output_path  = pro.get_input<std::string>(1);
-  float radius  = pro.get_input<float>(2);
+  auto radius  = pro.get_input<float>(2);
   int interval_n  = pro.get_input<int>(3);
 
   std::ifstream ifs(input_cams.c_str());
@@ -108,8 +110,8 @@ bool vpgl_correct_rational_cameras_mult_corr_process(bprb_func_process& pro)
   }
 
   if (intersections.size() != n) return false;
-  for (unsigned i = 0; i < intersections.size(); i++)
-    std::cout << "after adjustment 3D intersection point: " << intersections[i] << std::endl;
+  for (const auto & intersection : intersections)
+    std::cout << "after adjustment 3D intersection point: " << intersection << std::endl;
 
   for (unsigned i = 0; i < cams.size(); i++) {
     double u_off,v_off;
@@ -128,7 +130,7 @@ bool vpgl_correct_rational_cameras_mult_corr_refine_process_cons(bprb_func_proce
 {
   //this process takes 2 inputs and has no outputs
   std::vector<std::string> input_types;
-  input_types.push_back("vcl_string");  // a file that lists the path to a camera on each line and i and j coordinate of the 3D world point
+  input_types.emplace_back("vcl_string");  // a file that lists the path to a camera on each line and i and j coordinate of the 3D world point
                                     // format of the file:
                                     // n  # number of correspondences for each frame,
                                     // full_path_cam_name_1 i_11 j_11 i_12 j_12 ... i_1n j_1n
@@ -136,7 +138,7 @@ bool vpgl_correct_rational_cameras_mult_corr_refine_process_cons(bprb_func_proce
                                     // .
                                     // .
                                     // .
-  input_types.push_back("vcl_string"); // output path to save the corrected cams, names will be input_cam_name_corrected.rpb
+  input_types.emplace_back("vcl_string"); // output path to save the corrected cams, names will be input_cam_name_corrected.rpb
   std::vector<std::string> output_types;
   return pro.set_input_types(input_types)
       && pro.set_output_types(output_types);
@@ -211,8 +213,8 @@ bool vpgl_correct_rational_cameras_mult_corr_refine_process(bprb_func_process& p
   }
 
   if (intersections.size() != n) return false;
-  for (unsigned i = 0; i < intersections.size(); i++)
-    std::cout << "after adjustment 3D intersection point: " << intersections[i] << std::endl;
+  for (const auto & intersection : intersections)
+    std::cout << "after adjustment 3D intersection point: " << intersection << std::endl;
 
   for (unsigned i = 0; i < cams.size(); i++) {
     double u_off,v_off;

@@ -7,7 +7,9 @@
 #include <fstream>
 #include <sstream>
 #include <vul/vul_arg.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <mbl/mbl_read_props.h>
 #include <vul/vul_string.h>
 
@@ -38,8 +40,8 @@ std::ostream& operator<<(std::ostream& os,
 {
   os<<"image_dir: "<<p.image_dir<<std::endl;
   os<<"image_names: {"<<std::endl;
-  for (unsigned i=0;i<p.image_names.size();++i)
-    os<<"  "<<p.image_names[i]<<std::endl;
+  for (const auto & image_name : p.image_names)
+    os<<"  "<<image_name<<std::endl;
   os<<"}"<<std::endl;
   os<<"int1: "<<p.int1<<std::endl;
   os<<"double1: "<<p.double1<<std::endl;

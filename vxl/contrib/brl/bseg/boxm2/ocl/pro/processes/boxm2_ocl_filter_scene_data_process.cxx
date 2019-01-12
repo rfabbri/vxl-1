@@ -9,7 +9,9 @@
 // \author Octi Biris
 // \date Jun 16, 2015
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/ocl/algo/boxm2_ocl_filter_scene_data.h>
 #include <boxm2/ocl/boxm2_opencl_cache.h>
 #include <boxm2/boxm2_scene.h>
@@ -28,8 +30,8 @@
 
 namespace boxm2_ocl_filter_scene_data_process_globals
 {
-    const unsigned n_inputs_ = 5;
-    const unsigned n_outputs_ = 0;
+    constexpr unsigned n_inputs_ = 5;
+    constexpr unsigned n_outputs_ = 0;
 
 
 }
@@ -75,8 +77,8 @@ bool boxm2_ocl_filter_scene_data_process(bprb_func_process& pro)
     std::vector<std::string> valid_types;
     int appTypeSize;
         std::string appType;
-        valid_types.push_back("boxm2_mog3_grey");
-        valid_types.push_back("boxm2_mog6_view_compact");
+        valid_types.emplace_back("boxm2_mog3_grey");
+        valid_types.emplace_back("boxm2_mog6_view_compact");
         if (!boxm2_util::verify_appearance(*scene,valid_types,appType,appTypeSize)){
                 std::cout<<"scene doesn't have the correct appearance type - only mog3_grey and mog6_view compact allowed!!"<<std::endl;
         }

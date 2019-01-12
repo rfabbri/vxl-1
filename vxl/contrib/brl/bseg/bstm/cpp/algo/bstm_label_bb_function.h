@@ -11,7 +11,9 @@
 #include <boct/boct_bit_tree.h>
 #include <boxm2/basic/boxm2_array_3d.h>
 #include <vnl/vnl_vector_fixed.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bstm/io/bstm_cache.h>
 #include <vgl/vgl_box_3d.h>
 #include <vgl/algo/vgl_orient_box_3d.h>

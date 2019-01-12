@@ -1,6 +1,9 @@
 #include "HMatrix1DComputeDesign.h"
 
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vnl/algo/vnl_svd.h>
 #include <vgl/vgl_homg_point_1d.h>
@@ -14,7 +17,7 @@
 
 
 HMatrix1DComputeDesign::HMatrix1DComputeDesign(void) : HMatrix1DCompute() { }
-HMatrix1DComputeDesign::~HMatrix1DComputeDesign() { }
+HMatrix1DComputeDesign::~HMatrix1DComputeDesign() = default;
 
 bool
 HMatrix1DComputeDesign::compute_cool_homg(const std::vector<vgl_homg_point_1d<double> >&P,

@@ -13,7 +13,9 @@
 #include <vgl/vgl_pointset_3d.h>
 #include <vgl/algo/vgl_h_matrix_3d_compute_affine.h>
 #include <bvrml/bvrml_write.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_matrix_fixed.h>
 void boxm2_vecf_fit_skull::fill_smid_map(){
   smid_map_["left_lateral_canthus"]=LEFT_LATERAL_CANTHUS;
@@ -25,7 +27,7 @@ void boxm2_vecf_fit_skull::fill_smid_map(){
   smid_map_["forehead_intersection"]=FOREHEAD_INTERSECTION;
 }
 bool boxm2_vecf_fit_skull::add_labeled_point(boxm2_vecf_labeled_point lp){
-  std::map<std::string, mids>::iterator iit = smid_map_.find(lp.label_);
+  auto iit = smid_map_.find(lp.label_);
   if(iit == smid_map_.end() ){
     std::cout << "Measurement label " << lp.label_ << " doesn't exist\n";
     return false;
@@ -61,13 +63,12 @@ bool boxm2_vecf_fit_skull::read_anchor_file(std::string const& path){
   }
   // now that the file is parsed the labeled points can be added to the
   // internal database, lpts_ (labeled points)
-  for(std::map<std::string, std::vector<vgl_point_3d<double> > >::iterator ait = anchors.begin();
-      ait != anchors.end(); ++ait){
-    std::string lab = ait->first;
-    std::vector<vgl_point_3d<double> >& pts = ait->second;
+  for(auto & anchor : anchors){
+    std::string lab = anchor.first;
+    std::vector<vgl_point_3d<double> >& pts = anchor.second;
     double x = 0.0, y= 0.0, z = 0.0;
     double np = 0.0;
-    for(std::vector<vgl_point_3d<double> >::iterator pit = pts.begin();
+    for(auto pit = pts.begin();
         pit != pts.end(); ++pit, np+=1.0){
       x += pit->x(); y += pit->y(); z += pit->z();
     }
@@ -159,10 +160,10 @@ bool boxm2_vecf_fit_skull::set_trans(){
   vgl_point_3d<double> fint_src = params_.forehead_intersection_;
 
   std::vector<vgl_homg_point_3d<double> > source_pts, target_pts;
-  source_pts.push_back(vgl_homg_point_3d<double>(llc_src)); source_pts.push_back(vgl_homg_point_3d<double>(rlc_src));
-  source_pts.push_back(vgl_homg_point_3d<double>(mjaw_src)); source_pts.push_back(vgl_homg_point_3d<double>(fint_src));
-  target_pts.push_back(vgl_homg_point_3d<double>(llc_tgt)); target_pts.push_back(vgl_homg_point_3d<double>(rlc_tgt));
-  target_pts.push_back(vgl_homg_point_3d<double>(mjaw_tgt)); target_pts.push_back(vgl_homg_point_3d<double>(fint_tgt));
+  source_pts.emplace_back(llc_src); source_pts.emplace_back(rlc_src);
+  source_pts.emplace_back(mjaw_src); source_pts.emplace_back(fint_src);
+  target_pts.emplace_back(llc_tgt); target_pts.emplace_back(rlc_tgt);
+  target_pts.emplace_back(mjaw_tgt); target_pts.emplace_back(fint_tgt);
   vgl_h_matrix_3d_compute_affine hca;
   bool success = hca.compute(source_pts, target_pts, params_.trans_);
   if(!success) return false;
@@ -173,7 +174,7 @@ bool boxm2_vecf_fit_skull::set_trans(){
   std::cout << "Rotation part\n " << R << '\n';
   std::cout << "Symmetric part\n " << S << '\n';
 
-  unsigned n = static_cast<unsigned>(source_pts.size());
+  auto n = static_cast<unsigned>(source_pts.size());
   for(unsigned i = 0; i<n; ++i){
     vgl_homg_point_3d<double> hts = params_.trans_(source_pts[i]);
     vgl_point_3d<double> ts(hts), t(target_pts[i]);
@@ -202,4 +203,3 @@ bool boxm2_vecf_fit_skull::transform_skull(std::string const& source_skull_path,
   tostr.close();
   return true;
 }
-

@@ -1,4 +1,4 @@
-#include <math.h>
+#include <cmath>
 #include <bsol/bsol_algs.h>
 #include "betr_gridded_geo_polygon_3d.h"
 void betr_gridded_geo_polygon_3d::construct_grid(){
@@ -21,7 +21,7 @@ void betr_gridded_geo_polygon_3d::construct_grid(){
   }
   std::vector<vgl_point_2d<double> > verts;
   for(unsigned i = 0; i<poly_3d->size(); ++i)
-    verts.push_back(vgl_point_2d<double>(poly_3d->vertex(i)->x(), poly_3d->vertex(i)->y()));
+    verts.emplace_back(poly_3d->vertex(i)->x(), poly_3d->vertex(i)->y());
   vgl_polygon<double>  vpoly(verts);
 
   vsol_box_3d_sptr bb = poly_3d->get_bounding_box();

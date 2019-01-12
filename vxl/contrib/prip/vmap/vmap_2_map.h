@@ -14,7 +14,9 @@
 
 #include <iostream>
 #include <iosfwd>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include "vmap_types.h" // for vmap_dart_index
 #include "vmap_ptr_sequences.h"
 #include "vmap_kernel.h"
@@ -182,7 +184,7 @@ class vmap_2_map_dart_base_iterator
  public:
   typedef vmap_2_map_dart_base_iterator< Ref,Ptr,It > self_type ;
 
-  vmap_2_map_dart_base_iterator() {}
+  vmap_2_map_dart_base_iterator() = default;
 
   explicit vmap_2_map_dart_base_iterator(It arg) :it_(arg) {}
 
@@ -196,7 +198,7 @@ class vmap_2_map_dart_base_iterator
     it_=(It)it.reference();
   }
 
-  ~vmap_2_map_dart_base_iterator() {}
+  ~vmap_2_map_dart_base_iterator() = default;
 
 #if 0 // This assignment operator is covered by the next one
   self_type & operator=(self_type const& it)
@@ -364,7 +366,7 @@ class vmap_2_map : public vmap_owning_sequence<D>
 
  public:
 
-  vmap_2_map() {}
+  vmap_2_map() = default;
 
   vmap_2_map(self_type const& m) ;
 

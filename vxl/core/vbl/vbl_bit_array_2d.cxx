@@ -1,7 +1,4 @@
 // This is core/vbl/vbl_bit_array_2d.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 
@@ -9,13 +6,15 @@
 #include <cstring>
 #include "vbl_bit_array_2d.h"
 
-#include <vcl_compiler.h>
-#include <vcl_climits.h>  // for CHAR_BIT
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <climits>// for CHAR_BIT
+#include <cassert>
 
 //: Copy constructor
 vbl_bit_array_2d::vbl_bit_array_2d(vbl_bit_array_2d const& that)
-  : data_(VXL_NULLPTR), num_rows_(0), num_cols_(0)
+  : data_(nullptr), num_rows_(0), num_cols_(0)
 {
   if ( that.data_)
   {
@@ -65,7 +64,7 @@ void vbl_bit_array_2d::enlarge( unsigned int num_rows, unsigned int num_cols)
       index( i, 0, byteindex, bitindex);
 
       // find start of old column
-      unsigned long oldbyteindex= (unsigned long)(double(i*tempn)/CHAR_BIT);
+      auto oldbyteindex= (unsigned long)(double(i*tempn)/CHAR_BIT);
 
       // copy i-th column
       std::memcpy(data_+byteindex, tempdata+oldbyteindex, (tempn+CHAR_BIT-1)/CHAR_BIT);
@@ -89,7 +88,7 @@ unsigned long vbl_bit_array_2d::size() const
 void vbl_bit_array_2d::construct(unsigned int num_rows, unsigned int num_cols)
 {
   // quick return if possible
-  if (num_rows==0 || num_cols==0) { num_rows_=num_cols_=0; data_ = VXL_NULLPTR; return; }
+  if (num_rows==0 || num_cols==0) { num_rows_=num_cols_=0; data_ = nullptr; return; }
   num_rows_ = num_rows;
   num_cols_ = num_cols;
   data_ = new unsigned char [this->size()];
@@ -117,7 +116,7 @@ bool vbl_bit_array_2d::operator() (unsigned int i, unsigned int j) const
   unsigned int bitindex;
   index( i, j, byteindex, bitindex);
 
-  unsigned char mask= (unsigned char)(1<<bitindex);
+  auto mask= (unsigned char)(1<<bitindex);
 
   return (data_[byteindex] & mask) != 0;
 }
@@ -128,7 +127,7 @@ bool vbl_bit_array_2d::operator() (unsigned int i, unsigned int j)
   unsigned int bitindex;
   index( i, j, byteindex, bitindex);
 
-  unsigned char mask= (unsigned char)(1<<bitindex);
+  auto mask= (unsigned char)(1<<bitindex);
 
   return (data_[byteindex] & mask) != 0;
 }
@@ -140,8 +139,8 @@ void vbl_bit_array_2d::put(unsigned int i, unsigned int j, bool const &x)
 
   index( i, j, byteindex, bitindex);
 
-  unsigned char mask= (unsigned char)(x?(1<<bitindex):0);
-  unsigned char nmask= (unsigned char)(~(1<<bitindex));
+  auto mask= (unsigned char)(x?(1<<bitindex):0);
+  auto nmask= (unsigned char)(~(1<<bitindex));
 
   data_[byteindex]= mask|(nmask & data_[byteindex]);
 }

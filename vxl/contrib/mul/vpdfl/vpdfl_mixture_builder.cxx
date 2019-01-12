@@ -20,8 +20,10 @@
 //    IMS   Converted to VXL 14 May 2000, with redesign
 // \endverbatim
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_indent.h>
 #include <vsl/vsl_vector_io.h>
 #include <vsl/vsl_binary_loader.h>
@@ -177,7 +179,7 @@ void vpdfl_mixture_builder::weighted_build(vpdfl_pdf_base& base_model,
                                            const std::vector<double>& wts) const
 {
   assert(base_model.is_class("vpdfl_mixture"));
-  vpdfl_mixture& model = static_cast<vpdfl_mixture&>( base_model);
+  auto& model = static_cast<vpdfl_mixture&>( base_model);
 
   unsigned int n = builder_.size();
 
@@ -678,7 +680,7 @@ void vpdfl_mixture_builder::config_from_stream(std::istream & is)
   if (props.find("basis_pdf")!=props.end())
   {
     std::istringstream pdf_ss(props["basis_pdf"]);
-    vcl_unique_ptr<vpdfl_builder_base>
+    std::unique_ptr<vpdfl_builder_base>
             b = vpdfl_builder_base::new_pdf_builder_from_stream(pdf_ss);
     init(*b,n_pdfs);
     props.erase("basis_pdf");

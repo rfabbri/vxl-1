@@ -10,7 +10,9 @@
 #include <vector>
 #include <vil3d/vil3d_image_view.h>
 #include <vgl/vgl_point_3d.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: True if value v is strictly above 8 neighbours of *im in i and j
 template <class T>
@@ -62,7 +64,7 @@ inline void vil3d_find_peaks_26(std::vector<vgl_point_3d<int> >& peaks,
       const T* pixel = row;
       for (unsigned i=1;i<ni1;++i,pixel+=istep)
         if (*pixel>=min_thresh && vil3d_is_peak26(pixel,istep,jstep,kstep))
-        { peaks.push_back(vgl_point_3d<int>(i,j,k)); }
+        { peaks.emplace_back(i,j,k); }
     }
   }
 }
@@ -72,7 +74,7 @@ inline void vil3d_find_peaks_26(std::vector<vgl_point_3d<int> >& peaks,
 template <class T>
 inline vgl_point_3d<int> vil3d_find_max(const vil3d_image_view<T>& image)
 {
-  if (image.size()==0) return vgl_point_3d<int>();
+  if (image.size()==0) return {};
 
   const unsigned ni=image.ni(),nj=image.nj(),nk=image.nk();
   const std::ptrdiff_t istep = image.istep(),jstep=image.jstep(),kstep=image.kstep();

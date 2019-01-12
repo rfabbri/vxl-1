@@ -20,7 +20,9 @@
 // \author Ali Osman Ulusoy
 // \date Dec 1, 2011
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/io/boxm2_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -32,8 +34,8 @@
 
 namespace boxm2_cpp_filter_response_process_globals
 {
-  const unsigned n_inputs_ =  6;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 6;
+  constexpr unsigned n_outputs_ = 0;
 
   typedef boxm2_data_traits<BOXM2_FLOAT> RESPONSE_DATATRAIT;
 }
@@ -78,10 +80,10 @@ bool boxm2_cpp_filter_response_process(bprb_func_process& pro)
   unsigned i = 0;
   boxm2_scene_sptr scene =pro.get_input<boxm2_scene_sptr>(i++);
   boxm2_cache_sptr cache= pro.get_input<boxm2_cache_sptr>(i++);
-  float prob_threshold = pro.get_input<float>(i++);
+  auto prob_threshold = pro.get_input<float>(i++);
   std::string kernel_base_file_name =  pro.get_input< std::string>(i++);
-  unsigned id_kernel = pro.get_input<unsigned>(i++);
-  unsigned octree_lvl = pro.get_input<unsigned>(i++);
+  auto id_kernel = pro.get_input<unsigned>(i++);
+  auto octree_lvl = pro.get_input<unsigned>(i++);
 
   std::map<boxm2_block_id, boxm2_block_metadata> blocks = scene->blocks();
   std::cout << "Running boxm2_cpp_filter_response_process ..." << std::endl;
@@ -96,8 +98,8 @@ bool boxm2_cpp_filter_response_process(bprb_func_process& pro)
     boxm2_block_id id = blk_iter->first;
     std::cout<<"Filtering Block: "<<id<<std::endl;
 
-    boxm2_block *     blk     = cache->get_block(scene,id);
-    boxm2_data_base * alph    = cache->get_data_base(scene,id,boxm2_data_traits<BOXM2_ALPHA>::prefix());
+    boxm2_block *     blk = cache->get_block(scene,id);
+    boxm2_data_base * alph = cache->get_data_base(scene,id,boxm2_data_traits<BOXM2_ALPHA>::prefix());
     boxm2_block_metadata data = blk_iter->second;
 
     int alphaTypeSize = (int)boxm2_data_info::datasize(boxm2_data_traits<BOXM2_ALPHA>::prefix());
@@ -107,7 +109,7 @@ bool boxm2_cpp_filter_response_process(bprb_func_process& pro)
     std::string kernel_name = vul_file::strip_directory(kernel_base_file_name);
     std::stringstream ss; ss << kernel_name << "_" << id_kernel;
     std::cout << "Data type: " << RESPONSE_DATATRAIT::prefix(ss.str()) << std::endl;
-    boxm2_data_base * response    = cache->get_data_base(scene,id,RESPONSE_DATATRAIT::prefix(ss.str()),alph->buffer_length()/alphaTypeSize*responseTypeSize,false);
+    boxm2_data_base * response = cache->get_data_base(scene,id,RESPONSE_DATATRAIT::prefix(ss.str()),alph->buffer_length()/alphaTypeSize*responseTypeSize,false);
 
     filter_function.apply_filter(data, blk, alph, response, prob_threshold,  octree_lvl);
   }

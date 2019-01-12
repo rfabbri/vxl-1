@@ -7,7 +7,9 @@
 #include <fstream>
 #include <string>
 #include "bvgl_eulerspiral.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_binary_io.h>
 #include <vsl/vsl_vector_io.h>
 
@@ -20,7 +22,7 @@
 
 
 //some defines for Euler-spiral optimization
-const int bvgl_eulerspiral_max_gradient_descent_iter = 50000;  // maxinum number of iterations for gradient descent
+constexpr int bvgl_eulerspiral_max_gradient_descent_iter = 50000;  // maxinum number of iterations for gradient descent
 const double bvgl_eulerspiral_e_error = 1e-5;   // epsilon for error
 const double bvgl_eulerspiral_e_gamma = 1e-8;   // epsilon for gamma
 const double bvgl_eulerspiral_e_k = 1e-4;   //Epsilon for curvature
@@ -31,11 +33,11 @@ class bvgl_eulerspiral_optimization_function : public vnl_least_squares_function
 {
 public:
   friend class bvgl_eulerspiral;
-  virtual ~bvgl_eulerspiral_optimization_function() {}
+  ~bvgl_eulerspiral_optimization_function() override = default;
   //: The main function.
   //  Given the parameter vector x, compute the vector of residuals fx.
   //  Fx has been sized appropriately before the call.
-  virtual void f(vnl_vector<double> const& x, vnl_vector<double>& fx);
+  void f(vnl_vector<double> const& x, vnl_vector<double>& fx) override;
 
   //: return pointer to the Euler spiral of this function
   bvgl_eulerspiral* es() const { return this->es_; }
@@ -121,7 +123,7 @@ vgl_vector_2d< double > bvgl_eulerspiral::
 tangent_at_length( double s) const {
   double angle;
   angle = this->start_angle() + s*(this->k0() + 0.5*this->gamma()*s);
-  return vgl_vector_2d<double >(std::cos(angle), std::sin(angle));
+  return {std::cos(angle), std::sin(angle)};
 }
 
 vgl_vector_2d< double > bvgl_eulerspiral::
@@ -650,7 +652,7 @@ const std::string bvgl_eulerspiral_lookup_table::
 file_name = std::string("bvgl_eulerspiral_lookup_table.bvl");
 
 //: static bvgl_eulerspiral_lookup_table instance
-bvgl_eulerspiral_lookup_table* bvgl_eulerspiral_lookup_table::instance_ = VXL_NULLPTR;
+bvgl_eulerspiral_lookup_table* bvgl_eulerspiral_lookup_table::instance_ = nullptr;
 
 //: Return the pointer to the only instance of the class
 bvgl_eulerspiral_lookup_table *bvgl_eulerspiral_lookup_table::instance(){
@@ -721,9 +723,7 @@ bvgl_eulerspiral_lookup_table::bvgl_eulerspiral_lookup_table(){
 }
 
 //: Destructor
-bvgl_eulerspiral_lookup_table::~bvgl_eulerspiral_lookup_table(){
-
-}
+bvgl_eulerspiral_lookup_table::~bvgl_eulerspiral_lookup_table()= default;
 
 //: delta theta values for the table (tells you about the accuracy of the lookup)
 double bvgl_eulerspiral_lookup_table::dt(){
@@ -822,7 +822,7 @@ bvgl_eulerspiral_optimization_function(unsigned int number_of_unknowns,
                                        UseGradient g):
 vnl_least_squares_function(number_of_unknowns, number_of_residuals, g)
 {
-  this->es_ = VXL_NULLPTR;
+  this->es_ = nullptr;
 }
 
 //: Main function for optimization

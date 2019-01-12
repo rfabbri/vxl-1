@@ -23,17 +23,16 @@
 sdet_region_proc::sdet_region_proc(sdet_region_proc_params& rpp)
   : sdet_region_proc_params(rpp)
 {
-  image_ = VXL_NULLPTR;
-  vimage_ = VXL_NULLPTR;
-  clip_ = VXL_NULLPTR;
-  vclip_ = VXL_NULLPTR;
+  image_ = nullptr;
+  vimage_ = nullptr;
+  clip_ = nullptr;
+  vclip_ = nullptr;
   use_vil_image_ = true; //who knows, but need to chose one
 }
 
 //:Default Destructor
 sdet_region_proc::~sdet_region_proc()
-{
-}
+= default;
 
 //-------------------------------------------------------------------------
 //: Set the image to be processed (vil1 type image)
@@ -75,9 +74,9 @@ vil_image_resource_sptr vil_crop(const vil_image_resource_sptr &src, unsigned i0
                                  unsigned n_i, unsigned j0, unsigned n_j);
   if (box)
   {
-    vclip_ = VXL_NULLPTR;
+    vclip_ = nullptr;
 
-    unsigned i0 = (unsigned)box->get_min_x(), j0 = (unsigned)box->get_min_y();
+    auto i0 = (unsigned)box->get_min_x(), j0 = (unsigned)box->get_min_y();
     unsigned n_i = ((unsigned)box->get_max_x())-i0;
     unsigned n_j = ((unsigned)box->get_max_y())-j0;
     vclip_ = vil_crop(image, i0, n_i, j0, n_j);
@@ -191,31 +190,29 @@ vil1_image sdet_region_proc::get_residual_image()
   if (!image_||!regions_valid_)
   {
     std::cout << "In sdet_region_proc::get_residual_image() - no regions\n";
-    return VXL_NULLPTR;
+    return nullptr;
   }
   int xsize = image_.width(), ysize = image_.height();
   vil1_memory_image_of<unsigned char> res_image(xsize, ysize);
   res_image.fill(0);
-  float min_res = (float)vnl_numeric_traits<unsigned short>::maxval;
-  for (std::vector<vtol_intensity_face_sptr>::iterator fit = regions_.begin();
-       fit != regions_.end(); fit++)
-    for ((*fit)->reset(); (*fit)->next();)
+  auto min_res = (float)vnl_numeric_traits<unsigned short>::maxval;
+  for (auto & region : regions_)
+    for (region->reset(); region->next();)
     {
-      float res = (*fit)->Ir();
+      float res = region->Ir();
       if (res<min_res)
         min_res = res;
     }
 
-  for (std::vector<vtol_intensity_face_sptr>::iterator fit = regions_.begin();
-       fit != regions_.end(); fit++)
-    for ((*fit)->reset(); (*fit)->next();)
+  for (auto & region : regions_)
+    for (region->reset(); region->next();)
     {
-      int x = int((*fit)->X()), y = int((*fit)->Y());
-      float res = (*fit)->Ir();
+      int x = int(region->X()), y = int(region->Y());
+      float res = region->Ir();
       float is = res-min_res;//to ensure non-negative
       if (is>255)
         is = 255;//to ensure within char
-      unsigned char pix = (unsigned char)is;
+      auto pix = (unsigned char)is;
       res_image(x, y)=pix;
     }
   return res_image;
@@ -235,12 +232,11 @@ vil_image_view<float> sdet_region_proc::get_residual_image_view()
   int xsize = vimage_->ni(), ysize = vimage_->nj();
   null.set_size(xsize, ysize);
   null.fill(0.0);
-  for (std::vector<vtol_intensity_face_sptr>::iterator fit = regions_.begin();
-       fit != regions_.end(); fit++)
-    for ((*fit)->reset(); (*fit)->next();)
+  for (auto & region : regions_)
+    for (region->reset(); region->next();)
     {
-      int x = int((*fit)->X()), y = int((*fit)->Y());
-      null(x, y)= (*fit)->Ir();
+      int x = int(region->X()), y = int(region->Y());
+      null(x, y)= region->Ir();
     }
   return null;
 }

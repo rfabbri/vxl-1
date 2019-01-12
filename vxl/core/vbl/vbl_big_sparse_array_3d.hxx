@@ -5,8 +5,10 @@
 #include <utility>
 #include <iostream>
 #include "vbl_big_sparse_array_3d.h"
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 // locals
 inline ulonglong bigencode(unsigned i, unsigned j, unsigned k)
@@ -103,6 +105,6 @@ template class vbl_big_sparse_array_3d<T >
 #undef VBL_BIG_SPARSE_ARRAY_3D_INSTANTIATE
 #define VBL_BIG_SPARSE_ARRAY_3D_INSTANTIATE(T) \
 VBL_BIG_SPARSE_ARRAY_3D_INSTANTIATE_base(T); \
-VCL_INSTANTIATE_INLINE(std::ostream& operator << (std::ostream&, vbl_big_sparse_array_3d<T > const&))
+/*template std::ostream& operator << (std::ostream&, vbl_big_sparse_array_3d<T > const&) */
 
 #endif // vbl_big_sparse_array_3d_hxx_

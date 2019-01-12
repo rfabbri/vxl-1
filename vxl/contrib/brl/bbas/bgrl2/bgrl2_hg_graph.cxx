@@ -7,8 +7,10 @@
 // author: Ming-Ching Chang
 // date:   Apr 04, 2005
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 ////////////////////////////////////////////////////////////////////
 // ===== Internal Low-level Graph operation (without handling connectivity) =====
@@ -33,8 +35,8 @@ void bgrl2_hg_graph::_internal_add_edge (bgrl2_hg_edge* edge)
 
 bool bgrl2_hg_graph::_internal_del_edge (bgrl2_hg_edge* edge)
 {
-  assert (edge->connecting_s_vertex() == VXL_NULLPTR &&
-          edge->connecting_e_vertex() == VXL_NULLPTR);
+  assert (edge->connecting_s_vertex() == nullptr &&
+          edge->connecting_e_vertex() == nullptr);
   int n_removed = edges_.erase (edge->id());
   return n_removed == 1;
 }
@@ -44,7 +46,7 @@ bool bgrl2_hg_graph::_internal_del_edge (bgrl2_hg_edge* edge)
 
 bool bgrl2_hg_graph::remove_vertex (bgrl2_hg_vertex* vertex)
 {
-  std::vector<bgrl2_hg_edge*>::iterator it = vertex->connecting_edges().begin();
+  auto it = vertex->connecting_edges().begin();
   while (it != vertex->connecting_edges().end()) {
     bgrl2_hg_edge* edge = (*it);
     _internal_disconnect_edge_vertex (edge, vertex);
@@ -96,7 +98,7 @@ bool bgrl2_hg_graph::topo_remove_vertex (bgrl2_hg_vertex* vertex)
 
 bool bgrl2_hg_graph::topo_remove_vertex (int id)
 {
-  bgrl2_hg_vertex* vertex = (bgrl2_hg_vertex*) vertices (id);
+  auto* vertex = (bgrl2_hg_vertex*) vertices (id);
   if (vertex)
     return topo_remove_vertex (vertex);
   else
@@ -114,4 +116,3 @@ bool bgrl2_hg_graph::topo_remove_edge (int id)
   //: for scaffold_graph, can remove the graph edge directly.
   return remove_edge (id);
 }
-

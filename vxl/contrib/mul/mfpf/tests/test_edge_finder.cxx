@@ -12,7 +12,9 @@
 // \author Tim Cootes
 // \brief test mfpf_edge_finder
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_binary_loader.h>
 #include <mbl/mbl_cloneables_factory.h>
 #include <mfpf/mfpf_add_all_loaders.h>
@@ -104,13 +106,13 @@ void test_edge_finder()
           "  search_ni: 17\n"
           "}\n");
 
-    vcl_unique_ptr<mfpf_point_finder_builder>
+    std::unique_ptr<mfpf_point_finder_builder>
             pfb = mfpf_point_finder_builder::create_from_stream(ss);
 
     TEST("Correct Builder",pfb->is_a(),"mfpf_edge_finder_builder");
     if (pfb->is_a()=="mfpf_edge_finder_builder")
     {
-      mfpf_edge_finder_builder &a_pfb = static_cast<mfpf_edge_finder_builder&>(*pfb);
+      auto &a_pfb = static_cast<mfpf_edge_finder_builder&>(*pfb);
       std::cout<<a_pfb<<std::endl;
       TEST("search_ni configured",a_pfb.search_ni(),17);
     }
@@ -139,7 +141,7 @@ void test_edge_finder()
     bfs_out.close();
 
     mfpf_edge_finder edge_finder_in;
-    mfpf_point_finder *base_ptr_in = VXL_NULLPTR;
+    mfpf_point_finder *base_ptr_in = nullptr;
 
     vsl_b_ifstream bfs_in("test_edge_finder.bvl.tmp");
     TEST ("Opened test_edge_finder.bvl.tmp for reading",

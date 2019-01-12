@@ -8,7 +8,9 @@
 
 #include <iostream>
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_arg.h>
 #include <vul/vul_reg_exp.h>
 
@@ -18,7 +20,7 @@
 int main(int argc, char *argv[])
 {
 
-  vul_arg<std::string> re_string(VXL_NULLPTR, "Regular expression");
+  vul_arg<std::string> re_string(nullptr, "Regular expression");
   vul_arg_parse(argc,argv);
 
   std::string s;
@@ -42,4 +44,3 @@ int main(int argc, char *argv[])
   }
   return 0;
 }
-

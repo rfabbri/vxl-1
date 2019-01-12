@@ -14,13 +14,15 @@
 #include <iostream>
 #include <string>
 #include <bprb/bprb_func_process.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: global variables
 namespace bvxm_detect_edge_tangent_process_globals
 {
-  const unsigned n_inputs_ = 2;
-  const unsigned n_outputs_=1;
+  constexpr unsigned n_inputs_ = 2;
+  constexpr unsigned n_outputs_ = 1;
 
   // parameter strings
   const std::string param_noise_multiplier_ =  "noise_multiplier";

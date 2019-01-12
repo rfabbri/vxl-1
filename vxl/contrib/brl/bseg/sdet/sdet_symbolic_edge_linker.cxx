@@ -11,11 +11,13 @@
 #include <sdet/sdet_sel.h>
 #include <sdet/sdet_curve_model.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_timer.h>
 #include <vil/vil_image_resource.h>
 
-void sdet_symbolic_edge_linker::apply(sdet_edgemap_sptr edgemap) {
+void sdet_symbolic_edge_linker::apply(const sdet_edgemap_sptr& edgemap) {
 
   //different types of linkers depending on the curve model
   typedef sdet_sel<sdet_simple_linear_curve_model> sdet_sel_simple_linear;

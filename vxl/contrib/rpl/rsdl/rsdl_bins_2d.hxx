@@ -7,8 +7,10 @@
 #include <cstddef>
 #include "rsdl_bins_2d.h"
 
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_vector_fixed.h>
@@ -46,9 +48,7 @@ rsdl_bins_2d( const vnl_vector_fixed< COORD_T, 2 > & min_pt,
 
 template < class COORD_T, class VALUE_T >
 rsdl_bins_2d< COORD_T, VALUE_T > ::
-~rsdl_bins_2d()
-{
-}
+~rsdl_bins_2d() = default;
 
 template < class COORD_T, class VALUE_T >
 void

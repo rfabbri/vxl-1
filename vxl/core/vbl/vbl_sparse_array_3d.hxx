@@ -8,6 +8,9 @@
 #include "vbl_sparse_array_3d.h"
 #include "vbl_sparse_array_base.hxx"
 #include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Print the array to a stream in "(i,j,k): value" format.
 template <class T>
@@ -26,6 +29,6 @@ std::ostream& vbl_sparse_array_3d<T>::print(std::ostream& out) const
 #define VBL_SPARSE_ARRAY_3D_INSTANTIATE(T) \
 VBL_SPARSE_ARRAY_BASE_INSTANTIATE(T, vbl_triple<unsigned VCL_COMMA unsigned VCL_COMMA unsigned >); \
 template class vbl_sparse_array_3d<T >; \
-VCL_INSTANTIATE_INLINE(std::ostream& operator<< (std::ostream&, const vbl_sparse_array_3d<T > &))
+/*template std::ostream& operator<< (std::ostream&, const vbl_sparse_array_3d<T > &) */
 
 #endif // vbl_sparse_array_3d_hxx_

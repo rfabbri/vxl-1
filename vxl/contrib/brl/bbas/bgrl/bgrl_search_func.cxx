@@ -12,20 +12,19 @@ bgrl_edge_sptr
 bgrl_breadth_search::next_vertex()
 {
   if (!curr_vertex_)
-    return VXL_NULLPTR;
+    return nullptr;
 
-  for ( bgrl_vertex::edge_iterator itr = curr_vertex_->begin();
-        itr != curr_vertex_->end(); ++itr )
+  for (const auto & itr : *curr_vertex_)
   {
-    if ( visited_.find((*itr)->to()) == visited_.end() )
-      eval_queue_.push_back(*itr);
+    if ( visited_.find(itr->to()) == visited_.end() )
+      eval_queue_.push_back(itr);
   }
   while ( !eval_queue_.empty() && visited_.find(eval_queue_.front()->to()) != visited_.end() )
     eval_queue_.pop_front();
 
   if (eval_queue_.empty()){
-    curr_vertex_ = VXL_NULLPTR;
-    return VXL_NULLPTR;
+    curr_vertex_ = nullptr;
+    return nullptr;
   }
   else {
     bgrl_edge_sptr next = eval_queue_.front();
@@ -44,20 +43,19 @@ bgrl_edge_sptr
 bgrl_depth_search::next_vertex()
 {
   if (!curr_vertex_)
-    return VXL_NULLPTR;
+    return nullptr;
 
-  for ( bgrl_vertex::edge_iterator itr = curr_vertex_->begin();
-        itr != curr_vertex_->end(); ++itr )
+  for (const auto & itr : *curr_vertex_)
   {
-    if ( visited_.find((*itr)->to()) == visited_.end() )
-      eval_queue_.push_front(*itr);
+    if ( visited_.find(itr->to()) == visited_.end() )
+      eval_queue_.push_front(itr);
   }
   while ( !eval_queue_.empty() && visited_.find(eval_queue_.front()->to()) != visited_.end() )
     eval_queue_.pop_front();
 
   if (eval_queue_.empty()){
-    curr_vertex_ = VXL_NULLPTR;
-    return VXL_NULLPTR;
+    curr_vertex_ = nullptr;
+    return nullptr;
   }
   else {
     bgrl_edge_sptr next = eval_queue_.front();

@@ -1,7 +1,4 @@
 // This is core/vil1/file_formats/vil1_jpeg_decompressor.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author fsm
@@ -10,7 +7,9 @@
 #include "vil1_jpeg_decompressor.h"
 #include "vil1_jpeg_source_mgr.h"
 #include <vil1/vil1_stream.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 #define trace if (true) { } else std::cerr
 
@@ -32,7 +31,7 @@ vil1_jpeg_decompressor::vil1_jpeg_decompressor(vil1_stream *s)
   : stream(s)
   , ready(false)
   , valid(false)
-  , biffer(VXL_NULLPTR)
+  , biffer(nullptr)
 {
   stream->ref();
 
@@ -118,7 +117,7 @@ JSAMPLE const *vil1_jpeg_decompressor::read_scanline(unsigned line)
       jpeg_abort_decompress(&jobj);
       ready = false;
       valid = false;
-      return VXL_NULLPTR;
+      return nullptr;
     }
   }
 
@@ -145,10 +144,10 @@ vil1_jpeg_decompressor::~vil1_jpeg_decompressor()
 
   //
   stream->unref();
-  stream = VXL_NULLPTR;
+  stream = nullptr;
 
   //
   if (biffer)
     delete [] biffer;
-  biffer = VXL_NULLPTR;
+  biffer = nullptr;
 }

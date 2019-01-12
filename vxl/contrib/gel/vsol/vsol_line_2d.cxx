@@ -4,8 +4,10 @@
 #include "vsol_line_2d.h"
 //:
 // \file
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vnl/vnl_math.h>
 #include <vbl/io/vbl_io_smart_ptr.h>
 #include <vsol/vsol_point_2d.h>
@@ -315,7 +317,7 @@ void vsol_line_2d::print_summary(std::ostream &os) const
 void
 vsl_b_write(vsl_b_ostream &os, const vsol_line_2d* p)
 {
-  if (p==VXL_NULLPTR) {
+  if (p==nullptr) {
     vsl_b_write(os, false); // Indicate null pointer stored
   }
   else{
@@ -337,7 +339,7 @@ vsl_b_read(vsl_b_istream &is, vsol_line_2d* &p)
     p->b_read(is);
   }
   else
-    p = VXL_NULLPTR;
+    p = nullptr;
 }
 
 void vsol_line_2d::describe(std::ostream &strm, int blanking) const

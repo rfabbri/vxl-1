@@ -1,14 +1,14 @@
 // This is mul/vil3d/file_formats/vil3d_gen_synthetic.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \brief Reader for simple images generated on the fly.
 // \author Ian Scott - Manchester
 
 #include "vil3d_gen_synthetic.h"
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil3d/vil3d_image_view.h>
 #include <vil3d/vil3d_new.h>
 #include <vil/vil_pixel_format.h>
@@ -22,7 +22,7 @@ vil3d_image_resource_sptr vil3d_gen_synthetic_format::make_input_image(const cha
   assert(re.is_valid());
 
   if (! re.find(filename))
-    return VXL_NULLPTR;
+    return nullptr;
 
   unsigned ni = vul_string_atoi(re.match(1));
   unsigned nj = vul_string_atoi(re.match(2));
@@ -32,7 +32,7 @@ vil3d_image_resource_sptr vil3d_gen_synthetic_format::make_input_image(const cha
   if (pf == VIL_PIXEL_FORMAT_UNKNOWN)
   {
     std::cerr << "ERROR: vil3d_gen_synthetic_format unknown pixel format " << re.match(4) << std::endl;
-    return VXL_NULLPTR;
+    return nullptr;
   }
 
   vil3d_gen_synthetic_pixel_value pv;
@@ -67,7 +67,7 @@ vil3d_image_resource_sptr vil3d_gen_synthetic_format::make_input_image(const cha
     break;
    default:
     std::cerr << "ERROR: vil3d_gen_synthetic_format Cannot handle pixel format " << re.match(4) << std::endl;
-    return VXL_NULLPTR;
+    return nullptr;
   }
 
   return new vil3d_gen_synthetic_image(ni, nj, nk, pf, pv);
@@ -84,7 +84,7 @@ vil3d_image_resource_sptr vil3d_gen_synthetic_format::make_output_image(const ch
                                                                         enum vil_pixel_format /*format*/) const
 {
   std::cerr << "ERROR: Cannot write to generated synthetic images.\n";
-  return VXL_NULLPTR;
+  return nullptr;
 }
 
 
@@ -137,69 +137,69 @@ vil3d_image_view_base_sptr vil3d_gen_synthetic_image::get_copy_view(
                                unsigned i0, unsigned ni, unsigned j0, unsigned nj,
                                unsigned k0, unsigned nk) const
 {
-  if (i0+ni > this->ni() || j0+nj > this->nj() || k0+nk > this->nk()) return VXL_NULLPTR;
+  if (i0+ni > this->ni() || j0+nj > this->nj() || k0+nk > this->nk()) return nullptr;
 
   switch (format_)
   {
     case VIL_PIXEL_FORMAT_BOOL:
     {
-      vil3d_image_view<bool> *p =
+      auto *p =
         new vil3d_image_view<bool>(ni, nj, nk, nplanes());
       p->fill(value_.bool_value);
       return p;
     }
     case VIL_PIXEL_FORMAT_SBYTE:
     {
-      vil3d_image_view<vxl_sbyte> *p =
+      auto *p =
         new vil3d_image_view<vxl_sbyte>(ni, nj, nk, nplanes());
       p->fill(value_.sbyte_value);
       return p;
     }
     case VIL_PIXEL_FORMAT_BYTE:
     {
-      vil3d_image_view<vxl_byte> *p =
+      auto *p =
         new vil3d_image_view<vxl_byte>(ni, nj, nk, nplanes());
       p->fill(value_.byte_value);
       return p;
     }
     case VIL_PIXEL_FORMAT_INT_16:
     {
-      vil3d_image_view<vxl_int_16> *p =
+      auto *p =
         new vil3d_image_view<vxl_int_16>(ni, nj, nk, nplanes());
       p->fill(value_.int_16_value);
       return p;
     }
     case VIL_PIXEL_FORMAT_UINT_16:
     {
-      vil3d_image_view<vxl_uint_16> *p =
+      auto *p =
         new vil3d_image_view<vxl_uint_16>(ni, nj, nk, nplanes());
       p->fill(value_.uint_16_value);
       return p;
     }
     case VIL_PIXEL_FORMAT_INT_32:
     {
-      vil3d_image_view<vxl_int_32> *p =
+      auto *p =
         new vil3d_image_view<vxl_int_32>(ni, nj, nk, nplanes());
       p->fill(value_.int_32_value);
       return p;
     }
     case VIL_PIXEL_FORMAT_UINT_32:
     {
-      vil3d_image_view<vxl_uint_32> *p =
+      auto *p =
         new vil3d_image_view<vxl_uint_32>(ni, nj, nk, nplanes());
       p->fill(value_.uint_32_value);
       return p;
     }
     case VIL_PIXEL_FORMAT_FLOAT:
     {
-      vil3d_image_view<float> *p =
+      auto *p =
         new vil3d_image_view<float>(ni, nj, nk, nplanes());
       p->fill(value_.float_value);
       return p;
     }
     case VIL_PIXEL_FORMAT_DOUBLE:
     {
-      vil3d_image_view<double> *p =
+      auto *p =
         new vil3d_image_view<double>(ni, nj, nk, nplanes());
       p->fill(value_.double_value);
       return p;
@@ -207,7 +207,7 @@ vil3d_image_view_base_sptr vil3d_gen_synthetic_image::get_copy_view(
     default:
     std::cout<<"ERROR: vil3d_gen_synthetic_format::get_image_data()\n"
             <<"Can't deal with pixel type " << pixel_format() << std::endl;
-    return VXL_NULLPTR;
+    return nullptr;
   }
 }
 
@@ -223,4 +223,3 @@ bool vil3d_gen_synthetic_image::put_view(const vil3d_image_view_base&,
   std::cerr << "ERROR: Cannot write to generated synthetic images.\n";
   return false;
 }
-

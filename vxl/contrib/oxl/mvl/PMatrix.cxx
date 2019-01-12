@@ -1,7 +1,4 @@
 // This is oxl/mvl/PMatrix.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 
@@ -10,8 +7,10 @@
 #include <cmath>
 #include "PMatrix.h"
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <vnl/vnl_matrix.h>
 #include <vnl/vnl_matlab_print.h>
@@ -39,7 +38,7 @@
 //
 
 PMatrix::PMatrix ()
-  : svd_(VXL_NULLPTR)
+  : svd_(nullptr)
 {
   for (int row_index = 0; row_index < 3; row_index++)
     for (int col_index = 0; col_index < 4; col_index++)
@@ -56,7 +55,7 @@ PMatrix::PMatrix ()
 //   PMatrix P(cin);
 // \endcode
 PMatrix::PMatrix (std::istream& i)
-  : svd_(VXL_NULLPTR)
+  : svd_(nullptr)
 {
   read_ascii(i);
 }
@@ -67,7 +66,7 @@ PMatrix::PMatrix (std::istream& i)
 
 PMatrix::PMatrix (vnl_double_3x4 const& pmatrix)
   : p_matrix_ (pmatrix),
-  svd_(VXL_NULLPTR)
+  svd_(nullptr)
 {
 }
 
@@ -76,7 +75,7 @@ PMatrix::PMatrix (vnl_double_3x4 const& pmatrix)
 //: Construct from 3x3 matrix A and vector a. P = [A a].
 
 PMatrix::PMatrix (const vnl_matrix<double>& A, const vnl_vector<double>& a)
-  : svd_(VXL_NULLPTR)
+  : svd_(nullptr)
 {
   set(A,a);
 }
@@ -87,7 +86,7 @@ PMatrix::PMatrix (const vnl_matrix<double>& A, const vnl_vector<double>& a)
 
 PMatrix::PMatrix (const double *c_matrix)
   : p_matrix_ (c_matrix),
-  svd_(VXL_NULLPTR)
+  svd_(nullptr)
 {
 }
 
@@ -96,7 +95,7 @@ PMatrix::PMatrix (const double *c_matrix)
 // - Copy ctor
 
 PMatrix::PMatrix (const PMatrix& that)
-  : vbl_ref_count(), p_matrix_(that.get_matrix()), svd_(VXL_NULLPTR)
+  : vbl_ref_count(), p_matrix_(that.get_matrix()), svd_(nullptr)
 {
 }
 
@@ -104,7 +103,7 @@ PMatrix::PMatrix (const PMatrix& that)
 PMatrix& PMatrix::operator=(const PMatrix& that)
 {
   p_matrix_ = that.get_matrix();
-  svd_ = VXL_NULLPTR;
+  svd_ = nullptr;
   return *this;
 }
 
@@ -113,7 +112,7 @@ PMatrix& PMatrix::operator=(const PMatrix& that)
 // - Destructor
 PMatrix::~PMatrix()
 {
-  delete svd_; svd_ = VXL_NULLPTR;
+  delete svd_; svd_ = nullptr;
 }
 
 // OPERATIONS
@@ -165,7 +164,7 @@ HomgLineSeg2D PMatrix::project (const HomgLineSeg3D& L) const
 vgl_homg_point_3d<double> PMatrix::backproject_pseudoinverse (const vgl_homg_point_2d<double>& x) const
 {
   vnl_double_4 p = svd()->solve(vnl_double_3(x.x(),x.y(),x.w()).as_ref());
-  return vgl_homg_point_3d<double>(p[0],p[1],p[2],p[3]);
+  return {p[0],p[1],p[2],p[3]};
 }
 
 HomgPoint3D PMatrix::backproject_pseudoinverse (const HomgPoint2D& x) const
@@ -278,7 +277,7 @@ PMatrix PMatrix::read(std::istream& s)
 //: Compute the svd of this P and cache it, so that future operations that require it need not recompute it.
 vnl_svd<double>* PMatrix::svd() const
 {
-  if (svd_ == VXL_NULLPTR) {
+  if (svd_ == nullptr) {
     svd_ = new vnl_svd<double>(p_matrix_.as_ref());
   }
   return svd_;
@@ -288,7 +287,7 @@ vnl_svd<double>* PMatrix::svd() const
 //  This is necessary only in order to recover the space used by it if the PMatrix is not being deleted.
 void PMatrix::clear_svd() const
 {
-  delete svd_; svd_ = VXL_NULLPTR;
+  delete svd_; svd_ = nullptr;
 }
 
 //-----------------------------------------------------------------------------
@@ -301,12 +300,12 @@ vgl_homg_point_3d<double> PMatrix::get_focal() const
     std::cerr << "PMatrix::get_focal:\n"
              << "  Nullspace dimension is " << svd()->singularities()
              << "\n  Returning an invalid point (a vector of zeros)\n";
-    return vgl_homg_point_3d<double>(0,0,0,0);
+    return {0,0,0,0};
   }
 
   vnl_matrix<double> ns = svd()->nullspace();
 
-  return vgl_homg_point_3d<double>(ns(0,0), ns(1,0), ns(2,0), ns(3,0));
+  return {ns(0,0), ns(1,0), ns(2,0), ns(3,0)};
 }
 
 HomgPoint3D PMatrix::get_focal_point() const
@@ -636,4 +635,3 @@ PMatrix PMatrix::premultiply(vnl_double_3x3 const& H) const
 {
   return PMatrix(H * p_matrix_);
 }
-

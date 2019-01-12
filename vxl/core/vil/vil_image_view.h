@@ -1,9 +1,6 @@
 // This is core/vil/vil_image_view.h
 #ifndef vil_image_view_h_
 #define vil_image_view_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief A base class reference-counting view of some image data.
@@ -16,8 +13,10 @@
 #include <iosfwd>
 #include <string>
 #include <cstddef>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vil/vil_image_view_base.h>
 #include <vil/vil_memory_chunk.h>
 #include <vil/vil_pixel_format.h>
@@ -41,7 +40,7 @@ template <class T>
 class vil_image_view : public vil_image_view_base
 {
  private:
-  VCL_SAFE_BOOL_DEFINE;
+
  protected:
   //: Pointer to pixel at origin.
   T * top_left_;
@@ -56,12 +55,12 @@ class vil_image_view : public vil_image_view_base
   vil_memory_chunk_sptr ptr_;
 
   //: Disconnect this view from the underlying data,
-  void release_memory() { ptr_ = VXL_NULLPTR; }
+  void release_memory() { ptr_ = nullptr; }
 
  public:
   //: Dflt ctor
   //  Creates an empty one-plane image.
-  vil_image_view(): top_left_(VXL_NULLPTR),istep_(0),jstep_(0),planestep_(0) {}
+  vil_image_view(): top_left_(nullptr),istep_(0),jstep_(0),planestep_(0) {}
 
   //: Create an image of ni x nj pixels in (n_planes * n_interleaved_planes) planes
   //  If n_interleaved_planes > 1, the planes are interleaved.
@@ -111,7 +110,7 @@ class vil_image_view : public vil_image_view_base
   vil_image_view(const vil_image_view_base_sptr& rhs);
 
   //  Destructor
-  virtual ~vil_image_view() {}
+  ~vil_image_view() override = default;
 
   // === Standard container stuff ===
   // This assumes that the data is arranged contiguously.
@@ -153,12 +152,13 @@ class vil_image_view : public vil_image_view_base
   inline std::ptrdiff_t planestep() const { return planestep_; }
 
   //: Cast to bool is true if pointing at some data.
-  operator safe_bool() const
-  { return (top_left_ != VXL_NULLPTR)? VCL_SAFE_BOOL_TRUE : VXL_NULLPTR; }
+  /* The old 'safe_bool' did implicit conversions, best practice would be to use explicit operator bool */
+  operator bool() const
+  { return (top_left_ != nullptr)? true : false; }
 
   //: Return false if pointing at some data.
   bool operator!() const
-  { return (top_left_ != VXL_NULLPTR)? false : true; }
+  { return (top_left_ != nullptr)? false : true; }
 
   //: The number of bytes in the data
   inline unsigned size_bytes() const { return size() * sizeof(T); }
@@ -212,18 +212,18 @@ class vil_image_view : public vil_image_view_base
 
   //: resize current planes to ni x nj
   // If already correct size, this function returns quickly
-  virtual void set_size(unsigned ni, unsigned nj);
+  void set_size(unsigned ni, unsigned nj) override;
 
   //: resize to ni x nj x nplanes
   // If already correct size, this function returns quickly
-  virtual void set_size(unsigned ni, unsigned nj, unsigned nplanes);
+  void set_size(unsigned ni, unsigned nj, unsigned nplanes) override;
 
   //: Make a copy of the data in src and set this to view it
   void deep_copy(const vil_image_view<T>& src);
 
   //: Make empty.
   // Disconnects view from underlying data.
-  inline void clear() { release_memory(); ni_=nj_=nplanes_=0; top_left_=VXL_NULLPTR; istep_=jstep_=planestep_=0; }
+  inline void clear() { release_memory(); ni_=nj_=nplanes_=0; top_left_=nullptr; istep_=jstep_=planestep_=0; }
 
   //: Set this view to look at someone else's memory data.
   //  If the data goes out of scope then this view could be invalid, and
@@ -238,17 +238,17 @@ class vil_image_view : public vil_image_view_base
   void fill(T value);
 
   //: Print a 1-line summary of contents
-  virtual void print(std::ostream&) const;
+  void print(std::ostream&) const override;
 
   //: Return class name
-  virtual std::string is_a() const;
+  std::string is_a() const override;
 
   //: True if this is (or is derived from) class s
-  virtual bool is_class(std::string const& s) const;
+  bool is_class(std::string const& s) const override;
 
   //: Return a description of the concrete data pixel type.
   // The value corresponds directly to pixel_type.
-  inline vil_pixel_format pixel_format() const { return vil_pixel_format_of(T()); }
+  inline vil_pixel_format pixel_format() const override { return vil_pixel_format_of(T()); }
 
   //: True if they share same view of same image data.
   //  This does not do a deep equality on image data. If the images point

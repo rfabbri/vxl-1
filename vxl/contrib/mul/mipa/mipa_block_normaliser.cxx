@@ -8,7 +8,9 @@
 // \brief Class to independently normalise sub-blocks with a region
 // \author Martin Roberts
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_binary_loader.h>
 #include <vsl/vsl_vector_io.h>
 #include <vnl/vnl_vector.h>
@@ -106,7 +108,7 @@ void mipa_block_normaliser::print_summary(std::ostream& os) const
 // required if data is present in this base class
 void mipa_block_normaliser::b_write(vsl_b_ostream& bfs) const
 {
-    const short version_no=1;
+    constexpr short version_no = 1;
     vsl_b_write(bfs, version_no);
 
     vsl_b_write(bfs, ni_region_);
@@ -175,7 +177,7 @@ void mipa_block_normaliser::config_from_stream(
         mbl_exception_error(x);
     }
     std::istringstream ss2(props["normaliser"]);
-    vcl_unique_ptr<mipa_vector_normaliser> norm = new_normaliser_from_stream(ss2, extra_props);
+    std::unique_ptr<mipa_vector_normaliser> norm = new_normaliser_from_stream(ss2, extra_props);
     normaliser_=norm.release();
     props.erase("normaliser");
 
@@ -267,4 +269,3 @@ void mipa_block_normaliser::config_from_stream(
     mbl_read_props_look_for_unused_props(
             "mipa_block_normaliser::config_from_stream", props, extra_props);
 }
-

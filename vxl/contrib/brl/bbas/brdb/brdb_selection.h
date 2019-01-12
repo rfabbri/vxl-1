@@ -15,7 +15,9 @@
 #include <vector>
 #include <iostream>
 #include <set>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_ref_count.h>
 #include <brdb/brdb_relation_sptr.h>
 #include <brdb/brdb_selection_sptr.h>
@@ -37,7 +39,7 @@ class brdb_selection : public vbl_ref_count
   brdb_selection(const brdb_selection_sptr& selection, brdb_query_aptr query);
 
   //: destructor
-  ~brdb_selection();
+  ~brdb_selection() override;
 
   //: get the iterator pointing to the beginning of the selection set
   selection_t::const_iterator begin();

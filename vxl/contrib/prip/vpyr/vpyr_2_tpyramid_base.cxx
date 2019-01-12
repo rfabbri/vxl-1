@@ -38,7 +38,7 @@ void vpyr_2_tpyramid_base_dart::set_sequence_index(vmap_dart_index arg)
   vpyr_2_pyramid_base_dart::set_sequence_index(arg) ;
 
   vmap_2_tmap_dart_iterator it ;
-  if (edge_!=VXL_NULLPTR)
+  if (edge_!=nullptr)
   {
     it = edge_->begin()+offset ;
     if (&*it==(vmap_2_tmap_dart*)this)
@@ -46,7 +46,7 @@ void vpyr_2_tpyramid_base_dart::set_sequence_index(vmap_dart_index arg)
       edge_->set_begin(it) ;
     }
   }
-  if (vertex_!=VXL_NULLPTR)
+  if (vertex_!=nullptr)
   {
     it = vertex_->begin()+offset ;
     if (&*it==(vmap_2_tmap_dart*)this)
@@ -54,7 +54,7 @@ void vpyr_2_tpyramid_base_dart::set_sequence_index(vmap_dart_index arg)
       vertex_->set_begin(it) ;
     }
   }
-  if (face_!=VXL_NULLPTR)
+  if (face_!=nullptr)
   {
     it = face_->begin()+offset ;
     if (&*it==(vmap_2_tmap_dart*)this)
@@ -163,7 +163,7 @@ bool vpyr_2_tpyramid_base_edge::is_adjacent_to (const vpyr_2_tpyramid_base_face 
   return &left_face(level)== &arg || &right_face(level)==&arg ;
 }
 
-const vpyr_2_tpyramid_base_dart & vpyr_2_tpyramid_base_edge::direct_dart(vmap_level_index level) const
+const vpyr_2_tpyramid_base_dart & vpyr_2_tpyramid_base_edge::direct_dart(vmap_level_index  /*level*/) const
 {
   return ( const vpyr_2_tpyramid_base_dart &) *vmap_2_tmap_edge::begin() ;
 }
@@ -201,7 +201,7 @@ vmap_level_index vpyr_2_tpyramid_base_edge::last_level() const
 
 const vpyr_2_tpyramid_base_vertex* vpyr_2_tpyramid_base_vertex::ancestor(vmap_level_index level) const
 {
-  vpyr_2_tpyramid_base_vertex& d=const_cast<vpyr_2_tpyramid_base_vertex&> (*this);
+  auto& d=const_cast<vpyr_2_tpyramid_base_vertex&> (*this);
   return d.ancestor(level) ;
 }
 
@@ -242,11 +242,11 @@ int vpyr_2_tpyramid_base_vertex::degree(vmap_level_index l) const
 
 const vpyr_2_tpyramid_base_edge* vpyr_2_tpyramid_base_edge::ancestor(vmap_level_index level) const
 {
-  vpyr_2_tpyramid_base_edge& d=const_cast<vpyr_2_tpyramid_base_edge&> (*this);
+  auto& d=const_cast<vpyr_2_tpyramid_base_edge&> (*this);
   return d.ancestor(level) ;
 }
 
-vpyr_2_tpyramid_base_edge* vpyr_2_tpyramid_base_edge::ancestor(vmap_level_index level)
+vpyr_2_tpyramid_base_edge* vpyr_2_tpyramid_base_edge::ancestor(vmap_level_index  /*level*/)
 {
   vpyr_2_tpyramid_base_edge* v=this ;
   return v ;
@@ -254,7 +254,7 @@ vpyr_2_tpyramid_base_edge* vpyr_2_tpyramid_base_edge::ancestor(vmap_level_index 
 
 const vpyr_2_tpyramid_base_face* vpyr_2_tpyramid_base_face::ancestor(vmap_level_index level) const
 {
-  vpyr_2_tpyramid_base_face& d=const_cast<vpyr_2_tpyramid_base_face&> (*this);
+  auto& d=const_cast<vpyr_2_tpyramid_base_face&> (*this);
   return d.ancestor(level) ;
 }
 

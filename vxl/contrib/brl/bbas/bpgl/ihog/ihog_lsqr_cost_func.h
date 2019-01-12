@@ -26,27 +26,27 @@ class ihog_lsqr_cost_func : public vnl_least_squares_function
   //: Constructor (no masks)
   ihog_lsqr_cost_func(const ihog_image<float>& image1,
                       const ihog_image<float>& image2,
-                      const ihog_world_roi& roi,
+                      ihog_world_roi  roi,
                       const ihog_transform_2d& init_xform );
   //: Constructor (one mask)
   ihog_lsqr_cost_func(const ihog_image<float>& image1,
                       const ihog_image<float>& image2,
                       const ihog_image<float>& mask,
-                      const ihog_world_roi& roi,
+                      ihog_world_roi  roi,
                       const ihog_transform_2d& init_xform, bool image1_mask = false );
   //: Constructor (two masks)
   ihog_lsqr_cost_func(const ihog_image<float>& image1,
                       const ihog_image<float>& image2,
                       const ihog_image<float>& mask1,
                       const ihog_image<float>& mask2,
-                      const ihog_world_roi& roi,
+                      ihog_world_roi  roi,
                       const ihog_transform_2d& init_xform);
 
 
   //: The main function.
   //  Given the parameter vector x, compute the vector of residuals fx.
   //  Fx has been sized appropriately before the call.
-  virtual void f(vnl_vector<double> const& x, vnl_vector<double>& fx);
+  void f(vnl_vector<double> const& x, vnl_vector<double>& fx) override;
 
   //: Returns the transformed second image
   vil_image_view<float> last_xformed_image();

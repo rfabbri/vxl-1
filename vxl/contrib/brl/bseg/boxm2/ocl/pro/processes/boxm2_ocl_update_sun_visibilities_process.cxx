@@ -10,7 +10,9 @@
 #include <fstream>
 #include <bprb/bprb_func_process.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/ocl/boxm2_opencl_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/ocl/algo/boxm2_ocl_update_sun_visibilities.h>
@@ -22,8 +24,8 @@
 
 namespace boxm2_ocl_update_sun_visibilities_process_globals
 {
-  const unsigned n_inputs_  = 8;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 8;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool boxm2_ocl_update_sun_visibilities_process_cons(bprb_func_process& pro)
@@ -58,14 +60,14 @@ bool boxm2_ocl_update_sun_visibilities_process(bprb_func_process& pro)
 
   //get the inputs: device, scene, opencl_cache, cam, img
   unsigned argIdx = 0;
-  bocl_device_sptr          device       = pro.get_input<bocl_device_sptr>(argIdx++);
-  boxm2_scene_sptr          scene        = pro.get_input<boxm2_scene_sptr>(argIdx++);
+  bocl_device_sptr          device = pro.get_input<bocl_device_sptr>(argIdx++);
+  boxm2_scene_sptr          scene = pro.get_input<boxm2_scene_sptr>(argIdx++);
   boxm2_opencl_cache_sptr   opencl_cache = pro.get_input<boxm2_opencl_cache_sptr>(argIdx++);
-  boxm2_cache_sptr          cache        = pro.get_input<boxm2_cache_sptr>(argIdx++);
-  vpgl_camera_double_sptr   cam          = pro.get_input<vpgl_camera_double_sptr>(argIdx++);
-  unsigned                  ni           = pro.get_input<unsigned>(argIdx++);
-  unsigned                  nj           = pro.get_input<unsigned>(argIdx++);
-  std::string                prefix_name  = pro.get_input<std::string>(argIdx++);
+  boxm2_cache_sptr          cache = pro.get_input<boxm2_cache_sptr>(argIdx++);
+  vpgl_camera_double_sptr   cam = pro.get_input<vpgl_camera_double_sptr>(argIdx++);
+  auto                  ni = pro.get_input<unsigned>(argIdx++);
+  auto                  nj = pro.get_input<unsigned>(argIdx++);
+  std::string                prefix_name = pro.get_input<std::string>(argIdx++);
 
   return boxm2_ocl_update_sun_visibilities::update(scene, device, opencl_cache, cache, cam, ni, nj, prefix_name);
 }

@@ -9,7 +9,9 @@
 // \author Ali Osman Ulusoy
 // \date June 25, 2013
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <bstm/bstm_scene.h>
 #include <bstm/bstm_util.h>
 #include <bstm/io/bstm_cache.h>
@@ -20,8 +22,8 @@
 
 namespace bstm_cpp_majority_filter_process_globals
 {
-  const unsigned n_inputs_ = 3;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 3;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool bstm_cpp_majority_filter_process_cons (bprb_func_process& pro)
@@ -51,7 +53,7 @@ bool bstm_cpp_majority_filter_process (bprb_func_process& pro)
   unsigned i = 0;
   bstm_scene_sptr scene = pro.get_input<bstm_scene_sptr>(i++);
   bstm_cache_sptr cache = pro.get_input<bstm_cache_sptr>(i++);
-  float time = pro.get_input<float>(i++);
+  auto time = pro.get_input<float>(i++);
 
   //zip through each block
   std::map<bstm_block_id, bstm_block_metadata> blocks = scene->blocks();
@@ -67,8 +69,8 @@ bool bstm_cpp_majority_filter_process (bprb_func_process& pro)
 
     std::cout << "Filtering " << id << std::endl;
 
-    bstm_block *     blk     = cache->get_block(id);
-    bstm_time_block *     blk_t     = cache->get_time_block(id);
+    bstm_block *     blk = cache->get_block(id);
+    bstm_time_block *     blk_t = cache->get_time_block(id);
 
     bstm_data_base * change = cache->get_data_base(id,bstm_data_traits<BSTM_CHANGE>::prefix());
     bstm_majority_filter(data, blk, blk_t,change);
@@ -76,4 +78,3 @@ bool bstm_cpp_majority_filter_process (bprb_func_process& pro)
 
   return true;
 }
-

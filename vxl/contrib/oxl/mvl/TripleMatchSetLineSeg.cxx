@@ -1,15 +1,14 @@
 // This is oxl/mvl/TripleMatchSetLineSeg.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 
 #include <iostream>
 #include <vector>
 #include "TripleMatchSetLineSeg.h"
 
-#include <vcl_cassert.h>
+#include <cassert>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <mvl/HomgLineSeg2D.h>
 
 #include <mvl/LineSegSet.h>

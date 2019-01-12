@@ -14,7 +14,9 @@
 
 #include <iostream>
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <ihog/ihog_transform_2d.h>
 
 #include "breg3d_homography_generator.h"
@@ -23,12 +25,12 @@
 class breg3d_gdbicp_homography_generator : public breg3d_homography_generator
 {
  public:
-  breg3d_gdbicp_homography_generator(){}
+  breg3d_gdbicp_homography_generator()= default;
 
-  virtual ihog_transform_2d compute_homography();
+  ihog_transform_2d compute_homography() override;
 
  private:
-  ihog_transform_2d parse_gdbicp_output(std::string filename);
+  ihog_transform_2d parse_gdbicp_output(const std::string& filename);
 };
 
 

@@ -1,7 +1,4 @@
 // This is mul/mbl/mbl_read_int.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \brief Asks question and waits for an answer
@@ -31,9 +28,11 @@
 #include <iostream>
 #include <cstdio>
 #include "mbl_read_int.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
-const int MAX_LEN = 20;
+constexpr int MAX_LEN = 20;
 
 // If min_int != 0 or max_int != 0 then prints range but doesn't check that reply is in range
 int RD_ReadInt1(const char* q_str, int default_int,
@@ -49,7 +48,7 @@ int RD_ReadInt1(const char* q_str, int default_int,
       std::cout<<q_str<<" ["<<min_int<<".."<<max_int<<"] ("<<default_int<<") :";
     std::cout.flush();
 
-    if (std::fgets(reply,MAX_LEN,stdin)!=VXL_NULLPTR)
+    if (std::fgets(reply,MAX_LEN,stdin)!=nullptr)
     {
       int r = default_int;
       if (reply[0]=='\n' || std::sscanf(reply,"%d",&r)>0)

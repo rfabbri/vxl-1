@@ -8,8 +8,10 @@
 #include <iostream>
 #include "vpgl_generic_camera.h"
 #include <vnl/vnl_numeric_traits.h>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vgl/vgl_distance.h>
 #include <vgl/vgl_closest_point.h>
 #include <vgl/vgl_intersection.h>
@@ -30,8 +32,9 @@ template <class T>
 vpgl_generic_camera<T>::
     vpgl_generic_camera( vbl_array_2d<vgl_ray_3d<T> > const& rays)
 {
-    int nc = rays.cols(), nr = rays.rows();
-    assert(nc>0&&nr>0);
+    unsigned long nc = rays.cols();
+  unsigned long nr = rays.rows();
+  assert(nc>0&&nr>0);
     //compute bounds on ray origins
     double min_dist = vnl_numeric_traits<double>::maxval;
     double max_dist = 0.0;

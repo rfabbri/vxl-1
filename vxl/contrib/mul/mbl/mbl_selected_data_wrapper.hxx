@@ -8,13 +8,15 @@
 #include <cstdlib>
 #include "mbl_selected_data_wrapper.h"
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 //: Default constructor.
 template<class T>
 mbl_selected_data_wrapper<T>::mbl_selected_data_wrapper():
-  data_(VXL_NULLPTR), index_(0)
+  data_(nullptr), index_(0)
 {
 }
 
@@ -22,7 +24,7 @@ mbl_selected_data_wrapper<T>::mbl_selected_data_wrapper():
 template<class T>
 mbl_selected_data_wrapper<T>::mbl_selected_data_wrapper(
   const mbl_data_wrapper<T>& data, const std::vector<unsigned> &selection)
-  : data_(VXL_NULLPTR)
+  : data_(nullptr)
 {
   set(data, selection);
 }
@@ -31,7 +33,7 @@ mbl_selected_data_wrapper<T>::mbl_selected_data_wrapper(
 template<class T>
 mbl_selected_data_wrapper<T>::mbl_selected_data_wrapper(
   const mbl_selected_data_wrapper<T>& p)
-  : mbl_data_wrapper<T>(), data_(VXL_NULLPTR), index_(0)
+  : mbl_data_wrapper<T>(), data_(nullptr), index_(0)
 {
   *this = p;
 }
@@ -60,8 +62,8 @@ mbl_selected_data_wrapper<T>& mbl_selected_data_wrapper<T>::operator=(
 {
   if (this==&b) return *this;
 
-  delete data_; data_=VXL_NULLPTR;
-  if (b.data_!=VXL_NULLPTR)
+  delete data_; data_=nullptr;
+  if (b.data_!=nullptr)
     data_=b.data_->clone();
 
   index_ = b.index_;

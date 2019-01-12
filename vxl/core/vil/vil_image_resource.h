@@ -1,9 +1,6 @@
 // This is core/vil/vil_image_resource.h
 #ifndef vil_image_resource_h_
 #define vil_image_resource_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \brief Representation of a generic image source or destination.
@@ -12,7 +9,10 @@
 // \date 20 Sep 2002
 
 #include <vil/vil_image_view_base.h>
-#include <vcl_cassert.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vcl_atomic_count.h>
 #include <vil/vil_smart_ptr.h>
 #include <vil/vil_pixel_format.h>
@@ -98,10 +98,10 @@ class vil_image_resource
 
   //: Return a string describing the file format.
   // Only file images have a format, others return 0
-  virtual char const* file_format() const { return VXL_NULLPTR; }
+  virtual char const* file_format() const { return nullptr; }
 
   //: Extra property information
-  virtual bool get_property(char const* tag, void* property_value = VXL_NULLPTR) const =0;
+  virtual bool get_property(char const* tag, void* property_value = nullptr) const =0;
 
  protected:
   // You probably should not use a vil_image_resource in a vbl_smart_ptr, so the

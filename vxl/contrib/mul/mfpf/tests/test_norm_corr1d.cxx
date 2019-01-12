@@ -12,7 +12,9 @@
 //
 //=======================================================================
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vsl/vsl_binary_loader.h>
 #include <mfpf/mfpf_add_all_loaders.h>
 #include <mfpf/mfpf_norm_corr1d.h>
@@ -103,13 +105,13 @@ void test_norm_corr1d()
           "  search_ni: 17\n"
           "}\n");
 
-    vcl_unique_ptr<mfpf_point_finder_builder>
+    std::unique_ptr<mfpf_point_finder_builder>
             pf = mfpf_point_finder_builder::create_from_stream(ss);
 
     TEST("Correct Point Finder Builder", pf->is_a(),"mfpf_norm_corr1d_builder");
     if (pf->is_a()=="mfpf_norm_corr1d_builder")
     {
-      mfpf_norm_corr1d_builder &a_pf = static_cast<mfpf_norm_corr1d_builder&>(*pf);
+      auto &a_pf = static_cast<mfpf_norm_corr1d_builder&>(*pf);
       std::cout<<a_pf<<std::endl;
       TEST("search_ni configured",a_pf.search_ni(),17);
       TEST("ilo configured",a_pf.ilo(),-3);
@@ -139,7 +141,7 @@ void test_norm_corr1d()
     bfs_out.close();
 
     mfpf_norm_corr1d norm_corr1d_in;
-    mfpf_point_finder *base_ptr_in = VXL_NULLPTR;
+    mfpf_point_finder *base_ptr_in = nullptr;
 
     vsl_b_ifstream bfs_in("test_norm_corr1d.bvl.tmp");
     TEST ("Opened test_norm_corr1d.bvl.tmp for reading", (!bfs_in), false);

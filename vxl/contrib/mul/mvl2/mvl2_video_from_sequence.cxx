@@ -11,8 +11,10 @@
 #include <vil/vil_convert.h>
 #include <vul/vul_file.h>
 #include <vul/vul_sprintf.h>
-#include <vcl_cassert.h>
-#include <vcl_compiler.h>
+#include <cassert>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 mvl2_video_from_sequence::mvl2_video_from_sequence()
 {
@@ -24,9 +26,7 @@ mvl2_video_from_sequence::mvl2_video_from_sequence()
   height_=0;
 }
 
-mvl2_video_from_sequence::~mvl2_video_from_sequence()
-{
-}
+mvl2_video_from_sequence::~mvl2_video_from_sequence() = default;
 
 std::string mvl2_video_from_sequence::is_a() const
 {
@@ -69,7 +69,7 @@ bool mvl2_video_from_sequence::initialize( int /* width */, int /* height */,
 
   //knock off the extension
   std::size_t name_length=file_name.length();
-  std::size_t dot_pos = file_name.find_last_of(".");
+  std::size_t dot_pos = file_name.find_last_of('.');
   file_name.erase(dot_pos, name_length);
 
   //Extract the largest possible number off the end

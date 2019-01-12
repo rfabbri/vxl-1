@@ -17,12 +17,14 @@
 #include <volm/volm_loc_hyp.h>
 #include <volm/volm_loc_hyp_sptr.h>
 #include <bkml/bkml_parser.h>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 namespace boxm2_load_score_binary_process_globals
 {
-  const unsigned n_inputs_ = 5;
-  const unsigned n_outputs_ = 0;
+  constexpr unsigned n_inputs_ = 5;
+  constexpr unsigned n_outputs_ = 0;
 }
 
 bool boxm2_load_score_binary_process_cons(bprb_func_process& pro)
@@ -51,10 +53,10 @@ bool boxm2_load_score_binary_process(bprb_func_process& pro)
   // get input
   unsigned in_i = 0;
   std::string geo_hypo_folder = pro.get_input<std::string>(in_i++);
-  std::string candidate_list  = pro.get_input<std::string>(in_i++);
-  std::string score_file      = pro.get_input<std::string>(in_i++);
-  std::string out_text        = pro.get_input<std::string>(in_i++);
-  unsigned tile_id           = pro.get_input<unsigned>(in_i++);
+  std::string candidate_list = pro.get_input<std::string>(in_i++);
+  std::string score_file = pro.get_input<std::string>(in_i++);
+  std::string out_text = pro.get_input<std::string>(in_i++);
+  auto tile_id = pro.get_input<unsigned>(in_i++);
 
   // load the candidate list if exists
   bool is_candidate = false;
@@ -119,10 +121,10 @@ bool boxm2_load_score_binary_process(bprb_func_process& pro)
   // write to text file
   std::ofstream fout(out_text.c_str());
   fout << "lon      lat      score\n";
-  for (unsigned i = 0; i < loc_scores.size(); i++)
-    fout << std::setprecision(6) << std::fixed << loc_scores[i][0] << ' '
-         << std::setprecision(6) << std::fixed << loc_scores[i][1] << ' '
-         << std::setprecision(6) << std::fixed << loc_scores[i][2] << '\n';
+  for (auto & loc_score : loc_scores)
+    fout << std::setprecision(6) << std::fixed << loc_score[0] << ' '
+         << std::setprecision(6) << std::fixed << loc_score[1] << ' '
+         << std::setprecision(6) << std::fixed << loc_score[2] << '\n';
   fout.close();
   return true;
 }

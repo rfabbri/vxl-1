@@ -1,9 +1,6 @@
 // This is gel/gmvl/gmvl_node.h
 #ifndef gmvl_node_h_
 #define gmvl_node_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 // \file
 // \author crossge@crd.ge.com
@@ -16,7 +13,9 @@
 #include <iostream>
 #include <iosfwd>
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vbl/vbl_ref_count.h>
 
 class gmvl_node_cache;
@@ -34,7 +33,7 @@ class gmvl_node : public vbl_ref_count
  public:
   gmvl_node() : type_("gmvl_node"), ref_(-1) {}
   gmvl_node(gmvl_node const& n) : vbl_ref_count(), type_(n.type_), ref_(n.ref_) {}
-  virtual ~gmvl_node() {}
+  ~gmvl_node() override = default;
 
   // getter
   std::string &type() { return type_; }

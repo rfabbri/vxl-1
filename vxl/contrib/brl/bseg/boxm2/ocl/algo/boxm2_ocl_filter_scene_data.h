@@ -1,7 +1,9 @@
 #pragma once
 #include <iostream>
 #include <fstream>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <boxm2/ocl/boxm2_opencl_cache.h>
 #include <boxm2/boxm2_scene.h>
 #include <boxm2/boxm2_block.h>
@@ -20,7 +22,7 @@
 #include <boct/boct_bit_tree.h>
 class boxm2_ocl_filter_scene_data{
 public:
-        boxm2_ocl_filter_scene_data(){}
+        boxm2_ocl_filter_scene_data()= default;
         boxm2_ocl_filter_scene_data(boxm2_opencl_cache_sptr opencl_cache, bocl_device_sptr device,
                 bvpl_kernel_vector_sptr filter_vector,std::string appType,std::size_t appTypeSize,cl_command_queue* queue){
                 filter_vector_=filter_vector;

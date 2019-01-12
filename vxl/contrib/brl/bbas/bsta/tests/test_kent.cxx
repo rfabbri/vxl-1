@@ -7,7 +7,9 @@
 #include <vgl/vgl_plane_3d.h>
 #include <vnl/vnl_inverse.h>
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 //: Test bsta kent distribution
 void test_kent()
@@ -22,8 +24,7 @@ void test_kent()
   planes.push_back(wpl2);
 
   vnl_matrix<double> X(3,3,0);
-  for (unsigned i=0; i<planes.size(); i++) {
-    vgl_plane_3d<double> plane = planes[i];
+  for (auto plane : planes) {
     vgl_vector_3d<double> normal = plane.normal();
     vnl_matrix<double> n(1,3);
     n.put(0,0,normal.x());

@@ -1,7 +1,9 @@
 // This is core/vgui/examples/basic_manager.cxx
 #include <cstdlib>
 #include "basic_manager.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil1/vil1_load.h>
 #include <vgui/vgui.h>
 #include <vgui/vgui_dialog.h>
@@ -11,7 +13,7 @@
 
 basic_manager *basic_manager::instance()
 {
-  static basic_manager *instance_ = VXL_NULLPTR;
+  static basic_manager *instance_ = nullptr;
   if (!instance_)
   {
     instance_ = new basic_manager();

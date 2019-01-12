@@ -1,7 +1,4 @@
 // This is gel/gmvl/gmvl_helpers.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 // \author crossge@crd.ge.com
@@ -10,7 +7,9 @@
 #include <fstream>
 #include "gmvl_helpers.h"
 
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil1/vil1_image.h>
 #include <vil1/vil1_load.h>
 #include <gmvl/gmvl_corner_node.h>
@@ -20,14 +19,14 @@
 // input output
 std::ostream &operator<<( std::ostream &os, const std::vector<gmvl_node_sptr> &r)
 {
-  for (unsigned int i=0; i< r.size(); ++i) os << *r[i];
+  for (const auto & i : r) os << *i;
   return os;
 }
 
 
 // loaders and savers
 
-std::vector<gmvl_node_sptr> gmvl_load_raw_corners( const std::string filename)
+std::vector<gmvl_node_sptr> gmvl_load_raw_corners( const std::string& filename)
 {
   std::vector<gmvl_node_sptr> corners;
 
@@ -47,7 +46,7 @@ std::vector<gmvl_node_sptr> gmvl_load_raw_corners( const std::string filename)
   return corners;
 }
 
-gmvl_node_sptr gmvl_load_image( const std::string filename)
+gmvl_node_sptr gmvl_load_image( const std::string& filename)
 {
   vil1_image image= vil1_load( filename.c_str());
   gmvl_image_node *node= new gmvl_image_node( image);

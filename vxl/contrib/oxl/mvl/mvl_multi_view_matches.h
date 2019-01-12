@@ -1,9 +1,6 @@
 // This is oxl/mvl/mvl_multi_view_matches.h
 #ifndef mvl_multi_view_matches_h_
 #define mvl_multi_view_matches_h_
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma interface
-#endif
 //:
 //  \file
 // \brief Multiple view matches
@@ -26,7 +23,9 @@
 #include <vector>
 #include <iosfwd>
 #include <map>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 
 class mvl_multi_view_matches
 {

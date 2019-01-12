@@ -8,7 +8,9 @@
 
 #include <iostream>
 #include <string>
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vil3d/vil3d_fwd.h>
 class vimt3d_transform_3d;
 class vimt3d_image_3d;
@@ -31,4 +33,3 @@ bool vimt3d_save(const std::string& path,
                  bool use_millimetres =false);
 
 #endif // vimt3d_save_h_
-

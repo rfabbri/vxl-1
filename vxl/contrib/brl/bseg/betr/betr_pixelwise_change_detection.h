@@ -19,20 +19,20 @@ public:
 
   betr_pixelwise_change_detection() :
     betr_algorithm("pixelwise_change_detection"),
-    avg_prob_(0.0), i_offset_(0), j_offset_(0), change_img_(VXL_NULLPTR) {
+    avg_prob_(0.0), i_offset_(0), j_offset_(0), change_img_(nullptr) {
     multiple_ref_ = true;
     params_ = new betr_pixelwise_change_detection_params();
   }
 
   //: process change
-  virtual bool process();
+  bool process() override;
 
   //: resulting change probability
-  virtual double prob_change() const{return avg_prob_;}
+  double prob_change() const override{return avg_prob_;}
 
   //: image of pixel-wise census probabilities
-  virtual vil_image_resource_sptr change_image(
-    unsigned& i_offset, unsigned& j_offset) const{
+  vil_image_resource_sptr change_image(
+    unsigned& i_offset, unsigned& j_offset) const override{
       i_offset = i_offset_; j_offset = j_offset_; return change_img_;}
 
 private:

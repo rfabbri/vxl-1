@@ -8,8 +8,10 @@
 
 #include <mfpf/mfpf_edge_finder.h>
 #include <vsl/vsl_binary_loader.h>
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 #include <mbl/mbl_parse_block.h>
 #include <mbl/mbl_read_props.h>
@@ -20,17 +22,13 @@
 // Dflt ctor
 //=======================================================================
 
-mfpf_edge_finder_builder::mfpf_edge_finder_builder()
-{
-}
+mfpf_edge_finder_builder::mfpf_edge_finder_builder() = default;
 
 //=======================================================================
 // Destructor
 //=======================================================================
 
-mfpf_edge_finder_builder::~mfpf_edge_finder_builder()
-{
-}
+mfpf_edge_finder_builder::~mfpf_edge_finder_builder() = default;
 
 //: Define region size in world co-ordinates
 //  Sets up ROI to cover given box (with samples at step_size()),
@@ -65,7 +63,7 @@ void mfpf_edge_finder_builder::add_example(const vimt_image_2d_of<float>& /*imag
 void mfpf_edge_finder_builder::build(mfpf_point_finder& pf)
 {
   assert(pf.is_a()=="mfpf_edge_finder");
-  mfpf_edge_finder& ef = static_cast<mfpf_edge_finder&>(pf);
+  auto& ef = static_cast<mfpf_edge_finder&>(pf);
   set_base_parameters(ef);
 }
 
@@ -149,4 +147,3 @@ void mfpf_edge_finder_builder::b_read(vsl_b_istream& bfs)
       return;
   }
 }
-

@@ -18,8 +18,10 @@
 #include <vnl/vnl_float_3.h>
 #include <vnl/vnl_double_3.h>
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 
 //----------------------------------------------------------------------------
 class rgtl_soat3d_polygon
@@ -291,7 +293,7 @@ rgtl_sqt_object_set_triangles_3d<Face>
   cell_geometry.get_center_planes(center_normals);
 
   // Allocate an output polygon set for each child.
-  vcl_unique_ptr<rgtl_sqt_object_set_triangles_3d> out[4];
+  std::unique_ptr<rgtl_sqt_object_set_triangles_3d> out[4];
   for (unsigned int i=0; i < 4; ++i)
   {
     // Create this polygon set.

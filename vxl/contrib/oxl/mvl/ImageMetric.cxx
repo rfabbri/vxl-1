@@ -1,15 +1,14 @@
 // This is oxl/mvl/ImageMetric.cxx
-#ifdef VCL_NEEDS_PRAGMA_INTERFACE
-#pragma implementation
-#endif
 //:
 // \file
 
 #include <iostream>
 #include "ImageMetric.h"
 
-#include <vcl_compiler.h>
-#include <vcl_cassert.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
+#include <cassert>
 #include <vnl/vnl_double_2.h>
 #include <vnl/vnl_double_3x3.h>
 #include <vnl/vnl_math.h>
@@ -35,7 +34,7 @@ static std::ostream& warning(char const * fn)
 vgl_homg_point_2d<double> ImageMetric::image_to_homg(vgl_point_2d<double> const& p) const
 {
   assert(!"ImageMetric::image_to_homg should be implemented for efficiency");
-  return vgl_homg_point_2d<double>(p.x(), p.y(), 1.0);
+  return {p.x(), p.y(), 1.0};
 }
 
 //: Condition the 2D point p.
@@ -65,7 +64,7 @@ vnl_double_2 ImageMetric::homg_to_image(const HomgPoint2D& p) const
   assert(!"ImageMetric::homg_to_image should be implemented for efficiency");
   double x,y;
   p.get_nonhomogeneous(x, y);
-  return vnl_double_2(x, y);
+  return {x, y};
 }
 
 //: Convert homogeneous point in image coordinates to one in conditioned coordinates

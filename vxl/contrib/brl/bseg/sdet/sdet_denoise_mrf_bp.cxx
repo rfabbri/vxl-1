@@ -2,7 +2,9 @@
 #include <iostream>
 #include <cstdlib>
 #include "sdet_denoise_mrf_bp.h"
-#include <vcl_compiler.h>
+#ifdef _MSC_VER
+#  include <vcl_msvc_warnings.h>
+#endif
 #include <vul/vul_timer.h>
 #include <brip/brip_vil_float_ops.h>
 #include <brip/brip_line_generator.h>
@@ -18,8 +20,7 @@ sdet_denoise_mrf_bp::sdet_denoise_mrf_bp(sdet_denoise_mrf_bp_params& dmp)
 
 // Default Destructor
 sdet_denoise_mrf_bp::~sdet_denoise_mrf_bp()
-{
-}
+= default;
 
 void sdet_denoise_mrf_bp::
 set_image(vil_image_resource_sptr const& resource)
@@ -58,7 +59,7 @@ bool sdet_denoise_mrf_bp::denoise()
            << t.real()/1000.0 << " seconds\n";
 
   for (--lev ; lev>=0; --lev) {
-    unsigned pre_lev = static_cast<unsigned>(lev+1);
+    auto pre_lev = static_cast<unsigned>(lev+1);
     mrf_ = pyramid_upsample(mrf_, pre_lev);
     t.mark();
     for (unsigned it = 0; it<n_iter_; ++it) {
@@ -78,9 +79,9 @@ sdet_mrf_bp_sptr sdet_denoise_mrf_bp::
 pyramid_upsample(sdet_mrf_bp_sptr const& in_mrf, unsigned level)
 {
   if (level==0)
-    return VXL_NULLPTR;
+    return nullptr;
   unsigned nj = in_mrf->nj(), ni = in_mrf->ni();
-  if (!ni || !nj) return VXL_NULLPTR;
+  if (!ni || !nj) return nullptr;
   //initialize a mrf at the next resolution level
   vil_image_view<float> in_view = pyr_in_(level-1);
   unsigned njd = in_view.nj(), nid = in_view.ni();
