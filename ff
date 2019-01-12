@@ -1,1 +1,1 @@
-lsc -r |xargs cgrep $*
+lsc -r |xargs cgrep "$*"

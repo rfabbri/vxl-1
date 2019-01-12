@@ -1,5 +1,4 @@
 #!/bin/sh
-set -x
 case $# in
     0) echo 'Usage: subst files' 1>&2; exit 2
 esac
