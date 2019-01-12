@@ -362,7 +362,9 @@ git fetch vxl
 # git branch vxl-master vxl/master # create optional branch if you're fetching 
                                    # non-master branch, else use vxl-master normally
 git checkout master
-git checkout -b vxl-master-merge
+git branch -D vxl-master-merge-old # forget previous point VXL was merged into LEMSVPE
+git branch -m vxl-master-merge vxl-master-merge-old # store current VXL merge point
+git checkout -b vxl-master-merge # store current merge point (current master)
 # merges vxl/master into vxl-master-merge
 # TO BE CAREFUL TODO: use master-vxl-merge below. vxl-master below seems to have no effect
 git merge -s recursive vxl-master-merge -Xsubtree=vxl vxl/master    # optional branch vxl/anybranch
