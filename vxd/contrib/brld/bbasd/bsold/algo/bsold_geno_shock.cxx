@@ -5,14 +5,6 @@
 
 #include "bsold_geno_shock.h"
 
-#if !VCL_STATIC_CONST_INIT_FLOAT_NO_DEFN
-const double bsold_geno_shock::default_tangent_threshold
-   
-const double bsold_geno_shock::default_curvature_threshold
-   
-#endif
-
-
 //: Tests whether an interval is a probable shock based on
 // abrupt variation of measures at the endpoints.
 // It does not construct or store any information. 

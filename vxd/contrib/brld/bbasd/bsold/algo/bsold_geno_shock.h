@@ -22,9 +22,9 @@ class bsold_geno_shock
 
    //--- Constants/Parameters  ---------------------------------------
     
-   static const double default_tangent_threshold
+   static constexpr double default_tangent_threshold
        = (30.0);
-   static const double default_curvature_threshold
+   static constexpr double default_curvature_threshold
        = (0.3);
 
    //--- Shock Tests -----------------------------------------------
