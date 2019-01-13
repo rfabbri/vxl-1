@@ -32,16 +32,6 @@ foreach(p
     ##----- Policies Introduced by CMake 3.10
     CMP0071  #: Let AUTOMOC and AUTOUIC process GENERATED files.
     CMP0070  #: Define file(GENERATE) behavior for relative paths.
-    ##----- Policies Introduced by CMake 3.9
-    CMP0069  #: INTERPROCEDURAL_OPTIMIZATION is enforced when enabled.
-    CMP0068  #: RPATH settings on macOS do not affect install_name.
-    ##----- Policies Introduced by CMake 3.8
-    CMP0067  #: Honor language standard in try_compile() source-file signature.
-    ##----- Policies Introduced by CMake 3.7
-    CMP0066  #: Honor per-config flags in try_compile() source-file signature.
-    ##----- Policies Introduced by CMake 3.4
-    CMP0065  #: Do not add flags to export symbols from executables without the ENABLE_EXPORTS target property.
-    CMP0064  #: Support new TEST if() operator.
     )
   if(POLICY ${p})
     cmake_policy(SET ${p} NEW)
@@ -49,7 +39,11 @@ foreach(p
 endforeach()
 
 
-project(vxd)
+project(VXD)
+include(${CMAKE_CURRENT_SOURCE_DIR}/config/cmake/VXDInitializeBuildType.cmake)
+
+include(CMakeDependentOption)
+
 
 #-----------------------------------------------------------------------------
 if(NOT COMMAND SETIFEMPTY)
@@ -90,6 +84,7 @@ set(VXD_ROOT_SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR})
 set(VXD_CMAKE_DIR ${CMAKE_CURRENT_LIST_DIR}/config/cmake/Modules)
 
 include(${VXD_CMAKE_DIR}/VXDStandardOptions.cmake)
+include( GenerateExportHeader )
 include(${CMAKE_CURRENT_LIST_DIR}/config/cmake/doxygen/doxygen.cmake)
 # Only include these if we have vxd-specific cmake utilities. We currently use VXL's:
 #include(${CMAKE_CURRENT_LIST_DIR}/config/cmake/config/vxd_utils.cmake)
@@ -195,7 +190,7 @@ TEST_BIG_ENDIAN(MY_BIG_ENDIAN)
 # the UseVXD.cmake from the vxd binary directory, and determine the
 # vxd source directory by loading the cache.
 configure_file( ${VXD_CMAKE_DIR}/UseVXD.cmake
-                ${vxd_BINARY_DIR}/UseVXD.cmake COPYONLY )
+                ${VXD_BINARY_DIR}/UseVXD.cmake COPYONLY )
 # For use in client projects that call UseVXD.cmake
 set(VXD_LIBRARY_PATH ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} CACHE STATIC "Where all the vxd libraries are, for clients to use." )
 
