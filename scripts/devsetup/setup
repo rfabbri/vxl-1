@@ -37,7 +37,6 @@ git branch --track utils-master origin/utils-master
 git branch --track vxl-master origin/vxl-master
 git branch --track vxd-master origin/vxd-master
 git branch --track vpe-master origin/vpe-master
-git branch --track lemsvxl-new-master origin/lemsvxl-new-master
 
 echo '==> Setting up hardlinked clones for each subpackage.'
 # Setup separate hardlinked clones for each sub package, for history searching,
