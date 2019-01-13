@@ -39,10 +39,17 @@ foreach(p
 endforeach()
 
 
-project(VXD)
-include(${CMAKE_CURRENT_SOURCE_DIR}/config/cmake/VXDInitializeBuildType.cmake)
-
+project(VXD
+    VERSION 1
+    DESCRIPTION "Experimental C++ libraries for Computer Vision"
+    LANGUAGES CXX C)
 include(CMakeDependentOption)
+include(${CMAKE_CURRENT_SOURCE_DIR}/config/cmake/VXDInitializeBuildType.cmake)
+include(CheckCXXCompilerFlag)
+CHECK_CXX_COMPILER_FLAG(-Wno-undefined-var-template HAS_NO_UNDEFINED_VAR_TEMPLATE)
+if( HAS_NO_UNDEFINED_VAR_TEMPLATE )
+  add_definitions( -Wno-undefined-var-template )
+endif()
 
 
 #-----------------------------------------------------------------------------
