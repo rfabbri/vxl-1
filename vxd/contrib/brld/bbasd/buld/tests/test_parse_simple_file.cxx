@@ -2,18 +2,18 @@
 // \author Ricardo Fabbri
 //
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <iostream>
+#include <fstream>
 #include <buld/buld_parse_simple_file.h>
 
 void test_parse_number_lists()
 {
 
   {
-  vcl_ofstream ofp("number_lists_tmp.txt", vcl_ios::out);
+  std::ofstream ofp("number_lists_tmp.txt", std::ios::out);
 
   if (!ofp) {
-    vcl_cerr << "Error in test, unable to open file" << vcl_endl;
+    std::cerr << "Error in test, unable to open file" << std::endl;
     return;
   }
 
@@ -22,7 +22,7 @@ void test_parse_number_lists()
     << "0 2 1 3 5\n";
   }
 
-  vcl_vector<vcl_vector<int> > nl;
+  std::vector<std::vector<int> > nl;
   bool retval = buld_parse_number_lists("number_lists_tmp.txt", nl);
 
   TEST("retval", retval, true);
@@ -31,12 +31,12 @@ void test_parse_number_lists()
   int num_lines_gt[2] = { 6, 5 };
 
   for (unsigned i=0; i < nl.size(); ++i) {
-    vcl_cout << "Line [" << i << "]:\n" << nl[i].size() << vcl_endl;
+    std::cout << "Line [" << i << "]:\n" << nl[i].size() << std::endl;
     TEST("num element in line", nl[i].size(), num_lines_gt[i]);
     for (unsigned k=0; k < nl[i].size(); ++k) {
-      vcl_cout << nl[i][k] << ":";
+      std::cout << nl[i][k] << ":";
     }
-    vcl_cout << vcl_endl;
+    std::cout << std::endl;
   }
 }
 

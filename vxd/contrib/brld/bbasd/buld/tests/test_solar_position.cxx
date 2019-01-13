@@ -1,7 +1,7 @@
 #include <testlib/testlib_test.h>
 #include <buld/buld_solar_position.h>
 #include <vul/vul_get_timestamp.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 
 

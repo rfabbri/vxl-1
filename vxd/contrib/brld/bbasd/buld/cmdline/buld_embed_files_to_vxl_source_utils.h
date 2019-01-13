@@ -10,19 +10,19 @@
 // \author Based on original code by  Firat Kalaycilar (@lems.brown.edu)
 // \date Feb 09, 2010
 
-#include<vcl_string.h>
-#include<vcl_vector.h>
+#include<string>
+#include<vector>
 
-vcl_string getRandomVariableName(int len);
+std::string getRandomVariableName(int len);
 
-vcl_string getRandomHFileTag(int len);
+std::string getRandomHFileTag(int len);
 
-void parseInputFile(vcl_string& input_file_name, vcl_vector<vcl_string>& original_files, vcl_vector<vcl_string>& variable_names, vcl_string& root_path);
+void parseInputFile(std::string& input_file_name, std::vector<std::string>& original_files, std::vector<std::string>& variable_names, std::string& root_path);
 
-int getArrayString(vcl_string filename, vcl_string& varname, vcl_string& array_string);
+int getArrayString(std::string filename, std::string& varname, std::string& array_string);
 
-void create_h_file(vcl_string& filename, vcl_string& h_file_tag, vcl_string& extract_command, vcl_string& delete_command);
+void create_h_file(std::string& filename, std::string& h_file_tag, std::string& extract_command, std::string& delete_command);
 
-void create_cpp_file(vcl_string& output_cpp_file_name, vcl_string& output_h_file_name, vcl_string& root_path, vcl_vector<vcl_string>& original_files, vcl_vector<vcl_string>& variable_names, vcl_vector<int>& data_sizes, vcl_string& extract_command, vcl_string& delete_command);
+void create_cpp_file(std::string& output_cpp_file_name, std::string& output_h_file_name, std::string& root_path, std::vector<std::string>& original_files, std::vector<std::string>& variable_names, std::vector<int>& data_sizes, std::string& extract_command, std::string& delete_command);
 
 #endif /* BULD_EMBED_FILES_TO_VXL_SOURCE_UTILS_H_ */
