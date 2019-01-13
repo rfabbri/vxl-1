@@ -3,6 +3,7 @@
 //:
 // \file
 
+#include <iostream>
 #include "vidpro1_kl_process.h"
 #include <vidpro1/storage/vidpro1_image_storage.h>
 #include <vidpro1/storage/vidpro1_image_storage_sptr.h>
@@ -44,7 +45,7 @@ vidpro1_kl_process::vidpro1_kl_process(void)
 vidpro1_kl_process::~vidpro1_kl_process()
 {
   /* TODO */
-  std::cout << std::cerr << "In ~vidpro1_kl_process() - IMPORTANT: This will not work with the latest VXL because vgel has been terminated\nThere is a copy of it in lemsvxl/old/contrib/gel/vgel\nIf you need this, you must first modernize vgel and make it build\n\n";
+  std::cerr << "In ~vidpro1_kl_process() - IMPORTANT: This will not work with the latest VXL because vgel has been terminated\nThere is a copy of it in lemsvxl/old/contrib/gel/vgel\nIf you need this, you must first modernize vgel and make it build\n\n";
 /*    delete(kl_points); */
 }
 
@@ -111,7 +112,7 @@ vidpro1_kl_process::execute()
   vil_image_resource_sptr image2_sptr = frame_image2->get_image();
 
   /* TODO */
-  std::cout << std::cerr << "In vidpro1_kl_process::execute() - IMPORTANT: This will not work with the latest VXL because vgel has been terminated\nThere is a copy of it in lemsvxl/old/contrib/gel/vgel\nIf you need this, you must first modernize vgel and make it build\n\n";
+  std::cerr << "In vidpro1_kl_process::execute() - IMPORTANT: This will not work with the latest VXL because vgel has been terminated\nThere is a copy of it in lemsvxl/old/contrib/gel/vgel\nIf you need this, you must first modernize vgel and make it build\n\n";
 
   return false;
 

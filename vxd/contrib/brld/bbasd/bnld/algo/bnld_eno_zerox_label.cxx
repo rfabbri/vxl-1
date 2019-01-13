@@ -1,6 +1,10 @@
 #include "bnld_eno_zerox_label.h"
 #include <stdio.h>
 
+
+constexpr unsigned bnld_eno_zerox_label::unlabeled;
+constexpr unsigned bnld_eno_zerox_label::maxzeros;
+
 bnld_eno_zerox_label::
   bnld_eno_zerox_label(
       const double *data,

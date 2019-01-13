@@ -31,11 +31,11 @@
 class bnld_eno_zerox_label {
 public:
 
-  static const unsigned unlabeled 
+  static constexpr unsigned unlabeled 
       = ((unsigned) -1);
 
   //: max number of zeros per interval supported by this class
-  static const unsigned maxzeros
+  static constexpr unsigned maxzeros
       = (4);
 
   //: constructor does all the work and stores result in this object
