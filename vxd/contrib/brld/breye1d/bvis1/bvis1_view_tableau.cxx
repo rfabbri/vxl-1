@@ -29,7 +29,7 @@ bvis1_view_tableau::~bvis1_view_tableau()
 }
 
 
-vcl_string bvis1_view_tableau::type_name() const
+std::string bvis1_view_tableau::type_name() const
 {
   return "bvis1_view_tableau";
 }

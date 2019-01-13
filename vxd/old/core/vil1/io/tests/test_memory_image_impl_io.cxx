@@ -1,6 +1,6 @@
 // This is core/vil1/io/tests/test_memory_image_impl_io.cxx
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
+#include <iostream>
+#include <vector>
 #include <vil1/vil1_memory_image_of.h>
 #include <vil1/vil1_memory_image_impl.h>
 #include <vil1/vil1_memory_image_of_format.txx>
@@ -10,7 +10,7 @@
 
 void test_memory_image_impl_io()
 {
-  vcl_cout << "*********************************\n"
+  std::cout << "*********************************\n"
            << "Testing vil1_memory_image_impl io\n"
            << "*********************************\n";
 
@@ -73,9 +73,9 @@ void test_memory_image_impl_io()
         p_out.component_format() == p_in.component_format(), true);
 
    // Now get the data and compare them
-  vcl_vector<int> buf1(imageof.size());
+  std::vector<int> buf1(imageof.size());
   p_out.get_section(&buf1[0], 0, 0, width, height);
-  vcl_vector<int> buf2(imageof.size());
+  std::vector<int> buf2(imageof.size());
   p_in.get_section(&buf2[0], 0, 0, width, height);
   bool data_same = false;
   for (unsigned int i=0;i<buf1.size();i++)
@@ -83,8 +83,8 @@ void test_memory_image_impl_io()
   TEST ( "p_out == p_in (data)", data_same, true);
 
   // And have a look at the summary
-  vsl_print_summary(vcl_cout, p_in);
-  vcl_cout << vcl_endl;
+  vsl_print_summary(std::cout, p_in);
+  std::cout << std::endl;
 }
 
 

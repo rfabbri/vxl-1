@@ -1,8 +1,8 @@
 #include "bmcsd_util.h"
-#include <vcl_cstring.h>
-#include <vcl_sstream.h>
-#include <vcl_fstream.h>
-#include <vcl_iomanip.h>
+#include <cstring>
+#include <sstream>
+#include <fstream>
+#include <iomanip>
 #include <vul/vul_file.h>
 #include <vnl/vnl_vector_fixed.h>
 #include <vgl/algo/vgl_homg_operators_2d.h>
@@ -36,10 +36,10 @@ int n4[4][2] = {
 
 
 static bool
-bmcsd_read_offset(vcl_string noext,vnl_double_3x3 *m);
+bmcsd_read_offset(std::string noext,vnl_double_3x3 *m);
 
 static bool
-bmcsd_read_scaling(vcl_string noext,vnl_double_3x3 *m);
+bmcsd_read_scaling(std::string noext,vnl_double_3x3 *m);
 
 //:  Loads one sequence of points from a .con file into a vector of points
 // \param[out] points:  reference to user-provided vector; it will be resized to
@@ -50,14 +50,14 @@ bmcsd_read_scaling(vcl_string noext,vnl_double_3x3 *m);
 //TODO: put this in a file loader library
 bool
 load_con_file(
-      vcl_string filename, 
-      vcl_vector<vsol_point_2d_sptr> &points, 
+      std::string filename, 
+      std::vector<vsol_point_2d_sptr> &points, 
       bool *is_open)
 {
-  vcl_ifstream infp(filename.c_str(), vcl_ios::in);
+  std::ifstream infp(filename.c_str(), std::ios::in);
 
   if (!infp) {
-    vcl_cout << " Error opening file  " << filename << vcl_endl;
+    std::cout << " Error opening file  " << filename << std::endl;
     return false;
   }
 
@@ -66,21 +66,21 @@ load_con_file(
   //
   char lineBuffer[2000];
   infp.getline(lineBuffer,2000);
-  if (vcl_strncmp(lineBuffer,"CONTOUR",7)) {
-    vcl_cerr << "Invalid File " << filename << vcl_endl
-             << "Should be CONTOUR " << lineBuffer << vcl_endl;
+  if (std::strncmp(lineBuffer,"CONTOUR",7)) {
+    std::cerr << "Invalid File " << filename << std::endl
+             << "Should be CONTOUR " << lineBuffer << std::endl;
     return false;
   }
 
   char openFlag[2000];
   infp.getline(openFlag,2000);
-  if (!vcl_strncmp(openFlag,"OPEN",4))
+  if (!std::strncmp(openFlag,"OPEN",4))
     *is_open = true;
-  else if (!vcl_strncmp(openFlag,"CLOSE",5))
+  else if (!std::strncmp(openFlag,"CLOSE",5))
     *is_open = false;
   else{
-    vcl_cerr << "Invalid File " << filename << vcl_endl
-             << "Should be OPEN/CLOSE " << openFlag << vcl_endl;
+    std::cerr << "Invalid File " << filename << std::endl
+             << "Should be OPEN/CLOSE " << openFlag << std::endl;
     return false;
   }
 
@@ -107,25 +107,25 @@ load_con_file(
 // filename
 // OBS: this only works on unix systems
 bool
-con_filenames(vcl_string image_fname,vcl_vector<vcl_string> &con_fnames)
+con_filenames(std::string image_fname,std::vector<std::string> &con_fnames)
 {
 
-   vcl_string cmdline("/home/rfabbri/cprg/vxlprg/lemsvxlsrc/contrib/bmvgd/bmcsd/scripts/confiles ");
+   std::string cmdline("/home/rfabbri/cprg/vxlprg/lemsvxlsrc/contrib/bmvgd/bmcsd/scripts/confiles ");
    cmdline.append(image_fname);
    if (system(cmdline.c_str()) == -1) {
-      vcl_cerr << "error trying to exec helper script confiles" << vcl_endl;
+      std::cerr << "error trying to exec helper script confiles" << std::endl;
       return false;
    }
 
    // output of script:
-   vcl_string con_filenames="/tmp/lemsvxl_bmcsd_confiles";
-   vcl_ifstream infp(con_filenames.c_str(), vcl_ios::in);
+   std::string con_filenames="/tmp/lemsvxl_bmcsd_confiles";
+   std::ifstream infp(con_filenames.c_str(), std::ios::in);
    if (!infp) {
-     vcl_cout << " Error opening output of script, file  " << con_filenames << vcl_endl;
+     std::cout << " Error opening output of script, file  " << con_filenames << std::endl;
      return false;
    }
 
-   vcl_string cfname;
+   std::string cfname;
    while (!infp.eof()) {
       char buf[1024];
       infp.getline(buf,1024);
@@ -135,7 +135,7 @@ con_filenames(vcl_string image_fname,vcl_vector<vcl_string> &con_fnames)
 
 #ifndef NDEBUG
    if (con_fnames.size()==0)
-      vcl_cerr << "Warning: no contour files for image " << image_fname << vcl_endl;
+      std::cerr << "Warning: no contour files for image " << image_fname << std::endl;
 #endif
    return true;
 }
@@ -149,22 +149,22 @@ con_filenames(vcl_string image_fname,vcl_vector<vcl_string> &con_fnames)
 // \return true if no bad errors; false if any bad errors. (this has nothing to
 // do with the existence of a .scale file)
 bool
-bmcsd_read_scaling(vcl_string noext,vnl_double_3x3 *m)
+bmcsd_read_scaling(std::string noext,vnl_double_3x3 *m)
 {
-   vcl_ifstream infp((noext+".scale").c_str(), vcl_ios::in);
+   std::ifstream infp((noext+".scale").c_str(), std::ios::in);
    if (!infp) {
-     vcl_cout << "No scaling file " << noext+".scale"<< vcl_endl;
+     std::cout << "No scaling file " << noext+".scale"<< std::endl;
    } else {
      // Scaling file contains new:old 1D aspect ratio
      char buf[1024];
      infp.getline(buf,1024);
      infp.close();
-     vcl_istringstream strs(buf);
+     std::istringstream strs(buf);
 
      double new_dim=-1, old_dim=-1;
      strs >> new_dim;
      strs >> old_dim;
-     vcl_cout << "Scalings: " << new_dim << " " << old_dim<< vcl_endl;
+     std::cout << "Scalings: " << new_dim << " " << old_dim<< std::endl;
      (*m) = (new_dim/old_dim) * (*m);
      (*m)(2,2) = 1;
    }
@@ -176,21 +176,21 @@ bmcsd_read_scaling(vcl_string noext,vnl_double_3x3 *m)
 // \return true if no bad errors; false if any bad errors. (this has nothing to
 // do with the existence of a .origin file)
 bool
-bmcsd_read_offset(vcl_string noext,vnl_double_3x3 *m)
+bmcsd_read_offset(std::string noext,vnl_double_3x3 *m)
 {
-   vcl_ifstream infp((noext+".origin").c_str(), vcl_ios::in);
+   std::ifstream infp((noext+".origin").c_str(), std::ios::in);
    if (!infp) {
-     vcl_cout << "No offset file " << noext+".origin"<< vcl_endl;
+     std::cout << "No offset file " << noext+".origin"<< std::endl;
    } else {
      char buf[1024];
      infp.getline(buf,1024);
      infp.close();
-     vcl_istringstream strs(buf);
+     std::istringstream strs(buf);
 
      double col_offset, row_offset;
      strs >> col_offset;
      strs >> row_offset;
-     vcl_cout << "OFFSETS: " << col_offset << " " << row_offset << vcl_endl;
+     std::cout << "OFFSETS: " << col_offset << " " << row_offset << std::endl;
      (*m)(0,2) -= col_offset;
      (*m)(1,2) -= row_offset;
    }
@@ -201,15 +201,15 @@ bmcsd_read_offset(vcl_string noext,vnl_double_3x3 *m)
 //: returns directory of the file name, as well as the prefix, which is the
 //common prefix to all filenames of data relating to the file
 bool
-bmcsd_get_prefix(vcl_string img_name, vcl_string *dir, vcl_string *noext)
+bmcsd_get_prefix(std::string img_name, std::string *dir, std::string *noext)
 {
-//   vcl_cout << "Parsing image name: " << img_name << vcl_endl;
+//   std::cout << "Parsing image name: " << img_name << std::endl;
 
    *dir = vul_file::dirname(img_name);
-//   vcl_cout << "Directory: " << dir2 << vcl_endl;
+//   std::cout << "Directory: " << dir2 << std::endl;
 
    *noext = vul_file::strip_extension(img_name);
-//   vcl_cout << "Filename w/o extension: " << noext << vcl_endl;
+//   std::cout << "Filename w/o extension: " << noext << std::endl;
 
    return true;
 }
@@ -218,15 +218,15 @@ bmcsd_get_prefix(vcl_string img_name, vcl_string *dir, vcl_string *noext)
 // reads the extrinsic calibration from an ascii file into R and c
 static bool
 read_extrinsic(
-      vcl_string prefix_path_name, 
+      std::string prefix_path_name, 
       vgl_h_matrix_3d<double> *Rout,
       vgl_homg_point_3d<double> *center_out)
 {
-   vcl_cout << "Reading extrinsic params\n\n";
+   std::cout << "Reading extrinsic params\n\n";
    prefix_path_name.append(".extrinsic");
-   vcl_ifstream infp_ext(prefix_path_name.c_str(), vcl_ios::in);
+   std::ifstream infp_ext(prefix_path_name.c_str(), std::ios::in);
    if (!infp_ext) {
-     vcl_cerr << " Error opening file  " << prefix_path_name << vcl_endl;
+     std::cerr << " Error opening file  " << prefix_path_name << std::endl;
      return false;
    }
 
@@ -240,43 +240,43 @@ read_extrinsic(
    vgl_h_matrix_3d<double> R(mm,t_dummy);
    *Rout = R;
 
-//   vcl_cout << "Rotation\n";
-//   vcl_cout << *Rout << vcl_endl << vcl_endl;
+//   std::cout << "Rotation\n";
+//   std::cout << *Rout << std::endl << std::endl;
 
    infp_ext >> t_dummy;
    vgl_homg_point_3d<double> center(t_dummy[0],t_dummy[1],t_dummy[2]);
 
    *center_out = center;
 
-//   vcl_cout << "Center:\n";
-//   vcl_cout << t_dummy << vcl_endl;
+//   std::cout << "Center:\n";
+//   std::cout << t_dummy << std::endl;
    return true;
 }
 
 static bool
 read_extrinsic(
-      vcl_string prefix_path_name, 
+      std::string prefix_path_name, 
       vgl_h_matrix_3d<double> *Rout,
       vgl_homg_point_3d<double> *center_out);
 
 // reads intrinsic and extr. camera info from matlab calibration toolbox data
 bool
-read_cam(vcl_string img_name1, vcl_string img_name2, vpgl_perspective_camera <double> *P1out,
+read_cam(std::string img_name1, std::string img_name2, vpgl_perspective_camera <double> *P1out,
       vpgl_perspective_camera <double> *P2out)
 {
    bool stat;
 
-   vcl_string dir, noext;
+   std::string dir, noext;
    if (!bmcsd_get_prefix(img_name1,&dir,&noext)) {
-      vcl_cerr << "Error in read_cam: couldn't get prefix\n";
+      std::cerr << "Error in read_cam: couldn't get prefix\n";
       return false;
    }
 
    // Intrinsic params
-   vcl_string cam_fname(dir+"/calib.intrinsic");
-   vcl_ifstream infp(cam_fname.c_str(), vcl_ios::in);
+   std::string cam_fname(dir+"/calib.intrinsic");
+   std::ifstream infp(cam_fname.c_str(), std::ios::in);
    if (!infp) {
-     vcl_cerr << " Error opening file  " << cam_fname << vcl_endl;
+     std::cerr << " Error opening file  " << cam_fname << std::endl;
      return false;
    }
 
@@ -298,7 +298,7 @@ read_cam(vcl_string img_name1, vcl_string img_name2, vpgl_perspective_camera <do
    vgl_homg_point_3d<double> center;
    stat = read_extrinsic(noext, &R, &center);
       if (!stat) {
-         vcl_cerr << "error while reading extrinsic" << vcl_endl;
+         std::cerr << "error while reading extrinsic" << std::endl;
          return false;
       }
 
@@ -309,7 +309,7 @@ read_cam(vcl_string img_name1, vcl_string img_name2, vpgl_perspective_camera <do
 
    // File 2
    if (!bmcsd_get_prefix(img_name2,&dir,&noext)) {
-      vcl_cerr << "Error in read_cam: couldn't get prefix file 2\n";
+      std::cerr << "Error in read_cam: couldn't get prefix file 2\n";
       return false;
    }
 
@@ -322,7 +322,7 @@ read_cam(vcl_string img_name1, vcl_string img_name2, vpgl_perspective_camera <do
    vgl_homg_point_3d<double> center2;
    stat = read_extrinsic(noext, &R2, &center2);
       if (!stat) {
-         vcl_cerr << "error while reading extrinsic" << vcl_endl;
+         std::cerr << "error while reading extrinsic" << std::endl;
          return false;
       }
 
@@ -336,22 +336,22 @@ read_cam(vcl_string img_name1, vcl_string img_name2, vpgl_perspective_camera <do
 // reads intrinsic and extr. camera info from matlab calibration toolbox data
 // TODO break read_cam into stream operator for vpgl_camera
 bool
-read_cam( vcl_string img_name1, 
+read_cam( std::string img_name1, 
       vpgl_perspective_camera <double> *P1out)
 {
    bool stat;
 
-   vcl_string dir, noext;
+   std::string dir, noext;
    if (!bmcsd_get_prefix(img_name1,&dir,&noext)) {
-      vcl_cerr << "Error in read_cam: couln't get prefix\n";
+      std::cerr << "Error in read_cam: couln't get prefix\n";
       return false;
    }
 
    // Intrinsic params
-   vcl_string cam_fname(dir+"/calib.intrinsic");
-   vcl_ifstream infp(cam_fname.c_str(), vcl_ios::in);
+   std::string cam_fname(dir+"/calib.intrinsic");
+   std::ifstream infp(cam_fname.c_str(), std::ios::in);
    if (!infp) {
-     vcl_cerr << " Error opening file  " << cam_fname << vcl_endl;
+     std::cerr << " Error opening file  " << cam_fname << std::endl;
      return false;
    }
 
@@ -381,10 +381,10 @@ read_cam( vcl_string img_name1,
    vgl_homg_point_3d<double> center;
    stat = read_extrinsic(noext, &R, &center);
       if (!stat) {
-         vcl_cerr << "error while reading extrinsic" << vcl_endl;
+         std::cerr << "error while reading extrinsic" << std::endl;
          return false;
       }
-   vcl_cout << "Read rotation (before call vpgl_camera): " << vcl_endl << R << vcl_endl;
+   std::cout << "Read rotation (before call vpgl_camera): " << std::endl << R << std::endl;
    vpgl_perspective_camera<double> P1(K, center, vgl_rotation_3d<double>(R));
    *P1out = P1;
 
@@ -395,20 +395,20 @@ read_cam( vcl_string img_name1,
 // then decompose it into K, R and C and generate a perspective_camera.
 // The file has prefix *.projmatrix.
 bool
-read_3x4_matrix_into_cam( vcl_string img_name1, 
+read_3x4_matrix_into_cam( std::string img_name1, 
       vpgl_perspective_camera <double> *P1out)
 {
 
-   vcl_string dir, noext;
+   std::string dir, noext;
    if (!bmcsd_get_prefix(img_name1,&dir,&noext)) {
-      vcl_cerr << "Error in read_3x4_matrix_into_cam\n";
+      std::cerr << "Error in read_3x4_matrix_into_cam\n";
       return false;
    }
 
-   vcl_string cam_fname(noext+".projmatrix");
-   vcl_ifstream infp(cam_fname.c_str(), vcl_ios::in);
+   std::string cam_fname(noext+".projmatrix");
+   std::ifstream infp(cam_fname.c_str(), std::ios::in);
    if (!infp) {
-     vcl_cerr << " Error opening file  " << cam_fname << vcl_endl;
+     std::cerr << " Error opening file  " << cam_fname << std::endl;
      return false;
    }
 
@@ -426,7 +426,7 @@ read_3x4_matrix_into_cam( vcl_string img_name1,
      vpgl_perspective_decomposition( camera_matrix, *P1out);
 
    if (!stat) {
-     vcl_cerr << "read_3x4_matrix_into_cam: could not decompose matrix" << vcl_endl;
+     std::cerr << "read_3x4_matrix_into_cam: could not decompose matrix" << std::endl;
      return false;
    }
    return true;
@@ -462,9 +462,9 @@ reconstruct_pt_tangents(
       const vpgl_perspective_camera <double> &Pr1,
       const vpgl_perspective_camera <double> &Pr2,
       // Output: 
-      vcl_vector<vsol_point_2d_sptr> *Gamas,
-      vcl_vector<double> *error, // distance btw two rays in 3D
-      vcl_vector<vgl_vector_3d<double>> *Ts
+      std::vector<vsol_point_2d_sptr> *Gamas,
+      std::vector<double> *error, // distance btw two rays in 3D
+      std::vector<vgl_vector_3d<double>> *Ts
       )
       */
 
@@ -480,8 +480,8 @@ reconstruct_pt_tangents(
       // Output (caller's storage; we do not alloc em here): 
       double vnl_vector_fixed<double,3> *Gama_s,
       double vnl_vector_fixed<double,3> *Gama_sp,
-      vcl_vector<vgl_vector_3d<double>> *T_s,
-      vcl_vector<vgl_vector_3d<double>> *T_sp,
+      std::vector<vgl_vector_3d<double>> *T_s,
+      std::vector<vgl_vector_3d<double>> *T_sp,
       double *error_s1, // distance btw two rays in 3D
       double *error_s2, // distance btw two rays in 3D
       )
@@ -567,16 +567,16 @@ reconstruct_pt_tangents(
       vnl_svd<double> svd(A);
       vnl_vector<double> lambda = svd.solve(c2-c1);
     
-      vcl_cout << "Lambda:\n" << lambda << vcl_endl;
+      std::cout << "Lambda:\n" << lambda << std::endl;
       // the error is:   (A*lambda +c1 - c2).two_norm()
     
       vnl_vector_fixed<double,3> Cpt_v = c1 + lambda(0)*gama1;
       vgl_homg_point_3d<double> Cpt(Cpt_v(0), Cpt_v(1), Cpt_v(2));
-      vcl_cout << "Reconstructed point: " << Cpt << vcl_endl;
+      std::cout << "Reconstructed point: " << Cpt << std::endl;
 
      //=========== Tangents
-      vcl_cout << "\n\n\n";
-      vcl_cout << "================= Tangent reconstruction: =======================" << vcl_endl;
+      std::cout << "\n\n\n";
+      std::cout << "================= Tangent reconstruction: =======================" << std::endl;
     
       // Camera 1:
       vnl_vector_fixed<double,3> t1_cam_bkwd;
@@ -601,8 +601,8 @@ reconstruct_pt_tangents(
     
       t2_world_bkwd = Rct2*t2_cam_bkwd;
     
-      vcl_cout << "Test t1 dot F1 zero: " << dot_product(t1_world_bkwd,F1) << vcl_endl << vcl_endl;
-      vcl_cout << "Test t2 dot F2 zero: " << dot_product(t2_world_bkwd,F2) << vcl_endl << vcl_endl;
+      std::cout << "Test t1 dot F1 zero: " << dot_product(t1_world_bkwd,F1) << std::endl << std::endl;
+      std::cout << "Test t2 dot F2 zero: " << dot_product(t2_world_bkwd,F2) << std::endl << std::endl;
     
       T_rec = vnl_cross_3d( vnl_cross_3d(t1_world_bkwd,gama1), vnl_cross_3d(t2_world_bkwd,gama2) );
 
@@ -616,13 +616,13 @@ reconstruct_pt_tangents(
 //: reads a vector of vsol points from a binary file, where each coordinate is
 // stored row-by-row: x1,y1,x2,y2,x3,y3,x4,y4..
 bool
-myreadv(vcl_string fname, vcl_vector<vsol_point_2d_sptr> &pts)
+myreadv(std::string fname, std::vector<vsol_point_2d_sptr> &pts)
 {
 
-  vcl_ifstream infp(fname.c_str(), vcl_ios::in | vcl_ios::binary);
+  std::ifstream infp(fname.c_str(), std::ios::in | std::ios::binary);
 
   if (!infp) {
-    vcl_cerr << "myreadv: error, unable to open file name" << vcl_endl;
+    std::cerr << "myreadv: error, unable to open file name" << std::endl;
     return false;
   }
 
@@ -631,13 +631,13 @@ myreadv(vcl_string fname, vcl_vector<vsol_point_2d_sptr> &pts)
   // determine size of file
   long fsize;
 
-  vcl_filebuf *pbuf;
+  std::filebuf *pbuf;
 
   pbuf=infp.rdbuf();
 
   // get file size using buffer's members
-  fsize=pbuf->pubseekoff (0,vcl_ios::end,vcl_ios::in);
-  pbuf->pubseekpos (0,vcl_ios::in);
+  fsize=pbuf->pubseekoff (0,std::ios::end,std::ios::in);
+  pbuf->pubseekpos (0,std::ios::in);
 
   fsize = fsize/(2*sizeof(double));
 
@@ -659,13 +659,13 @@ myreadv(vcl_string fname, vcl_vector<vsol_point_2d_sptr> &pts)
 //: reads a vector of vsol points from a binary file, where each coordinate is
 // stored row-by-row: x1,y1,z1,x2,y2,z2,x3,y3,z3,x4,y4,z4..
 bool
-myreadv(vcl_string fname, vcl_vector<vgl_point_3d<double> > &pts)
+myreadv(std::string fname, std::vector<vgl_point_3d<double> > &pts)
 {
 
-  vcl_ifstream infp(fname.c_str(), vcl_ios::in | vcl_ios::binary);
+  std::ifstream infp(fname.c_str(), std::ios::in | std::ios::binary);
 
   if (!infp) {
-    vcl_cerr << "myreadv: error, unable to open file name" << vcl_endl;
+    std::cerr << "myreadv: error, unable to open file name" << std::endl;
     return false;
   }
 
@@ -674,13 +674,13 @@ myreadv(vcl_string fname, vcl_vector<vgl_point_3d<double> > &pts)
   // determine size of file
   long fsize;
 
-  vcl_filebuf *pbuf;
+  std::filebuf *pbuf;
 
   pbuf=infp.rdbuf();
 
   // get file size using buffer's members
-  fsize=pbuf->pubseekoff (0,vcl_ios::end,vcl_ios::in);
-  pbuf->pubseekpos (0,vcl_ios::in);
+  fsize=pbuf->pubseekoff (0,std::ios::end,std::ios::in);
+  pbuf->pubseekpos (0,std::ios::in);
 
   fsize = fsize/(3*sizeof(double));
 
@@ -701,25 +701,25 @@ myreadv(vcl_string fname, vcl_vector<vgl_point_3d<double> > &pts)
 }
 
 bool
-myreadv(vcl_string fname, vcl_vector<bmcsd_vector_3d> &pts)
+myreadv(std::string fname, std::vector<bmcsd_vector_3d> &pts)
 {
-  vcl_ifstream infp(fname.c_str(), vcl_ios::in | vcl_ios::binary);
+  std::ifstream infp(fname.c_str(), std::ios::in | std::ios::binary);
 
   if (!infp) {
-    vcl_cerr << "myreadv: error, unable to open file name" << vcl_endl;
+    std::cerr << "myreadv: error, unable to open file name" << std::endl;
     return false;
   }
 
   // determine size of file
   long fsize;
 
-  vcl_filebuf *pbuf;
+  std::filebuf *pbuf;
 
   pbuf=infp.rdbuf();
 
   // get file size using buffer's members
-  fsize=pbuf->pubseekoff (0,vcl_ios::end,vcl_ios::in);
-  pbuf->pubseekpos (0,vcl_ios::in);
+  fsize=pbuf->pubseekoff (0,std::ios::end,std::ios::in);
+  pbuf->pubseekpos (0,std::ios::in);
 
   fsize = fsize/(3*sizeof(double));
 
@@ -735,13 +735,13 @@ myreadv(vcl_string fname, vcl_vector<bmcsd_vector_3d> &pts)
 
 //: reads a 1D vector of doubles from a binary  file
 bool
-myread(vcl_string fname, vcl_vector<double> &pts)
+myread(std::string fname, std::vector<double> &pts)
 {
 
-  vcl_ifstream infp(fname.c_str(), vcl_ios::in | vcl_ios::binary);
+  std::ifstream infp(fname.c_str(), std::ios::in | std::ios::binary);
 
   if (!infp) {
-    vcl_cerr << "myread: error, unable to open file name" << vcl_endl;
+    std::cerr << "myread: error, unable to open file name" << std::endl;
     return false;
   }
 
@@ -750,13 +750,13 @@ myread(vcl_string fname, vcl_vector<double> &pts)
   // determine size of file
   long fsize;
 
-  vcl_filebuf *pbuf;
+  std::filebuf *pbuf;
 
   pbuf=infp.rdbuf();
 
   // get file size using buffer's members
-  fsize=pbuf->pubseekoff (0,vcl_ios::end,vcl_ios::in);
-  pbuf->pubseekpos (0,vcl_ios::in);
+  fsize=pbuf->pubseekoff (0,std::ios::end,std::ios::in);
+  pbuf->pubseekpos (0,std::ios::in);
 
   fsize = fsize/(sizeof(double));
 
@@ -778,12 +778,12 @@ myread(vcl_string fname, vcl_vector<double> &pts)
 //: write a vector of vsol_point_2d to a binary file, to be loaded in e.g.
 // matlab
 bool
-mywritev(vcl_string fname, const vcl_vector<vsol_point_2d_sptr> &pts)
+mywritev(std::string fname, const std::vector<vsol_point_2d_sptr> &pts)
 {
-  vcl_ofstream fp(fname.c_str(), vcl_ios::out | vcl_ios::binary);
+  std::ofstream fp(fname.c_str(), std::ios::out | std::ios::binary);
 
   if (!fp) {
-    vcl_cerr << "mywritev: error, unable to open file name" << vcl_endl;
+    std::cerr << "mywritev: error, unable to open file name" << std::endl;
     return false;
   }
 
@@ -799,15 +799,15 @@ mywritev(vcl_string fname, const vcl_vector<vsol_point_2d_sptr> &pts)
 }
 
 bool
-mywritev(vcl_string fname, const vcl_vector<bmcsd_vector_3d> &crv_3d)
+mywritev(std::string fname, const std::vector<bmcsd_vector_3d> &crv_3d)
 {
-  vcl_ofstream 
+  std::ofstream 
     fcrv_3d;
 
-  fcrv_3d.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
+  fcrv_3d.open(fname.c_str(),std::ios::out | std::ios::binary);
 
   if (!fcrv_3d) {
-    vcl_cerr << "mywritev: error, unable to open file name" << vcl_endl;
+    std::cerr << "mywritev: error, unable to open file name" << std::endl;
     return false;
   }
 
@@ -819,15 +819,15 @@ mywritev(vcl_string fname, const vcl_vector<bmcsd_vector_3d> &crv_3d)
 }
 
 bool
-mywritev(vcl_string fname, const vcl_vector<vgl_point_3d<double> > &crv_3d)
+mywritev(std::string fname, const std::vector<vgl_point_3d<double> > &crv_3d)
 {
-  vcl_ofstream 
+  std::ofstream 
     fcrv_3d;
 
-  fcrv_3d.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
+  fcrv_3d.open(fname.c_str(),std::ios::out | std::ios::binary);
 
   if (!fcrv_3d) {
-    vcl_cerr << "mywritev: error, unable to open file name" << vcl_endl;
+    std::cerr << "mywritev: error, unable to open file name" << std::endl;
     return false;
   }
 
@@ -841,36 +841,36 @@ mywritev(vcl_string fname, const vcl_vector<vgl_point_3d<double> > &crv_3d)
 }
 
 bool 
-mywritev(vcl_string prefix, vcl_string ext, const vcl_vector<bdifd_1st_order_curve_3d> &crv_3d)
+mywritev(std::string prefix, std::string ext, const std::vector<bdifd_1st_order_curve_3d> &crv_3d)
 {
 // The output files will be named like $prefix-3dcurve-$crv_id-{points|tangents}$ext
 
-  vcl_string myprefix = prefix + vcl_string("-3dcurve-");
+  std::string myprefix = prefix + std::string("-3dcurve-");
 
   for (unsigned c=0; c < crv_3d.size(); ++c) {
     unsigned np = crv_3d[c].size();
     if (np == 0) {
-      vcl_cerr << "Warning: curve [" << c << "] is empty.\n";
+      std::cerr << "Warning: curve [" << c << "] is empty.\n";
       continue;
     }
 
-    vcl_vector<bmcsd_vector_3d> tgts(np), pts(np);
+    std::vector<bmcsd_vector_3d> tgts(np), pts(np);
     for (unsigned p=0; p < np; ++p) {
       pts[p] = crv_3d[c][p].Gama;
       tgts[p] = crv_3d[c][p].T;
     }
 
-    vcl_ostringstream crv_id;
-    crv_id << vcl_setw(vcl_ceil(vcl_log(crv_3d.size())/vcl_log(10.0))+1) << vcl_setfill('0');
+    std::ostringstream crv_id;
+    crv_id << std::setw(std::ceil(std::log(crv_3d.size())/std::log(10.0))+1) << std::setfill('0');
     crv_id << c;
     
-    vcl_string newprefix = myprefix + crv_id.str();
+    std::string newprefix = myprefix + crv_id.str();
 
-    bool retval = mywritev(newprefix + vcl_string("-points") + ext, pts);
+    bool retval = mywritev(newprefix + std::string("-points") + ext, pts);
     if (!retval)
       return retval;
 
-    retval = mywritev(newprefix + vcl_string("-tangents") + ext, tgts);
+    retval = mywritev(newprefix + std::string("-tangents") + ext, tgts);
     if(!retval)
       return retval;
   }
@@ -878,40 +878,40 @@ mywritev(vcl_string prefix, vcl_string ext, const vcl_vector<bdifd_1st_order_cur
 }
 
 bool 
-myreadv(vcl_string prefix, vcl_string ext, vcl_vector<bdifd_1st_order_curve_3d> &crv_3d)
+myreadv(std::string prefix, std::string ext, std::vector<bdifd_1st_order_curve_3d> &crv_3d)
 {
-  vcl_string myprefix = prefix + vcl_string("-3dcurve-");
+  std::string myprefix = prefix + std::string("-3dcurve-");
 
 #ifndef NDEBUG
-  vcl_cout << "myreadv: reading curves with prefix " << myprefix << vcl_endl;
+  std::cout << "myreadv: reading curves with prefix " << myprefix << std::endl;
 #endif
   for (unsigned c=0; c < crv_3d.size(); ++c) {
-    vcl_ostringstream crv_id;
-    crv_id << vcl_setw(vcl_ceil(vcl_log(crv_3d.size())/vcl_log(10.0))+1) << vcl_setfill('0');
+    std::ostringstream crv_id;
+    crv_id << std::setw(std::ceil(std::log(crv_3d.size())/std::log(10.0))+1) << std::setfill('0');
     crv_id << c;
     
-    vcl_string newprefix = myprefix + crv_id.str();
+    std::string newprefix = myprefix + crv_id.str();
 
-    vcl_vector<bmcsd_vector_3d> tgts(crv_3d.size()), pts(crv_3d.size());
+    std::vector<bmcsd_vector_3d> tgts(crv_3d.size()), pts(crv_3d.size());
 
-    vcl_string p_fname = newprefix + vcl_string("-points") + ext;
+    std::string p_fname = newprefix + std::string("-points") + ext;
 #ifndef NDEBUG
-    vcl_cout << "myreadv: reading " << p_fname << vcl_endl;
+    std::cout << "myreadv: reading " << p_fname << std::endl;
 #endif
     bool retval = myreadv(p_fname, pts);
     if (!retval) {
-      vcl_cerr << "myreadv: error reading points" << p_fname << vcl_endl;
+      std::cerr << "myreadv: error reading points" << p_fname << std::endl;
       return retval;
     }
     unsigned np = pts.size();
 
-    vcl_string t_fname = newprefix + vcl_string("-tangents") + ext;
+    std::string t_fname = newprefix + std::string("-tangents") + ext;
 #ifndef NDEBUG
-    vcl_cout << "myreadv: reading " << t_fname << vcl_endl;
+    std::cout << "myreadv: reading " << t_fname << std::endl;
 #endif
     retval = myreadv(t_fname, tgts);
     if(!retval) {
-      vcl_cerr << "myreadv: error reading tangents" << t_fname << vcl_endl;
+      std::cerr << "myreadv: error reading tangents" << t_fname << std::endl;
       return retval;
     }
 
@@ -927,15 +927,15 @@ myreadv(vcl_string prefix, vcl_string ext, vcl_vector<bdifd_1st_order_curve_3d> 
 }
 
 bool
-mywrite(vcl_string fname, const vcl_vector<double> &v)
+mywrite(std::string fname, const std::vector<double> &v)
 {
-  vcl_ofstream 
+  std::ofstream 
     fp;
 
-  fp.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
+  fp.open(fname.c_str(),std::ios::out | std::ios::binary);
 
   if (!fp) {
-    vcl_cerr << "myread: error, unable to open file name" << vcl_endl;
+    std::cerr << "myread: error, unable to open file name" << std::endl;
     return false;
   }
 
@@ -948,15 +948,15 @@ mywrite(vcl_string fname, const vcl_vector<double> &v)
 }
 
 bool
-mywrite_ascii(vcl_string fname, const vcl_vector<double> &v)
+mywrite_ascii(std::string fname, const std::vector<double> &v)
 {
-  vcl_ofstream 
+  std::ofstream 
     fp;
 
-  fp.open(fname.c_str(),vcl_ios::out);
+  fp.open(fname.c_str(),std::ios::out);
 
   if (!fp) {
-    vcl_cerr << "mywrite_ascii: error, unable to open file name" << vcl_endl;
+    std::cerr << "mywrite_ascii: error, unable to open file name" << std::endl;
     return false;
   }
 
@@ -965,7 +965,7 @@ mywrite_ascii(vcl_string fname, const vcl_vector<double> &v)
     for (unsigned k=1; k<v.size(); ++k) {
       fp << " " << v[k];
     }
-    fp << vcl_endl;
+    fp << std::endl;
   }
   fp.close();
   return true;
@@ -1016,11 +1016,11 @@ get_normal_arc(const bsold_geno_curve_2d &c, unsigned i, double *normal_x, doubl
     }
 
 
-    double tolerance = vcl_numeric_limits<double>::epsilon()*1000;
-    if (vcl_fabs(sign_k) <= tolerance)
+    double tolerance = std::numeric_limits<double>::epsilon()*1000;
+    if (std::fabs(sign_k) <= tolerance)
       sign_k = 0;
     else
-      sign_k = sign_k / vcl_fabs(sign_k);
+      sign_k = sign_k / std::fabs(sign_k);
 
 
     *normal_x = -sign_k * tgt.y();
@@ -1058,11 +1058,11 @@ get_normal(const bsold_geno_curve_2d &c, unsigned i, double *normal_x, double *n
     }
 
 
-    double tolerance = vcl_numeric_limits<double>::epsilon()*1000;
-    if (vcl_fabs(sign_k) <= tolerance)
+    double tolerance = std::numeric_limits<double>::epsilon()*1000;
+    if (std::fabs(sign_k) <= tolerance)
       sign_k = 0;
     else
-      sign_k = sign_k / vcl_fabs(sign_k);
+      sign_k = sign_k / std::fabs(sign_k);
 
 
     *normal_x = -sign_k * tgt.y();
@@ -1072,10 +1072,10 @@ get_normal(const bsold_geno_curve_2d &c, unsigned i, double *normal_x, double *n
 void bmcsd_util::
 clip_to_img_bounds(
       const vil_image_view<vxl_uint_32> &img,
-      vcl_vector<vsol_point_2d_sptr> *curve_ptr) 
+      std::vector<vsol_point_2d_sptr> *curve_ptr) 
 {
-  vcl_vector<vsol_point_2d_sptr> points_clip; 
-  const vcl_vector<vsol_point_2d_sptr> &curve = *curve_ptr;
+  std::vector<vsol_point_2d_sptr> points_clip; 
+  const std::vector<vsol_point_2d_sptr> &curve = *curve_ptr;
 
   points_clip.reserve(curve.size()); 
 
@@ -1139,7 +1139,7 @@ in_img_bounds(const bdifd_1st_order_curve_2d &curve,
 }
 
 bool bmcsd_util::
-in_img_bounds( const vcl_vector<vsol_point_2d_sptr> &curve, 
+in_img_bounds( const std::vector<vsol_point_2d_sptr> &curve, 
     const vil_image_view<vxl_uint_32> &img)
 {
   for (unsigned i=0; i < curve.size(); ++i) {
@@ -1182,9 +1182,9 @@ in_img_bounds(const vsol_polyline_2d &curve,
 }
 
 void bmcsd_util::
-get_vsol_point_vector(const vsol_polyline_2d &crv, vcl_vector<vsol_point_2d_sptr> *pts_ptr)
+get_vsol_point_vector(const vsol_polyline_2d &crv, std::vector<vsol_point_2d_sptr> *pts_ptr)
 {
-  vcl_vector<vsol_point_2d_sptr> &pts = *pts_ptr;
+  std::vector<vsol_point_2d_sptr> &pts = *pts_ptr;
 
   pts.reserve(crv.size());
   for (unsigned k=0; k < crv.size(); ++k)
@@ -1246,12 +1246,12 @@ find_nearest_pt_using_double(const vsol_point_2d_sptr &pt, const vsol_polyline_2
 void bmcsd_util::
 prune_curves(
     unsigned min_num_samples, 
-    vcl_vector< vsol_polyline_2d_sptr > *pcurves,
+    std::vector< vsol_polyline_2d_sptr > *pcurves,
     bbld_subsequence_set *ss
     )
 {
-  vcl_vector< vsol_polyline_2d_sptr > &old_curves = *pcurves;
-  vcl_vector< vsol_polyline_2d_sptr > new_curves;
+  std::vector< vsol_polyline_2d_sptr > &old_curves = *pcurves;
+  std::vector< vsol_polyline_2d_sptr > new_curves;
 
   new_curves.reserve(old_curves.size());
   ss->reserve(old_curves.size());
@@ -1265,19 +1265,19 @@ prune_curves(
     }
   }
   *pcurves = new_curves;
-  vcl_vector< vsol_polyline_2d_sptr >(*pcurves).swap(*pcurves);
+  std::vector< vsol_polyline_2d_sptr >(*pcurves).swap(*pcurves);
   ss->trim_memory();
 }
 
 void bmcsd_util::
 prune_curves_by_length(
     double min_length, 
-    vcl_vector< vsol_polyline_2d_sptr > *pcurves,
+    std::vector< vsol_polyline_2d_sptr > *pcurves,
     bbld_subsequence_set *ss
     )
 {
-  vcl_vector< vsol_polyline_2d_sptr > &old_curves = *pcurves;
-  vcl_vector< vsol_polyline_2d_sptr > new_curves;
+  std::vector< vsol_polyline_2d_sptr > &old_curves = *pcurves;
+  std::vector< vsol_polyline_2d_sptr > new_curves;
 
   new_curves.reserve(old_curves.size());
   ss->reserve(old_curves.size());
@@ -1291,78 +1291,78 @@ prune_curves_by_length(
     }
   }
   *pcurves = new_curves;
-  vcl_vector< vsol_polyline_2d_sptr >(*pcurves).swap(*pcurves);
+  std::vector< vsol_polyline_2d_sptr >(*pcurves).swap(*pcurves);
   ss->trim_memory();
 }
 
 bool bmcsd_util::
-read_cam_anytype(vcl_string fname, camera_file_type type, 
+read_cam_anytype(std::string fname, camera_file_type type, 
   vpgl_perspective_camera<double> *cam)
 {
   switch (type) {
     case bmcsd_util::BMCS_INTRINSIC_EXTRINSIC:
-      vcl_cout << "Reading camera: intrinsic/extrinsic, fname = " << fname << vcl_endl;
+      std::cout << "Reading camera: intrinsic/extrinsic, fname = " << fname << std::endl;
       if (! read_cam(fname, cam) )
         return false;
     break;
 
     case bmcsd_util::BMCS_3X4:
-      vcl_cout << "Reading camera: 3x4 matrix, fname = " << fname << vcl_endl;
+      std::cout << "Reading camera: 3x4 matrix, fname = " << fname << std::endl;
       if (! read_3x4_matrix_into_cam(fname, cam) )
          return false;
     break;
     default:
-      vcl_cerr << "Invalid camera type\n";
+      std::cerr << "Invalid camera type\n";
       return false;
   }
   return true;
 }
 
 bool bmcsd_util::
-write_cams(vcl_string dir, vcl_string prefix, camera_file_type type, 
-    const vcl_vector<vpgl_perspective_camera<double> > &cam)
+write_cams(std::string dir, std::string prefix, camera_file_type type, 
+    const std::vector<vpgl_perspective_camera<double> > &cam)
 {
   if (cam.empty()) {
-    vcl_cerr << "Warning: trying to write no cameras\n";
+    std::cerr << "Warning: trying to write no cameras\n";
     return true; // no real errors encountered.
   }
 
   switch (type) {
     case bmcsd_util::BMCS_INTRINSIC_EXTRINSIC: {
-      vcl_cout << "Writing camera: intrinsic/extrinsic, dir = " << dir << vcl_endl;
+      std::cout << "Writing camera: intrinsic/extrinsic, dir = " << dir << std::endl;
 
       { // Intrinsics
-        vcl_string k_fname(dir+"/calib.intrinsic");
-        vcl_ofstream fp;
+        std::string k_fname(dir+"/calib.intrinsic");
+        std::ofstream fp;
 
-        fp.open(k_fname.c_str(),vcl_ios::out);
+        fp.open(k_fname.c_str(),std::ios::out);
 
         if (!fp) {
-          vcl_cerr << "write_cam: error, unable to open file name " << k_fname << vcl_endl;
+          std::cerr << "write_cam: error, unable to open file name " << k_fname << std::endl;
           return false;
         }
-        fp << vcl_setprecision(20);
+        fp << std::setprecision(20);
         fp << cam[0].get_calibration().get_matrix();
       }
 
        // Extrinsics
       for (unsigned v=0; v < cam.size(); ++v) {
-        vcl_ostringstream v_str;
-        v_str << vcl_setw(4) << vcl_setfill('0') << v;
+        std::ostringstream v_str;
+        v_str << std::setw(4) << std::setfill('0') << v;
 
-        vcl_string e_fname(dir + vcl_string("/") + prefix + v_str.str() + vcl_string(".extrinsic"));
-        vcl_cout << "Writing extrinsics file: " << e_fname << vcl_endl;
-        vcl_ofstream fp;
+        std::string e_fname(dir + std::string("/") + prefix + v_str.str() + std::string(".extrinsic"));
+        std::cout << "Writing extrinsics file: " << e_fname << std::endl;
+        std::ofstream fp;
 
-        fp.open(e_fname.c_str(),vcl_ios::out);
+        fp.open(e_fname.c_str(),std::ios::out);
 
         if (!fp) {
-          vcl_cerr << "write_cam: error, unable to open file name " << e_fname << vcl_endl;
+          std::cerr << "write_cam: error, unable to open file name " << e_fname << std::endl;
           return false;
         }
-        fp << vcl_setprecision(20);
-        fp << cam[v].get_rotation().as_matrix() << vcl_endl;
-        fp << vgl_to_vnl(cam[v].get_camera_center()) << vcl_endl;
+        fp << std::setprecision(20);
+        fp << cam[v].get_rotation().as_matrix() << std::endl;
+        fp << vgl_to_vnl(cam[v].get_camera_center()) << std::endl;
 
         fp.close();
       }
@@ -1370,12 +1370,12 @@ write_cams(vcl_string dir, vcl_string prefix, camera_file_type type,
     } break;
 
     case bmcsd_util::BMCS_3X4:
-      vcl_cout << "Writing camera: 3x4 matrix, dir = " << dir << vcl_endl;
-      vcl_cerr << "Error: Not supported\n";
+      std::cout << "Writing camera: 3x4 matrix, dir = " << dir << std::endl;
+      std::cerr << "Error: Not supported\n";
       return false;
     break;
     default:
-      vcl_cerr << "Invalid camera type\n";
+      std::cerr << "Invalid camera type\n";
       return false;
   }
   return true;
@@ -1383,13 +1383,13 @@ write_cams(vcl_string dir, vcl_string prefix, camera_file_type type,
 
 bool bmcsd_util::
 write_cams(
-      vcl_string dir, 
-      vcl_vector<vcl_string> cam_fname_noexts, 
+      std::string dir, 
+      std::vector<std::string> cam_fname_noexts, 
       camera_file_type type, 
-      const vcl_vector<vpgl_perspective_camera<double> > &cam)
+      const std::vector<vpgl_perspective_camera<double> > &cam)
 {
   if (cam.empty()) {
-    vcl_cerr << "Warning: trying to write no cameras\n";
+    std::cerr << "Warning: trying to write no cameras\n";
     return true; // no real errors encountered.
   }
 
@@ -1397,38 +1397,38 @@ write_cams(
 
   switch (type) {
     case bmcsd_util::BMCS_INTRINSIC_EXTRINSIC: {
-      vcl_cout << "Writing camera: intrinsic/extrinsic, dir = " << dir << vcl_endl;
+      std::cout << "Writing camera: intrinsic/extrinsic, dir = " << dir << std::endl;
 
       { // Intrinsics
-        vcl_string k_fname(dir+"/calib.intrinsic");
-        vcl_ofstream fp;
+        std::string k_fname(dir+"/calib.intrinsic");
+        std::ofstream fp;
 
-        fp.open(k_fname.c_str(),vcl_ios::out);
+        fp.open(k_fname.c_str(),std::ios::out);
 
         if (!fp) {
-          vcl_cerr << "write_cam: error, unable to open file name " << k_fname << vcl_endl;
+          std::cerr << "write_cam: error, unable to open file name " << k_fname << std::endl;
           return false;
         }
-        fp << vcl_setprecision(20);
+        fp << std::setprecision(20);
         fp << cam[0].get_calibration().get_matrix();
       }
 
        // Extrinsics
       for (unsigned v=0; v < cam.size(); ++v) {
-        vcl_string e_fname(dir + vcl_string("/") 
-            + cam_fname_noexts[v] + vcl_string(".extrinsic"));
-        vcl_cout << "Writing extrinsics file: " << e_fname << vcl_endl;
-        vcl_ofstream fp;
+        std::string e_fname(dir + std::string("/") 
+            + cam_fname_noexts[v] + std::string(".extrinsic"));
+        std::cout << "Writing extrinsics file: " << e_fname << std::endl;
+        std::ofstream fp;
 
-        fp.open(e_fname.c_str(),vcl_ios::out);
+        fp.open(e_fname.c_str(),std::ios::out);
 
         if (!fp) {
-          vcl_cerr << "write_cam: error, unable to open file name " << e_fname << vcl_endl;
+          std::cerr << "write_cam: error, unable to open file name " << e_fname << std::endl;
           return false;
         }
-        fp << vcl_setprecision(20);
-        fp << cam[v].get_rotation().as_matrix() << vcl_endl;
-        fp << vgl_to_vnl(cam[v].get_camera_center()) << vcl_endl;
+        fp << std::setprecision(20);
+        fp << cam[v].get_rotation().as_matrix() << std::endl;
+        fp << vgl_to_vnl(cam[v].get_camera_center()) << std::endl;
 
         fp.close();
       }
@@ -1436,28 +1436,28 @@ write_cams(
     } break;
 
     case bmcsd_util::BMCS_3X4:
-      vcl_cout << "Writing camera: 3x4 matrix, dir = " << dir << vcl_endl;
+      std::cout << "Writing camera: 3x4 matrix, dir = " << dir << std::endl;
 
       for (unsigned v=0; v < cam.size(); ++v) {
-        vcl_string e_fname(dir + vcl_string("/") 
-            + cam_fname_noexts[v] + vcl_string(".projmatrix"));
-        vcl_cout << "Writing cam file: " << e_fname << vcl_endl;
-        vcl_ofstream fp;
+        std::string e_fname(dir + std::string("/") 
+            + cam_fname_noexts[v] + std::string(".projmatrix"));
+        std::cout << "Writing cam file: " << e_fname << std::endl;
+        std::ofstream fp;
 
-        fp.open(e_fname.c_str(),vcl_ios::out);
+        fp.open(e_fname.c_str(),std::ios::out);
 
         if (!fp) {
-          vcl_cerr << "write_cam: error, unable to open file name " << e_fname << vcl_endl;
+          std::cerr << "write_cam: error, unable to open file name " << e_fname << std::endl;
           return false;
         }
-        fp << vcl_setprecision(20);
-        fp << cam[v].get_matrix() << vcl_endl;
+        fp << std::setprecision(20);
+        fp << cam[v].get_matrix() << std::endl;
         fp.close();
       }
       return false;
     break;
     default:
-      vcl_cerr << "Invalid camera type\n";
+      std::cerr << "Invalid camera type\n";
       return false;
   }
   return true;

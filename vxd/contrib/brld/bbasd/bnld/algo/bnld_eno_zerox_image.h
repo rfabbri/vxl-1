@@ -36,7 +36,7 @@ public:
   unsigned nj() const {return nj_;}
   unsigned long size() const {return ni_*nj_;}
 
-  void print(vcl_ostream& = vcl_cerr) const;
+  void print(std::ostream& = std::cerr) const;
 
    //-----------------------------------------------------------------
 
@@ -47,18 +47,18 @@ public:
   assign_labels(const vil_image_view<double> &img, const vil_image_view<unsigned> &label);
 
   const bnld_eno_zerox_label & horiz_labels(unsigned long i) const;
-  vcl_vector<unsigned>::const_iterator horiz_labels(unsigned long i, unsigned long j) const;
+  std::vector<unsigned>::const_iterator horiz_labels(unsigned long i, unsigned long j) const;
 
   const bnld_eno_zerox_label & vert_labels(unsigned long i) const;
-  vcl_vector<unsigned>::const_iterator vert_labels(unsigned long i, unsigned long j) const;
+  std::vector<unsigned>::const_iterator vert_labels(unsigned long i, unsigned long j) const;
 
   bool computed_labels() const { return vlabel_.size()!=0; }
 
 protected:
-  vcl_vector<bnld_eno_zerox_vector *> horiz_;    
-  vcl_vector<bnld_eno_zerox_vector *> vert_;
-  vcl_vector<bnld_eno_zerox_label *>  hlabel_;
-  vcl_vector<bnld_eno_zerox_label *>  vlabel_;
+  std::vector<bnld_eno_zerox_vector *> horiz_;    
+  std::vector<bnld_eno_zerox_vector *> vert_;
+  std::vector<bnld_eno_zerox_label *>  hlabel_;
+  std::vector<bnld_eno_zerox_label *>  vlabel_;
   unsigned 
     ni_,  //:< number of pixels in a row (i.e. number of columns)
     nj_;  //:< number of pixels in a column (i.e. number of rows)
@@ -95,7 +95,7 @@ vert(unsigned i) const
 
 // ----------------------------------------------------------------------
 
-inline vcl_vector<unsigned>::const_iterator bnld_eno_zerox_image::
+inline std::vector<unsigned>::const_iterator bnld_eno_zerox_image::
 horiz_labels(unsigned long i, unsigned long j) const
 {
   return (*(hlabel_[j]))[i];
@@ -107,7 +107,7 @@ horiz_labels(unsigned long i) const
   return *(hlabel_[i]);
 }
 
-inline vcl_vector<unsigned>::const_iterator bnld_eno_zerox_image::
+inline std::vector<unsigned>::const_iterator bnld_eno_zerox_image::
 vert_labels(unsigned long i, unsigned long j) const
 {
   return (*(vlabel_[i]))[j];

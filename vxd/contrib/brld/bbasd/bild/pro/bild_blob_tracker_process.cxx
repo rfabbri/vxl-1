@@ -23,7 +23,7 @@ bild_blob_tracker_process::bild_blob_tracker_process()
 #if 0
   if( !parameters()->add( "Restore"    , "-restore" ,  false   ) 
     ) {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 #endif
 }
@@ -40,7 +40,7 @@ bild_blob_tracker_process::clone() const
 }
 
 //: Return the name of this process
-vcl_string 
+std::string 
 bild_blob_tracker_process::name()
 {
   return "Blob Tracker";
@@ -58,26 +58,26 @@ bild_blob_tracker_process::output_frames()
   return 0;
 }
 
-vcl_vector< vcl_string >
+std::vector< std::string >
 bild_blob_tracker_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
 
-vcl_vector< vcl_string >
+std::vector< std::string >
 bild_blob_tracker_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   //to_return.push_back( "image" );
   return to_return;
 }
 
 
 // Compute the area and center of a blob
-static void bild_blob_center(const vcl_vector<int>& bi,
-                             const vcl_vector<int>& bj,
+static void bild_blob_center(const std::vector<int>& bi,
+                             const std::vector<int>& bj,
                              int& area, double& xc, double& yc)
 {
   int x1 = bi.back(),  y1 = bj.back();
@@ -120,7 +120,7 @@ bool
 bild_blob_tracker_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In vidpro1_can_test_process::execute() - not exactly one" << " input image" << vcl_endl;
+    std::cout << "In vidpro1_can_test_process::execute() - not exactly one" << " input image" << std::endl;
     return false;
   }
   clear_output();
@@ -146,7 +146,7 @@ bild_blob_tracker_process::execute()
 
   bil_blob_finder bf;
   bf.set_work_image(inv_img);
-  vcl_vector<int> bi, bj;
+  std::vector<int> bi, bj;
   //int blob_count = 0;
   int area=0;
   double xc=0.0, yc=0.0;
@@ -175,11 +175,11 @@ bild_blob_tracker_process::execute()
     ++blob_count;
     */
   }
-  //vcl_cout << "counted "<<blob_count<<" blobs" << vcl_endl;
+  //std::cout << "counted "<<blob_count<<" blobs" << std::endl;
   if(detected)
-    vcl_cout << "object detected" << vcl_endl;
+    std::cout << "object detected" << std::endl;
   else
-    vcl_cout << "clear" << vcl_endl;
+    std::cout << "clear" << std::endl;
 
 
   //vidpro1_image_storage_sptr output_storage = vidpro1_image_storage_new();

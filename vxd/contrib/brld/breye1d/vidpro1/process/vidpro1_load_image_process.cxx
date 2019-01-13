@@ -4,7 +4,7 @@
 // \file
 
 #include <vidpro1/process/vidpro1_load_image_process.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <bpro1/bpro1_parameters.h>
 #include <vidpro1/storage/vidpro1_image_storage.h>
@@ -23,7 +23,7 @@ vidpro1_load_image_process::vidpro1_load_image_process() : bpro1_process()
   if( !parameters()->add( "Image file <filename...>" , "-image_filename" , bpro1_filepath("","*") ) 
       )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -43,16 +43,16 @@ vidpro1_load_image_process::clone() const
 
 
 //: Return the name of the process
-vcl_string vidpro1_load_image_process::name()
+std::string vidpro1_load_image_process::name()
 {
   return "Load Image";
 }
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string > vidpro1_load_image_process::get_input_type()
+std::vector< std::string > vidpro1_load_image_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
 
   // no input type required
   to_return.clear();
@@ -62,9 +62,9 @@ vcl_vector< vcl_string > vidpro1_load_image_process::get_input_type()
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string > vidpro1_load_image_process::get_output_type()
+std::vector< std::string > vidpro1_load_image_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
 
   // output type
   to_return.push_back( "image" );
@@ -79,14 +79,14 @@ vidpro1_load_image_process::execute()
 {
   bpro1_filepath image_path;
   parameters()->get_value( "-image_filename" , image_path );
-  vcl_string image_filename = image_path.path;
+  std::string image_filename = image_path.path;
 
   //no input storage class for this process
   clear_output();
 
   vil_image_resource_sptr loaded_image = vil_load_image_resource( image_filename.c_str() );
   if( !loaded_image ) {
-    vcl_cerr << "Failed to load image file" << image_filename << vcl_endl;
+    std::cerr << "Failed to load image file" << image_filename << std::endl;
     return false;
   }
 
@@ -95,12 +95,12 @@ vidpro1_load_image_process::execute()
   //if (hacked_loading) {
   //  //: ozge's hack to load the second image shifted, TODO: REMOVE this
   //  vidpro1_repository_sptr res = bvis1_manager::instance()->repository();
-  //  vcl_set<bpro1_storage_sptr> st_set = res->get_all_storage_classes(res->current_frame());
-  //  vcl_string name_initial = "image";
+  //  std::set<bpro1_storage_sptr> st_set = res->get_all_storage_classes(res->current_frame());
+  //  std::string name_initial = "image";
   //  int len = name_initial.length();
   //  int max = 0;
   //  int offset_x = 0;
-  //  for (vcl_set<bpro1_storage_sptr>::iterator iter = st_set.begin();
+  //  for (std::set<bpro1_storage_sptr>::iterator iter = st_set.begin();
   //    iter != st_set.end(); iter++) {
   //      if ((*iter)->type() == image_storage->type()) {
   //        vidpro1_image_storage_sptr image_stg;

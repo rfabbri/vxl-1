@@ -8,9 +8,9 @@
 #include <bnld/bnld_solve_trigonometric_equation.h>
 #include <bgld/algo/bgld_circ_arc.h>
 
-#include <vcl_cmath.h>
+#include <cmath>
 #include <vnl/vnl_math.h>
-#include <vcl_limits.h>
+#include <limits>
 
 #include <vgl/vgl_lineseg_test.h>
 #include <vgl/vgl_distance.h>
@@ -53,7 +53,7 @@ lineseg_lineseg(const vgl_point_2d<double >& line1_p1,
 
     // case 1a: two lines are parallel (degenerate case). We pick either the
     // starting or ending point of line1 to be the closest point
-    if (vcl_abs(pd) < 1e-12)
+    if (std::abs(pd) < 1e-12)
     {
       // check if the first point of line1 is between two end points of line2
       // if so choose as intersection point
@@ -178,7 +178,7 @@ lineseg_lineseg(const vgl_point_2d<double >& line1_p1,
       ratio1 = ratio_pt;
       break;
     }
-    return vcl_sqrt(min_dist);
+    return std::sqrt(min_dist);
   }
 }
 
@@ -308,7 +308,7 @@ point_to_circle(const vgl_point_2d<double >& query_pt,
 
   //// regular arc - an arc with curvature != 0
   // construct a dummy arc
-  double length = (vcl_abs(k)<1) ? 1 : 1 / vcl_abs(k);
+  double length = (std::abs(k)<1) ? 1 : 1 / std::abs(k);
   bgld_circ_arc arc;
   arc.set_from(p0, t0, k, length);
   vgl_point_2d<double > p1 = arc.point1();
@@ -365,8 +365,8 @@ lineseg_to_circular_arc(const vgl_point_2d<double >& line_p1,
                         const vgl_point_2d<double >& arc_p1, 
                         const vgl_point_2d<double > arc_p2,
                         double arc_k,
-                        vcl_vector<double >& line_ratios, 
-                        vcl_vector<double >& arc_ratios)
+                        std::vector<double >& line_ratios, 
+                        std::vector<double >& arc_ratios)
 {
   // See ultraserver.lems.brown.edu/vision/docs/kimia/reports/notes/
   // circular-arc-formulae/paper.tex for detailed description of algorithm
@@ -411,7 +411,7 @@ lineseg_to_circular_arc(const vgl_point_2d<double >& line_p1,
   double a = arc_k*arc_k;
   double b = 2*(a1*b1 + a2*b2);
   double c = b1*b1 + b2*b2 - 1;
-  vcl_vector<double > roots;
+  std::vector<double > roots;
   bnld_solve_quadratic_equation(a, b, c, roots);
 
   double ret_distance = -1;
@@ -432,7 +432,7 @@ lineseg_to_circular_arc(const vgl_point_2d<double >& line_p1,
 
       // `psi0_plus_ks' should already be normalized
       // find k*s = (psi0 + ks) - psi0
-      double ksi = vcl_atan2(cross_product(psi0, psi0_plus_ks), 
+      double ksi = std::atan2(cross_product(psi0, psi0_plus_ks), 
         dot_product(psi0, psi0_plus_ks));
       double ratio_si = ksi / (arc_k*arc.len()) ;
       
@@ -557,7 +557,7 @@ lineseg_to_circular_arc(const vgl_point_2d<double >& line_p1,
 double bgld_closest_point::
 lineseg_to_circular_arc(const vgl_line_segment_2d<double >& lineseg,
                         const bgld_circ_arc& arc,
-                        vcl_vector<double >& line_ratios, vcl_vector<double >& arc_ratios)
+                        std::vector<double >& line_ratios, std::vector<double >& arc_ratios)
 {
   return bgld_closest_point::lineseg_to_circular_arc(
     lineseg.point1(), lineseg.point2(), arc.start(), arc.end(), arc.k(), 
@@ -580,8 +580,8 @@ circular_arc_to_circular_arc(const vgl_point_2d<double >& arc1_p1,
                              const vgl_point_2d<double >& arc2_p1,
                              const vgl_point_2d<double >& arc2_p2,
                              double arc2_k,
-                             vcl_vector<double >& arc1_ratios, 
-                             vcl_vector<double >& arc2_ratios)
+                             std::vector<double >& arc1_ratios, 
+                             std::vector<double >& arc2_ratios)
 {
   // See ultraserver.lems.brown.edu/vision/docs/kimia/reports/notes/
   // circular-arc-formulae/paper.tex for detailed description of algorithm
@@ -605,8 +605,8 @@ circular_arc_to_circular_arc(const vgl_point_2d<double >& arc1_p1,
   bgld_circ_arc arc1(arc1_p1, arc1_p2, arc1_k);
   bgld_circ_arc arc2(arc2_p1, arc2_p2, arc2_k);
   
-  vcl_vector<double >* ret_ratios1 = &arc1_ratios;
-  vcl_vector<double >* ret_ratios2 = &arc2_ratios;
+  std::vector<double >* ret_ratios1 = &arc1_ratios;
+  std::vector<double >* ret_ratios2 = &arc2_ratios;
 
   // swap when |k2| < |k1| so that the term (k1/k2), involed in some computation,
   // is always in the range [-1, 1], 
@@ -639,7 +639,7 @@ circular_arc_to_circular_arc(const vgl_point_2d<double >& arc1_p1,
   // solve trignometry equation to find t
   // equation (1)
   // 2a*b1 sin(k2*t + phi0) + 2a*b2 cos(k2*t + phi0) + (a^2+b1^2+b2^2-1)=0
-  vcl_vector<vgl_vector_2d<double > > roots;
+  std::vector<vgl_vector_2d<double > > roots;
   double eq_a = 2*a*b1; 
   double eq_b = 2*a*b2;
   double eq_c = a*a+b1*b1+b2*b2-1;
@@ -656,7 +656,7 @@ circular_arc_to_circular_arc(const vgl_point_2d<double >& arc1_p1,
     for (unsigned int i=0; i<roots.size(); ++i)
     {
       vgl_vector_2d<double > phi0_plus_k2xt = roots[i];
-      double k2xt = vcl_atan2(cross_product(phi0, phi0_plus_k2xt), 
+      double k2xt = std::atan2(cross_product(phi0, phi0_plus_k2xt), 
         dot_product(phi0, phi0_plus_k2xt));
       double ratio_t = k2xt/arc2.k() / arc2.len();
 
@@ -665,7 +665,7 @@ circular_arc_to_circular_arc(const vgl_point_2d<double >& arc1_p1,
       {
         vgl_vector_2d<double > psi0_plus_k1xs(a*phi0_plus_k2xt.x()+b2,
           a*phi0_plus_k2xt.y()+b1);
-        double k1xs =  vcl_atan2(cross_product(psi0, psi0_plus_k1xs),
+        double k1xs =  std::atan2(cross_product(psi0, psi0_plus_k1xs),
           dot_product(psi0, psi0_plus_k1xs));
         double ratio_s = k1xs / arc1.k() / arc1.len();
         
@@ -691,7 +691,7 @@ circular_arc_to_circular_arc(const vgl_point_2d<double >& arc1_p1,
 
     vgl_vector_2d<double > phi0_plus_k2xt(b2, b1);
     double k2xt[2];
-    k2xt[0] = vcl_atan2(cross_product(phi0, phi0_plus_k2xt),
+    k2xt[0] = std::atan2(cross_product(phi0, phi0_plus_k2xt),
         dot_product(phi0, phi0_plus_k2xt));
 
     // make sure k2xt[1] is in [-pi, pi]
@@ -707,7 +707,7 @@ circular_arc_to_circular_arc(const vgl_point_2d<double >& arc1_p1,
 
     vgl_vector_2d<double > psi0_plus_k1xs(b2, b1);
     double k1xs[2];
-    k1xs[0] = vcl_atan2(cross_product(psi0, psi0_plus_k1xs),
+    k1xs[0] = std::atan2(cross_product(psi0, psi0_plus_k1xs),
         dot_product(psi0, psi0_plus_k1xs));
 
     // make sure k1xs[1] is in [-pi, pi]
@@ -725,7 +725,7 @@ circular_arc_to_circular_arc(const vgl_point_2d<double >& arc1_p1,
     // even though some of the distances may involve very large number
     // and the final min-distance is not large, hence accurate
     double min_dist_t=0, min_dist_s=0;
-    double min_dist = vcl_numeric_limits<double >::max();
+    double min_dist = std::numeric_limits<double >::max();
     for (int i=0; i<2; ++i)
     {
       for (int j=0; j<2; ++j)
@@ -855,12 +855,12 @@ point_to_biarc(const vgl_point_2d<double > query,
 //: Solve trigonometry equation a sin(x) + b cos(x) + c = 0
 void bgld_closest_point::
 solve_1st_order_trig_equation(double a, double b, double c,
-  vcl_vector<vgl_vector_2d<double > >& roots)
+  std::vector<vgl_vector_2d<double > >& roots)
 {
   roots.clear();
 
-  vcl_vector<double > cos_x;
-  vcl_vector<double > sin_x;
+  std::vector<double > cos_x;
+  std::vector<double > sin_x;
   bnld_solve_1st_order_trig_equation(a, b, c, sin_x, cos_x);
 
   for (unsigned i =0; i < cos_x.size(); ++i)

@@ -1,7 +1,7 @@
 // This is gel/vsrl/vsrl_diffusion.cxx
 #include "vsrl_diffusion.h"
-#include <vcl_iostream.h>
-#include <vcl_cstdio.h> // for std::sprintf()
+#include <iostream>
+#include <cstdio> // for std::sprintf()
 #include <vxl_config.h>
 #include <vil1/vil1_memory_image_of.h>
 #include <vil1/vil1_save.h>
@@ -39,18 +39,18 @@ void vsrl_diffusion::write_image(const char *file_name,int it_num, vnl_matrix<do
   char new_name[512];
 
   if (it_num < 10) {
-    vcl_sprintf(&(new_name[0]),"%s00%d.ppm",file_name,it_num);
+    std::sprintf(&(new_name[0]),"%s00%d.ppm",file_name,it_num);
     write_image(&(new_name[0]),mat);
     return;
   }
 
   if (it_num < 100) {
-    vcl_sprintf(&(new_name[0]),"%s0%d.ppm",file_name,it_num);
+    std::sprintf(&(new_name[0]),"%s0%d.ppm",file_name,it_num);
     write_image(&(new_name[0]),mat);
     return;
   }
 
-  vcl_sprintf(&(new_name[0]),"%s%d.ppm",file_name,it_num);
+  std::sprintf(&(new_name[0]),"%s%d.ppm",file_name,it_num);
   write_image(&(new_name[0]),mat);
   return;
 }
@@ -63,7 +63,7 @@ void vsrl_diffusion::write_image(const char *file_name,vnl_matrix<double> *mat)
 
   // make a buffer which has the size of image1
 
-  vcl_cout << "Writing file " << file_name << vcl_endl;
+  std::cout << "Writing file " << file_name << std::endl;
 
   vil1_memory_image_of<vxl_byte> buffer(get_width(),get_height());
 

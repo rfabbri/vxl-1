@@ -43,7 +43,7 @@ class bsold_gshock_curve_2d : public bsold_geno_curve_2d {
    unsigned nshocks() const { return nshocks_; }
    
    //: print
-   virtual void describe(vcl_ostream &strm, int blanking) const;
+   virtual void describe(std::ostream &strm, int blanking) const;
 
    //: shock-related algorithms:
    friend class bsold_geno_shock;
@@ -53,7 +53,7 @@ class bsold_gshock_curve_2d : public bsold_geno_curve_2d {
    void mark(unsigned i) { skmark_[i] = true; }
    //: true if interval is marked as shock
    bool marked(unsigned i) const {return skmark_[i];}
-   virtual void make(const vcl_vector<bgld_param_curve *> &inter, bool closed) 
+   virtual void make(const std::vector<bgld_param_curve *> &inter, bool closed) 
       { bsold_geno_curve_2d::make(inter,closed); m_.clear(); cache_measures(); 
          skmark_.clear(); skmark_.resize(inter.size(),false);}
 
@@ -66,12 +66,12 @@ class bsold_gshock_curve_2d : public bsold_geno_curve_2d {
    //: vector of shock interpolants. shock_[i] == NULL if the interval have no
    // shock. It could be made into a list for efficient traversal of shocks if
    // this turns out to be important for some application.
-   vcl_vector<bsold_gshock_sptr> s_;
+   std::vector<bsold_gshock_sptr> s_;
  private:
    //: cache of tangent and curvature measurements of intervals
-   vcl_vector<bsold_geno_measures> m_;
+   std::vector<bsold_geno_measures> m_;
    //: shock mark:
-   vcl_vector<bool> skmark_;
+   std::vector<bool> skmark_;
    unsigned nshocks_;
 };
 

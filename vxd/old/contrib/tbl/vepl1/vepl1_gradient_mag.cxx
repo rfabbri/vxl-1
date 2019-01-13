@@ -1,6 +1,6 @@
 // This is tbl/vepl1/vepl1_gradient_mag.cxx
 #include "vepl1_gradient_mag.h"
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vipl/accessors/vipl_accessors_vil1_image.h>
 #include <vipl/vipl_gradient_mag.h>
 #include <vil1/vil1_memory_image_of.h>
@@ -21,7 +21,7 @@ vil1_image vepl1_gradient_mag(vil1_image const& image, double scale, double shif
 
   // byte rgb
   else if (vil1_pixel_format(image) == VIL1_RGB_BYTE) {
-    vcl_cerr << __FILE__ ": vepl1_gradient_mag() cannot be implemented for colour images\n";
+    std::cerr << __FILE__ ": vepl1_gradient_mag() cannot be implemented for colour images\n";
     return 0;
   }
 
@@ -60,7 +60,7 @@ vil1_image vepl1_gradient_mag(vil1_image const& image, double scale, double shif
 
   //
   else {
-    vcl_cerr << __FILE__ ": vepl1_gradient_mag() not implemented for " << image << vcl_endl;
+    std::cerr << __FILE__ ": vepl1_gradient_mag() not implemented for " << image << std::endl;
     return 0;
   }
 }

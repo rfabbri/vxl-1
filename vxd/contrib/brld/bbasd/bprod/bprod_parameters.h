@@ -13,12 +13,12 @@
 //    Matt Leotta  12/15/04  Migrated from vidpro
 // \endverbatim
 
-#include <vcl_string.h>
-#include <vcl_sstream.h>
-#include <vcl_iostream.h>
-#include <vcl_cassert.h>
-#include <vcl_vector.h>
-#include <vcl_map.h>
+#include <string>
+#include <sstream>
+#include <iostream>
+#include <cassert>
+#include <vector>
+#include <map>
 
 #include <vbl/vbl_ref_count.h>
 
@@ -37,9 +37,9 @@ class bprod_param
   virtual bprod_param * clone() const = 0;
 
   //: Return the parameter name
-  vcl_string name() const { return name_; }
+  std::string name() const { return name_; }
   //: Return the parameter description
-  vcl_string description() const { return description_; }
+  std::string description() const { return description_; }
   //: Returns true if the valid range of parameter values is bounded
   bool has_bounds() const { return has_bounds_; }
 
@@ -49,33 +49,33 @@ class bprod_param
   virtual bool set_from_temp() = 0;
 
   //: Return a string representation of the current value
-  virtual vcl_string value_str() const = 0;
+  virtual std::string value_str() const = 0;
   //: Return a string representation of the default value
-  virtual vcl_string default_str() const = 0;
+  virtual std::string default_str() const = 0;
   //: Return a string representation of the minimum value
-  virtual vcl_string min_str() const = 0;
+  virtual std::string min_str() const = 0;
   //: Return a string representation of the maximium value
-  virtual vcl_string max_str() const = 0;
+  virtual std::string max_str() const = 0;
 
   //: Set the current value by parsing a string
-  virtual bool parse_value_str(const vcl_string& input) = 0;
+  virtual bool parse_value_str(const std::string& input) = 0;
 
  protected:
   //: Constructor
-  bprod_param(bool has_bounds, const vcl_string& name, const vcl_string& desc)
+  bprod_param(bool has_bounds, const std::string& name, const std::string& desc)
    : has_bounds_(has_bounds), name_(name), description_(desc) {}
 
 
   //: Describes whether or not the parameter has bounds
   const bool has_bounds_;
   //: Name of the parameter
-  const vcl_string name_;
+  const std::string name_;
   //: Description of the parameter
-  const vcl_string description_;
+  const std::string description_;
 };
 
 //: Output stream operator for bprod_params
-vcl_ostream& operator<<(vcl_ostream& os, const bprod_param& p);
+std::ostream& operator<<(std::ostream& os, const bprod_param& p);
 
 //===========================================================================================
 
@@ -85,12 +85,12 @@ class bprod_param_type : public bprod_param
 {
  public:
   // Constructor - with bounds
-  bprod_param_type<T>(const vcl_string& name, const vcl_string& desc, const T& dflt, const T& min, const T& max)
+  bprod_param_type<T>(const std::string& name, const std::string& desc, const T& dflt, const T& min, const T& max)
    : bprod_param(true, name, desc), value_(dflt), default_(dflt), temp_value_(dflt),
      min_value_(min), max_value_(max) { assert( value_ < max_value_ &&  min_value_ < value_ ); }
 
   // Constructor - without bounds
-  bprod_param_type<T>(const vcl_string& name, const vcl_string& desc, const T& dflt)
+  bprod_param_type<T>(const std::string& name, const std::string& desc, const T& dflt)
    : bprod_param(false, name, desc), value_(dflt), default_(dflt), temp_value_(dflt),
      min_value_(dflt), max_value_(dflt) {}
 
@@ -117,23 +117,23 @@ class bprod_param_type : public bprod_param
   virtual bprod_param * clone() const { return new bprod_param_type<T>(*this); }
 
   //: Return a string representation of the current value
-  virtual vcl_string value_str() const { return create_string(value_); }
+  virtual std::string value_str() const { return create_string(value_); }
   //: Return a string representation of the default value
-  virtual vcl_string default_str() const { return create_string(default_); }
+  virtual std::string default_str() const { return create_string(default_); }
   //: Return a string representation of the minimum value
-  virtual vcl_string min_str() const { return has_bounds_? create_string(min_value_) : ""; }
+  virtual std::string min_str() const { return has_bounds_? create_string(min_value_) : ""; }
   //: Return a string representation of the maximium value
-  virtual vcl_string max_str() const { return has_bounds_? create_string(max_value_) : ""; }
+  virtual std::string max_str() const { return has_bounds_? create_string(max_value_) : ""; }
 
   //: Set the current value by parsing a string
-  virtual bool parse_value_str(const vcl_string& input) { return set_value(parse_string(input)); }
+  virtual bool parse_value_str(const std::string& input) { return set_value(parse_string(input)); }
 
  private:
   //: Create a string representation of the value
-  vcl_string create_string(const T& val) const;
+  std::string create_string(const T& val) const;
 
   //: Parse a string representation of the value
-  T parse_string(const vcl_string& input) const;
+  T parse_string(const std::string& input) const;
 
   //: The current parameter value
   T value_;
@@ -163,13 +163,13 @@ class bprod_parameters : public vbl_ref_count
   bprod_parameters( const bprod_parameters_sptr& old_params);
 
   //: Returns true if a parameter exists with \p name
-  bool valid_parameter( const vcl_string& name ) const;
+  bool valid_parameter( const std::string& name ) const;
 
   //: Returns true if a parameter exists with \p name and type \p T
   template<class T>
-  bool valid_parameter_type( const vcl_string& name, const T&) const
+  bool valid_parameter_type( const std::string& name, const T&) const
   {
-    vcl_map< vcl_string, bprod_param* >::const_iterator 
+    std::map< std::string, bprod_param* >::const_iterator 
       itr = name_param_map_.find( name );
     if( itr == name_param_map_.end() ) {
       return false; // Not Found
@@ -179,18 +179,18 @@ class bprod_parameters : public vbl_ref_count
 
   //: Add a new parameter with no bounds
   template<class T>
-  bool add( const vcl_string& desc, const vcl_string& name, const T& default_val )
+  bool add( const std::string& desc, const std::string& name, const T& default_val )
   { return add(new bprod_param_type<T>(name, desc, default_val)); }
 
   //: Add a new parameter with bounds
   template<class T>
-  bool add( const vcl_string& desc, const vcl_string& name, const T& default_val,
+  bool add( const std::string& desc, const std::string& name, const T& default_val,
             const T& min_val, const T& max_val )
   { return add(new bprod_param_type<T>(name, desc, default_val, min_val, max_val)); }
 
   //: Set the value of the existing parameter named \p name
   template<class T>
-  bool set_value( const vcl_string& name , const T& value )
+  bool set_value( const std::string& name , const T& value )
   {
     bprod_param_type<T> * param = NULL;
     if( get_param(name, param) && param ){
@@ -201,7 +201,7 @@ class bprod_parameters : public vbl_ref_count
 
   //: Return the value of the parameter named \p name by reference
   template<class T>
-  bool get_value( const vcl_string& name , T& value ) const
+  bool get_value( const std::string& name , T& value ) const
   {
     bprod_param_type<T> * param = NULL;
     if( get_param(name, param) && param ){
@@ -213,7 +213,7 @@ class bprod_parameters : public vbl_ref_count
 
   //: Return the default value of the parameter named \p name by reference
   template<class T>
-  bool get_default( const vcl_string& name , T& deflt ) const
+  bool get_default( const std::string& name , T& deflt ) const
   {
     bprod_param_type<T> * param = NULL;
     if( get_param(name, param) && param ){
@@ -225,7 +225,7 @@ class bprod_parameters : public vbl_ref_count
 
   //: Return the bounds of the parameter named \p name by reference
   template<class T>
-  bool get_bounds( const vcl_string& name, T & min, T & max ) const
+  bool get_bounds( const std::string& name, T & min, T & max ) const
   {
     bprod_param_type<T> * param = NULL;
     if( get_param(name, param) && param ){
@@ -239,39 +239,39 @@ class bprod_parameters : public vbl_ref_count
   //: Reset all parameters to their default values
   bool reset_all();
   //: Reset the parameter named \p name to its default value
-  bool reset( const vcl_string& name );
+  bool reset( const std::string& name );
 
   //: Return a vector of base class pointers to the parameters
-  vcl_vector< bprod_param* > get_param_list() const;
+  std::vector< bprod_param* > get_param_list() const;
   //: Return the description of the parameter named \p name
-  vcl_string get_desc( const vcl_string& name ) const;
+  std::string get_desc( const std::string& name ) const;
   //: Print all parameters to \p os
-  void print_all(vcl_ostream& os) const;
+  void print_all(std::ostream& os) const;
   
  private:
   //: Add parameter helper function
   bool add( bprod_param* param );
 
   template<class T>
-  bool get_param( const vcl_string& name, 
+  bool get_param( const std::string& name, 
                   bprod_param_type<T> * &param) const
   {
-    vcl_map< vcl_string, bprod_param* >::const_iterator 
+    std::map< std::string, bprod_param* >::const_iterator 
       itr = name_param_map_.find( name );
     if( itr == name_param_map_.end() ) {
       return false; // Not Found
     }
     param = dynamic_cast<bprod_param_type<T> *>(itr->second);
     if( !param )
-      vcl_cerr << "WARNING: parameter \""<< name 
-               << "\" was found but has incorrect type" << vcl_endl;
+      std::cerr << "WARNING: parameter \""<< name 
+               << "\" was found but has incorrect type" << std::endl;
     return true;
   }
 
   //: The map from names to parameters
-  vcl_map< vcl_string , bprod_param* > name_param_map_;
+  std::map< std::string , bprod_param* > name_param_map_;
   //: The vector of parameters in order of declaration
-  vcl_vector< bprod_param* > param_list_;
+  std::vector< bprod_param* > param_list_;
 };
 
 
@@ -283,19 +283,19 @@ class bprod_filepath
 {
  public:
   //: Constructor
-  bprod_filepath(const vcl_string& p = "", const vcl_string& e = "*")
+  bprod_filepath(const std::string& p = "", const std::string& e = "*")
    : path(p), ext(e) {}
 
-  vcl_string path;
-  vcl_string ext;
+  std::string path;
+  std::string ext;
 };
 
 //: Less than operator for bprod_filepath objects
 bool operator<( const bprod_filepath& lhs, const bprod_filepath& rhs );
 //: Output stream operator for bprod_filepath objects
-vcl_ostream& operator<<( vcl_ostream& strm, const bprod_filepath& fp );
+std::ostream& operator<<( std::ostream& strm, const bprod_filepath& fp );
 //: Input stream operator for bprod_filepath objects
-vcl_istream& operator>>( vcl_istream& strm, const bprod_filepath& fp );
+std::istream& operator>>( std::istream& strm, const bprod_filepath& fp );
 
 
 #endif // bprod_parameters_h_

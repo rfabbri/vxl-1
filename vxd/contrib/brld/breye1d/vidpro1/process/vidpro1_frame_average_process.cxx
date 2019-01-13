@@ -21,7 +21,7 @@ vidpro1_frame_average_process::vidpro1_frame_average_process()
   if( !parameters()->add( "Average All" , "-avgall" , bool(true)) ||
       !parameters()->add( "No Frames to Average" , "-nframes_avg" , unsigned(10)))
     {
-      vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+      std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
     }
   first_frame_ = true;
   frame_count_ = 0;
@@ -44,7 +44,7 @@ vidpro1_frame_average_process::clone() const
 
 
 //: Return the name of the process
-vcl_string
+std::string
 vidpro1_frame_average_process::name()
 {
   return "Frame Average";
@@ -52,18 +52,18 @@ vidpro1_frame_average_process::name()
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string > vidpro1_frame_average_process::get_input_type()
+std::vector< std::string > vidpro1_frame_average_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string > vidpro1_frame_average_process::get_output_type()
+std::vector< std::string > vidpro1_frame_average_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
@@ -104,7 +104,7 @@ vidpro1_frame_average_process::execute()
 {
   if ( input_data_.size() != 1 )
     {
-      vcl_cout << "In vidpro1_frame_average_process::execute() - not exactly one"
+      std::cout << "In vidpro1_frame_average_process::execute() - not exactly one"
                << " input image \n";
       return false;
     }

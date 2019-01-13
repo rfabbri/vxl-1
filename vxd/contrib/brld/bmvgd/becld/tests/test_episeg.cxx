@@ -4,12 +4,12 @@
 #include <vsol/vsol_point_2d.h>
 #include <vsol/vsol_digital_curve_2d.h>
 #include <vnl/vnl_math.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 
 static bool approx_equal(double a, double b, double thresh=1e-12)
 {
-  return vcl_abs(b-a) < thresh;
+  return std::abs(b-a) < thresh;
 }
 
 MAIN( test_episeg )
@@ -51,38 +51,38 @@ MAIN( test_episeg )
   TEST("Max Index", episeg1->max_index(), double(dc1->size()-1));
 
   double min_a = episeg1->min_angle();
-  vcl_cout << "Minimum Angle = " << min_a << vcl_endl;
+  std::cout << "Minimum Angle = " << min_a << std::endl;
   TEST("Min Angle", approx_equal(min_a, epipole->angle(dc1->p0()->get_p())), true);
   double max_a = episeg1->max_angle();
-  vcl_cout << "Maximum Angle = " << max_a << vcl_endl;
+  std::cout << "Maximum Angle = " << max_a << std::endl;
   TEST("Max Angle", approx_equal(max_a, epipole->angle(dc1->p1()->get_p())), true);
 
   min_a = episeg2->min_angle();
-  vcl_cout << "Minimum Angle (Reverse) = " << min_a << vcl_endl;
+  std::cout << "Minimum Angle (Reverse) = " << min_a << std::endl;
   TEST("Min Angle (Reverse)", approx_equal(min_a, epipole->angle(dc2->p1()->get_p())), true);
   max_a = episeg2->max_angle();
-  vcl_cout << "Maximum Angle (Reverse) = " << max_a << vcl_endl;
+  std::cout << "Maximum Angle (Reverse) = " << max_a << std::endl;
   TEST("Max Angle (Reverse)", approx_equal(max_a, epipole->angle(dc2->p0()->get_p())), true);
   
   double min_s = epipole->distance(dc1->point(1)->get_p());
-  vcl_cout << "Minimum Distance = " << min_s << vcl_endl;
+  std::cout << "Minimum Distance = " << min_s << std::endl;
   TEST("Min Distance", approx_equal(min_s, episeg1->min_dist()), true);
   double max_s = epipole->distance(dc1->point(6)->get_p());
-  vcl_cout << "Maximum Distance = " << max_s << vcl_endl;
+  std::cout << "Maximum Distance = " << max_s << std::endl;
   TEST("Max Distance", approx_equal(max_s, episeg1->max_dist()), true);
 
   // Test an arbitrary angle
   double a = episeg1->angle(2.5);
-  vcl_cout << "Test Angle = " << a << vcl_endl;
+  std::cout << "Test Angle = " << a << std::endl;
   TEST("Angle (2.5)", approx_equal(a, epipole->angle(dc1->interp(2.5))), true);
 
   // Test the binary search through index
   double index = episeg1->index(episeg1->angle(5.4));
-  vcl_cout << " Index Search = "<< index << vcl_endl;
+  std::cout << " Index Search = "<< index << std::endl;
   TEST("Index", approx_equal(index, 5.4, 1e-2), true); // less accurate due to small angle approx.
 
   index = episeg1->index(episeg1->angle(2.1));
-  vcl_cout << " Index Search (Reverse) = "<< index << vcl_endl;
+  std::cout << " Index Search (Reverse) = "<< index << std::endl;
   TEST("Index (Reverse)", approx_equal(index, 2.1, 1e-2), true); // less accurate due to small angle approx.
 
   SUMMARY();

@@ -1,6 +1,6 @@
 #include "bild_wshed2d_process.h"
 
-#include <vcl_cstdio.h>
+#include <cstdio>
 
 #include <vul/vul_timer.h>
 
@@ -27,7 +27,7 @@ bild_wshed2d_process::bild_wshed2d_process()
       !parameters()->add( "X_Max"                                      , "-max_x"    , (int)0 ) ||
       !parameters()->add( "Y_Max"                                      , "-max_y"    , (int)0 )
     ) {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -43,7 +43,7 @@ bild_wshed2d_process::clone() const
 }
 
 //: Return the name of this process
-vcl_string 
+std::string 
 bild_wshed2d_process::name()
 {
   return "Watershed Transform 2D";
@@ -61,18 +61,18 @@ bild_wshed2d_process::output_frames()
   return 1;
 }
 
-vcl_vector< vcl_string >
+std::vector< std::string >
 bild_wshed2d_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
 
-vcl_vector< vcl_string >
+std::vector< std::string >
 bild_wshed2d_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "image" );
   to_return.push_back( "image" );
   return to_return;
@@ -82,7 +82,7 @@ bool
 bild_wshed2d_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In vidpro1_can_test_process::execute() - not exactly one" << " input image" << vcl_endl;
+    std::cout << "In vidpro1_can_test_process::execute() - not exactly one" << " input image" << std::endl;
     return false;
   }
   clear_output();
@@ -100,14 +100,14 @@ bild_wshed2d_process::execute()
 
   if( image_view.nplanes() == 3 ) {
     vil_convert_planes_to_grey( image_view , greyscale_view );
-    vcl_cout << "converted" << vcl_endl;
+    std::cout << "converted" << std::endl;
   }
   else if ( image_view.nplanes() == 1 ) {
     greyscale_view = image_view;
-    vcl_cout << "not converted" << vcl_endl;
+    std::cout << "not converted" << std::endl;
   } 
   else {
-    vcl_cerr << "Returning false. nplanes(): " << image_view.nplanes() << vcl_endl;
+    std::cerr << "Returning false. nplanes(): " << image_view.nplanes() << std::endl;
     return false;
   }
 
@@ -125,62 +125,62 @@ bild_wshed2d_process::execute()
   {
     max_x = image_view.ni();
     max_y = image_view.nj();
-    vcl_cout << "All image is being segmented" << vcl_endl;
+    std::cout << "All image is being segmented" << std::endl;
   } 
   //error checks
   else if(min_x < 0)
   {
-    vcl_cerr << "X_Min is smaller than zero" << vcl_endl;
+    std::cerr << "X_Min is smaller than zero" << std::endl;
     return false;
   }
   else if(unsigned(min_x) > image_view.ni())
   {
-    vcl_cerr << "X_Min is larger than image width" << vcl_endl;
+    std::cerr << "X_Min is larger than image width" << std::endl;
     return false;
   }
   else if(max_x < 0)
   {
-    vcl_cerr << "X_Max is smaller than zero" << vcl_endl;
+    std::cerr << "X_Max is smaller than zero" << std::endl;
     return false;
   }
   else if(unsigned(max_x) > image_view.ni())
   {
-    vcl_cerr << "X_Max is larger than image width" << vcl_endl;
+    std::cerr << "X_Max is larger than image width" << std::endl;
     return false;
   }
   else if(min_y < 0)
   {
-    vcl_cerr << "Y_Min is smaller than zero" << vcl_endl;
+    std::cerr << "Y_Min is smaller than zero" << std::endl;
     return false;
   }
   else if(unsigned(min_y) > image_view.nj())
   {
-    vcl_cerr << "Y_Min is larger than image height" << vcl_endl;
+    std::cerr << "Y_Min is larger than image height" << std::endl;
     return false;
   }
   else if(max_y < 0)
   {
-    vcl_cerr << "Y_Max is smaller than zero" << vcl_endl;
+    std::cerr << "Y_Max is smaller than zero" << std::endl;
     return false;
   }
   else if(unsigned(max_y) > image_view.nj())
   {
-    vcl_cerr << "Y_Max is larger than image height" << vcl_endl;
+    std::cerr << "Y_Max is larger than image height" << std::endl;
     return false;
   }
   else if(min_x >= max_x)
   {
-    vcl_cerr << "X_Min is greater than or equal to X_Max" << vcl_endl;
+    std::cerr << "X_Min is greater than or equal to X_Max" << std::endl;
     return false;
   }
   else if(min_y >= max_y)
   {
-    vcl_cerr << "Y_Min is greater than or equal to Y_Max" << vcl_endl;
+    std::cerr << "Y_Min is greater than or equal to Y_Max" << std::endl;
     return false;
   }
 
   bil_wshed_2d bild_wshed_2d;    
-  vcl_vector< vil_image_view< unsigned char > > watershed_result_vector;
+  std::vector< vil_image_view< unsigned char > > watershed_result_vector;
   vil_image_view< unsigned char > watershed_result;
   vil_image_view< vil_rgb< unsigned char > > watershed_result_rgb(image_view.ni(), image_view.nj());
   vil_image_view< vil_rgb< unsigned char > > watershed_result_rgb_2(image_view.ni(), image_view.nj());

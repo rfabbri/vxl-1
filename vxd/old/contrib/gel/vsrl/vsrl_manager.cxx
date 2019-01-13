@@ -5,9 +5,9 @@
 // \author G.W. Brooksby
 // \date February 13, 2003
 
-#include <vcl_cstdlib.h>
-#include <vcl_cmath.h>
-#include <vcl_iostream.h>
+#include <cstdlib>
+#include <cmath>
+#include <iostream>
 #include <vil1/vil1_load.h>
 #include <vil1/vil1_scale_intensities.h>
 #include <vil1/vil1_save.h>
@@ -130,14 +130,14 @@ void vsrl_manager::init()
 
 void vsrl_manager::quit()
 {
-  vcl_exit(1);
+  std::exit(1);
 }
 
 void vsrl_manager::load_left_image()
 {
   vgui_dialog load_image_dlg("Load Image file");
-  static vcl_string image_filename = "";
-  static vcl_string ext = "*.*";
+  static std::string image_filename = "";
+  static std::string ext = "*.*";
   load_image_dlg.file("Image Filename:", ext, image_filename);
   if (!load_image_dlg.ask()) return;
   imgL_ = vil1_load(image_filename.c_str());
@@ -149,8 +149,8 @@ void vsrl_manager::load_left_image()
 void vsrl_manager::load_right_image()
 {
   vgui_dialog load_image_dlg("Load Image file");
-  static vcl_string image_filename = "";
-  static vcl_string ext = "*.*";
+  static std::string image_filename = "";
+  static std::string ext = "*.*";
   load_image_dlg.file("Image Filename:", ext, image_filename);
   if (!load_image_dlg.ask()) return;
   imgR_ = vil1_load(image_filename.c_str());
@@ -162,8 +162,8 @@ void vsrl_manager::load_right_image()
 void vsrl_manager::load_disparity_image()
 {
   vgui_dialog load_image_dlg("Load Disparity Image file");
-  static vcl_string image_filename = "";
-  static vcl_string ext = "*.*";
+  static std::string image_filename = "";
+  static std::string ext = "*.*";
   load_image_dlg.file("Disparity Image Filename:", ext, image_filename);
   if (!load_image_dlg.ask()) return;
   disp_img_ = vil1_load(image_filename.c_str());
@@ -179,13 +179,13 @@ void vsrl_manager::load_disparity_image()
 void vsrl_manager::save_disparity_image()
 {
   vgui_dialog save_image_dlg("Save Disparity Image file");
-  static vcl_string image_filename = "";
-  static vcl_string ext = "*.tif";
+  static std::string image_filename = "";
+  static std::string ext = "*.tif";
   save_image_dlg.file("Disparity Image Filename", ext, image_filename);
   if (!save_image_dlg.ask()) return;
   vil1_memory_image_of<unsigned char> disp(disp_img_);
   if (!vil1_save(disp,image_filename.c_str())) {
-    vcl_cout << "Error saving disparity image!\n";
+    std::cout << "Error saving disparity image!\n";
   }
   return;
 }
@@ -194,8 +194,8 @@ void vsrl_manager::load_params_file()
 {
   //
   vgui_dialog load_params_dlg("Load Dense Matcher Parameters file");
-  static vcl_string params_filename = "";
-  static vcl_string ext = "*.*";
+  static std::string params_filename = "";
+  static std::string ext = "*.*";
   load_params_dlg.file("Dense Matcher Parameter Filename:", ext, params_filename);
   if (!load_params_dlg.ask()) return;
   params_->load(params_filename.c_str()); // load the parameters file
@@ -204,7 +204,7 @@ void vsrl_manager::load_params_file()
 
 void vsrl_manager::point_pick()
 {
-  vcl_cerr << "vsrl_manager::point_pick() not yet implemented\n";
+  std::cerr << "vsrl_manager::point_pick() not yet implemented\n";
   return;
 }
 
@@ -238,7 +238,7 @@ bool vsrl_manager::handle(vgui_event const & event)
            event.modifier == vgui_SHIFT)
     {
       vgl_point_2d<float>  pos = vpicker0_->get_point();  // get the last point picked
-      vcl_cout << "handle: pos = " << pos << vcl_endl;
+      std::cout << "handle: pos = " << pos << std::endl;
       int x = int(pos.x()); int y = int(pos.y()); // convert to int.
       show_correlations(x,y);
     }
@@ -252,7 +252,7 @@ bool vsrl_manager::validate_point(vgl_point_2d<float> const& pt)
       pt.x() >= disp_img_.cols() ||
       pt.y() >= disp_img_.rows() )
     {
-      vcl_cout << "Error: point out of range of disparity image.\n";
+      std::cout << "Error: point out of range of disparity image.\n";
       return false;
     }
   else
@@ -267,7 +267,7 @@ int vsrl_manager::get_disparity(vgl_point_2d<float> const& pt)
     // we subtract the disparity bias, plus 1 for the indexing offset
     //    pixel_val -= (disparity_bias_ + 1);
     pixel_val -= (params_->correlation_range + 1);
-    vcl_cout << "Disparity: " << pixel_val << vcl_endl;
+    std::cout << "Disparity: " << pixel_val << std::endl;
   }
   return pixel_val;
 }
@@ -283,7 +283,7 @@ bool vsrl_manager::put_points()
   if (c==0)
   {
     pos = vpicker0_->get_point();  // get the last point picked
-    vcl_cout << "put_points: pos = " << pos << vcl_endl;
+    std::cout << "put_points: pos = " << pos << std::endl;
     if (!validate_point(pos)) return true;
     int disp = get_disparity(pos);
     vpicker1_->put_point(pos.x()+disp,pos.y());
@@ -371,11 +371,11 @@ bool vsrl_manager::do_dense_matching()
   // The parameters used will be the default parameters or
   // the parameters loaded manually from a file.
   // Now create a dense matcher with the images that are loaded.
-  vcl_cout << "Begin Stereo Dense Matcher...";
+  std::cout << "Begin Stereo Dense Matcher...";
   vsrl_stereo_dense_matcher matcher(imgL_,imgR_);
-  vcl_cout << "Setting Correlation Range...";
+  std::cout << "Setting Correlation Range...";
   matcher.set_correlation_range(params_->correlation_range);
-  vcl_cout << "Running Dense Matcher.\n";
+  std::cout << "Running Dense Matcher.\n";
   // Run the dense matcher.
   matcher.execute();
 
@@ -404,7 +404,7 @@ bool vsrl_manager::do_dense_matching()
   vil1_image scaled_image = scale_image(buffer);
   dimg_tab_->set_image(scaled_image);
 
-  vcl_cout << "Dense Matcher complete.\n";
+  std::cout << "Dense Matcher complete.\n";
   this->post_redraw();
   return true;
 }
@@ -423,8 +423,8 @@ vil1_image vsrl_manager::scale_image(vil1_memory_image_of<unsigned char> img)
       }
     }
   }
-  vcl_cout << "vsrl_manager::scale_image<unsigned char> - Max = " << maxval
-           << ", Min = " << minval << vcl_endl;
+  std::cout << "vsrl_manager::scale_image<unsigned char> - Max = " << maxval
+           << ", Min = " << minval << std::endl;
 
   double scale = 255.0/maxval;
   double shift = 0;
@@ -446,8 +446,8 @@ vil1_image vsrl_manager::scale_image(vil1_memory_image_of<double> img)
       }
     }
   }
-  vcl_cout << "vsrl_manager::scale_image<double> - Max = " << maxval
-           << ", Min = " << minval << vcl_endl;
+  std::cout << "vsrl_manager::scale_image<double> - Max = " << maxval
+           << ", Min = " << minval << std::endl;
 
   double scale = 255.0/maxval;
   double shift = 0;
@@ -489,14 +489,14 @@ void vsrl_manager::find_regions()
     vgui_image_tableau_sptr itab =  e2d0_->get_image_tableau();
     if (!itab)
     {
-      vcl_cout << "In segv_segmentation_manager::regions() - null image tableau\n";
+      std::cout << "In segv_segmentation_manager::regions() - null image tableau\n";
       return;
     }
     itab->set_image(ed_img);
   }
   if (!debug)
   {
-    vcl_vector<vtol_intensity_face_sptr>& regions = rp.get_regions();
+    std::vector<vtol_intensity_face_sptr>& regions = rp.get_regions();
     this->find_shadows(regions);
     this->draw_regions(regions, true);
   }
@@ -506,19 +506,19 @@ void vsrl_manager::find_regions()
     vgui_image_tableau_sptr itab =  e2d0_->get_image_tableau();
     if (!itab)
     {
-      vcl_cout << "In segv_segmentation_manager::regions() - null image tableau\n";
+      std::cout << "In segv_segmentation_manager::regions() - null image tableau\n";
       return;
     }
     itab->set_image(res_img);
   }
 }
 
-void vsrl_manager::draw_regions(vcl_vector<vtol_intensity_face_sptr>& regions,
+void vsrl_manager::draw_regions(std::vector<vtol_intensity_face_sptr>& regions,
                                 bool verts)
 {
   // This segment of code is ripped from various places in brl...bgui.
 
-  for (vcl_vector<vtol_intensity_face_sptr>::iterator rit = regions.begin();
+  for (std::vector<vtol_intensity_face_sptr>::iterator rit = regions.begin();
        rit != regions.end(); rit++)
   {
     vtol_face_2d_sptr f = (*rit)->cast_to_face_2d();
@@ -535,7 +535,7 @@ void vsrl_manager::draw_regions(vcl_vector<vtol_intensity_face_sptr>& regions,
       vsol_curve_2d_sptr c = e->curve();
 
       if (!c) {
-        vcl_cout << "vsrl_manager::draw_regions - null curve.\n";
+        std::cout << "vsrl_manager::draw_regions - null curve.\n";
         return;
       }
       if (c->cast_to_vdgl_digital_curve())
@@ -557,7 +557,7 @@ void vsrl_manager::draw_regions(vcl_vector<vtol_intensity_face_sptr>& regions,
         }
       }
       else
-        vcl_cout << "vsrl_manager::draw_regions - attempt to draw an edge with unknown curve geometry\n";
+        std::cout << "vsrl_manager::draw_regions - attempt to draw an edge with unknown curve geometry\n";
 
       vsovg->ls.push_back(e_line);
     }
@@ -567,7 +567,7 @@ void vsrl_manager::draw_regions(vcl_vector<vtol_intensity_face_sptr>& regions,
     if (verts)
     {
       vertex_list vts; f->vertices(vts);
-      for (vcl_vector<vtol_vertex_sptr>::iterator vit = vts.begin();
+      for (std::vector<vtol_vertex_sptr>::iterator vit = vts.begin();
            vit != vts.end(); vit++)
       {
         vtol_vertex_2d_sptr v = (*vit)->cast_to_vertex_2d();
@@ -640,8 +640,8 @@ vsrl_manager::draw_vector_at(vgl_vector_2d<float>* vec, float x, float y, float 
 
   // Apply rotation to get rot_vec
   vgl_vector_2d<float> rot_vec;
-  rot_vec.x_ =  vec->x() * vcl_cos(theta) + vec->y() * vcl_sin(theta);
-  rot_vec.y_ = -vec->x() * vcl_sin(theta) + vec->y() * vcl_cos(theta);
+  rot_vec.x_ =  vec->x() * std::cos(theta) + vec->y() * std::sin(theta);
+  rot_vec.y_ = -vec->x() * std::sin(theta) + vec->y() * std::cos(theta);
 
   // Apply translation
   float endx = rot_vec.x()+x;
@@ -679,7 +679,7 @@ vsrl_manager::show_gradient_dir(vil1_memory_image_of<double> im_in)
   // more carefully and I want better control of what happens at inflection points of ATAN2.
   // The scale (40) and offset (128) keep the range of the ATAN2 function within the range of
   // the <unsigned char> image.
-  vcl_cout << "vsrl_manager::show_gradient_dir() - Begin\n";
+  std::cout << "vsrl_manager::show_gradient_dir() - Begin\n";
 
   vil1_memory_image_of<double> im_out(im_in.width(),im_in.height());
 
@@ -700,14 +700,14 @@ vsrl_manager::show_gradient_dir(vil1_memory_image_of<double> im_in)
       else {
         dy = im_in(x,y) - im_in(x,y-1);
       }
-      im_out(x,y) = vcl_atan2(dy,dx) * scale + shift;
+      im_out(x,y) = std::atan2(dy,dx) * scale + shift;
     }
   }
 
   vil1_image scaled_image = scale_image(im_out);
   dimg_tab_->set_image(scaled_image);
   this->post_redraw();
-  vcl_cout << "vsrl_manager::show_gradient_dir() - End\n";
+  std::cout << "vsrl_manager::show_gradient_dir() - End\n";
   return im_out;
 }
 
@@ -725,7 +725,7 @@ void
 vsrl_manager::test_right_func()
 {
   // get the regions from jseg algorithm
-  //  vcl_vector<vdgl_digital_region*> regions = run_jseg(imgR_);
+  //  std::vector<vdgl_digital_region*> regions = run_jseg(imgR_);
   //  find_shadows(regions);
   //  this->post_redraw();
   this->region_disparity();
@@ -754,13 +754,13 @@ vsrl_manager::make_3d()
 }
 
 // Make a vector of digital regions and pass the problem to
-// find_shadows(vcl_vector<vdgl_digital_region*>) below.
+// find_shadows(std::vector<vdgl_digital_region*>) below.
 //
-void vsrl_manager::find_shadows(vcl_vector<vtol_intensity_face_sptr>& faces)
+void vsrl_manager::find_shadows(std::vector<vtol_intensity_face_sptr>& faces)
 {
-  vcl_vector<vdgl_digital_region*> reg_vec;
+  std::vector<vdgl_digital_region*> reg_vec;
 
-  for (vcl_vector<vtol_intensity_face_sptr>::iterator fit = faces.begin();
+  for (std::vector<vtol_intensity_face_sptr>::iterator fit = faces.begin();
        fit != faces.end(); fit++) {
     vdgl_digital_region* reg = (*fit)->cast_to_digital_region();
     reg_vec.push_back(reg);
@@ -773,27 +773,27 @@ void vsrl_manager::find_shadows(vcl_vector<vtol_intensity_face_sptr>& faces)
 //  Repeated here for digital regions instead of intensity faces...
 //
 
-void vsrl_manager::find_shadows(vcl_vector<vdgl_digital_region*> regions)
+void vsrl_manager::find_shadows(std::vector<vdgl_digital_region*> regions)
 {
   // Create an array to hold shadow metric
   // (First get rid of anything there already)
   if (shadow_metric_ != NULL) delete shadow_metric_;
-  shadow_metric_ = new vcl_vector<float>(regions.size());
+  shadow_metric_ = new std::vector<float>(regions.size());
 
   e2d1_->set_foreground(0,0,1);
   e2d1_->set_point_radius(5);
 
   int i=0;
-  vcl_vector<float>::iterator sm = shadow_metric_->begin();
-  vcl_cout << "Shadow Threshold: " << shadow_mean_ << vcl_endl;
+  std::vector<float>::iterator sm = shadow_metric_->begin();
+  std::cout << "Shadow Threshold: " << shadow_mean_ << std::endl;
 
-  for (vcl_vector<vdgl_digital_region*>::iterator rit = regions.begin();
+  for (std::vector<vdgl_digital_region*>::iterator rit = regions.begin();
        rit != regions.end(); ++rit,++i,++sm)
   {
     if ((*rit)->Npix() > 0)
     {
       (*rit)->ComputeIntensityStdev();
-      vcl_cout << "Intensity Face: " << i << "  Io = " << (*rit)->Io()
+      std::cout << "Intensity Face: " << i << "  Io = " << (*rit)->Io()
                << "  I_stdev = " << (*rit)->Io_sd();
       if ((*rit)->Io() == 0)
         *sm=0.0;
@@ -820,9 +820,9 @@ void vsrl_manager::find_shadows(vcl_vector<vdgl_digital_region*> regions)
         else if ( v1 < 1e-6 || v2 < 1e-6 )
           *sm=0.0;
         else
-          *sm = (float)vcl_exp(- vcl_fabs(0.693 * (m1-m2) * vcl_sqrt(1.0/(v1*v1) + 1.0/(v2*v2))));
+          *sm = (float)std::exp(- std::fabs(0.693 * (m1-m2) * std::sqrt(1.0/(v1*v1) + 1.0/(v2*v2))));
       }
-      vcl_cout << "  Shadow = " << *sm << vcl_endl;
+      std::cout << "  Shadow = " << *sm << std::endl;
     }
 
     if (*sm ==1)
@@ -836,12 +836,12 @@ void vsrl_manager::find_shadows(vcl_vector<vdgl_digital_region*> regions)
 // executes, the output of jseg is partitioned into digital_regions and a vector of
 // the resulting digital regions is returned.
 #if 0
-vcl_vector<vdgl_digital_region*>
+std::vector<vdgl_digital_region*>
 vsrl_manager::run_jseg(vil1_image image_in)
 {
 #ifndef INCLUDE_JSEG
-  vcl_cout << "vsrl_manager::run_jseg - Error. JSEG not included in this compilation.\n";
-  vcl_vector<vdgl_digital_region*> empty;
+  std::cout << "vsrl_manager::run_jseg - Error. JSEG not included in this compilation.\n";
+  std::vector<vdgl_digital_region*> empty;
   return empty;
 #else
   // Set up the JSEG parameters
@@ -869,13 +869,13 @@ vsrl_manager::run_jseg(vil1_image image_in)
   // Now we have an "image" of the regions.  We need to sort it into
   // vdgl_digital_regions. We'll hold the regions in a vector.
 
-  vcl_vector<vdgl_digital_region*> reg_vec;
+  std::vector<vdgl_digital_region*> reg_vec;
 
   int reg_cntr = 0;  // A counter for regions
 
   // Initialize things with one region
   // We'll use a 3D region and use the Z coord. for the class label.
-  vcl_cout << "Creating initial region.  #0\n";
+  std::cout << "Creating initial region.  #0\n";
   vdgl_digital_region* region1 = new vdgl_digital_region();
 
   // vdgl_digital_region(x,y,z,pix)
@@ -897,7 +897,7 @@ vsrl_manager::run_jseg(vil1_image image_in)
       // Now loop through the regions and see if we already have a region of
       // this class.
       bool found = false;  // use this flag to determine if we find a match
-      for (vcl_vector<vdgl_digital_region*>::iterator rit = reg_vec.begin();
+      for (std::vector<vdgl_digital_region*>::iterator rit = reg_vec.begin();
            rit<reg_vec.end();rit++){
         if (reg_num == (*rit)->Zo()) {
           // Found a matching region so put this pixel in the region
@@ -910,7 +910,7 @@ vsrl_manager::run_jseg(vil1_image image_in)
       // for this pixel, make a new region and insert it.
       if (!found) {
         reg_cntr++;
-        vcl_cout << "Creating new region.  #" << reg_cntr << vcl_endl;
+        std::cout << "Creating new region.  #" << reg_cntr << std::endl;
         vdgl_digital_region* new_region = new vdgl_digital_region();
         new_region->IncrementMeans(x,y,reg_num,im(x,y));
         reg_vec.push_back(new_region);
@@ -919,7 +919,7 @@ vsrl_manager::run_jseg(vil1_image image_in)
     }
   }
   // Initialize the regions to accept pixels...
-  for (vcl_vector<vdgl_digital_region*>::iterator rit = reg_vec.begin();
+  for (std::vector<vdgl_digital_region*>::iterator rit = reg_vec.begin();
        rit<reg_vec.end();rit++){
     (*rit)->InitPixelArrays();
   }
@@ -928,7 +928,7 @@ vsrl_manager::run_jseg(vil1_image image_in)
     for (int y=0;y<im.rows();y++) {
       unsigned char reg_num = (*js_out)(x,y); // get the region class number for this pixel
       // Now loop through the regions make pixel assignments
-      for (vcl_vector<vdgl_digital_region*>::iterator rit = reg_vec.begin();
+      for (std::vector<vdgl_digital_region*>::iterator rit = reg_vec.begin();
            rit<reg_vec.end();rit++){
         if (reg_num == (*rit)->Zo()) {
           // Found a matching region so put this pixel in the region
@@ -940,7 +940,7 @@ vsrl_manager::run_jseg(vil1_image image_in)
       // for this pixel, make a new region and insert it.
     }
   }
-  vcl_cout << "Finished Creating Regions.\n";
+  std::cout << "Finished Creating Regions.\n";
   // Overlay the regions on the original image
   if (image_in == imgL_){
     show_jseg_boundaries(js_out, e2d0_);
@@ -992,7 +992,7 @@ void vsrl_manager::show_jseg_boundaries(vil1_memory_image_of<unsigned char>* jse
       }
     }
   }
-  vcl_string fname="regions.tif";
+  std::string fname="regions.tif";
   vil1_save(rimg,fname.c_str());
   this->post_redraw();
   e2d0_->set_foreground(1,0,0);
@@ -1009,7 +1009,7 @@ float* vsrl_manager::show_correlations(int x, int y)
 {
   // Don't try anything funny.
   if (!imgL_ || !imgR_) {
-    vcl_cerr << "vsrl_manager::show_correlations() -> 2 images not loaded. Abort.\n";
+    std::cerr << "vsrl_manager::show_correlations() -> 2 images not loaded. Abort.\n";
     return NULL;
   }
 
@@ -1019,7 +1019,7 @@ float* vsrl_manager::show_correlations(int x, int y)
 
   // Make 'em pick the point in the left pane...
   if (c!=0) {
-    vcl_cerr << "vsrl_manager::show_correlations() -> Please pick point in left pane.\n";
+    std::cerr << "vsrl_manager::show_correlations() -> Please pick point in left pane.\n";
     return NULL;
   }
 
@@ -1035,11 +1035,11 @@ float* vsrl_manager::show_correlations(int x, int y)
   pos = vpicker0_->get_point();
   int range = params_->correlation_range;
   float* results = new float[(2*range)+1];
-  vcl_cout << "Correlation results about point: " << x << ", " << y << vcl_endl
+  std::cout << "Correlation results about point: " << x << ", " << y << std::endl
            << "X: Y: R:\n";
   for (int xo=-range; xo<=range; xo++) {
     results[xo+range] = (float)corr.get_correlation(x,y,(x+xo),y);
-    vcl_cout << (x+xo) << "  " << y << "  " << results[xo+range] << vcl_endl;
+    std::cout << (x+xo) << "  " << y << "  " << results[xo+range] << std::endl;
   }
 
   e2d0_->add_point(pos.x(),pos.y());
@@ -1082,7 +1082,7 @@ void vsrl_manager::raw_correlation()
 
   int range = params_->correlation_range;
   for (int y=0; y<imgL_.rows(); y++) {
-    vcl_cout << "Row: " << y << vcl_endl;
+    std::cout << "Row: " << y << std::endl;
     for (int x=0; x<imgL_.cols(); x++) {
       float max=-1e10f;
       // when the disparities are written to the buffer, they are offset by "range"
@@ -1133,7 +1133,7 @@ vil1_image* vsrl_manager::make_jseg_image(vil1_memory_image_of<unsigned char>* j
 void vsrl_manager::boundary_matching()
 {
 #ifndef INCLUDE_JSEG
-  vcl_cout << "vsrl_manager::boundary_matching - Error. JSEG not included in this compilation.\n";
+  std::cout << "vsrl_manager::boundary_matching - Error. JSEG not included in this compilation.\n";
   return;
 #else
   // Set up the JSEG parameters
@@ -1178,7 +1178,7 @@ void vsrl_manager::boundary_matching()
   imgR_ = *bi_R;
   this->post_redraw();
 
-  vcl_cout << "Beginning dense matching...\n";
+  std::cout << "Beginning dense matching...\n";
 
   vsrl_stereo_dense_matcher matcher(*bi_L,*bi_R);
   matcher.set_correlation_range(params_->correlation_range);
@@ -1209,7 +1209,7 @@ void vsrl_manager::boundary_matching()
   vil1_image scaled_image = scale_image(buffer);
   dimg_tab_->set_image(scaled_image);
 
-  vcl_cout << "Dense Matcher complete.\n";
+  std::cout << "Dense Matcher complete.\n";
   this->post_redraw();
   return;
 #endif
@@ -1222,7 +1222,7 @@ void vsrl_manager::region_disparity()
 
 #ifdef INCLUDE_JSEG
   // First do segmentation - one way or another
-  vcl_vector<vdgl_digital_region*> dregs = run_jseg(imgL_);  // JSEG method
+  std::vector<vdgl_digital_region*> dregs = run_jseg(imgL_);  // JSEG method
 
   // Next, find disparity on a pixel-by-pixel basis
   // raw correlation is used because the region segmentation should obviate
@@ -1232,7 +1232,7 @@ void vsrl_manager::region_disparity()
   // Find disparity using regions
   vsrl_region_disparity r_disp(&imgL_, &imgR_);
   vil1_memory_image_of<unsigned char> disp(disp_img_);
-  vcl_cout << "vsrl_manager::region_disparity\n";
+  std::cout << "vsrl_manager::region_disparity\n";
   r_disp.SetDisparityImage(&disp);
   r_disp.SetRegions(&dregs);
   r_disp.Execute();
@@ -1250,7 +1250,7 @@ void vsrl_manager::region_disparity()
 
   dimg_tab_->set_image(scale_image(disp));
 #else
-  vcl_cout << "vsrl_manager::region_disparity: Error - JSEG package required but not included in this compilation.\n"
+  std::cout << "vsrl_manager::region_disparity: Error - JSEG package required but not included in this compilation.\n"
            << "Compilation flag INCLUDE_JSEG not set.\n";
 #endif
 
@@ -1261,12 +1261,12 @@ void vsrl_manager::region_disparity()
 void vsrl_manager::corner_method()
 {
   if (!imgL_ || !imgR_) {
-    vcl_cout << "vsrl_manager::corner_method - No Images Loaded.\n";
+    std::cout << "vsrl_manager::corner_method - No Images Loaded.\n";
     return; // Sanity check.
   }
 
   // Construct a vector from the images.
-  vcl_vector<vil1_image> images;
+  std::vector<vil1_image> images;
   images.push_back(imgL_);
   images.push_back(imgR_);
 
@@ -1283,8 +1283,8 @@ void vsrl_manager::corner_method()
 
   // At this point we should have a bunch of matched KL points
   // get the matched points from the KLT structures
-  vcl_vector<vtol_vertex_2d_sptr> pts0;
-  vcl_vector<vtol_vertex_2d_sptr> pts1;
+  std::vector<vtol_vertex_2d_sptr> pts0;
+  std::vector<vtol_vertex_2d_sptr> pts1;
   matched_points->get (0, 1, pts0, pts1);
 
   // Get an image to store disparities in; make sure it starts out at zero
@@ -1298,24 +1298,24 @@ void vsrl_manager::corner_method()
       disp(x,y) = 0; // clear all entries
 
   // This is some setup for the kd_tree we're going to use...
-  vcl_vector< rsdl_point > rsdlvec;
+  std::vector< rsdl_point > rsdlvec;
 
   // Now calculate the disparity for each matched point.
   // This is simply the difference in the X-coordinate.
-  vcl_vector< vgl_point_3d <float> > points_3d;
-  vcl_vector<vtol_vertex_2d_sptr>::iterator p0_it = pts0.begin();
-  vcl_vector<vtol_vertex_2d_sptr>::iterator p1_it = pts1.begin();
+  std::vector< vgl_point_3d <float> > points_3d;
+  std::vector<vtol_vertex_2d_sptr>::iterator p0_it = pts0.begin();
+  std::vector<vtol_vertex_2d_sptr>::iterator p1_it = pts1.begin();
 
   // Now loop over all the points
 
   // Offset for zero disparity; allows us to handle negative disparities
   int zero_disp = 128;
-  vcl_cout << "vsrl_manager::corner_method():\n";
+  std::cout << "vsrl_manager::corner_method():\n";
   float x0, x1, y0, y1, d; // d = disparity (proportional to z)
   vnl_double_2 v_ang(0.0,0.0);
   vtol_vertex_2d tmp;
   for (;p0_it < pts0.end(); p0_it++, p1_it++) {
-    //    vcl_cout << "p0: " << (**p0_it) << "  p1: " << (**p1_it) << vcl_endl;
+    //    std::cout << "p0: " << (**p0_it) << "  p1: " << (**p1_it) << std::endl;
     tmp = **p0_it;  // Point 0
     x0 = (float)tmp.x();
     y0 = (float)tmp.y();
@@ -1336,8 +1336,8 @@ void vsrl_manager::corner_method()
   // Now we have a bunch of rsdl_points in a vector, so we
   // create an rsdl_kd_tree
   rsdl_kd_tree tree(rsdlvec);
-  vcl_vector<rsdl_point> neighbors;
-  vcl_vector<int> index;
+  std::vector<rsdl_point> neighbors;
+  std::vector<int> index;
 
   // Now scan the image and insert disparity as retrieved from
   // the rsdl_kd_tree.
@@ -1354,7 +1354,7 @@ void vsrl_manager::corner_method()
         rsdl_point& nn = neighbors.front();  // This should be the nearest neighbor pt.
         xd = int(nn.cartesian(0));
         yd = int(nn.cartesian(1));
-        //        vcl_cout << "X,Y: " << x << ',' << y << "\tXD,YD: " << xd << ',' << yd << vcl_endl;
+        //        std::cout << "X,Y: " << x << ',' << y << "\tXD,YD: " << xd << ',' << yd << std::endl;
         disp(x,y) = disp(xd,yd); // assign disparity to nearest neighbor's value
         if (disp(xd,yd) < min_disp) min_disp = disp(xd,yd);
       }

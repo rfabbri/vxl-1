@@ -17,7 +17,7 @@
 
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_vector_2d.h>
-#include <vcl_typeinfo.h>
+#include <typeinfo>
 
 #ifndef PI
 #define PI  (3.14159265358979323846)
@@ -75,10 +75,10 @@ class bgld_param_curve
 
   virtual ~bgld_param_curve() {}
 
-  static const vcl_type_info& type_id()
+  static const std::type_info& type_id()
   { return typeid(bgld_param_curve); }
 
-  virtual bool is_type( const vcl_type_info& type ) const
+  virtual bool is_type( const std::type_info& type ) const
   { return (typeid(bgld_param_curve) == type)!=0; }
 
   //: comparison operator.
@@ -90,7 +90,7 @@ class bgld_param_curve
   //: Write "<dbvgl_param_curve> to stream"
   // \relates dbvgl_param_curve
   //virtual
-  //vcl_ostream&  operator<<(vcl_ostream& s);
+  //std::ostream&  operator<<(std::ostream& s);
 
   // Elementary geometric functions ----------------------------------
 
@@ -135,7 +135,7 @@ class bgld_param_curve
 
 //: Read parameters from stream
 // \relates dbvgl_param_curve
-//vcl_istream&  operator>>(vcl_istream& s, bgld_param_curve const& c) const = 0;
+//std::istream&  operator>>(std::istream& s, bgld_param_curve const& c) const = 0;
 
 
 

@@ -3,8 +3,8 @@
 
 #include "bmcsd_project_curve_sketch_process.h"
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <bdifd/algo/bdifd_data.h>
 #include <vpgl/vpgl_perspective_camera.h>
 
@@ -35,7 +35,7 @@ bmcsd_project_curve_sketch_process::bmcsd_project_curve_sketch_process()
       !parameters()->add("Only project inliers", "-inliers", false) ||
       !parameters()->add("Project certain curve", "-onecurve", -1)
     ) {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -55,7 +55,7 @@ bmcsd_project_curve_sketch_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 bmcsd_project_curve_sketch_process::name()
 {
   return "Project Curve Sketch";
@@ -79,18 +79,18 @@ bmcsd_project_curve_sketch_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > bmcsd_project_curve_sketch_process::get_input_type()
+std::vector< std::string > bmcsd_project_curve_sketch_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vpgl camera" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > bmcsd_project_curve_sketch_process::get_output_type()
+std::vector< std::string > bmcsd_project_curve_sketch_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "vsol2D" );
   return to_return;
 }
@@ -112,12 +112,12 @@ bmcsd_project_curve_sketch_process::execute()
   const vpgl_perspective_camera<double> *pcam = 
     vpgld_cast_to_perspective_camera(cam_storage->get_camera());
   if(!pcam) {
-    vcl_cerr << "Error: process requires a perspective camera" << vcl_endl;
+    std::cerr << "Error: process requires a perspective camera" << std::endl;
     return false;
   }
 
-  vcl_cout << "NAME: " << cam_storage->name() << vcl_endl;
-  vcl_cout << "Camera: \n" << pcam->get_matrix();
+  std::cout << "NAME: " << cam_storage->name() << std::endl;
+  std::cout << "Camera: \n" << pcam->get_matrix();
 
   const vpgl_perspective_camera<double> &cam = *pcam;
 
@@ -126,23 +126,23 @@ bmcsd_project_curve_sketch_process::execute()
 
   bpro1_filepath input;
   parameters()->get_value("-curvesketch", input);
-  vcl_string csk_fname = input.path;
+  std::string csk_fname = input.path;
 
-  vcl_cout << "Reading curve sketch at " << csk_fname << vcl_endl;
+  std::cout << "Reading curve sketch at " << csk_fname << std::endl;
 
   bool retval  = csk->read_dir_format(csk_fname);
   if (!retval) {
-    vcl_cerr << "Error reading 3D curve sketch in current directory.";
+    std::cerr << "Error reading 3D curve sketch in current directory.";
   }
 
   // prune
   double tau_total_support;
   parameters()->get_value("-total_support", tau_total_support);
 
-  vcl_cout << "Pruning " << csk->num_curves() << 
-    " curves with cost < " << tau_total_support << vcl_endl;
+  std::cout << "Pruning " << csk->num_curves() << 
+    " curves with cost < " << tau_total_support << std::endl;
   csk->prune_by_total_support(tau_total_support);
-  vcl_cout << "Pruned down to " << csk->num_curves() << " curves" << vcl_endl;
+  std::cout << "Pruned down to " << csk->num_curves() << " curves" << std::endl;
 
   bool inliers;
   parameters()->get_value("-inliers", inliers);
@@ -152,7 +152,7 @@ bmcsd_project_curve_sketch_process::execute()
 
   // project curves
 
-  vcl_vector<vsol_spatial_object_2d_sptr> poly;
+  std::vector<vsol_spatial_object_2d_sptr> poly;
 
   for (unsigned i=0; i < csk->num_curves(); ++i) {
     if (onecurve != -1 && i != onecurve)
@@ -164,7 +164,7 @@ bmcsd_project_curve_sketch_process::execute()
 //      if (f != csk->attributes()[i].v_->stereo0() &&
 //          f != csk->attributes()[i].v_->stereo1()) {
 
-        vcl_vector<unsigned>::const_iterator it = vcl_find(
+        std::vector<unsigned>::const_iterator it = std::find(
             csk->attributes()[i].inlier_views_.begin(), 
             csk->attributes()[i].inlier_views_.end(),
             f);
@@ -173,9 +173,9 @@ bmcsd_project_curve_sketch_process::execute()
           continue;
 //      }
     }
-    vcl_cout << "Including curve id: " << i <<  " with length " << csk->curves_3d()[i].size() << vcl_endl;
+    std::cout << "Including curve id: " << i <<  " with length " << csk->curves_3d()[i].size() << std::endl;
 
-    vcl_vector<vsol_point_2d_sptr> pts(csk->curves_3d()[i].size());
+    std::vector<vsol_point_2d_sptr> pts(csk->curves_3d()[i].size());
 
     for (unsigned k=0; k < pts.size(); ++k) {
       vgl_point_3d<double> p(

@@ -14,8 +14,8 @@ becld_intersection_sets()
 //
 void becld_intersection_sets::
 compute(
-    const vcl_vector<vsol_polyline_2d_sptr> &c, //:< list of curves
-    const vcl_vector<vgl_homg_line_2d<double> > &ep //:< list of epipolars
+    const std::vector<vsol_polyline_2d_sptr> &c, //:< list of curves
+    const std::vector<vgl_homg_line_2d<double> > &ep //:< list of epipolars
     )
 {
   /*
@@ -32,7 +32,7 @@ compute(
 
   unsigned j,i,k;
   bool stat;
-  vcl_vector<bool> indices; 
+  std::vector<bool> indices; 
 
   for (j=0; j<ep.size(); ++j) {
     for (i=0; i<c.size(); ++i) {
@@ -60,7 +60,7 @@ compute(
 void becld_intersection_sets::
 print() const
 {
-  vcl_cout << "==== becld_intersection_sets ====" << vcl_endl;
+  std::cout << "==== becld_intersection_sets ====" << std::endl;
 
   unsigned intercepted_curve_cnt=0, i;
 
@@ -69,30 +69,30 @@ print() const
       intercepted_curve_cnt++;
   }
 
-  vcl_cout << "Number of intercepted curves: " << intercepted_curve_cnt << vcl_endl;
+  std::cout << "Number of intercepted curves: " << intercepted_curve_cnt << std::endl;
 
   for (i=0; i<L_.size(); ++i) {
     if ( ! (L_[i].intercepts.empty()) ) {
-      vcl_cout << "\n\nCURVE NUMBER " << i << vcl_endl;
+      std::cout << "\n\nCURVE NUMBER " << i << std::endl;
       print(L_[i]);
     }
   }
 
-  vcl_cout << "==============================" << vcl_endl;
+  std::cout << "==============================" << std::endl;
 }
 
 void becld_intersection_sets::
 print(const curve_intersections_list_ & c) const
 {
-  vcl_cout << "-- Intersections List --\n";
+  std::cout << "-- Intersections List --\n";
 
-  vcl_list<intersection_nhood_>::const_iterator  itr;
+  std::list<intersection_nhood_>::const_iterator  itr;
   unsigned cnt=1;
 
   for (itr = c.intercepts.begin(); itr != c.intercepts.end(); ++itr,++cnt) {
-    vcl_cout << "Intercept number: " << cnt << vcl_endl;
-    vcl_cout << "Epipolar number : " << itr->ep_number << vcl_endl;
-    vcl_cout << "Number of points: " << itr->index.size() << vcl_endl << vcl_endl;
+    std::cout << "Intercept number: " << cnt << std::endl;
+    std::cout << "Epipolar number : " << itr->ep_number << std::endl;
+    std::cout << "Number of points: " << itr->index.size() << std::endl << std::endl;
   }
 }
 
@@ -100,7 +100,7 @@ print(const curve_intersections_list_ & c) const
 void becld_intersection_sets::
 nhoods_intercepting_epipolar(
     unsigned ep_i, 
-    vcl_vector< vcl_list<vcl_vector<unsigned> > > &Lst
+    std::vector< std::list<std::vector<unsigned> > > &Lst
     ) const
 {
   Lst.resize(L_.size());
@@ -109,7 +109,7 @@ nhoods_intercepting_epipolar(
 
   for (i=0; i<L_.size(); ++i) {
     // traverse L_[i] and copy to Lst_[i] only those nhoods that are of epipolar ep_i
-    vcl_list<intersection_nhood_>::const_iterator ptr;
+    std::list<intersection_nhood_>::const_iterator ptr;
 
 
     for (ptr  = L_[i].intercepts.begin(); 
@@ -126,16 +126,16 @@ nhoods_intercepting_epipolar(
 }
 
 void becld_intersection_sets::
-points_intercepting_epipolar(unsigned ep_i, vcl_vector<vcl_list<unsigned> > &pts_idx) const
+points_intercepting_epipolar(unsigned ep_i, std::vector<std::list<unsigned> > &pts_idx) const
 {
-  vcl_vector< vcl_list<vcl_vector<unsigned> > > Lst;
+  std::vector< std::list<std::vector<unsigned> > > Lst;
 
   nhoods_intercepting_epipolar(ep_i, Lst);
 
   pts_idx.resize(ncurves());
 
   for (unsigned i=0; i<Lst.size(); ++i) {
-    vcl_list<vcl_vector<unsigned> >::const_iterator ptr;
+    std::list<std::vector<unsigned> >::const_iterator ptr;
 
     for (ptr=Lst[i].begin(); ptr != Lst[i].end(); ++ptr) {
       for (unsigned k=0; k < ptr->size(); ++k)
@@ -155,7 +155,7 @@ points_intercepting_epipolar(unsigned ep_i, vcl_vector<vcl_list<unsigned> > &pts
 //}
 
 void becld_intersection_sets::
-all_points(vcl_vector<vcl_vector<unsigned> > &pts_idx) const
+all_points(std::vector<std::vector<unsigned> > &pts_idx) const
 {
   pts_idx.resize(ncurves());
 
@@ -163,7 +163,7 @@ all_points(vcl_vector<vcl_vector<unsigned> > &pts_idx) const
     pts_idx[i].resize(npoints(i));
     unsigned long k=0; //:< index into pts_idx[i], e.g. pts_idx[i][k]
 
-    vcl_list<intersection_nhood_>::const_iterator  itr;
+    std::list<intersection_nhood_>::const_iterator  itr;
     for (itr = L_[i].intercepts.begin(); itr != L_[i].intercepts.end(); ++itr) {
       for (unsigned jj=0; jj < itr->index.size(); ++jj) {
         pts_idx[i][k++] = itr->index[jj];
@@ -180,7 +180,7 @@ npoints(unsigned i) const
   // count number of points in there
 
   unsigned long cnt = 0;
-  vcl_list<intersection_nhood_>::const_iterator  itr;
+  std::list<intersection_nhood_>::const_iterator  itr;
   for (itr = L_[i].intercepts.begin(); itr != L_[i].intercepts.end(); ++itr) {
     cnt += itr->index.size();
   }
@@ -202,6 +202,6 @@ n_intersecting_curves() const
 }
 
 //unsigned long becld_intersection_sets::
-//count_points(vcl_vector<unsigned> &pts_idx) const
+//count_points(std::vector<unsigned> &pts_idx) const
 //{
 //}

@@ -6,12 +6,12 @@
 void bmcsd_stereo_filter::
 setup_inputs(
       const bmcsd_stereo_views_sptr &views,
-      vcl_vector<bprod_process_sptr> &cam_src, 
-      vcl_vector<bprod_process_sptr> &edg_src, 
-      vcl_vector<bprod_process_sptr> &edg_dt, 
-      vcl_vector<bprod_process_sptr> &frag_src,
-      vcl_vector<bprod_process_sptr> &cvlet_src,
-      vcl_vector<bprod_process_sptr> &frag_tangents
+      std::vector<bprod_process_sptr> &cam_src, 
+      std::vector<bprod_process_sptr> &edg_src, 
+      std::vector<bprod_process_sptr> &edg_dt, 
+      std::vector<bprod_process_sptr> &frag_src,
+      std::vector<bprod_process_sptr> &cvlet_src,
+      std::vector<bprod_process_sptr> &frag_tangents
       )
 {
   v_ = views;
@@ -61,7 +61,7 @@ setup_inputs(
 void bmcsd_stereo_filter::
 get_cameras()
 {
-  vcl_vector<bdifd_camera> cams(s_.nviews());
+  std::vector<bdifd_camera> cams(s_.nviews());
 
   assert(input_type_id(CAM_ID0) == typeid(vpgl_perspective_camera<double>));
   cams[0].set_p(input<vpgl_perspective_camera<double> >(CAM_ID0));
@@ -84,7 +84,7 @@ get_cameras()
 void bmcsd_stereo_filter::
 get_edgemaps()
 {
-  vcl_vector<sdet_edgemap_sptr> em(s_.nviews());
+  std::vector<sdet_edgemap_sptr> em(s_.nviews());
   
   for (unsigned i=0; i < v_->num_confirmation_views(); ++i) {
     unsigned offset = confirmation_view_input_offset_ 
@@ -99,7 +99,7 @@ get_edgemaps()
 void bmcsd_stereo_filter::
 get_curvelets()
 {
-  vcl_vector<sdetd_sel_storage_sptr> sels(s_.nviews());
+  std::vector<sdetd_sel_storage_sptr> sels(s_.nviews());
   
   for (unsigned i=0; i < v_->num_confirmation_views(); ++i) {
     unsigned offset = confirmation_view_input_offset_ 
@@ -114,32 +114,32 @@ get_curvelets()
 void bmcsd_stereo_filter::
 get_curves_and_tangents()
 {
-  vcl_vector<vcl_vector< vsol_polyline_2d_sptr > > curves (s_.nviews()); 
+  std::vector<std::vector< vsol_polyline_2d_sptr > > curves (s_.nviews()); 
 
-  assert(input_type_id(FRAG_ID0) == typeid(vcl_vector< vsol_polyline_2d_sptr >));
-  assert(input_type_id(FRAG_ID1) == typeid(vcl_vector< vsol_polyline_2d_sptr >));
-  curves[0] = input<vcl_vector< vsol_polyline_2d_sptr > >(FRAG_ID0);
-  curves[1] = input<vcl_vector< vsol_polyline_2d_sptr > >(FRAG_ID1);
+  assert(input_type_id(FRAG_ID0) == typeid(std::vector< vsol_polyline_2d_sptr >));
+  assert(input_type_id(FRAG_ID1) == typeid(std::vector< vsol_polyline_2d_sptr >));
+  curves[0] = input<std::vector< vsol_polyline_2d_sptr > >(FRAG_ID0);
+  curves[1] = input<std::vector< vsol_polyline_2d_sptr > >(FRAG_ID1);
 
   // don't read any frags in the other views
   //  for (unsigned i=0; i < v_->num_confirmation_views(); ++i) {
   //    unsigned offset = 6 + i*sources_per_confirmation_view_;
   //    assert(input_type_id(offset + FRAG_ID) 
-  //        == typeid( vcl_vector< vsol_polyline_2d_sptr > ));
+  //        == typeid( std::vector< vsol_polyline_2d_sptr > ));
 
-  //    curves[i+2] = input<vcl_vector< vsol_polyline_2d_sptr > >(offset + FRAG_ID);
+  //    curves[i+2] = input<std::vector< vsol_polyline_2d_sptr > >(offset + FRAG_ID);
   //  }
   // s_.set_curves_and_break_into_episegs(curves, sseq);
 
-  typedef vcl_vector<vcl_vector<double> > view_tangents;
-  vcl_vector< view_tangents > tangents(2);
+  typedef std::vector<std::vector<double> > view_tangents;
+  std::vector< view_tangents > tangents(2);
 
   assert(input_type_id(TGT_ID0) == typeid(view_tangents));
   assert(input_type_id(TGT_ID1) == typeid(view_tangents));
   tangents[0] = input< view_tangents >(TGT_ID0);
   tangents[1] = input< view_tangents >(TGT_ID1);
 
-  vcl_vector<bbld_subsequence_set> sseq;
+  std::vector<bbld_subsequence_set> sseq;
   s_.set_curves(curves);
   s_.set_tangents(tangents);
   s_.break_into_episegs_and_replace_curve(&sseq);
@@ -150,8 +150,8 @@ get_dt_label()
 {
   typedef vil_image_view<vxl_uint_32> dt_t;
   typedef vil_image_view<unsigned> label_t;
-  vcl_vector< dt_t > dts(s_.nviews());
-  vcl_vector< label_t > labels(s_.nviews());
+  std::vector< dt_t > dts(s_.nviews());
+  std::vector< label_t > labels(s_.nviews());
 
   // dts[0] == null;
   // labels [0] == null;

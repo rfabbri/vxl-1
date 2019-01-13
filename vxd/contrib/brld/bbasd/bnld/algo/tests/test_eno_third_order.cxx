@@ -1,6 +1,6 @@
 #include <testlib/testlib_test.h>
 #include <bnld/algo/bnld_eno_third_order.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 MAIN( test_eno_third_order )
 {
@@ -8,8 +8,8 @@ MAIN( test_eno_third_order )
 
    bnld_eno_third_order eno;
    
-   vcl_vector<double> xi;
-   vcl_vector<double> fxi;
+   std::vector<double> xi;
+   std::vector<double> fxi;
    // these are samples of  p(x) = -4 + x - 3*x^2 + 2*x^3
    xi.push_back(0);
    xi.push_back(1);

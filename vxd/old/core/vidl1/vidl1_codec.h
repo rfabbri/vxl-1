@@ -13,7 +13,7 @@
 //   2004/09/10 Peter Vanroose - Added explicit copy constructor (ref_count !)
 // \endverbatim
 
-#include <vcl_string.h>
+#include <string>
 #include <vidl1/vidl1_codec_sptr.h>
 #include <vbl/vbl_ref_count.h>
 #include <vil/vil_image_view_base.h>
@@ -48,8 +48,8 @@ class vidl1_codec : public vbl_ref_count
   // Data Control--------------------------------------------------------------
 
   inline void set_number_frames(int n = 0) { numberframes = n; }
-  inline void set_name(vcl_string n = "") { name = n; }
-  inline void set_description(vcl_string d = "") { description = d; }
+  inline void set_name(std::string n = "") { name = n; }
+  inline void set_description(std::string d = "") { description = d; }
   inline void set_format(char f = '\0') { format = f; }
   inline void set_image_class(char t = 'M') { Class = t; }
   inline void set_bits_pixel(int d = 0) { B = d; }
@@ -61,8 +61,8 @@ class vidl1_codec : public vbl_ref_count
   // Data Access---------------------------------------------------------------
 
   inline int length() const { return numberframes; }
-  inline vcl_string get_name() const  { return name; }
-  inline vcl_string get_description() const { return description; }
+  inline std::string get_name() const  { return name; }
+  inline std::string get_description() const { return description; }
 
   inline char get_image_class()const { return Class; }
   inline char get_format() const     { return format; }
@@ -89,18 +89,18 @@ class vidl1_codec : public vbl_ref_count
                         int x0,
                         int y0) = 0;
 
-  virtual vcl_string type() const = 0;
+  virtual std::string type() const = 0;
 
   // IO
 
   //: Try to load fname, and if successful, return the codec that did it
-  virtual vidl1_codec_sptr load(vcl_string const& fname, char mode = 'r' ) = 0;
+  virtual vidl1_codec_sptr load(std::string const& fname, char mode = 'r' ) = 0;
 
   //: Take a vidl1_movie, and save in the format of this codec.
-  virtual bool save(vidl1_movie* movie, vcl_string const& fname) = 0;
+  virtual bool save(vidl1_movie* movie, std::string const& fname) = 0;
 
   //: Return true if fname looks like something we can read.
-  virtual bool probe(vcl_string const& fname) = 0;
+  virtual bool probe(std::string const& fname) = 0;
 
   //: Perform any operations required to close down the codec.
   // This will typically be called just before program exit.
@@ -113,9 +113,9 @@ class vidl1_codec : public vbl_ref_count
 
   inline void clear_strings() { name = description = date_time = ""; }
 
-  vcl_string name;             //!< Video Name
-  vcl_string description;      //!< Video Descriptor
-  vcl_string date_time;        //!< Date/Time Stamp
+  std::string name;             //!< Video Name
+  std::string description;      //!< Video Descriptor
+  std::string date_time;        //!< Date/Time Stamp
   char       format;           //!< Video format
   char       Class;            //!< Video class
   int        B;                //!< Pixel Precision

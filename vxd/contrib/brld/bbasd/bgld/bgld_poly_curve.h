@@ -17,7 +17,7 @@
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_vector_2d.h>
 #include <bgld/bgld_param_curve.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 //: polynomial is parametrized by s (runs in [-infinity,+infinity]). 
 //  n --> order
@@ -33,8 +33,8 @@ class bgld_poly_curve : public bgld_param_curve
   bgld_poly_curve() {}
 
   //: construct from vectors of coefs
-  bgld_poly_curve(int order, double len, vcl_vector<double> coefs_x, 
-                                         vcl_vector<double> coefs_y) 
+  bgld_poly_curve(int order, double len, std::vector<double> coefs_x, 
+                                         std::vector<double> coefs_y) 
     : order_(order), len_(len), coefs_x_(coefs_x), coefs_y_(coefs_y)  {}
 
   //: copy_constructor
@@ -44,10 +44,10 @@ class bgld_poly_curve : public bgld_param_curve
 
   virtual ~bgld_poly_curve() {}
 
-  static const vcl_type_info& type_id()
+  static const std::type_info& type_id()
   { return typeid(bgld_poly_curve); }
 
-  virtual bool is_type( const vcl_type_info& type ) const
+  virtual bool is_type( const std::type_info& type ) const
   { return (typeid(bgld_poly_curve) == type)!=0 ||
             this->bgld_param_curve::is_type(type);
   }
@@ -62,8 +62,8 @@ class bgld_poly_curve : public bgld_param_curve
   int order() const { return order_; }
 
   //: return vector of coefficients
-  vcl_vector<double> coefficients_x() const { return coefs_x_; }
-  vcl_vector<double> coefficients_y() const { return coefs_y_; }
+  std::vector<double> coefficients_x() const { return coefs_x_; }
+  std::vector<double> coefficients_y() const { return coefs_y_; }
 
   //: length of the polynomial piece between start and end points
   virtual double length() const = 0;
@@ -85,7 +85,7 @@ class bgld_poly_curve : public bgld_param_curve
   //: TODO
   virtual
   double curvature_at(double) const 
-    { vcl_cerr << "curvature function not implemented\n"; return 0;}
+    { std::cerr << "curvature function not implemented\n"; return 0;}
 
   //: Get curvature of the point at s arclength away from starting point.
   virtual double curvature_at_length(double s) const = 0;
@@ -119,8 +119,8 @@ class bgld_poly_curve : public bgld_param_curve
   double len_;
 
   //: vector of coefficients
-  vcl_vector<double> coefs_x_;
-  vcl_vector<double> coefs_y_;
+  std::vector<double> coefs_x_;
+  std::vector<double> coefs_y_;
 
 
 };

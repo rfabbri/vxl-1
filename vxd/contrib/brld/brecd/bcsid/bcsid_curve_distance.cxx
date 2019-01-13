@@ -15,20 +15,20 @@ inlier_curvelets_dt(
     )
 {
   //: compute inlier edgels
-  vcl_set<unsigned> inliers;
+  std::set<unsigned> inliers;
   bspid_curve_distance::inliers_dt(crv, d_threshold, dt, label, &inliers); 
 
   // For each inlier edgel
   //      Check that all edgels are also inliers
   for (
-      vcl_set<unsigned>::const_iterator in = inliers.begin();
+      std::set<unsigned>::const_iterator in = inliers.begin();
       in != inliers.end();
       in++) {
 
     int icell = *in % dt.ni();
     int jcell = *in / dt.ni();
 
-    const vcl_vector<sdet_edgel*>& edgels_in_cell 
+    const std::vector<sdet_edgel*>& edgels_in_cell 
       = cm.EM_->cell(icell, jcell);
 
     for (unsigned ie = 0; ie < edgels_in_cell.size(); ie++) {
@@ -60,7 +60,7 @@ inlier_curvelets_dt(
 
         if (all_inliers) {
 #ifndef NDEBUG
-          vcl_cout << "Adding a curvelet\n";
+          std::cout << "Adding a curvelet\n";
 #endif
           inlier_curvelets->push_back(cvlet);
         }
@@ -81,21 +81,21 @@ inlier_curvelets_dt_oriented(
     )
 {
   //: compute inlier edgels
-  vcl_set<unsigned> inliers;
+  std::set<unsigned> inliers;
   bcsid_curve_distance::inliers_dt_oriented(c, d_threshold, dtheta_threshold,
       dt, label, *cm.EM_, &inliers); 
 
   // For each inlier edgel
   //      Check that all edgels are also inliers
   for (
-      vcl_set<unsigned>::const_iterator in = inliers.begin();
+      std::set<unsigned>::const_iterator in = inliers.begin();
       in != inliers.end();
       in++) {
 
     int icell = *in % dt.ni();
     int jcell = *in / dt.ni();
 
-    const vcl_vector<sdet_edgel*>& edgels_in_cell 
+    const std::vector<sdet_edgel*>& edgels_in_cell 
       = cm.EM_->cell(icell, jcell);
 
     for (unsigned ie = 0; ie < edgels_in_cell.size(); ie++) {
@@ -133,7 +133,7 @@ inlier_curvelets_dt_oriented(
 
         if (enough_inliers) {
 #ifndef NDEBUG
-          vcl_cout << "Adding a curvelet\n";
+          std::cout << "Adding a curvelet\n";
 #endif
           inlier_curvelets->push_back(cvlet);
           break; // max 1 curvelet per edgel counts.
@@ -151,12 +151,12 @@ inliers_dt_oriented(
     const vil_image_view<vxl_uint_32> &dt,
     const vil_image_view<vxl_uint_32> &label,
     const sdet_edgemap &em,
-    vcl_set<unsigned> *inliers
+    std::set<unsigned> *inliers
   )
 {
 #ifndef NDEBUG
   if (dtheta_threshold > vnl_math::pi/2)
-    vcl_cerr << "Warning: a threshold of > vnl_math::pi/2 means no threshold.\n";
+    std::cerr << "Warning: a threshold of > vnl_math::pi/2 means no threshold.\n";
 #endif
   for (bcsid_edgel_seq_const_iter ep = c.begin(); ep != c.end(); ++ep) {
     unsigned p_i = static_cast<unsigned>(ep->pt.x()+0.5);
@@ -164,19 +164,19 @@ inliers_dt_oriented(
 
     if (dt(p_i, p_j) < d_threshold) {
       vxl_uint_32 l = label(p_i, p_j);
-      const vcl_vector<sdet_edgel*> &ev = em.edge_cells.begin()[l];
+      const std::vector<sdet_edgel*> &ev = em.edge_cells.begin()[l];
 
       for (unsigned i=0; i < ev.size(); ++i) {
         double dtheta = bgld_undirected_angle_distance(ev[i]->tangent, ep->tangent);
         /*
 #ifndef NDEBUG
-        vcl_cout 
+        std::cout 
           << "Curve point: " << ep->pt  
           << "<tgt " << ep->tangent*180./vnl_math::pi << ">"
           << " edgel point: " << ev[i]->pt
           << "<tgt " << ev[i]->tangent*180./vnl_math::pi << ">";
 
-        vcl_cout << " dtheta(deg): " << dtheta*180./vnl_math::pi << vcl_endl;
+        std::cout << " dtheta(deg): " << dtheta*180./vnl_math::pi << std::endl;
 #endif
 */
         if (dtheta < dtheta_threshold) {
@@ -197,7 +197,7 @@ num_inliers_dt_oriented(
     const vil_image_view<vxl_uint_32> &label,
     const sdet_edgemap &em)
 {
-  vcl_set<unsigned> inliers;
+  std::set<unsigned> inliers;
 
   return inliers_dt_oriented(c, d_threshold, dtheta_threshold, dt, label, em, 
       &inliers);
@@ -209,12 +209,12 @@ inliers_dt_oriented_all_samples(
     const vil_image_view<vxl_uint_32> &dt,
     const vil_image_view<vxl_uint_32> &label,
     const sdet_edgemap &em,
-    vcl_list<unsigned> *inliers
+    std::list<unsigned> *inliers
   )
 {
 #ifndef NDEBUG
   if (dtheta_threshold > vnl_math::pi/2)
-    vcl_cerr << "Warning: a threshold of > vnl_math::pi/2 means no threshold.\n";
+    std::cerr << "Warning: a threshold of > vnl_math::pi/2 means no threshold.\n";
 #endif
   for (bcsid_edgel_seq_const_iter ep = c.begin(); ep != c.end(); ++ep) {
     unsigned p_i = static_cast<unsigned>(ep->pt.x()+0.5);
@@ -222,19 +222,19 @@ inliers_dt_oriented_all_samples(
 
     if (dt(p_i, p_j) < d_threshold) {
       vxl_uint_32 l = label(p_i, p_j);
-      const vcl_vector<sdet_edgel*> &ev = em.edge_cells.begin()[l];
+      const std::vector<sdet_edgel*> &ev = em.edge_cells.begin()[l];
 
       for (unsigned i=0; i < ev.size(); ++i) {
         double dtheta = bgld_undirected_angle_distance(ev[i]->tangent, ep->tangent);
         /*
 #ifndef NDEBUG
-        vcl_cout 
+        std::cout 
           << "Curve point: " << ep->pt  
           << "<tgt " << ep->tangent*180./vnl_math::pi << ">"
           << " edgel point: " << ev[i]->pt
           << "<tgt " << ev[i]->tangent*180./vnl_math::pi << ">";
 
-        vcl_cout << " dtheta(deg): " << dtheta*180./vnl_math::pi << vcl_endl;
+        std::cout << " dtheta(deg): " << dtheta*180./vnl_math::pi << std::endl;
 #endif
 */
         if (dtheta < dtheta_threshold) {
@@ -256,7 +256,7 @@ num_inliers_dt_oriented_all_samples(
     const vil_image_view<vxl_uint_32> &label,
     const sdet_edgemap &em)
 {
-  vcl_list<unsigned> inliers;
+  std::list<unsigned> inliers;
 
   return inliers_dt_oriented_all_samples(c, d_threshold, dtheta_threshold, dt, label, em, 
       &inliers);

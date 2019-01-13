@@ -5,11 +5,11 @@
 #include "bnld_brent_root.h"
 #include <brent/brent.h>
 #include <vnl/vnl_math.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 
 // to remove
-#include <vcl_string.h>
+#include <string>
 #include <vnl/vnl_matrix.h>
 /////////////////////////////
 
@@ -70,7 +70,7 @@ solve(double ax, double bx, double& root)
     
     // best guess for the errorneous case
     root = (ax + bx)/2;
-    //vcl_cerr << "ERROR: f(ax) and f(bx) must have opposite signs.\n";
+    //std::cerr << "ERROR: f(ax) and f(bx) must have opposite signs.\n";
     return false;
   }
 

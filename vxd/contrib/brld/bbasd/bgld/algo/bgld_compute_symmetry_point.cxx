@@ -19,7 +19,7 @@ void bgld_compute_symmetry_point_on_line(const vgl_point_2d<double >& right_line
                                          const vgl_point_2d<double >& right_line_end,
                                          const vgl_point_2d<double >& left_bnd_pt,
                                          const vgl_vector_2d<double >& left_bnd_tangent,
-                                         vcl_vector<double >& signed_distance_from_line_start)
+                                         std::vector<double >& signed_distance_from_line_start)
 {
   // sanitize storage
   signed_distance_from_line_start.clear();
@@ -68,7 +68,7 @@ void bgld_compute_symmetry_point_on_line(const vgl_point_2d<double >& right_line
 void bgld_compute_symmetry_point_on_circ_arc(const bgld_circ_arc& right_bnd_arc,
                        const vgl_point_2d<double >& left_bnd_pt,
                        const vgl_vector_2d<double >& left_bnd_tangent, // pointing backward, following Giblin & Kimia's convention
-                       vcl_vector<double >& s_along_right_bnd_arc)
+                       std::vector<double >& s_along_right_bnd_arc)
 {
 
   double k = right_bnd_arc.k();
@@ -106,8 +106,8 @@ void bgld_compute_symmetry_point_on_circ_arc(const bgld_circ_arc& right_bnd_arc,
     double c = -cosB * k * (xA - xB) +sinA*cosB
                -sinB * k * (yA - yB) -cosA*sinB;
 
-    vcl_vector<double > cos_x;
-    vcl_vector<double > sin_x;
+    std::vector<double > cos_x;
+    std::vector<double > sin_x;
     bnld_solve_1st_order_trig_equation(a, b, c, sin_x, cos_x);
 
     if (cos_x.size() > 2) // degenerate

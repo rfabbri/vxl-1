@@ -11,7 +11,7 @@
 //
 //-----------------------------------------------------------------------------
 #include <gevd/gevd_param_mixin.h>
-#include <vcl_iosfwd.h>
+#include <iosfwd>
 
 class bmrf_network_builder_params : public gevd_param_mixin
 {
@@ -29,7 +29,7 @@ class bmrf_network_builder_params : public gevd_param_mixin
 
   bool SanityCheck();
   friend
-    vcl_ostream& operator<<(vcl_ostream&,const bmrf_network_builder_params& tp);
+    std::ostream& operator<<(std::ostream&,const bmrf_network_builder_params& tp);
  protected:
   void InitParams(float eu,
                   float ev,

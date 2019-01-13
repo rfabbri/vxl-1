@@ -4,7 +4,7 @@
 // \file
 
 #include <vidpro1/process/vidpro1_save_video_process.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <bpro1/bpro1_parameters.h>
 #include <vidpro1/storage/vidpro1_image_storage.h>
@@ -22,12 +22,12 @@ vidpro1_save_video_process::vidpro1_save_video_process()
  : bpro1_process(), sample_counter_(0), first_frame_(true), num_frames_(0)
 {
   if( !parameters()->add( "Video file <filename...>" , "-video_filename", bpro1_filepath("","*") ) ||
-      !parameters()->add( "Type" , "-video_type", vcl_string("tiff") ) ||
+      !parameters()->add( "Type" , "-video_type", std::string("tiff") ) ||
 
       !parameters()->add( "Frame Sample Interval" , "-frame_sample_interval",
                           unsigned(1) ) )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -47,7 +47,7 @@ vidpro1_save_video_process::clone() const
 
 
 //: Return the name of the process
-vcl_string vidpro1_save_video_process::name()
+std::string vidpro1_save_video_process::name()
 {
   return "Save Video";
 }
@@ -62,10 +62,10 @@ vidpro1_save_video_process::clear_output()
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 vidpro1_save_video_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   // image type required
   to_return.push_back( "image" );
 
@@ -74,10 +74,10 @@ vidpro1_save_video_process::get_input_type()
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 vidpro1_save_video_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.clear();
 
   return to_return;
@@ -105,7 +105,7 @@ bool
 vidpro1_save_video_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In vidpro1_background_diff_process::execute() - "
+    std::cout << "In vidpro1_background_diff_process::execute() - "
              << "not exactly two input images \n";
     return false;
   }
@@ -198,21 +198,21 @@ vidpro1_save_video_process::finish()
 {
     
   bpro1_filepath video_path;
-  vcl_string video_type;
+  std::string video_type;
   parameters()->get_value( "-video_filename" , video_path );
   parameters()->get_value( "-video_type" , video_type );
-  vcl_string video_filename = video_path.path;
+  std::string video_filename = video_path.path;
 
 
    // Create the extension for filenames
-  vcl_string extension = video_type.substr(0, video_type.size()-5); // To get rid of "Image" string
+  std::string extension = video_type.substr(0, video_type.size()-5); // To get rid of "Image" string
 
   int n=list_images.size();
   for (int i=0;i<n;i++)
   {
 
     // Create a name for the current image to be saved
-    vcl_string currentname = vul_sprintf("%s%05d.%s", video_filename.c_str(),
+    std::string currentname = vul_sprintf("%s%05d.%s", video_filename.c_str(),
                                          i,extension.c_str());
 
     vil_image_view<vxl_byte> save_image;
@@ -283,10 +283,10 @@ vidpro1_save_video_process::finish()
 }
 
 
-vcl_vector<vcl_string> vidpro1_save_video_process::list_to_vector(vcl_list<vcl_string>  v)
+std::vector<std::string> vidpro1_save_video_process::list_to_vector(std::list<std::string>  v)
 {
-    vcl_vector<vcl_string> vec;
-    vcl_list<vcl_string>::iterator iter;
+    std::vector<std::string> vec;
+    std::list<std::string>::iterator iter;
     for(iter=v.begin();iter!=v.end();iter++)
         vec.push_back(*iter);
 

@@ -19,7 +19,7 @@
 // \endverbatim
 
 
-#include <vcl_string.h>
+#include <string>
 #include <bpro1/bpro1_storage.h>
 #include "vpgld_camera_storage_sptr.h"
 #include <vpgl/vpgl_proj_camera.h>
@@ -33,7 +33,7 @@ public:
 
   vpgld_camera_storage();
   virtual ~vpgld_camera_storage();
-  virtual vcl_string type() const { return "vpgl camera"; }
+  virtual std::string type() const { return "vpgl camera"; }
 
   //: Return IO version number;
   short version() const;
@@ -52,7 +52,7 @@ public:
   virtual bpro1_storage* clone() const;
   
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "vpgld_camera_storage"; }
+  virtual std::string is_a() const { return "vpgld_camera_storage"; }
 
   //: Sets the camera pointer. Storage must be allocated by the user and will be
   // deleted by _this_ class. In the future, this might be replaced by a smart pointer.

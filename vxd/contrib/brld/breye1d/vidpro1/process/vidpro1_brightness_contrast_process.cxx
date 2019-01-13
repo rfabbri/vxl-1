@@ -4,7 +4,7 @@
 // \file
 
 #include <vidpro1/process/vidpro1_brightness_contrast_process.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <bpro1/bpro1_parameters.h>
 #include <vidpro1/storage/vidpro1_image_storage.h>
@@ -13,14 +13,14 @@
 #include <vil/vil_image_view.h>
 #include <vil/vil_image_resource.h>
 #include <vil/vil_new.h>
-#include <vcl_cmath.h>
+#include <cmath>
 
 
 vidpro1_brightness_contrast_process::vidpro1_brightness_contrast_process() : bpro1_process()
 {
   if( !parameters()->add( "Brightness" , "-brightness" , (int)0 ) ||
       !parameters()->add( "Contrast" ,   "-contrast" ,   1.0f ) ) {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   
   }
 }
@@ -38,21 +38,21 @@ vidpro1_brightness_contrast_process::clone() const
 }
 
 
-vcl_string vidpro1_brightness_contrast_process::name()
+std::string vidpro1_brightness_contrast_process::name()
 {
   return "Brightness/Contrast";
 }
 
-vcl_vector< vcl_string > vidpro1_brightness_contrast_process::get_input_type()
+std::vector< std::string > vidpro1_brightness_contrast_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
 
-vcl_vector< vcl_string > vidpro1_brightness_contrast_process::get_output_type()
+std::vector< std::string > vidpro1_brightness_contrast_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   // no return type
   to_return.clear();
 
@@ -63,7 +63,7 @@ bool vidpro1_brightness_contrast_process::execute()
 {
   if ( input_data_.size() != 1 )
   {
-      vcl_cout << "In vidpro1_brightness_contrast_process::execute() - not exactly one"
+      std::cout << "In vidpro1_brightness_contrast_process::execute() - not exactly one"
                << " input image \n";
       return false;
   }
@@ -87,7 +87,7 @@ bool vidpro1_brightness_contrast_process::execute()
     for( unsigned int y = 0 ; y < image_sptr->nj() ; y++ ) {
       for( unsigned int p = 0 ; p < image_sptr->nplanes() ; p++ ) {
         
-        distance = vcl_abs((float) ( image_view(x,y,p) - 127 ));
+        distance = std::abs((float) ( image_view(x,y,p) - 127 ));
         if( image_view(x,y,p) >= 127 ) {
           if( 127 + contrast * distance + brightness > 255 )
             image_view(x,y,p) = 255;

@@ -1,5 +1,5 @@
 // This is core/vil1/io/tests/test_memory_image_of_io.cxx
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vil1/vil1_memory_image_of.h>
 #include <vil1/io/vil1_io_memory_image_of.h>
 #include <vil1/io/vil1_io_image_impl.h>
@@ -9,7 +9,7 @@
 
 void test_memory_image_of_io()
 {
-  vcl_cout << "*******************************\n"
+  std::cout << "*******************************\n"
            << "Testing vil1_memory_image_of io\n"
            << "*******************************\n";
 
@@ -61,8 +61,8 @@ void test_memory_image_of_io()
   TEST("p_out == p_in (data)", data_same, true);
 
   // And have a look at the summary
-  vsl_print_summary(vcl_cout, p_in);
-  vcl_cout << vcl_endl;
+  vsl_print_summary(std::cout, p_in);
+  std::cout << std::endl;
 }
 
 TESTMAIN( test_memory_image_of_io );

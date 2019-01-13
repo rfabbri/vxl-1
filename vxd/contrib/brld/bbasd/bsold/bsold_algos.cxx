@@ -4,23 +4,23 @@
 
 #include "bsold_algos.h"
 
-//#include <vcl_cstring.h>
+//#include <cstring>
 #include <vsol/vsol_point_2d.h>
 #include <vsol/vsol_polygon_2d.h>
 #include <vsol/vsol_polyline_2d.h>
 #include <vgl/vgl_distance.h>
 #include <vnl/vnl_random.h>
-#include <vcl_cmath.h>
+#include <cmath>
 
 const double bsold_algos_epsilon = 1e-10;
 
 
 //: Break a polyline into two pieces, each is a polyline
-vcl_vector<vsol_polyline_2d_sptr > bsold_algos::
+std::vector<vsol_polyline_2d_sptr > bsold_algos::
 cut_polyline(const vsol_polyline_2d_sptr& polyline,
              const vsol_point_2d_sptr& cut_position)
 {
-  vcl_vector<vsol_polyline_2d_sptr > new_polys;
+  std::vector<vsol_polyline_2d_sptr > new_polys;
 
   // find order of the cutting_position vertex
   unsigned int index = 0;
@@ -37,7 +37,7 @@ cut_polyline(const vsol_polyline_2d_sptr& polyline,
     return new_polys;
   }
 
-  vcl_vector<vsol_point_2d_sptr > pt_set1;
+  std::vector<vsol_point_2d_sptr > pt_set1;
   pt_set1.reserve(index+1);
   for (unsigned int i = 0; i<=index; ++i)
   {
@@ -45,7 +45,7 @@ cut_polyline(const vsol_polyline_2d_sptr& polyline,
   }
   new_polys.push_back(new vsol_polyline_2d(pt_set1));
 
-  vcl_vector<vsol_point_2d_sptr > pt_set2;
+  std::vector<vsol_point_2d_sptr > pt_set2;
   pt_set2.reserve(polyline->size()-index-1);
   for (unsigned int i = index; i < polyline->size(); ++i)
   {
@@ -82,7 +82,7 @@ polyline_from_polygon(const vsol_polygon_2d_sptr& polygon,
   // construct a new polyline
 
   // first need to circular-shift the vertex set
-  vcl_vector<vsol_point_2d_sptr > pt_set;
+  std::vector<vsol_point_2d_sptr > pt_set;
   pt_set.reserve(polygon->size());
   for (unsigned int i=index; i<polygon->size(); ++i)
   {
@@ -103,7 +103,7 @@ vsol_polygon_2d_sptr bsold_algos::
 polygon_from_polyline(const vsol_polyline_2d_sptr& polyline)
 {
   // construct a new polygon using the vertices of the polyline
-  vcl_vector<vsol_point_2d_sptr > pt_set;
+  std::vector<vsol_point_2d_sptr > pt_set;
   pt_set.reserve(polyline->size());
   for (unsigned int i=0; i < polyline->size(); ++i)
   {

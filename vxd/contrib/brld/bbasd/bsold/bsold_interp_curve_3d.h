@@ -13,15 +13,15 @@
 //   
 // \endverbatim
 
-#include <vcl_vector.h>
-#include <vcl_iostream.h>
+#include <vector>
+#include <iostream>
 #include <bgld/bgld_param_curve_3d.h>
 #include <bgld/bgld_eno_curve_3d.h>
 #include <vsol/vsol_curve_3d.h>
 #include <vsol/vsol_point_3d.h>
 #include <vgl/vgl_point_3d.h>
-#include <vcl_limits.h>
-#include <vcl_cmath.h>  
+#include <limits>
+#include <cmath>  
 
 class bsold_interp_curve_3d : public vsol_curve_3d
 {
@@ -30,7 +30,7 @@ class bsold_interp_curve_3d : public vsol_curve_3d
 
   // Constructors/Destructors--------------------------------------------------
   bsold_interp_curve_3d() {};
-  bsold_interp_curve_3d(vcl_vector<bgld_param_curve_3d *> inter);
+  bsold_interp_curve_3d(std::vector<bgld_param_curve_3d *> inter);
   
   //: deletes internal storage
   ~bsold_interp_curve_3d() {
@@ -40,7 +40,7 @@ class bsold_interp_curve_3d : public vsol_curve_3d
   }
 
   //: same as constructor but may be called anytime
-  void make(const vcl_vector<bgld_param_curve_3d *> & inter);
+  void make(const std::vector<bgld_param_curve_3d *> & inter);
 
   virtual vsol_spatial_object_3d* clone(void) const 
    { return new bsold_interp_curve_3d(*this); }
@@ -82,9 +82,9 @@ class bsold_interp_curve_3d : public vsol_curve_3d
   // Data Access---------------------------------------------------------------
 
   //: return vector of intervals (parametric curves)
-  vcl_vector<bgld_param_curve_3d *> const & intervals() const { return ints_; }
+  std::vector<bgld_param_curve_3d *> const & intervals() const { return ints_; }
 
-  void set_intervals(vcl_vector<bgld_param_curve_3d *> const &intervals) 
+  void set_intervals(std::vector<bgld_param_curve_3d *> const &intervals) 
      { ints_ = intervals; }
 
   //: easy access of intervals using an array subscript
@@ -124,24 +124,24 @@ class bsold_interp_curve_3d : public vsol_curve_3d
   //: variant that also returns parameter t for the corresp. parametric curve
   unsigned interval_index(double s, double *t) const;
 
-  virtual vcl_string is_a() const { return vcl_string("bsold_interp_curve_3d"); }
+  virtual std::string is_a() const { return std::string("bsold_interp_curve_3d"); }
 
   //: access to the lengths array
   double lengths(int index) { return lengths_[index]; };
 
   //: Print an ascii summary to the stream
-  void print_summary(vcl_ostream &os) const;
+  void print_summary(std::ostream &os) const;
   //: output description to stream
-  virtual void describe(vcl_ostream &strm, int blanking=0) const;
+  virtual void describe(std::ostream &strm, int blanking=0) const;
 
  private:
 
   static bool is_almost_zero(double x)
-   { return (vcl_fabs(x) < vcl_numeric_limits<double>::epsilon()*1000); }
+   { return (std::fabs(x) < std::numeric_limits<double>::epsilon()*1000); }
   static bool is_almost_equal(double val1, double val2, double tol)
-   { return (vcl_fabs(val1 - val2) < tol); }
+   { return (std::fabs(val1 - val2) < tol); }
   static bool is_almost_equal(double val1, double val2)
-   { return (vcl_fabs(val1 - val2) <vcl_numeric_limits<double>::epsilon()*1000); }
+   { return (std::fabs(val1 - val2) <std::numeric_limits<double>::epsilon()*1000); }
 
   // Data Members-------------------------------------------------------------- 
  protected:
@@ -152,10 +152,10 @@ class bsold_interp_curve_3d : public vsol_curve_3d
   //vsol_point_3d_sptr p1_;
   
   //: List of bgld_param_curve smart pointers
-  vcl_vector<bgld_param_curve_3d *> ints_;
+  std::vector<bgld_param_curve_3d *> ints_;
   
   //: Arclengths of each interval for fast access
-  vcl_vector<double> lengths_;
+  std::vector<double> lengths_;
 
  private:
 };

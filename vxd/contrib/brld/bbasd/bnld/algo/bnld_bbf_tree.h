@@ -13,7 +13,7 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vbl/vbl_ref_count.h>
 #include <vbl/vbl_smart_ptr.h>
 #include <vnl/vnl_vector_fixed.h>
@@ -64,7 +64,7 @@ class bnld_bbf_node : public vbl_ref_count
   bnld_bbf_node( const bnld_bbf_box<T,n>& outer_box,
                  const bnld_bbf_box<T,n>& inner_box,
                  unsigned int depth,
-                 const vcl_vector<int>& indices )
+                 const std::vector<int>& indices )
     : outer_box_(outer_box), inner_box_(inner_box), depth_(depth),
       point_indices_(indices), left_(0), right_(0) {}
   
@@ -75,7 +75,7 @@ class bnld_bbf_node : public vbl_ref_count
   //: Depth of node in the tree
   unsigned int depth_;
   //: Indices of the points stored at this leaf
-  vcl_vector< int > point_indices_;
+  std::vector< int > point_indices_;
   //: Left child
   bnld_bbf_node_sptr left_;
   //: Right child
@@ -114,21 +114,21 @@ public:
   typedef vbl_smart_ptr<bnld_bbf_node< T,n > > bnld_bbf_node_sptr;
 
   //: Constuctor
-  bnld_bbf_tree( const vcl_vector< vnl_vector_fixed<T,n> >& points,
+  bnld_bbf_tree( const std::vector< vnl_vector_fixed<T,n> >& points,
                  int points_per_leaf=4 );
 
   //: Return an estimate of the n closest points to the query point
   // \param n is the number of nearest nodes to return
   // \param max_search_nodes is the number of nodes to examine (-1 means all)
   void n_nearest( const vnl_vector_fixed<T,n>& query_point,
-                  vcl_vector< int >& closest_indices,
+                  std::vector< int >& closest_indices,
                   int b=1, int max_search_nodes=-1 ) const;
   
   //: Return an estimate of the n closest points to the query point
   // \param n is the number of nearest nodes to return
   // \param max_search_nodes is the number of nodes to examine (-1 means all)
   void n_nearest_pts( const vnl_vector_fixed<T,n>& query_point,
-                      vcl_vector< vnl_vector_fixed<T,n> >& closest_points,
+                      std::vector< vnl_vector_fixed<T,n> >& closest_points,
                       int b=1, int max_search_nodes=-1) const;
   
 private:
@@ -136,18 +136,18 @@ private:
   bnld_bbf_node_sptr build_tree( int points_per_leaf,
                                  const bnld_bbf_box<T,n>& outer_box,
                                  int depth,
-                                 vcl_vector< int >& indices );
+                                 std::vector< int >& indices );
   //: Build an inner bounding box
-  bnld_bbf_box<T,n> build_inner_box( const vcl_vector< int >& indices );
+  bnld_bbf_box<T,n> build_inner_box( const std::vector< int >& indices );
   //: Find the dimension with the greatest variation
-  int greatest_variation( const vcl_vector<int>& indices );
+  int greatest_variation( const std::vector<int>& indices );
   //: Update
   void update_closest( const vnl_vector_fixed<T,n>& query_point, int b,
-                       bnld_bbf_node_sptr p, vcl_vector< int >& closest_indices,
-                       vcl_vector< T >& sq_distances, int & num_found ) const;
+                       bnld_bbf_node_sptr p, std::vector< int >& closest_indices,
+                       std::vector< T >& sq_distances, int & num_found ) const;
   //: See if the current leaf contains the NN neighbors
   bool bounded_at_leaf( const vnl_vector_fixed<T,n>& query_point, int b,
-                        bnld_bbf_node_sptr current, const vcl_vector< T >& sq_distances,
+                        bnld_bbf_node_sptr current, const std::vector< T >& sq_distances,
                         int & num_found ) const;
 
   //: The number of leaves in the tree
@@ -161,7 +161,7 @@ private:
   //: the root node in the tree
   bnld_bbf_node_sptr root_;
   //: vector of keypoints in the tree
-  vcl_vector< vnl_vector_fixed<T,n> > points_;
+  std::vector< vnl_vector_fixed<T,n> > points_;
 };
 
 #endif // bnld_bbf_tree_h_

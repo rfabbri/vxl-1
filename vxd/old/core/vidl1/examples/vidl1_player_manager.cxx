@@ -4,7 +4,7 @@
 // \file
 // \author Matt Leotta
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_timer.h>
 #include <vil/vil_image_view_base.h>
 #include <vgui/vgui.h>
@@ -81,8 +81,8 @@ bool vidl1_player_manager::handle(const vgui_event &e)
 void vidl1_player_manager::load_video_file()
 {
   vgui_dialog load_video_dlg("Load video file");
-  static vcl_string image_filename = "";
-  static vcl_string ext = "";
+  static std::string image_filename = "";
+  static std::string ext = "";
 
   load_video_dlg.file("Filename:", ext, image_filename);
   load_video_dlg.checkbox("Preload Frames ", preload_frames_);
@@ -100,8 +100,8 @@ void vidl1_player_manager::load_video_file()
   if (img_view) {
     height_ = img_view->nj();
     width_ = img_view->ni();
-    vcl_cout << "Video Height " << height_ << vcl_endl
-             << " Video Width " << width_ << vcl_endl;
+    std::cout << "Video Height " << height_ << std::endl
+             << " Video Width " << width_ << std::endl;
     if (win_)
       win_->reshape(width_, height_);
 
@@ -135,7 +135,7 @@ void vidl1_player_manager::play_video()
 {
   if (play_video_) return;
   if (!my_movie_) {
-    vcl_cout << "No movie has been loaded\n";
+    std::cout << "No movie has been loaded\n";
     return;
   }
 

@@ -18,7 +18,7 @@
 #include <bpro1/bpro1_parameters.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage_sptr.h>
-#include <vcl_vector.h>
+#include <vector>
 
 //: This class saves the geometry from the current frame into a .PS file.
 // It only saves vsol2D_curve types and ignores the rest
@@ -32,12 +32,12 @@ public:
   //: Clone the process
   virtual bpro1_process* clone() const;
   
-  vcl_string name() {
+  std::string name() {
     return "Save .PS File";
   }
   
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
   
   int input_frames() {
     return 1;
@@ -51,7 +51,7 @@ public:
     return true;
   }
 
-  bool savePS (vcl_string filename);
+  bool savePS (std::string filename);
 
 protected:
 };

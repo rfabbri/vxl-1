@@ -6,7 +6,7 @@
 #include "bmrf_node.h"
 #include "bmrf_gamma_func.h"
 #include "bmrf_epi_seg.h"
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <vsl/vsl_vector_io.h>
 #include <vsl/vsl_map_io.h>
 #include <vnl/io/vnl_io_matrix_fixed.h>
@@ -50,8 +50,8 @@ bmrf_curvel_3d::bmrf_curvel_3d(double x, double y, double z, vnl_double_3x3 & s)
 bool
 bmrf_curvel_3d::merge(const bmrf_curvel_3d_sptr& other)
 {
-  unsigned int num_frames = vcl_max(this->projs_2d_.size(), other->projs_2d_.size());
-  vcl_vector<vcl_pair<double,bmrf_node_sptr> > merged_projs_2d_(num_frames);
+  unsigned int num_frames = std::max(this->projs_2d_.size(), other->projs_2d_.size());
+  std::vector<std::pair<double,bmrf_node_sptr> > merged_projs_2d_(num_frames);
   unsigned int count = 0;
   for ( unsigned int f=0; f<num_frames; ++f )
   {
@@ -94,7 +94,7 @@ bmrf_curvel_3d::set_proj_in_frame(unsigned int frame, double alpha, const bmrf_n
 
   if (!projs_2d_[frame].second)
     ++num_projections_;
-  projs_2d_[frame] = vcl_pair<double, bmrf_node_sptr>(alpha, node);
+  projs_2d_[frame] = std::pair<double, bmrf_node_sptr>(alpha, node);
   stats_valid_ = false;
 }
 
@@ -123,7 +123,7 @@ bmrf_curvel_3d::pos_in_frame(unsigned int frame, vnl_double_2& pos) const
     pos[1] = node->epi_seg()->y(alpha);
     return true;
   }
-  vcl_map<unsigned int, vnl_double_2>::const_iterator p_itr = pseudo_points_.find(frame);
+  std::map<unsigned int, vnl_double_2>::const_iterator p_itr = pseudo_points_.find(frame);
   if ( p_itr != pseudo_points_.end() ) {
     pos = p_itr->second;
     return true;
@@ -178,7 +178,7 @@ bmrf_curvel_3d::alpha_at_frame(unsigned int frame) const
 bool
 bmrf_curvel_3d::is_projection(const bmrf_node_sptr& node) const
 {
-  for ( vcl_vector<vcl_pair<double,bmrf_node_sptr> >::const_iterator itr = projs_2d_.begin();
+  for ( std::vector<std::pair<double,bmrf_node_sptr> >::const_iterator itr = projs_2d_.begin();
         itr != projs_2d_.end();  ++itr )
   {
     if (node == itr->second)
@@ -219,7 +219,7 @@ bmrf_curvel_3d::gamma_std()
   double avg_sqr_gamma = sum_sqr_gamma_ / (num_samples-1);
   double avg_gamma = sum_gamma_ / num_samples;
   double var = avg_sqr_gamma - avg_gamma*sum_gamma_/(num_samples-1);
-  return vcl_sqrt(var);
+  return std::sqrt(var);
 }
 
 
@@ -284,7 +284,7 @@ bmrf_curvel_3d::show_stats() const
         continue;
       double s2 = projs_2d_[ind2].second->epi_seg()->s(projs_2d_[ind2].first);
       double gamma = 1.0 / (((int(ind2) - int(ind1)) / (1.0 - s1/s2)) + double(ind1-base_frame));
-      vcl_cout << " frames " << ind1 << ',' << ind2 << " gamma=" << gamma << vcl_endl;
+      std::cout << " frames " << ind1 << ',' << ind2 << " gamma=" << gamma << std::endl;
     }
   }
 }
@@ -335,9 +335,9 @@ bmrf_curvel_3d::b_read( vsl_b_istream& is )
    }
 
    default:
-    vcl_cerr << "I/O ERROR: bmrf_curvel_3d::b_read(vsl_b_istream&)\n"
+    std::cerr << "I/O ERROR: bmrf_curvel_3d::b_read(vsl_b_istream&)\n"
              << "           Unknown version number "<< ver << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }
@@ -353,7 +353,7 @@ bmrf_curvel_3d::version() const
 
 //: Print an ascii summary to the stream
 void
-bmrf_curvel_3d::print_summary( vcl_ostream& os ) const
+bmrf_curvel_3d::print_summary( std::ostream& os ) const
 {
   os << "num_proj=" << this->num_projections_;
 }
@@ -394,7 +394,7 @@ vsl_b_read(vsl_b_istream &is, bmrf_curvel_3d* &c)
 
 //: Print an ASCII summary to the stream
 void
-vsl_print_summary(vcl_ostream &os, const bmrf_curvel_3d* c)
+vsl_print_summary(std::ostream &os, const bmrf_curvel_3d* c)
 {
   os << "bmrf_curvel_3d{ ";
   c->print_summary(os);

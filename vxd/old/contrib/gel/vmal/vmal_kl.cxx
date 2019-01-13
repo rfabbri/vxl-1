@@ -8,7 +8,7 @@
 #include <vmal/vmal_multi_view_data.h>
 #include <vtol/vtol_vertex_2d.h>
 
-#include <vcl_iostream.h>
+#include <iostream>
 
 
 vmal_kl::vmal_kl(const vmal_kl_params & params) : params_(params)
@@ -19,7 +19,7 @@ vmal_kl::~vmal_kl()
 {
 }
 
-void vmal_kl::match_sequence(vcl_vector<vil1_image> &image_list,vmal_multi_view_data_vertex_sptr matches)
+void vmal_kl::match_sequence(std::vector<vil1_image> &image_list,vmal_multi_view_data_vertex_sptr matches)
 {
   // Uses the KL tracker to track points through an image
   int nFeatures = params_.numpoints;
@@ -108,7 +108,7 @@ void vmal_kl::match_sequence(vcl_vector<vil1_image> &image_list,vmal_multi_view_
 #if 0 // vidl_vil1 no longer exists
 void vmal_kl::match_sequence(vidl_vil1_movie_sptr movie,vmal_multi_view_data_vertex_sptr matches)
 {
-  vcl_vector<vil1_image> image_list;
+  std::vector<vil1_image> image_list;
   for (vidl_vil1_movie::frame_iterator pframe = movie->first();
         pframe <= movie->last();
         ++pframe)
@@ -120,18 +120,18 @@ void vmal_kl::match_sequence(vidl_vil1_movie_sptr movie,vmal_multi_view_data_ver
 }
 #endif
 
-vcl_vector<vtol_vertex_2d_sptr>* vmal_kl::extract_points(vil1_image & image)
+std::vector<vtol_vertex_2d_sptr>* vmal_kl::extract_points(vil1_image & image)
 {
   int width=image.width();
   int height=image.height();
-  vcl_cerr << "Beginning points extraction\n";
+  std::cerr << "Beginning points extraction\n";
 
   KLT_PixelType* img1=convert_to_gs_image(image);
 
   // Now, run the extractor
   int nFeatures = params_.numpoints;
 
-  vcl_cerr << "Setting up the context...\n";
+  std::cerr << "Setting up the context...\n";
   // Set up the context
   KLT_TrackingContext tc = KLTCreateTrackingContext();
 
@@ -141,15 +141,15 @@ vcl_vector<vtol_vertex_2d_sptr>* vmal_kl::extract_points(vil1_image & image)
   // KLTPrintTrackingContext(tc);
 
   // Set up structure to hold the features.
-  vcl_cerr << "Setting up structure to hold the features...\n";
+  std::cerr << "Setting up structure to hold the features...\n";
   KLT_FeatureList fl = KLTCreateFeatureList(nFeatures);
 
   // Extract the features
-  vcl_cerr << "Extracting the features...\n";
+  std::cerr << "Extracting the features...\n";
   KLTSelectGoodFeatures(tc, img1, width, height, fl);
 
   // Make an IUPointGroup to hold the values
-   vcl_vector<vtol_vertex_2d_sptr> *grp = new vcl_vector<vtol_vertex_2d_sptr>();
+   std::vector<vtol_vertex_2d_sptr> *grp = new std::vector<vtol_vertex_2d_sptr>();
 
   for (int i=0 ; i< fl->nFeatures ; i++)
      {
@@ -172,13 +172,13 @@ vcl_vector<vtol_vertex_2d_sptr>* vmal_kl::extract_points(vil1_image & image)
 //Convert a vil1_image to an array of grey scale
 KLT_PixelType* vmal_kl::convert_to_gs_image(vil1_image &image)
 {
-  vcl_cerr << "Converting image to grey scale...\n";
+  std::cerr << "Converting image to grey scale...\n";
   if (vil1_pixel_format(image)==VIL1_RGB_BYTE)
   {
     int w=image.width();
     int h=image.height();
     KLT_PixelType* tab_mono=new KLT_PixelType[w*h];
-    vcl_cerr << "width: " <<w<< "  height"<<h<<  vcl_endl;
+    std::cerr << "width: " <<w<< "  height"<<h<<  std::endl;
 
     vil1_memory_image_of<vxl_byte> ima_mono;
     ima_mono.resize(w,h);

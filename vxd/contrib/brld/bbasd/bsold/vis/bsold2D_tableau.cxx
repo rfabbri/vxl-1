@@ -8,7 +8,7 @@
 #include <vsol/vsol_spatial_object_2d.h>
 #include <bsold/bsold_circ_arc_2d.h>
 #include <bsold/bsold_circ_arc_2d_sptr.h>
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vsol/vsol_curve_2d_sptr.h>
 
 bsold2D_tableau::bsold2D_tableau(const char* n) :
@@ -47,10 +47,10 @@ bsold2D_tableau::add_bsold_circ_arc_2d(bsold_circ_arc_2d_sptr const& circ_arc,
 }
 
 void bsold2D_tableau::
-add_spatial_objects(vcl_vector<vsol_spatial_object_2d_sptr> const& sos,
+add_spatial_objects(std::vector<vsol_spatial_object_2d_sptr> const& sos,
                     const vgui_style_sptr& style)
 {
-  for (vcl_vector<vsol_spatial_object_2d_sptr>::const_iterator sit = sos.begin();
+  for (std::vector<vsol_spatial_object_2d_sptr>::const_iterator sit = sos.begin();
        sit != sos.end(); sit++)
   {
     add_spatial_object( (*sit) , style );

@@ -1,9 +1,9 @@
 #include "bsold_corner_finder.h"
 #include <vnl/vnl_math.h>
-#include <vcl_algorithm.h>
-#include <vcl_iostream.h>
+#include <algorithm>
+#include <iostream>
 
-void bsold_corner_finder::find_corners(bsold_interp_curve_2d *c, bool is_open, vcl_string out_angle_diffs)
+void bsold_corner_finder::find_corners(bsold_interp_curve_2d *c, bool is_open, std::string out_angle_diffs)
 {
   VICINITY_ = 35;
   DIST_STEP_ = 0.5;
@@ -18,7 +18,7 @@ void bsold_corner_finder::find_corners(bsold_interp_curve_2d *c, bool is_open, v
 
 void bsold_corner_finder::find_corners(bsold_interp_curve_2d *c, bool is_open,
                                        int vicinity, double dist_step, double min_tan_turn,
-                                       vcl_string out_angle_diffs)
+                                       std::string out_angle_diffs)
 {
   VICINITY_ = vicinity;
   DIST_STEP_ = dist_step;
@@ -36,13 +36,13 @@ void bsold_corner_finder::get_tangent_angles()
   for(unsigned i=0; i < curve_->size()+1; i++)
   {
     _tangent.push_back(curve_->tangent_angle_at(curve_->length_at(i)));
-//    vcl_cout << c->tangent_angle_at(c->length_at(i)) << vcl_endl;
+//    std::cout << c->tangent_angle_at(c->length_at(i)) << std::endl;
   }
 }
 
 void bsold_corner_finder::compute_average_tangent_angles()
 {
-  vcl_pair<double, double> temp;
+  std::pair<double, double> temp;
   int tangent_size_int = static_cast<int>(_tangent.size());
   for (int i=0;i<tangent_size_int;i++)
   {
@@ -59,14 +59,14 @@ double bsold_corner_finder::aveTangent(int start, int count)
 
   if ((start < 0)||(start >= size))
   {
-    vcl_cout<<" Error:<aveTangent> Parameters out of range "<<vcl_endl;
+    std::cout<<" Error:<aveTangent> Parameters out of range "<<std::endl;
     return 0;
   }
   
   int count_mag = abs(count);
   double prev_tangent = 0, tangent_sum = 0;
   
-  vcl_vector<double> tangent_list;
+  std::vector<double> tangent_list;
   int index = 0;
   double tangent = 0;
   double av_tangent = 0;
@@ -116,7 +116,7 @@ double bsold_corner_finder::aveTangent(int start, int count)
   }
 
   // Sort the tangent list
-  vcl_sort(tangent_list.begin(), tangent_list.end());
+  std::sort(tangent_list.begin(), tangent_list.end());
 
   // Compute the average of tangent change
   for (unsigned i = 0; i < tangent_list.size(); i++) 
@@ -135,8 +135,8 @@ double bsold_corner_finder::aveTangent(int start, int count)
           
     if (fabs(tangent-prev_tangent) > vnl_math::pi) 
     {
-      vcl_cout << " Warning : Angle diff > M_PI. Prev " << prev_tangent*(180/vnl_math::pi) 
-        << " Tangent = " << tangent*(180/vnl_math::pi) << vcl_endl;
+      std::cout << " Warning : Angle diff > M_PI. Prev " << prev_tangent*(180/vnl_math::pi) 
+        << " Tangent = " << tangent*(180/vnl_math::pi) << std::endl;
     }
     
     tangent_sum  += tangent;
@@ -154,12 +154,12 @@ double bsold_corner_finder::aveTangent(int start, int count)
 
 void bsold_corner_finder::find_extrema()
 {
-  vcl_ofstream outfp;
+  std::ofstream outfp;
   if(out_angle_diffs_.empty() == 0)
     outfp.open(out_angle_diffs_.c_str());
 
   double diff=0;
-  vcl_vector<double> angle_diff;
+  std::vector<double> angle_diff;
   unsigned i;
   for (i=0;i<_aveTangent.size();i++)
   {
@@ -186,7 +186,7 @@ void bsold_corner_finder::find_extrema()
     next = (i+1)%size;
 
     if(out_angle_diffs_.empty() == 0)
-      outfp << i << " "  << curve_->point_at_sample(i)->x() << " " << curve_->point_at_sample(i)->y() << " " << angle_diff[i] << vcl_endl;
+      outfp << i << " "  << curve_->point_at_sample(i)->x() << " " << curve_->point_at_sample(i)->y() << " " << angle_diff[i] << std::endl;
 
     if ((angle_diff[i]>angle_diff[prev]) && (angle_diff[i]>=angle_diff[next])) 
     {

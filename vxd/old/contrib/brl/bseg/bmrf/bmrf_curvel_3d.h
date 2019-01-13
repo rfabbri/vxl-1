@@ -14,10 +14,10 @@
 #include <vnl/vnl_double_2.h>
 #include <vbl/vbl_ref_count.h>
 #include <vsl/vsl_binary_io.h>
-#include <vcl_vector.h>
-#include <vcl_map.h>
-#include <vcl_utility.h>
-#include <vcl_iosfwd.h> // for std::ostream
+#include <vector>
+#include <map>
+#include <utility>
+#include <iosfwd> // for std::ostream
 
 #include "bmrf_curvel_3d_sptr.h"
 
@@ -98,17 +98,17 @@ class bmrf_curvel_3d : public bugl_gaussian_point_3d<double>, public vbl_ref_cou
   short version() const;
 
   //: Print an ascii summary to the stream
-  void print_summary(vcl_ostream &os) const;
+  void print_summary(std::ostream &os) const;
 
  protected:
   //: Compute the gamma statistics on the current projections
   void compute_statistics();
 
   //: A vector of alpha/node pairs which represent the projection of this curvel into image i.
-  vcl_vector<vcl_pair<double,bmrf_node_sptr> > projs_2d_;
+  std::vector<std::pair<double,bmrf_node_sptr> > projs_2d_;
 
   //: A map of projections that have been interpolated and do not belong to a node
-  vcl_map<unsigned int, vnl_double_2> pseudo_points_;
+  std::map<unsigned int, vnl_double_2> pseudo_points_;
 
   //: The sum of gamma values of all projections relative to the frame 0
   double sum_gamma_;
@@ -134,6 +134,6 @@ void vsl_b_write(vsl_b_ostream &os, const bmrf_curvel_3d* n);
 void vsl_b_read(vsl_b_istream &is, bmrf_curvel_3d* &n);
 
 //: Print an ASCII summary to the stream
-void vsl_print_summary(vcl_ostream &os, const bmrf_curvel_3d* n);
+void vsl_print_summary(std::ostream &os, const bmrf_curvel_3d* n);
 
 #endif // bmrf_curvel_3d_h_

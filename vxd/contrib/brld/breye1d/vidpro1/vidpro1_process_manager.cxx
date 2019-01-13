@@ -5,15 +5,15 @@
 
 #include "vidpro1_process_manager.h"
 
-#include <vcl_cassert.h>
-#include <vcl_utility.h>
+#include <cassert>
+#include <utility>
 #include <vul/vul_arg.h>
 
 #include <bpro1/bpro1_storage.h>
 #include <bpro1/bpro1_process.h>
 #include <vidpro1/vidpro1_repository.h>
 
-vcl_multimap< vcl_string , bpro1_process_sptr > vidpro1_process_manager::process_map;
+std::multimap< std::string , bpro1_process_sptr > vidpro1_process_manager::process_map;
 
 //: Constructor
 vidpro1_process_manager::vidpro1_process_manager()
@@ -33,9 +33,9 @@ vidpro1_process_manager::~vidpro1_process_manager()
 
 //: Return a process with the given name
 bpro1_process_sptr
-vidpro1_process_manager::get_process_by_name( const vcl_string& name ) const
+vidpro1_process_manager::get_process_by_name( const std::string& name ) const
 {
-  vcl_multimap< vcl_string , bpro1_process_sptr >::const_iterator it = process_map.find( name );
+  std::multimap< std::string , bpro1_process_sptr >::const_iterator it = process_map.find( name );
   if( it == process_map.end() ) {
     return NULL ;
   }
@@ -68,7 +68,7 @@ vidpro1_process_manager::set_non_causual(bool non_causal)
 //: Run a process on the current frame
 bool
 vidpro1_process_manager::run_process_on_current_frame( const bpro1_process_sptr& process,
-                                                      vcl_set<bpro1_storage_sptr>* modified )
+                                                      std::set<bpro1_storage_sptr>* modified )
 {
   bool to_return = false;
 
@@ -77,8 +77,8 @@ vidpro1_process_manager::run_process_on_current_frame( const bpro1_process_sptr&
 
   // SET INPUTS ////////////////////////////////////////////
 
-  vcl_vector< vcl_string > input_type_list = process->get_input_type();
-  vcl_vector< vcl_string > input_names = process->input_names();
+  std::vector< std::string > input_type_list = process->get_input_type();
+  std::vector< std::string > input_names = process->input_names();
 
   for( unsigned int i = 0 ;
       i < input_names.size();
@@ -113,7 +113,7 @@ vidpro1_process_manager::run_process_on_current_frame( const bpro1_process_sptr&
           }
   }
 
-  vcl_vector<vcl_vector<bpro1_storage_sptr> >  initial_inputs;
+  std::vector<std::vector<bpro1_storage_sptr> >  initial_inputs;
   for(int a = 0; a < process->input_frames(); ++a)
     initial_inputs.push_back(process->get_input(a));
 
@@ -129,7 +129,7 @@ vidpro1_process_manager::run_process_on_current_frame( const bpro1_process_sptr&
   // See if any missing input storage classes have been created
   if( to_return ){
     for(int a = 0; a < process->input_frames(); ++a){
-      vcl_vector<bpro1_storage_sptr> final_inputs = process->get_input(a);
+      std::vector<bpro1_storage_sptr> final_inputs = process->get_input(a);
       for(unsigned int i = 0; i < final_inputs.size(); ++i){
         if( final_inputs[i] && !initial_inputs[a][i] ){
           final_inputs[i]->set_name(input_names[i]);
@@ -158,8 +158,8 @@ vidpro1_process_manager::run_process_on_current_frame( const bpro1_process_sptr&
         a < process->output_frames();
         a++ ) {
 
-      vcl_vector < bpro1_storage_sptr > output_storage_classes = process->get_output(a);
-      vcl_vector< vcl_string > output_names = process->output_names();
+      std::vector < bpro1_storage_sptr > output_storage_classes = process->get_output(a);
+      std::vector< std::string > output_names = process->output_names();
 
 
       // Any outputs beyond those specified with output_names() are 
@@ -205,9 +205,9 @@ vidpro1_process_manager::run_process_on_current_frame( const bpro1_process_sptr&
 
 
 bool
-vidpro1_process_manager::run_process_queue_on_current_frame( vcl_set<bpro1_storage_sptr>* modified )
+vidpro1_process_manager::run_process_queue_on_current_frame( std::set<bpro1_storage_sptr>* modified )
 {
-  vcl_vector< bpro1_process_sptr >::iterator it = process_queue.begin();
+  std::vector< bpro1_process_sptr >::iterator it = process_queue.begin();
   for (; it != process_queue.end(); ++it){
     bool success = run_process_on_current_frame( (*it), modified );
     if( !success )
@@ -222,7 +222,7 @@ vidpro1_process_manager::run_process_queue_on_current_frame( vcl_set<bpro1_stora
 bool
 vidpro1_process_manager::finish_process( int first_frame, int last_frame,
                                         const bpro1_process_sptr& process,
-                                        vcl_set<bpro1_storage_sptr>* modified )
+                                        std::set<bpro1_storage_sptr>* modified )
 {
   
   process->clear_input(last_frame+1);
@@ -230,11 +230,11 @@ vidpro1_process_manager::finish_process( int first_frame, int last_frame,
 
   // SET INPUTS ////////////////////////////////////////////
 
-  vcl_vector< vcl_string > input_type_list = process->get_input_type();
-  vcl_vector< vcl_string > input_names = process->input_names();
+  std::vector< std::string > input_type_list = process->get_input_type();
+  std::vector< std::string > input_names = process->input_names();
 
-  vcl_vector< vcl_string > output_type_list = process->get_output_type();
-  vcl_vector< vcl_string > output_names = process->output_names();
+  std::vector< std::string > output_type_list = process->get_output_type();
+  std::vector< std::string > output_names = process->output_names();
 
   //Get the right storage classes from the repository
   for( int f = first_frame; f <= last_frame; ++f) {
@@ -260,8 +260,8 @@ vidpro1_process_manager::finish_process( int first_frame, int last_frame,
   // GET OUTPUTS ///////////////////////////////////////////
   for( int f = 0; f <= last_frame; ++f)
   {
-    vcl_vector < bpro1_storage_sptr > output_storage_classes = process->get_output(f);
-    vcl_vector< vcl_string > output_names = process->output_names();
+    std::vector < bpro1_storage_sptr > output_storage_classes = process->get_output(f);
+    std::vector< std::string > output_names = process->output_names();
 
     // Any outputs beyond those specified with output_names() are 
     // added to the modified set but not added to the repository
@@ -291,9 +291,9 @@ vidpro1_process_manager::finish_process( int first_frame, int last_frame,
 //: Call the finish function on the process queue
 bool
 vidpro1_process_manager::finish_process_queue( int first_frame, int last_frame,
-                                              vcl_set<bpro1_storage_sptr>* modified )
+                                              std::set<bpro1_storage_sptr>* modified )
 {
-  vcl_vector< bpro1_process_sptr >::iterator it = process_queue.begin();
+  std::vector< bpro1_process_sptr >::iterator it = process_queue.begin();
   for (; it != process_queue.end(); ++it){
     bool success = finish_process( first_frame, last_frame, (*it), modified );
     if( !success )
@@ -326,11 +326,11 @@ vidpro1_process_manager::clear_process_queue()
 }
 
 
-vcl_vector <vcl_string>
+std::vector <std::string>
 vidpro1_process_manager::get_process_queue_list() const
 {
-  vcl_vector <vcl_string> list;
-  vcl_vector< bpro1_process_sptr >::const_iterator i = process_queue.begin();
+  std::vector <std::string> list;
+  std::vector< bpro1_process_sptr >::const_iterator i = process_queue.begin();
   for (; i!= process_queue.end(); i++)
   {
     list.push_back( (*i)->name() );
@@ -344,7 +344,7 @@ void
 vidpro1_process_manager::register_process( const bpro1_process_sptr& sptr )
 {
 
-  process_map.insert( vcl_pair< vcl_string , bpro1_process_sptr >( sptr->name() , sptr ) );
+  process_map.insert( std::pair< std::string , bpro1_process_sptr >( sptr->name() , sptr ) );
 
 }
 

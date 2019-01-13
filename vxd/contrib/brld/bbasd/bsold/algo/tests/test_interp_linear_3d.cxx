@@ -6,12 +6,12 @@
 #include <vgl/vgl_vector_3d.h>
 #include <vnl/vnl_math.h>
 
-#include <vcl_iostream.h> 
-#include <vcl_cmath.h>
-#include <vcl_limits.h>
-#include <vcl_cstring.h>
-#include <vcl_iostream.h>
-#include <vcl_cstdio.h>
+#include <iostream> 
+#include <cmath>
+#include <limits>
+#include <cstring>
+#include <iostream>
+#include <cstdio>
 
 MAIN( test_interp_linear_3d )
 {
@@ -19,7 +19,7 @@ MAIN( test_interp_linear_3d )
 
    double tolerance = 10e-6;
 
-   vcl_vector<vsol_point_3d_sptr> pts;
+   std::vector<vsol_point_3d_sptr> pts;
 
    pts.push_back(new vsol_point_3d(0, -1, 0));
    pts.push_back(new vsol_point_3d(0, 0, 0));
@@ -29,7 +29,7 @@ MAIN( test_interp_linear_3d )
 
    bsold_interp_curve_3d c;
    bsold_curve_3d_algs::interpolate_linear_3d(&c, pts);
-   vcl_cout << c;
+   std::cout << c;
 
    TEST_NEAR("point sample test 1x: ", (*(c.point_at_sample(3))).x(), 2, tolerance);
    TEST_NEAR("point sample test 1y: ", (*(c.point_at_sample(3))).y(), 0, tolerance);

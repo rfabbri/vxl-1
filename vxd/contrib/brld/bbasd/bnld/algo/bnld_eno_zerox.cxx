@@ -1,4 +1,4 @@
-#include <vcl_cassert.h>
+#include <cassert>
 #include "bnld_eno_zerox.h"
 
 //:
@@ -196,7 +196,7 @@ bnld_eno_zerox_vector(const bnld_eno_1d &eno)
 {
 #ifndef NDEBUG
    if (!eno.interps_been_computed()) {
-      vcl_cerr << "eno object with no interpolation data" << vcl_endl;
+      std::cerr << "eno object with no interpolation data" << std::endl;
       // TODO: improve error treatment
       return;
    }
@@ -234,25 +234,25 @@ bnld_eno_zerox_vector(const bnld_eno_shock_1d &eno)
 }
 
 void bnld_eno_zero_crossing::
-print(vcl_ostream &strm) const
+print(std::ostream &strm) const
 {
-   strm << "==== Zeros ====" << vcl_endl
-        << "quantity: " << number() << vcl_endl;
+   strm << "==== Zeros ====" << std::endl
+        << "quantity: " << number() << std::endl;
 
    if (number() != 0)
-      strm << "location: " << vcl_endl;
+      strm << "location: " << std::endl;
 
    for (unsigned i=0; i<number(); ++i)
       strm << location(i) << "  ";
-   strm << vcl_endl;
+   strm << std::endl;
 }
 
 void bnld_eno_zerox_vector::
-print(vcl_ostream& strm) const
+print(std::ostream& strm) const
 {
 
-   strm << "==== Zerox Vector ====" << vcl_endl
-        << "len: " << z_.size() << vcl_endl;
+   strm << "==== Zerox Vector ====" << std::endl
+        << "len: " << z_.size() << std::endl;
 
    unsigned i;
    for (i=0; i < z_.size(); ++i)
@@ -260,10 +260,10 @@ print(vcl_ostream& strm) const
 }
 
 void bnld_eno_zerox_vector::
-print(bnld_eno_1d &eno, vcl_ostream& strm) const
+print(bnld_eno_1d &eno, std::ostream& strm) const
 {
-   strm << "==== Eno 1D with Zerocrossing ====" << vcl_endl
-        << "len: " << eno.size() << vcl_endl;
+   strm << "==== Eno 1D with Zerocrossing ====" << std::endl
+        << "len: " << eno.size() << std::endl;
 
    unsigned i;
    for (i=0; i < eno.size(); ++i) {
@@ -273,10 +273,10 @@ print(bnld_eno_1d &eno, vcl_ostream& strm) const
 }
 
 void bnld_eno_zerox_vector::
-print(bnld_eno_shock_1d &eno, vcl_ostream& strm) const
+print(bnld_eno_shock_1d &eno, std::ostream& strm) const
 {
-   strm << "==== Eno 1D with Shocks ====" << vcl_endl
-        << "len: " << eno.size() << vcl_endl;
+   strm << "==== Eno 1D with Shocks ====" << std::endl
+        << "len: " << eno.size() << std::endl;
 
    unsigned i;
    for (i=0; i < eno.size(); ++i) {

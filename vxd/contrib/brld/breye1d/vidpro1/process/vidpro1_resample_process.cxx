@@ -19,7 +19,7 @@
 vidpro1_resample_process::vidpro1_resample_process()
 {
   if( !parameters()->add( "Scale" , "-scale" , 0.5f ) ) {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -39,7 +39,7 @@ vidpro1_resample_process::clone() const
 
 
 //: Return the name of the process
-vcl_string
+std::string
 vidpro1_resample_process::name()
 {
   return "Resample";
@@ -47,18 +47,18 @@ vidpro1_resample_process::name()
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string > vidpro1_resample_process::get_input_type()
+std::vector< std::string > vidpro1_resample_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string > vidpro1_resample_process::get_output_type()
+std::vector< std::string > vidpro1_resample_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back("image");
   return to_return;
 }
@@ -86,7 +86,7 @@ vidpro1_resample_process::execute()
 {
   if ( input_data_.size() != 1 )
   {
-      vcl_cout << "In vidpro1_resample_process::execute() - not exactly one"
+      std::cout << "In vidpro1_resample_process::execute() - not exactly one"
                << " input image \n";
       return false;
   }

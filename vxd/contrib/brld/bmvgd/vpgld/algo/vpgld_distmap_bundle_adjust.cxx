@@ -7,17 +7,17 @@
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_point_3d.h>
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_algorithm.h>
-#include <vcl_cassert.h>
+#include <iostream>
+#include <fstream>
+#include <algorithm>
+#include <cassert>
 
 //: Constructor
 vpgld_distmap_bundle_adj_lsqr::
 vpgld_distmap_bundle_adj_lsqr(
-  const vcl_vector<vpgl_calibration_matrix<double> >& K,
-  const vcl_vector<vil_image_view<vxl_uint_32> > &dt,
-  const vcl_vector<vcl_vector<bool> >& mask
+  const std::vector<vpgl_calibration_matrix<double> >& K,
+  const std::vector<vil_image_view<vxl_uint_32> > &dt,
+  const std::vector<std::vector<bool> >& mask
   )
  : 
    // The base

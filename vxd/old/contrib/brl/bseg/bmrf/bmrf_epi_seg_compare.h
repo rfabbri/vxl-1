@@ -10,7 +10,7 @@
 //---------------------------------------------------------------------
 
 
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include "bmrf_epi_seg_sptr.h"
 #include "bmrf_epi_seg.h"
 
@@ -18,21 +18,21 @@
 inline double bmrf_min_alpha( const bmrf_epi_seg_sptr& ep1,
                               const bmrf_epi_seg_sptr& ep2 )
 {
-  return vcl_max(ep1->min_alpha(), ep2->min_alpha());
+  return std::max(ep1->min_alpha(), ep2->min_alpha());
 }
 
 //: Return the maximum alpha value in both epi-segments
 inline double bmrf_max_alpha( const bmrf_epi_seg_sptr& ep1,
                               const bmrf_epi_seg_sptr& ep2 )
 {
-  return vcl_min(ep1->max_alpha(), ep2->max_alpha());
+  return std::min(ep1->max_alpha(), ep2->max_alpha());
 }
 
 //: Return the minimum alpha step size needed for both epi-segments
 inline double bmrf_d_alpha( const bmrf_epi_seg_sptr& ep1,
                             const bmrf_epi_seg_sptr& ep2 )
 {
-  return vcl_min((ep1->max_alpha() - ep1->min_alpha())/ep1->n_pts() ,
+  return std::min((ep1->max_alpha() - ep1->min_alpha())/ep1->n_pts() ,
                  (ep2->max_alpha() - ep2->min_alpha())/ep2->n_pts() );
 }
 

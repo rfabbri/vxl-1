@@ -1,9 +1,9 @@
 // This is bbasd/bsold/vis/bsold_circ_arc_2d.cxx
 #include "bsold_circ_arc_2d.h"
 
-#include <vcl_cassert.h>
-#include <vcl_cmath.h>
-#include <vcl_iostream.h>
+#include <cassert>
+#include <cmath>
+#include <iostream>
 #include <vnl/vnl_math.h>
 #include <vbl/io/vbl_io_smart_ptr.h>
 #include <vsol/vsol_point_2d.h>
@@ -145,16 +145,16 @@ double bsold_circ_arc_2d::distance(vsol_point_2d_sptr const& query_pt) const
 ////---------------------------------------------------------------------------
 ////: Return the set of (real) intersection points of this arc with a line
 ////---------------------------------------------------------------------------
-//vcl_list<vsol_point_2d_sptr>
+//std::list<vsol_point_2d_sptr>
 //bsold_circ_arc_2d::intersection(vsol_line_2d const& l) const
 //{
 //  vgl_homg_point_2d<double> p0(l.p0()->x(), l.p0()->y(), 1.0),
 //                            p1(l.p1()->x(), l.p1()->y(), 1.0);
 //  vgl_homg_line_2d<double> line(p0,p1);
-//  vcl_list<vgl_homg_point_2d<double> > vv =
+//  std::list<vgl_homg_point_2d<double> > vv =
 //    vgl_homg_operators_2d<double>::intersection(*this,line);
-//  vcl_list<vsol_point_2d_sptr> v;
-//  vcl_list<vgl_homg_point_2d<double> >::iterator it = vv.begin();
+//  std::list<vsol_point_2d_sptr> v;
+//  std::list<vgl_homg_point_2d<double> >::iterator it = vv.begin();
 //  for (; !(it == vv.end()); ++it) {
 //    if ((*it).w() != 0)  v.push_back(new vsol_point_2d((*it)));
 //  }

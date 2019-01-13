@@ -22,19 +22,19 @@ void test_bgld_fit_circ_arc_spline()
   // y = 100* sin(2*pi * t);
   // t = x / 100;
 
-  vcl_vector<vgl_point_2d<double > > pts;
+  std::vector<vgl_point_2d<double > > pts;
   for (unsigned i =0; i <= 50; ++i)
   {
     double t = i * (1.0/50);
     double x = 100 * t;
-    double y = 100 * vcl_sin(2 * vnl_math::pi * t);
+    double y = 100 * std::sin(2 * vnl_math::pi * t);
     pts.push_back(vgl_point_2d<double > (x, y));
   }
 
   // Interpolate these curves with a polyarc
   
   //: Interpolate a set of points with a circular arc spline
-  vcl_vector<bgld_circ_arc > arc_list;
+  std::vector<bgld_circ_arc > arc_list;
   double tol = 1;
 
   bool success = bgld_fit_circ_arc_spline_to_polyline(arc_list, pts, tol);
@@ -60,7 +60,7 @@ void test_bgld_fit_circ_arc_spline()
     max_error = (max_error >= min_distance) ? max_error : min_distance;
   }
 
-  vcl_cout << "tol = " << tol << "\n"
+  std::cout << "tol = " << tol << "\n"
     << "max_error = " << max_error << "\n"
     << "Number of arc segments = " << arc_list.size() << "\n";
 
@@ -80,19 +80,19 @@ void test_bgld_fit_circ_arc_spline()
   double b = 50;
 
 
-  vcl_vector<vgl_point_2d<double > > pts2;
+  std::vector<vgl_point_2d<double > > pts2;
   for (unsigned i =0; i <= 50; ++i)
   {
     double t = i * (vnl_math::pi/50) - vnl_math::pi_over_2;
-    double x = a * vcl_cos(t);
-    double y = b * vcl_sin(t);
+    double x = a * std::cos(t);
+    double y = b * std::sin(t);
     pts2.push_back(vgl_point_2d<double > (x, y));
   }
 
   // Interpolate these curves with a polyarc
   
   //: Interpolate a set of points with a circular arc spline
-  vcl_vector<bgld_circ_arc > arc_list2;
+  std::vector<bgld_circ_arc > arc_list2;
   double tol2 = 2;
   
   bool success2 = bgld_fit_circ_arc_spline_to_polyline(arc_list2, pts2, tol2);
@@ -118,7 +118,7 @@ void test_bgld_fit_circ_arc_spline()
     max_error2 = (max_error2 >= min_distance) ? max_error2 : min_distance;
   }
 
-  vcl_cout << "tol2 = " << tol2 << "\n"
+  std::cout << "tol2 = " << tol2 << "\n"
     << "max_error2 = " << max_error2 << "\n"
     << "Number of arc segments2 = " << arc_list2.size() << "\n";
 

@@ -1,5 +1,5 @@
 #include "becld_epiband_builder.h"
-#include <vcl_stack.h>
+#include <stack>
 #include <vsol/vsol_point_2d.h>
 #include <vsol/vsol_box_2d.h>
 #include <vgl/vgl_distance.h>
@@ -57,21 +57,21 @@
 void becld_epiband_builder::
 build_epibands_iteratively(
       bool reinitialize, unsigned v,
-      const vcl_vector<bool> &is_specified,
-      const vcl_vector<vsol_point_2d_sptr> &points,
-      vcl_vector< vcl_vector<becld_epiband *> > &epband_,
-      const vcl_vector <vsol_box_2d_sptr> &bbox_,
-      const vcl_vector< vcl_vector<vpgl_fundamental_matrix<double> > > &fm_,
+      const std::vector<bool> &is_specified,
+      const std::vector<vsol_point_2d_sptr> &points,
+      std::vector< std::vector<becld_epiband *> > &epband_,
+      const std::vector <vsol_box_2d_sptr> &bbox_,
+      const std::vector< std::vector<vpgl_fundamental_matrix<double> > > &fm_,
       double err_pos_
         )
 {
 
-  vcl_stack<unsigned> stk;
+  std::stack<unsigned> stk;
 #ifdef DEBUG
   unsigned n_iter =0;
 #endif
 
-  vcl_vector<bool> is_in_stack;
+  std::vector<bool> is_in_stack;
   unsigned nviews_ = epband_.size();
 
   is_in_stack.resize(nviews_,false);
@@ -122,7 +122,7 @@ build_epibands_iteratively(
     stk.pop();
     is_in_stack[v] = false;
 #ifdef DEBUG
-    vcl_cout << "\nIteration #" << ++n_iter << ", view: " << v << vcl_endl;
+    std::cout << "\nIteration #" << ++n_iter << ", view: " << v << std::endl;
 #endif
 
     for (unsigned i=0; i < nviews_; ++i) {
@@ -135,7 +135,7 @@ build_epibands_iteratively(
       }
 
 #ifdef DEBUG
-      vcl_cout << "Creating band at view " << i << vcl_endl;
+      std::cout << "Creating band at view " << i << std::endl;
 #endif
 
       // Compute epipolars 
@@ -159,7 +159,7 @@ build_epibands_iteratively(
       bool new_polygon = true;
 
 #ifdef DEBUG
-      vcl_cout << "Err pos: " << err_pos_ << "  Epipolar band width view #" <<  i+1 <<  " (deg): " << (2.0*err_theta/vnl_math::pi)*180.0 << vcl_endl; 
+      std::cout << "Err pos: " << err_pos_ << "  Epipolar band width view #" <<  i+1 <<  " (deg): " << (2.0*err_theta/vnl_math::pi)*180.0 << std::endl; 
 #endif
       if (epband_[i][i]) {
         becld_epiband prv(*(epband_[i][i]));
@@ -167,10 +167,10 @@ build_epibands_iteratively(
         double area1 = epband_[i][i]->area();
         double area2 = prv.area();
         assert(area1 >= 0 && area2 >= 0);
-        new_polygon  = vcl_fabs(area1 - area2) > 0.1*err_pos_;
+        new_polygon  = std::fabs(area1 - area2) > 0.1*err_pos_;
 #ifdef DEBUG
         if (!new_polygon)
-          vcl_cout << "Area not smaller than what we had\n";
+          std::cout << "Area not smaller than what we had\n";
 #endif
       } else {
         epband_[i][i] = new becld_epiband(*(epband_[v][i]));

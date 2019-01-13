@@ -2,7 +2,7 @@
 #include <becld/becld_epiband.h>
 #include <vgl/vgl_distance.h>
 #include <vil/vil_print.h>
-#include <vcl_cstdlib.h>
+#include <cstdlib>
 
 
 // 8-nhood coordinates
@@ -34,15 +34,15 @@ becld_epiband_iterator( const becld_epiband &band ,becld_grid_cover_window &win,
 void becld_grid_cover_window::
 print() const
 { 
-  vcl_cout << "becld_grid_cover_window:\n";
-  vcl_cout << "clip window:";
-  win_.print(vcl_cout);
-  vcl_cout << vcl_endl;
-  vcl_cout << "label array:";
-  label_buf_.print(vcl_cout);
-//  vil_print_all(vcl_cout,label_buf_);
-  vcl_cout << vcl_endl;
-  vcl_cout << vcl_endl;
+  std::cout << "becld_grid_cover_window:\n";
+  std::cout << "clip window:";
+  win_.print(std::cout);
+  std::cout << std::endl;
+  std::cout << "label array:";
+  label_buf_.print(std::cout);
+//  vil_print_all(std::cout,label_buf_);
+  std::cout << std::endl;
+  std::cout << std::endl;
 }
 
 bool becld_grid_cover_window::
@@ -90,7 +90,7 @@ becld_polygon_grid_cover_iterator( vgl_polygon<double> const &poly, becld_grid_c
   reset();
 
   if (poly.num_sheets() > 1)
-    vcl_cerr << "WARNING: multiple sheets not yet supported by grid cover iterator \n";
+    std::cerr << "WARNING: multiple sheets not yet supported by grid cover iterator \n";
 }
 
 
@@ -155,7 +155,7 @@ reset()
 {
   clear_labels();
 
-  stk_ = vcl_stack<vgl_point_2d<int> >();
+  stk_ = std::stack<vgl_point_2d<int> >();
   p_.set((int)-1,(int)-1);
 
   // assert poly has no negative coordinates
@@ -166,15 +166,15 @@ reset()
   // Select initial vertex
   
   unsigned ip = 0;
-  vcl_vector<vgl_point_2d<double> > &sheet = poly_[0];
+  std::vector<vgl_point_2d<double> > &sheet = poly_[0];
 
   while (ip < sheet.size() && !(win_.valid_x(BECLD_ROUND(sheet[ip].x())) && win_.valid_y(BECLD_ROUND(sheet[ip].y()))))
     ip++;
 
   if (ip == sheet.size()) { // empty integer regions
     // now test if any vertex of the box is to polygon
-    vcl_cout << "PROBLEM: POLYGON UNEMPTY, BUT NO VERTEX IN BOX!\n";
-    vcl_abort();
+    std::cout << "PROBLEM: POLYGON UNEMPTY, BUT NO VERTEX IN BOX!\n";
+    std::abort();
     return;
   }
 
@@ -227,7 +227,7 @@ becld_slow_polygon_grid_cover_iterator( vgl_polygon<double> const &poly, double 
   reset();
 
   if (poly.num_sheets() > 1)
-    vcl_cerr << "WARNING: multiple sheets not yet supported by grid cover iterator \n";
+    std::cerr << "WARNING: multiple sheets not yet supported by grid cover iterator \n";
 }
 
 
@@ -283,7 +283,7 @@ void becld_slow_polygon_grid_cover_iterator::
 reset()
 {
   label_.clear();
-  stk_ = vcl_stack<vgl_point_2d<int> >();
+  stk_ = std::stack<vgl_point_2d<int> >();
   p_.set((int)-1,(int)-1);
 
   // assert poly has no negative coordinates

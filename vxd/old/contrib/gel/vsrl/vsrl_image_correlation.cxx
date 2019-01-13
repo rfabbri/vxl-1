@@ -1,9 +1,9 @@
 // This is gel/vsrl/vsrl_image_correlation.cxx
 #include "vsrl_image_correlation.h"
 
-#include <vcl_cmath.h> // for sqrt(double)
-#include <vcl_cstdlib.h>
-#include <vcl_cassert.h>
+#include <cmath> // for sqrt(double)
+#include <cstdlib>
+#include <cassert>
 #include <vil1/vil1_image.h>
 #include <vsrl/vsrl_window_accumulator.h>
 #include <vsrl/vsrl_parameters.h>
@@ -117,7 +117,7 @@ void vsrl_image_correlation::compute_local_stats(vnl_matrix<double> &im, vnl_mat
     {
       double xx=std(r,c);
       double m=mean(r,c);
-      std(r,c) = vcl_sqrt(xx-m*m);
+      std(r,c) = std::sqrt(xx-m*m);
     }
 }
 
@@ -252,7 +252,7 @@ void vsrl_image_correlation::initial_calculations()
 
   // now allocate memory for the various corelation matrix values
 
-  image_correlations_ = (vnl_matrix<double>**)(vcl_malloc(sizeof(*image_correlations_) * (correlation_range_*2 +1)));
+  image_correlations_ = (vnl_matrix<double>**)(std::malloc(sizeof(*image_correlations_) * (correlation_range_*2 +1)));
 
   // now compute each correlation
 
@@ -388,7 +388,7 @@ void vsrl_image_correlation::compute_local_stats(vil1_byte_buffer &buf, int x, i
 
     double var=sum_xx/N  - mean*mean;
 
-    std= vcl_sqrt(var);
+    std= std::sqrt(var);
   }
   else
   {
@@ -582,6 +582,6 @@ void vsrl_image_correlation::get_correlation_stats(int x, int y, double &mean, d
   {
     mean = sum_z/N;
     double var = sum_zz/N - mean*mean;
-    std = vcl_sqrt(var);
+    std = std::sqrt(var);
   }
 }

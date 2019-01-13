@@ -6,9 +6,9 @@
  *                                    Time-stamp: <2008-03-07 13:51:54 sugaya>
  * ************************************************************************* */
 
-#include <vcl_cstdlib.h>
-#include <vcl_cstring.h>
-#include <vcl_cstdarg.h>
+#include <cstdlib>
+#include <cstring>
+#include <cstdarg>
 
 #include "matrix.h"
 

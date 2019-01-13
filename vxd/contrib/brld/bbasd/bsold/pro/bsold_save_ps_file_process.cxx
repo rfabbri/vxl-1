@@ -28,7 +28,7 @@ bsold_save_ps_file_process()
   if( !parameters()->add( "Output PS file:", "-ps_file", bpro1_filepath("","*.ps")) 
     ) 
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -45,7 +45,7 @@ bsold_save_ps_file_process::clone() const
 }
 
 //: Return the name of this process
-vcl_string 
+std::string 
 bsold_save_ps_file_process::name()
 {
   return "Save vsol2D to Postscript File";
@@ -63,20 +63,20 @@ output_frames()
   return 1;
 }
 
-vcl_vector< vcl_string > bsold_save_ps_file_process::
+std::vector< std::string > bsold_save_ps_file_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   to_return.push_back( "vsol2D" );
   return to_return;
 }
 
 
-vcl_vector< vcl_string >
+std::vector< std::string >
 bsold_save_ps_file_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.clear();
   return to_return;
 }
@@ -87,8 +87,8 @@ execute()
 {
   if ( input_data_.size() != 1 )
   {
-    vcl_cout << "In bsold_save_ps_file_process::execute() - not exactly one" 
-      << " input image" << vcl_endl;
+    std::cout << "In bsold_save_ps_file_process::execute() - not exactly one" 
+      << " input image" << std::endl;
     return false;
   }
   this->clear_output();
@@ -114,10 +114,10 @@ execute()
 
 
 
-  vcl_string filename = ps_file.path;
+  std::string filename = ps_file.path;
 
-  vcl_vector<vsol_spatial_object_2d_sptr > vsol_data = vsol_storage->all_data();
-  vcl_vector<vil_rgb<float > > colors;
+  std::vector<vsol_spatial_object_2d_sptr > vsol_data = vsol_storage->all_data();
+  std::vector<vil_rgb<float > > colors;
   // everything blue
   for (unsigned i =0; i < vsol_data.size(); ++i)
   {
@@ -128,11 +128,11 @@ execute()
   // MAIN function ///////////////////////////////////////////////////////
   if (bsold_save_ps_file(ps_file.path, image_resource, vsol_data, colors))
   {
-    vcl_cout << "Writing postscript file succeeded.\n";
+    std::cout << "Writing postscript file succeeded.\n";
   }
   else
   {
-    vcl_cout << "ERROR: Writing postscript file failed.\n";
+    std::cout << "ERROR: Writing postscript file failed.\n";
   }
   ////////////////////////////////////////////////////////////////////////
 

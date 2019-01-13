@@ -12,16 +12,16 @@
 #define MANAGER bvis1_manager::instance()
 
 void bvis1_util::
-load_imgs_into_frames(const vcl_vector<vcl_string> &imgs_fnames, bool use_filenames)
+load_imgs_into_frames(const std::vector<std::string> &imgs_fnames, bool use_filenames)
 {
   for (unsigned v=0; v < imgs_fnames.size(); ++v) {
 
-    vcl_string image_filename = imgs_fnames[v];
+    std::string image_filename = imgs_fnames[v];
 
     vil_image_resource_sptr loaded_image 
       = vil_load_image_resource( image_filename.c_str() );
     if( !loaded_image ) {
-      vcl_cerr << "Failed to load image file" << image_filename << vcl_endl;
+      std::cerr << "Failed to load image file" << image_filename << std::endl;
       return;
     }
     vidpro1_image_storage_sptr is = vidpro1_image_storage_new();

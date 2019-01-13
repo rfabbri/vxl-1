@@ -18,15 +18,15 @@
 // for I/O:
 #include <vil1/vil1_load.h>
 #include <vil1/vil1_save.h>
-#include <vcl_iostream.h>
-#include <vcl_cstdlib.h> // for atof()
+#include <iostream>
+#include <cstdlib> // for atof()
 
 int
 main(int argc, char** argv)
 {
   if (argc < 3)
   {
-    vcl_cerr << "Syntax: example_dilate_disk file_in file_out [radius]\n";
+    std::cerr << "Syntax: example_dilate_disk file_in file_out [radius]\n";
     return 1;
   }
 
@@ -34,14 +34,14 @@ main(int argc, char** argv)
   vil1_image in = vil1_load(argv[1]);
 
   // The radius: (default is 3+3 cross)
-  float radius = (argc < 4) ? 1.0f : (float)vcl_atof(argv[3]);
+  float radius = (argc < 4) ? 1.0f : (float)std::atof(argv[3]);
 
   // The filter:
   vil1_image out = vepl1_dilate_disk(in,radius);
 
   // Write output:
   vil1_save(out, argv[2], "pnm");
-  vcl_cout << "Written image of type PNM to " << argv[2] << vcl_endl;
+  std::cout << "Written image of type PNM to " << argv[2] << std::endl;
 
   return 0;
 }

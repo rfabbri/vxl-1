@@ -5,18 +5,18 @@
 
 #include <testlib/testlib_test.h>
 #include <bgld/algo/bgld_circ_arc.h>
-#include <vcl_cmath.h>
-#include <vcl_limits.h>
+#include <cmath>
+#include <limits>
 #include <vgl/vgl_distance.h>
 //////#include <vnl/vnl_math.h>
 
 //: test functions of bgld_circ_arc class
 void test_bgld_circ_arc_functions()
 {
-  vcl_cout << "In test_bgld_circ_arc_functions()\n";
+  std::cout << "In test_bgld_circ_arc_functions()\n";
   vgl_point_2d<double > circ_center(2, 1);
   vgl_point_2d<double > point1(0, 1);
-  vgl_point_2d<double > point2(3, 1+vcl_sqrt(3.0));
+  vgl_point_2d<double > point2(3, 1+std::sqrt(3.0));
   double k = -0.5;
 
   // construct the circular arc
@@ -32,53 +32,53 @@ void test_bgld_circ_arc_functions()
 
   vgl_vector_2d<double > chord_dir = arc1.chord_dir();
   TEST_NEAR("chord_dir()", atan2(chord_dir.y(), chord_dir.x()), pi/6, 1e-8);
-  TEST_NEAR("chord_length()", arc1.chord_len(), vcl_sqrt(12.0), 1e-8);
+  TEST_NEAR("chord_length()", arc1.chord_len(), std::sqrt(12.0), 1e-8);
 
   double dist = (arc1.chord_midpoint()-
-    vgl_point_2d<double >(1.5, 1+vcl_sqrt(3.0)/2)).length();
+    vgl_point_2d<double >(1.5, 1+std::sqrt(3.0)/2)).length();
   TEST("chord_midpoint()", dist < 1e-8, true);
 
   TEST_NEAR("central_angle()", arc1.central_angle(), -2*pi/3, 1e-8);
   TEST_NEAR("height()", arc1.height(), 1, 1e-8);
   TEST_NEAR("len()", arc1.len(), 2*pi*2/3, 1e-8);
 
-  double true_area = 0.5 * 2*2* (pi * 2.0/3) - 0.5 * 2*2 * vcl_sin(pi * 2.0/3);
+  double true_area = 0.5 * 2*2* (pi * 2.0/3) - 0.5 * 2*2 * std::sin(pi * 2.0/3);
 
   TEST_NEAR("area()", arc1.area(), true_area, 1e-8);
   TEST_NEAR("area_approx()", arc1.area_approx(), true_area, 0.01*true_area);
 
 
-  //vcl_cout << "true area = " << true_area << vcl_endl;
-  //vcl_cout << "area = " << arc1.area() << vcl_endl;
-  //vcl_cout << "area approximation = " << arc1.area_approx() << vcl_endl;
+  //std::cout << "true area = " << true_area << std::endl;
+  //std::cout << "area = " << arc1.area() << std::endl;
+  //std::cout << "area approximation = " << arc1.area_approx() << std::endl;
 
   vgl_vector_2d<double > tangent1 = arc1.tangent_at_start();
-  TEST_NEAR("tangent_at_start()", vcl_atan2(tangent1.y(), 
+  TEST_NEAR("tangent_at_start()", std::atan2(tangent1.y(), 
     tangent1.x()), pi/2, 1e-8);
 
   vgl_vector_2d<double > tangent2 = arc1.tangent_at_end();
-  TEST_NEAR("tangent_at_end()", vcl_atan2(tangent2.y(), 
+  TEST_NEAR("tangent_at_end()", std::atan2(tangent2.y(), 
     tangent2.x()), -pi/6, 1e-8);
 
   vgl_vector_2d<double > normal1 = arc1.normal_at_start();
-  TEST_NEAR("normal_at_start()", vcl_atan2(normal1.y(), normal1.x()), 0, 1e-8);
+  TEST_NEAR("normal_at_start()", std::atan2(normal1.y(), normal1.x()), 0, 1e-8);
 
 
   vgl_vector_2d<double > normal2 = arc1.normal_at_end();
-  TEST_NEAR("normal_at_end()", vcl_atan2(normal2.y(), normal2.x()), 
+  TEST_NEAR("normal_at_end()", std::atan2(normal2.y(), normal2.x()), 
     -2*pi/3, 1e-8);
 
-  //vcl_cout << "\n\nCircle center " << arc1.center() << vcl_endl;
+  //std::cout << "\n\nCircle center " << arc1.center() << std::endl;
   dist = (circ_center-arc1.center()).length();
   TEST("center()", dist < 1e-8, true);
 
   vgl_point_2d<double > pt = arc1.point_at_length(2*pi/3);
-  //vcl_cout << "\n\nPt at 2*pi/3" << pt << vcl_endl;
-  dist = (pt-vgl_point_2d<double >(1, 1+vcl_sqrt(3.0))).length();
+  //std::cout << "\n\nPt at 2*pi/3" << pt << std::endl;
+  dist = (pt-vgl_point_2d<double >(1, 1+std::sqrt(3.0))).length();
   TEST("point_at_length(s)", dist < 1e-8, true);
 
   vgl_vector_2d<double > t = arc1.tangent_at_length(pi);
-  TEST_NEAR("tangent_at_length(s)", vcl_atan2(t.y(), t.x()), 0, 1e-8);
+  TEST_NEAR("tangent_at_length(s)", std::atan2(t.y(), t.x()), 0, 1e-8);
 
   TEST_NEAR("curvature_at_length(s)", arc1.curvature_at_length(1.0112), 
     k, 1e-8);
@@ -96,15 +96,15 @@ void test_bgld_circ_arc_functions()
 
 void test_bgld_circ_arc_creation()
 {
-  vcl_cout << "In test_bgld_circ_arc_creation()\n";
+  std::cout << "In test_bgld_circ_arc_creation()\n";
 
   // test creating circular arcs from three points
   // k = 0.5
   vgl_point_2d<double > start (0, 0);
-  vgl_point_2d<double > end (2*vcl_sqrt((double)3.0), 0);
+  vgl_point_2d<double > end (2*std::sqrt((double)3.0), 0);
   
-   vgl_point_2d<double > middle(vcl_sqrt(3.0) - 1, vcl_sqrt(3.0)-1);
-  //vgl_point_2d<double > middle(vcl_sqrt(3.0), 1);
+   vgl_point_2d<double > middle(std::sqrt(3.0) - 1, std::sqrt(3.0)-1);
+  //vgl_point_2d<double > middle(std::sqrt(3.0), 1);
   bgld_circ_arc arc;
   arc.set_from(start, middle, end);
   double true_k = -0.5;
@@ -115,13 +115,13 @@ void test_bgld_circ_arc_creation()
 
 
   // test creating a circular arc from center, starting point, and normal at ending point
-  vgl_point_2d<double > center(vcl_sqrt(3.0), -1);
+  vgl_point_2d<double > center(std::sqrt(3.0), -1);
   vgl_vector_2d<double > end_normal(4, 0);
   arc.set_from(start, center, end_normal);
   
   TEST_NEAR("Circular arc from 1 point, 1 center, 1 normal - curvature", arc.k(), 0.5, 1e-8);
 
-  vgl_point_2d<double > true_end_pt(vcl_sqrt(3.0)-2, -1);
+  vgl_point_2d<double > true_end_pt(std::sqrt(3.0)-2, -1);
   double error = (true_end_pt-arc.point2()).length();
   TEST_NEAR("Circular arc from 1 point, 1 center, 1 normal - end point", error, 0, 1e-8);
 

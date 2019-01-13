@@ -1,13 +1,13 @@
 // This is bbasd/bgld/algo/tests/test_diffgeom.cxx
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <bgld/algo/bgld_diffgeom.h>
 #include <vnl/vnl_math.h>
 
 //: Test differential geometry estimation functions
 MAIN( test_diffgeom )
 {
-   vcl_vector< vgl_point_2d<double> > vertices;
+   std::vector< vgl_point_2d<double> > vertices;
    const double tolerance = 1e-8;
    //Simple test for cos(x) points
    vertices.push_back(vgl_point_2d<double>(0.000000000000000,   1.000000000000000));
@@ -48,7 +48,7 @@ MAIN( test_diffgeom )
                          -0.447978631217491,  -0.894044263989487,
                          -0.290821022430010,  -0.956777473037887 };
 
-  vcl_vector< vnl_vector_fixed<double, 2> > normal, normal2;
+  std::vector< vnl_vector_fixed<double, 2> > normal, normal2;
   bgld_compute_normals(vertices, &normal);
 
   status = true;

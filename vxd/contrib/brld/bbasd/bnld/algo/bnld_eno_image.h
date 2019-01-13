@@ -24,7 +24,7 @@
 //
 class bnld_eno_image {
 public: 
-   bnld_eno_image(double border_value = vcl_numeric_limits<double>::max()/1e10) 
+   bnld_eno_image(double border_value = std::numeric_limits<double>::max()/1e10) 
       : border_value_(border_value) { }
 
    ~bnld_eno_image();
@@ -46,11 +46,11 @@ public:
    unsigned nj() const {return nj_;}
    unsigned long size() const {return ni_*nj_;}
 
-   void print(vcl_ostream& = vcl_cerr) const;
+   void print(std::ostream& = std::cerr) const;
 
 protected:
-   vcl_vector<bnld_eno_1d *> horiz_;    
-   vcl_vector<bnld_eno_1d *> vert_;
+   std::vector<bnld_eno_1d *> horiz_;    
+   std::vector<bnld_eno_1d *> vert_;
    unsigned 
      ni_,  //:< number of pixels in a row (i.e. number of columns)
      nj_;  //:< number of pixels in a column (i.e. number of rows)

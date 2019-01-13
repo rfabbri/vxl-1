@@ -14,8 +14,8 @@
 //#include <vidl_vil1/vidl_vil1_movie.h>
 
 #include <vcl_deprecated.h>
-#include <vcl_iostream.h>
-#include <vcl_cassert.h>
+#include <iostream>
+#include <cassert>
 
 vgel_kl::vgel_kl(const vgel_kl_params & params) : params_(params)
 {
@@ -213,12 +213,12 @@ void vgel_kl::match_sequence_base(
 }
 
 void vgel_kl::match_sequence(
-    vcl_vector<vil1_image> &         image_list,
+    std::vector<vil1_image> &         image_list,
     vgel_multi_view_data_vertex_sptr matches)
 {
-  VXL_DEPRECATED_MACRO( "vgel_kl::match_sequence(vcl_vector<vil1_image> &, vgel_multi_view_data_vertex_sptr)" );
+  VXL_DEPRECATED_MACRO( "vgel_kl::match_sequence(std::vector<vil1_image> &, vgel_multi_view_data_vertex_sptr)" );
 
-  vcl_vector<KLT_PixelType *> image_list_gs(image_list.size());
+  std::vector<KLT_PixelType *> image_list_gs(image_list.size());
   int width = image_list[0].width();
   int height = image_list[0].height();
   for (unsigned n=0; n<image_list.size(); n++) {
@@ -230,10 +230,10 @@ void vgel_kl::match_sequence(
 }
 
 void vgel_kl::match_sequence(
-    vcl_vector<vil_image_resource_sptr> & image_list,
+    std::vector<vil_image_resource_sptr> & image_list,
     vgel_multi_view_data_vertex_sptr      matches)
 {
-  vcl_vector<KLT_PixelType *> image_list_gs(image_list.size());
+  std::vector<KLT_PixelType *> image_list_gs(image_list.size());
   int width = (*image_list[0]).ni();
   int height = (*image_list[0]).nj();
   for (unsigned n=0; n<image_list.size(); n++) {
@@ -245,7 +245,7 @@ void vgel_kl::match_sequence(
 }
 
 void vgel_kl::match_sequence_base(
-    vcl_vector<KLT_PixelType *> &    image_list_gs,
+    std::vector<KLT_PixelType *> &    image_list_gs,
     int                              width,
     int                              height,
     vgel_multi_view_data_vertex_sptr matches)
@@ -369,7 +369,7 @@ void vgel_kl::matches_from_feature_table(KLT_FeatureTable                 ft,
 //{
 //  VXL_DEPRECATED( "vgel_kl::match_sequence(vidl_vil1_movie_sptr, vgel_multi_view_data_vertex_sptr)" );
 //
-//  vcl_vector<vil1_image> image_list;
+//  std::vector<vil1_image> image_list;
 //  for (vidl_vil1_movie::frame_iterator pframe = movie->first();
 //       pframe <= movie->last();
 //       ++pframe)
@@ -380,7 +380,7 @@ void vgel_kl::matches_from_feature_table(KLT_FeatureTable                 ft,
 //  match_sequence(image_list,matches);
 //}
 
-vcl_vector<vtol_vertex_2d_sptr>* vgel_kl::extract_points(vil1_image & image)
+std::vector<vtol_vertex_2d_sptr>* vgel_kl::extract_points(vil1_image & image)
 {
   VXL_DEPRECATED_MACRO( "vgel_kl::extract_points(vil1_image &)" );
 
@@ -390,7 +390,7 @@ vcl_vector<vtol_vertex_2d_sptr>* vgel_kl::extract_points(vil1_image & image)
   return extract_points_base (image_gs, width, height);
 }
 
-vcl_vector<vtol_vertex_2d_sptr>* vgel_kl::extract_points(vil_image_resource_sptr & image)
+std::vector<vtol_vertex_2d_sptr>* vgel_kl::extract_points(vil_image_resource_sptr & image)
 {
   int width=(*image).ni();
   int height=(*image).nj();
@@ -398,16 +398,16 @@ vcl_vector<vtol_vertex_2d_sptr>* vgel_kl::extract_points(vil_image_resource_sptr
   return extract_points_base (image_gs, width, height);
 }
 
-vcl_vector<vtol_vertex_2d_sptr>* vgel_kl::extract_points_base(KLT_PixelType * image_gs, int width, int height)
+std::vector<vtol_vertex_2d_sptr>* vgel_kl::extract_points_base(KLT_PixelType * image_gs, int width, int height)
 {
-  vcl_cerr << "Beginning points extraction\n";
+  std::cerr << "Beginning points extraction\n";
 
   KLT_PixelType* img1=image_gs;
 
   // Now, run the extractor
   int nFeatures = params_.numpoints;
 
-  vcl_cerr << "Setting up the context...\n";
+  std::cerr << "Setting up the context...\n";
   // Set up the context
   KLT_TrackingContext tc = KLTCreateTrackingContext();
 
@@ -417,15 +417,15 @@ vcl_vector<vtol_vertex_2d_sptr>* vgel_kl::extract_points_base(KLT_PixelType * im
   // KLTPrintTrackingContext(tc);
 
   // Set up structure to hold the features.
-  vcl_cerr << "Setting up structure to hold the features...\n";
+  std::cerr << "Setting up structure to hold the features...\n";
   KLT_FeatureList fl = KLTCreateFeatureList(nFeatures);
 
   // Extract the features
-  vcl_cerr << "Extracting the features...\n";
+  std::cerr << "Extracting the features...\n";
   KLTSelectGoodFeatures(tc, img1, width, height, fl);
 
   // Make an IUPointGroup to hold the values
-  vcl_vector<vtol_vertex_2d_sptr> *grp = new vcl_vector<vtol_vertex_2d_sptr>();
+  std::vector<vtol_vertex_2d_sptr> *grp = new std::vector<vtol_vertex_2d_sptr>();
 
   for (int i=0 ; i< fl->nFeatures ; i++)
   {
@@ -451,12 +451,12 @@ KLT_PixelType* vgel_kl::convert_to_gs_image(vil1_image &image)
 
   if (vil1_pixel_format(image)==VIL1_RGB_BYTE)
   {
-    vcl_cerr << "Converting image to grey scale...\n";
+    std::cerr << "Converting image to grey scale...\n";
 
     int w=image.width();
     int h=image.height();
     KLT_PixelType* tab_mono=new KLT_PixelType[w*h];
-    vcl_cerr << "width: " <<w<< "  height: "<<h<< "  pixel type: byte\n";
+    std::cerr << "width: " <<w<< "  height: "<<h<< "  pixel type: byte\n";
 
     vil1_memory_image_of<vxl_byte> ima_mono;
     ima_mono.resize(w,h);
@@ -474,7 +474,7 @@ KLT_PixelType* vgel_kl::convert_to_gs_image(vil1_image &image)
     int w=image.width();
     int h=image.height();
     KLT_PixelType* tab_mono=new KLT_PixelType[w*h];
-    vcl_cerr << "width: " <<w<< "  height: "<<h<< "  pixel type: byte\n";
+    std::cerr << "width: " <<w<< "  height: "<<h<< "  pixel type: byte\n";
 
     vil1_memory_image_of<vxl_byte> ima_mono;
     ima_mono.resize(w,h);
@@ -493,7 +493,7 @@ KLT_PixelType* vgel_kl::convert_to_gs_image(vil1_image &image)
     int w=image.width();
     int h=image.height();
     KLT_PixelType* tab_mono=new KLT_PixelType[w*h];
-    vcl_cerr << "width: " <<w<< "  height: "<<h<< "  pixel type: uint_16\n";
+    std::cerr << "width: " <<w<< "  height: "<<h<< "  pixel type: uint_16\n";
 
     vil1_memory_image_of<vxl_uint_16> ima_mono;
     ima_mono.resize(w,h);
@@ -512,7 +512,7 @@ KLT_PixelType* vgel_kl::convert_to_gs_image(vil1_image &image)
     int w=image.width();
     int h=image.height();
     KLT_PixelType* tab_mono=new KLT_PixelType[w*h];
-    vcl_cerr << "width: " <<w<< "  height: "<<h<< "  pixel type: uint_16\n";
+    std::cerr << "width: " <<w<< "  height: "<<h<< "  pixel type: uint_16\n";
 
     vil1_memory_image_of<vxl_uint_16> ima_mono;
     ima_mono.resize(w,h);
@@ -528,8 +528,8 @@ KLT_PixelType* vgel_kl::convert_to_gs_image(vil1_image &image)
   }
   else
   {
-    vcl_cerr << "Error: Cannot convert pixel type: "
-             << vil1_print(vil1_pixel_format(image)) << vcl_endl;
+    std::cerr << "Error: Cannot convert pixel type: "
+             << vil1_print(vil1_pixel_format(image)) << std::endl;
     return NULL;
   }
 }

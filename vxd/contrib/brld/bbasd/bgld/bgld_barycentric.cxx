@@ -8,7 +8,7 @@
 
 double tri_compactness (double* d, double& area)
 {
-  double compactness = 4.0 * vcl_sqrt(3.0) * area / (d[0]*d[0] + d[1]*d[1] + d[2]*d[2]);
+  double compactness = 4.0 * std::sqrt(3.0) * area / (d[0]*d[0] + d[1]*d[1] + d[2]*d[2]);
 
   ///assert (compactness <= 1);
   if (compactness > 1) {
@@ -57,9 +57,9 @@ void compute_tri_angles (const vgl_point_3d<double>& A,
   const double a = vgl_distance (B, C);
   const double b = vgl_distance (A, C);
   const double c = vgl_distance (A, B);
-  angle[0] = vcl_acos ( (b*b + c*c - a*a)/(b*c*2) );
-  angle[1] = vcl_acos ( (a*a + c*c - b*b)/(a*c*2) );
-  angle[2] = vcl_acos ( (a*a + b*b - c*c)/(a*b*2) );
+  angle[0] = std::acos ( (b*b + c*c - a*a)/(b*c*2) );
+  angle[1] = std::acos ( (a*a + c*c - b*b)/(a*c*2) );
+  angle[2] = std::acos ( (a*a + b*b - c*c)/(a*b*2) );
 }
 
 //: Compute the circumCenter from at least 3 dbsk3d_bnd_pts.
@@ -125,7 +125,7 @@ vgl_point_3d<double> circum_center_3pts (const vgl_point_3d<double>& A,
 #define E_EPSILON 1E-6
 bool dbsk3d_fs_edge::computeTriCoord()
 {
-  vcl_vector<dbmsh3d_vertex*> genes = get_ordered_genes ();
+  std::vector<dbmsh3d_vertex*> genes = get_ordered_genes ();
 
   if (genes.size()!=3)
     return false;

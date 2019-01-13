@@ -1,8 +1,8 @@
 //This is bbasd/bsold/vis/bsold_soview2D_circ_arc.cxx
 #include "bsold_soview2D_circ_arc.h"
 
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
+#include <iostream>
+#include <vector>
 #include <vnl/vnl_math.h>
 
 #include <vgl/vgl_distance.h>

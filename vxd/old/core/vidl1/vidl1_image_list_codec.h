@@ -12,12 +12,12 @@
 //   10/7/2003 Matt Leotta (Brown) Converted vil1 to vil
 // \endverbatim
 
-#include <vcl_string.h>
+#include <string>
 #include <vidl1/vidl1_image_list_codec_sptr.h>
 #include <vidl1/vidl1_codec.h>
 #include <vil/vil_image_resource.h>
-#include <vcl_list.h>
-#include <vcl_vector.h>
+#include <list>
+#include <vector>
 
 //: Coder/decoder for a list of images
 //   A vidl1_image_list_codec is the video I/O access for list of images.
@@ -28,8 +28,8 @@ class vidl1_image_list_codec :  public vidl1_codec
 
   // Constructors
   vidl1_image_list_codec();
-  vidl1_image_list_codec(vcl_list<vil_image_resource_sptr>& images);
-  vidl1_image_list_codec(vcl_vector<vil_image_resource_sptr>& images);
+  vidl1_image_list_codec(std::list<vil_image_resource_sptr>& images);
+  vidl1_image_list_codec(std::vector<vil_image_resource_sptr>& images);
   // Destructor
   ~vidl1_image_list_codec() {}
 
@@ -42,24 +42,24 @@ class vidl1_image_list_codec :  public vidl1_codec
   virtual vil_image_view_base_sptr get_view(int position, int x0, int w, int y0, int h) const;
   virtual bool put_view(int position, const vil_image_view_base &im, int x0, int y0);
   // IO
-  virtual vidl1_codec_sptr load(vcl_string const& fname, char mode = 'r' );
-  virtual vidl1_codec_sptr load(const vcl_list<vcl_string> &fnames, char mode = 'r');
-  virtual vidl1_codec_sptr load(const vcl_vector<vcl_string> &fnames, char mode = 'r');
-  virtual bool save(vidl1_movie* movie, vcl_string const& fname);
-  virtual bool save(vidl1_movie* movie, vcl_string const& fname, vcl_string const& type);
-  virtual bool probe(vcl_string const& fname);
+  virtual vidl1_codec_sptr load(std::string const& fname, char mode = 'r' );
+  virtual vidl1_codec_sptr load(const std::list<std::string> &fnames, char mode = 'r');
+  virtual vidl1_codec_sptr load(const std::vector<std::string> &fnames, char mode = 'r');
+  virtual bool save(vidl1_movie* movie, std::string const& fname);
+  virtual bool save(vidl1_movie* movie, std::string const& fname, std::string const& type);
+  virtual bool probe(std::string const& fname);
 
-  virtual vcl_string type() const { return "ImageList"; }
+  virtual std::string type() const { return "ImageList"; }
 
   // Specific to vidl1_image_list_codec
-  static void set_default_image_type(vcl_string const& type)
+  static void set_default_image_type(std::string const& type)
   { default_initialization_image_type_ = type; }
 
-  virtual void set_image_type(vcl_string const& type)
+  virtual void set_image_type(std::string const& type)
   { default_image_type_ = type; }
 
-  vcl_string get_image_type() const { return default_image_type_; }
-  vcl_vector<vil_image_resource_sptr> get_images() const {return images_;}
+  std::string get_image_type() const { return default_image_type_; }
+  std::vector<vil_image_resource_sptr> get_images() const {return images_;}
 
   // Register image loaders
   //virtual void register_image_loaders ();
@@ -68,11 +68,11 @@ class vidl1_image_list_codec :  public vidl1_codec
   virtual bool init();
 
   // Data Members--------------------------------------------------------------
-  vcl_vector<vil_image_resource_sptr> images_;
+  std::vector<vil_image_resource_sptr> images_;
 
  private:
-  vcl_string default_image_type_;
-  static vcl_string default_initialization_image_type_;
+  std::string default_image_type_;
+  static std::string default_initialization_image_type_;
 };
 
 #endif // vidl1_image_list_codec_h

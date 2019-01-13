@@ -2,20 +2,20 @@
 
 #include <vnl/vnl_vector_fixed.h>
 #include <vnl/vnl_math.h>
-#include <vcl_limits.h>
+#include <limits>
 #include <vgl/vgl_clip.h>
 #include <vgl/vgl_distance.h>
 #include <vgl/vgl_lineseg_test.h>
 #include <bgld/algo/bgld_intersect.h>
 #include <becld/becld_epipole_sptr.h>
 #include <becld/becld_epipole.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 //: clump arg from minus 1 to 1; also assert abs(arg) not much bigger than 1
 static inline double clump_to_acos(double x)
 { 
   if (x > 1.0 || x < -1.0) {
-    assert(vcl_fabs(vcl_fabs(x)-1) < 1e-5);
+    assert(std::fabs(std::fabs(x)-1) < 1e-5);
     if (x > 1.0)
       return 1.0;
     if (x < -1.0)
@@ -46,8 +46,8 @@ compute(const vgl_point_2d<double> &p, const vpgl_fundamental_matrix<double> &fm
   
   // detect case of epipole at infinity; ignore it for now
 
-  if( el.ideal(1e5*vcl_numeric_limits<double>::epsilon())  || er.ideal(1e5*vcl_numeric_limits<double>::epsilon()) ) {
-    vcl_cerr << "WARNING: Epipole at infinity not yet supported\n";
+  if( el.ideal(1e5*std::numeric_limits<double>::epsilon())  || er.ideal(1e5*std::numeric_limits<double>::epsilon()) ) {
+    std::cerr << "WARNING: Epipole at infinity not yet supported\n";
     abort();
   }
 
@@ -64,15 +64,15 @@ compute(const vgl_point_2d<double> &p, const vpgl_fundamental_matrix<double> &fm
 
     const double d = (vnl_vector_fixed<double,2>(p.x(),p.y()) - ep_v).two_norm(); 
 
-    const double rho = vcl_sqrt(d*d - err_pos*err_pos);
+    const double rho = std::sqrt(d*d - err_pos*err_pos);
 
     if (err_pos >= d) {
-      vcl_cout << "ERROR: point too close to epipole; case still not coded.\n";
+      std::cout << "ERROR: point too close to epipole; case still not coded.\n";
       abort();
     }
 
     const double angle_p1    = ep->angle(p);
-    const double dtheta1     = vcl_asin(err_pos / d);
+    const double dtheta1     = std::asin(err_pos / d);
     const double theta_plus  = angle_p1 + dtheta1;
     const double theta_minus = angle_p1 - dtheta1;
 
@@ -130,14 +130,14 @@ compute(const vgl_point_2d<double> &p, const vpgl_fundamental_matrix<double> &fm
     poly_.push_back(D[0],D[1]);
   // This measures the smallest possible err_theta between the two epipolar lines. However, this
   // might not be the real value.
-    err_theta = 0.5*vcl_acos(clump_to_acos( dot_product(t_minus,t_plus) ));
+    err_theta = 0.5*std::acos(clump_to_acos( dot_product(t_minus,t_plus) ));
   } else {
     poly_.push_back(A[0],A[1]);
     poly_.push_back(D[0],D[1]);
     poly_.push_back(ep_l_v[0],ep_l_v[1]);
     poly_.push_back(B[0],B[1]);
     poly_.push_back(C[0],C[1]);
-    err_theta = 0.5*(vnl_math::pi - vcl_acos(clump_to_acos( dot_product(t_minus,t_plus) )));
+    err_theta = 0.5*(vnl_math::pi - std::acos(clump_to_acos( dot_product(t_minus,t_plus) )));
   }
 
   // clip it with window()
@@ -160,7 +160,7 @@ compute(const vgl_point_2d<double> &p, const vpgl_fundamental_matrix<double> &fm
 //    poly_.push_back(5,6);  // G
 //    poly_.push_back(2,6);  // H
 
-//  vcl_cerr << "Generating dummy polygons\n";
+//  std::cerr << "Generating dummy polygons\n";
 
   return err_theta;
 }
@@ -206,8 +206,8 @@ compute(const becld_epiband &eb_a, const vpgl_fundamental_matrix<double> &fm_ab,
   
   // detect case of epipole at infinity; ignore it for now
 
-  if( el.ideal(1e5*vcl_numeric_limits<double>::epsilon())  || er.ideal(1e5*vcl_numeric_limits<double>::epsilon()) ) {
-    vcl_cerr << "WARNING: Epipole at infinity not yet supported\n";
+  if( el.ideal(1e5*std::numeric_limits<double>::epsilon())  || er.ideal(1e5*std::numeric_limits<double>::epsilon()) ) {
+    std::cerr << "WARNING: Epipole at infinity not yet supported\n";
     abort();
   }
 
@@ -225,7 +225,7 @@ compute(const becld_epiband &eb_a, const vpgl_fundamental_matrix<double> &fm_ab,
     const double d = eb_a.distance(vgl_point_2d<double>(er));
 
     if (d <= err_pos) {
-      vcl_cerr << "ERROR: eb_a too close to epipole; case still not coded.\n";
+      std::cerr << "ERROR: eb_a too close to epipole; case still not coded.\n";
       abort();
     }
 
@@ -235,14 +235,14 @@ compute(const becld_epiband &eb_a, const vpgl_fundamental_matrix<double> &fm_ab,
 
     becld_epiband::get_bounds(eb_a.polygon(),*ep,theta_plus,theta_minus,theta_mean);
 #ifdef DEBUG
-    vcl_cout << "Epipolar band width view 'from' (computed deg): " << 180.0* ((theta_plus - theta_minus))/vnl_math::pi << vcl_endl;
+    std::cout << "Epipolar band width view 'from' (computed deg): " << 180.0* ((theta_plus - theta_minus))/vnl_math::pi << std::endl;
 #endif
 
-    if (vcl_fabs(theta_plus - theta_minus) >= vnl_math::pi) {
-      vcl_cout<< "ERROR: Whole plane being covered -- case not yet implemented\n";
-      vcl_cout << "Polygon:\n";
-      eb_a.polygon().print(vcl_cout);
-      vcl_cout << "Epipole_from: " << ep->location() << vcl_endl;
+    if (std::fabs(theta_plus - theta_minus) >= vnl_math::pi) {
+      std::cout<< "ERROR: Whole plane being covered -- case not yet implemented\n";
+      std::cout << "Polygon:\n";
+      eb_a.polygon().print(std::cout);
+      std::cout << "Epipole_from: " << ep->location() << std::endl;
       abort();
     }
 
@@ -298,14 +298,14 @@ compute(const becld_epiband &eb_a, const vpgl_fundamental_matrix<double> &fm_ab,
     poly_.push_back(ep_l_v[0],ep_l_v[1]);
     poly_.push_back(C[0],C[1]);
     poly_.push_back(D[0],D[1]);
-    err_theta = 0.5*vcl_acos(clump_to_acos( dot_product(t_minus,t_plus) ));
+    err_theta = 0.5*std::acos(clump_to_acos( dot_product(t_minus,t_plus) ));
   } else {
     poly_.push_back(A[0],A[1]);
     poly_.push_back(D[0],D[1]);
     poly_.push_back(ep_l_v[0],ep_l_v[1]);
     poly_.push_back(B[0],B[1]);
     poly_.push_back(C[0],C[1]);
-    err_theta = 0.5*(vnl_math::pi - vcl_acos(clump_to_acos( dot_product(t_minus,t_plus) )));
+    err_theta = 0.5*(vnl_math::pi - std::acos(clump_to_acos( dot_product(t_minus,t_plus) )));
   }
 
   // clip it with window()
@@ -346,8 +346,8 @@ get_bounds(
 {
 
   if (!(poly.num_sheets() == 1 && poly[0].size() >= 2))
-    vcl_cerr << vcl_cout << "ERROR: poly.num_sheets(): " << poly.num_sheets() 
-                        << " poly[0].size(): " << poly[0].size() << vcl_endl;
+    std::cerr << std::cout << "ERROR: poly.num_sheets(): " << poly.num_sheets() 
+                        << " poly[0].size(): " << poly[0].size() << std::endl;
 
   assert(poly.num_sheets() == 1 && poly[0].size() >= 2);
 
@@ -410,7 +410,7 @@ double becld_epiband::
 distance(const vgl_point_2d<double> &pt) const
 {
   if (is_empty())
-    return vcl_numeric_limits<double>::infinity();
+    return std::numeric_limits<double>::infinity();
   return vgl_distance(poly_, pt);
 }
 
@@ -426,11 +426,11 @@ intersect( const becld_epiband &a, const becld_epiband &b)
   assert (this->box_ == a.box_ && b.box_ == a.box_);
 
   if (!is_empty() && (poly_.num_sheets() > 1 || poly_[0].size() < 2)) {
-    vcl_cout << "\nINTERSECTION WARNING: num_sheets: " << poly_.num_sheets() 
-                        << " poly[0].size: " << poly_[0].size() << vcl_endl;
+    std::cout << "\nINTERSECTION WARNING: num_sheets: " << poly_.num_sheets() 
+                        << " poly[0].size: " << poly_[0].size() << std::endl;
 
-    vcl_cout << "Poly 1(area " << a.area() << "): " << a.poly_ << vcl_endl;
-    vcl_cout << "Poly 2(area " << b.area() << "): " << b.poly_ << vcl_endl;
+    std::cout << "Poly 1(area " << a.area() << "): " << a.poly_ << std::endl;
+    std::cout << "Poly 2(area " << b.area() << "): " << b.poly_ << std::endl;
 
     if (poly_.num_sheets() > 1) {
       // return only the one with largest area.
@@ -445,15 +445,15 @@ intersect( const becld_epiband &a, const becld_epiband &b)
       }
       if (max_i == (unsigned)-1) {
         max_i = 0;
-        vcl_cout  << "Probably degenerate empty poly\n";
+        std::cout  << "Probably degenerate empty poly\n";
       }
       vgl_polygon<double>::sheet_t max_sheet = poly_[max_i];
       poly_.clear();
       poly_.push_back(max_sheet);
 
-      vcl_cout << "Resulting (maximal) poly (area " << area() << "): " << poly_ << vcl_endl;
+      std::cout << "Resulting (maximal) poly (area " << area() << "): " << poly_ << std::endl;
     } else 
-      vcl_cout << "Unexpected EMPTY polygon" << vcl_endl;
+      std::cout << "Unexpected EMPTY polygon" << std::endl;
 
     return false;
   }

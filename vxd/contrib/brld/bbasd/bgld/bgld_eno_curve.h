@@ -23,7 +23,7 @@
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_vector_2d.h>
 #include <bgld/bgld_param_curve.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 #define S_T_ACCURACY 10e-6
 
@@ -39,14 +39,14 @@ public:
   //: No empty constructors
 
   //: Constructor from ENO coefficients
-  bgld_eno_curve(vcl_vector<double> coefs_x, vcl_vector<double> coefs_y, double start_t, double end_t);
+  bgld_eno_curve(std::vector<double> coefs_x, std::vector<double> coefs_y, double start_t, double end_t);
 
   virtual ~bgld_eno_curve();
 
-  static const vcl_type_info& type_id()
+  static const std::type_info& type_id()
   { return typeid(bgld_eno_curve); }
 
-  virtual bool is_type( const vcl_type_info& type ) const
+  virtual bool is_type( const std::type_info& type ) const
   { return (typeid(bgld_eno_curve) == type)!=0 ||
   this->bgld_eno_curve::is_type(type);
   }
@@ -122,8 +122,8 @@ protected:
 
   //: vector of coefficients, someone would like to update this class
   //  in order to make it work 
-  vcl_vector<double> coefs_x_;
-  vcl_vector<double> coefs_y_;
+  std::vector<double> coefs_x_;
+  std::vector<double> coefs_y_;
 
   //: global starting and ending t parameters 
   //  (necessary when a collection of parametric curves are used)

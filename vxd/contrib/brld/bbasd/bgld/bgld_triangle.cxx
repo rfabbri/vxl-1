@@ -3,7 +3,7 @@
 //\file
 // Mar 07, 2007  Basic triangle geometric.
 
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vgl/vgl_distance.h>
 #include <bgld/bgld_triangle.h>
 

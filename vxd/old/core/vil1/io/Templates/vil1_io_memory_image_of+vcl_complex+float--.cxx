@@ -4,7 +4,7 @@
 # pragma warning(disable: 4018)
 #endif
 
-#include <vcl_complex.h>
+#include <complex>
 #include <vil1/io/vil1_io_memory_image_of.txx>
 
-VIL1_IO_MEMORY_IMAGE_OF_INSTANTIATE(vcl_complex<float>);
+VIL1_IO_MEMORY_IMAGE_OF_INSTANTIATE(std::complex<float>);

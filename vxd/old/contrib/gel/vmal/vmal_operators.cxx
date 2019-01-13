@@ -1,6 +1,6 @@
 // This is gel/vmal/vmal_operators.cxx
 #include "vmal_operators.h"
-#include <vcl_cmath.h>
+#include <cmath>
 #include <vnl/vnl_double_2.h>
 #include <vnl/vnl_cross.h>
 
@@ -41,7 +41,7 @@ double vmal_operators::project_point(double x0,double y0,
       *x=resx;
       *y=resy;
     }
-      return vcl_sqrt((resx-x0)*(resx-x0)+(resy-y0)*(resy-y0));
+      return std::sqrt((resx-x0)*(resx-x0)+(resy-y0)*(resy-y0));
   }
 
   return -1;

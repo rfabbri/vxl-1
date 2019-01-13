@@ -5,13 +5,13 @@
 // This class will solve a dynamic program which attempts
 // to compute a set of assignments between two sets of tokens
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vnl/vnl_vector.h>
 
 class vsrl_token;
 class vsrl_null_token;
 
-typedef  vcl_vector<vsrl_token*> token_list;
+typedef  std::vector<vsrl_token*> token_list;
 
 
 class vsrl_dynamic_program
@@ -70,8 +70,8 @@ class vsrl_dynamic_program
   double continuity_cost_; // the cost of a discontinuity
   int search_range_; // the search range for each token;
 
-  vcl_vector<int> lower_search_range_; // the search range for each token
-  vcl_vector<int> upper_search_range_; // in the future it could be specific
+  std::vector<int> lower_search_range_; // the search range for each token
+  std::vector<int> upper_search_range_; // in the future it could be specific
 
 
 

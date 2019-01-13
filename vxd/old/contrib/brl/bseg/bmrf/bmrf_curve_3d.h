@@ -11,13 +11,13 @@
 #include <vnl/vnl_double_3x4.h>
 #include <vbl/vbl_ref_count.h>
 #include <vsl/vsl_binary_io.h>
-#include <vcl_list.h>
-#include <vcl_set.h>
-#include <vcl_map.h>
-#include <vcl_iosfwd.h> // for std::ostream
+#include <list>
+#include <set>
+#include <map>
+#include <iosfwd> // for std::ostream
 
 //: A 3D curve
-class bmrf_curve_3d : public vcl_list<bmrf_curvel_3d_sptr>, public vbl_ref_count
+class bmrf_curve_3d : public std::list<bmrf_curvel_3d_sptr>, public vbl_ref_count
 {
  public:
   //: Constructor
@@ -33,13 +33,13 @@ class bmrf_curve_3d : public vcl_list<bmrf_curvel_3d_sptr>, public vbl_ref_count
   void stat_trim(double max_std);
 
   //: Attempt to fill in missing correspondences
-  void fill_gaps(const vcl_set<int>& frames, double da);
+  void fill_gaps(const std::set<int>& frames, double da);
 
   //: Attempt to interpolate artificial values for missing correspondences
-  void interp_gaps(const vcl_set<int>& frames);
+  void interp_gaps(const std::set<int>& frames);
 
   //: Simultaneously reconstruct all points in a 3d curve
-  void reconstruct(const vcl_map<int,vnl_double_3x4>& cameras, float sigma = 0.5);
+  void reconstruct(const std::map<int,vnl_double_3x4>& cameras, float sigma = 0.5);
 
   //: Binary save self to stream.
   void b_write(vsl_b_ostream &os) const;
@@ -51,7 +51,7 @@ class bmrf_curve_3d : public vcl_list<bmrf_curvel_3d_sptr>, public vbl_ref_count
   short version() const;
 
   //: Print an ascii summary to the stream
-  void print_summary(vcl_ostream &os) const;
+  void print_summary(std::ostream &os) const;
 };
 
 
@@ -62,7 +62,7 @@ void vsl_b_write(vsl_b_ostream &os, const bmrf_curve_3d* n);
 void vsl_b_read(vsl_b_istream &is, bmrf_curve_3d* &n);
 
 //: Print an ASCII summary to the stream
-void vsl_print_summary(vcl_ostream &os, const bmrf_curve_3d* n);
+void vsl_print_summary(std::ostream &os, const bmrf_curve_3d* n);
 
 
 #endif // bmrf_curve_3d_h_

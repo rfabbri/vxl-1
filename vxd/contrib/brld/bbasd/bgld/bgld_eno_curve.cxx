@@ -1,10 +1,10 @@
 // This is bbasd/bgld/bgld_eno_curve.cxx
 #include "bgld_eno_curve.h"
-#include <vcl_cmath.h>
+#include <cmath>
 #include <vnl/vnl_math.h>
 #include <limits>
 
-bgld_eno_curve::bgld_eno_curve(vcl_vector<double> coefs_x, vcl_vector<double> coefs_y, double start_t, double end_t)
+bgld_eno_curve::bgld_eno_curve(std::vector<double> coefs_x, std::vector<double> coefs_y, double start_t, double end_t)
 {
   tolerance_ = 10e-6;
 
@@ -38,7 +38,7 @@ double bgld_eno_curve::s_to_t(double s, double accuracy) const
   {
     double k_guess = (k_start + k_end) / 2;
     double len = length_at(k_guess);
-    if(vcl_fabs(s-len) < accuracy || vcl_fabs(k_start-k_end) < accuracy)
+    if(std::fabs(s-len) < accuracy || std::fabs(k_start-k_end) < accuracy)
       return k_guess;
     else if(s < len)
       k_end = k_guess;
@@ -56,36 +56,36 @@ double bgld_eno_curve::length_at(double t) const
   // t has to be in [start_t_, end_t_] range
   assert(t >= start_t_ - tolerance_ && t <= end_t_ + tolerance_);
 
-  double A = 4 * (vcl_pow(coefs_x_[2], 2.0) + vcl_pow(coefs_y_[2], 2.0));
+  double A = 4 * (std::pow(coefs_x_[2], 2.0) + std::pow(coefs_y_[2], 2.0));
   double B = 4 * (coefs_x_[1] * coefs_x_[2] + coefs_y_[1] * coefs_y_[2]);
-  double C = vcl_pow(coefs_x_[1], 2.0) + vcl_pow(coefs_y_[1], 2.0);
+  double C = std::pow(coefs_x_[1], 2.0) + std::pow(coefs_y_[1], 2.0);
 
   if(A == 0)
   {
     if(B == 0)
     {
-      val = vcl_sqrt(C) * t;
+      val = std::sqrt(C) * t;
     }
     else
     {
-      double temp1 = vcl_pow(C, 1.5);
-      double temp2 = vcl_pow(B * t + C, 1.5);
+      double temp1 = std::pow(C, 1.5);
+      double temp2 = std::pow(B * t + C, 1.5);
       val = 2 * (-temp1 + temp2) / (3*B);
     }
   }
   else
   {
-    double rootA = vcl_sqrt(A);
-    double rootC = vcl_sqrt(C);
-    double sqB = vcl_pow(B,2.0);
+    double rootA = std::sqrt(A);
+    double rootC = std::sqrt(C);
+    double sqB = std::pow(B,2.0);
 
-    double inter1 = vcl_log((B + 2 * rootC * rootA) / rootA);
-    double inter2 = vcl_sqrt(A*vcl_pow(t,2.0) + B*t+ C);
-    double inter3 = vcl_log((B + 2*A*t + 2*inter2*rootA) / rootA);
+    double inter1 = std::log((B + 2 * rootC * rootA) / rootA);
+    double inter2 = std::sqrt(A*std::pow(t,2.0) + B*t+ C);
+    double inter3 = std::log((B + 2*A*t + 2*inter2*rootA) / rootA);
 
-    if(vcl_fabs(inter1) == std::numeric_limits<double>::infinity()) inter1 = 0;
-    if(vcl_fabs(inter2) == std::numeric_limits<double>::infinity()) inter2 = 0;
-    if(vcl_fabs(inter3) == std::numeric_limits<double>::infinity()) inter3 = 0;
+    if(std::fabs(inter1) == std::numeric_limits<double>::infinity()) inter1 = 0;
+    if(std::fabs(inter2) == std::numeric_limits<double>::infinity()) inter2 = 0;
+    if(std::fabs(inter3) == std::numeric_limits<double>::infinity()) inter3 = 0;
 
     if(my_isnan(inter1)) inter1 = 0;
     if(my_isnan(inter2)) inter2 = 0;
@@ -96,10 +96,10 @@ double bgld_eno_curve::length_at(double t) const
     double temp3 = 4 * C * A * inter1;
     double temp4 = -2 * inter2 * rootA * B;
     double temp5 = sqB * inter3;
-    double temp6 = -4 * inter2 * vcl_pow(A,1.5) * t;
+    double temp6 = -4 * inter2 * std::pow(A,1.5) * t;
     double temp7 = -4 * C * A * inter3;
 
-    val = (temp1+temp2+temp3+temp4+temp5+temp6+temp7) / (-8*vcl_pow(A,1.5));
+    val = (temp1+temp2+temp3+temp4+temp5+temp6+temp7) / (-8*std::pow(A,1.5));
   }
   
   if(len_until_start_ != -1)
@@ -132,7 +132,7 @@ vgl_vector_2d<double> bgld_eno_curve::tangent_at(double t) const
 {
   assert(t >= start_t_ - tolerance_ && t <= end_t_ + tolerance_);
   double angle = tangent_angle_at(t);
-  return vgl_vector_2d<double> (vcl_cos(angle), vcl_sin(angle));
+  return vgl_vector_2d<double> (std::cos(angle), std::sin(angle));
 }
 
 vgl_vector_2d<double> bgld_eno_curve::tangent_at_length(double s) const
@@ -148,7 +148,7 @@ double bgld_eno_curve::tangent_angle_at(double t) const
   double dx = evaluate_first_derivative_x(t);
   double dy = evaluate_first_derivative_y(t);
 
-  double angle = vcl_atan2(dy, dx);
+  double angle = std::atan2(dy, dx);
   if(angle < 0)
     angle += 2*vnl_math::pi;
 
@@ -172,7 +172,7 @@ double bgld_eno_curve::curvature_at(double t) const
   double y_tt = evaluate_second_derivative_y(t);
 
   double temp1 = x_t * y_tt - y_t * x_tt;
-  double temp2 = vcl_pow(vcl_pow(x_t, 2.0) + vcl_pow(y_t, 2.0), 1.5);
+  double temp2 = std::pow(std::pow(x_t, 2.0) + std::pow(y_t, 2.0), 1.5);
 
   return temp1 / temp2;
 }
@@ -186,12 +186,12 @@ double bgld_eno_curve::curvature_at_length(double s) const
 
 double bgld_eno_curve::evaluate_x(double t) const
 {
-  return coefs_x_[0] + coefs_x_[1] * t + coefs_x_[2] * vcl_pow(t, 2.0);
+  return coefs_x_[0] + coefs_x_[1] * t + coefs_x_[2] * std::pow(t, 2.0);
 }
 
 double bgld_eno_curve::evaluate_y(double t) const
 {
-  return coefs_y_[0] + coefs_y_[1] * t + coefs_y_[2] * vcl_pow(t, 2.0);
+  return coefs_y_[0] + coefs_y_[1] * t + coefs_y_[2] * std::pow(t, 2.0);
 }
 
 double bgld_eno_curve::evaluate_first_derivative_x(double t) const

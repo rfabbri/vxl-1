@@ -20,7 +20,7 @@ public:
   virtual ~bmcsd_discrete_corresp_storage();
 
   // For backward compatibility reasons, the name still has 'pt' in it.
-  virtual vcl_string type() const { return "mw pt corresp"; }
+  virtual std::string type() const { return "mw pt corresp"; }
 
   //: Create a copy of the object on the heap.
   // The caller is responsible for deletion
@@ -28,7 +28,7 @@ public:
   
   //: Return a platform independent string identifying the class
   // For backward compatibility reasons, the name still has 'point' in it.
-  virtual vcl_string is_a() const { return "mw_point_corresp_storage"; }
+  virtual std::string is_a() const { return "mw_point_corresp_storage"; }
 
   bmcsd_discrete_corresp *corresp() {
     return c_;

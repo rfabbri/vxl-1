@@ -8,8 +8,8 @@
 //\date Mon Apr 24 20:47:25 EDT 2006
 //
 
-#include <vcl_vector.h>
-#include <vcl_list.h>
+#include <vector>
+#include <list>
 
 #include <vgl/vgl_line_2d.h>
 #include <vgl/vgl_homg_point_2d.h>
@@ -29,8 +29,8 @@ public:
 
   virtual void points_intercepting_epipolar(
       const vgl_homg_line_2d<double> *ep_l,
-      const vcl_vector<vsol_point_2d_sptr> &p,
-      vcl_list<unsigned> &p_idx
+      const std::vector<vsol_point_2d_sptr> &p,
+      std::list<unsigned> &p_idx
       ) const = 0;
 };
 
@@ -41,15 +41,15 @@ public:
   
   virtual void points_intercepting_epipolar(
       const vgl_homg_line_2d<double> *ep_l,
-      const vcl_vector<vsol_point_2d_sptr> &p,
-      vcl_list<unsigned> &p_idx
+      const std::vector<vsol_point_2d_sptr> &p,
+      std::list<unsigned> &p_idx
       ) const;
 
   static inline bool
   compute(
       const vgl_homg_line_2d<double> *l, 
-      const vcl_vector<vsol_point_2d_sptr> &p,
-      vcl_vector<bool> &indices, 
+      const std::vector<vsol_point_2d_sptr> &p,
+      std::vector<bool> &indices, 
       double maxdist=1.4);
 };
 
@@ -92,8 +92,8 @@ class becld_epiline_interceptor_fast_using_angle : becld_epiline_interceptor_bas
 
   void points_intercepting_epipolar(
       const vgl_homg_line_2d<double> *ep_l,
-      const vcl_vector<vsol_point_2d_sptr> &p,
-      vcl_vector<vcl_list<unsigned> > &p_idx
+      const std::vector<vsol_point_2d_sptr> &p,
+      std::vector<std::list<unsigned> > &p_idx
       ) const;
 
   void set_distance_error(double dist) { d_err_ = dist; }
@@ -113,7 +113,7 @@ class becld_epiline_interceptor_fast_using_angle : becld_epiline_interceptor_bas
   protected:
     double d_err;
     unsigned long npts_;
-    vcl_vector<double> angles_;
+    std::vector<double> angles_;
 };
 */
 
@@ -133,8 +133,8 @@ inline bool
 becld_epiline_interceptor_brute::
 compute(
     const vgl_homg_line_2d<double> *l, 
-    const vcl_vector<vsol_point_2d_sptr> &p,
-    vcl_vector<bool> &indices, 
+    const std::vector<vsol_point_2d_sptr> &p,
+    std::vector<bool> &indices, 
     double maxdist)
 {
 //    - currently, an intersection is simply a point whose distance to the line

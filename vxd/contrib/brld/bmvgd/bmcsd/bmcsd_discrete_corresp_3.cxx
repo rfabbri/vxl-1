@@ -39,15 +39,15 @@ set_size(unsigned npts0, unsigned npts1, unsigned npts2)
   n1_=npts1; 
   n2_=npts2;
   if (is_hashed()) {
-    vcl_cerr << "Not supported: reuse structure after it is hashed\n";
+    std::cerr << "Not supported: reuse structure after it is hashed\n";
     abort();
   }
 }
 
-vcl_ostream&  operator<<(vcl_ostream& s, const bmcsd_discrete_corresp_3 &c)
+std::ostream&  operator<<(std::ostream& s, const bmcsd_discrete_corresp_3 &c)
 {
   s << "===========  bmcsd_discrete_corresp_3 ===========\n";
-  s << "# of domain points: " << c.n0() << "," << c.n1() << "," << c.n2() << vcl_endl;
+  s << "# of domain points: " << c.n0() << "," << c.n1() << "," << c.n2() << std::endl;
 
   unsigned  total_n_corresp= c.l_.count_nonempty();
 
@@ -68,12 +68,12 @@ vcl_ostream&  operator<<(vcl_ostream& s, const bmcsd_discrete_corresp_3 &c)
   }
 
   if (count > max_domain_elts)
-    vcl_cout << "...\n";
+    std::cout << "...\n";
 
-  s << "Total number of corresps: " << total_n_corresp << vcl_endl;
+  s << "Total number of corresps: " << total_n_corresp << std::endl;
   //  s << "Avg. number of corresps per domain point: " << 
-  //  (float)total_n_corresp/(float)c.corresp_.size() << vcl_endl;
-  s << "Number of corresps with finite cost: " << n_finite << vcl_endl;
+  //  (float)total_n_corresp/(float)c.corresp_.size() << std::endl;
+  s << "Number of corresps with finite cost: " << n_finite << std::endl;
   s << "============================================\n";
 
   return s;
@@ -103,7 +103,7 @@ equal(vbl_sparse_array_3d<bmcsd_match_attribute> l1, vbl_sparse_array_3d<bmcsd_m
 void bmcsd_discrete_corresp_3::
 number_of_correct_triplets(unsigned &n_correct, unsigned &n_valid, const bmcsd_discrete_corresp_3 *gt) const
 {
-  vcl_vector<bool> p0s, p1s, p2s;
+  std::vector<bool> p0s, p1s, p2s;
 
   gt->participating_points(p0s,p1s,p2s);
 
@@ -132,7 +132,7 @@ compare_and_print( const bmcsd_discrete_corresp_3 *gt) const
   assert(this->n1() == gt->n1());
   assert(this->n2() == gt->n2());
 
-  vcl_cout << "\n========== CORRESPONDENCE STATISTICS ==========\n"; 
+  std::cout << "\n========== CORRESPONDENCE STATISTICS ==========\n"; 
 
 
   // # of correct triplets within all finite-valued triplets
@@ -142,8 +142,8 @@ compare_and_print( const bmcsd_discrete_corresp_3 *gt) const
   unsigned n_correct, n_valid;
   number_of_correct_triplets(n_correct, n_valid, gt);
 
-  vcl_cout << "# of correct triplets: \t\n"
-    << 100*(float)n_correct/(float)(n_valid) << "% ("  << n_correct << " out of " << n_valid << ")." << vcl_endl;
+  std::cout << "# of correct triplets: \t\n"
+    << 100*(float)n_correct/(float)(n_valid) << "% ("  << n_correct << " out of " << n_valid << ")." << std::endl;
 
   /*
    * TODO: number of right triplets in ground truth that are not present in the
@@ -153,17 +153,17 @@ compare_and_print( const bmcsd_discrete_corresp_3 *gt) const
   unsigned n_w_gt;
   number_of_pts1_with_gt_among_any_candidates(n_w_gt,gt);
 
-  vcl_cout << "# of points in image 1 having ground-truth among any candidates:\n\t" 
-    << 100.0*(float)n_w_gt/(float)(size()) << "% ("  << n_w_gt << " out of " << size() << ")." << vcl_endl;
+  std::cout << "# of points in image 1 having ground-truth among any candidates:\n\t" 
+    << 100.0*(float)n_w_gt/(float)(size()) << "% ("  << n_w_gt << " out of " << size() << ")." << std::endl;
 
-  vcl_cout << "Top 5 matches covers " << (float)(100*vcl_min(5*n_gt,total_nmatches_gt))/(float)total_nmatches_gt << "\% of the total candidate matches (" << vcl_min(5*n_gt,total_nmatches_gt) << " out of " << total_nmatches_gt << ").\n";
+  std::cout << "Top 5 matches covers " << (float)(100*std::min(5*n_gt,total_nmatches_gt))/(float)total_nmatches_gt << "\% of the total candidate matches (" << std::min(5*n_gt,total_nmatches_gt) << " out of " << total_nmatches_gt << ").\n";
 
 
   unsigned nh_higher, nh_valid;
   percentage_of_matches_above_truth(nh_higher,nh_valid,gt);
 
-  vcl_cout << "# Matches with cost higher than correct match:\n\t" 
-    << 100.0*(float)nh_higher/(float)nh_valid<< "% ("  << nh_higher << " out of " << nh_valid << ")." << vcl_endl;
+  std::cout << "# Matches with cost higher than correct match:\n\t" 
+    << 100.0*(float)nh_higher/(float)nh_valid<< "% ("  << nh_higher << " out of " << nh_valid << ")." << std::endl;
     */
 }
 
@@ -173,7 +173,7 @@ compare_and_print( const bmcsd_discrete_corresp_3 *gt) const
 // p1s[i] == true if i is part of some triplet (a,b,i) with finite cost
 // p2s[i] == true if i is part of some triplet (a,b,i) with finite cost
 void bmcsd_discrete_corresp_3::
-participating_points(vcl_vector<bool> &p0s,vcl_vector<bool> &p1s,vcl_vector<bool> &p2s) const
+participating_points(std::vector<bool> &p0s,std::vector<bool> &p1s,std::vector<bool> &p2s) const
 {
   // resize
   p0s.resize(n0_,false);
@@ -203,13 +203,13 @@ version() const
 //: Print an ascii summary to the stream
 void 
 bmcsd_discrete_corresp_3::
-print_summary(vcl_ostream &os) const
+print_summary(std::ostream &os) const
 {
   os << *this;
 }
 
 //: Return a platform independent string identifying the class
-vcl_string bmcsd_discrete_corresp_3::
+std::string bmcsd_discrete_corresp_3::
 is_a() const 
 { 
   return "bmcsd_discrete_corresp_3";
@@ -247,9 +247,9 @@ b_read(vsl_b_istream &is)
     break;
 
     default:
-        vcl_cerr << "I/O ERROR: bmcsd_discrete_corresp_3::b_read(vsl_b_istream&)\n"
+        std::cerr << "I/O ERROR: bmcsd_discrete_corresp_3::b_read(vsl_b_istream&)\n"
              << "           Unknown version number "<< ver << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }

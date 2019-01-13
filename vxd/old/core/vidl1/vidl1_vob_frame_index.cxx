@@ -7,23 +7,23 @@
 // 10-18-02
 
 #include <iostream>
-#include <vcl_cassert.h>
-#include <vcl_cstdio.h>
-#include <vcl_fstream.h>
+#include <cassert>
+#include <cstdio>
+#include <fstream>
 #include <vul/vul_awk.h>
 
-bool vidl1_vob_frame_index::load(vcl_string const& filename)
+bool vidl1_vob_frame_index::load(std::string const& filename)
 {
-  vcl_vector<vidl1_vob_frame_index_entry> tmp;
+  std::vector<vidl1_vob_frame_index_entry> tmp;
 
-  vcl_ifstream f(filename.c_str(), vcl_ios_binary);
+  std::ifstream f(filename.c_str(), std::ios::binary);
   if (!f.good())
   {
-    vcl_cerr << "vidl1_vob_frame_index: Cannot read IDX file ["<< filename <<"]\n";
+    std::cerr << "vidl1_vob_frame_index: Cannot read IDX file ["<< filename <<"]\n";
     return false;
   }
   vul_awk awk(f);
-  vcl_string tag(awk[0]);
+  std::string tag(awk[0]);
   const int MPEG_IDX = 1;
   const int LBA = 2;
   int idx_type = 0;
@@ -32,16 +32,16 @@ bool vidl1_vob_frame_index::load(vcl_string const& filename)
   else if (tag == "LBA")
     idx_type = LBA;
   else
-    vcl_cerr << "vidl1_vob_frame_index: WARNING: unknown type [" << awk[0] << "]\n";
+    std::cerr << "vidl1_vob_frame_index: WARNING: unknown type [" << awk[0] << "]\n";
 
   for (int frame=0; awk; ++awk, ++frame)
   {
     // Skip comment and ----- lines
     vidl1_vob_frame_index_entry e;
-    if (idx_type == LBA && vcl_sscanf(awk.line(), " %x | %d", &e.lba, &e.frame) == 2)
+    if (idx_type == LBA && std::sscanf(awk.line(), " %x | %d", &e.lba, &e.frame) == 2)
       tmp.push_back(e);
     int dummy;
-    if (idx_type == MPEG_IDX && vcl_sscanf(awk.line(), " %x %x", &e.lba, &dummy) == 2)
+    if (idx_type == MPEG_IDX && std::sscanf(awk.line(), " %x %x", &e.lba, &dummy) == 2)
     {
       e.frame = frame;
       tmp.push_back(e);
@@ -52,9 +52,9 @@ bool vidl1_vob_frame_index::load(vcl_string const& filename)
   // assert that l is sorted by frame
   for (unsigned int i = 0; i+1 < l.size(); ++i)
     assert(l[i+1].frame > l[i].frame);
-  vcl_cerr << "Loaded " << l.size() << " entries from [" << filename << "]\n";
+  std::cerr << "Loaded " << l.size() << " entries from [" << filename << "]\n";
   if (l.size() == 0)
-    vcl_cerr << "WARNING: No index entries -- all seeks from start\n";
+    std::cerr << "WARNING: No index entries -- all seeks from start\n";
   return true;
 }
 
@@ -63,7 +63,7 @@ int vidl1_vob_frame_index::frame_to_lba_of_prev_I_frame(int f, int* f_actual)
   int lo = 0;
   int hi = l.size()-1;
   if (hi < 0 || f < l[lo].frame || f > l[hi].frame) {
-    vcl_cerr << "urk: frame " << f << " out of IDX range\n";
+    std::cerr << "urk: frame " << f << " out of IDX range\n";
     return -1;
   }
   while (lo < hi-1)
@@ -79,7 +79,7 @@ int vidl1_vob_frame_index::frame_to_lba_of_prev_I_frame(int f, int* f_actual)
       break;
     }
   }
-  // vcl_fprintf(stderr, "vidl1_vob_frame_index: [%5d %5d] -> [%5d %5d]\n", lo, hi, l[lo].frame, l[hi].frame);
+  // std::fprintf(stderr, "vidl1_vob_frame_index: [%5d %5d] -> [%5d %5d]\n", lo, hi, l[lo].frame, l[hi].frame);
   if (f_actual)
     *f_actual = l[lo].frame;
   return l[lo].lba;

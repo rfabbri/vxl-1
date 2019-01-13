@@ -36,13 +36,13 @@ bnld_eno_zerox_image::
 
 void 
 bnld_eno_zerox_image::
-print(vcl_ostream& strm) const
+print(std::ostream& strm) const
 {
 
   strm << "===== Eno Zerox Image =====\n"
-       << "Rows: " << nj_ << "  Cols: " << ni_ << vcl_endl;
+       << "Rows: " << nj_ << "  Cols: " << ni_ << std::endl;
 
-  strm << "Computed labels: " << ((computed_labels())? "yes" : "no") << vcl_endl;
+  strm << "Computed labels: " << ((computed_labels())? "yes" : "no") << std::endl;
   
 }
 
@@ -53,7 +53,7 @@ assign_labels(const vil_image_view<double> &img, const vil_image_view<unsigned> 
 {
 
   if (!label.is_contiguous() || label.istep() != 1) {
-    vcl_cerr << "bnld_eno_zerox_image::assign_labels : only contigous row-wise (col,row) images supported\n";
+    std::cerr << "bnld_eno_zerox_image::assign_labels : only contigous row-wise (col,row) images supported\n";
     return false;
   }
 

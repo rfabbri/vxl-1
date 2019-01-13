@@ -16,9 +16,9 @@
 #include <vil/vil_image_view.h>
 #include <vul/vul_file.h>
 
-#include <vcl_iostream.h>
-#include <vcl_cstring.h> // for memcpy()
-#include <vcl_cassert.h>
+#include <iostream>
+#include <cstring> // for memcpy()
+#include <cassert>
 
 //: Constructor
 vidl1_avicodec::vidl1_avicodec()
@@ -47,7 +47,7 @@ vidl1_avicodec::~vidl1_avicodec()
 //-----------------------------------------------------------------------------
 //: Probe the file fname, open it as an AVI file. If it works, return true, false otherwise.
 
-bool vidl1_avicodec::probe(vcl_string const& fname)
+bool vidl1_avicodec::probe(std::string const& fname)
 {
   std::cerr << "ERROR: VIDL1 stubbed out, use vidl instead\n";
   abort();
@@ -76,7 +76,7 @@ bool vidl1_avicodec::probe(vcl_string const& fname)
 //  into the cloned codec. The cloned codec is the one that is returned
 //  by this function.
 vidl1_codec_sptr
-vidl1_avicodec::load(vcl_string const& fname, char mode)
+vidl1_avicodec::load(std::string const& fname, char mode)
 {
   vidl1_avicodec *cloned_avi_codec = new vidl1_avicodec;
 
@@ -90,7 +90,7 @@ vidl1_avicodec::load(vcl_string const& fname, char mode)
 
 
 bool
-vidl1_avicodec::load_avi(vcl_string const& fname, char mode )
+vidl1_avicodec::load_avi(std::string const& fname, char mode )
 {
   std::cerr << "ERROR: VIDL1 stubbed out, use vidl instead\n";
   abort();
@@ -169,7 +169,7 @@ vidl1_avicodec::get_view( int position,
                                                      vil_pixel_format_component_format(fmt));
 
   // Copy the data into the memory chunk
-  vcl_memcpy(chunk->data(), im24->At(0,0),sizeof(vxl_byte)*im24->Bytes());
+  std::memcpy(chunk->data(), im24->At(0,0),sizeof(vxl_byte)*im24->Bytes());
 
   // Create a vil_image_view of this memory chunk
   vil_image_view_base_sptr image = new vil_image_view<vxl_byte>(chunk, reinterpret_cast<vxl_byte*>(chunk->data())+2,
@@ -187,7 +187,7 @@ vidl1_avicodec::put_view( int /*position*/,
                           const vil_image_view_base &/*im*/,
                           int /*x0*/, int /*y0*/)
 {
-  vcl_cerr << "vidl1_avicodec::put_view not implemented\n";
+  std::cerr << "vidl1_avicodec::put_view not implemented\n";
   return false;
 }
 
@@ -223,8 +223,8 @@ vidl1_avicodec::seek(int frame_number) const
   moviestream_->Seek(frame_number);
   moviestream_->SeekToPrevKeyFrame();
   int key_frame = moviestream_->GetPos();
-  vcl_cout << "[vidl1_avicodec::seek] key frame " << key_frame
-           << "  -> decompress " << frame_number-key_frame << " frames" << vcl_endl;
+  std::cout << "[vidl1_avicodec::seek] key frame " << key_frame
+           << "  -> decompress " << frame_number-key_frame << " frames" << std::endl;
   for (int i=key_frame; i<frame_number; ++i)
   {
     moviestream_->ReadFrame();

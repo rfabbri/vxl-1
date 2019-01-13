@@ -13,7 +13,7 @@
 // lines.  The function returns a gamma value give alpha and time.
 
 #include <vbl/vbl_ref_count.h>
-#include <vcl_map.h>
+#include <map>
 #include "bmrf_epi_seg_sptr.h"
 
 
@@ -109,7 +109,7 @@ class bmrf_pwl_gamma_func : public bmrf_gamma_func
 
  private:
   //: The knots
-  vcl_map<double, double> knots_;
+  std::map<double, double> knots_;
 };
 
 #endif // bmrf_gamma_func_h_

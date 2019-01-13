@@ -1,6 +1,6 @@
 // This is bbasd/bgld/bgld_poly_curve_line.cxx
 #include "bgld_poly_curve_line.h"
-#include <vcl_cmath.h>
+#include <cmath>
 
 //: construct from two points so that s runs in [0,1]
 bgld_poly_curve_line::bgld_poly_curve_line(vgl_point_2d<double> start, vgl_point_2d<double> end)

@@ -13,7 +13,7 @@ extern "C" {
 #include <vtol/vtol_vertex_2d_sptr.h>
 #include <vil1/vil1_image.h>
 #include <vil/vil_image_resource.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <vgel/vgel_multi_view_data_vertex_sptr.h>
 //#include <vidl_vil1/vidl_vil1_movie_sptr.h>
 #include <vxl_config.h>
@@ -69,10 +69,10 @@ class vgel_kl
   //
   // \deprecated Use other vil(2) version
   // May be removed after VXL 1.1.1
-  virtual void match_sequence(vcl_vector<vil1_image> &,
+  virtual void match_sequence(std::vector<vil1_image> &,
                               vgel_multi_view_data_vertex_sptr);
   //: get matching points from a sequence of images
-  virtual void match_sequence(vcl_vector<vil_image_resource_sptr> &,
+  virtual void match_sequence(std::vector<vil_image_resource_sptr> &,
                               vgel_multi_view_data_vertex_sptr);
 
   //: get matching points from a sequence of video frames
@@ -86,10 +86,10 @@ class vgel_kl
   //
   // \deprecated Use other vil(2) version
   // May be removed after VXL 1.1.1
-  virtual vcl_vector<vtol_vertex_2d_sptr> *
+  virtual std::vector<vtol_vertex_2d_sptr> *
   extract_points(vil1_image &);
   //: extract feature points from a single image
-  virtual vcl_vector<vtol_vertex_2d_sptr> *
+  virtual std::vector<vtol_vertex_2d_sptr> *
   extract_points(vil_image_resource_sptr &);
 
  private:
@@ -99,11 +99,11 @@ class vgel_kl
                                    int, int,
                                    vgel_multi_view_data_vertex_sptr, bool);
 
-  virtual void match_sequence_base(vcl_vector<KLT_PixelType *> &,
+  virtual void match_sequence_base(std::vector<KLT_PixelType *> &,
                                    int, int,
                                    vgel_multi_view_data_vertex_sptr);
 
-  virtual vcl_vector<vtol_vertex_2d_sptr> *
+  virtual std::vector<vtol_vertex_2d_sptr> *
   extract_points_base(KLT_PixelType *, int, int);
 
   //: Convert a vil1_image to an array of grey scale

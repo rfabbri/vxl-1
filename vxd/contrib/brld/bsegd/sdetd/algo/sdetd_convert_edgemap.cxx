@@ -18,7 +18,7 @@ sdetd_convert_edgemap_to_image(const sdet_curve_fragment_graph& CFG,
   bw_image.set_size(roi_box.width()+1, roi_box.height()+1);
   bw_image.fill(0);
 
-  for (vcl_list<sdet_edgel_chain*>::const_iterator f_it = CFG.frags.begin(); 
+  for (std::list<sdet_edgel_chain*>::const_iterator f_it = CFG.frags.begin(); 
     f_it != CFG.frags.end(); ++f_it)
   {
     sdet_edgel_chain* chain = (*f_it);
@@ -78,7 +78,7 @@ sdetd_convert_edgemap_to_image(const sdet_edgemap& edgemap,
   bw_image.set_size(roi_box.width()+1, roi_box.height()+1);
   bw_image.fill(0);
 
-  for (vcl_vector<sdet_edgel *>::const_iterator 
+  for (std::vector<sdet_edgel *>::const_iterator 
        e_it = edgemap.edgels.begin(); 
        e_it != edgemap.edgels.end(); ++e_it)
   {
@@ -94,8 +94,8 @@ sdetd_convert_edgemap_to_image(const sdet_edgemap& edgemap,
       bw_image(image_i, image_j) = 255;
 #ifndef NDEBUG
       if (edgemap.edge_cells(pt_y,pt_x).empty()) {
-        vcl_cout << "[ix,iy]: [" << pt_x << "," << pt_y << "]\n";
-        vcl_cout << "x,y: " << pt.x() << ", " << pt.y() << vcl_endl;
+        std::cout << "[ix,iy]: [" << pt_x << "," << pt_y << "]\n";
+        std::cout << "x,y: " << pt.x() << ", " << pt.y() << std::endl;
       }
       assert(!edgemap.edge_cells(pt_y,pt_x).empty());
 #endif
@@ -128,7 +128,7 @@ sdetd_convert_edgemap_to_grayscale_image(const sdet_curve_fragment_graph& CFG,
   bw_image.set_size(roi_box.width()+1, roi_box.height()+1);
   bw_image.fill(0);
 
-  for (vcl_list<sdet_edgel_chain*>::const_iterator f_it = CFG.frags.begin();
+  for (std::list<sdet_edgel_chain*>::const_iterator f_it = CFG.frags.begin();
     f_it != CFG.frags.end(); ++f_it)
   {
     sdet_edgel_chain* chain = (*f_it);
@@ -162,7 +162,7 @@ sdetd_convert_edgemap_to_grayscale_image(const sdet_edgemap& edgemap,
   bw_image.set_size(roi_box.width()+1, roi_box.height()+1);
   bw_image.fill(0);
 
-  for (vcl_vector<sdet_edgel *>::const_iterator
+  for (std::vector<sdet_edgel *>::const_iterator
        e_it = edgemap.edgels.begin();
        e_it != edgemap.edgels.end(); ++e_it)
   {

@@ -25,10 +25,10 @@ class bgld_arc_base : public bgld_eulerspiral_base
   //: default constructor
   bgld_arc_base() : bgld_eulerspiral_base() {}
 
-  static const vcl_type_info& type_id()
+  static const std::type_info& type_id()
   { return typeid(bgld_arc_base); }
 
-  virtual bool is_type( const vcl_type_info& type ) const
+  virtual bool is_type( const std::type_info& type ) const
   { return (typeid(bgld_arc_base) == type)!=0 ||
             this->bgld_eulerspiral_base::is_type(type);
   }
@@ -39,10 +39,10 @@ class bgld_arc_base : public bgld_eulerspiral_base
 
 //: Write "<bgld_param_curve of type euler spiral> to stream"
 // \relates bgld_param_curve
-//vcl_ostream&  operator<<(vcl_ostream& s, bgld_arc_base const& c);
+//std::ostream&  operator<<(std::ostream& s, bgld_arc_base const& c);
 
 //: Read parameters from stream
 // \relates dbvgl_param_curve
-//vcl_istream&  operator>>(vcl_istream& s, bgld_arc_base const& c);
+//std::istream&  operator>>(std::istream& s, bgld_arc_base const& c);
 
 #endif // bgld_arc_base_h_

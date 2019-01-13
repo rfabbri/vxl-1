@@ -4,10 +4,10 @@
 
 #include "bnld_bbf_tree.h"
 
-#include <vcl_limits.h>
-#include <vcl_utility.h>
-#include <vcl_algorithm.h>
-#include <vcl_iostream.h>
+#include <limits>
+#include <utility>
+#include <algorithm>
+#include <iostream>
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_vector.h>
 
@@ -78,34 +78,34 @@ T bnld_bbf_dist_sq( const vnl_vector_fixed<T,n>& p, const bnld_bbf_box<T,n>& b )
 
 //: Constuctor
 template <class T, unsigned int n>
-bnld_bbf_tree<T,n>::bnld_bbf_tree(const vcl_vector< vnl_vector_fixed<T,n> >& points, int points_per_leaf)
+bnld_bbf_tree<T,n>::bnld_bbf_tree(const std::vector< vnl_vector_fixed<T,n> >& points, int points_per_leaf)
  : leaf_count_(0), leaves_examined_(0), internal_count_(0),
    internal_examined_(0), points_(points) 
 {
   assert(points_per_leaf > 0);
   
   // 1.  Build the initial bounding box.
-  vnl_vector_fixed<T,n> low(vcl_numeric_limits<T>::min());
-  vnl_vector_fixed<T,n> high(vcl_numeric_limits<T>::max());
+  vnl_vector_fixed<T,n> low(std::numeric_limits<T>::min());
+  vnl_vector_fixed<T,n> high(std::numeric_limits<T>::max());
   bnld_bbf_box<T,n> box( low, high );
   
   // 2. create the vector of ids
-  vcl_vector< int > indices( points_.size() );
+  std::vector< int > indices( points_.size() );
   for ( unsigned int i=0; i<indices.size(); ++i ) indices[ i ] = i;
 
   // 3. call recursive function to do the real work
   root_ = build_tree( points_per_leaf, box, 0, indices );
 
-  vcl_cout << "total leaves = " << leaf_count_ << vcl_endl
-           << "total interal = " << internal_count_ << vcl_endl;
+  std::cout << "total leaves = " << leaf_count_ << std::endl
+           << "total interal = " << internal_count_ << std::endl;
 }
 
 
 //: For sorting pairs by their first element
 template <class T>
 inline bool
-first_less( const vcl_pair<T,int>& left,
-            const vcl_pair<T,int>& right )
+first_less( const std::pair<T,int>& left,
+            const std::pair<T,int>& right )
 {
   return left.first < right.first;
 }
@@ -117,7 +117,7 @@ typename bnld_bbf_tree<T,n>::bnld_bbf_node_sptr
 bnld_bbf_tree<T,n>::build_tree( int points_per_leaf,
                                 const bnld_bbf_box<T,n>& outer_box,
                                 int depth,
-                                vcl_vector< int >& indices )
+                                std::vector< int >& indices )
 {
   unsigned int i;
 
@@ -138,10 +138,10 @@ bnld_bbf_tree<T,n>::build_tree( int points_per_leaf,
   // 4. Form and then sort a vector of temporary pairs, containing the
   //    indices and the values along the selected dim of the data.
   //    Sort by the values.
-  vcl_vector< vcl_pair< T, int > > values( indices.size() );
+  std::vector< std::pair< T, int > > values( indices.size() );
   for ( i=0; i<indices.size(); ++i )
-    values[i] = vcl_pair<T, int> ( points_[ indices[i] ][dim], indices[i] );
-  vcl_sort( values.begin(), values.end(), first_less<T> );
+    values[i] = std::pair<T, int> ( points_[ indices[i] ][dim], indices[i] );
+  std::sort( values.begin(), values.end(), first_less<T> );
 
   // 5. Partition the vector and the bounding box along the dimension.
   unsigned int med_loc = (indices.size()-1) / 2;
@@ -151,7 +151,7 @@ bnld_bbf_tree<T,n>::build_tree( int points_per_leaf,
   left_outer_box.max_point_[dim] = median_value;
   right_outer_box.min_point_[dim] = median_value;
   
-  vcl_vector< int > left_indices( med_loc+1 ), right_indices( indices.size()-med_loc-1 );
+  std::vector< int > left_indices( med_loc+1 ), right_indices( indices.size()-med_loc-1 );
   for ( i=0; i<=med_loc; ++i ) left_indices[i] = values[i].second;
   for ( ; i<indices.size(); ++i ) right_indices[i-med_loc-1] = values[i].second;
 
@@ -167,7 +167,7 @@ bnld_bbf_tree<T,n>::build_tree( int points_per_leaf,
 //: Build an inner bounding box
 template <class T, unsigned int n>
 bnld_bbf_box<T,n>
-bnld_bbf_tree<T,n>::build_inner_box( const vcl_vector< int >& indices )
+bnld_bbf_tree<T,n>::build_inner_box( const std::vector< int >& indices )
 {
   assert( indices.size() > 0 );
   vnl_vector_fixed<T,n> min_point( points_[ indices[ 0 ] ] );
@@ -188,7 +188,7 @@ bnld_bbf_tree<T,n>::build_inner_box( const vcl_vector< int >& indices )
 //: Find the dimension with the greatest variation
 template <class T, unsigned int n>
 int
-bnld_bbf_tree<T,n>::greatest_variation( const vcl_vector<int>& indices )
+bnld_bbf_tree<T,n>::greatest_variation( const std::vector<int>& indices )
 {
   int dim = -1;
   T interval_size = 0;
@@ -215,10 +215,10 @@ bnld_bbf_tree<T,n>::greatest_variation( const vcl_vector<int>& indices )
 template <class T, unsigned int n>
 void
 bnld_bbf_tree<T,n>::n_nearest_pts( const vnl_vector_fixed<T,n>& query_point,
-                                   vcl_vector< vnl_vector_fixed<T,n> >& closest_points,
+                                   std::vector< vnl_vector_fixed<T,n> >& closest_points,
                                    int num, int max_search_nodes ) const
 {
-  vcl_vector< int > closest_indices( num );
+  std::vector< int > closest_indices( num );
   this->n_nearest(query_point, closest_indices, num, max_search_nodes);
 
   closest_points.resize( num );
@@ -232,7 +232,7 @@ bnld_bbf_tree<T,n>::n_nearest_pts( const vnl_vector_fixed<T,n>& query_point,
 template <class T, unsigned int n>
 void
 bnld_bbf_tree<T,n>::n_nearest( const vnl_vector_fixed<T,n>& query_point,
-                               vcl_vector< int >& closest_indices,
+                               std::vector< int >& closest_indices,
                                int num, int max_search_nodes ) const
 {
   assert(num>0);
@@ -242,8 +242,8 @@ bnld_bbf_tree<T,n>::n_nearest( const vnl_vector_fixed<T,n>& query_point,
   if ( closest_indices.size() != (unsigned int)num )
     closest_indices.resize( num );
     
-  vcl_vector< T > sq_distances( num );
-  vcl_vector< bnld_bbf_queue_entry<T,n> > priority_queue;
+  std::vector< T > sq_distances( num );
+  std::vector< bnld_bbf_queue_entry<T,n> > priority_queue;
   priority_queue.reserve( 100 );    // should be more than enough
   
   int num_found = 0;
@@ -266,29 +266,29 @@ bnld_bbf_tree<T,n>::n_nearest( const vnl_vector_fixed<T,n>& query_point,
       current = current->right_ ;
     }
   }
-  vcl_make_heap( priority_queue.begin(), priority_queue.end() );
+  std::make_heap( priority_queue.begin(), priority_queue.end() );
   sq_dist = 0;
 
-//   vcl_cout << "\nAfter initial trip down the tree, here's the heap\n";
+//   std::cout << "\nAfter initial trip down the tree, here's the heap\n";
 //   int i;
 //   for ( i=0; i<priority_queue.size(); ++i )
-//     vcl_cout << "  " << i << ":  sq distance " << priority_queue[i].dist_
-//              << ", node depth " << priority_queue[i].node_->depth_ << vcl_endl;
+//     std::cout << "  " << i << ":  sq distance " << priority_queue[i].dist_
+//              << ", node depth " << priority_queue[i].node_->depth_ << std::endl;
               
   bool first_leaf = true;
 
   do {
-    // vcl_cout << "\ncurrent -- sq_dist " << sq_dist << ", depth: " << current->depth_
+    // std::cout << "\ncurrent -- sq_dist " << sq_dist << ", depth: " << current->depth_
     //         << current->outer_box_ << "\ninner_box: "
     //      << current->inner_box_ << "\n";
-    // vcl_cout << "heap size: " << heap_vec.size() << vcl_endl;
+    // std::cout << "heap size: " << heap_vec.size() << std::endl;
     if ( num_found < num || sq_dist < sq_distances[ num_found-1 ] ) {
       if ( ! current->left_ ) {  // a leaf node
-        // vcl_cout << "Leaf\n";
+        // std::cout << "Leaf\n";
         leaves_examined_ ++ ;
         update_closest( query_point, num, current, closest_indices, sq_distances, num_found );
         if ( first_leaf ) {  // check if we can quit just at this leaf node.
-          // vcl_cout << "First leaf\n";
+          // std::cout << "First leaf\n";
           first_leaf = false;
           if ( this-> bounded_at_leaf( query_point, num, current, sq_distances, num_found ) )
             break;
@@ -296,44 +296,44 @@ bnld_bbf_tree<T,n>::n_nearest( const vnl_vector_fixed<T,n>& query_point,
       }
 
       else {
-        // vcl_cout << "Internal\n";
+        // std::cout << "Internal\n";
         internal_examined_ ++ ;
 
         left_box_sq_dist = bnld_bbf_dist_sq( query_point, current->left_->inner_box_ );
-        // vcl_cout << "left sq distance = " << left_box_sq_dist << vcl_endl;
+        // std::cout << "left sq distance = " << left_box_sq_dist << std::endl;
         if ( num_found < num || sq_distances[ num_found-1 ] > left_box_sq_dist ) {
-          // vcl_cout << "pushing left onto the heap\n";
+          // std::cout << "pushing left onto the heap\n";
           priority_queue.push_back( bnld_bbf_queue_entry<T,n>( left_box_sq_dist, current->left_ ) );
-          vcl_push_heap( priority_queue.begin(), priority_queue.end() );
+          std::push_heap( priority_queue.begin(), priority_queue.end() );
         };
 
         right_box_sq_dist = bnld_bbf_dist_sq( query_point, current->right_->inner_box_ );
-        // vcl_cout << "right sq distance = " << right_box_sq_dist << vcl_endl;
+        // std::cout << "right sq distance = " << right_box_sq_dist << std::endl;
         if ( num_found < num || sq_distances[ num_found-1 ] > right_box_sq_dist ) {
-          // vcl_cout << "pushing right onto the heap\n";
+          // std::cout << "pushing right onto the heap\n";
           priority_queue.push_back( bnld_bbf_queue_entry<T,n>( right_box_sq_dist, current->right_ ) );
-          vcl_push_heap( priority_queue.begin(), priority_queue.end() );
+          std::push_heap( priority_queue.begin(), priority_queue.end() );
         }
       }
     }
-    // else vcl_cout << "skipping node\n";
+    // else std::cout << "skipping node\n";
 
     if ( leaves_examined_ >= max_search_nodes && max_search_nodes > 0)
       break;
     else if ( priority_queue.size() == 0 )
       break;
     else {
-      vcl_pop_heap( priority_queue.begin(), priority_queue.end() );
+      std::pop_heap( priority_queue.begin(), priority_queue.end() );
       sq_dist = priority_queue.back().dist_;
       current = priority_queue.back().node_;
       priority_queue.pop_back();
     }
   } while ( true );
 
-//  vcl_cout << "\nAfter n_nearest, leaves_examined_ = " << leaves_examined_
+//  std::cout << "\nAfter n_nearest, leaves_examined_ = " << leaves_examined_
 //           << ", fraction = " << float(leaves_examined_) / leaf_count_
 //           << "\n     internal_examined_ = " << internal_examined_
-//           << ", fraction = " << float(internal_examined_) / internal_count_ << vcl_endl;
+//           << ", fraction = " << float(internal_examined_) / internal_count_ << std::endl;
            
   assert(num_found >= 0);
   if(num_found < num)
@@ -345,21 +345,21 @@ void
 bnld_bbf_tree<T,n>::update_closest( const vnl_vector_fixed<T,n>& query_point,
                                     int num,
                                     bnld_bbf_node_sptr p,
-                                    vcl_vector< int >& closest_indices,
-                                    vcl_vector< T >& sq_distances,
+                                    std::vector< int >& closest_indices,
+                                    std::vector< T >& sq_distances,
                                     int & num_found ) const
 {
   assert(num>0);
-  // vcl_cout << "Update_closest for leaf " << vcl_endl;
-  // vcl_cout << " query_point = " << query_point << vcl_endl;
-  // vcl_cout << " inner bounding box = \n" << p->inner_box_ << vcl_endl;
-  // vcl_cout << " sq_dist = " << rsdl_dist_sq( query_point, p->inner_box_ ) << vcl_endl;
+  // std::cout << "Update_closest for leaf " << std::endl;
+  // std::cout << " query_point = " << query_point << std::endl;
+  // std::cout << " inner bounding box = \n" << p->inner_box_ << std::endl;
+  // std::cout << " sq_dist = " << rsdl_dist_sq( query_point, p->inner_box_ ) << std::endl;
 
   for ( unsigned int i=0; i < p->point_indices_.size(); ++i ) {  // check each id
     int id = p->point_indices_[i];
     T sq_dist = vnl_vector_ssd( query_point, points_[ id ] );
-    // vcl_cout << "  id = " << id << ", point = " << points_[ id ]
-    //          << ", sq_dist = " << sq_dist << vcl_endl;
+    // std::cout << "  id = " << id << ", point = " << points_[ id ]
+    //          << ", sq_dist = " << sq_dist << std::endl;
 
     // if enough points have been found and the distance of this point is
     // too large then skip it.
@@ -385,11 +385,11 @@ bnld_bbf_tree<T,n>::update_closest( const vnl_vector_fixed<T,n>& query_point,
     closest_indices[ j+1 ] = id;
     sq_distances[ j+1 ] = sq_dist;
   }
-  // vcl_cout << "  End of leaf computation, num_found =  " << num_found
-  //          << ", and they are: " << vcl_endl;
+  // std::cout << "  End of leaf computation, num_found =  " << num_found
+  //          << ", and they are: " << std::endl;
   // for ( int k=0; k<num_found; ++k )
-  //   vcl_cout << "     " << k << ":  indices: " << closest_indices[ k ]
-  //            << ", sq_dist " << sq_distances[ k ] << vcl_endl;
+  //   std::cout << "     " << k << ":  indices: " << closest_indices[ k ]
+  //            << ", sq_dist " << sq_distances[ k ] << std::endl;
 }
 
 
@@ -403,18 +403,18 @@ bool
 bnld_bbf_tree<T,n>::bounded_at_leaf( const vnl_vector_fixed<T,n>& query_point,
                                      int num,
                                      bnld_bbf_node_sptr current,
-                                     const vcl_vector< T >& sq_distances,
+                                     const std::vector< T >& sq_distances,
                                      int & num_found ) const
 {
   assert(num>0);
-  // vcl_cout << "bounded_at_leaf\n"
+  // std::cout << "bounded_at_leaf\n"
   //          << "num_found = " << num_found << "\n";
 
   if ( num_found != num ) {
     return false;
   }
 
-  double radius = vcl_sqrt( sq_distances[ num-1 ] );
+  double radius = std::sqrt( sq_distances[ num-1 ] );
 
   for ( unsigned int i=0; i < n; ++i ) {
     double x = query_point[i];
@@ -432,7 +432,7 @@ template class bnld_bbf_box< T,n >; \
 template class bnld_bbf_node< T,n >; \
 template class bnld_bbf_queue_entry< T,n >; \
 template class bnld_bbf_tree< T,n >; \
-VCL_INSTANTIATE_INLINE(bool first_less( const vcl_pair<T,int>& left, \
-                                        const vcl_pair<T,int>& right )); \
+VCL_INSTANTIATE_INLINE(bool first_less( const std::pair<T,int>& left, \
+                                        const std::pair<T,int>& right )); \
 typedef bnld_bbf_node<T,n> bnld_bbf_node_inst; \
 VBL_SMART_PTR_INSTANTIATE( bnld_bbf_node_inst );

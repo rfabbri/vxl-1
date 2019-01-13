@@ -29,7 +29,7 @@ int vepl1_test_threshold()
   vil1_image flot_img = CreateTestfloatImage(32,32), flot_ori = CreateTestfloatImage(32,32);
   vil1_image colr_img = CreateTest24bitImage(32,32), colr_ori = CreateTest24bitImage(32,32);
 #endif // 0
-  vcl_string m = "vepl1_threshold";
+  std::string m = "vepl1_threshold";
   ALL_TESTS(vepl1_threshold,0,m);
   return 0;
 }

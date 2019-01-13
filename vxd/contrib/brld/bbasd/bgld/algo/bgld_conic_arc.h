@@ -15,8 +15,8 @@
 // \endverbatim
 
 
-#include <vcl_iostream.h>
-//#include <vcl_cmath.h>
+#include <iostream>
+//#include <cmath>
 #include <vgl/vgl_conic_segment_2d.h>
 
 
@@ -165,7 +165,7 @@ public:
   //**************************************************************
   
   //: Print parameters of the circular arc
-  virtual void print(vcl_ostream &os = vcl_cerr );
+  virtual void print(std::ostream &os = std::cerr );
 
 
 protected:

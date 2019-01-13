@@ -19,14 +19,14 @@ class bmcsd_discrete_corresp_storage_3: public bpro1_storage
 public:
   bmcsd_discrete_corresp_storage_3();
   virtual ~bmcsd_discrete_corresp_storage_3();
-  virtual vcl_string type() const { return "mw_3_pt_corresp"; }
+  virtual std::string type() const { return "mw_3_pt_corresp"; }
 
   //: Create a copy of the object on the heap.
   // The caller is responsible for deletion
   virtual bpro1_storage* clone() const;
   
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "mw_point_corresp_storage_3"; }
+  virtual std::string is_a() const { return "mw_point_corresp_storage_3"; }
 
   bmcsd_discrete_corresp_3 *corresp() {
     return c_;

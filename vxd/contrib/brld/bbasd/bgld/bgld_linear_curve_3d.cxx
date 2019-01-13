@@ -1,6 +1,6 @@
 // This is bbasd/bgld/bgld_linear_curve_3d.cxx
 #include "bgld_linear_curve_3d.h"
-#include <vcl_cmath.h>
+#include <cmath>
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_analytic_integrant.h>
 #include <vnl/algo/vnl_adaptsimpson_integral.h>
@@ -64,9 +64,9 @@ vgl_vector_3d<double> bgld_linear_curve_3d::tangent_at_length(double s) const
 //  struct tangent_angles ta = tangent_angles_at_length(s);
 //  double phi = ta.phi_;
 //  double theta = ta.theta_;
-//  return vgl_vector_3d<double> (vcl_sin(phi)*vcl_cos(theta), 
-//                                vcl_sin(phi)*vcl_sin(theta), 
-//                                vcl_cos(phi));
+//  return vgl_vector_3d<double> (std::sin(phi)*std::cos(theta), 
+//                                std::sin(phi)*std::sin(theta), 
+//                                std::cos(phi));
   vgl_vector_3d<double> tangent(slopes_[0], slopes_[1], slopes_[2]);
   normalize(tangent);
   return tangent;
@@ -80,7 +80,7 @@ vgl_vector_3d<double> bgld_linear_curve_3d::normal_at(double s) const
 
 vgl_vector_3d<double> bgld_linear_curve_3d::normal_at_length(double s) const
 {
-  vcl_cout << "bgld_linear_curve_3d::normal_at_length NOT IMPLEMENTED!" << vcl_endl;
+  std::cout << "bgld_linear_curve_3d::normal_at_length NOT IMPLEMENTED!" << std::endl;
   return vgl_vector_3d<double>(0, 0, 0);
 }
 
@@ -99,11 +99,11 @@ struct tangent_angles bgld_linear_curve_3d::tangent_angles_at_length(double s) c
 
   struct tangent_angles ta;
 
-  ta.theta_ = vcl_atan2(dy, dx);
+  ta.theta_ = std::atan2(dy, dx);
   if(ta.theta_ < 0)
     ta.theta_ += 2*vnl_math::pi;
 
-  ta.phi_ = vcl_atan2(vcl_sqrt(vcl_pow(dx,2.0) + vcl_pow(dy,2.0)), dz);
+  ta.phi_ = std::atan2(std::sqrt(std::pow(dx,2.0) + std::pow(dy,2.0)), dz);
   if(ta.phi_ < 0)
     ta.phi_ += 2*vnl_math::pi;
 
@@ -118,7 +118,7 @@ double bgld_linear_curve_3d::curvature_at(double s) const
 
 double bgld_linear_curve_3d::curvature_at_length(double s) const
 {
-  vcl_cout << "bgld_linear_curve_3d::curvature_at_length NOT IMPLEMENTED!" << vcl_endl;
+  std::cout << "bgld_linear_curve_3d::curvature_at_length NOT IMPLEMENTED!" << std::endl;
   return 0;
 }
 
@@ -130,6 +130,6 @@ double bgld_linear_curve_3d::torsion_at(double s) const
 
 double bgld_linear_curve_3d::torsion_at_length(double s) const
 {
-  vcl_cout << "bgld_linear_curve_3d::torsion_at_length NOT IMPLEMENTED!" << vcl_endl;
+  std::cout << "bgld_linear_curve_3d::torsion_at_length NOT IMPLEMENTED!" << std::endl;
   return 0;
 }

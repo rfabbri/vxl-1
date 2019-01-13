@@ -5,8 +5,8 @@
 //:
 // \file
 
-#include <vcl_cassert.h>
-#include <vcl_vector.h>
+#include <cassert>
+#include <vector>
 
 #include <bgrld/bgrld_graph.h>
 
@@ -175,7 +175,7 @@ void  bgrld_graph<V,E>::del_all_edges()
 template<class V, class E>
 void bgrld_graph<V,E>::purge_isolated_vertices()
 {
-  vcl_vector<V_sptr> vert_to_del;
+  std::vector<V_sptr> vert_to_del;
   for ( vertex_iterator v_itr = vertices_.begin();
         v_itr != vertices_.end(); ++v_itr )
   {
@@ -192,7 +192,7 @@ void bgrld_graph<V,E>::purge_isolated_vertices()
 
 //: return all vertices with degree one
 template<class V, class E>
-void bgrld_graph<V,E>::get_all_degree_one_vertices(vcl_vector<V_sptr>& vertices)
+void bgrld_graph<V,E>::get_all_degree_one_vertices(std::vector<V_sptr>& vertices)
 {
   for ( vertex_iterator v_itr = vertices_.begin();
         v_itr != vertices_.end(); ++v_itr )
@@ -515,7 +515,7 @@ bool bgrld_graph<V,E>::has_cycle() {
 
 //: Print an ascii summary to the stream
 template<class V, class E>
-void bgrld_graph<V,E>::print_summary( vcl_ostream& os ) const
+void bgrld_graph<V,E>::print_summary( std::ostream& os ) const
 {
   os << this->number_of_vertices() << " vertices";
 }
@@ -555,9 +555,9 @@ void bgrld_graph<V,E>::b_read(vsl_b_istream &is)
     break;
   }
   default:
-    vcl_cerr << "I/O ERROR: bgrld_graph<V,E>::b_read(vsl_b_istream&)\n"
+    std::cerr << "I/O ERROR: bgrld_graph<V,E>::b_read(vsl_b_istream&)\n"
              << "           Unknown version number "<< ver << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
   }
   return;
   

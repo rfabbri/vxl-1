@@ -161,5 +161,5 @@ void    GetAngles(Profile  *ppf);
 Profile *FairCurReconstruct(int n, Point3D* P, Real afa1, Real betan);
 
 
-#endif arcspline_h_
+#endif // arcspline_h_
 

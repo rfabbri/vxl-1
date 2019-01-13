@@ -9,8 +9,8 @@
 #define __MATRIX_H__
 
 #include "vector.h"
-#include <vcl_cmath.h>
-#include <vcl_cstdio.h>
+#include <cmath>
+#include <cstdio>
 #include "macros.h"
 
 typedef double  *double_ptr;
@@ -20,7 +20,7 @@ static bool
 IsZero (double  val,
         double  epsilon = -1) {
   if (epsilon == -1) epsilon = MATH_DBL_EPSILON;
-  if (vcl_fabs (val) < epsilon) {
+  if (std::fabs (val) < epsilon) {
     return true;
   } else {
     return false;

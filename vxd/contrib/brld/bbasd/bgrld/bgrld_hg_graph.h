@@ -7,8 +7,8 @@
 #ifndef bgrld_hg_graph_h_
 #define bgrld_hg_graph_h_
 
-#include <vcl_map.h>
-#include <vcl_utility.h>
+#include <map>
+#include <utility>
 
 #include <bgrld/bgrld_hg_vertex.h>
 #include <bgrld/bgrld_hg_edge.h>
@@ -16,19 +16,19 @@
 class bgrld_hg_graph 
 {
 protected:
-  vcl_map<int, bgrld_hg_vertex*>    vertices_;
-  vcl_map<int, bgrld_hg_edge*>      edges_;
+  std::map<int, bgrld_hg_vertex*>    vertices_;
+  std::map<int, bgrld_hg_edge*>      edges_;
 
 public:
   //: ====== Graph query functions ======
-  vcl_map<int, bgrld_hg_vertex*>& vertices() {
+  std::map<int, bgrld_hg_vertex*>& vertices() {
     return vertices_;
   }
   bgrld_hg_vertex* vertices (const int i) {
     //: !! this query will insert a NULL object to the map if key not found !!
     //  return scaffold_vertices_[i];
     //  instead, use find to avoid inserting NULL objects
-    vcl_map<int, bgrld_hg_vertex*>::iterator V_it = vertices_.find (i);
+    std::map<int, bgrld_hg_vertex*>::iterator V_it = vertices_.find (i);
     if (V_it == vertices_.end())
       return NULL;
     
@@ -36,11 +36,11 @@ public:
     return vertex;
   }
 
-  vcl_map<int, bgrld_hg_edge*>& edges() {
+  std::map<int, bgrld_hg_edge*>& edges() {
     return edges_;
   }
   bgrld_hg_edge* edges (const int i) {
-    vcl_map<int, bgrld_hg_edge*>::iterator E_it = edges_.find (i);
+    std::map<int, bgrld_hg_edge*>::iterator E_it = edges_.find (i);
     if (E_it == edges_.end())
       return NULL;
     
@@ -97,14 +97,14 @@ public:
 
   virtual ~bgrld_hg_graph() 
   {
-    vcl_map<int, bgrld_hg_edge*>::iterator E_it = edges_.begin();
+    std::map<int, bgrld_hg_edge*>::iterator E_it = edges_.begin();
     for (; E_it != edges_.end(); E_it++) {
       bgrld_hg_edge* edge = (*E_it).second;
       delete edge;
     }
     edges_.clear ();
 
-    vcl_map<int, bgrld_hg_vertex*>::iterator V_it = vertices_.begin();
+    std::map<int, bgrld_hg_vertex*>::iterator V_it = vertices_.begin();
     for (; V_it != vertices_.end(); V_it++) {
       bgrld_hg_vertex* vertex = (*V_it).second;
       delete vertex;

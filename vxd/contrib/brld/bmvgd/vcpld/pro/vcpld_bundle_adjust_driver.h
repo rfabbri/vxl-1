@@ -23,7 +23,7 @@ public:
   vcpld_bundle_adjust_driver(
       const bmcsd_curve_stereo_data_path &dpath, 
       bmcsd_curve_3d_sketch *csk,
-      const vcl_set<unsigned> &viewset,
+      const std::set<unsigned> &viewset,
       bool optimize_one_view,
       bool curve_ransac
       )
@@ -45,12 +45,12 @@ public:
   //: Runs all instances of the 2-view matching and reconstruction
   bool run(unsigned long timestamp=1);
 
-  const vcl_vector< vpgl_perspective_camera<double> > &optimized_cameras()
+  const std::vector< vpgl_perspective_camera<double> > &optimized_cameras()
   { return *optimized_cam_; }
 
   unsigned nviews() const { return nviews_; }
 
-  const vcl_vector<unsigned> &views() const { return views_; }
+  const std::vector<unsigned> &views() const { return views_; }
 
 protected:
   //: Inputs
@@ -58,16 +58,16 @@ protected:
   const bmcsd_curve_3d_sketch *csk_;
 
   //: Outputs
-  vcl_vector< vpgl_perspective_camera<double> > *optimized_cam_;
-  typedef vcl_vector<vgl_point_3d<double> > curve_points;
-  vcl_vector< curve_points > *optimized_pts3d_;
+  std::vector< vpgl_perspective_camera<double> > *optimized_cam_;
+  typedef std::vector<vgl_point_3d<double> > curve_points;
+  std::vector< curve_points > *optimized_pts3d_;
 
   unsigned nviews_;
   //: the views that were selected to be optimized
-  vcl_vector<unsigned> views_;
+  std::vector<unsigned> views_;
 
   //: the superset of views the user requested to be optimized
-  vcl_set<unsigned> viewset_;
+  std::set<unsigned> viewset_;
 
   //: true if each view's 6DOF is to be optimized independently
   bool optimize_one_view_;
@@ -79,15 +79,15 @@ protected:
   //: true if init has been called
   bool initialized_;
   //: pool of processors.
-  vcl_vector<bprod_process_sptr> cam_src_;
-  vcl_vector<bprod_process_sptr> edg_src_;
-  vcl_vector<bprod_process_sptr> edg_dt_;
+  std::vector<bprod_process_sptr> cam_src_;
+  std::vector<bprod_process_sptr> edg_src_;
+  std::vector<bprod_process_sptr> edg_dt_;
   bprod_process_sptr curve_bundler_;
 
-  bool get_views_to_optimize(const vcl_set<unsigned> &viewset, 
-      vcl_vector<unsigned> *views_ptr);
+  bool get_views_to_optimize(const std::set<unsigned> &viewset, 
+      std::vector<unsigned> *views_ptr);
   void get_curve_visibility_using_reference_views(
-      vcl_vector<vcl_vector<bool> > *mask_ptr );
+      std::vector<std::vector<bool> > *mask_ptr );
 };
 
 #endif // vcpld_bundle_adjust_driver_h

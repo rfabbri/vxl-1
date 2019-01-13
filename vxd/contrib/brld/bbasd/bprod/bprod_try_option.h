@@ -14,7 +14,7 @@
 
 
 #include <bprod/bprod_process.h>
-#include <vcl_deque.h>
+#include <deque>
 
 
 //: A filter that transmits the first non-failing input

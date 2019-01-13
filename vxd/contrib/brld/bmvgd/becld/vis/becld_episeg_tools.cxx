@@ -4,7 +4,7 @@
 
 #include "becld_episeg_tools.h"
 #include "becld_episeg_soview2D.h"
-#include <vcl_iostream.h>
+#include <iostream>
 #include <bvis1/bvis1_manager.h>
 #include <bvis1/bvis1_view_tableau.h>
 #include <vgui/vgui.h> 
@@ -74,7 +74,7 @@ becld_episeg_inspector_tool::~becld_episeg_inspector_tool()
 
 
 //: Return the name of this tool
-vcl_string
+std::string
 becld_episeg_inspector_tool::name() const
 {
   return "Epi-Segment Inspector"; 
@@ -85,8 +85,8 @@ becld_episeg_inspector_tool::name() const
 void 
 becld_episeg_inspector_tool::print_stats(const becld_episeg_sptr seg) const
 {
-  vcl_cout << "Min Angle = " << seg->min_angle() << vcl_endl;
-  vcl_cout << "Max Angle = " << seg->max_angle() << vcl_endl;
+  std::cout << "Min Angle = " << seg->min_angle() << std::endl;
+  std::cout << "Max Angle = " << seg->max_angle() << std::endl;
 }
 
 
@@ -234,7 +234,7 @@ void
 becld_episeg_inspector_tool::get_popup( const vgui_popup_params& /*params*/, 
                                      vgui_menu &menu )
 {
-  vcl_string on = "[x] ", off = "[ ] ";
+  std::string on = "[x] ", off = "[ ] ";
   menu.add( ((draw_bounds_)?on:off)+"Draw Bounds", 
             bvis1_tool_toggle, (void*)(&draw_bounds_) );
   menu.add( ((draw_neighbors_)?on:off)+"Draw Neighbors", 

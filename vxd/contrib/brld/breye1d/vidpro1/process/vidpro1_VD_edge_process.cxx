@@ -48,7 +48,7 @@ vidpro1_VD_edge_process::vidpro1_VD_edge_process()
       !parameters()->add( "Include Borders" ,     "-sinclude_borders" ,  (bool)dp.borderp ) ||
       !parameters()->add( "Min Length" ,          "-min_length" ,        (int)dp.minLength )) 
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -68,7 +68,7 @@ vidpro1_VD_edge_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 vidpro1_VD_edge_process::name()
 {
   return "VD EdgeDetector";
@@ -92,20 +92,20 @@ vidpro1_VD_edge_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > 
+std::vector< std::string > 
 vidpro1_VD_edge_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > 
+std::vector< std::string > 
 vidpro1_VD_edge_process::get_output_type()
 {  
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "vtol" );
   return to_return;
 }
@@ -116,8 +116,8 @@ bool
 vidpro1_VD_edge_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In vidpro1_VD_Edge_process::execute() - not exactly one"
-             << " input image" << vcl_endl;
+    std::cout << "In vidpro1_VD_Edge_process::execute() - not exactly one"
+             << " input image" << std::endl;
     return false;
   }
   clear_output();
@@ -134,7 +134,7 @@ vidpro1_VD_edge_process::execute()
     vil_convert_to_grey_using_rgb_weighting(image_sptr->get_view()) );
       
   if(grey_view.nplanes() != 1) {
-    vcl_cerr << "Returning false. nplanes(): " << grey_view.nplanes() << vcl_endl;
+    std::cerr << "Returning false. nplanes(): " << grey_view.nplanes() << std::endl;
     return false;
   }
 
@@ -154,18 +154,18 @@ vidpro1_VD_edge_process::execute()
   detector.SetImage(img);
   //process edges
   detector.DoContour();
-  vcl_vector<vtol_edge_2d_sptr> * edges = detector.GetEdges();
+  std::vector<vtol_edge_2d_sptr> * edges = detector.GetEdges();
 
   if (!edges)
     return false;
 
 
-  vcl_cout << "process " << edges->size() << " edges in " << t.real() << " msecs." << vcl_endl;
+  std::cout << "process " << edges->size() << " edges in " << t.real() << " msecs." << std::endl;
 
   // create the output storage class
   vidpro1_vtol_storage_sptr output_vtol = vidpro1_vtol_storage_new();
   // add the edges as topology objects to to storage class
-  for ( vcl_vector<vtol_edge_2d_sptr>::iterator e_itr = edges->begin();
+  for ( std::vector<vtol_edge_2d_sptr>::iterator e_itr = edges->begin();
         e_itr != edges->end();  ++e_itr ) {
     vtol_topology_object_sptr edge = e_itr->ptr();    
     output_vtol->add_vtol(edge);

@@ -5,7 +5,7 @@
 
 #include "bild_distance_transform_process.h"
 
-#include <vcl_cstdlib.h>
+#include <cstdlib>
 #include <bpro1/bpro1_parameters.h>
 #include <bpro1/bpro1_storage.h>
 #include <vidpro1/storage/vidpro1_image_storage.h>
@@ -22,7 +22,7 @@
 //: Constructor
 bild_distance_transform_process::bild_distance_transform_process()
 {
-  vcl_vector<vcl_string> algorithm_choices;
+  std::vector<std::string> algorithm_choices;
   algorithm_choices.push_back("Fast Exact (squared)"); // 0
   algorithm_choices.push_back("CEDT");                 // 1
   algorithm_choices.push_back("Brute Force (squared)");// 2
@@ -32,7 +32,7 @@ bild_distance_transform_process::bild_distance_transform_process()
     !parameters()->add( "Pixels of interest are black" , "-is_black" , (bool)false ) ||
     !parameters()->add( "Output labels of nearest pixels?" , "-do_label" , (bool)true )
       ) {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -52,18 +52,18 @@ bild_distance_transform_process::clone() const
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string > bild_distance_transform_process::get_input_type()
+std::vector< std::string > bild_distance_transform_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string > bild_distance_transform_process::get_output_type()
+std::vector< std::string > bild_distance_transform_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
 
   bool do_label = false;
@@ -153,7 +153,7 @@ bild_distance_transform_process::execute()
     output_img_storage->set_name("EDT Image");
 
     if (do_label) {
-      vcl_cerr << "Not yet supported with CEDT\n" ;
+      std::cerr << "Not yet supported with CEDT\n" ;
       return true;
       /*
       vil_image_view<unsigned> label_img(edt_img.ni(), edt_img.nj(), 1);
@@ -193,10 +193,10 @@ bild_distance_transform_process::execute()
     if (!do_label) {
       if (dt_algo == 0) {
         if (!bild_exact_distance_transform_maurer(bool_image_view))
-          vcl_abort();
+          std::abort();
       } else { // brute 
         if (!bild_exact_distance_transform_brute_force_with_list(bool_image_view))
-          vcl_abort();
+          std::abort();
       }
 
       vidpro1_image_storage_sptr output_img_storage = vidpro1_image_storage_new();
@@ -213,7 +213,7 @@ bild_distance_transform_process::execute()
         retval = bild_exact_distance_transform_brute_force_with_list_label( bool_image_view, imlabel);
 
       if (!retval)
-        vcl_abort();
+        std::abort();
 
       vidpro1_image_storage_sptr output_img_storage = vidpro1_image_storage_new();
       output_img_storage->set_image( vil_new_image_resource_of_view( bool_image_view ) );

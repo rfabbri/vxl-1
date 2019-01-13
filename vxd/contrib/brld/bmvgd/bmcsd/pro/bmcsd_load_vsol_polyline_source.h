@@ -18,7 +18,7 @@
 class bmcsd_load_vsol_polyline_source : public bprod_source {
 public:
 
-  bmcsd_load_vsol_polyline_source( vcl_string fname ) 
+  bmcsd_load_vsol_polyline_source( std::string fname ) 
     : fname_(fname),
       min_samples_(0),
       min_length_(0.0),
@@ -34,17 +34,17 @@ public:
   void set_min_length(double m) { min_length_ = m; use_length_ = true; }
 
   bprod_signal execute() {
-    vcl_string ext = vul_file::extension(fname_);
-    vcl_vector< vsol_spatial_object_2d_sptr > base;
+    std::string ext = vul_file::extension(fname_);
+    std::vector< vsol_spatial_object_2d_sptr > base;
 
     if (ext == ".vsl") {
       vsl_b_ifstream bp_in(fname_.c_str());
       if (!bp_in) {
-        vcl_cout << " Error opening file  " << fname_ << vcl_endl;
+        std::cout << " Error opening file  " << fname_ << std::endl;
         return BPROD_INVALID;
       }
 
-      vcl_cout << "Opened vsl file " << fname_ <<  " for reading" << vcl_endl;
+      std::cout << "Opened vsl file " << fname_ <<  " for reading" << std::endl;
 
       vidpro1_vsol2D_storage_sptr output_vsol = vidpro1_vsol2D_storage_new();
       output_vsol->b_read(bp_in);
@@ -55,10 +55,10 @@ public:
       if (!retval) {
         return BPROD_INVALID;
       }
-      vcl_cout << "Opened cemv file " << fname_ <<  " for reading" << vcl_endl;
+      std::cout << "Opened cemv file " << fname_ <<  " for reading" << std::endl;
     }
 
-    vcl_vector< vsol_polyline_2d_sptr > curves;
+    std::vector< vsol_polyline_2d_sptr > curves;
     curves.reserve(base.size());
 
     // Cast everything to polyline
@@ -68,7 +68,7 @@ public:
         p = dynamic_cast<vsol_polyline_2d *> (base[i].ptr());
 
       if (!p) {
-        vcl_cerr << "Non-polyline found, but only POLYLINES supported!" << vcl_endl;
+        std::cerr << "Non-polyline found, but only POLYLINES supported!" << std::endl;
         return BPROD_INVALID;
       }
 
@@ -79,15 +79,15 @@ public:
     }
 
     // The swap trick reduces the excess memory used by curves
-    vcl_vector< vsol_polyline_2d_sptr >(curves).swap(curves);
-    vcl_cout << "Curves: #curves =  " << curves.size() << vcl_endl;
+    std::vector< vsol_polyline_2d_sptr >(curves).swap(curves);
+    std::cout << "Curves: #curves =  " << curves.size() << std::endl;
 
     output(0, curves);
     return BPROD_VALID;
   }
 
 private:
-  vcl_string fname_;
+  std::string fname_;
   unsigned min_samples_;
   double min_length_;
   bool use_length_;

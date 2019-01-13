@@ -13,14 +13,14 @@
 // for I/O:
 #include <vil1/vil1_load.h>
 #include <vil1/vil1_image.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 int
 main(int argc, char** argv)
 {
   if (argc < 2)
   {
-    vcl_cerr << "Syntax: example_histogram file_in\n";
+    std::cerr << "Syntax: example_histogram file_in\n";
     return 1;
   }
 
@@ -28,11 +28,11 @@ main(int argc, char** argv)
   vil1_image in = vil1_load(argv[1]);
 
   // The filter:
-  vcl_vector<unsigned int> out = vepl1_histogram(in);
+  std::vector<unsigned int> out = vepl1_histogram(in);
 
   // Write output:
   for (unsigned int i=0; i<out.size(); ++i) if (out[i] != 0)
-    vcl_cout << i << ": " << out[i] << vcl_endl;
+    std::cout << i << ": " << out[i] << std::endl;
 
   return 0;
 }

@@ -18,14 +18,14 @@
 class bsold_geno {
 public:
   static void interpolate(bsold_geno_curve_2d *c, 
-      vcl_vector<vsol_point_2d_sptr> const &pts, bool closed);
+      std::vector<vsol_point_2d_sptr> const &pts, bool closed);
   static void interpolate3_approx(bsold_geno_curve_2d *c, 
-      vcl_vector<vsol_point_2d_sptr> const &pts, bool closed);
+      std::vector<vsol_point_2d_sptr> const &pts, bool closed);
 
   static void interpolate3_from_tangents(
       bsold_geno_curve_2d *c, 
-      vcl_vector<vsol_point_2d_sptr> const &pts, 
-      vcl_vector<double> const &tangent_angles,
+      std::vector<vsol_point_2d_sptr> const &pts, 
+      std::vector<double> const &tangent_angles,
       bool closed);
 
 
@@ -34,14 +34,14 @@ public:
   // corners/shocks (useful for e.g. re-doing the interpolation after some shock
   // detection)
   static bsold_interp_curve_2d_sptr 
-      interpolate_geno(vcl_vector<vsol_point_2d_sptr> const &pts, bool closed);
+      interpolate_geno(std::vector<vsol_point_2d_sptr> const &pts, bool closed);
 
   //: version of GENO that accepts a vector stating which _intervals_ contain
   // corners/shocks (useful for e.g. re-doing the interpolation after some shock
   // detection)
 
   static bsold_interp_curve_2d_sptr 
-      interpolate_geno(vcl_vector<vsol_point_2d_sptr> const &pts, bool closed);
+      interpolate_geno(std::vector<vsol_point_2d_sptr> const &pts, bool closed);
   */
 
   //: 2nd order GENO interpolation of an interval from four points.

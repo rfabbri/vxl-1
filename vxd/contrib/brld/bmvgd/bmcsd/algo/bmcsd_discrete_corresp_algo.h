@@ -7,7 +7,7 @@
 //\author Ricardo Fabbri (rfabbri), Brown University  (@gmail.com)
 //\date Mon Nov 6  2006
 //
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <bmcsd/bmcsd_discrete_corresp.h>
 #include <bmcsd/bmcsd_discrete_corresp_n.h>
 #include <bmcsd/bmcsd_util.h>
@@ -31,10 +31,10 @@ class bmcsd_discrete_corresp_algo {
   static void compose(const bmcsd_discrete_corresp &a, const bmcsd_discrete_corresp &b, 
       bmcsd_discrete_corresp *ab_ptr);
 
-  //: Forms corresp indicating which element from the vcl_vector \p from is in
+  //: Forms corresp indicating which element from the std::vector \p from is in
   // to.
   template <typename Tptr> static void 
-  match_equal(const vcl_vector<Tptr> &from, const vcl_vector<Tptr> &to,
+  match_equal(const std::vector<Tptr> &from, const std::vector<Tptr> &to,
       bmcsd_discrete_corresp *c_ptr)
   {
     bmcsd_discrete_corresp &c = *c_ptr;
@@ -54,10 +54,10 @@ class bmcsd_discrete_corresp_algo {
     }
   }
 
-  //: Forms corresp indicating which element from the vcl_vector \p from is a
+  //: Forms corresp indicating which element from the std::vector \p from is a
   // subcurve of some curve in \p to.
   template <typename Tptr> static void 
-  match_subcurves(const vcl_vector<Tptr> &from, const vcl_vector<Tptr> &to,
+  match_subcurves(const std::vector<Tptr> &from, const std::vector<Tptr> &to,
       bmcsd_discrete_corresp *c_ptr);
 
   //: Given:
@@ -71,8 +71,8 @@ class bmcsd_discrete_corresp_algo {
   //  defined by acorr restricted to the common elements.
   template <typename Tptr> static void 
   extend(
-      const vcl_vector<Tptr> &a0, const vcl_vector<Tptr> &a1,
-      const vcl_vector<Tptr> &b0, const vcl_vector<Tptr> &b1,
+      const std::vector<Tptr> &a0, const std::vector<Tptr> &a1,
+      const std::vector<Tptr> &b0, const std::vector<Tptr> &b1,
       const bmcsd_discrete_corresp &acorr,
       bmcsd_discrete_corresp *bcorr_ptr)
   {
@@ -101,8 +101,8 @@ class bmcsd_discrete_corresp_algo {
   //  defined by acorr restricted to the common elements.
   template <typename Tptr> static void 
   extend_to_subcurves(
-      const vcl_vector<Tptr> &a0, const vcl_vector<Tptr> &a1,
-      const vcl_vector<Tptr> &b0, const vcl_vector<Tptr> &b1,
+      const std::vector<Tptr> &a0, const std::vector<Tptr> &a1,
+      const std::vector<Tptr> &b0, const std::vector<Tptr> &b1,
       const bmcsd_discrete_corresp &acorr,
       bmcsd_discrete_corresp *bcorr_ptr)
   {
@@ -122,8 +122,8 @@ class bmcsd_discrete_corresp_algo {
 
   static unsigned long compute_checksum(const bmcsd_curve_stereo &s);
   static unsigned long compute_checksum(
-      const vcl_vector<vsol_polyline_2d_sptr> &pts0, 
-      const vcl_vector<vsol_polyline_2d_sptr> &pts1);
+      const std::vector<vsol_polyline_2d_sptr> &pts0, 
+      const std::vector<vsol_polyline_2d_sptr> &pts1);
 
   //: computes ROC statistics (TP, FP, TN, FN, etc) on the space of
   // correspondences being (i,k) with i=0,...,n0()-1 and k=0,...,n1()-1.

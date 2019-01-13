@@ -20,8 +20,8 @@
 // \endverbatim
 //--------------------------------------------------------------------------------
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <vbl/vbl_ref_count.h>
 
 #include <bpro1/bpro1_parameters_sptr.h>
@@ -115,14 +115,14 @@ class bpro1_process : public vbl_ref_count
   virtual void clear_output(int resize = -1);
   
   //: Set this vector of inputs at the given frame
-  void set_input( const vcl_vector< bpro1_storage_sptr >&, unsigned frame=0);
+  void set_input( const std::vector< bpro1_storage_sptr >&, unsigned frame=0);
   //: Append the storage class to the input vector at the given frame
   void add_input( const bpro1_storage_sptr& i, unsigned frame=0);
 
   //: Return the vector of output storage class at the given frame
-  vcl_vector< bpro1_storage_sptr >  const & get_output(unsigned frame=0);
+  std::vector< bpro1_storage_sptr >  const & get_output(unsigned frame=0);
   //: Return the vector of input storage class at the given frame
-  vcl_vector< bpro1_storage_sptr >  const & get_input(unsigned frame=0);
+  std::vector< bpro1_storage_sptr >  const & get_input(unsigned frame=0);
 
   //: Return a smart pointer to the parameters
   bpro1_parameters_sptr parameters();
@@ -130,23 +130,23 @@ class bpro1_process : public vbl_ref_count
   void set_parameters(const bpro1_parameters_sptr& params);
 
   //: Set the vector of names of the storage classes to be used as input
-  void set_input_names(const vcl_vector<vcl_string>& names)
+  void set_input_names(const std::vector<std::string>& names)
   { input_names_ = names;}
 
   //: Set the vector of names of the storage classes to be used as output
-  void set_output_names(const vcl_vector<vcl_string>& names)
+  void set_output_names(const std::vector<std::string>& names)
   { output_names_ = names;}
 
   //: Return the vector of names of the storage classes to be used as input
-  vcl_vector< vcl_string > input_names() const
+  std::vector< std::string > input_names() const
   { return input_names_;}
 
   //: Return the vector of names of the storage classes to be used as output
-  vcl_vector< vcl_string > output_names() const
+  std::vector< std::string > output_names() const
   { return output_names_;}
 
   //: The name of the video process
-  virtual vcl_string name() = 0;
+  virtual std::string name() = 0;
 
   //: Returns the number of frames needed for input
   // (prior to and including the current frame)
@@ -158,13 +158,13 @@ class bpro1_process : public vbl_ref_count
  //: to facilitate use of future frames.
 
   //: Returns a vector of strings describing the required storage class input types
-  virtual vcl_vector< vcl_string > get_input_type() = 0;
+  virtual std::vector< std::string > get_input_type() = 0;
   //: Returns a vector of strings describing the storage class output types produced
-  virtual vcl_vector< vcl_string > get_output_type() = 0;
+  virtual std::vector< std::string > get_output_type() = 0;
 
   //: Returns a vector of strings with suggested names for output classes
   // returns an empty vector by default
-  virtual vcl_vector< vcl_string > suggest_output_names();
+  virtual std::vector< std::string > suggest_output_names();
 
   //: Execute the process on using the storage classes already set.
   // \return false if any error occurs.
@@ -177,8 +177,8 @@ class bpro1_process : public vbl_ref_count
   virtual bool non_causal() const { return false; }
  protected:
   
-  vcl_vector< vcl_vector< bpro1_storage_sptr > >  input_data_;
-  vcl_vector< vcl_vector< bpro1_storage_sptr > >  output_data_;
+  std::vector< std::vector< bpro1_storage_sptr > >  input_data_;
+  std::vector< std::vector< bpro1_storage_sptr > >  output_data_;
 
   //: Copy Constructor
   bpro1_process(const bpro1_process& other);
@@ -190,9 +190,9 @@ class bpro1_process : public vbl_ref_count
   bpro1_parameters_sptr parameters_;
   
   //: Names of the storage classes used as input
-  vcl_vector< vcl_string > input_names_;
+  std::vector< std::string > input_names_;
   //: Names of the storage classes used as output
-  vcl_vector< vcl_string > output_names_;
+  std::vector< std::string > output_names_;
 
   
 };

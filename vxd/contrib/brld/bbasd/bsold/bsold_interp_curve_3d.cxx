@@ -1,9 +1,9 @@
 // This is bbasd/bsold/bsold_interp_curve_3d.cxx
 #include "bsold_interp_curve_3d.h"
 #include <vsol/vsol_point_3d.h>
-#include <vcl_algorithm.h>  
-#include <vcl_cstring.h>
-#include <vcl_cstdio.h>
+#include <algorithm>  
+#include <cstring>
+#include <cstdio>
 //:
 // \file
 // \author Based on original code by  H. Can Aras (design/declarations) 
@@ -11,7 +11,7 @@
 //: Constructor
 // Caution: the user of this constructor SHALL NOT delete the bgld_param_curve_3d objects
 // pointed to by the 'inter' vector 
-bsold_interp_curve_3d::bsold_interp_curve_3d(vcl_vector<bgld_param_curve_3d *> inter)
+bsold_interp_curve_3d::bsold_interp_curve_3d(std::vector<bgld_param_curve_3d *> inter)
     : ints_(inter), lengths_(ints_.size())
 {
    lengths_[0] = ints_[0]->length();
@@ -19,7 +19,7 @@ bsold_interp_curve_3d::bsold_interp_curve_3d(vcl_vector<bgld_param_curve_3d *> i
      lengths_[i]=lengths_[i-1] + ints_[i]->length();
 }
 
-void bsold_interp_curve_3d::make(const vcl_vector<bgld_param_curve_3d *> &inter)
+void bsold_interp_curve_3d::make(const std::vector<bgld_param_curve_3d *> &inter)
 {
    for (unsigned i = 0; i<ints_.size(); i++)
       delete ints_[i];
@@ -92,8 +92,8 @@ unsigned bsold_interp_curve_3d::interval_index(double s) const
    }
 
    // binary search for s in vector of arclens
-   const vcl_vector<double>::const_iterator
-      p = vcl_lower_bound(lengths_.begin(), lengths_.end(), s);
+   const std::vector<double>::const_iterator
+      p = std::lower_bound(lengths_.begin(), lengths_.end(), s);
 
    // remove this
    assert (p <  lengths_.begin() + lengths_.size() );
@@ -116,36 +116,36 @@ unsigned bsold_interp_curve_3d::interval_index(double s, double *t) const
 }
 
 //: Print an ascii summary to the stream
-void bsold_interp_curve_3d::print_summary(vcl_ostream &os) const
+void bsold_interp_curve_3d::print_summary(std::ostream &os) const
 {
   os << *this;
 }
 
 
 //: blanking parameter not supported
-void bsold_interp_curve_3d::describe(vcl_ostream &strm, int blanking) const
+void bsold_interp_curve_3d::describe(std::ostream &strm, int blanking) const
 {
   if (blanking < 0) blanking = 0; while (blanking--) strm << ' ';
 
   strm << "=== bsold_interp_curve_3d ===\n";
-  strm << "#intervals: " << ints_.size() << "\t length: " << length() << vcl_endl;
+  strm << "#intervals: " << ints_.size() << "\t length: " << length() << std::endl;
   for (unsigned int i=0; i<ints_.size(); ++i) 
   {
-     strm << "=== Interval " << i << " ===" << vcl_endl;
+     strm << "=== Interval " << i << " ===" << std::endl;
      bgld_eno_curve_3d *p = (bgld_eno_curve_3d *) ints_[i];
      if((typeid(*ints_[i]) == typeid(bgld_eno_curve_3d)))
      {
-       vcl_cout << "t start: " << p->start_t() << " start point: " << p->point_at_t(p->start_t()) << vcl_endl;
-       vcl_cout << "t end: " << p->end_t() << " end point: " << p->point_at_t(p->end_t()) << vcl_endl;
-       vcl_cout << "x-Coefficients: ";
-       vcl_cout << p->coef_x(0) << " " << p->coef_x(1) << " " << p->coef_x(2) << " " << p->coef_x(3) << vcl_endl;
-       vcl_cout << "y-Coefficients: ";
-       vcl_cout << p->coef_y(0) << " " << p->coef_y(1) << " " << p->coef_y(2) << " " << p->coef_y(3) << vcl_endl;
-       vcl_cout << "z-Coefficients: ";
-       vcl_cout << p->coef_z(0) << " " << p->coef_z(1) << " " << p->coef_z(2) << " " << p->coef_z(3) << vcl_endl;
+       std::cout << "t start: " << p->start_t() << " start point: " << p->point_at_t(p->start_t()) << std::endl;
+       std::cout << "t end: " << p->end_t() << " end point: " << p->point_at_t(p->end_t()) << std::endl;
+       std::cout << "x-Coefficients: ";
+       std::cout << p->coef_x(0) << " " << p->coef_x(1) << " " << p->coef_x(2) << " " << p->coef_x(3) << std::endl;
+       std::cout << "y-Coefficients: ";
+       std::cout << p->coef_y(0) << " " << p->coef_y(1) << " " << p->coef_y(2) << " " << p->coef_y(3) << std::endl;
+       std::cout << "z-Coefficients: ";
+       std::cout << p->coef_z(0) << " " << p->coef_z(1) << " " << p->coef_z(2) << " " << p->coef_z(3) << std::endl;
      }
-     vcl_cout << typeid(*ints_[i]).name() << vcl_endl;
-     strm << "Cummulative length: " << lengths_[i] << vcl_endl;
+     std::cout << typeid(*ints_[i]).name() << std::endl;
+     strm << "Cummulative length: " << lengths_[i] << std::endl;
   }
 }
 

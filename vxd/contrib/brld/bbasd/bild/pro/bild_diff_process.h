@@ -14,8 +14,8 @@
 
 #include <bprod/bprod_process.h>
 #include <bprod/bprod_process_factory.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 
 //: Process that computes absolute difference between images
 class bild_diff_process : public bprod_filter {
@@ -36,7 +36,7 @@ public:
       virtual bprod_process_sptr create(const bprod_parameters_sptr& params) const;
 
     //: The name of the process
-      virtual vcl_string name() const { return "Image Difference"; }
+      virtual std::string name() const { return "Image Difference"; }
 
       virtual ~factory() {}
   };

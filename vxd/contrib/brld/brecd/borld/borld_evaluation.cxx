@@ -66,12 +66,12 @@ bool borld_evaluation_overlap(vsol_box_2d_sptr gt_box, vsol_box_2d_sptr det_box,
 //: check each gt_box of the model_category in this query image
 //  return the overlapping ground truth box if there is a detection and a ground truth bounding box that overlaps it sufficiently
 vsol_box_2d_sptr borld_evaluation_evaluate_detection(buld_exp_stat& exp_stat, 
-                        vcl_string model_category, 
+                        std::string model_category, 
                         borld_image_description_sptr query_desc, 
                         vsol_box_2d_sptr detection_box, 
                         float overlap_ratio_threshold)
 {
-  vcl_vector<vsol_box_2d_sptr> boxes;
+  std::vector<vsol_box_2d_sptr> boxes;
 
   if (!borld_get_boxes(boxes, query_desc, model_category)) 
     return 0;
@@ -102,13 +102,13 @@ vsol_box_2d_sptr borld_evaluation_evaluate_detection(buld_exp_stat& exp_stat,
 
 //: check the assignment between detection boxes and the prototype boxes
 vsol_box_2d_sptr borld_evaluation_evaluate_detection(buld_exp_stat& exp_stat, 
-                                                     vcl_string model_category, 
+                                                     std::string model_category, 
                                                      borld_image_description_sptr query_desc, 
-                                                     vcl_vector<vsol_box_2d_sptr> detection_boxes, 
+                                                     std::vector<vsol_box_2d_sptr> detection_boxes, 
                                                      float overlap_ratio_threshold)
 {
   /*  TODO
-  vcl_vector<vsol_box_2d_sptr> boxes;
+  std::vector<vsol_box_2d_sptr> boxes;
   if (!get_boxes(boxes, query_desc, model_category)) 
     return 0;
 
@@ -144,29 +144,29 @@ vsol_box_2d_sptr borld_evaluation_evaluate_detection(buld_exp_stat& exp_stat,
 
 //: ROC is TPR vs FPR plot
 //  x axis is FPR and y axis is TPR so print one line of x values and the second line as y values
-void borld_evaluation_print_ROC_data(vcl_vector<buld_exp_stat_sptr>& stats)
+void borld_evaluation_print_ROC_data(std::vector<buld_exp_stat_sptr>& stats)
 {
   for (unsigned i = 0; i < stats.size(); i++) {
-    vcl_cout << stats[i]->FPR() << "\t";  // x1 x2 ..
+    std::cout << stats[i]->FPR() << "\t";  // x1 x2 ..
   }
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
   for (unsigned i = 0; i < stats.size(); i++) {
-    vcl_cout << stats[i]->TPR() << "\t";  // y1 y2 ..
+    std::cout << stats[i]->TPR() << "\t";  // y1 y2 ..
   }
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
 }
-void borld_evaluation_print_ROC_data(vcl_vector<buld_exp_stat_sptr>& stats, vcl_ofstream& of)
+void borld_evaluation_print_ROC_data(std::vector<buld_exp_stat_sptr>& stats, std::ofstream& of)
 {
   for (unsigned i = 0; i < stats.size(); i++) {
     of << stats[i]->FPR() << "\t";  // x1 x2 ..
   }
-  of << vcl_endl;
+  of << std::endl;
   for (unsigned i = 0; i < stats.size(); i++) {
     of << stats[i]->TPR() << "\t";  // y1 y2 ..
   }
-  of << vcl_endl;
+  of << std::endl;
 }
-void borld_evaluation_get_ROC_data(vcl_vector<buld_exp_stat_sptr>& stats, vcl_vector<float>& xs, vcl_vector<float>& ys)
+void borld_evaluation_get_ROC_data(std::vector<buld_exp_stat_sptr>& stats, std::vector<float>& xs, std::vector<float>& ys)
 {
   xs.clear();  ys.clear();
   for (unsigned i = 0; i < stats.size(); i++) {
@@ -179,54 +179,54 @@ void borld_evaluation_get_ROC_data(vcl_vector<buld_exp_stat_sptr>& stats, vcl_ve
 
 //: RPC is recall vs 1 - precision plot
 //  x axis is (1-precision) and y axis is recall so print one line of x values and the second line as y values
-void borld_evaluation_print_RPC_data(vcl_vector<buld_exp_stat_sptr>& stats)
+void borld_evaluation_print_RPC_data(std::vector<buld_exp_stat_sptr>& stats)
 {
   for (unsigned i = 0; i < stats.size(); i++) {
-    vcl_cout << (1.0f - stats[i]->precision()) << "\t";  // x1 x2 ..
+    std::cout << (1.0f - stats[i]->precision()) << "\t";  // x1 x2 ..
   }
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
   for (unsigned i = 0; i < stats.size(); i++) {
-    vcl_cout << stats[i]->recall() << "\t";  // y1 y2 ..
+    std::cout << stats[i]->recall() << "\t";  // y1 y2 ..
   }
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
 }
-void borld_evaluation_print_RPC_data(vcl_vector<buld_exp_stat_sptr>& stats, vcl_ofstream& of)
+void borld_evaluation_print_RPC_data(std::vector<buld_exp_stat_sptr>& stats, std::ofstream& of)
 {
   for (unsigned i = 0; i < stats.size(); i++) {
     of << (1.0f - stats[i]->precision()) << "\t";  // x1 x2 ..
   }
-  of << vcl_endl;
+  of << std::endl;
   for (unsigned i = 0; i < stats.size(); i++) {
     of << stats[i]->recall() << "\t";  // y1 y2 ..
   }
-  of << vcl_endl;
+  of << std::endl;
 }
 
 //: PRC is precision vs recall plot
 //  x axis is (recall) and y axis is precision so print one line of x values and the second line as y values
-void borld_evaluation_print_PRC_data(vcl_vector<buld_exp_stat_sptr>& stats)
+void borld_evaluation_print_PRC_data(std::vector<buld_exp_stat_sptr>& stats)
 {
   for (unsigned i = 0; i < stats.size(); i++) {
-    vcl_cout << stats[i]->recall() << "\t";  // x1 x2 ..
+    std::cout << stats[i]->recall() << "\t";  // x1 x2 ..
   }
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
   for (unsigned i = 0; i < stats.size(); i++) {
-    vcl_cout << stats[i]->precision() << "\t";  // y1 y2 ..
+    std::cout << stats[i]->precision() << "\t";  // y1 y2 ..
   }
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
 }
-void borld_evaluation_print_PRC_data(vcl_vector<buld_exp_stat_sptr>& stats, vcl_ofstream& of)
+void borld_evaluation_print_PRC_data(std::vector<buld_exp_stat_sptr>& stats, std::ofstream& of)
 {
   for (unsigned i = 0; i < stats.size(); i++) {
     of << stats[i]->recall() << "\t";  // x1 x2 ..
   }
-  of << vcl_endl;
+  of << std::endl;
   for (unsigned i = 0; i < stats.size(); i++) {
     of << stats[i]->precision() << "\t";  // y1 y2 ..
   }
-  of << vcl_endl;
+  of << std::endl;
 }
-void borld_evaluation_get_PRC_data(vcl_vector<buld_exp_stat_sptr>& stats, vcl_vector<float>& xs, vcl_vector<float>& ys)
+void borld_evaluation_get_PRC_data(std::vector<buld_exp_stat_sptr>& stats, std::vector<float>& xs, std::vector<float>& ys)
 {
   xs.clear();  ys.clear();
   for (unsigned i = 0; i < stats.size(); i++) {
@@ -238,7 +238,7 @@ void borld_evaluation_get_PRC_data(vcl_vector<buld_exp_stat_sptr>& stats, vcl_ve
 }
 
 //: intersect the (0,1) - (1,0) line on the ROC plot with the ROC curve given by the stats
-float borld_evaluation_ROC_EER(vcl_vector<buld_exp_stat_sptr>& stats)
+float borld_evaluation_ROC_EER(std::vector<buld_exp_stat_sptr>& stats)
 {
   vdgl_edgel_chain_sptr chain = new vdgl_edgel_chain();
   for (unsigned i = 0; i<stats.size(); i++) {
@@ -253,7 +253,7 @@ float borld_evaluation_ROC_EER(vcl_vector<buld_exp_stat_sptr>& stats)
 
   vgl_point_2d<double> p1(0, 1);
   vgl_point_2d<double> p2(1, 0);
-  vcl_vector<vgl_point_2d<double> > pts;
+  std::vector<vgl_point_2d<double> > pts;
   vgl_line_2d<double> dummy_line(p1, p2);
   if (!bdgl_curve_algs::intersect_line_fast(dc, dummy_line, pts))
     return -1;
@@ -269,7 +269,7 @@ float borld_evaluation_ROC_EER(vcl_vector<buld_exp_stat_sptr>& stats)
 }
 
 //: intersect the (0,1) - (1,0) line on the RPC plot with the RPC curve given by the stats
-float borld_evaluation_RPC_EER(vcl_vector<buld_exp_stat_sptr>& stats)
+float borld_evaluation_RPC_EER(std::vector<buld_exp_stat_sptr>& stats)
 {
   vdgl_edgel_chain_sptr chain = new vdgl_edgel_chain();
   for (unsigned i = 0; i<stats.size(); i++) {
@@ -284,7 +284,7 @@ float borld_evaluation_RPC_EER(vcl_vector<buld_exp_stat_sptr>& stats)
 
   vgl_point_2d<double> p1(0, 1);
   vgl_point_2d<double> p2(1, 0);
-  vcl_vector<vgl_point_2d<double> > pts;
+  std::vector<vgl_point_2d<double> > pts;
   vgl_line_2d<double> dummy_line(p1, p2);
   if (!bdgl_curve_algs::intersect_line_fast(dc, dummy_line, pts))
     return -1;
@@ -300,7 +300,7 @@ float borld_evaluation_RPC_EER(vcl_vector<buld_exp_stat_sptr>& stats)
 }
 
 //: intersect the (0,1) - (1,0) line on the PRC plot with the PRC curve given by the stats
-float borld_evaluation_PRC_EER(vcl_vector<buld_exp_stat_sptr>& stats)
+float borld_evaluation_PRC_EER(std::vector<buld_exp_stat_sptr>& stats)
 {
   vdgl_edgel_chain_sptr chain = new vdgl_edgel_chain();
   for (unsigned i = 0; i<stats.size(); i++) {
@@ -315,7 +315,7 @@ float borld_evaluation_PRC_EER(vcl_vector<buld_exp_stat_sptr>& stats)
 
   vgl_point_2d<double> p1(0, 1);
   vgl_point_2d<double> p2(1, 0);
-  vcl_vector<vgl_point_2d<double> > pts;
+  std::vector<vgl_point_2d<double> > pts;
   vgl_line_2d<double> dummy_line(p1, p2);
   if (!bdgl_curve_algs::intersect_line_fast(dc, dummy_line, pts))
     return -1;
@@ -332,8 +332,8 @@ float borld_evaluation_PRC_EER(vcl_vector<buld_exp_stat_sptr>& stats)
 
 
 void borld_evaluation_evaluate_classification(buld_exp_stat_sptr exp_stat, 
-                                              const vcl_string& gt_class, 
-                                              const vcl_string& output_class)
+                                              const std::string& gt_class, 
+                                              const std::string& output_class)
 {
   if (output_class == gt_class)
     exp_stat->increment_TP();
@@ -343,13 +343,13 @@ void borld_evaluation_evaluate_classification(buld_exp_stat_sptr exp_stat,
 
 void borld_evaluation_evaluate_classification(buld_exp_stat_sptr exp_stat, 
                                               borld_category_info_set_sptr cis,
-                                              const vcl_string& gt_class, 
+                                              const std::string& gt_class, 
                                               int output_class_id)
 {
   //first find the class of the gt_class
   borld_category_info_sptr cat = cis->find_category(gt_class);
   if (!cat) {
-    vcl_cerr << "In borld_evaluation_evaluate_classification() -- cannot find the class: " << gt_class << " in the available classes list!\n";
+    std::cerr << "In borld_evaluation_evaluate_classification() -- cannot find the class: " << gt_class << " in the available classes list!\n";
     throw 0;
   }
   if (cat->id_ == output_class_id)

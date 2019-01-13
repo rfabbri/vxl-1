@@ -1,12 +1,12 @@
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <iostream>
+#include <fstream>
 
 #include "bmcsd_load_camera_process.h"
 
-#include <vcl_cstring.h>
-#include <vcl_string.h>
-#include <vcl_fstream.h>
+#include <cstring>
+#include <string>
+#include <fstream>
 #include <vpgl/vpgl_perspective_camera.h>
 #include <vpgld/pro/vpgld_camera_storage.h>
 
@@ -30,14 +30,14 @@ bmcsd_load_camera_process::bmcsd_load_camera_process() : bpro1_process()
       !parameters()->add( "Multiple Intrinsic/Extrinsic Sequence?" , "-multi_intrextr" , false)  ||
       !parameters()->add( "     # of first file (integer from 0 to 499)" , "-multi_intrextr_first_file"     , 0 ) ||
       !parameters()->add( "     Reset numbering?" , "-multi_intrextr_reset" , false)  ||
-      !parameters()->add( "     Prefix", "-multi_intrextr_prefix"     , vcl_string("frame_00") ) ||
+      !parameters()->add( "     Prefix", "-multi_intrextr_prefix"     , std::string("frame_00") ) ||
       !parameters()->add( "Turntable ct?"   , "-turn_ct" , false ) ||
       !parameters()->add( "     # angle steps (integer multiple of 1 deg)" , "-angle"     , 0 ) ||
       !parameters()->add( "Turntable Taubin?"   , "-turn_olympus" , false ) ||
       !parameters()->add( "     Angle (degrees)" , "-angle_olympus"     , 0.0 )
    )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -49,15 +49,15 @@ bmcsd_load_camera_process::clone() const
   return new bmcsd_load_camera_process(*this);
 }
 
-vcl_vector< vcl_string > bmcsd_load_camera_process::get_input_type() 
+std::vector< std::string > bmcsd_load_camera_process::get_input_type() 
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   return to_return;
 }
 
-vcl_vector< vcl_string > bmcsd_load_camera_process::get_output_type() 
+std::vector< std::string > bmcsd_load_camera_process::get_output_type() 
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vpgl camera" );
   return to_return;
 }
@@ -92,7 +92,7 @@ bool bmcsd_load_camera_process::execute()
     double angle=0;
     parameters()->get_value( "-angle_olympus" , angle);
 
-    vcl_cout <<"Angle: " << angle << vcl_endl; //: Viewport size; TODO get these from parameters 
+    std::cout <<"Angle: " << angle << std::endl; //: Viewport size; TODO get these from parameters 
     unsigned  crop_origin_x_ = 450; unsigned  crop_origin_y_ = 1750; vnl_double_3x3 Kmatrix;
     bdifd_turntable::internal_calib_olympus(Kmatrix, 500, crop_origin_x_, crop_origin_y_);
 //    bdifd_turntable::internal_calib_olympus(Kmatrix);
@@ -111,7 +111,7 @@ bool bmcsd_load_camera_process::execute()
       int ini_file_num = 0;
       parameters()->get_value( "-multi_intrextr_first_file", ini_file_num);
       if (ini_file_num > 499) {
-        vcl_cout << "initial file number outside bounds.\n";
+        std::cout << "initial file number outside bounds.\n";
         return false;
       }
       file_num = ini_file_num;
@@ -124,7 +124,7 @@ bool bmcsd_load_camera_process::execute()
     int i1 = ((file_num-file_num%10)/10)%10;
     int i2 = file_num%10;
 
-    vcl_cout << "File number " << i0 << i1 << i2 << vcl_endl;
+    std::cout << "File number " << i0 << i1 << i2 << std::endl;
 
     file_num_s[0] = num2char[i0];
     file_num_s[1] = num2char[i1];
@@ -133,30 +133,30 @@ bool bmcsd_load_camera_process::execute()
            
     bpro1_filepath input;
     parameters()->get_value( "-nameprefix" , input);
-    vcl_string input_file = input.path;
-    vcl_string mypath(input_file + vcl_string("/"));
+    std::string input_file = input.path;
+    std::string mypath(input_file + std::string("/"));
 
 
     if (input_file.empty())
       mypath = "/home/rfabbri/work/may9/multi_intrextr/right-dome/all-frames/calib-opt-500/";
 
-    vcl_cout << "Reading multi_intrextr cameras from " << mypath << vcl_endl;
+    std::cout << "Reading multi_intrextr cameras from " << mypath << std::endl;
 
-    vcl_string prefix;
+    std::string prefix;
     parameters()->get_value("-multi_intrextr_prefix", prefix);
-    vcl_string suffix(".anything");
+    std::string suffix(".anything");
 
-    vcl_cout << "File number (vcl_string)" << file_num_s << vcl_endl;
+    std::cout << "File number (std::string)" << file_num_s << std::endl;
 
     vpgl_perspective_camera<double> cam;
-    if (! read_cam(mypath + prefix + vcl_string(file_num_s) + suffix, &cam) ) 
+    if (! read_cam(mypath + prefix + std::string(file_num_s) + suffix, &cam) ) 
        return false;
     P = new vpgl_perspective_camera<double>(cam);
 
   } else {
     bpro1_filepath input;
     parameters()->get_value( "-nameprefix" , input);
-    vcl_string input_file = input.path;
+    std::string input_file = input.path;
 
 
     //unused int cam_type;
@@ -171,24 +171,24 @@ bool bmcsd_load_camera_process::execute()
 
     if (intrinsic_extrinsic_ftype) {
 
-      vcl_cout << "Selected type: " << "ASCII intrinsic/extrinsic" << vcl_endl;
+      std::cout << "Selected type: " << "ASCII intrinsic/extrinsic" << std::endl;
       if (! read_cam(input.path,&cam) )
          return false;
     } else if (camera_matrix_ftype) {
-      vcl_cout << "Selected type: " << "ASCII camera matrix" << vcl_endl;
+      std::cout << "Selected type: " << "ASCII camera matrix" << std::endl;
       if (! read_3x4_matrix_into_cam(input.path,&cam) )
          return false;
     } else if (vsl_ftype){
-      vcl_cout << "Selected type: " << "VSL binary OLD format" << vcl_endl;
+      std::cout << "Selected type: " << "VSL binary OLD format" << std::endl;
       vsl_b_ifstream bp_in(input.path);
       if (!bp_in) {
-        vcl_cerr << "ERROR: couldn't open file: " << input.path << vcl_endl;
+        std::cerr << "ERROR: couldn't open file: " << input.path << std::endl;
         return false;
       }
       b_read_vpgld(bp_in, &cam);
       bp_in.close();
     } else {
-      vcl_cerr << "Error: no camera type selected!\n";
+      std::cerr << "Error: no camera type selected!\n";
       return false;
     }
     
@@ -205,13 +205,13 @@ bool bmcsd_load_camera_process::execute()
   output_data_[0].push_back(cam_storage);
   
   if (cam_storage->get_camera()->type_name() != "vpgl_perspective_camera")
-    vcl_cerr << "Error: bmcsd load camera requires perspective camera, but returned: " 
+    std::cerr << "Error: bmcsd load camera requires perspective camera, but returned: " 
       << cam_storage->get_camera()->type_name() << std::endl;
 
   const vpgl_perspective_camera<double> *psp_cam = 
     static_cast<const vpgl_perspective_camera<double>*>(cam_storage->get_camera());
 
-  vcl_cout << "Camera (process): \n" << *psp_cam;
+  std::cout << "Camera (process): \n" << *psp_cam;
 
   return true;
 }

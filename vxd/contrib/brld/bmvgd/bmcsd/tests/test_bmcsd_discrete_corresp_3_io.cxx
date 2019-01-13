@@ -1,15 +1,15 @@
 #include <testlib/testlib_test.h>
 #include <bmcsd/bmcsd_discrete_corresp_3.h>
-#include <vcl_limits.h>
-#include <vcl_set.h>
+#include <limits>
+#include <set>
 #include <vnl/vnl_math.h>
 
-#include <vcl_iterator.h>
-#include <vcl_algorithm.h>
+#include <iterator>
+#include <algorithm>
 
 typedef vbl_triple<unsigned,unsigned,unsigned> trip_uuu;
 
-static const double tolerance=vcl_numeric_limits<double>::epsilon()*100;
+static const double tolerance=std::numeric_limits<double>::epsilon()*100;
 
 //: Currently tests both IO and other functions of bmcsd_discrete_corresp_3
 MAIN( test_discrete_corresp_3_io )
@@ -19,7 +19,7 @@ MAIN( test_discrete_corresp_3_io )
   //---- STATISTICS ----------------------------------------------------------
 
   {
-  vcl_cout << "\nTesting statistics ----------------------------------------\n";
+  std::cout << "\nTesting statistics ----------------------------------------\n";
   bmcsd_discrete_corresp_3 gt(7,8,8);
 
   gt.l_.put(1,2,3,bmcsd_match_attribute());
@@ -30,7 +30,7 @@ MAIN( test_discrete_corresp_3_io )
   gt.l_.put(3,4,4,bmcsd_match_attribute());
 
 
-  double inf = vcl_numeric_limits<double>::infinity();
+  double inf = std::numeric_limits<double>::infinity();
   bmcsd_discrete_corresp_3 cp(7,8,8);
   cp.l_.put(1,2,3,bmcsd_match_attribute(false,0));
   cp.l_.put(2,2,2,bmcsd_match_attribute(false,23.2));
@@ -63,17 +63,17 @@ MAIN( test_discrete_corresp_3_io )
   unsigned n_correct, n_valid;
   cp.number_of_correct_triplets(n_correct, n_valid, &gt);
 
-  vcl_cout << "n_correct: " << n_correct << " n_valid: " << n_valid << vcl_endl;
+  std::cout << "n_correct: " << n_correct << " n_valid: " << n_valid << std::endl;
   TEST("number_of_correct_triplets:  n_correct",n_correct,3);
   TEST("number_of_correct_triplets:  n_valid",n_valid,5);
 
-  vcl_vector<bool> p0s, p1s, p2s;
+  std::vector<bool> p0s, p1s, p2s;
   gt.participating_points(p0s,p1s,p2s);
 
-  vcl_cout << "[ ";
+  std::cout << "[ ";
   for (unsigned i=0; i <p0s.size(); ++i)
-    vcl_cout << p0s[i] << " "; 
-  vcl_cout << "]\n";
+    std::cout << p0s[i] << " "; 
+  std::cout << "]\n";
 
 
 
@@ -93,27 +93,27 @@ MAIN( test_discrete_corresp_3_io )
   cp.hash();
   TEST("Is Hashed",cp.is_hashed(),true);
 
-  const vcl_set<triplet_uuu> &s4xx = cp.triplets(0,4);
+  const std::set<triplet_uuu> &s4xx = cp.triplets(0,4);
 
-  vcl_cout << "All triplets in cp whose first index is 4: ";
-  vcl_copy(s4xx.begin(), s4xx.end(), vcl_ostream_iterator<trip_uuu>(vcl_cout, " "));
-  vcl_cout << vcl_endl;
+  std::cout << "All triplets in cp whose first index is 4: ";
+  std::copy(s4xx.begin(), s4xx.end(), std::ostream_iterator<trip_uuu>(std::cout, " "));
+  std::cout << std::endl;
 
 
   gt.hash();
-  vcl_set<triplet_uuu> sx44;
+  std::set<triplet_uuu> sx44;
 
   gt.triplets(1,4,2,4,sx44);
 
-  vcl_cout << "All triplets in gt whose second and third indices are both 4: ";
-  vcl_copy(sx44.begin(), sx44.end(), vcl_ostream_iterator<trip_uuu>(vcl_cout, " "));
-  vcl_cout << vcl_endl;
+  std::cout << "All triplets in gt whose second and third indices are both 4: ";
+  std::copy(sx44.begin(), sx44.end(), std::ostream_iterator<trip_uuu>(std::cout, " "));
+  std::cout << std::endl;
 
 
   //----- BINARY I/O ----------------------------------------------------------
 
-  vcl_cout << "Initial data:" << vcl_endl;
-  vcl_cout << cp;
+  std::cout << "Initial data:" << std::endl;
+  std::cout << cp;
 
   // ------ Writing -------
   vsl_b_ofstream bfs_out("bmcsd_discrete_corresp_3.tmp");
@@ -133,39 +133,39 @@ MAIN( test_discrete_corresp_3_io )
   
   TEST("cp_out == cp_in", cp, cp_in);
 
-  vcl_cout << "Recovered data:" << vcl_endl;
-  vcl_cout << cp_in;
+  std::cout << "Recovered data:" << std::endl;
+  std::cout << cp_in;
 
   }
 
   { // A brief sets refresher:
     typedef vbl_triple<unsigned,unsigned,unsigned> trip_uuu;
-    vcl_set<trip_uuu > s1;
+    std::set<trip_uuu > s1;
 
     s1.insert(trip_uuu(1,2,3));
     s1.insert(trip_uuu(3,2,1));
     s1.insert(trip_uuu(1,2,4));
 
-    vcl_cout << "Set 1: ";
-    vcl_copy(s1.begin(), s1.end(), vcl_ostream_iterator<trip_uuu>(vcl_cout, " "));
-    vcl_cout << vcl_endl;
+    std::cout << "Set 1: ";
+    std::copy(s1.begin(), s1.end(), std::ostream_iterator<trip_uuu>(std::cout, " "));
+    std::cout << std::endl;
 
-    vcl_set<trip_uuu > s2;
+    std::set<trip_uuu > s2;
     s2.insert(trip_uuu(4,1,1));
     s2.insert(trip_uuu(3,2,1));
     s2.insert(trip_uuu(69,1,1));
     s2.insert(trip_uuu(1,2,3));
 
-    vcl_cout << "Set 2: ";
-    vcl_copy(s2.begin(), s2.end(), vcl_ostream_iterator<trip_uuu>(vcl_cout, " "));
-    vcl_cout << vcl_endl;
+    std::cout << "Set 2: ";
+    std::copy(s2.begin(), s2.end(), std::ostream_iterator<trip_uuu>(std::cout, " "));
+    std::cout << std::endl;
 
-    vcl_set<trip_uuu> s3;
-    vcl_set_intersection(s1.begin(),s1.end(), s2.begin(), s2.end(), inserter(s3, s3.begin()));
+    std::set<trip_uuu> s3;
+    std::set_intersection(s1.begin(),s1.end(), s2.begin(), s2.end(), inserter(s3, s3.begin()));
 
-    vcl_cout << "Set 3 (Set 1 intersection with Set 2): ";
-    vcl_copy(s3.begin(), s3.end(), vcl_ostream_iterator<trip_uuu>(vcl_cout, " "));
-    vcl_cout << vcl_endl;
+    std::cout << "Set 3 (Set 1 intersection with Set 2): ";
+    std::copy(s3.begin(), s3.end(), std::ostream_iterator<trip_uuu>(std::cout, " "));
+    std::cout << std::endl;
   }
 
   SUMMARY();

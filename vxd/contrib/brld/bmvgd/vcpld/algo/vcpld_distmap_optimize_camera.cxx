@@ -7,11 +7,11 @@
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_point_3d.h>
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_algorithm.h>
+#include <iostream>
+#include <fstream>
+#include <algorithm>
 #include <ext/algorithm>
-#include <vcl_cassert.h>
+#include <cassert>
 
 #include <vnl/vnl_rotation_matrix.h>
 #include <vnl/vnl_double_3.h>
@@ -26,7 +26,7 @@ using namespace std;
 vcpld_distmap_optimize_camera_lsqr::
 vcpld_distmap_optimize_camera_lsqr(
       const vpgl_calibration_matrix<double> & K,
-      vcl_vector< vgl_homg_point_3d<double>  > &world_points,
+      std::vector< vgl_homg_point_3d<double>  > &world_points,
       const vil_image_view<vxl_uint_32> &dt,
       const vil_image_view<unsigned> &label,
       const sdet_edgemap_sptr &em)
@@ -64,7 +64,7 @@ f(vnl_vector<double> const& x, vnl_vector<double>& fx)
 
 vpgl_perspective_camera<double> vcpld_distmap_optimize_camera::
 opt_orient_pos(const vpgl_perspective_camera<double>& camera,
-               vcl_vector< point_set > &world_objects,
+               std::vector< point_set > &world_objects,
                const vil_image_view<vxl_uint_32> &dt,
                const vil_image_view<unsigned> &label,
                const sdet_edgemap_sptr &em,
@@ -75,7 +75,7 @@ opt_orient_pos(const vpgl_perspective_camera<double>& camera,
   const vgl_rotation_3d<double>& R = camera.get_rotation();
   vnl_double_3 w = R.as_rodrigues();
 
-  vcl_vector< vgl_homg_point_3d<double> > world_points;
+  std::vector< vgl_homg_point_3d<double> > world_points;
 
   unsigned npts = 0;
   for (unsigned c=0; c < world_objects.size(); ++c) 
@@ -99,10 +99,10 @@ opt_orient_pos(const vpgl_perspective_camera<double>& camera,
 
   double max_err, med_err;
   double avg_err = lsqr_func.reproj_error(fx, &max_err, &med_err);
-  vcl_cout << "Initial average, max, med error: " << avg_err << ", " <<
-    max_err << ", " << med_err << vcl_endl;
+  std::cout << "Initial average, max, med error: " << avg_err << ", " <<
+    max_err << ", " << med_err << std::endl;
 
-  if (avg_err == vcl_numeric_limits<double>::infinity()) {
+  if (avg_err == std::numeric_limits<double>::infinity()) {
     *avg_err_ptr = avg_err;
     return camera;
   }
@@ -119,10 +119,10 @@ opt_orient_pos(const vpgl_perspective_camera<double>& camera,
   lsqr_func.f(params, fx);
   double max_err, med_err;
   double avg_err = lsqr_func.reproj_error(fx, &max_err, &med_err);
-  vcl_cout << "Final average, max, med error: " << avg_err << ", " <<
-    max_err << ", " << med_err << vcl_endl;
+  std::cout << "Final average, max, med error: " << avg_err << ", " <<
+    max_err << ", " << med_err << std::endl;
   *avg_err_ptr = avg_err;
-  if (avg_err == vcl_numeric_limits<double>::infinity())
+  if (avg_err == std::numeric_limits<double>::infinity())
     return camera;
   }
 
@@ -131,7 +131,7 @@ opt_orient_pos(const vpgl_perspective_camera<double>& camera,
 
 vpgl_perspective_camera<double> vcpld_distmap_optimize_camera::
 opt_orient_pos_subset(const vpgl_perspective_camera<double>& camera,
-               vcl_vector< point_set > &world_objects,
+               std::vector< point_set > &world_objects,
                const vil_image_view<vxl_uint_32> &dt,
                const vil_image_view<unsigned> &label,
                const sdet_edgemap_sptr &em)
@@ -151,7 +151,7 @@ opt_orient_pos_subset(const vpgl_perspective_camera<double>& camera,
 
   for (unsigned i=0; i < ns; ++i) {
 
-    vcl_vector< point_set > samp(nc);
+    std::vector< point_set > samp(nc);
     bool nosizes=true;
     do {
       random_sample_n(world_objects.begin(), world_objects.end(),
@@ -166,22 +166,22 @@ opt_orient_pos_subset(const vpgl_perspective_camera<double>& camera,
       }
     } while(nosizes);
 
-    vcl_cout << "Sampled curves with sizes(id): ";
+    std::cout << "Sampled curves with sizes(id): ";
     for (unsigned c=0; c < nc; ++c) {
       unsigned id = 0;
-      vcl_vector< point_set >::iterator iter =  
-        vcl_find(world_objects.begin(), world_objects.end(), samp[c]);
+      std::vector< point_set >::iterator iter =  
+        std::find(world_objects.begin(), world_objects.end(), samp[c]);
       assert(iter != world_objects.end());
       id = iter - world_objects.begin();
-      vcl_cout << samp[c].size() << "(" << id << ") ";
+      std::cout << samp[c].size() << "(" << id << ") ";
     }
-    vcl_cout << vcl_endl;
+    std::cout << std::endl;
       
 
     double err3;
     vpgl_perspective_camera<double> newcam = 
     opt_orient_pos(cam, samp, dt, label, em, &err3);
-    vcl_cout << "error 3: " << err3 << vcl_endl;
+    std::cout << "error 3: " << err3 << std::endl;
 
     double err_all;
     vpgl_perspective_camera<double> newcam_all = 
@@ -207,9 +207,9 @@ opt_orient_pos_subset(const vpgl_perspective_camera<double>& camera,
     best_cam = cam_ini;
   }
 
-  vcl_cout << "Very final average error: " << best_err << vcl_endl;
+  std::cout << "Very final average error: " << best_err << std::endl;
 
-  vcl_cout <<"---\n";
+  std::cout <<"---\n";
 
   return best_cam;
 }

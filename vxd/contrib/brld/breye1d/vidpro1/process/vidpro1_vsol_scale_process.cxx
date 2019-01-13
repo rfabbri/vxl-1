@@ -22,7 +22,7 @@
 vidpro1_vsol_scale_process::vidpro1_vsol_scale_process()
 {
   if( !parameters()->add( "scale" , "-scale" ,  0.5f )  ) {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   } 
 }
 
@@ -36,7 +36,7 @@ vidpro1_vsol_scale_process::clone() const
 
 
 //: Return the name of the process
-vcl_string
+std::string
 vidpro1_vsol_scale_process::name()
 {
   return "Scale vsol";
@@ -44,20 +44,20 @@ vidpro1_vsol_scale_process::name()
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string > 
+std::vector< std::string > 
 vidpro1_vsol_scale_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   return to_return;
 }
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string > 
+std::vector< std::string > 
 vidpro1_vsol_scale_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   return to_return;
 }
@@ -103,14 +103,14 @@ scale_vsol(const vsol_spatial_object_2d_sptr& so, float scale)
     }
     else if(vsol_polyline_2d_sptr pline = curve->cast_to_polyline())
     {
-      vcl_vector<vsol_point_2d_sptr> pts;
+      std::vector<vsol_point_2d_sptr> pts;
       for(unsigned int i=0; i<pline->size(); ++i)
         pts.push_back(scale_vsol(pline->vertex(i),scale));
       return new vsol_polyline_2d(pts);
     }
     else if(vsol_digital_curve_2d_sptr dc = curve->cast_to_digital_curve())
     {
-      vcl_vector<vsol_point_2d_sptr> pts;
+      std::vector<vsol_point_2d_sptr> pts;
       for(unsigned int i=0; i<dc->size(); ++i)
         pts.push_back(scale_vsol(dc->point(i),scale));
       return new vsol_digital_curve_2d(pts);
@@ -120,7 +120,7 @@ scale_vsol(const vsol_spatial_object_2d_sptr& so, float scale)
   {
     if(vsol_polygon_2d_sptr pg = region->cast_to_polygon())
     {
-      vcl_vector<vsol_point_2d_sptr> pts;
+      std::vector<vsol_point_2d_sptr> pts;
       for(unsigned int i=0; i<pg->size(); ++i)
         pts.push_back(scale_vsol(pg->vertex(i),scale));
       return new vsol_polygon_2d(pts);
@@ -135,7 +135,7 @@ bool
 vidpro1_vsol_scale_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cerr << __FILE__ << " - not exactly one input frame" << vcl_endl;
+    std::cerr << __FILE__ << " - not exactly one input frame" << std::endl;
     return false;
   }
 
@@ -151,10 +151,10 @@ vidpro1_vsol_scale_process::execute()
   vidpro1_vsol2D_storage_sptr output_vsol = vidpro1_vsol2D_storage_new();
   output_data_[0].push_back(output_vsol);
   
-  vcl_vector<vcl_string> groups = frame_vsol->groups();
+  std::vector<std::string> groups = frame_vsol->groups();
   for(unsigned g=0; g<groups.size(); ++g)
   {
-    vcl_vector<vsol_spatial_object_2d_sptr> objs 
+    std::vector<vsol_spatial_object_2d_sptr> objs 
       = frame_vsol->data_named(groups[g]);
     for(unsigned v=0; v<objs.size(); ++v){
       output_vsol->add_object(scale_vsol(objs[v],scale), 

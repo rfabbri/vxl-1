@@ -7,8 +7,8 @@
 // \brief  See bprod_run_tableau.h for a description of this file.
 
 
-#include <vcl_iostream.h>
-#include <vcl_sstream.h>
+#include <iostream>
+#include <sstream>
 #include <vgui/vgui.h>
 #include <vgui/vgui_gl.h>
 #include <vgui/vgui_command.h>
@@ -53,7 +53,7 @@ bool bprod_run_tableau::handle(const vgui_event& e)
     glColor3f(1.0f,0.0f,0.0f);
     glRasterPos2f(10.0f,20.0f);
 
-    vcl_stringstream out;
+    std::stringstream out;
     out << "FPS: "<< fps_;
     vgui_text_put(out.str().c_str());
 

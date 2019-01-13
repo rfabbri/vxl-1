@@ -6,7 +6,7 @@
 #include "bgld_param_curve.h"
 
 //: Write "<dbvgl_param_curve> to stream"
-//vcl_ostream& bgld_param_curve::operator<<(vcl_ostream& s) {
+//std::ostream& bgld_param_curve::operator<<(std::ostream& s) {
   //s << "<dbvgl_param_curve> ";
   //return s;
 //}

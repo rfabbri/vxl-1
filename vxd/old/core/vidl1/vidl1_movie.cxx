@@ -3,7 +3,7 @@
 
 #include "vidl1_movie.h"
 
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <vidl1/vidl1_frame.h>
 #include <vidl1/vidl1_clip.h>
@@ -25,7 +25,7 @@ vidl1_movie::vidl1_movie(vidl1_clip_sptr clip)
 {
   // Check validity of initialisation
   if (!clip_.empty())
-    vcl_cerr << "Bad initialisation of the movie.\n";
+    std::cerr << "Bad initialisation of the movie.\n";
 
   add_clip(clip);
 }
@@ -40,7 +40,7 @@ vidl1_frame_sptr vidl1_movie::get_frame(int n)
 {
   vidl1_frame_sptr ret_frame = NULL;
 
-  vcl_list<vidl1_clip_sptr>::iterator i = clip_.begin();
+  std::list<vidl1_clip_sptr>::iterator i = clip_.begin();
 
   while ((i!=clip_.end()) && (!(ret_frame=(*i)->get_frame(n))))
   {
@@ -69,7 +69,7 @@ void vidl1_movie::add_clip(vidl1_clip_sptr clip)
 int vidl1_movie::length() const
 {
   int number = 0;
-  for (vcl_list<vidl1_clip_sptr>::const_iterator i=clip_.begin(); i!= clip_.end(); ++i)
+  for (std::list<vidl1_clip_sptr>::const_iterator i=clip_.begin(); i!= clip_.end(); ++i)
     number += (*i)->length();
 
   return number;
@@ -81,14 +81,14 @@ int vidl1_movie::length() const
 int vidl1_movie::width() const
 {
   // Get the size X of the first clip
-  vcl_list<vidl1_clip_sptr>::const_iterator i=clip_.begin();
+  std::list<vidl1_clip_sptr>::const_iterator i=clip_.begin();
   int sizeX = (*i)->width();
 
   // Check that the (eventually) other clips have the same size
   for (; i!= clip_.end(); ++i)
     if ((*i)->width() != sizeX)
     {
-      vcl_cerr << "SizeX of the movie asked. But the different clips have different sizes.\n";
+      std::cerr << "SizeX of the movie asked. But the different clips have different sizes.\n";
       return 0;
     }
 
@@ -102,14 +102,14 @@ int vidl1_movie::width() const
 int vidl1_movie::height() const
 {
   // Get the size Y of the first clip
-  vcl_list<vidl1_clip_sptr>::const_iterator i = clip_.begin();
+  std::list<vidl1_clip_sptr>::const_iterator i = clip_.begin();
   int sizeY = (*i)->height();
 
   // Check that the (eventually) other clips have the same size
   for (; i!= clip_.end(); ++i)
     if ((*i)->height() != sizeY)
     {
-      vcl_cerr << "SizeY of the movie asked. But the different clips have different sizes.\n";
+      std::cerr << "SizeY of the movie asked. But the different clips have different sizes.\n";
       return 0;
     }
 

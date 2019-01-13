@@ -11,8 +11,8 @@
 #include <bgld/algo/bgld_biarc.h>
 
 //: Interpolate a set of points with a circular arc spline
-bool bgld_fit_circ_arc_spline_to_polyline(vcl_vector<bgld_circ_arc >& arc_list,
-                                 const vcl_vector<vgl_point_2d<double > >& pts,
+bool bgld_fit_circ_arc_spline_to_polyline(std::vector<bgld_circ_arc >& arc_list,
+                                 const std::vector<vgl_point_2d<double > >& pts,
                                  double tolerance)
 {
   // Preliminary check
@@ -106,8 +106,8 @@ bool bgld_fit_circ_arc_spline_to_polyline(vcl_vector<bgld_circ_arc >& arc_list,
 // -----------------------------------------------------------------------------
 //: Interpolate a polygon with circular-arc polygon, i.e., a closed smooth contour
 // consisting circular arc segments
-bool bgld_fit_circ_arc_spline_to_polygon(vcl_vector<bgld_circ_arc >& arc_list,
-                                 const vcl_vector<vgl_point_2d<double > >& pts,
+bool bgld_fit_circ_arc_spline_to_polygon(std::vector<bgld_circ_arc >& arc_list,
+                                 const std::vector<vgl_point_2d<double > >& pts,
                                  double tolerance)
 {
   // Algorithm:
@@ -120,7 +120,7 @@ bool bgld_fit_circ_arc_spline_to_polygon(vcl_vector<bgld_circ_arc >& arc_list,
 
   // identify the longest line segment
   double huge_val = 1e10;
-  vcl_vector<double > sqr_lengths(pts.size(), 0);
+  std::vector<double > sqr_lengths(pts.size(), 0);
   for (unsigned i =0; i < pts.size(); ++i)
   {
     vgl_point_2d<double > start = pts[i];
@@ -140,7 +140,7 @@ bool bgld_fit_circ_arc_spline_to_polygon(vcl_vector<bgld_circ_arc >& arc_list,
   }
 
   // cut-open the polygon at the longest line segment
-  vcl_vector<vgl_point_2d<double > > polyline(pts.size(), vgl_point_2d<double >());
+  std::vector<vgl_point_2d<double > > polyline(pts.size(), vgl_point_2d<double >());
   for (unsigned i =0; i < pts.size(); ++i)
   {
     polyline[i] = pts[(i+max_sqr_length_index+1) % pts.size()];

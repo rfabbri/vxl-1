@@ -31,11 +31,11 @@ class bnld_eno_zero_crossing {
    unsigned compute(const bnld_eno_shock_interp &ip);
 
 
-   void print(vcl_ostream& = vcl_cerr) const;    
+   void print(std::ostream& = std::cerr) const;    
    bool combine(const bnld_eno_zero_crossing *z1, const bnld_eno_zero_crossing *z2);
    
    //: Sort increasing
-   void sort() { vcl_sort(loc_.begin(),loc_.begin()+number_); }
+   void sort() { std::sort(loc_.begin(),loc_.begin()+number_); }
    void remove_duplicates(); 
 
 protected:
@@ -43,9 +43,9 @@ protected:
    vnl_vector_fixed <double,BNLD_ENO_MAX_ZEROX + 1> loc_;
 // double slope_[eno::max_zerox + 1];  (removed: not used)
 
-   bool is_almost_zero(double x) const {return vcl_fabs(x) < bnld_eno::near_zero_value;}
+   bool is_almost_zero(double x) const {return std::fabs(x) < bnld_eno::near_zero_value;}
    bool is_almost_equal(double x1, double x2, double tolerance) const
-      { return vcl_fabs((double) x1 - x2) < tolerance; }
+      { return std::fabs((double) x1 - x2) < tolerance; }
    bool is_in_interval(double val, double start, double end) const
       { return val >= start && val <= end; }
    int  check_in_interval(const bnld_eno_poly *poly, int index, double start, double end);
@@ -68,15 +68,15 @@ public:
    //: total number of zeros in all intervals
    unsigned number() const {return number_;};
 
-   void print (vcl_ostream&) const;
+   void print (std::ostream&) const;
    //: Prints alongside corresponding intervals
-   void print (bnld_eno_1d &eno,vcl_ostream&) const;
+   void print (bnld_eno_1d &eno,std::ostream&) const;
    //: Prints alongside corresponding intervals
-   void print (bnld_eno_shock_1d &eno,vcl_ostream&) const;
+   void print (bnld_eno_shock_1d &eno,std::ostream&) const;
 
 //   compute(bnld_eno_shock_1d &eno);
 protected:
-   vcl_vector<bnld_eno_zero_crossing> z_;
+   std::vector<bnld_eno_zero_crossing> z_;
    unsigned number_; //:< total qty of zeros in all intervals
 };
 

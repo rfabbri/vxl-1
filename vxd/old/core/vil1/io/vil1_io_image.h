@@ -22,6 +22,6 @@ void vsl_b_write(vsl_b_ostream &os, const vil1_image & b);
 void vsl_b_read(vsl_b_istream &is, vil1_image & b);
 
 //: Print human readable summary of object to a stream
-void vsl_print_summary(vcl_ostream& os,const vil1_image & b);
+void vsl_print_summary(std::ostream& os,const vil1_image & b);
 
 #endif // vil1_io_image_h_

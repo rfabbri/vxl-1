@@ -25,7 +25,7 @@
 //
 // \endverbatim
 
-#include <vcl_vector.h>
+#include <vector>
 
 class bnld_eno_third_order
 {
@@ -37,9 +37,9 @@ public:
   virtual ~bnld_eno_third_order();
   //: interpolator with f(x_i) values only, the sampling is assumed 
   //   to be uniform in this case, i.e. x_i = 0,1,2,...
-  void interpolate(vcl_vector<double> fxi);
+  void interpolate(std::vector<double> fxi);
   //: interpolator with both x_i and f(x_i) values
-  void interpolate(vcl_vector<double> xi, vcl_vector<double> fxi);
+  void interpolate(std::vector<double> xi, std::vector<double> fxi);
   //: get the specified coefficient of the specified interval
   double coefficient(int interval, int coeff_order);
   //: get starting index of the fitted polynomial for an interval
@@ -50,7 +50,7 @@ protected:
 
 private:
   // given 4 sample points, this function fits a cubic through these points
-  void find_parameters(vcl_vector<double> xi, vcl_vector<double> fxi, int start_index, double *coeffs);
+  void find_parameters(std::vector<double> xi, std::vector<double> fxi, int start_index, double *coeffs);
 
   // VARIABLES
 public:

@@ -7,13 +7,13 @@
 
 #include <vsol/vsol_box_2d.h>
 
-#include <vcl_iostream.h>
+#include <iostream>
 
-void borld_image_bbox_description::add_box(vcl_string cat, vsol_box_2d_sptr b)
+void borld_image_bbox_description::add_box(std::string cat, vsol_box_2d_sptr b)
 {
-  vcl_map<vcl_string, vcl_vector<vsol_box_2d_sptr> >::iterator iter = data_.find(cat);
+  std::map<std::string, std::vector<vsol_box_2d_sptr> >::iterator iter = data_.find(cat);
   if (iter == data_.end()) {
-    vcl_vector<vsol_box_2d_sptr> tmp(1, b);
+    std::vector<vsol_box_2d_sptr> tmp(1, b);
     data_[cat] = tmp;
   } else {
     (iter->second).push_back(b);
@@ -21,9 +21,9 @@ void borld_image_bbox_description::add_box(vcl_string cat, vsol_box_2d_sptr b)
 }
 
 //: CAUTION: assumes that cat exists!! check with category_exists() before using
-vcl_vector<vsol_box_2d_sptr>& borld_image_bbox_description::get_box_vector(vcl_string cat)
+std::vector<vsol_box_2d_sptr>& borld_image_bbox_description::get_box_vector(std::string cat)
 {
-  vcl_map<vcl_string, vcl_vector<vsol_box_2d_sptr> >::iterator iter = data_.find(cat);
+  std::map<std::string, std::vector<vsol_box_2d_sptr> >::iterator iter = data_.find(cat);
   return iter->second;
 }
 
@@ -34,17 +34,17 @@ unsigned borld_image_bbox_description::version()
 
 void borld_image_bbox_description::b_read()
 {
-  vcl_cout << "IMPLEMENT: borld_image_bbox_description::b_read()\n";
+  std::cout << "IMPLEMENT: borld_image_bbox_description::b_read()\n";
 }
 
 void borld_image_bbox_description::b_write()
 {
-  vcl_cout << "IMPLEMENT: borld_image_bbox_description::b_write()\n";
+  std::cout << "IMPLEMENT: borld_image_bbox_description::b_write()\n";
 }
 
-void borld_image_bbox_description::write_xml(vcl_ostream& os)
+void borld_image_bbox_description::write_xml(std::ostream& os)
 {
-  for (vcl_map<vcl_string, vcl_vector<vsol_box_2d_sptr> >::iterator iter = data_.begin(); iter != data_.end(); iter++) {
+  for (std::map<std::string, std::vector<vsol_box_2d_sptr> >::iterator iter = data_.begin(); iter != data_.end(); iter++) {
     for (unsigned i = 0; i < (iter->second).size(); i++) {
       os << "\t\t<instance>\n";
       os << "\t\t\t<category>" << iter->first << "</category>\n";

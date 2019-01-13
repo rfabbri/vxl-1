@@ -7,7 +7,7 @@
 #include <vnl/vnl_vector_fixed.h>
 #include <vil/vil_bilin_interp.h>
 #include <bil/algo/bil_color_conversions.h>
-#include <vcl_cmath.h>
+#include <cmath>
 
 double get_color_distance_of_curve_regions(bsold_interp_curve_2d_sptr curve, float region_width, 
                                             vil_image_view<float>& L, 
@@ -15,7 +15,7 @@ double get_color_distance_of_curve_regions(bsold_interp_curve_2d_sptr curve, flo
                                             vil_image_view<float>& B, 
                                             double color_gamma)
 {
-  vcl_vector<vsol_point_2d_sptr > region_pts;                                                     
+  std::vector<vsol_point_2d_sptr > region_pts;                                                     
   // get points on either side of the curve                                                      // do not use the points right on the curve
                                                                                                  // when this parameter is false, the plus and minus region pts are reliably all the newly added ones
   bsold_curve_algs::sample_region_along_curve(*curve, region_pts, 0.3f, curve->length(), region_width, false);
@@ -51,7 +51,7 @@ double get_color_distance_of_curve_regions(bsold_interp_curve_2d_sptr curve, flo
 double get_intensity_distance_of_curve_regions(bsold_interp_curve_2d_sptr curve, float region_width, 
                                                vil_image_view<vxl_byte>& img, double intensity_gamma)                                               
 {
-  vcl_vector<vsol_point_2d_sptr > region_pts;     
+  std::vector<vsol_point_2d_sptr > region_pts;     
 
   // get points on either side of the curve                                                      // do not use the points right on the curve
                                                                                                  // when this parameter is false, the plus and minus region pts are reliably all the newly added ones

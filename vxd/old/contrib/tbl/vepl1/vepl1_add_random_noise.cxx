@@ -68,7 +68,7 @@ vil1_image vepl1_add_random_noise(vil1_image const& image, double maxdev)
   //
   else
   {
-    vcl_cerr << __FILE__ ": vepl1_add_random_noise() not implemented for " << image << vcl_endl;
+    std::cerr << __FILE__ ": vepl1_add_random_noise() not implemented for " << image << std::endl;
     return 0;
   }
 }

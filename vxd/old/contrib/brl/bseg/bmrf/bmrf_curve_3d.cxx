@@ -48,9 +48,9 @@ bmrf_curve_3d::stat_trim(double max_std)
 
 //: Attempt to fill in missing correspondences
 void
-bmrf_curve_3d::fill_gaps(const vcl_set<int>& frames, double da)
+bmrf_curve_3d::fill_gaps(const std::set<int>& frames, double da)
 {
-  for ( vcl_set<int>::const_iterator fitr = frames.begin();
+  for ( std::set<int>::const_iterator fitr = frames.begin();
         fitr != frames.end();  ++fitr )
   {
     bool filled = true;
@@ -106,9 +106,9 @@ bmrf_curve_3d::fill_gaps(const vcl_set<int>& frames, double da)
 
 //: Attempt to interpolate artificial values for missing correspondences
 void
-bmrf_curve_3d::interp_gaps(const vcl_set<int>& frames)
+bmrf_curve_3d::interp_gaps(const std::set<int>& frames)
 {
-  for ( vcl_set<int>::const_iterator fitr = frames.begin();
+  for ( std::set<int>::const_iterator fitr = frames.begin();
         fitr != frames.end();  ++fitr )
   {
     vnl_double_2 last_point;
@@ -145,7 +145,7 @@ bmrf_curve_3d::interp_gaps(const vcl_set<int>& frames)
 
 //: Simultaneously reconstruct all points in a 3d curve
 void
-bmrf_curve_3d::reconstruct(const vcl_map<int,vnl_double_3x4>& cameras, float sigma)
+bmrf_curve_3d::reconstruct(const std::map<int,vnl_double_3x4>& cameras, float sigma)
 {
   unsigned int num_pts = this->size();
 
@@ -153,7 +153,7 @@ bmrf_curve_3d::reconstruct(const vcl_map<int,vnl_double_3x4>& cameras, float sig
   kernel[0] = 0.0f;
   kernel[1] = 1.0f;
   if (sigma > 0.0f) {
-    kernel[0] = float(vcl_exp(-1.0/(2*sigma*sigma)));
+    kernel[0] = float(std::exp(-1.0/(2*sigma*sigma)));
     float kernel_sum = 2.0f*kernel[0] + kernel[1];
     kernel[0] /= kernel_sum;
     kernel[1] /= kernel_sum;
@@ -169,7 +169,7 @@ bmrf_curve_3d::reconstruct(const vcl_map<int,vnl_double_3x4>& cameras, float sig
     vnl_matrix<double> C(2*num_views, 3, 0.0);
     vnl_vector<double> d(2*num_views, 0.0);
     unsigned int v=0;
-    for ( vcl_map<int,vnl_double_3x4>::const_iterator C_itr = cameras.begin();
+    for ( std::map<int,vnl_double_3x4>::const_iterator C_itr = cameras.begin();
           C_itr != cameras.end();  ++C_itr ) {
       const int f = C_itr->first;
       const vnl_double_3x4 cam = C_itr->second;
@@ -212,7 +212,7 @@ bmrf_curve_3d::reconstruct(const vcl_map<int,vnl_double_3x4>& cameras, float sig
     double e1 = error[3*cnt];
     double e2 = error[3*cnt+1];
     double e3 = error[3*cnt+2];
-    error2[cnt] = vcl_sqrt(e1*e1+e2*e2+e3*e3);
+    error2[cnt] = std::sqrt(e1*e1+e2*e2+e3*e3);
   }
 
   double max = error2.max_value();
@@ -234,7 +234,7 @@ void
 bmrf_curve_3d::b_write( vsl_b_ostream& os ) const
 {
   vsl_b_write(os, version());
-  vsl_b_write(os, *((vcl_list<bmrf_curvel_3d_sptr> const*)this));
+  vsl_b_write(os, *((std::list<bmrf_curvel_3d_sptr> const*)this));
 }
 
 
@@ -250,15 +250,15 @@ bmrf_curve_3d::b_read( vsl_b_istream& is )
   {
    case 1:
    {
-    vsl_b_read(is, *((vcl_list<bmrf_curvel_3d_sptr>*)this));
+    vsl_b_read(is, *((std::list<bmrf_curvel_3d_sptr>*)this));
 
     break;
    }
 
    default:
-    vcl_cerr << "I/O ERROR: bmrf_curve_3d::b_read(vsl_b_istream&)\n"
+    std::cerr << "I/O ERROR: bmrf_curve_3d::b_read(vsl_b_istream&)\n"
              << "           Unknown version number "<< ver << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }
@@ -274,7 +274,7 @@ bmrf_curve_3d::version() const
 
 //: Print an ascii summary to the stream
 void
-bmrf_curve_3d::print_summary( vcl_ostream& os ) const
+bmrf_curve_3d::print_summary( std::ostream& os ) const
 {
   os << "num_pts=" << this->size();
 }
@@ -315,7 +315,7 @@ vsl_b_read(vsl_b_istream &is, bmrf_curve_3d* &c)
 
 //: Print an ASCII summary to the stream
 void
-vsl_print_summary(vcl_ostream &os, const bmrf_curve_3d* c)
+vsl_print_summary(std::ostream &os, const bmrf_curve_3d* c)
 {
   os << "bmrf_curve_3d{ ";
   c->print_summary(os);

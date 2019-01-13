@@ -32,10 +32,10 @@ class vsrl_region_disparity
   void SetLeftImage(vil1_image* li){l_img_ = li;}
   void SetRightImage(vil1_image* ri) {r_img_ = ri;}
   void SetDisparityImage(vil1_memory_image_of<unsigned char>* di) {d_img_ = di;}
-  vcl_vector<vtol_intensity_face_sptr>* GetIFRegions() {return if_regions_;}
-  vcl_vector<vdgl_digital_region*>* GetDigitalRegions() {return digi_regions_;}
-  void SetRegions(vcl_vector<vtol_intensity_face_sptr>* regs);
-  void SetRegions(vcl_vector<vdgl_digital_region*>* regs);
+  std::vector<vtol_intensity_face_sptr>* GetIFRegions() {return if_regions_;}
+  std::vector<vdgl_digital_region*>* GetDigitalRegions() {return digi_regions_;}
+  void SetRegions(std::vector<vtol_intensity_face_sptr>* regs);
+  void SetRegions(std::vector<vdgl_digital_region*>* regs);
   vil1_memory_image_of<double>* GetRegionDisparities() {return reg_disp_img_;}
 
  private:
@@ -44,8 +44,8 @@ class vsrl_region_disparity
   vil1_image* r_img_; // Right image
   vil1_memory_image_of<unsigned char>* d_img_; // Disparity image
   vil1_memory_image_of<double>* reg_disp_img_; // Newly calculated disparity image
-  vcl_vector<vtol_intensity_face_sptr>* if_regions_; // Intensity Face Regions
-  vcl_vector<vdgl_digital_region*>* digi_regions_; // Digital Regions
+  std::vector<vtol_intensity_face_sptr>* if_regions_; // Intensity Face Regions
+  std::vector<vdgl_digital_region*>* digi_regions_; // Digital Regions
   bool run_digital_regions();
   bool run_intensity_faces();
   int region_type_;

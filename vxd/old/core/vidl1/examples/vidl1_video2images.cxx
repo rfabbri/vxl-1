@@ -4,11 +4,11 @@
 // \author Fred Wheeler
 
 #include <vcl_compiler.h>
-#include <vcl_cstdlib.h>
-#include <vcl_iostream.h>
-#include <vcl_string.h>
-#include <vcl_list.h>
-#include <vcl_algorithm.h>
+#include <cstdlib>
+#include <iostream>
+#include <string>
+#include <list>
+#include <algorithm>
 #include <vul/vul_arg.h>
 #include <vul/vul_sprintf.h>
 #include <vil/vil_image_view.h>
@@ -26,12 +26,12 @@
 #define CHECK_BASE(t,e,m) \
 do { \
   if ( ! (t) ) { \
-    if (e) vcl_cout << "error: "; \
-    else   vcl_cout << "warning: "; \
-    vcl_cout << m << vcl_endl; \
-    vcl_cout << "use option -help for help\n"; \
-    vcl_cout.flush(); \
-    if (e) vcl_exit(1); \
+    if (e) std::cout << "error: "; \
+    else   std::cout << "warning: "; \
+    std::cout << m << std::endl; \
+    std::cout << "use option -help for help\n"; \
+    std::cout.flush(); \
+    if (e) std::exit(1); \
   } \
 } while (false)
 
@@ -39,15 +39,15 @@ do { \
 #define CHECKE2(t,m0,m1) CHECK_BASE(t,1,m0<<m1)
 
 // print messages based on the -verbose option setting
-#define V1(x) if (verbose() >= 1) vcl_cout << x << vcl_endl
-#define V2(x) if (verbose() >= 2) vcl_cout << "  " << x << vcl_endl
+#define V1(x) if (verbose() >= 1) std::cout << x << std::endl
+#define V2(x) if (verbose() >= 2) std::cout << "  " << x << std::endl
 
 inline void
 print_help_exit (const char * help_text[])
 {
   for (const char ** l = help_text; 0 != *l; l++)
-    vcl_cout << *l << vcl_endl;
-  vcl_exit(0);
+    std::cout << *l << std::endl;
+  std::exit(0);
 }
 
 // help text printed with -help option
@@ -123,7 +123,7 @@ static const char * help_text[] = {
 
 static bool callback_greyscale = false;
 static bool callback_demux_video = false;
-static vcl_string callback_pid = "0x0000";
+static std::string callback_pid = "0x0000";
 static int callback_numframes = -1;
 
 // This callback is needed to provide info necessary to initialize the
@@ -155,7 +155,7 @@ main (int argc, char **argv)
       ("-i", "input video filename", 0);
   vul_arg<const char *> oifnt
       ("-o", "output image printf-style filename template", 0);
-  vul_arg<vcl_list<int> > frames
+  vul_arg<std::list<int> > frames
       ("-f", "indices of frames to convert");
 
 #if defined(HAS_MPEG2) || defined(VCL_WIN32)
@@ -169,7 +169,7 @@ main (int argc, char **argv)
 
   vul_arg_parse( argc, argv);
 
-  if (argc > 1) vcl_exit(1);
+  if (argc > 1) std::exit(1);
   if (help()) print_help_exit (help_text);
 
   CHECKE( ivfn(), "specify input video file with option -i" );
@@ -191,7 +191,7 @@ main (int argc, char **argv)
   V1( "number of frames in video: " << movie->length() );
 
   // the highest frame index to be converted
-  int frame_max = * vcl_max_element (frames().begin(), frames().end());
+  int frame_max = * std::max_element (frames().begin(), frames().end());
 
   for (vidl1_movie::frame_iterator pframe = movie->begin(); pframe < movie->end(); ++pframe)
   {
@@ -199,7 +199,7 @@ main (int argc, char **argv)
 
     V2( "frame index: " << i );
 
-    if (frames().end() != vcl_find (frames().begin(), frames().end(), i))
+    if (frames().end() != std::find (frames().begin(), frames().end(), i))
     {
       vil_image_view_base_sptr frame0 = pframe->get_view();
       V2( "frame image: " << frame0 );
@@ -207,7 +207,7 @@ main (int argc, char **argv)
               "video frames must have 8 bits per component" );
       vil_image_view<vxl_byte> frame (frame0);
       if (oifnt()) {
-        vcl_string fn = vul_sprintf (oifnt(), i);
+        std::string fn = vul_sprintf (oifnt(), i);
         V2( "writing frame to file " << fn );
         vil_save (frame, fn.c_str());
       }

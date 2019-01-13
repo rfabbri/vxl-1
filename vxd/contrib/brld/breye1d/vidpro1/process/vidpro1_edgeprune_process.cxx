@@ -1,5 +1,5 @@
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <iostream>
+#include <fstream>
 #include <vidpro1/process/vidpro1_edgeprune_process.h>
 
 #include <vsol/vsol_polyline_2d.h>
@@ -26,7 +26,7 @@ vidpro1_edgeprune_process::vidpro1_edgeprune_process() : bpro1_process()
      !parameters()->add( "Input VSOL?" ,                            "-ivsol" ,  true )
      )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -39,9 +39,9 @@ vidpro1_edgeprune_process::clone() const
 }
 
 
-vcl_vector< vcl_string > vidpro1_edgeprune_process::get_input_type()
+std::vector< std::string > vidpro1_edgeprune_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
 
   bool i_vsol=false;
   parameters()->get_value( "-ivsol" , i_vsol);
@@ -54,9 +54,9 @@ vcl_vector< vcl_string > vidpro1_edgeprune_process::get_input_type()
   return to_return;
 }
 
-vcl_vector< vcl_string > vidpro1_edgeprune_process::get_output_type()
+std::vector< std::string > vidpro1_edgeprune_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
 
   //is this input or output
   to_return.push_back( "vsol2D" );
@@ -75,7 +75,7 @@ bool vidpro1_edgeprune_process::execute()
   parameters()->get_value( "-ivsol" , i_vsol);
 
   // new vvector to store the points
-  vcl_vector< vsol_spatial_object_2d_sptr > contours;
+  std::vector< vsol_spatial_object_2d_sptr > contours;
 
 
   if (!i_vsol) {
@@ -83,7 +83,7 @@ bool vidpro1_edgeprune_process::execute()
     vidpro1_vtol_storage_sptr input_vtol;
     input_vtol.vertical_cast(input_data_[0][0]);
 
-    for ( vcl_set<vtol_topology_object_sptr>::const_iterator itr = input_vtol->begin();
+    for ( std::set<vtol_topology_object_sptr>::const_iterator itr = input_vtol->begin();
           itr != input_vtol->end();  ++itr ) {
 
       //: Adding only curves from the vtol objects
@@ -102,7 +102,7 @@ bool vidpro1_edgeprune_process::execute()
                      (prunel && dc->get_interpolator()->get_length() > thres)
                     )
                    ) || !prune) {
-                vcl_vector< vsol_point_2d_sptr > points; 
+                std::vector< vsol_point_2d_sptr > points; 
                 for (unsigned int i = 0; i<chain->size(); i++) {
                   vsol_point_2d_sptr newPt = new vsol_point_2d (chain->edgel(i).x(),chain->edgel(i).y());
                   points.push_back(newPt);
@@ -112,12 +112,12 @@ bool vidpro1_edgeprune_process::execute()
               }
 
             }
-          } else vcl_cout << "failed curve_2d" << vcl_endl;
-        } else vcl_cout << "failed edge_2d" << vcl_endl;
-      } else vcl_cout << "failed edge" << vcl_endl;
+          } else std::cout << "failed curve_2d" << std::endl;
+        } else std::cout << "failed edge_2d" << std::endl;
+      } else std::cout << "failed edge" << std::endl;
     }
 
-    vcl_cout << "Pruned " << input_vtol->size()-contours.size() << " edges out of " << input_vtol->size() << " edges\n"; 
+    std::cout << "Pruned " << input_vtol->size()-contours.size() << " edges out of " << input_vtol->size() << " edges\n"; 
 
   } else { // Input Vsol2D
 
@@ -125,11 +125,11 @@ bool vidpro1_edgeprune_process::execute()
     vidpro1_vsol2D_storage_sptr input_vsol;
     input_vsol.vertical_cast(input_data_[0][0]);
 
-    vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol->all_data();
+    std::vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol->all_data();
 
     for (unsigned int b = 0 ; b < vsol_list.size() ; b++ ) 
     {
-      vcl_vector<vsol_point_2d_sptr> pts;
+      std::vector<vsol_point_2d_sptr> pts;
       //POINT
       if( vsol_list[b]->cast_to_point() ) {
         if (prune)
@@ -154,7 +154,7 @@ bool vidpro1_edgeprune_process::execute()
         // CIRCULAR ARC
         else if (vsol_list[b]->cast_to_curve()->cast_to_conic())
         {
-          vcl_cout << "CAUTION: This vsol member is a circular ARC and this process is NOT HANDLING circular arcs!!! Skipping it!\n";
+          std::cout << "CAUTION: This vsol member is a circular ARC and this process is NOT HANDLING circular arcs!!! Skipping it!\n";
           continue;
         }
       }
@@ -186,7 +186,7 @@ bool vidpro1_edgeprune_process::execute()
         contours.push_back(vsol_list[b]);
     }
 
-    vcl_cout << "Pruned " << input_vsol->all_data().size()-contours.size() << " curves out of " << input_vsol->all_data().size() << " curves\n"; 
+    std::cout << "Pruned " << input_vsol->all_data().size()-contours.size() << " curves out of " << input_vsol->all_data().size() << " curves\n"; 
   }
 
 

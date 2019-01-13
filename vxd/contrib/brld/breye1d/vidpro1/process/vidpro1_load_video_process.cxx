@@ -22,12 +22,12 @@
 #include <vul/vul_file_iterator.h>
 #include <vul/vul_file.h>
 #include <vnl/vnl_math.h>
-#include <vcl_iostream.h>
-#include <vcl_algorithm.h>
+#include <iostream>
+#include <algorithm>
 
 
 #if HAS_DSHOW
-#include <vcl_cstdio.h>
+#include <cstdio>
 #include <vil/vil_flip.h>
 #include <vil/vil_save.h>
 #include <vil/vil_decimate.h>
@@ -62,7 +62,7 @@ vidpro1_load_video_process::vidpro1_load_video_process() : bpro1_process(), num_
 
         )
     {
-        vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
     }
 }
 
@@ -82,7 +82,7 @@ vidpro1_load_video_process::clone() const
 
 
 //: Return the name of the process
-vcl_string vidpro1_load_video_process::name()
+std::string vidpro1_load_video_process::name()
 {
     return "Load Video";
 }
@@ -98,10 +98,10 @@ vidpro1_load_video_process::clear_output(int resize)
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 vidpro1_load_video_process::get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     // no input type required
     to_return.clear();
 
@@ -110,10 +110,10 @@ vidpro1_load_video_process::get_input_type()
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 vidpro1_load_video_process::get_output_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "image" );
 
     return to_return;
@@ -177,11 +177,11 @@ vidpro1_load_video_process::execute()
     return false;
 
 
-  vcl_string path = video_path.path;
+  std::string path = video_path.path;
   
   // determine whether the input path is a video file or a list of image files
   bool glob = false;
-  if ( vul_file::is_directory(path) || path.find_first_of('*') != vcl_string::npos)
+  if ( vul_file::is_directory(path) || path.find_first_of('*') != std::string::npos)
      glob = true;
   
   // if the input path is an image file, then we load all images with the same extention, i.e.,
@@ -189,7 +189,7 @@ vidpro1_load_video_process::execute()
   // then we will load all images of the form /image_folder/*.jpg
   if(!glob && vil_load_image_resource(path.c_str()))
   {
-    vcl_string ex = vul_file::extension(path);
+    std::string ex = vul_file::extension(path);
     path = vul_file::dirname(path) + "/*" + ex;;
     glob = true;
   }
@@ -206,8 +206,8 @@ vidpro1_load_video_process::execute()
     return false;
 
   // Load the images input video stream and put them into the image storages
-  vcl_cout << "\nLoading video frames into memory ....";
-  vcl_vector<vidpro1_image_storage_sptr > image_storage_list;
+  std::cout << "\nLoading video frames into memory ....";
+  std::vector<vidpro1_image_storage_sptr > image_storage_list;
   while (video_istr->advance())
   {
     vidl_frame_sptr frame = video_istr->current_frame();
@@ -258,31 +258,31 @@ vidpro1_load_video_process::execute()
     // save to the global list
     image_storage_list.push_back(image_storage);
   }
-  vcl_cout << image_storage_list.size() << " frames loaded.\n";
+  std::cout << image_storage_list.size() << " frames loaded.\n";
 
   // push the image storage list to the repository. Need to put the last frame first.
-  for (vcl_vector<vidpro1_image_storage_sptr >::reverse_iterator iter = 
+  for (std::vector<vidpro1_image_storage_sptr >::reverse_iterator iter = 
     image_storage_list.rbegin(); iter != image_storage_list.rend(); ++iter)
   {
-    output_data_.push_back(vcl_vector< bpro1_storage_sptr >(1, *iter));
+    output_data_.push_back(std::vector< bpro1_storage_sptr >(1, *iter));
     ++this->num_frames_;
   }
 
 #if HAS_DSHOW
 
     } else {  // using dshow
-      vcl_vector< vil_image_resource_sptr > temp_output;
+      std::vector< vil_image_resource_sptr > temp_output;
       
-      vcl_vector<vcl_string> video_files;
+      std::vector<std::string> video_files;
       for(vul_file_iterator fn = video_path.path; fn; ++fn)
         video_files.push_back(fn());
       while(!video_files.empty())
       {
-        vcl_cout << "Using direct show to open: " << video_files.back() << vcl_endl;
+        std::cout << "Using direct show to open: " << video_files.back() << std::endl;
         vidl_dshow_file_istream istream(video_files.back());
 
         if (!istream.is_open()) {
-          vcl_cout << "Failed to open the input stream\n";
+          std::cout << "Failed to open the input stream\n";
           return false;
         }
         
@@ -294,7 +294,7 @@ vidpro1_load_video_process::execute()
           if (istream.is_seekable())
             istream.seek_frame(0);
           else {
-            vcl_cout << "The stream is not seekable! Quitting!\n";
+            std::cout << "The stream is not seekable! Quitting!\n";
             return false;
           }
           start_frame_ = end_frame_ = 0;
@@ -308,7 +308,7 @@ vidpro1_load_video_process::execute()
             if (frame) {
               int height = frame->nj();
               int width = frame->ni();
-              vcl_cout << "orig frame number: " << istream.frame_number() << " width: " << width << " height: " << height << vcl_endl;
+              std::cout << "orig frame number: " << istream.frame_number() << " width: " << width << " height: " << height << std::endl;
               
               vil_image_view<vxl_byte> img, img_ud, dummy;
               vidl_convert_to_view(*frame,img);
@@ -318,22 +318,22 @@ vidpro1_load_video_process::execute()
               if(isroi)
               {  
                 if(topx_<width)
-                  topx_=vcl_max(0,topx_);
+                  topx_=std::max(0,topx_);
                 else
                   topx_=0;
   
                 if(topy_<height)
-                  topy_=vcl_max(0,topy_);
+                  topy_=std::max(0,topy_);
                 else
                   topy_=0;
   
                 if(lenx_>0)
-                  lenx_=vcl_min(width-topx_,lenx_);
+                  lenx_=std::min(width-topx_,lenx_);
                 else
                   lenx_=0;
   
                 if(leny_>0)
-                  leny_=vcl_min(height-topy_,leny_);
+                  leny_=std::min(height-topy_,leny_);
                 else
                   leny_=0;
                 dummy = vil_crop(img_ud, topx_, lenx_, topy_, leny_);
@@ -342,7 +342,7 @@ vidpro1_load_video_process::execute()
               
               if (decimate) {
                 vil_image_view<vxl_byte> dummy2;
-                vil_gauss_filter_2d(dummy, dummy2, sigma, unsigned(vcl_floor(3*sigma+0.5)));
+                vil_gauss_filter_2d(dummy, dummy2, sigma, unsigned(std::floor(3*sigma+0.5)));
                 img_r = vil_decimate(vil_new_image_resource_of_view(dummy2), factor, factor);
               }
               else
@@ -350,11 +350,11 @@ vidpro1_load_video_process::execute()
 
 
             } else {
-              vcl_cout << "Either the frame is corrupted stopping, or more likely end of file is reached!\n";
+              std::cout << "Either the frame is corrupted stopping, or more likely end of file is reached!\n";
               break;
             }
             
-            //vcl_vector< bpro1_storage_sptr > tmp(1,image_storage);
+            //std::vector< bpro1_storage_sptr > tmp(1,image_storage);
             //temp_output.push_back(tmp);
             temp_output.push_back(img_r);
             num_frames_ ++;
@@ -369,9 +369,9 @@ vidpro1_load_video_process::execute()
         vidpro1_image_storage_sptr image_storage = vidpro1_image_storage_new();
         if (temp_output[k])
           image_storage->set_image(temp_output[k]);
-        output_data_.push_back(vcl_vector< bpro1_storage_sptr > (1,image_storage));
+        output_data_.push_back(std::vector< bpro1_storage_sptr > (1,image_storage));
       }
-      vcl_cout << "num_frames_: " << num_frames_ << " output size: " << output_data_.size() << vcl_endl;
+      std::cout << "num_frames_: " << num_frames_ << " output size: " << output_data_.size() << std::endl;
 
     }
 #endif

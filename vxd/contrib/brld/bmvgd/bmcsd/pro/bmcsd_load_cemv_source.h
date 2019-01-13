@@ -18,7 +18,7 @@
 class bmcsd_load_cemv_source : public bprod_source {
 public:
 
-  bmcsd_load_cemv_source( vcl_string fname ) 
+  bmcsd_load_cemv_source( std::string fname ) 
     : fname_(fname),
       min_samples_(0)
   {
@@ -29,11 +29,11 @@ public:
   void set_min_samples(unsigned m) { min_samples_ = m; }
 
   bprod_signal execute() {
-    vcl_vector< vsol_spatial_object_2d_sptr > base;
+    std::vector< vsol_spatial_object_2d_sptr > base;
     bsold_load_cem(contours, fname_);
 
     // create the output storage class
-    vcl_vector< vsol_polyline_2d_sptr > curves;
+    std::vector< vsol_polyline_2d_sptr > curves;
     curves.reserve(base.size());
 
     // Cast everything to polyline
@@ -43,7 +43,7 @@ public:
         p = dynamic_cast<vsol_polyline_2d *> (base[i].ptr());
 
       if (!p) {
-        vcl_cerr << "Non-polyline found, but only POLYLINES supported!" << vcl_endl;
+        std::cerr << "Non-polyline found, but only POLYLINES supported!" << std::endl;
         return BPROD_INVALID;
       }
 
@@ -53,15 +53,15 @@ public:
 
 
     // The swap trick reduces the excess memory used by curves
-    vcl_vector< vsol_polyline_2d_sptr >(curves).swap(curves);
-    vcl_cout << "Curves: #curves =  " << curves.size() << vcl_endl;
+    std::vector< vsol_polyline_2d_sptr >(curves).swap(curves);
+    std::cout << "Curves: #curves =  " << curves.size() << std::endl;
 
     output(0, curves);
     return BPROD_VALID;
   }
 
 private:
-  vcl_string fname_;
+  std::string fname_;
   unsigned min_samples_;
 };
 

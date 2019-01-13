@@ -4,12 +4,12 @@
 
 #include "bnld_solve_quadratic_equation.h"
 
-#include <vcl_cmath.h>
-#include <vcl_cassert.h>
+#include <cmath>
+#include <cassert>
 
 //: Solve quadratic equation ax^2 + bx + c = 0, a != 0
 void bnld_solve_quadratic_equation(double a, double b, double c, 
-                                     vcl_vector<double >& roots)
+                                     std::vector<double >& roots)
 {
   // require
   assert(a != 0);
@@ -18,8 +18,8 @@ void bnld_solve_quadratic_equation(double a, double b, double c,
   double delta = b*b - 4*a*c;
   if (delta > 0) // two distinct roots
   {
-    roots.push_back((-b-vcl_sqrt(delta))/(2*a));
-    roots.push_back((-b+vcl_sqrt(delta))/(2*a));
+    roots.push_back((-b-std::sqrt(delta))/(2*a));
+    roots.push_back((-b+std::sqrt(delta))/(2*a));
     return;
   }
   else if (delta == 0)  // one root

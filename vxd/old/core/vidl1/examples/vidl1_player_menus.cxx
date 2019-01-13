@@ -1,7 +1,7 @@
 // This is core/vidl1/examples/vidl1_player_menus.cxx
 #include "vidl1_player_menus.h"
 #include "vidl1_player_manager.h"
-#include <vcl_cstdlib.h> // for vcl_exit()
+#include <cstdlib> // for std::exit()
 #include <vgui/vgui.h>
 #include <vgui/vgui_dialog.h>
 #include <vgui/vgui_key.h>
@@ -23,7 +23,7 @@ vidl1_player_load_mpegcodec_callback(vidl1_codec * vc)
 
   bool grey_scale = false;
   bool demux_video = true;
-  vcl_string pid = "0x00";
+  std::string pid = "0x00";
   int numframes = -1;
 
   dialog.checkbox("gray scale",grey_scale);
@@ -33,7 +33,7 @@ vidl1_player_load_mpegcodec_callback(vidl1_codec * vc)
 
   if ( !dialog.ask())
   {
-    vcl_cout << "vidl1_player_load_mpegcodec_callback. did not initialize codec.\n";
+    std::cout << "vidl1_player_load_mpegcodec_callback. did not initialize codec.\n";
   }
 
   vidl1_mpegcodec * mpegcodec = vc->castto_vidl1_mpegcodec();
@@ -62,7 +62,7 @@ void vidl1_player_menus::load_video_callback()
 
 void vidl1_player_menus::quit_callback()
 {
-  vcl_exit(1);
+  std::exit(1);
 }
 
 

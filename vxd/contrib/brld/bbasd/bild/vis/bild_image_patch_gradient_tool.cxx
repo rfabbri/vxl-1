@@ -45,7 +45,7 @@ bool bild_image_patch_gradient_tool::handle( const vgui_event & e,
   return false;
 }
 
-vcl_string bild_image_patch_gradient_tool::name() const
+std::string bild_image_patch_gradient_tool::name() const
 {
   return "Patch Gradient";
 }

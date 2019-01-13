@@ -13,14 +13,14 @@
 // for I/O:
 #include <vil1/vil1_load.h>
 #include <vil1/vil1_save.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 int
 main(int argc, char** argv)
 {
   if (argc < 3)
   {
-    vcl_cerr << "Syntax: example_sobel file_in file_out\n";
+    std::cerr << "Syntax: example_sobel file_in file_out\n";
     return 1;
   }
 
@@ -32,7 +32,7 @@ main(int argc, char** argv)
 
   // Write output:
   vil1_save(out, argv[2], "pnm");
-  vcl_cout << "Written image of type PNM to " << argv[2] << vcl_endl;
+  std::cout << "Written image of type PNM to " << argv[2] << std::endl;
 
   return 0;
 }

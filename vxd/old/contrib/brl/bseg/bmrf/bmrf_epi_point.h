@@ -19,8 +19,8 @@
 // \endverbatim
 //
 //-------------------------------------------------------------------------
-#include <vcl_iosfwd.h>
-#include <vcl_string.h>
+#include <iosfwd>
+#include <string>
 #include <vbl/vbl_ref_count.h>
 #include <vsl/vsl_fwd.h>
 #include <vgl/vgl_point_2d.h>
@@ -101,13 +101,13 @@ class bmrf_epi_point:  public vbl_ref_count
   short version() const;
 
   //: Print an ascii summary to the stream
-  void print_summary(vcl_ostream &os) const;
+  void print_summary(std::ostream &os) const;
 
   //: Return a platform independent string identifying the class
-  vcl_string is_a() const { return vcl_string("bmrf_epi_point"); }
+  std::string is_a() const { return std::string("bmrf_epi_point"); }
 
   //: Return true if the argument matches the string identifying the class or any parent class
-  bool is_class(const vcl_string& cls) const { return cls==bmrf_epi_point::is_a(); }
+  bool is_class(const std::string& cls) const { return cls==bmrf_epi_point::is_a(); }
 
  protected:
   vgl_point_2d<double> p_;
@@ -118,7 +118,7 @@ class bmrf_epi_point:  public vbl_ref_count
   double tan_ang_;  //curve tangent at point
 };
 
-vcl_ostream&  operator<<(vcl_ostream& s, bmrf_epi_point const& ep);
+std::ostream&  operator<<(std::ostream& s, bmrf_epi_point const& ep);
 
 #include "bmrf_epi_point_sptr.h"
 

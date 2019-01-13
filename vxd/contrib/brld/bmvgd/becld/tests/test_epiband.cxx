@@ -1,7 +1,7 @@
 #include <testlib/testlib_test.h>
-#include <vcl_limits.h>
-#include <vcl_set.h>
-#include <vcl_iterator.h>
+#include <limits>
+#include <set>
+#include <iterator>
 #include <vnl/vnl_math.h>
 #include <vgl/vgl_clip.h>
 #include <vgl/vgl_distance.h>
@@ -10,10 +10,10 @@
 #include <becld/becld_epipole.h>
 #include <becld/becld_epiband.h>
 #include <becld/becld_epiband_iterator.h>
-#include <vcl_iomanip.h>
-#include <vcl_algorithm.h>
+#include <iomanip>
+#include <algorithm>
 
-static const double tolerance=vcl_numeric_limits<double>::epsilon()*100;
+static const double tolerance=std::numeric_limits<double>::epsilon()*100;
 static void print_integers(const vgl_polygon<double> &p, bool boundaryin=true);
 static void test_get_bounds();
 static void test_vgl_polygon_iterators();
@@ -24,21 +24,21 @@ static void test_vgl_polygon_iterators();
 struct ltpt {
   bool operator()(const vgl_point_2d<int> &s1, const vgl_point_2d<int> &s2) const
     {
-       return vcl_pair<int,int> (s1.x(), s1.y()) < vcl_pair<int,int> (s2.x(),s2.y());
+       return std::pair<int,int> (s1.x(), s1.y()) < std::pair<int,int> (s2.x(),s2.y());
     }
 };
 
-typedef vcl_set<vgl_point_2d<int>,ltpt >  my_point_set;
+typedef std::set<vgl_point_2d<int>,ltpt >  my_point_set;
 
 static void 
 print_integers_cover_iterator(
     const vgl_polygon<double> &p,
-    vcl_set<vgl_point_2d<int>,ltpt > &s_fast, 
-    vcl_set<vgl_point_2d<int>,ltpt > &s_slow);
+    std::set<vgl_point_2d<int>,ltpt > &s_fast, 
+    std::set<vgl_point_2d<int>,ltpt > &s_slow);
 void 
 print_integers_cover_iterator(
     const vgl_polygon<double> &p,
-    vcl_set<vgl_point_2d<int>,ltpt > &s_fast,
+    std::set<vgl_point_2d<int>,ltpt > &s_fast,
     becld_grid_cover_window &w
     ) ;
 
@@ -61,14 +61,14 @@ print_integers(const vgl_polygon<double> &p, bool boundary_in)
   // iterate
   vgl_polygon_scan_iterator<double> it(p,boundary_in); 
 
-  vcl_cout << "Interior points:\n";
+  std::cout << "Interior points:\n";
   for (it.reset(); it.next(); ) {
     int y = it.scany();
     for (int x = it.startx(); x <= it.endx(); ++x) {
-      vcl_cout << "(" << x << "," << y << ") ";
+      std::cout << "(" << x << "," << y << ") ";
     }
   }
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
 }
 
 
@@ -78,8 +78,8 @@ print_integers(const vgl_polygon<double> &p, bool boundary_in)
 void 
 print_integers_cover_iterator(
     const vgl_polygon<double> &p,
-    vcl_set<vgl_point_2d<int>,ltpt > &s_fast, 
-    vcl_set<vgl_point_2d<int>,ltpt > &s_slow)
+    std::set<vgl_point_2d<int>,ltpt > &s_fast, 
+    std::set<vgl_point_2d<int>,ltpt > &s_slow)
 {
   
   {
@@ -87,12 +87,12 @@ print_integers_cover_iterator(
   // iterate
   becld_polygon_grid_cover_iterator it(p,w); 
 
-  vcl_cout << "Interior points (FAST cover iterator):\n";
+  std::cout << "Interior points (FAST cover iterator):\n";
   for (it.reset(); it.nxt(); ) {
-    vcl_cout << "(" << it.x() << "," << it.y() << ") ";
+    std::cout << "(" << it.x() << "," << it.y() << ") ";
     s_fast.insert(vgl_point_2d<int>(it.x(),it.y()));
   }
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
   w.print();
   }
   
@@ -101,12 +101,12 @@ print_integers_cover_iterator(
   // iterate
   becld_slow_polygon_grid_cover_iterator it(p); 
 
-  vcl_cout << "Interior points (SLOW cover iterator):\n";
+  std::cout << "Interior points (SLOW cover iterator):\n";
   for (it.reset(); it.nxt(); ) {
-    vcl_cout << "(" << it.x() << "," << it.y() << ") ";
+    std::cout << "(" << it.x() << "," << it.y() << ") ";
     s_slow.insert(vgl_point_2d<int>(it.x(),it.y()));
   }
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
   }
 
   TEST("Fast and slow algorithms the same",s_fast==s_slow,true);
@@ -115,19 +115,19 @@ print_integers_cover_iterator(
 void 
 print_integers_cover_iterator(
     const vgl_polygon<double> &p,
-    vcl_set<vgl_point_2d<int>,ltpt > &s_fast,
+    std::set<vgl_point_2d<int>,ltpt > &s_fast,
     becld_grid_cover_window &w
     ) 
 {
   // iterate
   becld_polygon_grid_cover_iterator it(p,w); 
 
-  vcl_cout << "Interior points (FAST cover iterator):\n";
+  std::cout << "Interior points (FAST cover iterator):\n";
   for (it.reset(); it.nxt(); ) {
-    vcl_cout << "(" << it.x() << "," << it.y() << ") ";
+    std::cout << "(" << it.x() << "," << it.y() << ") ";
     s_fast.insert(vgl_point_2d<int>(it.x(),it.y()));
   }
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
   w.print();
 }
 
@@ -169,7 +169,7 @@ test_vgl_polygon_iterators()
 
     print_integers(p1);
     {
-    vcl_set<vgl_point_2d<int>,ltpt > s_fast,s_slow;
+    std::set<vgl_point_2d<int>,ltpt > s_fast,s_slow;
     print_integers_cover_iterator(p1,s_fast,s_slow);
     TEST("Fast iterator conforms to ground truth",s_fast==s_truth,true);
     }
@@ -188,7 +188,7 @@ test_vgl_polygon_iterators()
     // TODO test on distance
 
     print_integers(p1);
-    vcl_set<vgl_point_2d<int>,ltpt > s_fast,s_slow;
+    std::set<vgl_point_2d<int>,ltpt > s_fast,s_slow;
     print_integers_cover_iterator(p1,s_fast,s_slow);
   }
   
@@ -211,7 +211,7 @@ test_vgl_polygon_iterators()
     TEST("Polygon with hole: containment", 
         p1.contains(1.5,2) && !p1.contains(4,2) && p1.contains(6,2),true);
 
-//    vcl_set<vgl_point_2d<int>,ltpt > s_fast,s_slow;
+//    std::set<vgl_point_2d<int>,ltpt > s_fast,s_slow;
 //    print_integers_cover_iterator(p1,s_fast,s_slow);
   }
 
@@ -255,7 +255,7 @@ test_vgl_polygon_iterators()
     // Intersect
 
     vgl_polygon<double> p_int = vgl_clip(p1, p2, vgl_clip_type_intersect);
-    p_int.print(vcl_cout);
+    p_int.print(std::cout);
     // Result is given as one sheet!
   }
 
@@ -276,8 +276,8 @@ test_vgl_polygon_iterators()
 
     get_double_squares_truth_1(s_truth);
 
-    vcl_cout << "Here!\n";
-    vcl_set<vgl_point_2d<int>,ltpt > s_fast,s_slow;
+    std::cout << "Here!\n";
+    std::set<vgl_point_2d<int>,ltpt > s_fast,s_slow;
     print_integers_cover_iterator(p1,s_fast,s_slow);
 
     TEST("Fast iterator conforms to ground truth",s_fast==s_truth,true);
@@ -315,7 +315,7 @@ test_vgl_polygon_iterators()
     // Intersect
 
     vgl_polygon<double> p_int = vgl_clip(p1, p2, vgl_clip_type_intersect);
-    p_int.print(vcl_cout);
+    p_int.print(std::cout);
     // Result is given as one sheet!
   }
 
@@ -341,7 +341,7 @@ test_vgl_polygon_iterators()
     TEST("Double-triangle with one sheet 1: containment", 
         p1.contains(5,4) && !p1.contains(9,6) && p1.contains(17,3),true);
 
-    vcl_cout << " =========== Double triangle with one sheet ============\n";
+    std::cout << " =========== Double triangle with one sheet ============\n";
     print_integers(p1,true);
     print_integers(p1,false);
     // Notice how the vertex (10,4) is repeated in both the above lists.
@@ -349,7 +349,7 @@ test_vgl_polygon_iterators()
     // Also, the second list of interior points provide vertex B and D, but not C and E.
 
     // same, with polygon_grid_cover_iterator
-    vcl_set<vgl_point_2d<int>,ltpt > s_fast,s_slow;
+    std::set<vgl_point_2d<int>,ltpt > s_fast,s_slow;
     print_integers_cover_iterator(p1,s_fast,s_slow);
     TEST("Fast iterator conforms to ground truth",s_fast==s_truth,true);
     if (s_fast != s_truth) {
@@ -373,7 +373,7 @@ test_vgl_polygon_iterators()
     TEST("Double-triangle with one sheet 1: containment", 
         p1.contains(5,4) && !p1.contains(9,6) && p1.contains(17,3),true);
 
-    vcl_cout << " =========== Double triangle with one sheet ============\n";
+    std::cout << " =========== Double triangle with one sheet ============\n";
     print_integers(p1,true);
     print_integers(p1,false);
     // Notice how the vertex (10,4) is repeated in both the above lists.
@@ -381,7 +381,7 @@ test_vgl_polygon_iterators()
     // Also, the second list of interior points provide vertex B and D, but not C and E.
 
     // same, with polygon_grid_cover_iterator
-    vcl_set<vgl_point_2d<int>,ltpt > s_fast,s_slow;
+    std::set<vgl_point_2d<int>,ltpt > s_fast,s_slow;
     print_integers_cover_iterator(p1,s_fast,s_slow);
     TEST("Fast iterator conforms to ground truth",s_fast==s_truth,true);
     if (s_fast != s_truth) {
@@ -402,7 +402,7 @@ test_vgl_polygon_iterators()
     TEST("Sliver : containment", 
         p1.contains(10,0.5) && !p1.contains(1,0.1) && p1.contains(1,0.5),true);
 
-    vcl_cout << " =========== Sliver 1 ============\n";
+    std::cout << " =========== Sliver 1 ============\n";
     print_integers(p1,true);
     print_integers(p1,false);
     // Notice how the vertex (10,4) is repeated in both the above lists.
@@ -413,16 +413,16 @@ test_vgl_polygon_iterators()
 
     vgl_triangle_scan_iterator<double> it;
 
-    vcl_cout << "Triangle iterator points:\n";
+    std::cout << "Triangle iterator points:\n";
     for (it.reset(); it.next(); ) {
       int y = it.scany();
       for (int x = it.startx(); x <= it.endx(); ++x) {
-        vcl_cout << "(" << x << "," << y << ") ";
+        std::cout << "(" << x << "," << y << ") ";
       }
     }
-    vcl_cout << vcl_endl;
+    std::cout << std::endl;
 
-    vcl_set<vgl_point_2d<int>,ltpt > s_fast,s_slow;
+    std::set<vgl_point_2d<int>,ltpt > s_fast,s_slow;
     print_integers_cover_iterator(p1,s_fast,s_slow);
     TEST("Fast iterator conforms to ground truth",s_fast==s_truth,true);
     if (s_fast != s_truth) {
@@ -443,13 +443,13 @@ test_vgl_polygon_iterators()
     TEST("Sliver : containment", 
         p1.contains(0.5,10) && !p1.contains(0.1, 1) && p1.contains(0.5, 1),true);
 
-    vcl_cout << " =========== Sliver 1 rotated 90 degrees ============\n";
+    std::cout << " =========== Sliver 1 rotated 90 degrees ============\n";
     print_integers(p1,true);
     print_integers(p1,false);
     // Notice how the vertex (10,4) is repeated in both the above lists.
     // Also, the second list of interior points provide vertex B and D, but not C and E.
 
-    vcl_set<vgl_point_2d<int>,ltpt > s_fast,s_slow;
+    std::set<vgl_point_2d<int>,ltpt > s_fast,s_slow;
     print_integers_cover_iterator(p1,s_fast,s_slow);
     TEST("Fast iterator conforms to ground truth",s_fast==s_truth,true);
     if (s_fast != s_truth) {
@@ -467,14 +467,14 @@ test_vgl_polygon_iterators()
     my_point_set s_truth;
     get_ground_truth(-1,22,-1,4,s_truth,p1);
 
-    vcl_cout << " =========== Sliver 2 ============\n";
+    std::cout << " =========== Sliver 2 ============\n";
     print_integers(p1,true);
     print_integers(p1,false);
     // Notice how the vertex (10,4) is repeated in both the above lists.
 
     // Also, the second list of interior points provide vertex B and D, but not C and E.
 
-    vcl_set<vgl_point_2d<int>,ltpt > s_fast,s_slow;
+    std::set<vgl_point_2d<int>,ltpt > s_fast,s_slow;
     print_integers_cover_iterator(p1,s_fast,s_slow);
     TEST("Fast iterator conforms to ground truth",s_fast==s_truth,true);
     if (s_fast != s_truth) {
@@ -487,19 +487,19 @@ test_vgl_polygon_iterators()
     vgl_polygon<double> p1;
 
     double A = vgl_area<double>(p1);
-    vcl_cout << "Area: " << A << vcl_endl;
+    std::cout << "Area: " << A << std::endl;
     TEST("Empty polygon area:", A, 0);
 
     // distance to empty polygon 
 
     vgl_point_2d<double> pt(2,3);
     double d = vgl_distance(p1, pt);
-    vcl_cout << "d:" << d << vcl_endl;
+    std::cout << "d:" << d << std::endl;
 
 
     my_point_set s_truth; // empty
 
-    vcl_set<vgl_point_2d<int>,ltpt > s_fast,s_slow;
+    std::set<vgl_point_2d<int>,ltpt > s_fast,s_slow;
     print_integers_cover_iterator(p1,s_fast,s_slow);
     TEST("Fast iterator conforms to ground truth",s_fast==s_truth,true);
     if (s_fast != s_truth) {
@@ -519,9 +519,9 @@ test_vgl_polygon_iterators()
     assert(!(bfs_in) == false);
     bfs_in.close();
 
-    vcl_cout << vcl_setprecision(20) << vcl_scientific;
-    vcl_cout << "Poly A:\n" << p1<< vcl_endl;
-    vcl_cout << "Poly B:\n" << p2<< vcl_endl;
+    std::cout << std::setprecision(20) << std::scientific;
+    std::cout << "Poly A:\n" << p1<< std::endl;
+    std::cout << "Poly B:\n" << p2<< std::endl;
 
 
     // Intersect
@@ -529,9 +529,9 @@ test_vgl_polygon_iterators()
     int retval;
     vgl_polygon<double> p_int = vgl_clip(p1, p2, vgl_clip_type_intersect,&retval);
     if (retval == 0)
-      vcl_cout << "Polygon clipper failed\n";
+      std::cout << "Polygon clipper failed\n";
     TEST("Clipper still has that old bug",retval,1);
-    p_int.print(vcl_cout);
+    p_int.print(std::cout);
   }
     */
 
@@ -562,8 +562,8 @@ test_vgl_polygon_iterators()
     int retval;
     vgl_polygon<double> p_int = vgl_clip(p1, p2, vgl_clip_type_intersect,&retval);
     if (retval == 0)
-      vcl_cout << "Polygon clipper failed\n";
-    p_int.print(vcl_cout);
+      std::cout << "Polygon clipper failed\n";
+    p_int.print(std::cout);
   }
 
     // ANOTHER TEST:
@@ -583,7 +583,7 @@ test_vgl_polygon_iterators()
       my_point_set s_truth;
 
 
-      vcl_set<vgl_point_2d<int>,ltpt > s_fast,s_slow;
+      std::set<vgl_point_2d<int>,ltpt > s_fast,s_slow;
 
       print_integers_cover_iterator(p1,s_fast,w);
 
@@ -606,7 +606,7 @@ test_vgl_polygon_iterators()
       my_point_set s_truth;
 
 
-      vcl_set<vgl_point_2d<int>,ltpt > s_fast,s_slow;
+      std::set<vgl_point_2d<int>,ltpt > s_fast,s_slow;
 
       TEST("Is window clean for re-iteration",w.is_label_buf_clean(),true);
       print_integers_cover_iterator(p1,s_fast,w);
@@ -676,7 +676,7 @@ test_get_bounds()
     becld_epiband::get_bounds(poly, ep, theta_plus, theta_minus, theta_mean);
 
 
-    vcl_cout << "theta_plus: " << (theta_plus/vnl_math::pi)*180.0 << " theta_minus: " << (theta_minus/vnl_math::pi)*180.0 << " theta_mean: " << (theta_mean/vnl_math::pi)*180.0 << vcl_endl;
+    std::cout << "theta_plus: " << (theta_plus/vnl_math::pi)*180.0 << " theta_minus: " << (theta_minus/vnl_math::pi)*180.0 << " theta_mean: " << (theta_mean/vnl_math::pi)*180.0 << std::endl;
 
     TEST("becld_epiband testcase C:",remainder_div_2pi(theta_minus - vnl_math::pi/2.0) < tolerance, true);
     TEST("becld_epiband testcase C:",remainder_div_2pi(theta_plus - 5.0*vnl_math::pi/4.0) < tolerance, true);
@@ -713,7 +713,7 @@ test_get_bounds()
     double theta_mean;
     becld_epiband::get_bounds(poly, ep, theta_plus, theta_minus, theta_mean);
 
-    vcl_cout << "theta_plus: " << (theta_plus/vnl_math::pi)*180.0 << " theta_minus: " << (theta_minus/vnl_math::pi)*180.0 << " theta_mean: " << (theta_mean/vnl_math::pi)*180.0 << vcl_endl;
+    std::cout << "theta_plus: " << (theta_plus/vnl_math::pi)*180.0 << " theta_minus: " << (theta_minus/vnl_math::pi)*180.0 << " theta_mean: " << (theta_mean/vnl_math::pi)*180.0 << std::endl;
   }
 
   { // Test E 
@@ -749,11 +749,11 @@ test_get_bounds()
     double theta_mean;
     becld_epiband::get_bounds(poly, ep, theta_plus, theta_minus, theta_mean);
 
-    vcl_cout << "\n\n=============================================\n";
-    vcl_cout << "theta_minus : " <<  theta_minus
+    std::cout << "\n\n=============================================\n";
+    std::cout << "theta_minus : " <<  theta_minus
              << "theta_plus : " <<  theta_plus
              << "theta_med : " <<  theta_mean;
-    vcl_cout << "\n=============================================\n";
+    std::cout << "\n=============================================\n";
 
     TEST("becld_epiband testcase degen:",theta_plus - theta_minus < vnl_math::pi/8, true);
   }
@@ -815,12 +815,12 @@ print_difference_info(const my_point_set &set1, const my_point_set &s_truth, con
 {
     my_point_set C;
 
-    vcl_set_symmetric_difference(set1.begin(), set1.end(), s_truth.begin(), s_truth.end(),
-               vcl_inserter(C, C.begin()),
+    std::set_symmetric_difference(set1.begin(), set1.end(), s_truth.begin(), s_truth.end(),
+               std::inserter(C, C.begin()),
                ltpt());
-    vcl_cout << "Set C (difference of set1 and s_truth): ";
-//      vcl_copy(C.begin(), C.end(), vcl_ostream_iterator<const vgl_point_2d<int> >(vcl_cout, " "));
-//      vcl_cout << vcl_endl;
+    std::cout << "Set C (difference of set1 and s_truth): ";
+//      std::copy(C.begin(), C.end(), std::ostream_iterator<const vgl_point_2d<int> >(std::cout, " "));
+//      std::cout << std::endl;
 
     my_point_set::const_iterator it;
     for (it = C.begin(); it != C.end(); ++it) {

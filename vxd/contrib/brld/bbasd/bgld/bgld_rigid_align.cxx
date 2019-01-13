@@ -1,9 +1,9 @@
 // Mar 03, 2004  bgld/bgld_rigid_transform.cxx
 // Based on original code by MingChing Chang
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <stdio.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <vnl/vnl_matrix.h>
 #include <vnl/algo/vnl_svd.h>
 
@@ -25,8 +25,8 @@
 //       2)multiple by the rotation matrix R
 //       3)add by Cf, you get the point in P in P1 space
 //
-void bgld_get_rigid_alignment (vcl_vector<vgl_point_3d<double> >& cor_fixPS,
-                               vcl_vector<vgl_point_3d<double> >& cor_movPS,
+void bgld_get_rigid_alignment (std::vector<vgl_point_3d<double> >& cor_fixPS,
+                               std::vector<vgl_point_3d<double> >& cor_movPS,
                                vnl_matrix_fixed<double,3,3>& R, 
                                vnl_vector_fixed<double,3>& Cf, 
                                vnl_vector_fixed<double,3>& Cm)
@@ -106,15 +106,15 @@ void print_R_C1_C2 (const vnl_matrix_fixed<double,3,3>& R,
 {
   //: print R, Cf and Cm
   char buffer[128];
-  vcl_cout<< "R = \n";
+  std::cout<< "R = \n";
   for (int i=0; i<3; i++) {
     sprintf (buffer, "[%+2.5f, %+2.5f, %+2.5f]\n", R.get(i,0), R.get(i,1), R.get(i,2));
-    vcl_cout<< buffer;
+    std::cout<< buffer;
   }
   sprintf (buffer, "Cf = (%+2.5f, %+2.5f, %+2.5f)\n", Cf.get(0), Cf.get(1), Cf.get(2));
-  vcl_cout<< buffer;
+  std::cout<< buffer;
   sprintf (buffer, "Cm = (%+2.5f, %+2.5f, %+2.5f)\n", Cm.get(0), Cm.get(1), Cm.get(2));
-  vcl_cout<< buffer;
+  std::cout<< buffer;
 }
 
 //Input: P, R, Cf, Cm

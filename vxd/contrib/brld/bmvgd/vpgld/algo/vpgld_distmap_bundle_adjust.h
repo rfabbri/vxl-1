@@ -9,8 +9,8 @@
 //
 
 
-#include <vcl_vector.h>
-#include <vcl_limits.h>
+#include <vector>
+#include <limits>
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_sparse_lst_sqr_function.h>
 #include <vgl/vgl_point_2d.h>
@@ -40,9 +40,9 @@ class vpgld_distmap_bundle_adj_lsqr : public vnl_sparse_lst_sqr_function
   // floating point version, so that the Jacobian can make more sense near
   // Voronoi boundaries.
   vpgld_distmap_bundle_adj_lsqr(
-      const vcl_vector<vpgl_calibration_matrix<double> >& K,
-      const vcl_vector<vil_image_view<vxl_uint_32> > &dt,
-      const vcl_vector<vcl_vector<bool> >& mask);
+      const std::vector<vpgl_calibration_matrix<double> >& K,
+      const std::vector<vil_image_view<vxl_uint_32> > &dt,
+      const std::vector<std::vector<bool> >& mask);
 
   //: Compute the residuals from the ith component of a and the jth component of b.
   //  This is not normally used because f() has a self-contained efficient implementation
@@ -69,9 +69,9 @@ class vpgld_distmap_bundle_adj_lsqr : public vnl_sparse_lst_sqr_function
   {
     double x2 = r[0]*r[0], y2 = r[1]*r[1], z2 = r[2]*r[2];
     double m = x2 + y2 + z2;
-    double theta = vcl_sqrt(m);
-    double s = vcl_sin(theta) / theta;
-    double c = (1.0 - vcl_cos(theta)) / m;
+    double theta = std::sqrt(m);
+    double s = std::sin(theta) / theta;
+    double c = (1.0 - std::cos(theta)) / m;
 
     vnl_matrix_fixed<double,3,3> R(0.0);
     R(0,0) = R(1,1) = R(2,2) = 1.0;
@@ -113,13 +113,13 @@ private:
   typedef vil_image_view<vxl_uint_32> dt_type;
 
   //: The fixed internal camera calibration
-  vcl_vector<vpgl_calibration_matrix<double> > K_;
+  std::vector<vpgl_calibration_matrix<double> > K_;
   //: The fixed internal camera calibration in matrix form
-  vcl_vector<vnl_double_3x3> Km_;
+  std::vector<vnl_double_3x3> Km_;
 
   //: The distance maps for the measured projected features in each view being
   // optimized. This is fixed throughout.
-  vcl_vector<dt_type> dt_;
+  std::vector<dt_type> dt_;
   unsigned iteration_count_;
 
   //: Evaluates the distance map at the point.
@@ -132,7 +132,7 @@ private:
     if (dt.in_range(x,y))
       return dt(x,y);
     else
-      return vcl_numeric_limits<double>::infinity();
+      return std::numeric_limits<double>::infinity();
   }
 };
 

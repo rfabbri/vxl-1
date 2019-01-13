@@ -21,7 +21,7 @@ bild_harr_wavelet_process::bild_harr_wavelet_process()
 {
   if( !parameters()->add( "Restore"    , "-restore" ,  false   ) 
     ) {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -37,7 +37,7 @@ bild_harr_wavelet_process::clone() const
 }
 
 //: Return the name of this process
-vcl_string 
+std::string 
 bild_harr_wavelet_process::name()
 {
   return "Harr Wavelet";
@@ -55,18 +55,18 @@ bild_harr_wavelet_process::output_frames()
   return 1;
 }
 
-vcl_vector< vcl_string >
+std::vector< std::string >
 bild_harr_wavelet_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
 
-vcl_vector< vcl_string >
+std::vector< std::string >
 bild_harr_wavelet_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
@@ -75,7 +75,7 @@ bool
 bild_harr_wavelet_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In vidpro1_can_test_process::execute() - not exactly one" << " input image" << vcl_endl;
+    std::cout << "In vidpro1_can_test_process::execute() - not exactly one" << " input image" << std::endl;
     return false;
   }
   clear_output();

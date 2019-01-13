@@ -2,7 +2,7 @@
 #include <bmcsd/pro/bmcsd_fragment_tangents_filter.h>
 #include <bmcsd/pro/bmcsd_load_curvelet_source.h>
 #include <bmcsd/pro/bmcsd_stereo_filter.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 
 bool bmcsd_concurrent_stereo_driver::
 init()
@@ -44,7 +44,7 @@ init()
   //  unsigned num_curve_stereo_runs = f_.num_instances();
   //  unsigned num_curve_stereo_jobs = num_curve_stereo_runs/max_concurrent_matchers_;
 
-  vcl_cout << "Initializing stereo driver w nviews = " << nviews() << vcl_endl;
+  std::cout << "Initializing stereo driver w nviews = " << nviews() << std::endl;
   cam_src_.reserve(nviews());
   edg_src_.reserve(nviews());
   if (use_curvelets_)
@@ -115,12 +115,12 @@ init()
 
   update_stereo_params();
 
-  curve_stereo_jobs_.reserve(static_cast<unsigned>(vcl_ceil(curve_stereo_.size()/max_concurrent_matchers_)));
+  curve_stereo_jobs_.reserve(static_cast<unsigned>(std::ceil(curve_stereo_.size()/max_concurrent_matchers_)));
   //: Setup the nodes to do simultaneous processing
   for (unsigned i=0; i < curve_stereo_.size(); ++i) {
     if (i % max_concurrent_matchers_ == 0) {
       unsigned num_matchers
-       = vcl_min(static_cast<unsigned long>(max_concurrent_matchers_), 
+       = std::min(static_cast<unsigned long>(max_concurrent_matchers_), 
            static_cast<unsigned long>(curve_stereo_.size()-i));
 
       curve_stereo_jobs_.push_back(new bmcsd_stereo_jobs(num_matchers));
@@ -148,7 +148,7 @@ init()
 bool bmcsd_concurrent_stereo_driver::
 run(unsigned long timestamp)
 {
-  vcl_cout << "Running stereo driver.\n";
+  std::cout << "Running stereo driver.\n";
   assert(initialized_);
   bprod_signal retval = output_job_->run(timestamp);
 

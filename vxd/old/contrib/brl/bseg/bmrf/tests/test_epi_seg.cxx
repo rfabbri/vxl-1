@@ -24,7 +24,7 @@ static void epi_seg()
   eps->add_point(ep1);
   eps->add_int_sample(10.25, 0.1, 100, 0.2, 200);
   eps->add_int_sample(10.75, 0.15, 150, 0.25, 250);
-  vcl_cout << "epi_seg\n" << *eps << '\n';
+  std::cout << "epi_seg\n" << *eps << '\n';
   TEST("Testing constructors",
        eps->min_alpha()==10      &&
        eps->max_alpha()==11      &&
@@ -58,7 +58,7 @@ static void epi_seg()
   //  vsl_b_read(is, eps_in);
       eps_in->b_read(is);
   is.close();
-  vcl_cout << *eps_in << '\n';
+  std::cout << *eps_in << '\n';
   TEST("Testing I/0",
        eps->min_alpha()==eps_in->min_alpha()        &&
        eps->max_alpha()==eps_in->max_alpha()        &&

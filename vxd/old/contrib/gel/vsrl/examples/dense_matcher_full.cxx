@@ -3,7 +3,7 @@
 // \file
 // \brief Dense matcher
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vsrl/vsrl_stereo_dense_matcher.h>
 #include <vsrl/vsrl_parameters.h>
 
@@ -13,19 +13,19 @@
 int main(int argc, char ** argv)
 {
   if (argc<2) {
-    vcl_cerr << argv[0] << " im1 im2 disparity_file [params_file]\n";
+    std::cerr << argv[0] << " im1 im2 disparity_file [params_file]\n";
     return 0;
   }
 
   // create the stereo dense matcher
   vil1_image image1 = vil1_load(argv[1]);
   if (!image1) {
-    vcl_cerr << "Error loading " << argv[1] << ". Exiting.\n";
+    std::cerr << "Error loading " << argv[1] << ". Exiting.\n";
     return 0;
   }
   vil1_image image2 = vil1_load(argv[2]);
   if (!image2) {
-    vcl_cerr << "Error loading " << argv[2] << ". Exiting.\n";
+    std::cerr << "Error loading " << argv[2] << ". Exiting.\n";
     return 0;
   }
 

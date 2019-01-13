@@ -1,7 +1,7 @@
 #include <testlib/testlib_test.h>
 #include <bgld/bgld_linear_curve_3d.h>
-#include <vcl_iostream.h>
-#include <vcl_cmath.h>
+#include <iostream>
+#include <cmath>
 #include <vnl/vnl_math.h>
 
 MAIN( test_linear_curve_3d )

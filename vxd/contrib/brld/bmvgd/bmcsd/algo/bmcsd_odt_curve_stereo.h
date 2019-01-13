@@ -36,14 +36,14 @@ public:
   virtual bool set_nviews(unsigned nviews);
 
   //: set the edgemaps for each view.
-  void set_all_edgemaps(const vcl_vector<sdet_edgemap_sptr> &em);
+  void set_all_edgemaps(const std::vector<sdet_edgemap_sptr> &em);
 
   //: set the symbolic edge linker storages for each view.
-  void set_all_sels(const vcl_vector<sdetd_sel_storage_sptr> &sels);
+  void set_all_sels(const std::vector<sdetd_sel_storage_sptr> &sels);
 
   //: set the tangents for the samples of the curve fragments. The indexing goes
   // tangents[id_view][id_curve][id_sample]
-  void set_tangents(const vcl_vector<vcl_vector<vcl_vector<double> > > &tangents);
+  void set_tangents(const std::vector<std::vector<std::vector<double> > > &tangents);
 
   //: sets the threshold in angular difference (radians) for wich an edgel is
   //considered an inlier to the reprojected curve point-tangent sample in each
@@ -103,14 +103,14 @@ public:
   // are measured from the distance map. 
   //
   // \param[out] i_best : index into \c crv_candidates_ptrs() of top matching curve
-  // \param[out] votes : vcl_vector of the number of inliers, s.t. votes[i] ==
+  // \param[out] votes : std::vector of the number of inliers, s.t. votes[i] ==
   // total number of inliers for crv_candidates_ptrs(i). 
   //
   // If there is no reliable curve, or if there are no candidates to begin with,
   // votes will be empty, but return value will be true.
   //
   // \return false if some error ocurred during matching.
-  bool match_using_orientation_dt(unsigned *i_best, vcl_vector<unsigned long> *votes);
+  bool match_using_orientation_dt(unsigned *i_best, std::vector<unsigned long> *votes);
 
   //: Run match_using_orientation_dt, then perform additional tests to determine
   // if a match is reliable. The following criterion is used
@@ -123,10 +123,10 @@ public:
   // This is used to prevent influence of clutter from views where the curve is
   // occluded.
   //
-  bool match_using_orientation_dt_extras(vcl_vector<unsigned long> *votes_ptr);
+  bool match_using_orientation_dt_extras(std::vector<unsigned long> *votes_ptr);
 
   //: Convenience function returning the index of the best match.
-  bool match_using_orientation_dt_extras(unsigned *i_best, vcl_vector<unsigned long> *votes_ptr);
+  bool match_using_orientation_dt_extras(unsigned *i_best, std::vector<unsigned long> *votes_ptr);
 
   //: Reconstructs given subcurve specified by index ini_id and end_id into
   // selected_crv_id(v0()), by assuming correspondence to candidate curve with index \p ic.
@@ -193,23 +193,23 @@ public:
   // keep only the episegs having all point-tangents within an angle of
   // the epipolar line. Such angle is set in set_min_epiangle().
   virtual void break_curves_into_episegs_pairwise(
-      vcl_vector<vcl_vector< vsol_polyline_2d_sptr > > *broken_vsols,
-      vcl_vector<bbld_subsequence_set> *ss_ptr
+      std::vector<std::vector< vsol_polyline_2d_sptr > > *broken_vsols,
+      std::vector<bbld_subsequence_set> *ss_ptr
       ) const;
 
   //: Stand-alone episeg breaker using tangent angle information.
   // \see break_curves_into_episegs_pairwise
   static void break_curves_into_episegs_angle(
-    const vcl_vector< vsol_polyline_2d_sptr >  &vsols,
-    const vcl_vector<vcl_vector<double> > &tgts,
+    const std::vector< vsol_polyline_2d_sptr >  &vsols,
+    const std::vector<std::vector<double> > &tgts,
     double min_epiangle,
-    vcl_vector<vsol_polyline_2d_sptr> *vsols2,
+    std::vector<vsol_polyline_2d_sptr> *vsols2,
     const vgl_homg_point_2d<double> &e,
     bbld_subsequence_set *ss_ptr);
 
   //: Precondition: set_tangents and set_curve must have been called.
   virtual void break_into_episegs_and_replace_curve(
-      vcl_vector<bbld_subsequence_set> *curves_ss);
+      std::vector<bbld_subsequence_set> *curves_ss);
 
   bool has_sels() { return !sels_.empty(); }
 
@@ -218,17 +218,17 @@ protected:
 
 private:
   //: edgemap for each view.
-  vcl_vector<sdet_edgemap_sptr> em_;
+  std::vector<sdet_edgemap_sptr> em_;
 
   //: symbolic edge linker structure for each view.
-  vcl_vector<sdetd_sel_storage_sptr> sels_;
+  std::vector<sdetd_sel_storage_sptr> sels_;
 
-  typedef vcl_vector<bdifd_1st_order_curve_2d> first_order_curve_map;
+  typedef std::vector<bdifd_1st_order_curve_2d> first_order_curve_map;
 
   //: curve map for each view with 1st order differential geometry
   // (point-tangents), already in world coordinates. Indexing goes
   // pt_tgts_[id_view][id_curve][id_sample]
-  vcl_vector< first_order_curve_map > pt_tgts_;
+  std::vector< first_order_curve_map > pt_tgts_;
   double tau_dtheta_;
   unsigned tau_min_inliers_per_view_;
   unsigned tau_min_total_inliers_;
@@ -238,8 +238,8 @@ private:
   unsigned tau_min_num_inlier_edgels_per_curvelet_;
 
   //: \see curve_tangents()
-  vcl_vector<vcl_vector<vcl_vector<double> > > curve_tangents_;
-  vcl_vector<vcl_vector<bcsid_edgel_seq> > reprojection_crv_;
+  std::vector<std::vector<std::vector<double> > > curve_tangents_;
+  std::vector<std::vector<bcsid_edgel_seq> > reprojection_crv_;
 };
 
 //: Reconstruct all curves that match bewtween two views. 
@@ -251,7 +251,7 @@ private:
 // \param[out] corresp: corresp[c] == correspondence of s.curves(v0(), c) used for crv3d[c]
 bool bmcsd_match_and_reconstruct_all_curves(
     bmcsd_odt_curve_stereo &s, 
-    vcl_vector<bdifd_1st_order_curve_3d> *crv3d,
+    std::vector<bdifd_1st_order_curve_3d> *crv3d,
     bmcsd_discrete_corresp *corresp
     );
 
@@ -259,9 +259,9 @@ bool bmcsd_match_and_reconstruct_all_curves(
 // for each curve.
 bool bmcsd_match_and_reconstruct_all_curves_attr(
     bmcsd_odt_curve_stereo &s, 
-    vcl_vector<bdifd_1st_order_curve_3d> *crv3d_ptr,
+    std::vector<bdifd_1st_order_curve_3d> *crv3d_ptr,
     bmcsd_discrete_corresp *corresp_ptr,
-    vcl_vector< bmcsd_curve_3d_attributes > *attr_ptr
+    std::vector< bmcsd_curve_3d_attributes > *attr_ptr
     );
 
 //: Matches all curves bewtween two views.
@@ -283,7 +283,7 @@ bool bmcsd_match_all_curves(
 bool reconstruct_from_corresp(
     bmcsd_odt_curve_stereo &s, 
     const bmcsd_discrete_corresp &corresp,
-    vcl_vector<bdifd_1st_order_curve_3d> *crv3d_ptr
+    std::vector<bdifd_1st_order_curve_3d> *crv3d_ptr
     );
 
 //: variant of reconstruct_from_corresp which also outputs attributes.
@@ -291,8 +291,8 @@ bool
 reconstruct_from_corresp_attr(
     bmcsd_odt_curve_stereo &s, 
     const bmcsd_discrete_corresp &corresp,
-    vcl_vector<bdifd_1st_order_curve_3d> *crv3d_ptr,
-    vcl_vector< bmcsd_curve_3d_attributes > *attr_ptr
+    std::vector<bdifd_1st_order_curve_3d> *crv3d_ptr,
+    std::vector< bmcsd_curve_3d_attributes > *attr_ptr
     );
 
 #endif // bmcsd_odt_curve_stereo_h

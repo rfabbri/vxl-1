@@ -15,7 +15,7 @@ bprod_xio_sink::bprod_xio_sink()
 
 
 //: Constructor
-bprod_xio_sink::bprod_xio_sink(const vcl_string& filename)
+bprod_xio_sink::bprod_xio_sink(const std::string& filename)
   : os_(filename.c_str())
 {
   write_header();
@@ -32,7 +32,7 @@ bprod_xio_sink::~bprod_xio_sink()
 
 
 //: Open a new file
-bool bprod_xio_sink::open(const vcl_string& filename)
+bool bprod_xio_sink::open(const std::string& filename)
 {
   if(os_.good())
     write_footer();
@@ -63,7 +63,7 @@ bprod_signal bprod_xio_sink::execute()
     return BPROD_INVALID;
 
   bxml_write_data(os_, data);
-  os_ << "\n" << vcl_flush;
+  os_ << "\n" << std::flush;
 
   return BPROD_VALID;
 }
@@ -72,11 +72,11 @@ bprod_signal bprod_xio_sink::execute()
 void bprod_xio_sink::write_header()
 {
   bxml_write_declaration(os_, bxml_document() );
-  os_ << "<stream>\n" << vcl_flush;
+  os_ << "<stream>\n" << std::flush;
 }
 
 
 void bprod_xio_sink::write_footer()
 {
-  os_ << "\n</stream>\n" << vcl_flush;
+  os_ << "\n</stream>\n" << std::flush;
 }

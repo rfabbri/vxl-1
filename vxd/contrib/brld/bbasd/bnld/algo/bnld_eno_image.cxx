@@ -10,7 +10,7 @@ interpolate(const vil_image_view<double> *img)
   // - alloc eno1d vectors
 
   if (!img->is_contiguous() || img->istep() != 1) {
-    vcl_cerr << "bnld_eno_image: only contigous row-wise (col,row) images supported\n";
+    std::cerr << "bnld_eno_image: only contigous row-wise (col,row) images supported\n";
     return false;
   }
   
@@ -51,10 +51,10 @@ bnld_eno_image::
 
 void 
 bnld_eno_image::
-print(vcl_ostream& strm) const
+print(std::ostream& strm) const
 {
 
   strm << "===== Eno Image =====\n"
-       << "Rows: " << nj_ << "  Cols: " << ni_ << vcl_endl;
+       << "Rows: " << nj_ << "  Cols: " << ni_ << std::endl;
   
 }

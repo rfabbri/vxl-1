@@ -11,8 +11,8 @@
 #include <buld/buld_octave.h>
 #include <vil/vil_image_view.h>
 #include <vil/vil_new.h>
-#include <vcl_cmath.h>
-#include <vcl_vector.h>
+#include <cmath>
+#include <vector>
 
 #define BILD_CONVERT_IMAGE_VIEW_TO_ARRAY \
         for(int b = 0; b < nbands; b++) \
@@ -32,17 +32,17 @@ buld_octave_value bild_convert_image_view_to_octave_value(const vil_image_view<T
 vil_image_resource_sptr bild_convert_octave_array_to_image_resource(const buld_octave_uint8_array& oct_array);
 
 template <class T>
-vil_image_resource_sptr bild_octave_imresize(const vil_image_view<T>& image_src, double factor, const vcl_string& interp);
+vil_image_resource_sptr bild_octave_imresize(const vil_image_view<T>& image_src, double factor, const std::string& interp);
 
 template <class T>
 vil_image_resource_sptr bild_octave_imresize(const vil_image_view<T>& image_src, double factor);
 
-vil_image_resource_sptr bild_octave_imresize(const buld_octave_value& image_src, double factor, const vcl_string& interp);
+vil_image_resource_sptr bild_octave_imresize(const buld_octave_value& image_src, double factor, const std::string& interp);
 
 vil_image_resource_sptr bild_octave_imresize(const buld_octave_value& image_src, double factor);
 
 template <class T>
-vcl_vector<vil_image_resource_sptr> bild_octave_create_image_pyramid(const vil_image_view<T>& image_src, const vcl_string& interp, double step, int num_steps);
+std::vector<vil_image_resource_sptr> bild_octave_create_image_pyramid(const vil_image_view<T>& image_src, const std::string& interp, double step, int num_steps);
 
 
 // IMPLEMENTATION
@@ -53,7 +53,7 @@ buld_octave_value bild_convert_image_view_to_octave_value(const vil_image_view<T
     int width = image_src.ni();
     int height = image_src.nj();
     int nbands = image_src.nplanes();
-    vcl_vector<int> sizes(3);
+    std::vector<int> sizes(3);
     sizes[0] = height; sizes[1] = width; sizes[2] = nbands;
     vil_pixel_format pf = image_src.pixel_format();
     if(pf == VIL_PIXEL_FORMAT_BYTE)
@@ -84,7 +84,7 @@ buld_octave_value bild_convert_image_view_to_octave_value(const vil_image_view<T
 }
 
 template <class T>
-vil_image_resource_sptr bild_octave_imresize(const vil_image_view<T>& image_src, double factor, const vcl_string& interp)
+vil_image_resource_sptr bild_octave_imresize(const vil_image_view<T>& image_src, double factor, const std::string& interp)
 {
     buld_octave_value octave_image = bild_convert_image_view_to_octave_value<T>(image_src);
     bild_octave_imresize(octave_image, factor, interp);
@@ -97,13 +97,13 @@ vil_image_resource_sptr bild_octave_imresize(const vil_image_view<T>& image_src,
 }
 
 template <class T>
-vcl_vector<vil_image_resource_sptr> bild_octave_create_image_pyramid(const vil_image_view<T>& image_src, const vcl_string& interp, double step, int num_steps)
+std::vector<vil_image_resource_sptr> bild_octave_create_image_pyramid(const vil_image_view<T>& image_src, const std::string& interp, double step, int num_steps)
 {
-    vcl_vector<vil_image_resource_sptr> pyr_vec;
+    std::vector<vil_image_resource_sptr> pyr_vec;
     buld_octave_value octave_image = bild_convert_image_view_to_octave_value<T>(image_src);
     for(int i = 0; i < num_steps; i++)
     {
-        double scale = 1 / vcl_pow(step, i);
+        double scale = 1 / std::pow(step, i);
         vil_image_resource_sptr im_scaled = bild_octave_imresize(octave_image, scale, interp);
         pyr_vec.push_back(im_scaled);
     }

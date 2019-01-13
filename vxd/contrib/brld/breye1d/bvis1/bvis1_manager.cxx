@@ -3,7 +3,7 @@
 // \file
 
 #include <iomanip>
-#include <vcl_sstream.h>
+#include <sstream>
 #include <vul/vul_file.h>
 #include <bvis1/bvis1_manager.h>
 #include <bvis1/bvis1_displayer.h>
@@ -27,7 +27,7 @@
 
 //static manager instance
 bvis1_manager* bvis1_manager::instance_ = 0;
-vcl_map< vcl_string, bvis1_displayer_sptr > bvis1_manager::displayers_;
+std::map< std::string, bvis1_displayer_sptr > bvis1_manager::displayers_;
 
 //: Constructor
 bvis1_manager::bvis1_manager()
@@ -115,8 +115,8 @@ void
 bvis1_manager::layer_per_view()
 {
   vgui_selector_tableau_sptr selector_tab = active_selector();
-  const vcl_vector< vcl_string >& names = selector_tab->child_names();
-  vcl_vector<vgui_selector_tableau_sptr> new_selectors;
+  const std::vector< std::string >& names = selector_tab->child_names();
+  std::vector<vgui_selector_tableau_sptr> new_selectors;
   for(unsigned int i=0; i<names.size(); ++i){
     if(selector_tab->is_visible(names[i])){
       vgui_selector_tableau_sptr new_selector_tab = vgui_selector_tableau_new();
@@ -170,7 +170,7 @@ bvis1_manager::remove_active_view()
      bvis1_view_tableau_sptr rm_view;
      rm_view.vertical_cast( rm_viewer->child.child() );
 
-     for( vcl_vector<bvis1_view_tableau_sptr>::iterator v_itr = view_tabs_.begin();
+     for( std::vector<bvis1_view_tableau_sptr>::iterator v_itr = view_tabs_.begin();
           v_itr != view_tabs_.end(); ++v_itr){
        if( *v_itr == rm_view ){
          view_tabs_.erase(v_itr);
@@ -191,20 +191,20 @@ bvis1_manager::get_info_on_active_tableau()
 
   if(!cur_active_tableau.ptr()) return;
 
-  vcl_cout << vcl_endl << "***** Active Tableau Info: **********" << vcl_endl;
-  vcl_cout << "TYPE: " << cur_active_tableau->type_name() << vcl_endl;
+  std::cout << std::endl << "***** Active Tableau Info: **********" << std::endl;
+  std::cout << "TYPE: " << cur_active_tableau->type_name() << std::endl;
 
   //temp hack
   if (cur_active_tableau->type_name()!="bgui_vsol2D_tableau")
     return;
 
-  vcl_vector< vcl_string > all_groups = cur_active_tableau->get_grouping_names();
-  vcl_cout << "Groups: ";
+  std::vector< std::string > all_groups = cur_active_tableau->get_grouping_names();
+  std::cout << "Groups: ";
   for (unsigned int i=0; i<all_groups.size(); i++)
-    vcl_cout << all_groups[i] << ", ";
+    std::cout << all_groups[i] << ", ";
 
-  vcl_cout << vcl_endl;
-  vcl_cout << "*************************************" << vcl_endl;
+  std::cout << std::endl;
+  std::cout << "*************************************" << std::endl;
 }
 
 //: Regenerate all tableau from the repository
@@ -224,7 +224,7 @@ bvis1_manager::regenerate_all_tableaux()
     for ( vidpro1_repository::storage_map::iterator t_itr = repository_->map_begin();
           t_itr != repository_->map_end();  ++t_itr ){
       // for each storage object
-      for ( vcl_vector< bpro1_storage_sptr >::iterator s_itr = t_itr->second.begin();
+      for ( std::vector< bpro1_storage_sptr >::iterator s_itr = t_itr->second.begin();
             s_itr != t_itr->second.end(); ++s_itr ){
         add_to_display(*s_itr);
       }
@@ -236,7 +236,7 @@ bvis1_manager::regenerate_all_tableaux()
   for ( vidpro1_repository::storage_map::iterator t_itr = repository_->global_map_begin();
         t_itr != repository_->global_map_end();  ++t_itr ){
     // for each storage object
-    for ( vcl_vector< bpro1_storage_sptr >::iterator s_itr = t_itr->second.begin();
+    for ( std::vector< bpro1_storage_sptr >::iterator s_itr = t_itr->second.begin();
           s_itr != t_itr->second.end(); ++s_itr ){
       add_to_display(*s_itr);
     }
@@ -251,14 +251,14 @@ void
 bvis1_manager::make_empty_storage()
 {
   vgui_dialog make_storage_dlg("Make an empty storage class");
-  vcl_vector<vcl_string> types;
-  vcl_set<vcl_string> typeset = repository_->types();
-  for ( vcl_set<vcl_string>::iterator itr = typeset.begin();
+  std::vector<std::string> types;
+  std::set<std::string> typeset = repository_->types();
+  for ( std::set<std::string>::iterator itr = typeset.begin();
         itr != typeset.end();  ++itr )
     types.push_back(*itr);
   static unsigned int choice = 0;
   make_storage_dlg.choice("Type",types,choice);
-  vcl_string name;
+  std::string name;
   make_storage_dlg.field("Name",name);
   bool all_frames = false;
   bool global = false;
@@ -320,8 +320,8 @@ void
 bvis1_manager::load_repository()
 {
   vgui_dialog load_rep_dlg("Load the repository from a file");
-  static vcl_string file_name = "";
-  static vcl_string ext = "*.rep";
+  static std::string file_name = "";
+  static std::string ext = "*.rep";
   load_rep_dlg.file("File:", ext, file_name);
   if( !load_rep_dlg.ask())
     return;
@@ -330,7 +330,7 @@ bvis1_manager::load_repository()
 }
 
 void 
-bvis1_manager::load_repository_from_file(vcl_string file_name)
+bvis1_manager::load_repository_from_file(std::string file_name)
 {
   bvis1_util::handle_file_name_prefix(file_name);
 
@@ -351,8 +351,8 @@ bvis1_manager::load_repository_from_file(vcl_string file_name)
 void bvis1_manager::add_to_repository()
 {
   vgui_dialog add_to_rep_dlg("Add_To the repository from a file");
-  static vcl_string file_name = "";
-  static vcl_string ext = "*.rep";
+  static std::string file_name = "";
+  static std::string ext = "*.rep";
   add_to_rep_dlg.file("File:", ext, file_name);
   if( !add_to_rep_dlg.ask())
     return;
@@ -371,8 +371,8 @@ void
 bvis1_manager::save_repository()
 {
   vgui_dialog save_rep_dlg("Save the repository to a file");
-  static vcl_string file_name = "";
-  static vcl_string ext = "*.rep";
+  static std::string file_name = "";
+  static std::string ext = "*.rep";
   static bool save_visible = false;
   save_rep_dlg.file("File:", ext, file_name);
   save_rep_dlg.checkbox("Save Visible Only",save_visible);
@@ -382,7 +382,7 @@ bvis1_manager::save_repository()
   vsl_b_ofstream bfs(file_name);
   if(save_visible){
     vidpro1_repository_sptr new_rep = new vidpro1_repository(*(this->repository_));
-    vcl_set<vcl_string> names = this->visible_storage();
+    std::set<std::string> names = this->visible_storage();
     new_rep->remove_all_except(names);
     vsl_b_write(bfs, new_rep);
   }
@@ -402,12 +402,12 @@ bvis1_manager::view_repository()
 void 
 bvis1_manager::save_view_as_movie() const
 {
-  vcl_cerr << "FIXME not supported (rfabbri)\n";
+  std::cerr << "FIXME not supported (rfabbri)\n";
   vgui_dialog save_rep_dlg("Save Views as Movie");
   int start = 1;
   int end = bvis1_manager::instance()->repository()->num_frames();
-  vcl_string file_name = "";
-  vcl_string ext = "*.png";
+  std::string file_name = "";
+  std::string ext = "*.png";
   int id_codec = 0;
 
   save_rep_dlg.file("File Name, Prefix+extension or Directory:", ext, file_name);
@@ -425,14 +425,14 @@ bvis1_manager::save_view_as_movie() const
     return;
 
 #if 0
-  vcl_list<vcl_string> supported_codecs_lst = vidl1_io::supported_types();
+  std::list<std::string> supported_codecs_lst = vidl1_io::supported_types();
 
   if (supported_codecs_lst.empty()) {
-    vcl_cerr << "Error: no codecs compiled into vidl1\n";
+    std::cerr << "Error: no codecs compiled into vidl1\n";
     return;
   }
 
-  vcl_vector<vcl_string> supported_codecs(
+  std::vector<std::string> supported_codecs(
       supported_codecs_lst.begin(), supported_codecs_lst.end());
 
   save_rep_dlg.choice("Output Codec", supported_codecs, id_codec);
@@ -491,16 +491,16 @@ bvis1_manager::active_tableau()
 }
 
 //: Find the names of the visible data in the active view
-vcl_set<vcl_string> 
+std::set<std::string> 
 bvis1_manager::visible_storage()
 {
-  vcl_set<vcl_string> vis_names;
+  std::set<std::string> vis_names;
   vgui_selector_tableau_sptr active_selector = this->active_selector();
   if( !active_selector )
     return vis_names;
 
-  vcl_vector<vcl_string> all_names = active_selector->child_names();
-  for( vcl_vector<vcl_string>::iterator itr = all_names.begin();
+  std::vector<std::string> all_names = active_selector->child_names();
+  for( std::vector<std::string>::iterator itr = all_names.begin();
        itr != all_names.end(); ++itr )
   {
     if(active_selector->is_visible(*itr))
@@ -515,7 +515,7 @@ bvis1_manager::visible_storage()
 bpro1_storage_sptr
 bvis1_manager::storage_from_tableau(const vgui_tableau_sptr& tab)
 {
-  vcl_map< bpro1_storage*, vgui_tableau_sptr >::iterator itr;
+  std::map< bpro1_storage*, vgui_tableau_sptr >::iterator itr;
   for( itr=tableau_map_.begin(); itr != tableau_map_.end(); ++itr ){
     if (itr->second == tab) break;
   }
@@ -583,14 +583,14 @@ bvis1_manager::recording_macro()
 void
 bvis1_manager::start_recording_macro()
 {
-  vcl_cout << "Recording Process Macro Started..." << vcl_endl;
+  std::cout << "Recording Process Macro Started..." << std::endl;
   recording_macro_bool_ = true;
 }
 
 void
 bvis1_manager::stop_recording_macro()
 {
-  vcl_cout << "Stopped Recording Process Macro." << vcl_endl;
+  std::cout << "Stopped Recording Process Macro." << std::endl;
   recording_macro_bool_ = false;
 }
 
@@ -638,7 +638,7 @@ bvis1_manager::process_and_play_video()
 {
   vgui_dialog frames_dlg("Process and Play Video");
   int first_frame = repository_->current_frame();
-  vcl_stringstream prompt;
+  std::stringstream prompt;
   prompt << "Process from frame "<<first_frame+1<<" to ";
   int last_frame = repository_->num_frames();
   frames_dlg.field(prompt.str().c_str(), last_frame);
@@ -652,9 +652,9 @@ bvis1_manager::process_and_play_video()
          repository_->current_frame() < last_frame &&
          repository_->go_to_next_n_frame(skip_frames_) ){
     
-    vcl_set<bpro1_storage_sptr> modified; 
+    std::set<bpro1_storage_sptr> modified; 
     process_manager_.run_process_queue_on_current_frame(&modified);
-    for ( vcl_set<bpro1_storage_sptr>::iterator itr = modified.begin();
+    for ( std::set<bpro1_storage_sptr>::iterator itr = modified.begin();
           itr != modified.end(); ++itr ) {
       this->add_to_display(*itr);
 
@@ -668,11 +668,11 @@ bvis1_manager::process_and_play_video()
     return;
   }
 
-  vcl_cout << "finish frames " << first_frame+1 << " to " << last_frame+1 << vcl_endl;
+  std::cout << "finish frames " << first_frame+1 << " to " << last_frame+1 << std::endl;
   // finish the process queue
-  vcl_set<bpro1_storage_sptr> modified; 
+  std::set<bpro1_storage_sptr> modified; 
   process_manager_.finish_process_queue(first_frame,last_frame,&modified);
-  for ( vcl_set<bpro1_storage_sptr>::iterator itr = modified.begin();
+  for ( std::set<bpro1_storage_sptr>::iterator itr = modified.begin();
         itr != modified.end(); ++itr ) {
     this->add_to_display(*itr);
   }
@@ -729,9 +729,9 @@ void bvis1_manager::goto_frame()
 void
 bvis1_manager::process_frame()
 {
-  vcl_set<bpro1_storage_sptr> modified; 
+  std::set<bpro1_storage_sptr> modified; 
   process_manager_.run_process_queue_on_current_frame(&modified);
-  for ( vcl_set<bpro1_storage_sptr>::iterator itr = modified.begin();
+  for ( std::set<bpro1_storage_sptr>::iterator itr = modified.begin();
         itr != modified.end(); ++itr ) {
     this->add_to_display(*itr);
   }
@@ -784,7 +784,7 @@ bvis1_manager::display_current_frame(bool clear_old)
   }
 
   // update each of the views
-  for( vcl_vector<bvis1_view_tableau_sptr>::iterator v_itr = view_tabs_.begin();
+  for( std::vector<bvis1_view_tableau_sptr>::iterator v_itr = view_tabs_.begin();
        v_itr != view_tabs_.end(); ++v_itr ){
 
     // determine which frame this view should use
@@ -797,15 +797,15 @@ bvis1_manager::display_current_frame(bool clear_old)
     }
 
     // all storage classes at the current frame
-    vcl_set<bpro1_storage_sptr> storage_set = repository()->get_all_storage_classes(curr_frame);
+    std::set<bpro1_storage_sptr> storage_set = repository()->get_all_storage_classes(curr_frame);
     // all names of tableau attached to the current view
-    const vcl_vector<vcl_string>& all_names = (*v_itr)->selector()->child_names();
+    const std::vector<std::string>& all_names = (*v_itr)->selector()->child_names();
 
     // Check each tableau currently drawn in this view.  For each, do one of the following
     // - remove it if there is no related storage class
     // - replace it with a cached tableau
     // - update it with the data of the storage class
-    for ( vcl_vector<vcl_string>::const_iterator itr = all_names.begin();
+    for ( std::vector<std::string>::const_iterator itr = all_names.begin();
           itr != all_names.end(); ++itr ){
       vgui_tableau_sptr tab = (*v_itr)->selector()->get_tableau(*itr);
       bpro1_storage_sptr stg = repository()->get_data_by_name_at(*itr,curr_frame);
@@ -818,7 +818,7 @@ bvis1_manager::display_current_frame(bool clear_old)
       }
       // check the cache
       if(cache_tableau_){
-        typedef vcl_map< bpro1_storage*, vgui_tableau_sptr >::iterator m_itr_t;
+        typedef std::map< bpro1_storage*, vgui_tableau_sptr >::iterator m_itr_t;
         m_itr_t search_itr = tableau_map_.find(stg.ptr());
         if(search_itr != tableau_map_.end()){
           storage_set.erase(stg);
@@ -835,13 +835,13 @@ bvis1_manager::display_current_frame(bool clear_old)
       }
     }
     // create any missing tableau from the storage
-    for(vcl_set<bpro1_storage_sptr>::iterator s_itr = storage_set.begin();
+    for(std::set<bpro1_storage_sptr>::iterator s_itr = storage_set.begin();
         s_itr != storage_set.end();  ++s_itr)
     {
-      vcl_string name = (*s_itr)->name();
+      std::string name = (*s_itr)->name();
 
       // only create a new tableau if it hasn't already been created
-      typedef vcl_map< bpro1_storage*, vgui_tableau_sptr >::iterator m_itr_t;
+      typedef std::map< bpro1_storage*, vgui_tableau_sptr >::iterator m_itr_t;
       m_itr_t search_itr = tableau_map_.find(s_itr->ptr());
       if(search_itr != tableau_map_.end()){
         (*v_itr)->selector()->add(search_itr->second, name);
@@ -886,7 +886,7 @@ bvis1_manager::toggle_tableau_cache()
 vgui_tableau_sptr
 bvis1_manager::make_tableau(const bpro1_storage_sptr& storage, bool& cacheable ) const
 {
-  vcl_map< vcl_string , bvis1_displayer_sptr >::const_iterator itr;
+  std::map< std::string , bvis1_displayer_sptr >::const_iterator itr;
   itr = displayers_.find(storage->type());
   if( itr != displayers_.end() ){
     cacheable = itr->second->cacheable();
@@ -902,7 +902,7 @@ bool
 bvis1_manager::update_tableau(const vgui_tableau_sptr& tableau, 
                              const bpro1_storage_sptr& storage ) const
 {
-  vcl_map< vcl_string , bvis1_displayer_sptr >::const_iterator itr;
+  std::map< std::string , bvis1_displayer_sptr >::const_iterator itr;
   itr = displayers_.find(storage->type());
   if( itr != displayers_.end() )
     return itr->second->update_tableau( tableau, storage );
@@ -921,7 +921,7 @@ bvis1_manager::add_to_display(const bpro1_storage_sptr& storage)
     return true;
   }
 
-  vcl_string name = storage->name();
+  std::string name = storage->name();
 
   bool cacheable = false;
   vgui_tableau_sptr new_tab = this->make_tableau( storage, cacheable );
@@ -940,7 +940,7 @@ bvis1_manager::resetskip()
     return true;
 }
 
-bvis1_displayer_sptr bvis1_manager::displayer(  vcl_string const& type )
+bvis1_displayer_sptr bvis1_manager::displayer(  std::string const& type )
 {
   return displayers_[type];
 }

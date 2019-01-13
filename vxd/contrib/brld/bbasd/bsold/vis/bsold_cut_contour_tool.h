@@ -28,7 +28,7 @@ public:
   bsold_cut_contour_tool();
 
 
-  virtual vcl_string name() const {return "Cut contour"; }
+  virtual std::string name() const {return "Cut contour"; }
   
   ////: Allow the tool to add to the popup menu as a tableau would
   //virtual void get_popup(const vgui_popup_params& params, vgui_menu &menu);
@@ -84,8 +84,8 @@ protected:
   float iy_;
 
 
-  vcl_vector<vsol_spatial_object_2d_sptr > last_removed_;
-  vcl_vector<vsol_spatial_object_2d_sptr > last_added_;
+  std::vector<vsol_spatial_object_2d_sptr > last_removed_;
+  std::vector<vsol_spatial_object_2d_sptr > last_added_;
 
   cut_contour_mode active_mode_;
 

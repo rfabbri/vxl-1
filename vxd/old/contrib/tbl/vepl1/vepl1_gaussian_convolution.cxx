@@ -1,6 +1,6 @@
 // This is tbl/vepl1/vepl1_gaussian_convolution.cxx
 #include "vepl1_gaussian_convolution.h"
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vipl/accessors/vipl_accessors_vil1_image.h>
 #include <vipl/vipl_gaussian_convolution.h>
 #include <vil1/vil1_memory_image_of.h>
@@ -71,7 +71,7 @@ vil1_image vepl1_gaussian_convolution(vil1_image const& image, double sigma, dou
 
   //
   else {
-    vcl_cerr << __FILE__ ": vepl1_gaussian_convolution() not implemented for " << image << vcl_endl;
+    std::cerr << __FILE__ ": vepl1_gaussian_convolution() not implemented for " << image << std::endl;
     return 0;
   }
 }

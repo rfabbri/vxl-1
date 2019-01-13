@@ -26,7 +26,7 @@
 #include <bgui/bgui_vsol2D_tableau_sptr.h>
 #include <bgui/bgui_vsol2D_tableau.h>
 
-#include <vcl_set.h>
+#include <set>
 
 class bvis1_vsol2D_tool : public bvis1_tool
 {
@@ -37,16 +37,16 @@ public:
   virtual bool set_tableau ( const vgui_tableau_sptr& tableau );
   virtual bool set_storage ( const bpro1_storage_sptr& storage);
 
-  virtual vcl_string name() const = 0;
+  virtual std::string name() const = 0;
   
   //: Allow the tool to add to the popup menu as a tableau would
   virtual void get_popup(const vgui_popup_params& params, vgui_menu &menu);
   
   //: Return the active group name
-  vcl_string active_group() const { return active_group_; }
+  std::string active_group() const { return active_group_; }
   
   //: Set the active group name
-  void set_active_group(const vcl_string& name) { active_group_ = name; }
+  void set_active_group(const std::string& name) { active_group_ = name; }
 
 protected:
 
@@ -57,7 +57,7 @@ protected:
   bgui_vsol2D_tableau_sptr tableau_;
   bpro1_storage_sptr storage_;
   
-  vcl_string active_group_;
+  std::string active_group_;
 
 };
 
@@ -76,7 +76,7 @@ public:
   bool handle( const vgui_event & e, 
                const bvis1_view_tableau_sptr& view );
 
-  vcl_string name() const;
+  std::string name() const;
 
 protected:
 
@@ -99,7 +99,7 @@ public:
   bool handle( const vgui_event & e, 
                const bvis1_view_tableau_sptr& view );
 
-  vcl_string name() const;
+  std::string name() const;
   void deactivate();
   
 protected:
@@ -130,7 +130,7 @@ public:
   bool handle( const vgui_event & e, 
                const bvis1_view_tableau_sptr& view );
 
-  vcl_string name() const;
+  std::string name() const;
   void deactivate();
 
 protected:
@@ -145,7 +145,7 @@ protected:
 private:
 
   bool active;
-  vcl_vector< vsol_point_2d_sptr > point_list;
+  std::vector< vsol_point_2d_sptr > point_list;
   float last_x;
   float last_y;
 };
@@ -162,7 +162,7 @@ public:
   bool handle( const vgui_event & e, 
                const bvis1_view_tableau_sptr& view );
 
-  vcl_string name() const;
+  std::string name() const;
   void deactivate();
 
 protected:
@@ -177,7 +177,7 @@ protected:
 private:
 
   bool active;
-  vcl_vector< vsol_point_2d_sptr > point_list;
+  std::vector< vsol_point_2d_sptr > point_list;
   float last_x;
   float last_y;
 };
@@ -194,7 +194,7 @@ public:
   bool handle( const vgui_event & e, 
                const bvis1_view_tableau_sptr& view );
 
-  vcl_string name() const;
+  std::string name() const;
   void deactivate();
 
 protected:
@@ -209,7 +209,7 @@ protected:
 private:
 
   bool active;
-  vcl_vector< vsol_point_2d_sptr > point_list;
+  std::vector< vsol_point_2d_sptr > point_list;
   float last_x;
   float last_y;
 };
@@ -226,7 +226,7 @@ public:
   bool handle( const vgui_event & e, 
                const bvis1_view_tableau_sptr& view );
 
-  vcl_string name() const;
+  std::string name() const;
   void deactivate();
 
 protected:
@@ -250,7 +250,7 @@ public:
     virtual ~bvis1_vsol2D_inspect_tool();
 
     //: Returns the string name of this tool
-    vcl_string name() const;
+    std::string name() const;
 
     void deactivate();
 
@@ -281,7 +281,7 @@ public:
     virtual ~bvis1_vsol2D_selection_tool();
 
     //: Returns the string name of this tool
-    vcl_string name() const;
+    std::string name() const;
 
     void deactivate();
 
@@ -299,7 +299,7 @@ private:
     bool active_;
     vgui_soview2D * object_;
     vgui_easy2D_tableau_sptr tableau_;
-    vcl_set<vsol_spatial_object_2d_sptr> objs_;
+    std::set<vsol_spatial_object_2d_sptr> objs_;
 
 };
 
@@ -318,7 +318,7 @@ public:
   virtual ~bvis1_vsol2D_adjust_tool();
 
   //: Returns the string name of this tool
-  vcl_string name() const;
+  std::string name() const;
 
   void deactivate();
   
@@ -339,7 +339,7 @@ private:
   bool active_;
   bool cycle_;
   bgui_vsol_soview2D * object_;
-  vcl_vector<vsol_point_2d_sptr> points_;
+  std::vector<vsol_point_2d_sptr> points_;
   vsol_point_2d_sptr active_pt_;
 
 };
@@ -352,7 +352,7 @@ public:
   virtual ~bvis1_vsol2D_crop_tool();
 
   //: Returns the string name of this tool
-  vcl_string name() const;
+  std::string name() const;
 
   void deactivate();
   
@@ -372,19 +372,19 @@ private:
 
     bool active_;
 
-    vcl_string active_group_;
+    std::string active_group_;
 
     vgui_event_condition gesture0;
     vgui_event_condition gesture1;
     vgui_event_condition gesture2;
 
-    vcl_vector<vsol_point_2d_sptr> point_list;
+    std::vector<vsol_point_2d_sptr> point_list;
 
     bool draw_polygon_;
 
 
     bgui_vsol_soview2D * object_;
-    vcl_vector<vsol_point_2d_sptr> points_;
+    std::vector<vsol_point_2d_sptr> points_;
     vsol_point_2d_sptr active_pt_;
 
 };

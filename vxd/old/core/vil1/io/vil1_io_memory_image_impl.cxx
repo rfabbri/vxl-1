@@ -11,7 +11,7 @@
 #include <vil1/io/vil1_io_memory_image_format.h>
 #include <vsl/vsl_binary_io.h>
 #include <vsl/vsl_binary_explicit_io.h>
-#include <vcl_climits.h> // for CHAR_BIT
+#include <climits> // for CHAR_BIT
 
 //: Constructor
 vil1_io_memory_image_impl::vil1_io_memory_image_impl()
@@ -105,15 +105,15 @@ void vsl_b_read(vsl_b_istream &is, vil1_memory_image_impl & p)
     break;
    }
    default:
-    vcl_cerr << "I/O ERROR: vsl_b_read(vsl_b_istream&, vil1_memory_image_impl&)\n"
+    std::cerr << "I/O ERROR: vsl_b_read(vsl_b_istream&, vil1_memory_image_impl&)\n"
              << "           Unknown version number "<< v << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
   }
 }
 
 //========================================================================
 //: Output a human readable summary to the stream
-void vsl_print_summary(vcl_ostream& os,const vil1_memory_image_impl & p)
+void vsl_print_summary(std::ostream& os,const vil1_memory_image_impl & p)
 {
   os<<"vil1_memory_image_impl :"
     <<"\nNum planes : "<<p.planes()

@@ -7,13 +7,13 @@
 
 
 //: Write "<dbvgl_param_curve of type type_> to stream"
-//vcl_ostream& operator<<(vcl_ostream& s, bgld_eulerspiral_base const& c) {
+//std::ostream& operator<<(std::ostream& s, bgld_eulerspiral_base const& c) {
 //  s << "<dbvgl_param_curve of type euler spiral ";
 //  return s << "> ";
 //}
 
 //: Read from stream
-//vcl_istream& operator>>(vcl_istream& is,  bgld_eulerspiral_base& q) {
+//std::istream& operator>>(std::istream& is,  bgld_eulerspiral_base& q) {
   //return is;
 //}
 

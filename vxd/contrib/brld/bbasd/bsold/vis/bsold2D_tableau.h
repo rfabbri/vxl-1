@@ -15,7 +15,7 @@
 //  Modifications:
 // \endverbatim
 //-----------------------------------------------------------------------------
-#include <vcl_vector.h>
+#include <vector>
 
 #include <vsol/vsol_spatial_object_2d_sptr.h>
 #include <vgui/vgui_style_sptr.h>
@@ -39,7 +39,7 @@ class bsold2D_tableau : public bgui_vsol2D_tableau
   ~bsold2D_tableau(){}
 
   //: Returns the type of this tableau ('bsold2D_tableau').
-  vcl_string type_name() const { return "bsold2D_tableau";}
+  std::string type_name() const { return "bsold2D_tableau";}
 
  
   ////: display for bsold_circ_arc_2d
@@ -51,7 +51,7 @@ class bsold2D_tableau : public bgui_vsol2D_tableau
                           const vgui_style_sptr& style = NULL);
 
   //: display methods for vectors of vsol classes (not grouped)
-  void add_spatial_objects(vcl_vector<vsol_spatial_object_2d_sptr> const& sos,
+  void add_spatial_objects(std::vector<vsol_spatial_object_2d_sptr> const& sos,
                            const vgui_style_sptr& style = NULL);
 
 

@@ -1,6 +1,6 @@
 // This is gel/vsrl/vsrl_saliency_diffusion.cxx
 #include "vsrl_saliency_diffusion.h"
-#include <vcl_iostream.h>
+#include <iostream>
 
 vsrl_saliency_diffusion::vsrl_saliency_diffusion(vsrl_dense_matcher *matcher):
   vsrl_diffusion(matcher), saliency_(0)
@@ -38,7 +38,7 @@ void vsrl_saliency_diffusion::diffuse_disparity(int num_iter)
   // will propagate from strong regions of saliency
   // to regions of low disparity
 
-  vcl_cout << "Starting to diffuse\n";
+  std::cout << "Starting to diffuse\n";
 
   vnl_matrix<double> mat1= (*disparity_matrix_);
   vnl_matrix<double> mat2= mat1;
@@ -51,8 +51,8 @@ void vsrl_saliency_diffusion::diffuse_disparity(int num_iter)
 
    for (int dif_num=0;dif_num<num_iter;dif_num++)
    {
-     vcl_cout << "Saliency Diffusion Iteration " << dif_num << vcl_endl
-              << " disparity for pixel 700,353 is " << (*mstar1)(700,353) << vcl_endl;
+     std::cout << "Saliency Diffusion Iteration " << dif_num << std::endl
+              << " disparity for pixel 700,353 is " << (*mstar1)(700,353) << std::endl;
 
      // make an image of the current disparity
 
@@ -116,7 +116,7 @@ void vsrl_saliency_diffusion::diffuse_disparity(int num_iter)
    // copy the new results
    (*disparity_matrix_)=(*mstar1);
 
-   vcl_cout << "Finished the diffusion\n";
+   std::cout << "Finished the diffusion\n";
 }
 
 void vsrl_saliency_diffusion::execute(int num_iter)

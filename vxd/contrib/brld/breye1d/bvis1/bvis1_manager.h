@@ -14,10 +14,10 @@
 //  \date 06/27/05 
 // \endverbatim
 
-#include <vcl_vector.h>
-#include <vcl_map.h>
-#include <vcl_set.h>
-#include <vcl_string.h>
+#include <vector>
+#include <map>
+#include <set>
+#include <string>
 #include <vbl/vbl_ref_count.h>
 
 #include <vgui/vgui_tableau_sptr.h>
@@ -68,7 +68,7 @@ public:
   vgui_tableau_sptr active_tableau();
 
   //: Find the names of the visible data in the active view
-  vcl_set<vcl_string> visible_storage();
+  std::set<std::string> visible_storage();
 
   //: Look up the storage class that created the given tableau
   bpro1_storage_sptr storage_from_tableau(const vgui_tableau_sptr& tab);
@@ -97,7 +97,7 @@ public:
   //-------------------------------------------------------------
 
   //: Load the repository from a binary data file
-  void load_repository_from_file(vcl_string file_name);
+  void load_repository_from_file(std::string file_name);
 
   //: Load the repository from a binary data file using a dialog
   void load_repository();
@@ -189,13 +189,13 @@ public:
                       const bpro1_storage_sptr& storage ) const;
 
   //:return the view vector
-  vcl_vector<bvis1_view_tableau_sptr> get_views() {return view_tabs_;}
+  std::vector<bvis1_view_tableau_sptr> get_views() {return view_tabs_;}
 
   // reset the skipping frame
   bool resetskip();
 
   // get a displayer by type name e.g. vsol2D
-  bvis1_displayer_sptr displayer(  vcl_string const& type );
+  bvis1_displayer_sptr displayer(  std::string const& type );
 
 protected:
   //: Constructor
@@ -228,13 +228,13 @@ private:
   vgui_grid_tableau_sptr grid_tab_;
 
   //: The view tableaux that provided a view of the data
-  vcl_vector<bvis1_view_tableau_sptr> view_tabs_;
+  std::vector<bvis1_view_tableau_sptr> view_tabs_;
 
   //: A map from storage object pointers to tableaux
-  vcl_map< bpro1_storage*, vgui_tableau_sptr > tableau_map_;
+  std::map< bpro1_storage*, vgui_tableau_sptr > tableau_map_;
 
   //: Vector of maps from type to displayer
-  static vcl_map< vcl_string, bvis1_displayer_sptr > displayers_;
+  static std::map< std::string, bvis1_displayer_sptr > displayers_;
 
   //: Currently active tool
   bvis1_tool_sptr active_tool_;

@@ -15,40 +15,40 @@
 
 #include <vepl1/vepl1_threshold.h>
 #include <vxl_config.h> // for vxl_byte
-#include <vcl_vector.h>
+#include <vector>
 
 // for I/O:
 #include <vil1/vil1_load.h>
 #include <vil1/vil1_save.h>
-#include <vcl_iostream.h>
-#include <vcl_cstdlib.h> // for atoi()
+#include <iostream>
+#include <cstdlib> // for atoi()
 
 int
 main(int argc, char** argv)
 {
-  if (argc < 3) { vcl_cerr << "Syntax: example3_threshold file_in file_out [threshold]\n"; return 1; }
+  if (argc < 3) { std::cerr << "Syntax: example3_threshold file_in file_out [threshold]\n"; return 1; }
 
   // The input image:
   vil1_image in = vil1_load(argv[1]);
-  if (vil1_pixel_format(in) != VIL1_BYTE) { vcl_cerr << "Please use a ubyte image as input\n"; return 2; }
+  if (vil1_pixel_format(in) != VIL1_BYTE) { std::cerr << "Please use a ubyte image as input\n"; return 2; }
   int xs = in.width();
   int ys = in.height();
 
   // In-memory version:
   vil1_memory_image_of<vxl_byte> out(in);
-  vcl_vector<vxl_byte> buf(in.get_size_bytes());
+  std::vector<vxl_byte> buf(in.get_size_bytes());
   in.get_section(&buf[0],0,0,xs,ys);
   out.put_section(&buf[0],0,0,xs,ys);
 
   // The threshold value:
-  vxl_byte threshold = (argc < 4) ? vxl_byte(64) : vxl_byte(vcl_atoi(argv[3]));
+  vxl_byte threshold = (argc < 4) ? vxl_byte(64) : vxl_byte(std::atoi(argv[3]));
 
   // perform thresholding:
   out = vepl1_threshold(out,threshold,0,255); // NOTE THAT dst == src
 
   // Write output:
   vil1_save(out, argv[2], "pnm");
-  vcl_cout << "Written image of type PGM to " << argv[2] << vcl_endl;
+  std::cout << "Written image of type PGM to " << argv[2] << std::endl;
 
   return 0;
 }

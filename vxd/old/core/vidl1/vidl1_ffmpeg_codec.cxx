@@ -51,7 +51,7 @@ vidl1_ffmpeg_codec::initialize()
 //: Probe the file fname, open it as an AVI file.
 //  If it works, return true, false otherwise.
 
-bool vidl1_ffmpeg_codec::probe(vcl_string const& fname)
+bool vidl1_ffmpeg_codec::probe(std::string const& fname)
 {
   std::cerr << "ERROR: VIDL1 stubbed out, use vidl instead\n";
   abort();
@@ -96,7 +96,7 @@ bool vidl1_ffmpeg_codec::probe(vcl_string const& fname)
   char buf[100];
   avcodec_string(buf, 100, enc, 0);
 #ifdef DEBUG
-  vcl_cout<< "ffmpeg codec: " << buf<<vcl_endl;
+  std::cout<< "ffmpeg codec: " << buf<<std::endl;
 #endif
   AVCodec* codec = avcodec_find_decoder(enc->codec_id);
   if ( !codec || avcodec_open( enc, codec ) < 0 ) {
@@ -117,7 +117,7 @@ bool vidl1_ffmpeg_codec::probe(vcl_string const& fname)
 //  into the cloned codec. The cloned codec is the one that is returned
 //  by this function.
 vidl1_codec_sptr
-vidl1_ffmpeg_codec::load(vcl_string const& fname, char mode)
+vidl1_ffmpeg_codec::load(std::string const& fname, char mode)
 {
   vidl1_ffmpeg_codec *cloned_avi_codec = new vidl1_ffmpeg_codec;
 
@@ -131,7 +131,7 @@ vidl1_ffmpeg_codec::load(vcl_string const& fname, char mode)
 
 
 bool
-vidl1_ffmpeg_codec::open(vcl_string const& fname, char mode )
+vidl1_ffmpeg_codec::open(std::string const& fname, char mode )
 {
   std::cerr << "ERROR: VIDL1 stubbed out, use vidl instead\n";
   abort();
@@ -307,7 +307,7 @@ vidl1_ffmpeg_codec::cur_frame() const
   // packet (stored in last_dts) is actually the next frame's
   // dts.
   if ( enc->codec_id == CODEC_ID_MPEG2VIDEO &&
-       vcl_string("avi") == fmt_cxt_->iformat->name ) {
+       std::string("avi") == fmt_cxt_->iformat->name ) {
     frame_number_offset_ = 1;
   }
 
@@ -321,7 +321,7 @@ vidl1_ffmpeg_codec::put_view( int /*position*/,
                               const vil_image_view_base &/*im*/,
                               int /*x0*/, int /*y0*/)
 {
-  vcl_cerr << "vidl1_ffmpeg_codec::put_view not implemented\n";
+  std::cerr << "vidl1_ffmpeg_codec::put_view not implemented\n";
   return false;
 }
 
@@ -379,7 +379,7 @@ vidl1_ffmpeg_codec::count_frames() const
 #endif
 
 #ifdef DEBUG
-    vcl_cout << "estimated "<<cnt+1<<" frames"<<vcl_endl;
+    std::cout << "estimated "<<cnt+1<<" frames"<<std::endl;
 #endif
     return cnt+1;
   }
@@ -420,7 +420,7 @@ vidl1_ffmpeg_codec::count_frames() const
     ++frame_count;
 
 #ifdef DEBUG
-  vcl_cout << "counted "<<frame_count<<" frames"<<vcl_endl;
+  std::cout << "counted "<<frame_count<<" frames"<<std::endl;
 #endif
 
   // seek back to the start
@@ -562,7 +562,7 @@ vidl1_ffmpeg_codec::seek( unsigned frame ) const
     }
     if ( last_dts >= req_timestamp ) {
       if ( last_dts >= req_timestamp + frame_size ) {
-        vcl_cerr << "Warning: seek went into the future!\n";
+        std::cerr << "Warning: seek went into the future!\n";
         return false;
       }
       return true;

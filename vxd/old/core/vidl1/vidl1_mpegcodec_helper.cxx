@@ -1,9 +1,9 @@
 // This is core/vidl1/vidl1_mpegcodec_helper.cxx
 #include "vidl1_mpegcodec_helper.h"
 #include <vidl1/vidl1_file_sequence.h>
-#include <vcl_iostream.h>
-#include <vcl_cstring.h> // for memcpy
-#include <vcl_cstdlib.h> // for exit()
+#include <iostream>
+#include <cstring> // for memcpy
+#include <cstdlib> // for exit()
 
 #ifdef HAVE_IO_H
 #include <fcntl.h>
@@ -11,7 +11,7 @@
 #endif
 
 vidl1_mpegcodec_helper::vidl1_mpegcodec_helper(vo_open_t * vopen,
-                                               vcl_string filename,
+                                               std::string filename,
                                                frame_buffer * buffers) :
   filename_(filename),output_open_(vopen)
 {
@@ -34,7 +34,7 @@ vidl1_mpegcodec_helper::vidl1_mpegcodec_helper(vo_open_t * vopen,
 
 vidl1_mpegcodec_helper::~vidl1_mpegcodec_helper()
 {
-  vcl_cout << "vidl1_mpegcodec_helper::~vidl1_mpegcodec_helper. entering.\n";
+  std::cout << "vidl1_mpegcodec_helper::~vidl1_mpegcodec_helper. entering.\n";
   vo_close (output_);
   if (in_file_)
   {
@@ -44,7 +44,7 @@ vidl1_mpegcodec_helper::~vidl1_mpegcodec_helper()
   //mpeg2_close (mpeg2dec_);
   delete mpeg2dec_;
 
-  vcl_cout << "vidl1_mpegcodec_helper::~vidl1_mpegcodec_helper. exiting.\n";
+  std::cout << "vidl1_mpegcodec_helper::~vidl1_mpegcodec_helper. exiting.\n";
 }
 
 bool
@@ -171,16 +171,16 @@ vidl1_mpegcodec_helper::demux (uint8_t * buf, uint8_t * endb, int flags)
     if (missing > 0) {                               \
       if (header == head_buf) {                      \
         if (missing <= endb - buf) {                 \
-          vcl_memcpy(header + bytes, buf, missing);  \
+          std::memcpy(header + bytes, buf, missing);  \
           buf += missing;                            \
           bytes = (x);                               \
         } else {                                     \
-          vcl_memcpy(header + bytes, buf, endb-buf); \
+          std::memcpy(header + bytes, buf, endb-buf); \
           state_bytes = bytes + (endb - buf);        \
           return 0;                                  \
         }                                            \
       } else {                                       \
-        vcl_memcpy(head_buf, header, bytes);         \
+        std::memcpy(head_buf, header, bytes);         \
         state = DEMUX_HEADER;                        \
         state_bytes = bytes;                         \
         return 0;                                    \
@@ -255,8 +255,8 @@ vidl1_mpegcodec_helper::demux (uint8_t * buf, uint8_t * endb, int flags)
     if (demux_pid_) {
       if ((header[3] >= 0xe0) && (header[3] <= 0xef))
         goto pes;
-      vcl_cerr << "bad stream id : " << header[3] << '\n';
-      vcl_exit(1);
+      std::cerr << "bad stream id : " << header[3] << '\n';
+      std::exit(1);
     }
     switch (header[3])
     {
@@ -275,8 +275,8 @@ vidl1_mpegcodec_helper::demux (uint8_t * buf, uint8_t * endb, int flags)
         // header points to the mpeg1 pack header
       }
       else {
-        vcl_cerr << "weird pack header\n";
-        vcl_exit(1);
+        std::cerr << "weird pack header\n";
+        std::exit(1);
       }
       break;
      default:
@@ -306,7 +306,7 @@ vidl1_mpegcodec_helper::demux (uint8_t * buf, uint8_t * endb, int flags)
             len++;
             NEEDBYTES (len);
             if (len == 23) {
-              vcl_cerr << "too much stuffing.\n";
+              std::cerr << "too much stuffing.\n";
               break;
             }
           }
@@ -340,8 +340,8 @@ vidl1_mpegcodec_helper::demux (uint8_t * buf, uint8_t * endb, int flags)
           buf += bytes;
         }
       } else if (header[3] < 0xb9) {
-        vcl_cerr << "looks like a video stream, not system stream\n";
-        vcl_exit(1);
+        std::cerr << "looks like a video stream, not system stream\n";
+        std::exit(1);
       } else {
         NEEDBYTES (6);
         DONEBYTES (6);
@@ -377,7 +377,7 @@ vidl1_mpegcodec_helper::decode_ts(int packets)
     endb = buf + 188;
     if (buf[0] != 0x47)
     {
-      vcl_cerr << "bad sync byte\n";
+      std::cerr << "bad sync byte\n";
       return false;
     }
     pid = ((buf[1] << 8) + buf[2]) & 0x1fff;
@@ -406,7 +406,7 @@ vidl1_mpegcodec_helper::decode_es(int reads)
 void
 vidl1_mpegcodec_helper::print()
 {
-  vcl_cout << "about to print out decoder members.\n"
+  std::cout << "about to print out decoder members.\n"
            << "frmt is: " << int(this->get_format()) << '\n'
            << "the last frame decoded is: " << output_->last_frame_decoded
            << "\nvidl1_mpegcodec_helper::print. end.\n";

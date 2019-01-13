@@ -1,6 +1,6 @@
 #include "bnld_eno_shock.h"
 #include "bnld_eno_zerox.h"
-#include <vcl_cassert.h>
+#include <cassert>
 
 
 #if !VCL_STATIC_CONST_INIT_FLOAT_NO_DEFN
@@ -17,13 +17,13 @@ const double bnld_eno_shock_1d::default_curvature_change_threshold
 // ----------------------------------------------------------------------------
 
 void bnld_eno_shock_interp::
-print(vcl_ostream& strm) const
+print(std::ostream& strm) const
 {
    strm << "==== Shock ====\n";
    if (no_intercept())
-      strm << "Shock with no intersection" << vcl_endl;
+      strm << "Shock with no intersection" << std::endl;
    else
-      strm << "Shock location: " << loc() << vcl_endl;
+      strm << "Shock location: " << loc() << std::endl;
 }
 
 
@@ -47,7 +47,7 @@ make(bnld_eno_interp const *prev, bnld_eno_interp const *curr,
       // something different if there are two?  TODO
 #ifndef NDEBUG 
       if (valid_root_cnt == 2)
-         vcl_cerr << "two roots/intersections, ignoring root at " << zeros.location(1) << vcl_endl;
+         std::cerr << "two roots/intersections, ignoring root at " << zeros.location(1) << std::endl;
 #endif
       loc_ = zeros.location(0);
       no_intercept_=false;
@@ -110,8 +110,8 @@ test( bnld_eno_interp const *prv, bnld_eno_measures const *prvm,
 
    // only look to place shocks in regions of locally maximum curvature
    // I guess the orig authors meant && here
-   if ( !(vcl_fabs(curm->total_curvature()) > vcl_fabs(prvm->total_curvature()) || 
-       vcl_fabs(curm->total_curvature()) > vcl_fabs(nxtm->total_curvature())) )
+   if ( !(std::fabs(curm->total_curvature()) > std::fabs(prvm->total_curvature()) || 
+       std::fabs(curm->total_curvature()) > std::fabs(nxtm->total_curvature())) )
       return false;
 
    delta_tan = 
@@ -123,8 +123,8 @@ test( bnld_eno_interp const *prv, bnld_eno_measures const *prvm,
 
    /* set flag if either tangent exceeds the threshold */
    large_tangent_change_p = 
-        (vcl_fabs(delta_tan_back) > shock_tangent_change_threshold || 
-         vcl_fabs(delta_tan_fwd) > shock_tangent_change_threshold);
+        (std::fabs(delta_tan_back) > shock_tangent_change_threshold || 
+         std::fabs(delta_tan_fwd) > shock_tangent_change_threshold);
 
    delta_curv =
        curm->end_curvature() - prvm->start_curvature();
@@ -135,17 +135,17 @@ test( bnld_eno_interp const *prv, bnld_eno_measures const *prvm,
 
    /* set flag if either curvature exceeds the threshold */
    large_curvature_change_p = 
-      (vcl_fabs(delta_curv_back) > shock_curvature_change_threshold || 
-       vcl_fabs(delta_curv_fwd)  > shock_curvature_change_threshold);
+      (std::fabs(delta_curv_back) > shock_curvature_change_threshold || 
+       std::fabs(delta_curv_fwd)  > shock_curvature_change_threshold);
 
 
    /* if only delta_tan would cause this to be marked a shock,
       print out for testing... */
    if (!large_tangent_change_p && !large_curvature_change_p
-       && vcl_fabs(delta_tan) > shock_tangent_change_threshold) {
+       && std::fabs(delta_tan) > shock_tangent_change_threshold) {
       large_tangent_change_p = true;
       #ifndef NDEBUG
-         vcl_cerr << "Classified as Shock because of internal interval tangent change.\n";
+         std::cerr << "Classified as Shock because of internal interval tangent change.\n";
       #endif
    }
 
@@ -170,14 +170,14 @@ test( bnld_eno_interp const *prv, bnld_eno_measures const *prvm,
    //      } 
    //#ifdef DEBUG
    //   else {
-   //         vcl_cout << " ***** no shock needed" << vcl_endl;
+   //         std::cout << " ***** no shock needed" << std::endl;
    //         this->print();
-   //         vcl_cout << "*********"<<vcl_endl;
+   //         std::cout << "*********"<<std::endl;
    //   }
    //#endif 
    //   }
    //#ifdef DEBUG
-   //   vcl_cout << large_tangent_change_p  << " x " << large_curvature_change_p <<vcl_endl;
+   //   std::cout << large_tangent_change_p  << " x " << large_curvature_change_p <<std::endl;
    //#endif
 
    return need_shock_p;
@@ -209,7 +209,7 @@ place_shocks( double tangent_change_thresh,
 {
 #ifndef NDEBUG
    if (!interps_been_computed()) {
-      vcl_cerr << "no interpolants\n";
+      std::cerr << "no interpolants\n";
       return false;
    }
 #endif
@@ -233,7 +233,7 @@ place_shocks( double tangent_change_thresh,
 
 #ifndef NDEBUG
       if (has_shock(i-1) || has_shock(i+1)) {
-        vcl_cerr << "Neighbor already has a shock.\n**** does that make sense?***\n";
+        std::cerr << "Neighbor already has a shock.\n**** does that make sense?***\n";
         // TODO from this print/debug code, it is clear that the
         // shock-placing criteria have never been really solid. - rfabbri
         //======= I commented out the following code, as it is useful
@@ -290,7 +290,7 @@ compute_measures()
 {
 #ifndef NDEBUG
    if (!interps_been_computed()) {
-      vcl_cerr << "error: interpolants not computed." << vcl_endl;
+      std::cerr << "error: interpolants not computed." << std::endl;
       return;
    }
 #endif
@@ -304,7 +304,7 @@ make_shock(unsigned i)
 {
 #ifndef NDEBUG
    if (i==0 || i+1 >= interp_.size()) {
-      vcl_cerr << "msg: we dont compute shock for boundary elements" << vcl_endl; 
+      std::cerr << "msg: we dont compute shock for boundary elements" << std::endl; 
       return;
    }
 #endif
@@ -313,7 +313,7 @@ make_shock(unsigned i)
       s_.resize(interp_.size(),0);
 #ifndef NDEBUG
    else if (has_shock(i)) {
-      vcl_cerr << "error: this interval already have a shock" << vcl_endl;
+      std::cerr << "error: this interval already have a shock" << std::endl;
       return;
    }
 #endif
@@ -334,10 +334,10 @@ bnld_eno_shock_1d::
 
 
 void bnld_eno_shock_1d::
-print(vcl_ostream& strm) const
+print(std::ostream& strm) const
 {
-   strm << "==== Eno 1D with Shocks ====" << vcl_endl
-        << "len: " << size() << vcl_endl;
+   strm << "==== Eno 1D with Shocks ====" << std::endl
+        << "len: " << size() << std::endl;
 
    unsigned i;
    for (i=0; i < size(); ++i) {

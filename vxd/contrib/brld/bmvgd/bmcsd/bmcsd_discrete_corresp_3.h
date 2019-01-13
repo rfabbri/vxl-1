@@ -11,8 +11,8 @@
 
 #include <vbl/vbl_sparse_array_3d.h>
 #include <bmcsd/bmcsd_discrete_corresp.h>
-#include <vcl_set.h>
-#include <vcl_algorithm.h>
+#include <set>
+#include <algorithm>
 #include <assert.h>
 
 class bmcsd_discrete_corresp_n; // just for conversion constructor
@@ -43,7 +43,7 @@ public:
   void hash();
 
   void
-  participating_points(vcl_vector<bool> &p0s,vcl_vector<bool> &p1s,vcl_vector<bool> &p2s) const;
+  participating_points(std::vector<bool> &p0s,std::vector<bool> &p1s,std::vector<bool> &p2s) const;
 
   void 
   number_of_correct_triplets(
@@ -57,19 +57,19 @@ public:
 
   //: return all triplets containing point "point_id" of image "img_id"
   //
-  const vcl_set<triplet_uuu> &triplets(unsigned img_id, unsigned point_id) const
+  const std::set<triplet_uuu> &triplets(unsigned img_id, unsigned point_id) const
     { assert(is_hashed()); return hash_[img_id][point_id]; }
 
   //: return all triplets containing point with id "p1" of image "img1" and
   // point id "p2" of image "img2"
   void triplets(
-      unsigned img1, unsigned p1, unsigned img2, unsigned p2, vcl_set<triplet_uuu> &t) const
+      unsigned img1, unsigned p1, unsigned img2, unsigned p2, std::set<triplet_uuu> &t) const
     { 
       assert(is_hashed());
-      const vcl_set<triplet_uuu> &s1 = triplets(img1,p1);
-      const vcl_set<triplet_uuu> &s2 = triplets(img2,p2);
+      const std::set<triplet_uuu> &s1 = triplets(img1,p1);
+      const std::set<triplet_uuu> &s2 = triplets(img2,p2);
 
-      vcl_set_intersection(s1.begin(),s1.end(), s2.begin(), s2.end(), inserter(t, t.begin()));
+      std::set_intersection(s1.begin(),s1.end(), s2.begin(), s2.end(), inserter(t, t.begin()));
     }
 
   bmcsd_match_attribute & operator() (unsigned i, unsigned j, unsigned k)
@@ -83,7 +83,7 @@ public:
 
   // Functions to be moved to algo ----------------------------------------
 
-  vcl_list<bmcsd_attributed_point>::const_iterator 
+  std::list<bmcsd_attributed_point>::const_iterator 
   find_right_corresp_mincost(unsigned p1_idx, const bmcsd_discrete_corresp *gt) const;
 
   void 
@@ -115,14 +115,14 @@ public:
   short version() const;
 
   //: Return a platform independent string identifying the class
-  vcl_string is_a() const;
+  std::string is_a() const;
 
   void compare_and_print( const bmcsd_discrete_corresp_3 *gt) const;
 
-  friend vcl_ostream&  operator<<(vcl_ostream& s, const bmcsd_discrete_corresp_3 &c);
+  friend std::ostream&  operator<<(std::ostream& s, const bmcsd_discrete_corresp_3 &c);
   
   //: Print an ascii summary to the stream
-  void print_summary(vcl_ostream &os) const;
+  void print_summary(std::ostream &os) const;
 
 public:
 
@@ -137,7 +137,7 @@ public:
   //: hash_[0][i] == set of triplets (i,*,*)
   //  hash_[1][i] == set of triplets (*,i,*)
   //  hash_[2][i] == set of triplets (*,*,i)
-  vcl_vector<vcl_vector<vcl_set<triplet_uuu> > > hash_;
+  std::vector<std::vector<std::set<triplet_uuu> > > hash_;
 protected:
   static bool equal(vbl_sparse_array_3d<bmcsd_match_attribute> l1, vbl_sparse_array_3d<bmcsd_match_attribute> l2);
 };
@@ -154,7 +154,7 @@ inline void vsl_b_read(vsl_b_istream &is, bmcsd_discrete_corresp_3 & v)
   v.b_read(is);
 }
 
-inline vcl_ostream&  operator<<(vcl_ostream& s, const triplet_uuu  &x)
+inline std::ostream&  operator<<(std::ostream& s, const triplet_uuu  &x)
 {
   s << "(" << x.first << "," << x.second <<"," << x.third << ")";
   return s;

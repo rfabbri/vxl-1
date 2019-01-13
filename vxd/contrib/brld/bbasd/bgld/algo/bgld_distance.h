@@ -136,20 +136,20 @@ projected_distance (
 
   double d_e=(x1-x2)*(x1-x2)+(y1-y2)*(y1-y2);
 
-  double startx2=x2-vcl_sin(theta2);
-  double starty2=y2+vcl_cos(theta2);
-  double endx2  =x2+vcl_sin(theta2);
-  double endy2  =y2-vcl_cos(theta2);
+  double startx2=x2-std::sin(theta2);
+  double starty2=y2+std::cos(theta2);
+  double endx2  =x2+std::sin(theta2);
+  double endy2  =y2-std::cos(theta2);
 
-  double d_p= vcl_fabs((y1-starty2)*(endx2-startx2) - (x1-startx2)*(endy2-starty2))/2.0;
+  double d_p= std::fabs((y1-starty2)*(endx2-startx2) - (x1-startx2)*(endy2-starty2))/2.0;
 
-  *d_e_ptr = vcl_sqrt(d_e);
+  *d_e_ptr = std::sqrt(d_e);
   *d_t_ptr = d_p;
   double d_n = d_e - d_p*d_p;
   if (d_n <= 0)
     *d_n_ptr = 0;
   else
-    *d_n_ptr = vcl_sqrt(d_n);
+    *d_n_ptr = std::sqrt(d_n);
 }
 
 //: Same as projected_distance, but returns a weighted distance d_w.

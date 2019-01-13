@@ -51,8 +51,8 @@ project_to_image(const bdifd_vector_3d &Gamma) const
   vgl_homg_point_2d<double> point2d = Pr_.project(point3d);
 
   if (point2d.ideal(1e-10)) {
-    vcl_cout << "Warning: bdifd_camera::project_to_image : infinite projection\n";
-    vcl_cout << "         point3d: " << point3d << "; point2d: " << point2d << vcl_endl;
+    std::cout << "Warning: bdifd_camera::project_to_image : infinite projection\n";
+    std::cout << "         point3d: " << point3d << "; point2d: " << point2d << std::endl;
   }
 
   bdifd_vector_2d p2dv;
@@ -132,7 +132,7 @@ project_to_image(const bdifd_3rd_order_point_3d &p3d, bool *stat) const
 #ifndef NDEBUG
   if (!bdifd_util::near_zero(dot_product(n_pcam, t_pcam),1e-6))
     if (bdifd_util::near_zero(dot_product(pw.n, pw.t),1e-6))
-      vcl_cout << ">>> Pau em WORLD TO CAM vector! " << dot_product(pw.n, pw.t) <<"\n";
+      std::cout << ">>> Pau em WORLD TO CAM vector! " << dot_product(pw.n, pw.t) <<"\n";
 #endif
 
   bdifd_vector_2d t_pcam_2; 
@@ -157,7 +157,7 @@ project_to_image(const bdifd_3rd_order_point_3d &p3d, bool *stat) const
       &timg_2, &nimg_2, L);
 
 //  if (!bdifd_util::near_zero((Rot*timg_2 - pimg.t).two_norm(), 1e-8))
-//    vcl_cout << "Linear transform invalid in project to image\n";
+//    std::cout << "Linear transform invalid in project to image\n";
 
   *stat = *stat && ret;
 
@@ -210,7 +210,7 @@ project_k(const bdifd_2nd_order_point_3d &Frame, bdifd_2nd_order_point_2d *frame
 
 #ifndef NDEBUG
   if (!bdifd_util::near_zero(dot_product(frame1->n,frame1->t))) {
-    vcl_cerr << "Cross product imprecision\n";
+    std::cerr << "Cross product imprecision\n";
   }
 #endif
 
@@ -278,7 +278,7 @@ project_3rd(const bdifd_3rd_order_point_3d &Fr, bdifd_3rd_order_point_2d *frame1
 }
 
 void bdifd_camera::
-print(vcl_ostream &os) const
+print(std::ostream &os) const
 {
 //  os << Pr;
 

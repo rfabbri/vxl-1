@@ -35,7 +35,7 @@ class bild_image_region_stats_tool : public bild_image_tool
   void display_stats_bar() const;
 
   //: The tool name
-  vcl_string name() const { return "Region Stats"; }
+  std::string name() const { return "Region Stats"; }
   
  protected:
   

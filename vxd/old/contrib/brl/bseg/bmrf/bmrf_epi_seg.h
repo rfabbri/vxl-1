@@ -26,8 +26,8 @@
 // \endverbatim
 //
 //-------------------------------------------------------------------------
-#include <vcl_vector.h>
-#include <vcl_iosfwd.h>
+#include <vector>
+#include <iosfwd>
 #include <vbl/vbl_ref_count.h>
 #include <vsl/vsl_binary_io.h>
 #include <bmrf/bmrf_epi_point_sptr.h>
@@ -64,7 +64,7 @@ class bmrf_epi_seg : public vbl_ref_count
                                         max_left_int_(s.max_left_int_),
                                         min_right_int_(s.min_right_int_),
                                         max_right_int_(s.max_right_int_) {}
-  bmrf_epi_seg(vcl_vector<bmrf_epi_point_sptr> const & points);
+  bmrf_epi_seg(std::vector<bmrf_epi_point_sptr> const & points);
   virtual ~bmrf_epi_seg() {}
 
   //: accessors
@@ -85,8 +85,8 @@ class bmrf_epi_seg : public vbl_ref_count
   bmrf_epi_point_sptr p(int i) const {return seg_[i];}
 
   //: Returns the const iterator to the
-  vcl_vector<bmrf_epi_point_sptr>::const_iterator begin() const { return seg_.begin(); }
-  vcl_vector<bmrf_epi_point_sptr>::const_iterator end() const { return seg_.end(); }
+  std::vector<bmrf_epi_point_sptr>::const_iterator begin() const { return seg_.begin(); }
+  std::vector<bmrf_epi_point_sptr>::const_iterator end() const { return seg_.end(); }
 
   //: extremal geometry values
   double min_alpha();
@@ -150,13 +150,13 @@ class bmrf_epi_seg : public vbl_ref_count
   short version() const;
 
   //: Print an ascii summary to the stream
-  void print_summary(vcl_ostream &os) const;
+  void print_summary(std::ostream &os) const;
 
   //: Return a platform independent string identifying the class
-  vcl_string is_a() const;
+  std::string is_a() const;
 
   //: Return true if the argument matches the string identifying the class or any parent class
-  bool is_class(const vcl_string& cls) const;
+  bool is_class(const std::string& cls) const;
 
  protected:
   //: local methods
@@ -176,12 +176,12 @@ class bmrf_epi_seg : public vbl_ref_count
   double min_tan_ang_;
   double max_tan_ang_;
   //:points are in original digital curve order but also monotonic in alpha
-  vcl_vector<bmrf_epi_point_sptr> seg_;
-  vcl_vector<double> int_alpha_;//!< the alphas for intensity samples
-  vcl_vector<double> left_ds_;
-  vcl_vector<double> left_int_; //!< left intensity average
-  vcl_vector<double> right_ds_;
-  vcl_vector<double> right_int_;//!< right intensity average
+  std::vector<bmrf_epi_point_sptr> seg_;
+  std::vector<double> int_alpha_;//!< the alphas for intensity samples
+  std::vector<double> left_ds_;
+  std::vector<double> left_int_; //!< left intensity average
+  std::vector<double> right_ds_;
+  std::vector<double> right_int_;//!< right intensity average
   double avg_left_int_;
   double avg_right_int_;
   double left_int_sd_;
@@ -192,7 +192,7 @@ class bmrf_epi_seg : public vbl_ref_count
   double max_right_int_;
 };
 
-vcl_ostream& operator<<(vcl_ostream& s, bmrf_epi_seg const& ec);
+std::ostream& operator<<(std::ostream& s, bmrf_epi_seg const& ec);
 
 //: Binary save bmrf_epi_seg to stream.
 void vsl_b_write(vsl_b_ostream &os,  bmrf_epi_seg_sptr const& eps);

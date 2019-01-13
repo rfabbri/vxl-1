@@ -3,9 +3,9 @@
 //:
 //  \file
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_cstring.h> // for strcmp()
+#include <iostream>
+#include <fstream>
+#include <cstring> // for strcmp()
 
 // initialize the instance_ variable
 vsrl_parameters* vsrl_parameters::instance_ = 0;
@@ -73,7 +73,7 @@ void vsrl_parameters::load(const char *filename)
 {
   // read in the parameters
 
-  vcl_ifstream file(filename);
+  std::ifstream file(filename);
 
   // read in the parameters
 
@@ -85,43 +85,43 @@ void vsrl_parameters::load(const char *filename)
     file >> tag;
     file >> val;
 
-    if (!vcl_strcmp(tag,"correlation_range")){
-      vcl_cout << "setting correlation_range to " << val << vcl_endl;
+    if (!std::strcmp(tag,"correlation_range")){
+      std::cout << "setting correlation_range to " << val << std::endl;
       this->correlation_range=(int)val;
     }
 
-    if (!vcl_strcmp(tag,"inner_cost")){
-      vcl_cout << "setting inner_cost to " << val << vcl_endl;
+    if (!std::strcmp(tag,"inner_cost")){
+      std::cout << "setting inner_cost to " << val << std::endl;
       this->inner_cost=(double)val;
     }
 
-    if (!vcl_strcmp(tag,"outer_cost")){
-      vcl_cout << "setting outer_cost to " << val << vcl_endl;
+    if (!std::strcmp(tag,"outer_cost")){
+      std::cout << "setting outer_cost to " << val << std::endl;
       this->outer_cost=(double)val;
     }
 
-    if (!vcl_strcmp(tag,"continuity_cost")){
-      vcl_cout << "setting continuity_cost to " << val << vcl_endl;
+    if (!std::strcmp(tag,"continuity_cost")){
+      std::cout << "setting continuity_cost to " << val << std::endl;
       this->continuity_cost=(double)val;
     }
 
-    if (!vcl_strcmp(tag,"correlation_window_width")){
-      vcl_cout << "setting correlation_window_width to " << val << vcl_endl;
+    if (!std::strcmp(tag,"correlation_window_width")){
+      std::cout << "setting correlation_window_width to " << val << std::endl;
       this->correlation_window_width=(int)val;
     }
 
-    if (!vcl_strcmp(tag,"correlation_window_height")){
-      vcl_cout << "setting correlation_window_height to " << val << vcl_endl;
+    if (!std::strcmp(tag,"correlation_window_height")){
+      std::cout << "setting correlation_window_height to " << val << std::endl;
       this->correlation_window_height=(int)val;
     }
 
-    if (!vcl_strcmp(tag,"bias_cost")){
-      vcl_cout << "setting bias_cost to " << val << vcl_endl;
+    if (!std::strcmp(tag,"bias_cost")){
+      std::cout << "setting bias_cost to " << val << std::endl;
       this->bias_cost=(double)val;
     }
 
-    if (!vcl_strcmp(tag,"common_intensity_diff")){
-      vcl_cout << "setting common_intensity_diff to " << val << vcl_endl;
+    if (!std::strcmp(tag,"common_intensity_diff")){
+      std::cout << "setting common_intensity_diff to " << val << std::endl;
       this->common_intensity_diff=(double)val;
     }
   }

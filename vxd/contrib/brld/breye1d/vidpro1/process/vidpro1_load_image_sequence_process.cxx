@@ -6,7 +6,7 @@
 #include <vidpro1/storage/vidpro1_image_storage_sptr.h>
 #include <vul/vul_file.h>
 #include <vil/vil_load.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 
 //: Constructor
@@ -17,7 +17,7 @@ vidpro1_load_image_sequence_process() : bpro1_process(), num_frames_(0)
       !parameters()->add( "Image list file:" , "-image_list", bpro1_filepath("","*") )
         )
     {
-        vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
     }
 }
 
@@ -38,7 +38,7 @@ vidpro1_load_image_sequence_process::clone() const
 
 
 //: Return the name of the process
-vcl_string vidpro1_load_image_sequence_process::
+std::string vidpro1_load_image_sequence_process::
 name()
 {
     return "Load Image Sequence";
@@ -55,10 +55,10 @@ clear_output(int resize)
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string > vidpro1_load_image_sequence_process::
+std::vector< std::string > vidpro1_load_image_sequence_process::
 get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     // no input type required
     to_return.clear();
     return to_return;
@@ -66,10 +66,10 @@ get_input_type()
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string >vidpro1_load_image_sequence_process::
+std::vector< std::string >vidpro1_load_image_sequence_process::
 get_output_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "image" );
     return to_return;
 }
@@ -100,7 +100,7 @@ execute()
   // image folder
   bpro1_filepath image_folder_path;
   this->parameters()->get_value("-image_folder" , image_folder_path);
-  vcl_string image_folder = image_folder_path.path;
+  std::string image_folder = image_folder_path.path;
 
   // be smart: in case user enters a filename instead of a folder, extract the
   // folder containing the file
@@ -112,22 +112,22 @@ execute()
   // image name list
   bpro1_filepath image_list_path;
   this->parameters()->get_value("-image_list" , image_list_path);
-  //vcl_string image_list = image_list_path.path;
+  //std::string image_list = image_list_path.path;
 
   // parse the image_list file to extract the list of file names
-  vcl_vector<vcl_string > image_names;
+  std::vector<std::string > image_names;
   
   // 2. parse the image_list file to extract the names
-  vcl_ifstream fp(image_list_path.path.c_str());
+  std::ifstream fp(image_list_path.path.c_str());
   if (!fp) 
   {
-    vcl_cout<<"ERROR: Can't open " << image_list_path.path << vcl_endl;
+    std::cout<<"ERROR: Can't open " << image_list_path.path << std::endl;
     return false;
   }
 
   while (!fp.eof()) 
   {
-    vcl_string name;
+    std::string name;
     fp >> name;
     if (!name.empty())
     {
@@ -141,12 +141,12 @@ execute()
   for (unsigned i = image_names.size(); i > 0; --i)
   {
     // load the image
-    vcl_string image_file = image_folder + "/" + image_names[i-1];
+    std::string image_file = image_folder + "/" + image_names[i-1];
 
     vil_image_resource_sptr image_resource = vil_load_image_resource(image_file.c_str());
     if (!image_resource)
     {
-      vcl_cerr << "ERROR: can't load image " << image_file << ". Process canceled.\n";
+      std::cerr << "ERROR: can't load image " << image_file << ". Process canceled.\n";
       this->output_data_.clear();
       this->num_frames_ = 0;
       return false;
@@ -155,7 +155,7 @@ execute()
     // place holder for the image
     vidpro1_image_storage_sptr image_storage = vidpro1_image_storage_new();
     image_storage->set_image( image_resource );
-    output_data_.push_back(vcl_vector< bpro1_storage_sptr >(1,image_storage));
+    output_data_.push_back(std::vector< bpro1_storage_sptr >(1,image_storage));
     this->num_frames_++;
   }
   return true;   

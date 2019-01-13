@@ -17,8 +17,8 @@
 
 #include <bprod/bprod_process.h>
 #include <bxml/bxml_read.h>
-#include <vcl_string.h>
-#include <vcl_fstream.h>
+#include <string>
+#include <fstream>
 
 
 
@@ -31,19 +31,19 @@ class bprod_xio_source : public bprod_source
     bprod_xio_source();
 
     //: Constructor
-    bprod_xio_source(const vcl_string& filename);
+    bprod_xio_source(const std::string& filename);
 
     //: Destructor
     ~bprod_xio_source();
 
     //: Open a new file
-    bool open(const vcl_string& filename);
+    bool open(const std::string& filename);
 
     //: Runs the process
     bprod_signal execute();
 
   private:
-    vcl_ifstream is_;
+    std::ifstream is_;
     bxml_stream_read reader_;
 };
 

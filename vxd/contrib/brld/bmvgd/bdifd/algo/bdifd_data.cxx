@@ -2,13 +2,13 @@
 #include <bdifd/bdifd_analytic.h>
 #include <bdifd/bdifd_rig.h>
 #include "bdifd_data.h"
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <vsol/vsol_line_2d.h>
 
 void bdifd_data::
 max_err_reproj_perturb(
-    const vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > &crv2d_gt_,
-    const vcl_vector<bdifd_camera> &cam_,
+    const std::vector<std::vector<bdifd_3rd_order_point_2d> > &crv2d_gt_,
+    const std::vector<bdifd_camera> &cam_,
     const bdifd_rig &rig,
     double &err_pos,
     double &err_t,
@@ -21,18 +21,18 @@ max_err_reproj_perturb(
     unsigned &nvalid
     )
 {
-  vcl_vector<double> err_pos_sq_v;
-  vcl_vector<double> err_t_v;
-  vcl_vector<double> err_k_v;
-  vcl_vector<double> err_kdot_v;
-  vcl_vector<unsigned> valid_idx;
+  std::vector<double> err_pos_sq_v;
+  std::vector<double> err_t_v;
+  std::vector<double> err_k_v;
+  std::vector<double> err_kdot_v;
+  std::vector<unsigned> valid_idx;
 
   err_reproj_perturb(crv2d_gt_, cam_, rig, err_pos_sq_v, err_t_v, err_k_v, err_kdot_v, valid_idx);
 
 
   unsigned idx;
 
-  err_pos = vcl_sqrt(bdifd_util::max(err_pos_sq_v,idx));
+  err_pos = std::sqrt(bdifd_util::max(err_pos_sq_v,idx));
   i_pos   = valid_idx[idx];
 
   err_t = bdifd_util::max(err_t_v,idx);
@@ -56,14 +56,14 @@ max_err_reproj_perturb(
 //
 void bdifd_data::
 err_reproj_perturb(
-    const vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > &crv2d_gt_,
-    const vcl_vector<bdifd_camera> &cam_,
+    const std::vector<std::vector<bdifd_3rd_order_point_2d> > &crv2d_gt_,
+    const std::vector<bdifd_camera> &cam_,
     const bdifd_rig &rig,
-    vcl_vector<double> &err_pos_sq,
-    vcl_vector<double> &err_t,
-    vcl_vector<double> &err_k,
-    vcl_vector<double> &err_kdot,
-    vcl_vector<unsigned> &valid_idx
+    std::vector<double> &err_pos_sq,
+    std::vector<double> &err_t,
+    std::vector<double> &err_k,
+    std::vector<double> &err_kdot,
+    std::vector<unsigned> &valid_idx
     )
 {
   assert(crv2d_gt_.size() >= 3 && crv2d_gt_[0].size() == crv2d_gt_[1].size() && crv2d_gt_[0].size() == crv2d_gt_[2].size());
@@ -102,13 +102,13 @@ err_reproj_perturb(
       double dy = p_rec_reproj.gama[1] - p3.gama[1];
       err_pos_sq.push_back(dx*dx + dy*dy);
 
-      double dtheta = vcl_acos(bdifd_util::clump_to_acos( p_rec_reproj.t[0]*p3.t[0] + p_rec_reproj.t[1]*p3.t[1] ));
+      double dtheta = std::acos(bdifd_util::clump_to_acos( p_rec_reproj.t[0]*p3.t[0] + p_rec_reproj.t[1]*p3.t[1] ));
       err_t.push_back(dtheta);
       
-      double dk = vcl_fabs(p_rec_reproj.k - p3.k);
+      double dk = std::fabs(p_rec_reproj.k - p3.k);
       err_k.push_back(dk);
 
-      double dkdot = vcl_fabs(p_rec_reproj.kdot - p3.kdot);
+      double dkdot = std::fabs(p_rec_reproj.kdot - p3.kdot);
       err_kdot.push_back(dkdot);
     }
   }
@@ -118,9 +118,9 @@ err_reproj_perturb(
 //cameras and returns a vector containing a vector of points for each view
 void bdifd_data::
 project_into_cams(
-    const vcl_vector<bdifd_3rd_order_point_3d> &crv3d, 
-    const vcl_vector<bdifd_camera> &cam,
-    vcl_vector<vcl_vector<vsol_point_2d_sptr> > &xi //:< image coordinates
+    const std::vector<bdifd_3rd_order_point_3d> &crv3d, 
+    const std::vector<bdifd_camera> &cam,
+    std::vector<std::vector<vsol_point_2d_sptr> > &xi //:< image coordinates
     ) 
 {
   unsigned nviews=cam.size();
@@ -141,9 +141,9 @@ project_into_cams(
 //: Project a set of space curves into different cameras
 void bdifd_data::
 project_into_cams(
-    const vcl_vector<vcl_vector<bdifd_3rd_order_point_3d> > &crv3d,
-    const vcl_vector<bdifd_camera> &cam,
-    vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > &crv2d_gt)
+    const std::vector<std::vector<bdifd_3rd_order_point_3d> > &crv3d,
+    const std::vector<bdifd_camera> &cam,
+    std::vector<std::vector<bdifd_3rd_order_point_2d> > &crv2d_gt)
 {
   unsigned nviews=cam.size();
   unsigned npts=0;
@@ -168,12 +168,12 @@ project_into_cams(
 //: Project a set of space curves into different cameras
 void bdifd_data::
 project_into_cams_without_epitangency(
-    const vcl_vector<vcl_vector<bdifd_3rd_order_point_3d> > &crv3d,
-    const vcl_vector<bdifd_camera> &cam,
-    vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > &crv2d,
+    const std::vector<std::vector<bdifd_3rd_order_point_3d> > &crv3d,
+    const std::vector<bdifd_camera> &cam,
+    std::vector<std::vector<bdifd_3rd_order_point_2d> > &crv2d,
     double epipolar_angle_thresh)
 {
-  vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > crv2d_gt_complete;
+  std::vector<std::vector<bdifd_3rd_order_point_2d> > crv2d_gt_complete;
 
   project_into_cams(crv3d, cam, crv2d_gt_complete);
 
@@ -195,9 +195,9 @@ project_into_cams_without_epitangency(
 
 void bdifd_data::
 project_into_cams(
-    const vcl_vector<bdifd_3rd_order_point_3d> &crv3d, 
-    const vcl_vector<bdifd_camera> &cam,
-    vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > &xi //:< image coordinates
+    const std::vector<bdifd_3rd_order_point_3d> &crv3d, 
+    const std::vector<bdifd_camera> &cam,
+    std::vector<std::vector<bdifd_3rd_order_point_2d> > &xi //:< image coordinates
     ) 
 {
   unsigned nviews=cam.size();
@@ -216,14 +216,14 @@ project_into_cams(
 
 void bdifd_data::
 space_curves_ctspheres_old(
-    vcl_vector<vcl_vector<bdifd_3rd_order_point_3d> > &crv3d
+    std::vector<std::vector<bdifd_3rd_order_point_3d> > &crv3d
     )
 {
   static const unsigned number_of_curves=7;
 
   crv3d.resize(number_of_curves);
 
-  vcl_vector<double> theta;
+  std::vector<double> theta;
 
   bdifd_vector_3d translation(-11,-5,0);
 
@@ -253,13 +253,13 @@ space_curves_ctspheres_old(
 
 void bdifd_data::
 space_curves_ctspheres(
-    vcl_vector<vcl_vector<bdifd_3rd_order_point_3d> > &crv3d
+    std::vector<std::vector<bdifd_3rd_order_point_3d> > &crv3d
     )
 {
-  vcl_vector<double> theta;
+  std::vector<double> theta;
   bdifd_vector_3d translation;
   bdifd_vector_3d direction;
-  vcl_vector<bdifd_3rd_order_point_3d > crv_tmp;
+  std::vector<bdifd_3rd_order_point_3d > crv_tmp;
   bdifd_vector_3d axis;
   double angle;
 
@@ -535,13 +535,13 @@ space_curves_ctspheres(
 //degenerate cases where we output two exactly equal 3D points. 
 void bdifd_data::
 space_curves_olympus_turntable(
-    vcl_vector<vcl_vector<bdifd_3rd_order_point_3d> > &crv3d
+    std::vector<std::vector<bdifd_3rd_order_point_3d> > &crv3d
     )
 {
-  vcl_vector<double> theta;
+  std::vector<double> theta;
   bdifd_vector_3d translation;
   bdifd_vector_3d direction;
-  vcl_vector<bdifd_3rd_order_point_3d > crv_tmp;
+  std::vector<bdifd_3rd_order_point_3d > crv_tmp;
   bdifd_vector_3d axis;
   double angle;
 
@@ -732,7 +732,7 @@ space_curves_olympus_turntable(
   // Ellipses
   ra = un;
   rb = 4*un;
-  stepsize_ellipse = stepsize_ellipse_arclength/vcl_max(ra,rb);
+  stepsize_ellipse = stepsize_ellipse_arclength/std::max(ra,rb);
   stepsize_ellipse *= 180.0/vnl_math::pi;
   translation = bdifd_vector_3d (-6,-6,-7)*un;
   bdifd_analytic::ellipse(ra, rb,translation, crv_tmp, theta, 60, stepsize_ellipse, 120);
@@ -740,7 +740,7 @@ space_curves_olympus_turntable(
 
   ra = un;
   rb = 4*un;
-  stepsize_ellipse = stepsize_ellipse_arclength/vcl_max(ra,rb);
+  stepsize_ellipse = stepsize_ellipse_arclength/std::max(ra,rb);
   stepsize_ellipse *= 180.0/vnl_math::pi;
   translation = bdifd_vector_3d (9,0,-3)*un;
   bdifd_analytic::ellipse(ra, rb,translation, crv_tmp, theta, 0, stepsize_ellipse, 360);
@@ -748,7 +748,7 @@ space_curves_olympus_turntable(
 
   ra = un;
   rb = 4*un;
-  stepsize_ellipse = stepsize_ellipse_arclength/vcl_max(ra,rb);
+  stepsize_ellipse = stepsize_ellipse_arclength/std::max(ra,rb);
   stepsize_ellipse *= 180.0/vnl_math::pi;
   translation = bdifd_vector_3d (0,0,0)*un;
   bdifd_analytic::ellipse(ra, rb, translation, crv_tmp, theta, 30, stepsize_ellipse, 180);
@@ -763,7 +763,7 @@ space_curves_olympus_turntable(
 
   ra = 3*un;
   rb = un;
-  stepsize_ellipse = stepsize_ellipse_arclength/vcl_max(ra,rb);
+  stepsize_ellipse = stepsize_ellipse_arclength/std::max(ra,rb);
   stepsize_ellipse *= 180.0/vnl_math::pi;
   translation = bdifd_vector_3d (0,0,0)*un;
   bdifd_analytic::ellipse(ra, rb, translation, crv_tmp, theta, 30, stepsize_ellipse, 180);
@@ -778,7 +778,7 @@ space_curves_olympus_turntable(
 
   ra = un;
   rb = 0.5*un;
-  stepsize_ellipse = stepsize_ellipse_arclength/vcl_max(ra,rb);
+  stepsize_ellipse = stepsize_ellipse_arclength/std::max(ra,rb);
   stepsize_ellipse *= 180.0/vnl_math::pi;
   translation = bdifd_vector_3d (0,0,0)*un;
   bdifd_analytic::ellipse(ra, rb, translation, crv_tmp, theta, 0, stepsize_ellipse, 280);
@@ -793,7 +793,7 @@ space_curves_olympus_turntable(
 
   ra = 4*un;
   rb = un;
-  stepsize_ellipse = stepsize_ellipse_arclength/vcl_max(ra,rb);
+  stepsize_ellipse = stepsize_ellipse_arclength/std::max(ra,rb);
   stepsize_ellipse *= 180.0/vnl_math::pi;
   translation = bdifd_vector_3d (0,0,0)*un;
   bdifd_analytic::ellipse(ra, rb, translation, crv_tmp, theta, 0, stepsize_ellipse, 360);
@@ -868,13 +868,13 @@ space_curves_olympus_turntable(
 //degenerate cases where we output two exactly equal 3D points. 
 void bdifd_data::
 space_curves_digicam_turntable_sandbox(
-    vcl_vector<vcl_vector<bdifd_3rd_order_point_3d> > &crv3d
+    std::vector<std::vector<bdifd_3rd_order_point_3d> > &crv3d
     )
 {
-  vcl_vector<double> theta;
+  std::vector<double> theta;
   bdifd_vector_3d translation;
   bdifd_vector_3d direction;
-  vcl_vector<bdifd_3rd_order_point_3d > crv_tmp;
+  std::vector<bdifd_3rd_order_point_3d > crv_tmp;
   bdifd_vector_3d axis;
   double angle;
 
@@ -1085,7 +1085,7 @@ space_curves_digicam_turntable_sandbox(
   // Ellipses
   ra = un;
   rb = 4*un;
-  stepsize_ellipse = stepsize_ellipse_arclength/vcl_max(ra,rb);
+  stepsize_ellipse = stepsize_ellipse_arclength/std::max(ra,rb);
   stepsize_ellipse *= 180.0/vnl_math::pi;
   translation = bdifd_vector_3d (-6,-6,-7)*un;
   bdifd_analytic::ellipse(ra, rb,translation, crv_tmp, theta, 60, stepsize_ellipse, 120);
@@ -1094,7 +1094,7 @@ space_curves_digicam_turntable_sandbox(
   /*
   ra = un;
   rb = 4*un;
-  stepsize_ellipse = stepsize_ellipse_arclength/vcl_max(ra,rb);
+  stepsize_ellipse = stepsize_ellipse_arclength/std::max(ra,rb);
   stepsize_ellipse *= 180.0/vnl_math::pi;
   translation = bdifd_vector_3d (9,0,-3)*un;
   bdifd_analytic::ellipse(ra, rb,translation, crv_tmp, theta, 0, stepsize_ellipse, 360);
@@ -1102,7 +1102,7 @@ space_curves_digicam_turntable_sandbox(
 
   ra = un;
   rb = 4*un;
-  stepsize_ellipse = stepsize_ellipse_arclength/vcl_max(ra,rb);
+  stepsize_ellipse = stepsize_ellipse_arclength/std::max(ra,rb);
   stepsize_ellipse *= 180.0/vnl_math::pi;
   translation = bdifd_vector_3d (0,0,0)*un;
   bdifd_analytic::ellipse(ra, rb, translation, crv_tmp, theta, 30, stepsize_ellipse, 180);
@@ -1117,7 +1117,7 @@ space_curves_digicam_turntable_sandbox(
 
   ra = 3*un;
   rb = un;
-  stepsize_ellipse = stepsize_ellipse_arclength/vcl_max(ra,rb);
+  stepsize_ellipse = stepsize_ellipse_arclength/std::max(ra,rb);
   stepsize_ellipse *= 180.0/vnl_math::pi;
   translation = bdifd_vector_3d (0,0,0)*un;
   bdifd_analytic::ellipse(ra, rb, translation, crv_tmp, theta, 30, stepsize_ellipse, 180);
@@ -1132,7 +1132,7 @@ space_curves_digicam_turntable_sandbox(
 
   ra = un;
   rb = 0.5*un;
-  stepsize_ellipse = stepsize_ellipse_arclength/vcl_max(ra,rb);
+  stepsize_ellipse = stepsize_ellipse_arclength/std::max(ra,rb);
   stepsize_ellipse *= 180.0/vnl_math::pi;
   translation = bdifd_vector_3d (0,0,0)*un;
   bdifd_analytic::ellipse(ra, rb, translation, crv_tmp, theta, 0, stepsize_ellipse, 280);
@@ -1148,7 +1148,7 @@ space_curves_digicam_turntable_sandbox(
 
   ra = 4*un;
   rb = un;
-  stepsize_ellipse = stepsize_ellipse_arclength/vcl_max(ra,rb);
+  stepsize_ellipse = stepsize_ellipse_arclength/std::max(ra,rb);
   stepsize_ellipse *= 180.0/vnl_math::pi;
   translation = bdifd_vector_3d (0,0,0)*un;
   bdifd_analytic::ellipse(ra, rb, translation, crv_tmp, theta, 0, stepsize_ellipse, 360);
@@ -1226,13 +1226,13 @@ space_curves_digicam_turntable_sandbox(
 //degenerate cases where we output two exactly equal 3D points. 
 void bdifd_data::
 space_curves_digicam_turntable_medium_sized(
-    vcl_vector<vcl_vector<bdifd_3rd_order_point_3d> > &crv3d
+    std::vector<std::vector<bdifd_3rd_order_point_3d> > &crv3d
     )
 {
-  vcl_vector<double> theta;
+  std::vector<double> theta;
   bdifd_vector_3d translation;
   bdifd_vector_3d direction;
-  vcl_vector<bdifd_3rd_order_point_3d > crv_tmp;
+  std::vector<bdifd_3rd_order_point_3d > crv_tmp;
   bdifd_vector_3d axis;
   double angle;
 
@@ -1434,7 +1434,7 @@ space_curves_digicam_turntable_medium_sized(
   // Ellipses
   ra = un;
   rb = 4*un;
-  stepsize_ellipse = stepsize_ellipse_arclength/vcl_max(ra,rb);
+  stepsize_ellipse = stepsize_ellipse_arclength/std::max(ra,rb);
   stepsize_ellipse *= 180.0/vnl_math::pi;
   translation = bdifd_vector_3d (-6,-6,-7)*un;
   bdifd_analytic::ellipse(ra, rb,translation, crv_tmp, theta, 60, stepsize_ellipse, 120);
@@ -1443,7 +1443,7 @@ space_curves_digicam_turntable_medium_sized(
   /*
   ra = un;
   rb = 4*un;
-  stepsize_ellipse = stepsize_ellipse_arclength/vcl_max(ra,rb);
+  stepsize_ellipse = stepsize_ellipse_arclength/std::max(ra,rb);
   stepsize_ellipse *= 180.0/vnl_math::pi;
   translation = bdifd_vector_3d (9,0,-3)*un;
   bdifd_analytic::ellipse(ra, rb,translation, crv_tmp, theta, 0, stepsize_ellipse, 360);
@@ -1451,7 +1451,7 @@ space_curves_digicam_turntable_medium_sized(
 
   ra = un;
   rb = 4*un;
-  stepsize_ellipse = stepsize_ellipse_arclength/vcl_max(ra,rb);
+  stepsize_ellipse = stepsize_ellipse_arclength/std::max(ra,rb);
   stepsize_ellipse *= 180.0/vnl_math::pi;
   translation = bdifd_vector_3d (0,0,0)*un;
   bdifd_analytic::ellipse(ra, rb, translation, crv_tmp, theta, 30, stepsize_ellipse, 180);
@@ -1466,7 +1466,7 @@ space_curves_digicam_turntable_medium_sized(
 
   ra = 3*un;
   rb = un;
-  stepsize_ellipse = stepsize_ellipse_arclength/vcl_max(ra,rb);
+  stepsize_ellipse = stepsize_ellipse_arclength/std::max(ra,rb);
   stepsize_ellipse *= 180.0/vnl_math::pi;
   translation = bdifd_vector_3d (0,0,0)*un;
   bdifd_analytic::ellipse(ra, rb, translation, crv_tmp, theta, 30, stepsize_ellipse, 180);
@@ -1483,7 +1483,7 @@ space_curves_digicam_turntable_medium_sized(
   /*
   ra = un;
   rb = 0.5*un;
-  stepsize_ellipse = stepsize_ellipse_arclength/vcl_max(ra,rb);
+  stepsize_ellipse = stepsize_ellipse_arclength/std::max(ra,rb);
   stepsize_ellipse *= 180.0/vnl_math::pi;
   translation = bdifd_vector_3d (0,0,0)*un;
   bdifd_analytic::ellipse(ra, rb, translation, crv_tmp, theta, 0, stepsize_ellipse, 280);
@@ -1499,7 +1499,7 @@ space_curves_digicam_turntable_medium_sized(
 
   ra = 4*un;
   rb = un;
-  stepsize_ellipse = stepsize_ellipse_arclength/vcl_max(ra,rb);
+  stepsize_ellipse = stepsize_ellipse_arclength/std::max(ra,rb);
   stepsize_ellipse *= 180.0/vnl_math::pi;
   translation = bdifd_vector_3d (0,0,0)*un;
   bdifd_analytic::ellipse(ra, rb, translation, crv_tmp, theta, 0, stepsize_ellipse, 360);
@@ -1601,24 +1601,24 @@ camera_ctspheres(
   double const theta = frm_index*rotation_step;
 
   vnl_matrix_fixed< double, 3, 3 > R;
-  R[0][0] = vcl_cos(theta);
+  R[0][0] = std::cos(theta);
   R[0][1] = 0;
-  R[0][2] = -vcl_sin(theta);
+  R[0][2] = -std::sin(theta);
 
   R[1][0] = 0;
   R[1][1] = 1;
   R[1][2] = 0;
 
-  R[2][0] = vcl_sin(theta);
+  R[2][0] = std::sin(theta);
   R[2][1] = 0;
-  R[2][2] = vcl_cos(theta);
+  R[2][2] = std::cos(theta);
   
 
   vnl_vector_fixed<double,3> dummy0(0,0,0.0);
   vgl_h_matrix_3d<double> Rhmg(R,dummy0);
 
   // World origin is at center of rotation or fixation point.
-  vgl_homg_point_3d<double> transl(-r*vcl_sin(theta), 0, -r*vcl_cos(theta));
+  vgl_homg_point_3d<double> transl(-r*std::sin(theta), 0, -r*std::cos(theta));
 
 
   return new vpgl_perspective_camera<double> (K, transl, vgl_rotation_3d<double>(Rhmg));
@@ -1735,31 +1735,31 @@ camera_olympus(
   Rx[0][2] = 0          ;
                
   Rx[1][0] = 0          ;
-  Rx[1][1] = vcl_cos(pitch) ;
-  Rx[1][2] = -vcl_sin(pitch);
+  Rx[1][1] = std::cos(pitch) ;
+  Rx[1][2] = -std::sin(pitch);
                
   Rx[2][0] = 0          ;
-  Rx[2][1] = vcl_sin(pitch) ;
-  Rx[2][2] = vcl_cos(pitch) ;
+  Rx[2][1] = std::sin(pitch) ;
+  Rx[2][2] = std::cos(pitch) ;
 
-  Ry[0][0] = vcl_cos(yaw) ;
+  Ry[0][0] = std::cos(yaw) ;
   Ry[0][1] = 0        ;
-  Ry[0][2] = vcl_sin(yaw) ;
+  Ry[0][2] = std::sin(yaw) ;
                         
   Ry[1][0] = 0        ;
   Ry[1][1] = 1        ;
   Ry[1][2] = 0        ;
                         
-  Ry[2][0] = -vcl_sin(yaw); 
+  Ry[2][0] = -std::sin(yaw); 
   Ry[2][1] = 0        ;
-  Ry[2][2] = vcl_cos(yaw) ;
+  Ry[2][2] = std::cos(yaw) ;
 
-  Rz[0][0] =vcl_cos(roll) ;
-  Rz[0][1] =-vcl_sin(roll);
+  Rz[0][0] =std::cos(roll) ;
+  Rz[0][1] =-std::sin(roll);
   Rz[0][2] =0         ;
                        
-  Rz[1][0] =vcl_sin(roll) ;
-  Rz[1][1] =vcl_cos(roll) ;
+  Rz[1][0] =std::sin(roll) ;
+  Rz[1][1] =std::cos(roll) ;
   Rz[1][2] =0         ;
                        
   Rz[2][0] =0         ;
@@ -1789,17 +1789,17 @@ camera_olympus(
 
   vnl_double_3x3 Rot_theta;
 
-  Rot_theta[0][0] = vcl_cos(theta);
+  Rot_theta[0][0] = std::cos(theta);
   Rot_theta[0][1] = 0;
-  Rot_theta[0][2] = -vcl_sin(theta);
+  Rot_theta[0][2] = -std::sin(theta);
 
   Rot_theta[1][0] = 0;
   Rot_theta[1][1] = 1;
   Rot_theta[1][2] = 0;
 
-  Rot_theta[2][0] = vcl_sin(theta);
+  Rot_theta[2][0] = std::sin(theta);
   Rot_theta[2][1] = 0;
-  Rot_theta[2][2] = vcl_cos(theta);
+  Rot_theta[2][2] = std::cos(theta);
 
   vnl_double_3x3 R_W0_to_Wtheta = Rot_theta.transpose();
 
@@ -1815,12 +1815,12 @@ camera_olympus(
   return new vpgl_perspective_camera<double>(K, C2_in_world_vgl, vgl_rotation_3d<double>(Rhmg));
 }
 
-//: convert from vcl_vector<bdifd_3rd_order_point_2d> 
-// to vcl_vector<vsol_line_2d_sptr>  and perturb if wanted
+//: convert from std::vector<bdifd_3rd_order_point_2d> 
+// to std::vector<vsol_line_2d_sptr>  and perturb if wanted
 void bdifd_data::
 get_lines(
-    vcl_vector<vsol_line_2d_sptr> &lines,
-    const vcl_vector<bdifd_3rd_order_point_2d> &C_subpixel,
+    std::vector<vsol_line_2d_sptr> &lines,
+    const std::vector<bdifd_3rd_order_point_2d> &C_subpixel,
     bool do_perturb,
     double pert_pos,
     double pert_tan
@@ -1846,8 +1846,8 @@ get_lines(
 void bdifd_data::
 get_circle_edgels(
     double radius, 
-    vcl_vector<vsol_line_2d_sptr> &lines,
-    vcl_vector<bdifd_3rd_order_point_2d> &C_subpixel,
+    std::vector<vsol_line_2d_sptr> &lines,
+    std::vector<bdifd_3rd_order_point_2d> &C_subpixel,
     bool do_perturb,
     double pert_pos,
     double pert_tan
@@ -1856,7 +1856,7 @@ get_circle_edgels(
   // transl. big enough so all coordinates are positive
   bdifd_vector_2d translation(radius,radius);
 
-  double dtheta = (vcl_asin(vcl_sqrt(2.)/(2.*radius)) );
+  double dtheta = (std::asin(std::sqrt(2.)/(2.*radius)) );
 
   dtheta *= (180.0/vnl_math::pi);
 
@@ -1864,8 +1864,8 @@ get_circle_edgels(
     pert_tan *= (vnl_math::pi/180.0);
   }
 
-  vcl_vector<double> theta;
-  vcl_vector<bdifd_3rd_order_point_2d> C;
+  std::vector<double> theta;
+  std::vector<bdifd_3rd_order_point_2d> C;
   bdifd_analytic::circle_curve( radius, translation, C, theta, 0, dtheta, 360);
 
   bdifd_analytic::limit_distance(C, C_subpixel);
@@ -1880,8 +1880,8 @@ void bdifd_data::
 get_ellipse_edgels(
     double ra, 
     double rb, 
-    vcl_vector<vsol_line_2d_sptr> &lines,
-    vcl_vector<bdifd_3rd_order_point_2d> &C_subpixel,
+    std::vector<vsol_line_2d_sptr> &lines,
+    std::vector<bdifd_3rd_order_point_2d> &C_subpixel,
     bool do_perturb,
     double pert_pos,
     double pert_tan
@@ -1890,7 +1890,7 @@ get_ellipse_edgels(
   // transl. big enough so all coordinates are positive
   bdifd_vector_2d translation(ra,rb);
 
-  double dtheta = (vcl_asin(vcl_sqrt(2.)/(2.*vcl_max(ra,rb))) );
+  double dtheta = (std::asin(std::sqrt(2.)/(2.*std::max(ra,rb))) );
   dtheta /= 10.0; // XXX
 
   dtheta *= (180.0/vnl_math::pi);
@@ -1899,19 +1899,19 @@ get_ellipse_edgels(
     pert_tan *= (vnl_math::pi/180.0);
   }
 
-  vcl_vector<double> theta;
-  vcl_vector<bdifd_3rd_order_point_2d> C;
+  std::vector<double> theta;
+  std::vector<bdifd_3rd_order_point_2d> C;
   bdifd_analytic::ellipse(ra, rb, translation, C, theta, 0, dtheta, 360);
 
-  vcl_cout << "Before limit distance: " << C.size() << vcl_endl;
+  std::cout << "Before limit distance: " << C.size() << std::endl;
   bdifd_analytic::limit_distance(C, C_subpixel);
-  vcl_cout << "After limit distance: " << C_subpixel.size() << vcl_endl;
+  std::cout << "After limit distance: " << C_subpixel.size() << std::endl;
 
   bdifd_data::get_lines(lines, C_subpixel, do_perturb, pert_pos, pert_tan);
 }
 
 vgl_point_3d<double> bdifd_data::
-get_point_crv3d(const vcl_vector<vcl_vector<bdifd_3rd_order_point_3d> > &crv3d, unsigned i)
+get_point_crv3d(const std::vector<std::vector<bdifd_3rd_order_point_3d> > &crv3d, unsigned i)
 {
 
   unsigned idx=0;
@@ -1922,17 +1922,17 @@ get_point_crv3d(const vcl_vector<vcl_vector<bdifd_3rd_order_point_3d> > &crv3d, 
       ++idx;
     }
   }
-  vcl_cerr << "Invalid index\n";
+  std::cerr << "Invalid index\n";
   return vgl_point_3d<double>();
 }
 
 // Get cameras and points in traditional format, i.e. with perspective projection cameras and no
 // differential geometry.
 //
-// \param[out] pimage_pts :  pointer to a vcl_vector v where v[view_id][point_id]. Corresponding
+// \param[out] pimage_pts :  pointer to a std::vector v where v[view_id][point_id]. Corresponding
 // points have the same point_id, which is also the id of the corresponding 3D point into world_pts.
 //
-// \param[out] world_pts : vcl_vector of 3D points
+// \param[out] world_pts : std::vector of 3D points
 //
 // \param[out] cams : perspective cameras for each view v. These are turntable views at angle given
 // by view_angles[i].
@@ -1941,15 +1941,15 @@ get_point_crv3d(const vcl_vector<vcl_vector<bdifd_3rd_order_point_3d> > &crv3d, 
 //
 void bdifd_data::
 get_digital_camera_point_dataset(
-    vcl_vector<vpgl_perspective_camera<double> > *pcams, 
-    vcl_vector<vcl_vector<vgl_point_2d<double> > > *pimage_pts, 
-    vcl_vector<vgl_point_3d<double> > *pworld_pts, 
-    const vcl_vector<double> &view_angles)
+    std::vector<vpgl_perspective_camera<double> > *pcams, 
+    std::vector<std::vector<vgl_point_2d<double> > > *pimage_pts, 
+    std::vector<vgl_point_3d<double> > *pworld_pts, 
+    const std::vector<double> &view_angles)
 {
   // aliases
-  vcl_vector<vpgl_perspective_camera<double> > &cams = *pcams;
-  vcl_vector<vcl_vector<vgl_point_2d<double> > > &image_pts = *pimage_pts; 
-  vcl_vector<vgl_point_3d<double> > &world_pts = *pworld_pts;
+  std::vector<vpgl_perspective_camera<double> > &cams = *pcams;
+  std::vector<std::vector<vgl_point_2d<double> > > &image_pts = *pimage_pts; 
+  std::vector<vgl_point_3d<double> > &world_pts = *pworld_pts;
 
 
   unsigned  crop_origin_x = 450;
@@ -1969,7 +1969,7 @@ get_digital_camera_point_dataset(
 
   // Extracts list of 3D point positions
   {
-  vcl_vector<vcl_vector<bdifd_3rd_order_point_3d> > crv3d;
+  std::vector<std::vector<bdifd_3rd_order_point_3d> > crv3d;
   bdifd_data::space_curves_olympus_turntable( crv3d );
 
 

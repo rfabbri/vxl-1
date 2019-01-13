@@ -18,14 +18,14 @@
 #include <vil1/vil1_memory_image_of.h>
 
 #include <vepl1/vepl1_add_random_noise.h>
-#include <vcl_iostream.h>
-#include <vcl_cstdlib.h> // for atof()
+#include <iostream>
+#include <cstdlib> // for atof()
 #include <vxl_config.h> // for vxl_byte
 
 int
 main(int argc, char** argv)
 {
-  if (argc < 3) { vcl_cerr << "Syntax: example_add_random_noise file_in file_out [width]\n"; return 1; }
+  if (argc < 3) { std::cerr << "Syntax: example_add_random_noise file_in file_out [width]\n"; return 1; }
 
   // The input image:
   vil1_image in = vil1_load(argv[1]);
@@ -36,12 +36,12 @@ main(int argc, char** argv)
 #endif
 
   // The noise `width':
-  double sigma = (argc < 4) ? 5 : vcl_atof(argv[3]);
+  double sigma = (argc < 4) ? 5 : std::atof(argv[3]);
 
   // The filter:
   vil1_image out = vepl1_add_random_noise(src,sigma);
 
   vil1_save(out, argv[2]);
-  vcl_cout << "Noisy image written to " << argv[2] << vcl_endl;
+  std::cout << "Noisy image written to " << argv[2] << std::endl;
   return 0;
 }

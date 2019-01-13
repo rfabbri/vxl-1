@@ -8,17 +8,17 @@
 
 //: blanking parameter not supported
 void bsold_geno_curve_2d::
-describe(vcl_ostream &strm, int blanking) const
+describe(std::ostream &strm, int blanking) const
 {
   if (blanking < 0) blanking = 0; while (blanking--) strm << ' ';
 
   strm << "=== bsold_geno_curve_2d ===\n";
-  strm << "#intervals: " << ints_.size() << "\t length: " << length() << vcl_endl;
+  strm << "#intervals: " << ints_.size() << "\t length: " << length() << std::endl;
   for (unsigned int i=0; i<ints_.size(); ++i) {
-     strm << "=== Interval " << i << " ===" << vcl_endl;
+     strm << "=== Interval " << i << " ===" << std::endl;
   // ints_[i]->print(strm);
-     strm << "Cummulative length: " << lengths_[i] << vcl_endl;
-     strm << "Stencil position: " << stencil_[i] << vcl_endl; }
+     strm << "Cummulative length: " << lengths_[i] << std::endl;
+     strm << "Stencil position: " << stencil_[i] << std::endl; }
 }
 
 //: Returns the curvature at s arclength away from p0_

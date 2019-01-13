@@ -18,7 +18,7 @@
 // for I/O:
 #include <vil1/vil1_load.h>
 #include <vil1/vil1_save.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vil1/vil1_memory_image_of.txx>
 
 #include <vxl_config.h> // for vxl_byte
@@ -36,7 +36,7 @@ VIL1_MEMORY_IMAGE_OF_INSTANTIATE(vil1_rgb<double>);
 int
 main(int argc, char** argv)
 {
-  if (argc < 3) { vcl_cerr << "Syntax: example_convert file_in file_out\n"; return 1; }
+  if (argc < 3) { std::cerr << "Syntax: example_convert file_in file_out\n"; return 1; }
 
   // The input image:
   vil1_image in = vil1_load(argv[1]);
@@ -48,17 +48,17 @@ main(int argc, char** argv)
   if (in.planes() == 1 && in.components() == 1) { // monochrome
     vxl_byte dummy = 0;
     if (in.bits_per_component() == 8)
-      vcl_cerr<<"Warning: no conversion necessary\n";
+      std::cerr<<"Warning: no conversion necessary\n";
     out_grey = vepl1_convert(in, dummy);
     vil1_save(out_grey, argv[2], "pnm");
-    vcl_cout << "vepl1_convert()ed grey image to PGM image " << argv[2] << vcl_endl;
+    std::cout << "vepl1_convert()ed grey image to PGM image " << argv[2] << std::endl;
   }
   else if (in.planes() == 1 && in.components() == 3) { // colour (RGB)
     out_rgb = vepl1_convert(in,rgbcell());
     vil1_save(out_rgb, argv[2], "pnm");
-    vcl_cout << "vepl1_convert()ed RGB image to PPM image " << argv[2] << vcl_endl;
+    std::cout << "vepl1_convert()ed RGB image to PPM image " << argv[2] << std::endl;
   }
-  else vcl_cerr << "Cannot handle image with "<< in.planes() <<" planes and "<< in.components() <<" components\n";
+  else std::cerr << "Cannot handle image with "<< in.planes() <<" planes and "<< in.components() <<" components\n";
 
   return 0;
 }

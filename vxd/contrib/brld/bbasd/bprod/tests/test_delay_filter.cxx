@@ -2,7 +2,7 @@
 #include <bprod/bprod_process.h>
 #include <bprod/bprod_delay.h>
 #include "bprod_sample_processes.h"
-#include <vcl_iostream.h>
+#include <iostream>
 
 
 
@@ -29,7 +29,7 @@ MAIN( test_delay_filter )
     bprod_signal s1 = oq->run(count);
     bprod_signal s2 = delay->run(count);
     if(s1 == BPROD_INVALID || s2 == BPROD_INVALID){
-      vcl_cerr << "Error stream failure" << vcl_endl;
+      std::cerr << "Error stream failure" << std::endl;
       break;
     }
     if(s1 == BPROD_EOS || s2 == BPROD_EOS){
@@ -39,10 +39,10 @@ MAIN( test_delay_filter )
 
   //TEST("number of iterations", count, data.size());
 
-  vcl_cout << "Resulting data output\n";
+  std::cout << "Resulting data output\n";
   for(unsigned int i=0; i<oq_ptr->data.size(); ++i)
-    vcl_cout << oq_ptr->data[i] << " ";
-  vcl_cout << vcl_endl;
+    std::cout << oq_ptr->data[i] << " ";
+  std::cout << std::endl;
 
 
   SUMMARY();

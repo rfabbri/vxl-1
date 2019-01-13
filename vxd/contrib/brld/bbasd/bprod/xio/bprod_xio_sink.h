@@ -16,8 +16,8 @@
 
 
 #include <bprod/bprod_process.h>
-#include <vcl_string.h>
-#include <vcl_fstream.h>
+#include <string>
+#include <fstream>
 
 
 
@@ -29,13 +29,13 @@ class bprod_xio_sink : public bprod_sink
     bprod_xio_sink();
 
     //: Constructor
-    bprod_xio_sink(const vcl_string& filename);
+    bprod_xio_sink(const std::string& filename);
 
     //: Destructor
     ~bprod_xio_sink();
 
     //: Open a new file
-    bool open(const vcl_string& filename);
+    bool open(const std::string& filename);
 
     //: Runs the process
     bprod_signal execute();
@@ -43,14 +43,14 @@ class bprod_xio_sink : public bprod_sink
     //: Only execute if the file stream is valid
     // the const_cast here is a workaround for a bug
     // in some versions of gcc that mistakenly define is_open as non-const
-    bool enabled() const { return const_cast<vcl_ofstream&>(os_).is_open(); }
+    bool enabled() const { return const_cast<std::ofstream&>(os_).is_open(); }
 
   protected:
     void write_header();
     void write_footer();
 
   private:
-    vcl_ofstream os_;
+    std::ofstream os_;
 };
 
 

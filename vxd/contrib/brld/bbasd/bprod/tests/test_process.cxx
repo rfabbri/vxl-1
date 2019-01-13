@@ -1,7 +1,7 @@
 #include <testlib/testlib_test.h>
 #include <bprod/bprod_process.h>
 #include "bprod_sample_processes.h"
-#include <vcl_iostream.h>
+#include <iostream>
 #include <bprod/bprod_observer.h>
 
 
@@ -14,7 +14,7 @@ class bprod_message : public bprod_observer
     bool notify(const bprod_storage_sptr& data, unsigned long timestamp)
     {
       if(data->info() == BPROD_VALID)
-        vcl_cout << "Received: "<< data->template data<T>() <<" at time "<<timestamp<< vcl_endl;
+        std::cout << "Received: "<< data->template data<T>() <<" at time "<<timestamp<< std::endl;
       return true;
     }
 };
@@ -24,7 +24,7 @@ MAIN( test_process )
 {
   START ("process");
 
-  vcl_vector<int> data;
+  std::vector<int> data;
   data.push_back(1);
   data.push_back(2);
   data.push_back(4);
@@ -61,15 +61,15 @@ MAIN( test_process )
 
   TEST("number of iterations", count, data.size());
 
-  vcl_cout << "Resulting data output 1\n";
+  std::cout << "Resulting data output 1\n";
   for(unsigned int i=0; i<oq1_ptr->data.size(); ++i)
-    vcl_cout << oq1_ptr->data[i] << " ";
-  vcl_cout << vcl_endl;
+    std::cout << oq1_ptr->data[i] << " ";
+  std::cout << std::endl;
 
-  vcl_cout << "Resulting data output 2\n";
+  std::cout << "Resulting data output 2\n";
   for(unsigned int i=0; i<oq2_ptr->data.size(); ++i)
-    vcl_cout << oq2_ptr->data[i] << " ";
-  vcl_cout << vcl_endl;
+    std::cout << oq2_ptr->data[i] << " ";
+  std::cout << std::endl;
 
   SUMMARY();
 }

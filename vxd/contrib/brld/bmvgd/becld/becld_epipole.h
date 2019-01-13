@@ -12,7 +12,7 @@
 //  14 July 2004 - Dave Pacheco: added coepillinear, get_depth
 // \endverbatim
 
-#include <vcl_cmath.h>
+#include <cmath>
 #include <vgl/vgl_point_2d.h>
 #include <vbl/vbl_ref_count.h>
 #include <vul/vul_timestamp.h>
@@ -82,7 +82,7 @@ becld_epipole::distance(double u, double v) const
 {
   double du = u-location_.x();
   double dv = v-location_.y();
-  return vcl_sqrt(du*du + dv*dv);
+  return std::sqrt(du*du + dv*dv);
 }
 
 //: Compute the angle (in radians) from the epipole to a point (u,v)
@@ -91,7 +91,7 @@ becld_epipole::angle(double u, double v) const
 {
   double du = u-location_.x();
   double dv = v-location_.y();
-  return vcl_atan2(dv,du);
+  return std::atan2(dv,du);
 }
 
 //: Conversion to epipolar coordinates from image coordinates
@@ -100,8 +100,8 @@ becld_epipole::to_epi_coords(double u, double v, double &s, double &a) const
 {
   double du = u-location_.x();
   double dv = v-location_.y();
-  s = vcl_sqrt(du*du + dv*dv);
-  a = vcl_atan2(dv,du);
+  s = std::sqrt(du*du + dv*dv);
+  a = std::atan2(dv,du);
 }
 
 //: Conversion to epipolar coordinates from image coordinates
@@ -117,8 +117,8 @@ becld_epipole::to_epi_coords(const vgl_point_2d<double>& u_v) const
 inline void 
 becld_epipole::to_img_coords(double s, double a, double &u, double &v) const
 {
-  u = location_.x() + s*vcl_cos(a);
-  v = location_.y() + s*vcl_sin(a);
+  u = location_.x() + s*std::cos(a);
+  v = location_.y() + s*std::sin(a);
 }
 
 //: Conversion to image coordinates from epipolar coordinates

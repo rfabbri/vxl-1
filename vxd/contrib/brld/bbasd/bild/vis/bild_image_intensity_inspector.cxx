@@ -40,8 +40,8 @@ bool bild_image_intensity_inspector::handle(const vgui_event & e,
   {
     float ix, iy;
     vgui_projection_inspector().window_to_image_coordinates(e.wx, e.wy, ix, iy);
-    unsigned int px = static_cast<unsigned int>(vcl_floor(ix+0.5));
-    unsigned int py = static_cast<unsigned int>(vcl_floor(iy+0.5));
+    unsigned int px = static_cast<unsigned int>(std::floor(ix+0.5));
+    unsigned int py = static_cast<unsigned int>(std::floor(iy+0.5));
     vgui::out<<"("<<px<<","<<py<<")";
 
     if(px>=0 && px<dimage_.ni() && py>=0 && py<dimage_.nj())
@@ -98,7 +98,7 @@ bool bild_image_intensity_inspector::handle(const vgui_event & e,
 void bild_image_intensity_inspector::get_popup( const vgui_popup_params& params, 
                                                  vgui_menu &menu )
 {
-  vcl_string on = "[x] ", off = "[ ] ";
+  std::string on = "[x] ", off = "[ ] ";
   menu.add( ((rgb_)?on:off)+"RGB ", bvis1_tool_toggle, (void*)(&rgb_) );
   menu.add( ((ihs_)?on:off)+"IHS", bvis1_tool_toggle, (void*)(&ihs_) );
   menu.add( ((raw_)?on:off)+"Raw", bvis1_tool_toggle, (void*)(&raw_) );

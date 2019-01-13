@@ -56,14 +56,14 @@ reconstruct_point_lsqr(
 // Curve 1 has to be the same size as crv 2.
 void bdifd_rig::
 reconstruct_3d_curve(
-  vcl_vector<bdifd_vector_3d> *Crv3d,
-  const vcl_vector<vsol_point_2d_sptr> &crv1, 
-  const vcl_vector<vsol_point_2d_sptr> &crv2)
+  std::vector<bdifd_vector_3d> *Crv3d,
+  const std::vector<vsol_point_2d_sptr> &crv1, 
+  const std::vector<vsol_point_2d_sptr> &crv2)
 {
   assert(crv1.size() == crv2.size());
 
   // convert to world coordinates
-  vcl_vector<bdifd_vector_3d> crv1_v, crv2_v;
+  std::vector<bdifd_vector_3d> crv1_v, crv2_v;
 
   crv1_v.resize(crv1.size()); crv2_v.resize(crv1.size());
 
@@ -78,9 +78,9 @@ reconstruct_3d_curve(
 //: input is a vector of image points in 3D world coordinates
 void bdifd_rig::
 reconstruct_3d_curve(
-  vcl_vector<bdifd_vector_3d> *Crv3d,
-  const vcl_vector<bdifd_vector_3d> &crv1, 
-  const vcl_vector<bdifd_vector_3d> &crv2)
+  std::vector<bdifd_vector_3d> *Crv3d,
+  const std::vector<bdifd_vector_3d> &crv1, 
+  const std::vector<bdifd_vector_3d> &crv2)
 {
   assert(crv1.size() == crv2.size());
   Crv3d->resize(crv1.size());
@@ -129,12 +129,12 @@ reconstruct_1st_order(
 #ifndef NDEBUG 
   if (!ran_dbg_) {
     double lambda1_err, lambda2_err;
-    lambda1_err = vcl_fabs(lambda1 - dot_product(Gama1_,cam[0].F));
-    lambda2_err = vcl_fabs(lambda2 - dot_product(Gama2_,cam[1].F));
+    lambda1_err = std::fabs(lambda1 - dot_product(Gama1_,cam[0].F));
+    lambda2_err = std::fabs(lambda2 - dot_product(Gama2_,cam[1].F));
     if (lambda1_err > 0.1  || lambda2_err > 0.1) {
-      vcl_cerr << "Warning: very imprecise measurements and/or reconstruction in " << __FILE__ << vcl_endl;
-      vcl_cerr << "reconstr lsq err: " << err << 
-        "\tlambda1 error: " << lambda1_err << "\tlambda2 error: " << lambda2_err << vcl_endl;
+      std::cerr << "Warning: very imprecise measurements and/or reconstruction in " << __FILE__ << std::endl;
+      std::cerr << "reconstr lsq err: " << err << 
+        "\tlambda1 error: " << lambda1_err << "\tlambda2 error: " << lambda2_err << std::endl;
       ran_dbg_ = true;
     }
   }
@@ -185,7 +185,7 @@ reconstruct_2nd_order(
 
 #ifndef NDEBUG
   if ( !bdifd_util::near_zero(residual, 1e-8) ) {
-    vcl_cout << "Imprecision in normal reconstruction!\n";
+    std::cout << "Imprecision in normal reconstruction!\n";
   }
 #endif
 
@@ -288,28 +288,28 @@ reconstruct_occluding_contour_point(
 
   //: Frontier points. 
   if (bdifd_util::near_zero(numerator,tol)) {
-  //    vcl_cout << "Frontier point detected; c_t\\cdot\\N: ";
+  //    std::cout << "Frontier point detected; c_t\\cdot\\N: ";
     return false;
   }
 
   if (bdifd_util::near_zero(lambda_(0)) || bdifd_util::near_zero(1.0/lambda_(0))) {
-    vcl_cout << "WARNING: Invalid depth" << vcl_endl;
+    std::cout << "WARNING: Invalid depth" << std::endl;
 
     if (bdifd_util::near_zero(factor,tol) || bdifd_util::near_zero(1.0/factor,tol))
-      vcl_cout << "Factor leads to zero or infinite depth\n";
+      std::cout << "Factor leads to zero or infinite depth\n";
 
     if (bdifd_util::near_zero(numerator,tol))
-      vcl_cout << "Numerator near zero; ";
+      std::cout << "Numerator near zero; ";
 
     if (bdifd_util::near_zero(denominator,tol)) {
-      vcl_cout << "Denominator near zero:\n";
-      vcl_cout << "denom:  " << denominator
-        << " numer: " << numerator  << vcl_endl
+      std::cout << "Denominator near zero:\n";
+      std::cout << "denom:  " << denominator
+        << " numer: " << numerator  << std::endl
         << " delta_gamma_t: " << delta_gamma_t 
-        << " N: " << N << vcl_endl;
+        << " N: " << N << std::endl;
     }
 
-    vcl_cout << vcl_endl;
+    std::cout << std::endl;
 
     return false;
   }
@@ -349,28 +349,28 @@ reconstruct_occluding_contour_point(
 
   //: Frontier points. 
   if (bdifd_util::near_zero(numerator,tol)) {
-  //    vcl_cout << "Frontier point detected; c_t\\cdot\\N: ";
+  //    std::cout << "Frontier point detected; c_t\\cdot\\N: ";
     return false;
   }
 
   if (bdifd_util::near_zero(lambda_(0)) || bdifd_util::near_zero(1.0/lambda_(0))) {
-    vcl_cout << "WARNING: Invalid depth" << vcl_endl;
+    std::cout << "WARNING: Invalid depth" << std::endl;
 
     if (bdifd_util::near_zero(factor,tol) || bdifd_util::near_zero(1.0/factor,tol))
-      vcl_cout << "Factor leads to zero or infinite depth\n";
+      std::cout << "Factor leads to zero or infinite depth\n";
 
     if (bdifd_util::near_zero(numerator,tol))
-      vcl_cout << "Numerator near zero; ";
+      std::cout << "Numerator near zero; ";
 
     if (bdifd_util::near_zero(denominator,tol)) {
-      vcl_cout << "Denominator near zero:\n";
-      vcl_cout << "denom:  " << denominator
-        << " numer: " << numerator  << vcl_endl
+      std::cout << "Denominator near zero:\n";
+      std::cout << "denom:  " << denominator
+        << " numer: " << numerator  << std::endl
         << " delta_gamma_t: " << delta_gamma_t 
-        << " N: " << N << vcl_endl;
+        << " N: " << N << std::endl;
     }
 
-    vcl_cout << vcl_endl;
+    std::cout << std::endl;
 
     return false;
   }
@@ -382,15 +382,15 @@ reconstruct_occluding_contour_point(
 //
 void bdifd_rig::
 reconstruct_3d_occluding_contour(
-  vcl_vector<bdifd_vector_3d> *Crv3d,
-  vcl_vector<bool> &valid,
-  const vcl_vector<vsol_point_2d_sptr> &crv1, 
-  const vcl_vector<vsol_point_2d_sptr> &crv2)
+  std::vector<bdifd_vector_3d> *Crv3d,
+  std::vector<bool> &valid,
+  const std::vector<vsol_point_2d_sptr> &crv1, 
+  const std::vector<vsol_point_2d_sptr> &crv2)
 {
   assert(crv1.size() == crv2.size());
 
   // convert to world coordinates
-  vcl_vector<bdifd_vector_3d> crv1_v, crv2_v;
+  std::vector<bdifd_vector_3d> crv1_v, crv2_v;
 
   crv1_v.resize(crv1.size()); crv2_v.resize(crv1.size());
 
@@ -404,17 +404,17 @@ reconstruct_3d_occluding_contour(
 
 void bdifd_rig::
 reconstruct_3d_occluding_contour(
-  vcl_vector<bdifd_vector_3d> *Crv3d,
-  vcl_vector<bool> &valid,
-  const vcl_vector<vsol_point_2d_sptr> &crv1, 
-  const vcl_vector<vsol_point_2d_sptr> &crv2,
+  std::vector<bdifd_vector_3d> *Crv3d,
+  std::vector<bool> &valid,
+  const std::vector<vsol_point_2d_sptr> &crv1, 
+  const std::vector<vsol_point_2d_sptr> &crv2,
   const bdifd_vector_3d &dC
   )
 {
   assert(crv1.size() == crv2.size());
 
   // convert to world coordinates
-  vcl_vector<bdifd_vector_3d> crv1_v, crv2_v;
+  std::vector<bdifd_vector_3d> crv1_v, crv2_v;
 
   crv1_v.resize(crv1.size()); crv2_v.resize(crv1.size());
 
@@ -438,10 +438,10 @@ reconstruct_3d_occluding_contour(
 //
 void bdifd_rig::
 reconstruct_3d_occluding_contour(
-  vcl_vector<bdifd_vector_3d> *Crv3d,
-  vcl_vector<bool> &valid,
-  const vcl_vector<bdifd_vector_3d> &crv1, 
-  const vcl_vector<bdifd_vector_3d> &crv2)
+  std::vector<bdifd_vector_3d> *Crv3d,
+  std::vector<bool> &valid,
+  const std::vector<bdifd_vector_3d> &crv1, 
+  const std::vector<bdifd_vector_3d> &crv2)
 {
   assert(crv1.size() == crv2.size());
   Crv3d->resize(crv1.size());
@@ -482,10 +482,10 @@ reconstruct_3d_occluding_contour(
 //
 void bdifd_rig::
 reconstruct_3d_occluding_contour(
-  vcl_vector<bdifd_vector_3d> *Crv3d,
-  vcl_vector<bool> &valid,
-  const vcl_vector<bdifd_vector_3d> &crv1, 
-  const vcl_vector<bdifd_vector_3d> &crv2,
+  std::vector<bdifd_vector_3d> *Crv3d,
+  std::vector<bool> &valid,
+  const std::vector<bdifd_vector_3d> &crv1, 
+  const std::vector<bdifd_vector_3d> &crv2,
   const bdifd_vector_3d &dC
   )
 {
@@ -524,7 +524,7 @@ angle_with_epipolar_plane(const bdifd_vector_3d &v_world, const bdifd_vector_3d 
       bdifd_util::near_zero(cam[0].F.two_norm()-1,1e-5) && 
       !bdifd_util::near_zero(v_world.two_norm()));
 
-  return vcl_acos(bdifd_util::clump_to_acos(dot_product(v_world,Nep)/(v_world.two_norm()*Nep.two_norm())));
+  return std::acos(bdifd_util::clump_to_acos(dot_product(v_world,Nep)/(v_world.two_norm()*Nep.two_norm())));
 }
 
 double bdifd_rig:: 
@@ -546,7 +546,7 @@ angle_with_epipolar_line(
   epi_line_v[1] = ep_l.b()/ep_l.c();
 
   double epipolar_angle = 
-    vcl_acos(bdifd_util::clump_to_acos( (epi_line_v[0]*v_img[0] + epi_line_v[1]*v_img[1])/(v_img.two_norm()*epi_line_v.two_norm()) ));
+    std::acos(bdifd_util::clump_to_acos( (epi_line_v[0]*v_img[0] + epi_line_v[1]*v_img[1])/(v_img.two_norm()*epi_line_v.two_norm()) ));
 
   if (epipolar_angle > vnl_math::pi/2.0)
     epipolar_angle = vnl_math::pi - epipolar_angle;

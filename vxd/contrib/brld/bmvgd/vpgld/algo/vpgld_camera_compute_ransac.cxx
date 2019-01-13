@@ -1,6 +1,6 @@
-#include <vcl_iostream.h>
-#include <vcl_cassert.h>
-#include <vcl_cmath.h>
+#include <iostream>
+#include <cassert>
+#include <cmath>
 #include <vgl/algo/vgl_homg_operators_2d.h>
 #include <vnl/algo/vnl_svd.h>
 #include <rrel/rrel_ran_sam_search.h>
@@ -12,21 +12,21 @@
 //------------------------------------------
 bool
 vpgld_camera_compute_ransac::
-compute( const vcl_vector< vgl_homg_point_2d<double> >& image_pts,
-         const vcl_vector< vgl_homg_point_3d<double> >& world_pts,
+compute( const std::vector< vgl_homg_point_2d<double> >& image_pts,
+         const std::vector< vgl_homg_point_3d<double> >& world_pts,
          vpgl_proj_camera<double>& camera )
 {
 
   // Check that there are at least 6 points.
   if ( image_pts.size() < 6 || world_pts.size() < 6 ){
-    vcl_cerr << "vpgl_camera_compute_ransac: Need at least 6 point pairs.\n"
-             << "Number in each set: " << pr.size() << ", " << pl.size() << vcl_endl;
+    std::cerr << "vpgl_camera_compute_ransac: Need at least 6 point pairs.\n"
+             << "Number in each set: " << pr.size() << ", " << pl.size() << std::endl;
     return false;
   }
 
   // Check that the correspondence lists are the same size.
   if ( image_pts.size() != world_pts.size() ){
-    vcl_cerr << "vpgl_camera_compute_ransac: Need correspondence lists of same size.\n";
+    std::cerr << "vpgl_camera_compute_ransac: Need correspondence lists of same size.\n";
     return false;
   }
 
@@ -50,7 +50,7 @@ compute( const vcl_vector< vgl_homg_point_2d<double> >& image_pts,
 
 
   // Using MUSET (Minimum Unbiased Scale Estimator with trimmed statistics)
-  rrel_muset_obj* ransac = new rrel_muset_obj((int)vcl_floor(image_points.size()*.75));
+  rrel_muset_obj* ransac = new rrel_muset_obj((int)std::floor(image_points.size()*.75));
 
   rrel_ran_sam_search* ransam = new rrel_ran_sam_search;
   ransam->set_trace_level(trace_level);
@@ -61,10 +61,10 @@ compute( const vcl_vector< vgl_homg_point_2d<double> >& image_pts,
   estimator->params_to_projective( ransam->params(), camera );
 
   // Get a list of the outliers.
-  vcl_vector<double> residuals;
+  std::vector<double> residuals;
   estimator->compute_residuals( ransam->params(), residuals );
 
-  outliers = vcl_vector<bool>();
+  outliers = std::vector<bool>();
   for ( unsigned i = 0; i < pr.size(); i++ ){
     if ( residuals[i] > 1 )
       outliers.push_back( true );
@@ -82,8 +82,8 @@ compute( const vcl_vector< vgl_homg_point_2d<double> >& image_pts,
 
 //------------------------------------------
 rrel_proj_problem::rrel_proj_problem(
-  const vcl_vector< vgl_homg_point_2d<double> >& pr,
-  const vcl_vector< vgl_homg_point_2d<double> >& pl ) :
+  const std::vector< vgl_homg_point_2d<double> >& pr,
+  const std::vector< vgl_homg_point_2d<double> >& pl ) :
   image_pts_(&image_pts),
   world_pts_(&world_pts),
   rrel_estimation_problem(6,6)
@@ -97,13 +97,13 @@ rrel_proj_problem::rrel_proj_problem(
 //------------------------------------------
 bool
 rrel_proj_problem::fit_from_minimal_set(
-  const vcl_vector<int>& point_indices,
+  const std::vector<int>& point_indices,
   vnl_vector<double>& params ) const
 {
-  if ( verbose ) vcl_cerr << "rrel_proj_problem::fit_from_minimal_set\n";
+  if ( verbose ) std::cerr << "rrel_proj_problem::fit_from_minimal_set\n";
   assert( point_indices.size() == 6 );
 
-  vcl_vector< vgl_homg_point_2d<double> > image_6pts(6), world_6pts(6);
+  std::vector< vgl_homg_point_2d<double> > image_6pts(6), world_6pts(6);
 
   for ( int i = 0; i < 6; i++ ){
     int index = point_indices[i];
@@ -117,7 +117,7 @@ rrel_proj_problem::fit_from_minimal_set(
     return false;
 
   proj_to_params( cam , params );
-  if ( verbose ) vcl_cerr << "params: " << params << '\n';
+  if ( verbose ) std::cerr << "params: " << params << '\n';
   return true;
 }
 
@@ -126,9 +126,9 @@ rrel_proj_problem::fit_from_minimal_set(
 void
 rrel_proj_problem::compute_residuals(
   const vnl_vector<double>& params,
-  vcl_vector<double>& residuals ) const
+  std::vector<double>& residuals ) const
 {
-  if ( verbose ) vcl_cerr << "rrel_proj_problem::compute_residuals\n";
+  if ( verbose ) std::cerr << "rrel_proj_problem::compute_residuals\n";
 
   vpgl_proj_matrix<double> cam;
   params_to_proj(params, cam);
@@ -183,9 +183,9 @@ bool
 rrel_proj_problem::weighted_least_squares_fit(
   vnl_vector<double>& /*params*/,
   vnl_matrix<double>& /*norm_covar*/,
-  const vcl_vector<double>* /*weights*/ ) const
+  const std::vector<double>* /*weights*/ ) const
 {
-  vcl_cerr << "rrel_proj_problem::weighted_least_squares_fit was called, but is not implemented.\n";
+  std::cerr << "rrel_proj_problem::weighted_least_squares_fit was called, but is not implemented.\n";
   return false;
 }
 

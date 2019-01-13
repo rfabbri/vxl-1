@@ -8,16 +8,16 @@
 #include <bmcsd/bmcsd_util.h>
 
 void bmcsd_algo_util::
-move_world_to_1st_cam(vcl_vector<vpgl_perspective_camera<double> *> &cam)
+move_world_to_1st_cam(std::vector<vpgl_perspective_camera<double> *> &cam)
 {
-  // just pass empty vcl_vector
-  vcl_vector<vgl_point_3d<double> > pts;
+  // just pass empty std::vector
+  std::vector<vgl_point_3d<double> > pts;
 
   move_world_to_1st_cam(cam,pts);
 }
 
 void bmcsd_algo_util::
-move_world_to_1st_cam(vcl_vector<vpgl_perspective_camera<double> *> &cam,vcl_vector<vgl_point_3d<double> > &pts)
+move_world_to_1st_cam(std::vector<vpgl_perspective_camera<double> *> &cam,std::vector<vgl_point_3d<double> > &pts)
 {
   vgl_h_matrix_3d<double> R_0;
   R_0 = cam[0]->get_rotation().as_h_matrix_3d();
@@ -95,8 +95,8 @@ move_world_to_1st_cam(vcl_vector<vpgl_perspective_camera<double> *> &cam,vcl_vec
 
 bool bmcsd_algo_util::
 dg_reprojection_error(
-    vcl_vector<bdifd_3rd_order_point_2d> &pts, //:< pts[iv] points in view iv
-    const vcl_vector<bdifd_camera> &cam,
+    std::vector<bdifd_3rd_order_point_2d> &pts, //:< pts[iv] points in view iv
+    const std::vector<bdifd_camera> &cam,
     unsigned v,
     double &dpos,
     double &dtheta,
@@ -135,12 +135,12 @@ dg_reprojection_error(
         one_true = true;
         double angle = bmcsd_util::angle_unit(p_v_reproj.t, pts[v].t);
 
-        double dtheta_inc = vcl_min(angle, vnl_math::pi - angle);
+        double dtheta_inc = std::min(angle, vnl_math::pi - angle);
         dtheta += dtheta_inc*dtheta_inc;
 
         // TODO: make bellow squared too.
-        dk     += vcl_fabs(p_v_reproj.k - pts[v].k);
-        dkdot  += vcl_fabs(p_v_reproj.kdot - pts[v].kdot);
+        dk     += std::fabs(p_v_reproj.k - pts[v].k);
+        dkdot  += std::fabs(p_v_reproj.kdot - pts[v].kdot);
 
         double d = (p_v_reproj.gama - pts[v].gama).two_norm();
         dpos   += d*d;
@@ -149,14 +149,14 @@ dg_reprojection_error(
         double d_e, d_n_1, d_t_1;
         bgld_distance::projected_distance(
             p_v_reproj.gama[0],  p_v_reproj.gama[1],
-            pts[v].gama[0],  pts[v].gama[1], vcl_atan2(pts[v].t[1],pts[v].t[0]),
+            pts[v].gama[0],  pts[v].gama[1], std::atan2(pts[v].t[1],pts[v].t[0]),
             &d_e, &d_n_1, &d_t_1 
             );
 
         double d_n_2, d_t_2;
         bgld_distance::projected_distance(
             pts[v].gama[0],  pts[v].gama[1], 
-            p_v_reproj.gama[0],  p_v_reproj.gama[1], vcl_atan2(p_v_reproj.t[1],p_v_reproj.t[0]),
+            p_v_reproj.gama[0],  p_v_reproj.gama[1], std::atan2(p_v_reproj.t[1],p_v_reproj.t[0]),
             &d_e, &d_n_2, &d_t_2 
             );
 
@@ -183,8 +183,8 @@ dg_reprojection_error(
 
 bool bmcsd_algo_util::
 dg_reprojection_error(
-    vcl_vector<bdifd_3rd_order_point_2d> &pts, //:< pts[iv] points in view iv
-    const vcl_vector<bdifd_camera> &cam,
+    std::vector<bdifd_3rd_order_point_2d> &pts, //:< pts[iv] points in view iv
+    const std::vector<bdifd_camera> &cam,
     // no parameter v - do it for all v.
     double &dpos,
     double &dtheta,
@@ -216,7 +216,7 @@ void bmcsd_algo_util::
 extract_edgel_chain(const vsol_polyline_2d &pts, sdet_edgel_chain *ec)
 {
   // Move vsol polyline into vgl_vector of points
-  vcl_vector<vgl_point_2d<double> > pts_vgl;
+  std::vector<vgl_point_2d<double> > pts_vgl;
   pts_vgl.reserve(pts.size());
   for (unsigned i=0; i < pts.size(); ++i)
     pts_vgl.push_back(pts.vertex(i)->get_p());
@@ -225,7 +225,7 @@ extract_edgel_chain(const vsol_polyline_2d &pts, sdet_edgel_chain *ec)
 
   bsold_geno_curve_2d gc;
 
-  vcl_vector<vsol_point_2d_sptr > pts_vsol;
+  std::vector<vsol_point_2d_sptr > pts_vsol;
   pts_vsol.reserve(pts.size());
   for (unsigned i=0; i < pts.size(); ++i)
     pts_vsol.push_back(pts.vertex(i));

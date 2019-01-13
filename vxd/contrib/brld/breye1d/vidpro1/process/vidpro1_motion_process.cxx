@@ -21,7 +21,7 @@ vidpro1_motion_process::vidpro1_motion_process()
 {
   if( !parameters()->add( "Low Range" ,  "-motion_low" ,  0.0f ) ||
       !parameters()->add( "High Range" , "-motion_high" , 10000.0f ) ) {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -41,7 +41,7 @@ vidpro1_motion_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 vidpro1_motion_process::name()
 {
   return "Compute Motion";
@@ -65,18 +65,18 @@ vidpro1_motion_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > vidpro1_motion_process::get_input_type()
+std::vector< std::string > vidpro1_motion_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > vidpro1_motion_process::get_output_type()
+std::vector< std::string > vidpro1_motion_process::get_output_type()
 {  
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
@@ -87,7 +87,7 @@ bool
 vidpro1_motion_process::execute()
 {
   if ( input_data_.size() != 2 ){
-    vcl_cout << "In vidpro1_motion_process::execute() - not exactly two"
+    std::cout << "In vidpro1_motion_process::execute() - not exactly two"
              << " input images \n";
     return false;
   }
@@ -113,7 +113,7 @@ vidpro1_motion_process::execute()
   else if ( image1.nplanes() == 1 ) {
     grey_img1 = image1;
   } else {
-    vcl_cerr << "Returning false. image1.nplanes(): " << image1.nplanes() << vcl_endl;
+    std::cerr << "Returning false. image1.nplanes(): " << image1.nplanes() << std::endl;
     return false;
   }
 
@@ -123,13 +123,13 @@ vidpro1_motion_process::execute()
   else if ( image2.nplanes() == 1 ) {
     grey_img2 = image2;
   } else {
-    vcl_cerr << "Returning false. image2.nplanes(): " << image2.nplanes() << vcl_endl;
+    std::cerr << "Returning false. image2.nplanes(): " << image2.nplanes() << std::endl;
     return false;
   }
 
 
-  vcl_string output_filename;
-  vcl_string input_filename;
+  std::string output_filename;
+  std::string input_filename;
 
   parameters()->get_value( "-motion_low" ,   low_range_ );
   parameters()->get_value( "-motion_high" ,  high_range_ );

@@ -26,10 +26,10 @@ compute(const bgld_param_curve &c)
 
 
 void bsold_geno_measures::
-print(vcl_ostream& strm) const
+print(std::ostream& strm) const
 {
    strm << "       tangents(deg): " << start_tangent_ << "  " << end_tangent_ 
-        << vcl_endl
+        << std::endl
         << "      curvature(deg): " << start_curvature_ << "  " << end_curvature_
-        << vcl_endl;
+        << std::endl;
 }

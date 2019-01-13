@@ -22,7 +22,7 @@ void test_compute_symmetry_point_on_line()
 
   // the symmetry point on line is (5, 0) and has s = 4;
 
-  vcl_vector<double > s_along_line;
+  std::vector<double > s_along_line;
 
   bgld_compute_symmetry_point_on_line(right_line_start, right_line_end,
                                       left_bnd_pt, left_bnd_tangent,
@@ -36,9 +36,9 @@ void test_compute_symmetry_point_on_line()
   }
 
   // Case 2: typical case
-  left_bnd_pt.set( 5 - 6 * vcl_cos(vnl_math::pi/6), 9);
+  left_bnd_pt.set( 5 - 6 * std::cos(vnl_math::pi/6), 9);
   double angle = -2*vnl_math::pi /3;
-  left_bnd_tangent.set(vcl_cos(angle), vcl_sin(angle));
+  left_bnd_tangent.set(std::cos(angle), std::sin(angle));
 
   s_along_line.clear();
   bgld_compute_symmetry_point_on_line(right_line_start, right_line_end,
@@ -68,13 +68,13 @@ void test_compute_symmetry_point_on_circ_arc()
   // arc: radius = 8
   // angle = 2 x 30o
   double radius = 8;
-  vgl_point_2d<double > pt1(5-radius * vcl_cos(vnl_math::pi/6) , -4);
-  vgl_point_2d<double > pt2(5+ radius * vcl_cos(vnl_math::pi/6) , -4);
+  vgl_point_2d<double > pt1(5-radius * std::cos(vnl_math::pi/6) , -4);
+  vgl_point_2d<double > pt2(5+ radius * std::cos(vnl_math::pi/6) , -4);
   double k = -1.0 / radius;
   bgld_circ_arc right_bnd_arc(pt1, pt2, k);
 
   // the symmetry point on line is (5, 0) and has s = 1/2 length of arc;
-  vcl_vector<double > s_along_line;
+  std::vector<double > s_along_line;
   bgld_compute_symmetry_point_on_circ_arc(right_bnd_arc,
                                       left_bnd_pt, left_bnd_tangent,
                                       s_along_line);
@@ -88,9 +88,9 @@ void test_compute_symmetry_point_on_circ_arc()
   }
 
   // Case 2: typical case
-  left_bnd_pt.set( 5 - 6 * vcl_cos(vnl_math::pi/6), 9);
+  left_bnd_pt.set( 5 - 6 * std::cos(vnl_math::pi/6), 9);
   double angle = -2*vnl_math::pi /3;
-  left_bnd_tangent.set(vcl_cos(angle), vcl_sin(angle));
+  left_bnd_tangent.set(std::cos(angle), std::sin(angle));
 
   s_along_line.clear();
   bgld_compute_symmetry_point_on_circ_arc(right_bnd_arc,

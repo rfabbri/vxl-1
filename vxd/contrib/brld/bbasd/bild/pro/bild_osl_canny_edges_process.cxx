@@ -35,7 +35,7 @@ bild_osl_canny_edges_process() : bpro1_process()
         !parameters()->add( "Min Edgel Intensity" ,      "-minintensity" ,       (int)60 ) 
         )
     {
-        vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
     }
     
 }
@@ -60,7 +60,7 @@ clone() const
 
 
 // ------------------------------------------------------------------
-vcl_string bild_osl_canny_edges_process::
+std::string bild_osl_canny_edges_process::
 name()
 {
     return "Binary Osl Canny edges";
@@ -69,20 +69,20 @@ name()
 
 // ------------------------------------------------------------------
 //: Return input types
-vcl_vector< vcl_string > bild_osl_canny_edges_process::
+std::vector< std::string > bild_osl_canny_edges_process::
 get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "image" );
     return to_return;
 }
 
 // ------------------------------------------------------------------
 //: Return output types
-vcl_vector< vcl_string > bild_osl_canny_edges_process::
+std::vector< std::string > bild_osl_canny_edges_process::
 get_output_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "image" );
     to_return.push_back( "image" );
     return to_return;
@@ -112,7 +112,7 @@ execute()
 {
     if ( input_data_.size() != 1 )
     {
-        vcl_cout << "In bild_osl_canny_edges_process::execute() - not exactly one"
+        std::cout << "In bild_osl_canny_edges_process::execute() - not exactly one"
             << " input image \n";
         return false;
     }
@@ -133,7 +133,7 @@ execute()
     }
     else
     {
-        vcl_cerr << "Returning false. nplanes(): " << image_view.nplanes() << vcl_endl;
+        std::cerr << "Returning false. nplanes(): " << image_view.nplanes() << std::endl;
         return false;
     }
     
@@ -158,7 +158,7 @@ execute()
 
     // Canny edge detector execution
     osl_canny_ox detector(canny_params);
-    vcl_list<osl_edge*>  edges;
+    std::list<osl_edge*>  edges;
 
     // =========================================
     detector.detect_edges(img, &edges);
@@ -171,14 +171,14 @@ execute()
         osl_edgel_chain * ec=(osl_edgel_chain *)edges.front();
         for(unsigned i=0;i<ec->size();i++)
         {
-            unsigned int x = (unsigned int)vcl_floor(ec->GetY(i));
-            unsigned int y = (unsigned int)vcl_floor(ec->GetX(i));
+            unsigned int x = (unsigned int)std::floor(ec->GetY(i));
+            unsigned int y = (unsigned int)std::floor(ec->GetX(i));
 
             // location of edge
             binary_edge_img(x,y)=255;
             
             // tangent varies form 0 to 2pi but it is encoded to 0-180
-            dir_img(x,y)=(unsigned int)vcl_floor((ec->GetTheta(i)+180)/2);
+            dir_img(x,y)=(unsigned int)std::floor((ec->GetTheta(i)+180)/2);
         }
         edges.pop_front();
     }

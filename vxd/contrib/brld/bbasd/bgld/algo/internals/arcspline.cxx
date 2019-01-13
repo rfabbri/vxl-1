@@ -6,10 +6,10 @@
 #include "arcspline.h"
 
 
-#include <vcl_cmath.h>
-#include <vcl_memory.h>
-#include <vcl_cstdio.h>
-#include <vcl_cstdlib.h>
+#include <cmath>
+#include <memory>
+#include <cstdio>
+#include <cstdlib>
 
 
 int   RealZero (Real re, Real eps)   /* Is |re| <= eps ? */

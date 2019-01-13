@@ -24,7 +24,7 @@ void vil1_io_image_impl::b_read_by_base(vsl_b_istream& is,
 }
 
 //: Print summary of derived class to os using vil1_image_impl reference
-void vil1_io_image_impl::print_summary_by_base(vcl_ostream& os,
+void vil1_io_image_impl::print_summary_by_base(std::ostream& os,
                                                const vil1_image_impl& base) const
 {
   vsl_print_summary(os,base);
@@ -53,18 +53,18 @@ void vsl_b_read(vsl_b_istream &is, vil1_image_impl & )
    case 1:
     // Nothing to load.
    default:
-    vcl_cerr << "I/O ERROR: vsl_b_read(vsl_b_istream&, vil1_image_impl&)\n"
+    std::cerr << "I/O ERROR: vsl_b_read(vsl_b_istream&, vil1_image_impl&)\n"
              << "           Unknown version number "<< ver << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }
 
 //=========================================================================
 //: Output a human readable summary to the stream
-void vsl_print_summary(vcl_ostream & /*os*/,const vil1_image_impl & /*p*/)
+void vsl_print_summary(std::ostream & /*os*/,const vil1_image_impl & /*p*/)
 {
-  vcl_cerr << "vsl_print_summary() NYI\n";
+  std::cerr << "vsl_print_summary() NYI\n";
 }
 
 //: Add example object to list of those that can be loaded
@@ -93,7 +93,7 @@ void vsl_b_read(vsl_b_istream &is, vil1_image_impl* &b)
 }
 
 //: Print summary to stream by vil1_image_impl pointer
-void vsl_print_summary(vcl_ostream &os, const vil1_image_impl * b)
+void vsl_print_summary(std::ostream &os, const vil1_image_impl * b)
 {
     vsl_clipon_binary_loader<vil1_image_impl,vil1_io_image_impl>::
       instance().print_object_summary(os,b);

@@ -24,7 +24,7 @@ bool bgrld_hg_hypergraph::_internal_del_edge (bgrld_hg_edge* edge)
 void bgrld_hg_hypergraph::_internal_add_hyperedge (bgrld_hg_hyperedge* hyperedge) 
 {
   ///assert (hyperedge->id() > 0);
-  ///hyperedges_.insert (vcl_pair<int, bgrld_hg_hyperedge*> (hyperedge->id(), hyperedge));
+  ///hyperedges_.insert (std::pair<int, bgrld_hg_hyperedge*> (hyperedge->id(), hyperedge));
 }
 
 bool bgrld_hg_hypergraph::_internal_del_hyperedge (bgrld_hg_hyperedge* hyperedge) 
@@ -41,13 +41,13 @@ bool bgrld_hg_hypergraph::_internal_del_hyperedge (bgrld_hg_hyperedge* hyperedge
 //: ===== High-level Graph operation (handling connectivity) =====
 bool bgrld_hg_hypergraph::remove_vertex (bgrld_hg_vertex* vertex)
 {
-  vcl_vector<bgrld_hg_edge*>::iterator E_it = vertex->connecting_edges().begin();
+  std::vector<bgrld_hg_edge*>::iterator E_it = vertex->connecting_edges().begin();
   while (E_it != vertex->connecting_edges().end()) {
     bgrld_hg_edge* edge = (*E_it);
     _internal_disconnect_edge_vertex (edge, vertex);
   }
 
-  vcl_vector<bgrld_hg_hyperedge*>::iterator H_it = vertex->connecting_hyperedges().begin();
+  std::vector<bgrld_hg_hyperedge*>::iterator H_it = vertex->connecting_hyperedges().begin();
   while (H_it != vertex->connecting_hyperedges().end()) {
     bgrld_hg_hyperedge* hyperedge = (*H_it);
     _internal_disconnect_hyperedge_vertex (hyperedge, vertex);
@@ -94,13 +94,13 @@ bool bgrld_hg_hypergraph::remove_edge (bgrld_hg_edge* edge)
 
 bool bgrld_hg_hypergraph::remove_hyperedge (bgrld_hg_hyperedge* hyperedge)
 {
-  vcl_vector<bgrld_hg_edge*>::iterator E_it = hyperedge->connecting_edges().begin();
+  std::vector<bgrld_hg_edge*>::iterator E_it = hyperedge->connecting_edges().begin();
   while (E_it != hyperedge->connecting_edges().end()) {
     bgrld_hg_edge* edge = (*E_it);
     _internal_disconnect_hyperedge_edge (hyperedge, edge);
   }
 
-  vcl_vector<bgrld_hg_vertex*>::iterator V_it = hyperedge->connecting_vertices().begin();
+  std::vector<bgrld_hg_vertex*>::iterator V_it = hyperedge->connecting_vertices().begin();
   while (V_it != hyperedge->connecting_vertices().end()) {
     bgrld_hg_vertex* vertex = (*V_it);
     _internal_disconnect_hyperedge_vertex (hyperedge, vertex);

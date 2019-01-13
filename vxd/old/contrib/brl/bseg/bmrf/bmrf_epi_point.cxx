@@ -2,7 +2,7 @@
 #include "bmrf_epi_point.h"
 //:
 // \file
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vsl/vsl_binary_io.h>
 
 //: Binary save self to stream.
@@ -48,13 +48,13 @@ short bmrf_epi_point::version() const
 }
 
 //: Print an ascii summary to the stream
-void bmrf_epi_point::print_summary(vcl_ostream &os) const
+void bmrf_epi_point::print_summary(std::ostream &os) const
 {
   os << *this;
 }
 
 //external functions
-vcl_ostream& operator<<(vcl_ostream& s, bmrf_epi_point const& ep)
+std::ostream& operator<<(std::ostream& s, bmrf_epi_point const& ep)
 {
   s << '(' << (int)ep.x() << ' ' << (int)ep.y() << ")[" << ep.alpha()
     << ' ' << ep.s() << ' '  << ep.grad_mag() << ' ' << ep.grad_ang() << ' '

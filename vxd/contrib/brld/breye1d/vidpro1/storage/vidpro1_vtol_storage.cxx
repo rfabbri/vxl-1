@@ -60,7 +60,7 @@ vidpro1_vtol_storage::size() const
 
 
 //: Return a const iterator to the beginning of the data
-vcl_set<vtol_topology_object_sptr>::const_iterator
+std::set<vtol_topology_object_sptr>::const_iterator
 vidpro1_vtol_storage::begin() const
 {
   return data_set_.begin();
@@ -68,7 +68,7 @@ vidpro1_vtol_storage::begin() const
 
 
 //: Return a const iterator to the end of the data
-vcl_set<vtol_topology_object_sptr>::const_iterator
+std::set<vtol_topology_object_sptr>::const_iterator
 vidpro1_vtol_storage::end() const
 {
   return data_set_.end();

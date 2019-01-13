@@ -7,7 +7,7 @@
 // it will then create the dynamic program which will determine
 // the optimal assignments between the two images
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vnl/vnl_vector.h>
 class vsrl_intensity_token;
 class vsrl_image_correlation;
@@ -63,16 +63,16 @@ class vsrl_raster_dp_setup
   int raster_line_;
 
   // the token lists
-  vcl_vector<vsrl_intensity_token*> tok_list1;
-  vcl_vector<vsrl_intensity_token*> tok_list2;
+  std::vector<vsrl_intensity_token*> tok_list1;
+  std::vector<vsrl_intensity_token*> tok_list2;
 
   void create_token_list(int width,
                          vsrl_image_correlation *image_correlation,
-                         vcl_vector<vsrl_intensity_token*> &tok_list,
+                         std::vector<vsrl_intensity_token*> &tok_list,
                          double step=1);
 
   // clear token list;
-  void clear_token_list(vcl_vector<vsrl_intensity_token*> &tok_list);
+  void clear_token_list(std::vector<vsrl_intensity_token*> &tok_list);
 
   //: the search range used
   int search_range_;

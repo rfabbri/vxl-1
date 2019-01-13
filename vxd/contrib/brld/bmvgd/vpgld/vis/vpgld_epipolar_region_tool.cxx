@@ -27,7 +27,7 @@ vpgld_epipolar_region_tool()
   gesture0 = vgui_event_condition(vgui_LEFT, vgui_MODIFIER_NULL, true);
 }
 
-vcl_string
+std::string
 vpgld_epipolar_region_tool::name() const
 {
   return "Epipolar Region";
@@ -36,31 +36,31 @@ vpgld_epipolar_region_tool::name() const
 void   
 vpgld_epipolar_region_tool::activate ()
 {
-  vcl_cout << "vpgld_epipolar_region_tool ON\n";
+  std::cout << "vpgld_epipolar_region_tool ON\n";
   
-  vcl_vector< bvis1_view_tableau_sptr > views;
+  std::vector< bvis1_view_tableau_sptr > views;
   views = MANAGER->get_views();
 
   if (views.size() < 2) {
-    vgui::out << "Error: need at least 2 views for this tool" << vcl_endl;
-    vcl_cerr  << "Error: need at least 2 views for this tool" << vcl_endl;
+    vgui::out << "Error: need at least 2 views for this tool" << std::endl;
+    std::cerr  << "Error: need at least 2 views for this tool" << std::endl;
     return;
   }
 
   int v1, v2; //:< view numbers to work on
   if(!get_epipolar_params(&v1, &v2, &maxradius_perturb_)) {
-    vcl_cerr << "Error: in getting params" << vcl_endl;
+    std::cerr << "Error: in getting params" << std::endl;
     return;
   }
   if ( (unsigned)v1+1 > views.size() || (unsigned)v2 +1 > views.size() ) {
-    vcl_cerr << "Error: invalid view numbers" << vcl_endl;
+    std::cerr << "Error: invalid view numbers" << std::endl;
     return;
   }
 
   int frame_v1 = views[v1]->frame();
   int frame_v2 = views[v2]->frame();
 
-  vcl_cout << "Working in frames " << frame_v1 << " and " << frame_v2 << vcl_endl;
+  std::cout << "Working in frames " << frame_v1 << " and " << frame_v2 << std::endl;
 
   // -------- Get camera matrices from each frame
   {
@@ -74,15 +74,15 @@ vpgld_epipolar_region_tool::activate ()
   cam_storage.vertical_cast(p);
 
   if (cam_storage->get_camera()->type_name() != "vpgl_perspective_camera") {
-    vcl_cerr << "Error: tool requires a perspective camera" << vcl_endl;
+    std::cerr << "Error: tool requires a perspective camera" << std::endl;
     return;
   }
 
   p1_ = static_cast<const vpgl_perspective_camera<double> *> (cam_storage->get_camera());
 
-  vcl_cout << "NAME: " << cam_storage->name() << vcl_endl;
-  //  vcl_cout << "Camera1: \n" << p1_->get_matrix();
-  vcl_cout << "Camera1: \n" << *p1_;
+  std::cout << "NAME: " << cam_storage->name() << std::endl;
+  //  std::cout << "Camera1: \n" << p1_->get_matrix();
+  std::cout << "Camera1: \n" << *p1_;
 
   // camera 2
   p = MANAGER->repository()->get_data_at("vpgl camera",frame_v2);
@@ -90,15 +90,15 @@ vpgld_epipolar_region_tool::activate ()
   cam_storage.vertical_cast(p);
 
   if (cam_storage->get_camera()->type_name() != "vpgl_perspective_camera") {
-    vcl_cerr << "Error: tool requires a perspective camera" << vcl_endl;
+    std::cerr << "Error: tool requires a perspective camera" << std::endl;
     return;
   }
 
   p2_ = static_cast<const vpgl_perspective_camera<double> *> (cam_storage->get_camera());
 
-  vcl_cout << "NAME2: " << cam_storage->name() << vcl_endl;
-  //  vcl_cout << "Camera2: \n" << p2_->get_matrix();
-  vcl_cout << "Camera2: \n" << *p2_;
+  std::cout << "NAME2: " << cam_storage->name() << std::endl;
+  //  std::cout << "Camera2: \n" << p2_->get_matrix();
+  std::cout << "Camera2: \n" << *p2_;
 
   // Fundamental matrix
   fm_ = new vpgl_fundamental_matrix <double> (*p1_,*p2_);
@@ -106,10 +106,10 @@ vpgld_epipolar_region_tool::activate ()
 
   // -------- Add tableaus to draw on
  
-  vcl_string type("vsol2D");
-  vcl_string name("epipolar");
-  vcl_string type2("vsol2D");
-  vcl_string name2("epipolar");
+  std::string type("vsol2D");
+  std::string name("epipolar");
+  std::string type2("vsol2D");
+  std::string name2("epipolar");
 
 
   bpro1_storage_sptr 
@@ -120,7 +120,7 @@ vpgld_epipolar_region_tool::activate ()
      MANAGER->add_to_display(n_data);
      MANAGER->add_to_display(n_data2);
   } else {
-     vcl_cerr << "error: unable to register new data\n";
+     std::cerr << "error: unable to register new data\n";
      return ;
   }
 
@@ -132,11 +132,11 @@ vpgld_epipolar_region_tool::activate ()
     tab_l_.vertical_cast(tab_ptr1);
     tab_r_.vertical_cast(tab_ptr2);
   } else {
-    vcl_cerr << "error: Could not find child tableaus in selector\n";
+    std::cerr << "error: Could not find child tableaus in selector\n";
     return ;
   }
 
-  vcl_string active;
+  std::string active;
   active = views[v1]->selector()->active_name();
   views[v1]->selector()->set_active(name);
   views[v1]->selector()->active_to_top();
@@ -154,7 +154,7 @@ void
 vpgld_epipolar_region_tool::deactivate ()
 {
   delete fm_;
-  vcl_cout << "vpgl_epipolar_region_tool OFF\n";
+  std::cout << "vpgl_epipolar_region_tool OFF\n";
 }
 
 bool 
@@ -185,16 +185,16 @@ vpgld_epipolar_region_tool::handle( const vgui_event & e,
         switch (e.key) {
           case '.': { // increase radius
             maxradius_perturb_+= 1;
-            vcl_cout << "Radius of neighborhood: " << maxradius_perturb_ << vcl_endl;
+            std::cout << "Radius of neighborhood: " << maxradius_perturb_ << std::endl;
             break;
           }
           case ',': { // decrease radius
             maxradius_perturb_-= 1;
-            vcl_cout << "Radius of neighborhood: " << maxradius_perturb_ << vcl_endl;
+            std::cout << "Radius of neighborhood: " << maxradius_perturb_ << std::endl;
             break;
           }
           default:
-            vcl_cout << "Unassigned key: " << e.key << " pressed.\n";
+            std::cout << "Unassigned key: " << e.key << " pressed.\n";
             return true;
             break;
         }
@@ -204,7 +204,7 @@ vpgld_epipolar_region_tool::handle( const vgui_event & e,
          tab_r_->remove(soview_r_);
         }
 
-        vcl_cout << "Frame index: " << view->frame() << vcl_endl;
+        std::cout << "Frame index: " << view->frame() << std::endl;
       
         tab_l_->set_foreground(0,1,0.2);
         tab_l_->set_point_radius(5);

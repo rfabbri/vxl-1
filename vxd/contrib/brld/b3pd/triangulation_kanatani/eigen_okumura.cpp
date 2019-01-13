@@ -5,11 +5,11 @@
  *
  *                                    Time-stamp: <07/09/12 10:19:31 sugaya>
  * ************************************************************************* */
-#include <vcl_cstdlib.h>
-#include <vcl_cstring.h>
+#include <cstdlib>
+#include <cstring>
 #include "matrix.h"
 #include "matutil.h"      /* 行列用小道具集 */
-#include <vcl_cmath.h>
+#include <cmath>
 
 #define EPS         1E-6  /* 非対角成分の許容誤差 */
 #define MAX_ITER    100   /* 最大の繰返し数 */

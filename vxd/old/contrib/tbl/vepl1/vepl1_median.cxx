@@ -1,6 +1,6 @@
 // This is tbl/vepl1/vepl1_median.cxx
 #include "vepl1_median.h"
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vipl/accessors/vipl_accessors_vil1_image.h>
 #include <vipl/vipl_median.h>
 #include <vil1/vil1_memory_image_of.h>
@@ -70,7 +70,7 @@ vil1_image vepl1_median(vil1_image const& image, float radius)
 
   //
   else {
-    vcl_cerr << __FILE__ ": vepl1_median() not implemented for " << image << vcl_endl;
+    std::cerr << __FILE__ ": vepl1_median() not implemented for " << image << std::endl;
     return 0;
   }
 }

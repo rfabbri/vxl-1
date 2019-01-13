@@ -17,8 +17,8 @@
 #define _DBORL_CATEGORY_INFO_H
 
 #include <vbl/vbl_ref_count.h>
-#include <vcl_string.h>
-#include <vcl_vector.h>
+#include <string>
+#include <vector>
 #include <vil/vil_rgb.h>
 #include <vxl_config.h>
 #include <vsl/vsl_binary_io.h>
@@ -27,24 +27,24 @@
 class borld_category_info : public vbl_ref_count
 {
 public:
-  vcl_string name_;
+  std::string name_;
   int id_;
   vil_rgb<vxl_byte> color_;
-  vcl_vector<vcl_string> prefix_list_;
+  std::vector<std::string> prefix_list_;
 
   //: the default color is red
   inline borld_category_info() : name_(""), id_(-1), color_((vxl_byte)255, (vxl_byte)0, (vxl_byte)0) {}
-  inline borld_category_info(vcl_string name) : name_(name), id_(-1), color_((vxl_byte)255, (vxl_byte)0, (vxl_byte)0) {}
-  inline borld_category_info(vcl_string name, int id) : name_(name), id_(id), color_((vxl_byte)255, (vxl_byte)0, (vxl_byte)0) {}
+  inline borld_category_info(std::string name) : name_(name), id_(-1), color_((vxl_byte)255, (vxl_byte)0, (vxl_byte)0) {}
+  inline borld_category_info(std::string name, int id) : name_(name), id_(id), color_((vxl_byte)255, (vxl_byte)0, (vxl_byte)0) {}
   borld_category_info(borld_category_info& other);
   
-  void set_name(vcl_string name) { name_ = name; }
+  void set_name(std::string name) { name_ = name; }
   void set_id(int id) { id_ = id; }
   void set_color(vil_rgb<vxl_byte> c);
-  void set_prefix_list(vcl_vector<vcl_string>& list);
-  void add_prefix(vcl_string p);
+  void set_prefix_list(std::vector<std::string>& list);
+  void add_prefix(std::string p);
 
-  void write_xml(vcl_ostream& os);
+  void write_xml(std::ostream& os);
 };
 
 //: a vector of categories
@@ -52,19 +52,19 @@ class borld_category_info_set : public vbl_ref_count
 {
 public:
   borld_category_info_set() {}
-  borld_category_info_set(const vcl_vector<borld_category_info_sptr>& cats) : cats_(cats) {}
+  borld_category_info_set(const std::vector<borld_category_info_sptr>& cats) : cats_(cats) {}
 
   void add_category(borld_category_info_sptr c); 
-  vcl_vector<borld_category_info_sptr>& categories() { return cats_; }
+  std::vector<borld_category_info_sptr>& categories() { return cats_; }
 
   //: assumes that we're given a simple file where each line is: <category_name> <category_id> or it is a comment line which start with the char: #
-  bool read_cats_from_a_simple_file(vcl_istream& is);
+  bool read_cats_from_a_simple_file(std::istream& is);
 
   //: return the class given by the name, return NULL if not in the list
-  borld_category_info_sptr find_category(const vcl_string class_name);
+  borld_category_info_sptr find_category(const std::string class_name);
 
 protected:
-  vcl_vector<borld_category_info_sptr> cats_;
+  std::vector<borld_category_info_sptr> cats_;
 };
 
 // Binary io, NOT IMPLEMENTED, signatures defined to use borld_category_info_set as a brdb_value

@@ -48,10 +48,10 @@ class vidl1_avicodec : public vidl1_codec
                         int x0, int y0 );
 
   //-----------------------------------------------------
-  virtual bool probe(vcl_string const& fname);
-  virtual vidl1_codec_sptr load(vcl_string const& fname, char mode = 'r' );
-  virtual bool save(vidl1_movie* movie, vcl_string const& fname);
-  virtual vcl_string type() const { return "AVI"; }
+  virtual bool probe(std::string const& fname);
+  virtual vidl1_codec_sptr load(std::string const& fname, char mode = 'r' );
+  virtual bool save(vidl1_movie* movie, std::string const& fname);
+  virtual std::string type() const { return "AVI"; }
   virtual vidl1_avicodec* castto_vidl1_avicodec() { return this; }
 
   // Set of encoders that this class knows how to configure by itself,
@@ -85,7 +85,7 @@ class vidl1_avicodec : public vidl1_codec
   // Helpers
   HANDLE  make_dib(vidl1_frame_sptr frame, UINT bits);
 
-  bool load_avi(vcl_string const& fname, char mode);
+  bool load_avi(std::string const& fname, char mode);
 
  protected:
   bool read_header();

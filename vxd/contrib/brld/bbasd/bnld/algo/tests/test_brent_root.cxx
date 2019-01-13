@@ -1,6 +1,6 @@
 #include <testlib/testlib_test.h>
 #include <bnld/algo/bnld_brent_root.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vnl/vnl_math.h>
 
 
@@ -31,9 +31,9 @@ MAIN( test_brent_root )
    double root = -1000;
    root_solver.solve(-100, 100, root);
 
-   vcl_cout << "Function f(x) = 2x + 50\n";
-   vcl_cout << "Root x0 = " << root << vcl_endl;
+   std::cout << "Function f(x) = 2x + 50\n";
+   std::cout << "Root x0 = " << root << std::endl;
 
-   TEST("solve f(x) = ", vcl_abs(root+25)<1e-12, true); 
+   TEST("solve f(x) = ", std::abs(root+25)<1e-12, true); 
    SUMMARY();
 }

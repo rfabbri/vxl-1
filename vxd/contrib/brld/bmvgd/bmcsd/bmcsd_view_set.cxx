@@ -1,5 +1,5 @@
 #include "bmcsd_view_set.h"
-#include <vcl_fstream.h>
+#include <fstream>
 #include <buld/buld_parse_simple_file.h>
 #include <vsl/vsl_vector_io.h>
 
@@ -42,23 +42,23 @@ get_capitol_subset_view_instances(bmcsd_stereo_instance_views *frames_to_match)
 
 bool bmcsd_view_set::
 read_txt(
-    const vcl_string &fname,
+    const std::string &fname,
     bmcsd_stereo_instance_views *frames_to_match)
 {
   bmcsd_stereo_instance_views &f = *frames_to_match;
 
-  vcl_vector< vcl_vector <int> > ids;
+  std::vector< std::vector <int> > ids;
 
   bool retval = buld_parse_number_lists (fname, ids);
   if (!retval) {
-    vcl_cerr << "ERROR: in parsing number lists\n";
+    std::cerr << "ERROR: in parsing number lists\n";
     return false;
   }
 
   for (unsigned l=0; l < ids.size(); ++l) {
     if (ids[l].size() < 3) {
-      vcl_cerr << 
-        "ERROR in bmcsd_view_set::read_txt - need at least 2 views in line " << l << vcl_endl;
+      std::cerr << 
+        "ERROR in bmcsd_view_set::read_txt - need at least 2 views in line " << l << std::endl;
       return false; 
     }
 
@@ -76,25 +76,25 @@ read_txt(
   return true;
 }
 
-vcl_ostream&  operator<<(vcl_ostream& s, const bmcsd_stereo_instance_views& p)
+std::ostream&  operator<<(std::ostream& s, const bmcsd_stereo_instance_views& p)
 {
-  s << "num instances: " << p.num_instances() << vcl_endl;
+  s << "num instances: " << p.num_instances() << std::endl;
   for (unsigned i=0; i < p.num_instances(); ++i)
-    s << *p.instance(i) << vcl_endl;
+    s << *p.instance(i) << std::endl;
 
   return s;
 }
 
-vcl_ostream&  operator<<(vcl_ostream& s, const bmcsd_stereo_views & p)
+std::ostream&  operator<<(std::ostream& s, const bmcsd_stereo_views & p)
 {
-  s << "stereo0: " << p.stereo0() << vcl_endl;
-  s << "stereo1: " << p.stereo1() << vcl_endl;
-  s << "num_conf: " << p.num_confirmation_views() << vcl_endl;
+  s << "stereo0: " << p.stereo0() << std::endl;
+  s << "stereo1: " << p.stereo1() << std::endl;
+  s << "num_conf: " << p.num_confirmation_views() << std::endl;
 
   for (unsigned i=0; i < p.num_confirmation_views(); ++i) {
     s << p.confirmation_view(i) << " "; 
   }
-  s << vcl_endl;
+  s << std::endl;
 
   return s;
 }
@@ -129,9 +129,9 @@ b_read(vsl_b_istream &is)
     break;
 
     default:
-        vcl_cerr << "I/O ERROR: bmcsd_stereo_views::b_read(vsl_b_istream&)\n"
+        std::cerr << "I/O ERROR: bmcsd_stereo_views::b_read(vsl_b_istream&)\n"
              << "           Unknown version number "<< ver << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }

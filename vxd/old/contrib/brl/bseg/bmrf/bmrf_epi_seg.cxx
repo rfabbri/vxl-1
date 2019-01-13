@@ -2,8 +2,8 @@
 //:
 // \file
 
-#include <vcl_cassert.h>
-#include <vcl_iostream.h>
+#include <cassert>
+#include <iostream>
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_numeric_traits.h>
 #include <bmrf/bmrf_epi_point.h>
@@ -33,9 +33,9 @@ bmrf_epi_seg::bmrf_epi_seg()
   max_right_int_=0;
 }
 
-bmrf_epi_seg::bmrf_epi_seg(vcl_vector<bmrf_epi_point_sptr> const& points)
+bmrf_epi_seg::bmrf_epi_seg(std::vector<bmrf_epi_point_sptr> const& points)
 {
-  for (vcl_vector<bmrf_epi_point_sptr>::const_iterator pit=points.begin();
+  for (std::vector<bmrf_epi_point_sptr>::const_iterator pit=points.begin();
        pit != points.end(); pit++)
     seg_.push_back(*pit);
   limits_valid_ = false;
@@ -101,10 +101,10 @@ void bmrf_epi_seg::compute_limits()
     double ang_rad = deg_to_rad*ang_deg;
     min_tan_ang_ = vnl_math::min(min_tan_ang_, ang_deg);
     max_tan_ang_ = vnl_math::max(max_tan_ang_, ang_deg);
-    sin_sum += vcl_sin(ang_rad);
-    cos_sum += vcl_cos(ang_rad);
+    sin_sum += std::sin(ang_rad);
+    cos_sum += std::cos(ang_rad);
   }
-  avg_tan_ang_ = vcl_atan2(sin_sum, cos_sum)/deg_to_rad;
+  avg_tan_ang_ = std::atan2(sin_sum, cos_sum)/deg_to_rad;
   limits_valid_=true;
 }
 
@@ -437,10 +437,10 @@ void bmrf_epi_seg::compute_int_values()
   }
   avg_left_int_ = sum_li/n;
   left_int_sd_ = sum_li2/n - avg_left_int_*avg_left_int_;
-  left_int_sd_ = vcl_sqrt(left_int_sd_);
+  left_int_sd_ = std::sqrt(left_int_sd_);
   avg_right_int_ = sum_ri/n;
   right_int_sd_ = sum_ri2/n - avg_right_int_*avg_right_int_;
-  right_int_sd_ = vcl_sqrt(right_int_sd_);
+  right_int_sd_ = std::sqrt(right_int_sd_);
   int_valid_ = true;
 }
 
@@ -514,9 +514,9 @@ double bmrf_epi_seg::tan_ang_match(const double a,
   if (!sa || !sb || !ang_sd)
     return 1e8;
   double ang_a = sa->tan_ang(a), ang_b = sb->tan_ang(a);
-  double da = vcl_fabs(ang_a-ang_b);
+  double da = std::fabs(ang_a-ang_b);
   //see if the angles were near the cut
-  double da_360 = vcl_fabs(da-360);
+  double da_360 = std::fabs(da-360);
   double d = da;
   if (da_360<da)
     d = da_360;
@@ -538,11 +538,11 @@ double bmrf_epi_seg::left_int_match(const double a,
   double lia_sd = sa->left_int_sd(), lib_sd = sb->left_int_sd();
   double sd = vnl_math::min(lia_sd, lib_sd);
 #ifdef DEBUG
-  vcl_cout << "left_int:(" << lia << ' ' << lib << " /" << sd << ")\n";
+  std::cout << "left_int:(" << lia << ' ' << lib << " /" << sd << ")\n";
 #endif
   if (!sd)
     return 1e8;
-  return vcl_fabs(lia-lib)/sd;
+  return std::fabs(lia-lib)/sd;
 }
 
 //=======================================================================
@@ -560,11 +560,11 @@ double bmrf_epi_seg::right_int_match(const double a,
   double ria_sd = sa->right_int_sd(), rib_sd = sb->right_int_sd();
   double sd = vnl_math::min(ria_sd, rib_sd);
 #ifdef DEBUG
-  vcl_cout << "right_int:(" << ria << ' ' << rib << " /" << sd << ")\n";
+  std::cout << "right_int:(" << ria << ' ' << rib << " /" << sd << ")\n";
 #endif
   if (!sd)
     return 1e8;
-  return vcl_fabs(ria-rib)/sd;
+  return std::fabs(ria-rib)/sd;
 }
 
 //=======================================================================
@@ -580,7 +580,7 @@ double bmrf_epi_seg::velocity_coef(const double a,
   double sum = 0.5*(s_a + s_b);//is average s the best?
   if (!sum)
     return 0;
-  return vcl_fabs(s_a-s_b)/sum;
+  return std::fabs(s_a-s_b)/sum;
 }
 
 //=======================================================================
@@ -590,7 +590,7 @@ double bmrf_epi_seg::match(const double a,
                            bmrf_epi_seg_sptr const& sa,
                            bmrf_epi_seg_sptr const& sb)
 {
-  vcl_cout << sa << ' ' << sb <<'\n';
+  std::cout << sa << ' ' << sb <<'\n';
   double tam = tan_ang_match(a, sa, sb);
   double lim = left_int_match(a, sa, sb);
   double rim = right_int_match(a, sa, sb);
@@ -598,9 +598,9 @@ double bmrf_epi_seg::match(const double a,
     return -1;//erroneous match
   double v = velocity_coef(a, sa, sb);
   double tot = tam+lim+rim;
-  vcl_cout << "M|" << tot << "|(" << a << ' ' << sa->s(a) << ' ' << sb->s(a)
+  std::cout << "M|" << tot << "|(" << a << ' ' << sa->s(a) << ' ' << sb->s(a)
            << "):[" << tam << ' ' << lim << ' ' << rim << "]->" << v
-           << '\n' << vcl_flush;
+           << '\n' << std::flush;
   return tot;
 }
 #endif
@@ -663,9 +663,9 @@ void bmrf_epi_seg::b_read(vsl_b_istream &is)
     break;
    }
    default:
-    vcl_cerr << "I/O ERROR: bmrf_epi_seg::b_read(vsl_b_istream&)\n"
+    std::cerr << "I/O ERROR: bmrf_epi_seg::b_read(vsl_b_istream&)\n"
              << "           Unknown version number "<< ver << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }
@@ -677,24 +677,24 @@ short bmrf_epi_seg::version() const
 }
 
 //: Print an ascii summary to the stream
-void bmrf_epi_seg::print_summary(vcl_ostream &os) const
+void bmrf_epi_seg::print_summary(std::ostream &os) const
 {
   os << *this;
 }
 
 //: Return a platform independent string identifying the class
-vcl_string bmrf_epi_seg::is_a() const
+std::string bmrf_epi_seg::is_a() const
 {
-  return vcl_string("bmrf_epi_seg");
+  return std::string("bmrf_epi_seg");
 }
 
 //: Return true if the argument matches the string identifying the class or any parent class
-bool bmrf_epi_seg::is_class(const vcl_string& cls) const
+bool bmrf_epi_seg::is_class(const std::string& cls) const
 {
   return cls==bmrf_epi_seg::is_a();
 }
 
-vcl_ostream&  operator<<(vcl_ostream& s, bmrf_epi_seg const& epi_seg)
+std::ostream&  operator<<(std::ostream& s, bmrf_epi_seg const& epi_seg)
 {
   int n = epi_seg.n_pts();
   bmrf_epi_seg& es = const_cast<bmrf_epi_seg &>(epi_seg);//cast away const

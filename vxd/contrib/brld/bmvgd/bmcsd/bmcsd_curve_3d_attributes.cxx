@@ -5,7 +5,7 @@
 void bmcsd_curve_3d_attributes::
 b_write(vsl_b_ostream &os) const
 {
-  // print_summary(vcl_cout);
+  // print_summary(std::cout);
   vsl_b_write(os, version());
   vsl_b_write(os, *v_); // yuck..
   vsl_b_write(os, inlier_views_);
@@ -39,16 +39,16 @@ b_read(vsl_b_istream &is)
     break;
 
     default:
-        vcl_cerr << "I/O ERROR: bmcsd_curve_2d_attributes::b_read(vsl_b_istream&)\n"
+        std::cerr << "I/O ERROR: bmcsd_curve_2d_attributes::b_read(vsl_b_istream&)\n"
              << "           Unknown version number "<< ver << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }
 
 //: Print an ascii summary to the stream
 void bmcsd_curve_3d_attributes::
-print_summary(vcl_ostream &os) const
+print_summary(std::ostream &os) const
 {
   os << "[" << is_a() << ": " << *v_
     << " inlier_views: ";

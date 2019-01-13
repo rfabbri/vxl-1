@@ -47,20 +47,20 @@ bsold_cut_contour_tool()
 void bsold_cut_contour_tool::
 activate()
 {
-  vcl_cout << "=============================================================================\n";
-  vcl_cout << "             TOOL INSTRUCTIONS                             \n";
-  vcl_cout << " 'q'                   : Swith to DEFAULT mode             \n";
-  vcl_cout << " In DEFAULT mode:                                          \n";
-  vcl_cout << "   SHIFT + right click : open a polygon                    \n";
-  vcl_cout << "   'j'                 : join two ends of a polyline and turn into a polygon  \n";
-  vcl_cout << "   SHIFT + left click  : cut a polyline into 2 pieces      \n";
-  vcl_cout << "   'r'                 : delete a line or a polyline                          \n";
-  vcl_cout << "   'SHIFT + r'         : undo delete a line or a polyline             \n";
-  vcl_cout << " 'g'                   : Swith to CONNECT_POLYLINE mode    \n";
-  vcl_cout << " In CONNECT_POLYLINE mode:                                 \n";
-  vcl_cout << "   SHIFT + left click  : Pick starting point to connect                      \n";
-  vcl_cout << "   SHIFT + middle click: Pick ending point to connect                      \n";
-  vcl_cout << "===========================================================\n";
+  std::cout << "=============================================================================\n";
+  std::cout << "             TOOL INSTRUCTIONS                             \n";
+  std::cout << " 'q'                   : Swith to DEFAULT mode             \n";
+  std::cout << " In DEFAULT mode:                                          \n";
+  std::cout << "   SHIFT + right click : open a polygon                    \n";
+  std::cout << "   'j'                 : join two ends of a polyline and turn into a polygon  \n";
+  std::cout << "   SHIFT + left click  : cut a polyline into 2 pieces      \n";
+  std::cout << "   'r'                 : delete a line or a polyline                          \n";
+  std::cout << "   'SHIFT + r'         : undo delete a line or a polyline             \n";
+  std::cout << " 'g'                   : Swith to CONNECT_POLYLINE mode    \n";
+  std::cout << " In CONNECT_POLYLINE mode:                                 \n";
+  std::cout << "   SHIFT + left click  : Pick starting point to connect                      \n";
+  std::cout << "   SHIFT + middle click: Pick ending point to connect                      \n";
+  std::cout << "===========================================================\n";
 }
 
 
@@ -86,7 +86,7 @@ handle( const vgui_event & e, const bvis1_view_tableau_sptr& view )
   if (this->gesture_switch_normal_mode_(e))
   {
     this->active_mode_ = bsold_cut_contour_tool::NORMAL;
-    vcl_cout << "\nSwitched to mode NORMAL." << vcl_endl;
+    std::cout << "\nSwitched to mode NORMAL." << std::endl;
     return true;
   }
 
@@ -94,7 +94,7 @@ handle( const vgui_event & e, const bvis1_view_tableau_sptr& view )
   if (this->gesture_switch_connect_polyline_mode_(e))
   {
     this->active_mode_ = bsold_cut_contour_tool::CONNECT_POLYLINE;
-    vcl_cout << "\nSwitched to mode CONNECT_POLYLINE." << vcl_endl;
+    std::cout << "\nSwitched to mode CONNECT_POLYLINE." << std::endl;
     this->connect_polyline1_ = 0;
     this->connect_polyline2_ = 0;
     return true;
@@ -166,7 +166,7 @@ handle( const vgui_event & e, const bvis1_view_tableau_sptr& view )
 bool bsold_cut_contour_tool::
 handle_cut_polyline(float ix, float iy)
 {
-  vcl_cout << "Action: Cut polyline\n";
+  std::cout << "Action: Cut polyline\n";
   vgui_soview* obj = this->tableau()->get_highlighted_soview();
 
   if (!obj)
@@ -180,7 +180,7 @@ handle_cut_polyline(float ix, float iy)
     vsol_polyline_2d_sptr polyline = polyline_soview->sptr();
     
     // find the closest point
-    vcl_vector<vsol_point_2d_sptr > pt_set;
+    std::vector<vsol_point_2d_sptr > pt_set;
     pt_set.reserve(polyline->size());
     for (unsigned int i=0; i<polyline->size(); ++i)
     {
@@ -190,11 +190,11 @@ handle_cut_polyline(float ix, float iy)
     vsol_point_2d_sptr closest_pt = 
       bsol_algs::closest_point(new vsol_point_2d(ix, iy), pt_set, min_dist);
 
-    vcl_vector<vsol_polyline_2d_sptr > new_polys = 
+    std::vector<vsol_polyline_2d_sptr > new_polys = 
       bsold_algos::cut_polyline(polyline, closest_pt);
 
     // convert to list of vsol_spatial_objects to add to the storage
-    vcl_vector<vsol_spatial_object_2d_sptr > vsol_list;
+    std::vector<vsol_spatial_object_2d_sptr > vsol_list;
     for (unsigned int i=0; i<new_polys.size(); ++i)
     {
       vsol_list.push_back(new_polys[i]->cast_to_spatial_object());
@@ -216,7 +216,7 @@ handle_cut_polyline(float ix, float iy)
   }
   else
   {
-    vcl_cout << "ERROR: highlighted object is not a polyline.\n";
+    std::cout << "ERROR: highlighted object is not a polyline.\n";
   }
   return true;
 }
@@ -228,7 +228,7 @@ handle_cut_polyline(float ix, float iy)
 bool bsold_cut_contour_tool::
 handle_open_polygon(float ix, float iy)
 {
-  vcl_cout << "Action: Open a polygon\n";
+  std::cout << "Action: Open a polygon\n";
   vgui_soview* obj = this->tableau()->get_highlighted_soview();
   if (!obj) return true;
   if (obj->type_name() == "bgui_vsol_soview2D_polygon")
@@ -238,7 +238,7 @@ handle_open_polygon(float ix, float iy)
     vsol_polygon_2d_sptr polygon = polygon_soview->sptr();
     
     // find the closest point
-    vcl_vector<vsol_point_2d_sptr > pt_set;
+    std::vector<vsol_point_2d_sptr > pt_set;
     pt_set.reserve(polygon->size());
     for (unsigned int i=0; i<polygon->size(); ++i)
     {
@@ -269,7 +269,7 @@ handle_open_polygon(float ix, float iy)
   }
   else
   {
-    vcl_cout << "ERROR: highlighted object is not a polygon.\n";
+    std::cout << "ERROR: highlighted object is not a polygon.\n";
   }
   return true;
 }
@@ -282,7 +282,7 @@ handle_open_polygon(float ix, float iy)
 bool bsold_cut_contour_tool::
 handle_close_polyline(float ix, float iy)
 {
-  vcl_cout << "Action: Close a polyline\n";
+  std::cout << "Action: Close a polyline\n";
   vgui_soview* obj = this->tableau()->get_highlighted_soview();
   if (!obj) return true;
   if (obj->type_name() == "bgui_vsol_soview2D_polyline")
@@ -313,7 +313,7 @@ handle_close_polyline(float ix, float iy)
   }
   else
   {
-    vcl_cout << "ERROR: highlighted object is not a polyline.\n";
+    std::cout << "ERROR: highlighted object is not a polyline.\n";
   }
   return false;
 
@@ -329,7 +329,7 @@ handle_close_polyline(float ix, float iy)
 bool bsold_cut_contour_tool::
 handle_delete_vsol(float ix, float iy)
 {
-  vcl_cout << "Action: Delete a polyline or a line segment\n";
+  std::cout << "Action: Delete a polyline or a line segment\n";
   vgui_soview* obj = this->tableau()->get_highlighted_soview();
   if (!obj) return false;
 
@@ -352,7 +352,7 @@ handle_delete_vsol(float ix, float iy)
   }
   else
   {
-    vcl_cout << "ERROR: hightlighted object is not a vsol_soview2D object.\n";
+    std::cout << "ERROR: hightlighted object is not a vsol_soview2D object.\n";
   }
     
   return true;
@@ -369,7 +369,7 @@ handle_delete_vsol(float ix, float iy)
 bool bsold_cut_contour_tool::
 handle_undo()
 {
-  vcl_cout << "Action: Undo vsol deletion\n";
+  std::cout << "Action: Undo vsol deletion\n";
   for (unsigned int i=0; i<this->last_added_.size(); ++i)
   {
     this->storage()->remove_object(this->last_added_[i]);
@@ -383,7 +383,7 @@ handle_undo()
   this->last_added_.clear();
   this->last_removed_.clear();
 
-  vcl_cout << "Undo done.\n";
+  std::cout << "Undo done.\n";
 
   bvis1_manager::instance()->display_current_frame();
 
@@ -398,12 +398,12 @@ handle_undo()
 bool bsold_cut_contour_tool::
 handle_pick_connect_polyline1(float ix, float iy)
 {
-  vcl_cout << "Action: Pick polyline1 to connect\n";
+  std::cout << "Action: Pick polyline1 to connect\n";
   vgui_soview* obj = this->tableau()->get_highlighted_soview();
 
   if (!obj)
   {
-    vcl_cout << "\n ERROR: no vsol object highlighted." << vcl_endl;
+    std::cout << "\n ERROR: no vsol object highlighted." << std::endl;
     return false;
   }
 
@@ -425,7 +425,7 @@ handle_pick_connect_polyline1(float ix, float iy)
   }
   else
   {
-    vcl_cout << "ERROR: highlighted object is not a polyline.\n";
+    std::cout << "ERROR: highlighted object is not a polyline.\n";
   }
   return true;
 }
@@ -438,11 +438,11 @@ handle_pick_connect_polyline1(float ix, float iy)
 bool bsold_cut_contour_tool::
 handle_pick_connect_polyline2(float ix, float iy)
 {
-  vcl_cout << "Action: Pick polyline2 to connect\n";
+  std::cout << "Action: Pick polyline2 to connect\n";
 
   if (!this->connect_polyline1_)
   {
-    vcl_cout << "\nERROR: need to pick polyline1 to connect first!" << vcl_endl;
+    std::cout << "\nERROR: need to pick polyline1 to connect first!" << std::endl;
     return true;
   }
 
@@ -450,7 +450,7 @@ handle_pick_connect_polyline2(float ix, float iy)
 
   if (!obj)
   {
-    vcl_cout << "\n ERROR: no vsol object highlighted." << vcl_endl;
+    std::cout << "\n ERROR: no vsol object highlighted." << std::endl;
     return false;
   }
 
@@ -463,7 +463,7 @@ handle_pick_connect_polyline2(float ix, float iy)
 
     if (poly == this->connect_polyline1_)
     {
-      vcl_cout << "\nERROR: selected object for polyline2 is the same as polyline1. Choose a different polyline.\n";
+      std::cout << "\nERROR: selected object for polyline2 is the same as polyline1. Choose a different polyline.\n";
       return true;
     }
     
@@ -477,7 +477,7 @@ handle_pick_connect_polyline2(float ix, float iy)
   }
   else
   {
-    vcl_cout << "ERROR: highlighted object is not a polyline.\n";
+    std::cout << "ERROR: highlighted object is not a polyline.\n";
   }
 
 
@@ -486,7 +486,7 @@ handle_pick_connect_polyline2(float ix, float iy)
   // Then delete both polyline1 and polyline2
 
   // collect points from polyline1, change their order if necessary
-  vcl_vector<vsol_point_2d_sptr > pt_set1;
+  std::vector<vsol_point_2d_sptr > pt_set1;
   if (this->connect_polyline1_at_start_)
   {
     for (unsigned i = this->connect_polyline1_->size(); i > 0; --i)
@@ -504,7 +504,7 @@ handle_pick_connect_polyline2(float ix, float iy)
 
 
   // collect points from polyline2, change their order if necessary
-  vcl_vector<vsol_point_2d_sptr > pt_set2;
+  std::vector<vsol_point_2d_sptr > pt_set2;
   if (this->connect_polyline2_at_start_)
   {
     for (unsigned i =0; i < this->connect_polyline2_->size(); ++i)
@@ -521,7 +521,7 @@ handle_pick_connect_polyline2(float ix, float iy)
   }
 
   // group the two point sets into one, merge end points if necessary
-  vcl_vector<vsol_point_2d_sptr > new_pts;
+  std::vector<vsol_point_2d_sptr > new_pts;
   new_pts.insert(new_pts.end(), pt_set1.begin(), pt_set1.end());
 
   vsol_point_2d_sptr poly1_end = pt_set1.back();

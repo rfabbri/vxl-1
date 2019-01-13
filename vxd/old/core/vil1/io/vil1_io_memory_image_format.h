@@ -25,6 +25,6 @@ void vsl_b_write(vsl_b_ostream &os, const vil1_memory_image_format& v);
 void vsl_b_read(vsl_b_istream &is, vil1_memory_image_format& v);
 
 //: Print human readable summary of a vil1_memory_image_format object
-void vsl_print_summary(vcl_ostream& os,const vil1_memory_image_format& v);
+void vsl_print_summary(std::ostream& os,const vil1_memory_image_format& v);
 
 #endif // #ifndef vil1_io_memory_image_format_h_

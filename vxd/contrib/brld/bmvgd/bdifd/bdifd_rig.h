@@ -50,14 +50,14 @@ public:
      bdifd_vector_3d *Cpt_v) const;
 
   void reconstruct_3d_curve(
-    vcl_vector<bdifd_vector_3d> *Crv3d,
-    const vcl_vector<bdifd_vector_3d> &crv1, 
-    const vcl_vector<bdifd_vector_3d> &crv2);
+    std::vector<bdifd_vector_3d> *Crv3d,
+    const std::vector<bdifd_vector_3d> &crv1, 
+    const std::vector<bdifd_vector_3d> &crv2);
 
   void reconstruct_3d_curve(
-    vcl_vector<bdifd_vector_3d> *C3d,
-    const vcl_vector<vsol_point_2d_sptr> &c1, 
-    const vcl_vector<vsol_point_2d_sptr> &c2);
+    std::vector<bdifd_vector_3d> *C3d,
+    const std::vector<vsol_point_2d_sptr> &c1, 
+    const std::vector<vsol_point_2d_sptr> &c2);
    
   //: All input in world coordinates and normalized.
   inline bool reconstruct_tangent(
@@ -129,34 +129,34 @@ public:
         bdifd_vector_3d delta_c);
 
   void reconstruct_3d_occluding_contour(
-    vcl_vector<bdifd_vector_3d> *Crv3d,
-    vcl_vector<bool> &valid,
-    const vcl_vector<vsol_point_2d_sptr> &crv1, 
-    const vcl_vector<vsol_point_2d_sptr> &crv2);
+    std::vector<bdifd_vector_3d> *Crv3d,
+    std::vector<bool> &valid,
+    const std::vector<vsol_point_2d_sptr> &crv1, 
+    const std::vector<vsol_point_2d_sptr> &crv2);
 
   void reconstruct_3d_occluding_contour(
-    vcl_vector<bdifd_vector_3d> *Crv3d,
-    vcl_vector<bool> &valid,
-    const vcl_vector<vsol_point_2d_sptr> &crv1, 
-    const vcl_vector<vsol_point_2d_sptr> &crv2,
+    std::vector<bdifd_vector_3d> *Crv3d,
+    std::vector<bool> &valid,
+    const std::vector<vsol_point_2d_sptr> &crv1, 
+    const std::vector<vsol_point_2d_sptr> &crv2,
     const bdifd_vector_3d &dC);
 
   void reconstruct_3d_occluding_contour(
-    vcl_vector<bdifd_vector_3d> *Crv3d,
-    vcl_vector<bool> &valid,
-    const vcl_vector<bdifd_vector_3d> &crv1, 
-    const vcl_vector<bdifd_vector_3d> &crv2);
+    std::vector<bdifd_vector_3d> *Crv3d,
+    std::vector<bool> &valid,
+    const std::vector<bdifd_vector_3d> &crv1, 
+    const std::vector<bdifd_vector_3d> &crv2);
 
   void reconstruct_3d_occluding_contour(
-    vcl_vector<bdifd_vector_3d> *Crv3d,
-    vcl_vector<bool> &valid,
-    const vcl_vector<bdifd_vector_3d> &crv1, 
-    const vcl_vector<bdifd_vector_3d> &crv2,
+    std::vector<bdifd_vector_3d> *Crv3d,
+    std::vector<bool> &valid,
+    const std::vector<bdifd_vector_3d> &crv1, 
+    const std::vector<bdifd_vector_3d> &crv2,
     const bdifd_vector_3d &dC);
 
 public: // DATA
 
-  vcl_vector<bdifd_camera> cam;
+  std::vector<bdifd_camera> cam;
 
   vpgl_fundamental_matrix <double> f12;
 

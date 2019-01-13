@@ -1,7 +1,7 @@
 #include <testlib/testlib_test.h>
 #include <bgld/bgld_eno_curve_3d.h>
-#include <vcl_iostream.h>
-#include <vcl_cmath.h>
+#include <iostream>
+#include <cmath>
 #include <vnl/vnl_math.h>
 
 MAIN( test_eno_curve_3d )
@@ -14,17 +14,17 @@ MAIN( test_eno_curve_3d )
   // y(t) = -1 + t + t^2 - 2t^3
   // z(t) = 2 + 2t - t^2 + t^3
 
-  vcl_vector<double> coefs_x;
+  std::vector<double> coefs_x;
   coefs_x.push_back(1);
   coefs_x.push_back(-2);
   coefs_x.push_back(-2);
   coefs_x.push_back(1);
-  vcl_vector<double> coefs_y;
+  std::vector<double> coefs_y;
   coefs_y.push_back(-1);
   coefs_y.push_back(1);
   coefs_y.push_back(1);
   coefs_y.push_back(-2);
-  vcl_vector<double> coefs_z;
+  std::vector<double> coefs_z;
   coefs_z.push_back(2);
   coefs_z.push_back(2);
   coefs_z.push_back(-1);

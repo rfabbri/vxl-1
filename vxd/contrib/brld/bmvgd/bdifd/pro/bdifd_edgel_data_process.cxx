@@ -12,8 +12,8 @@
 
 #include <bdifd/pro/bdifd_3rd_order_geometry_storage.h>
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 
 #include <vsol/vsol_point_2d.h>
 #include <vsol/vsol_point_2d_sptr.h>
@@ -33,7 +33,7 @@ bdifd_edgel_data_process::bdifd_edgel_data_process()
       !parameters()->add( "   perturb position" , "-dpos"     , 0.2) ||
       !parameters()->add( "   perturb tangents (deg)" , "-dtan"     , 10.0)
       ) {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -53,7 +53,7 @@ bdifd_edgel_data_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 bdifd_edgel_data_process::name()
 {
   return "Edgel Test Data";
@@ -77,17 +77,17 @@ bdifd_edgel_data_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > bdifd_edgel_data_process::get_input_type()
+std::vector< std::string > bdifd_edgel_data_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > bdifd_edgel_data_process::get_output_type()
+std::vector< std::string > bdifd_edgel_data_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "vsol2D" );
   to_return.push_back( "3rdOrderGeometry" );
   return to_return;
@@ -100,8 +100,8 @@ bdifd_edgel_data_process::execute()
 {
   clear_output();
 
-  vcl_vector<bdifd_3rd_order_point_2d> C_subpixel;
-  vcl_vector<vsol_line_2d_sptr> lines;
+  std::vector<bdifd_3rd_order_point_2d> C_subpixel;
+  std::vector<vsol_line_2d_sptr> lines;
 
   //get the parameters
   bool do_circle=false;
@@ -132,7 +132,7 @@ bdifd_edgel_data_process::execute()
   }
 
   
-    vcl_vector< vsol_spatial_object_2d_sptr > edgels;
+    std::vector< vsol_spatial_object_2d_sptr > edgels;
 
     const double scale=0.5;
     for (unsigned i=0; i<lines.size(); i++) {

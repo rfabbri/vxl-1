@@ -1,5 +1,5 @@
 #include "vsrl_intensity_token.h"
-#include <vcl_iostream.h>
+#include <iostream>
 
 
 vsrl_intensity_token::vsrl_intensity_token()
@@ -55,7 +55,7 @@ double vsrl_intensity_token::cost(vsrl_token *tok)
         // we should be able to perform an efficient lookup
         image_cost= (1.0 - image_correlation_->get_correlation(x1,y1,(x2-x1)));
         if (image_cost <0.0){
-          // vcl_cout << "Warning we have a strange correlation function" << vcl_endl;
+          // std::cout << "Warning we have a strange correlation function" << std::endl;
           image_cost=1.0;
         }
       }
@@ -67,7 +67,7 @@ double vsrl_intensity_token::cost(vsrl_token *tok)
 
     else{
       // we don't know how to compare these tokens
-      vcl_cout << "warning cannot compare tokens" << vcl_endl;
+      std::cout << "warning cannot compare tokens" << std::endl;
     }
   }
 

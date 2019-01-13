@@ -25,7 +25,7 @@ vidpro1_horn_schunck_process::vidpro1_horn_schunck_process()
       !parameters()->add( "No of Iterations", "-no_of_iterations" ,  (int)10 )
       )
     {    
-      vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+      std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
     }
 }
 
@@ -45,7 +45,7 @@ vidpro1_horn_schunck_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 vidpro1_horn_schunck_process::name()
 {
   return "Compute Horn_Schunck";
@@ -69,18 +69,18 @@ vidpro1_horn_schunck_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > vidpro1_horn_schunck_process::get_input_type()
+std::vector< std::string > vidpro1_horn_schunck_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > vidpro1_horn_schunck_process::get_output_type()
+std::vector< std::string > vidpro1_horn_schunck_process::get_output_type()
 {  
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
@@ -99,7 +99,7 @@ bool
 vidpro1_horn_schunck_process::execute()
 {
   if ( input_data_.size() != 2 ){
-    vcl_cout << "In vidpro1_horn_schunck_process::execute() - not exactly two"
+    std::cout << "In vidpro1_horn_schunck_process::execute() - not exactly two"
              << " input images \n";
     return false;
   }
@@ -130,7 +130,7 @@ vidpro1_horn_schunck_process::execute()
   else if ( image1.nplanes() == 1 ) {
     grey_img1 = image1;
   } else {
-    vcl_cerr << "Returning false. image1.nplanes(): " << image1.nplanes() << vcl_endl;
+    std::cerr << "Returning false. image1.nplanes(): " << image1.nplanes() << std::endl;
     return false;
   }
 
@@ -140,7 +140,7 @@ vidpro1_horn_schunck_process::execute()
   else if ( image2.nplanes() == 1 ) {
     grey_img2 = image2;
   } else {
-    vcl_cerr << "Returning false. image2.nplanes(): " << image2.nplanes() << vcl_endl;
+    std::cerr << "Returning false. image2.nplanes(): " << image2.nplanes() << std::endl;
     return false;
   }
 
@@ -158,14 +158,14 @@ vidpro1_horn_schunck_process::execute()
 
   if(result == -1)
     {
-      vcl_cout << "Warning! input images are equal " 
+      std::cout << "Warning! input images are equal " 
                << "in vidpro1_horn_schunck_process\n";
       this->store_output(output);
       return true;
     }
   else if (result == -2)
     {
-      vcl_cout << "Warning! some internal process image is all zero " 
+      std::cout << "Warning! some internal process image is all zero " 
                << "in vidpro1_horn_schunck_process\n";
       this->store_output(output);
       return true;

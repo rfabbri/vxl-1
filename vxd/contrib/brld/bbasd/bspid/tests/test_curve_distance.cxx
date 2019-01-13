@@ -6,8 +6,8 @@
 
 void
 test_num_inliers(
-    const vcl_vector<double> &d_threshold, 
-    const vcl_vector<unsigned> &num_inliers, 
+    const std::vector<double> &d_threshold, 
+    const std::vector<unsigned> &num_inliers, 
     vil_image_view<vxl_uint_32> &feature_map, 
     const vsol_digital_curve_2d &curve, 
     bool verbose)
@@ -19,7 +19,7 @@ test_num_inliers(
 
   for (unsigned i=0; i < d_threshold.size(); ++i) {
     if (verbose)
-      vcl_cout << "distance threshold " << d_threshold[i] << vcl_endl;
+      std::cout << "distance threshold " << d_threshold[i] << std::endl;
 
     unsigned num_inliers_computed = 
       bspid_curve_distance::num_inliers_dt(curve, d_threshold[i], feature_map, label);
@@ -27,8 +27,8 @@ test_num_inliers(
     TEST("Number inliers equals ground truth", num_inliers_computed, num_inliers[i]);
 
     if (verbose)
-      vcl_cout  << "num_inliers = " << num_inliers_computed 
-        << "  num_inliers ground truth = " << num_inliers[i] << vcl_endl;
+      std::cout  << "num_inliers = " << num_inliers_computed 
+        << "  num_inliers ground truth = " << num_inliers[i] << std::endl;
   }
 }
 
@@ -38,7 +38,7 @@ MAIN( test_curve_distance )
 
 
   { 
-  vcl_cout << "2x2 image with two features at different distances from the curve\n";
+  std::cout << "2x2 image with two features at different distances from the curve\n";
   // -- Data
   unsigned r=2,c=2;
   vil_image_view <vxl_uint_32> feature_map(c,r,1);
@@ -50,8 +50,8 @@ MAIN( test_curve_distance )
   curve.add_vertex(new vsol_point_2d(1,0));
   
   // -- Ground truth
-  vcl_vector <double> d_threshold;
-  vcl_vector <unsigned> num_inliers;
+  std::vector <double> d_threshold;
+  std::vector <unsigned> num_inliers;
 
   // equidistant edgels count as 1
   d_threshold.push_back(1.01); num_inliers.push_back(1);
@@ -64,7 +64,7 @@ MAIN( test_curve_distance )
   }
 
   { 
-  vcl_cout << "2x2 image with equidistant features from the curve\n";
+  std::cout << "2x2 image with equidistant features from the curve\n";
   // -- Data
   unsigned r=2,c=2;
   vil_image_view <vxl_uint_32> feature_map(c,r,1);
@@ -76,8 +76,8 @@ MAIN( test_curve_distance )
   curve.add_vertex(new vsol_point_2d(1,0));
   
   // -- Ground truth
-  vcl_vector <double> d_threshold;
-  vcl_vector <unsigned> num_inliers;
+  std::vector <double> d_threshold;
+  std::vector <unsigned> num_inliers;
 
   // equidistant edgels count as 1
   d_threshold.push_back(1.01); num_inliers.push_back(1);
@@ -90,7 +90,7 @@ MAIN( test_curve_distance )
   }
 
   { 
-  vcl_cout << "2x2 image with features on all pixels, one of them on the curve\n";
+  std::cout << "2x2 image with features on all pixels, one of them on the curve\n";
   // -- Data
   unsigned r=2,c=2;
   vil_image_view <vxl_uint_32> feature_map(c,r,1);
@@ -100,8 +100,8 @@ MAIN( test_curve_distance )
   curve.add_vertex(new vsol_point_2d(1,0));
   
   // -- Ground truth
-  vcl_vector <double> d_threshold;
-  vcl_vector <unsigned> num_inliers;
+  std::vector <double> d_threshold;
+  std::vector <unsigned> num_inliers;
 
   d_threshold.push_back(1.01); num_inliers.push_back(1);
   d_threshold.push_back(3); num_inliers.push_back(1);
@@ -113,7 +113,7 @@ MAIN( test_curve_distance )
   }
 
   { 
-  vcl_cout << "4x5 image\n";
+  std::cout << "4x5 image\n";
   // -- Data
   unsigned r=5,c=4;
   vil_image_view <vxl_uint_32> feature_map(c,r,1);
@@ -131,8 +131,8 @@ MAIN( test_curve_distance )
   curve.add_vertex(new vsol_point_2d(2,3));
   
   // -- Ground truth
-  vcl_vector <double> d_threshold;
-  vcl_vector <unsigned> num_inliers;
+  std::vector <double> d_threshold;
+  std::vector <unsigned> num_inliers;
 
   d_threshold.push_back(0); num_inliers.push_back(0);   
   d_threshold.push_back(1.01); num_inliers.push_back(2);

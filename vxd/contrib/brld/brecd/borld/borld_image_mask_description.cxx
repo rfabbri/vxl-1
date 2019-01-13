@@ -5,7 +5,7 @@
 // \date        10/03/07
 #include "borld_image_mask_description.h"
 
-#include <vcl_iostream.h>
+#include <iostream>
 
 unsigned borld_image_mask_description::version()
 {
@@ -14,15 +14,15 @@ unsigned borld_image_mask_description::version()
 
 void borld_image_mask_description::b_read()
 {
-  vcl_cout << "IMPLEMENT: borld_image_mask_description::b_read()\n";
+  std::cout << "IMPLEMENT: borld_image_mask_description::b_read()\n";
 }
 
 void borld_image_mask_description::b_write()
 {
-  vcl_cout << "IMPLEMENT: borld_image_mask_description::b_write()\n";
+  std::cout << "IMPLEMENT: borld_image_mask_description::b_write()\n";
 }
 
 //: nothing to write to the xml file --> just empty implementation to prevent abstract class instantiation error (error C2259)
-void borld_image_mask_description::write_xml(vcl_ostream& os)
+void borld_image_mask_description::write_xml(std::ostream& os)
 {
 }

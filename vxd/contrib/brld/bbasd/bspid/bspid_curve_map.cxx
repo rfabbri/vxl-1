@@ -6,13 +6,13 @@
 #include "bspid_curve_map.h"
 #include <vsol/vsol_digital_curve_2d.h>
 #include <vsol/vsol_point_2d.h>
-#include <vcl_limits.h>
-#include <vcl_cmath.h>
+#include <limits>
+#include <cmath>
 
 
 
 //: Constructor
-bspid_curve_map::bspid_curve_map(const vcl_vector<vsol_digital_curve_2d_sptr>& curves,
+bspid_curve_map::bspid_curve_map(const std::vector<vsol_digital_curve_2d_sptr>& curves,
                                  unsigned int width, unsigned int height,
                                  int x_offset, int y_offset)
  : x_offset_(x_offset), y_offset_(y_offset),
@@ -22,7 +22,7 @@ bspid_curve_map::bspid_curve_map(const vcl_vector<vsol_digital_curve_2d_sptr>& c
 
 
 //: Constructor
-bspid_curve_map::bspid_curve_map(const vcl_vector<vsol_digital_curve_2d_sptr>& curves)
+bspid_curve_map::bspid_curve_map(const std::vector<vsol_digital_curve_2d_sptr>& curves)
  : x_offset_(0), y_offset_(0),
    map_(make_array(x_offset_, y_offset_, curves), 3.0, 4.242641f)
 {
@@ -41,7 +41,7 @@ bspid_curve_map::distance(int x, int y) const
 {
   if( x < x_offset_ || x >= (int(width())+x_offset_) ||
       y < y_offset_ || y >= (int(height())+y_offset_) )
-    return vcl_numeric_limits<float>::infinity();
+    return std::numeric_limits<float>::infinity();
   return float(map_.distance(x-x_offset_+1,y-y_offset_+1))/3.0f;
 }
 
@@ -75,8 +75,8 @@ bspid_curve_map::fill_between(vbl_array_2d<map_element>& array,
                               const vgl_point_2d<int>& min_pt, 
                               const vgl_point_2d<int>& max_pt )
 {
-  if( vcl_abs((float) (max_pt.x() - min_pt.x())) < 2 && 
-      vcl_abs((float) (max_pt.y() - min_pt.y())) < 2 )
+  if( std::abs((float) (max_pt.x() - min_pt.x())) < 2 && 
+      std::abs((float) (max_pt.y() - min_pt.y())) < 2 )
     return;
   
   vgl_point_2d<int> mid_pt = centre(min_pt, max_pt);
@@ -89,13 +89,13 @@ bspid_curve_map::fill_between(vbl_array_2d<map_element>& array,
 
 //: Make an array from these curves
 vbl_array_2d<bspid_curve_map::map_element> 
-bspid_curve_map::make_array_fixed(const vcl_vector<vsol_digital_curve_2d_sptr>& curves,
+bspid_curve_map::make_array_fixed(const std::vector<vsol_digital_curve_2d_sptr>& curves,
                                   unsigned int width, unsigned int height,
                                   int x_offset, int y_offset)
 {
   vbl_array_2d<map_element> array(height, width, map_element(NULL,0));
   // Iterate through all curves
-  for ( vcl_vector<vsol_digital_curve_2d_sptr>::const_iterator itr=curves.begin();
+  for ( std::vector<vsol_digital_curve_2d_sptr>::const_iterator itr=curves.begin();
         itr != curves.end();  ++itr )
   {
     vsol_digital_curve_2d_sptr dc = *itr;
@@ -103,13 +103,13 @@ bspid_curve_map::make_array_fixed(const vcl_vector<vsol_digital_curve_2d_sptr>& 
       continue;
     // Round each point in the curve to a pixel location
     vgl_point_2d<double> temp_pt = dc->p0()->get_p();
-    vgl_point_2d<int> last_pt((int)vcl_floor(temp_pt.x()+0.5)-x_offset, 
-                              (int)vcl_floor(temp_pt.y()+0.5)-y_offset);
+    vgl_point_2d<int> last_pt((int)std::floor(temp_pt.x()+0.5)-x_offset, 
+                              (int)std::floor(temp_pt.y()+0.5)-y_offset);
     for( unsigned int p=0; p<dc->size(); ++p )
     {
       temp_pt = dc->point(p)->get_p();
-      vgl_point_2d<int> pt((int)vcl_floor(temp_pt.x()+0.5)-x_offset, 
-                           (int)vcl_floor(temp_pt.y()+0.5)-y_offset);
+      vgl_point_2d<int> pt((int)std::floor(temp_pt.x()+0.5)-x_offset, 
+                           (int)std::floor(temp_pt.y()+0.5)-y_offset);
       // check that the pixel falls within the array
       assert(pt.x() >= 0 && pt.x() < int(width));
       assert(pt.y() >= 0 && pt.y() < int(height));
@@ -136,14 +136,14 @@ bspid_curve_map::make_array_fixed(const vcl_vector<vsol_digital_curve_2d_sptr>& 
 //: Make an array from these curves
 vbl_array_2d<bspid_curve_map::map_element> 
 bspid_curve_map::make_array(int& x_offset, int& y_offset,
-                            const vcl_vector<vsol_digital_curve_2d_sptr>& curves)
+                            const std::vector<vsol_digital_curve_2d_sptr>& curves)
 {
-  int x_min = vcl_numeric_limits<int>::max();
-  int y_min = vcl_numeric_limits<int>::max();
-  int x_max = vcl_numeric_limits<int>::min();
-  int y_max = vcl_numeric_limits<int>::min();
+  int x_min = std::numeric_limits<int>::max();
+  int y_min = std::numeric_limits<int>::max();
+  int x_max = std::numeric_limits<int>::min();
+  int y_max = std::numeric_limits<int>::min();
   // Iterate through all curves
-  for ( vcl_vector<vsol_digital_curve_2d_sptr>::const_iterator itr=curves.begin();
+  for ( std::vector<vsol_digital_curve_2d_sptr>::const_iterator itr=curves.begin();
         itr != curves.end();  ++itr )
   {
     vsol_digital_curve_2d_sptr dc = *itr;
@@ -154,8 +154,8 @@ bspid_curve_map::make_array(int& x_offset, int& y_offset,
     for( unsigned int p=0; p<dc->size(); ++p )
     {
       vgl_point_2d<double> temp_pt = dc->point(p)->get_p();
-      int x = (int)vcl_floor(temp_pt.x()+0.5);
-      int y = (int)vcl_floor(temp_pt.y()+0.5);
+      int x = (int)std::floor(temp_pt.x()+0.5);
+      int y = (int)std::floor(temp_pt.y()+0.5);
       if( x > x_max ) x_max = x;
       if( x < x_min ) x_min = x;
       if( y > y_max ) y_max = y;

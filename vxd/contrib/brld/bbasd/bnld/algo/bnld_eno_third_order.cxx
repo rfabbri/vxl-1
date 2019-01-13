@@ -1,8 +1,8 @@
 // This is bbasd/bnld/bnld_eno_third_order.cxx
 #include "bnld_eno_third_order.h"
-#include <vcl_iostream.h>
-#include <vcl_cfloat.h>
-#include <vcl_cmath.h>
+#include <iostream>
+#include <cfloat>
+#include <cmath>
 #include <assert.h>
 
 bnld_eno_third_order::bnld_eno_third_order()
@@ -17,9 +17,9 @@ bnld_eno_third_order::~bnld_eno_third_order()
   delete [] coeffs_;
 }
 
-void bnld_eno_third_order::interpolate(vcl_vector<double> fxi)
+void bnld_eno_third_order::interpolate(std::vector<double> fxi)
 {
-  vcl_vector<double> xi;
+  std::vector<double> xi;
 
   int size = fxi.size();
   for(int i=0; i<size; i++)
@@ -28,7 +28,7 @@ void bnld_eno_third_order::interpolate(vcl_vector<double> fxi)
   return interpolate(xi, fxi);
 }
 
-void bnld_eno_third_order::interpolate(vcl_vector<double> xi, vcl_vector<double> fxi)
+void bnld_eno_third_order::interpolate(std::vector<double> xi, std::vector<double> fxi)
 {
   assert(xi.size() > 3);
   num_intervals_ = xi.size()-1;
@@ -52,7 +52,7 @@ void bnld_eno_third_order::interpolate(vcl_vector<double> xi, vcl_vector<double>
     {
       // using {x(i), x(i+1), x(i+2), x(i+3)} set
       find_parameters(xi, fxi, i, temp_coeffs);
-      if( vcl_fabs(temp_coeffs[3]) < vcl_fabs(smoothest_poly_coeffs[3]) )
+      if( std::fabs(temp_coeffs[3]) < std::fabs(smoothest_poly_coeffs[3]) )
       {
         for(int j=0; j<4; j++)
           smoothest_poly_coeffs[j] = temp_coeffs[j];
@@ -63,7 +63,7 @@ void bnld_eno_third_order::interpolate(vcl_vector<double> xi, vcl_vector<double>
     {
       // using {x(i-1), x(i), x(i+1), x(i+2)} set
       find_parameters(xi, fxi, i-1, temp_coeffs);
-      if( vcl_fabs(temp_coeffs[3]) < vcl_fabs(smoothest_poly_coeffs[3]) )
+      if( std::fabs(temp_coeffs[3]) < std::fabs(smoothest_poly_coeffs[3]) )
       {
         for(int j=0; j<4; j++)
           smoothest_poly_coeffs[j] = temp_coeffs[j];
@@ -74,7 +74,7 @@ void bnld_eno_third_order::interpolate(vcl_vector<double> xi, vcl_vector<double>
     {
       // using {x(i-2), x(i-1), x(i), x(i+1)} set
       find_parameters(xi, fxi, i-2, temp_coeffs);
-      if( vcl_fabs(temp_coeffs[3]) < vcl_fabs(smoothest_poly_coeffs[3]) )
+      if( std::fabs(temp_coeffs[3]) < std::fabs(smoothest_poly_coeffs[3]) )
       {
         for(int j=0; j<4; j++)
           smoothest_poly_coeffs[j] = temp_coeffs[j];
@@ -104,14 +104,14 @@ void bnld_eno_third_order::print()
 {
   for(int i=0; i<num_intervals_; i++)
   {
-    vcl_cout << "interval " << i << vcl_endl << "---" << vcl_endl;
-    vcl_cout << "starting point index: " << poly_start_index_[i] << vcl_endl;
-    vcl_cout << coeffs_[i][0] << " " << coeffs_[i][1] << " " << 
-                coeffs_[i][2] << " " << coeffs_[i][3] << vcl_endl;
+    std::cout << "interval " << i << std::endl << "---" << std::endl;
+    std::cout << "starting point index: " << poly_start_index_[i] << std::endl;
+    std::cout << coeffs_[i][0] << " " << coeffs_[i][1] << " " << 
+                coeffs_[i][2] << " " << coeffs_[i][3] << std::endl;
   }
 }
 
-void bnld_eno_third_order::find_parameters(vcl_vector<double> xi, vcl_vector<double> fxi, int start_index, double *coeffs)
+void bnld_eno_third_order::find_parameters(std::vector<double> xi, std::vector<double> fxi, int start_index, double *coeffs)
 {
   double a0, a1, a2, a3;
   

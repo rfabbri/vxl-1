@@ -28,12 +28,12 @@ becld_episeg_displayer::make_tableau( bpro1_storage_sptr storage) const
   becld_episeg_storage_sptr episeg_storage;
   episeg_storage.vertical_cast(storage);
 
-  vcl_vector<becld_episeg_sptr> episegs = episeg_storage->episegs();
+  std::vector<becld_episeg_sptr> episegs = episeg_storage->episegs();
 
   // Create a new tableau
   vgui_displaylist2D_tableau_sptr episeg_tab = vgui_displaylist2D_tableau_new();
   
-  for( vcl_vector<becld_episeg_sptr>::const_iterator itr = episegs.begin();
+  for( std::vector<becld_episeg_sptr>::const_iterator itr = episegs.begin();
        itr != episegs.end(); ++itr){
       becld_episeg_soview2D* obj = new becld_episeg_soview2D(*itr);
       episeg_tab->add( obj );

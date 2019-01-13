@@ -15,10 +15,10 @@ becld_episeg_from_curve_converter::becld_episeg_from_curve_converter(becld_epipo
 {}
 
 //: Convert a digital curve to an episegment
-vcl_vector<becld_episeg_sptr>
+std::vector<becld_episeg_sptr>
 becld_episeg_from_curve_converter::convert_curve(vsol_digital_curve_2d_sptr curve)
 {
-  vcl_vector<becld_episeg_sptr> to_return;
+  std::vector<becld_episeg_sptr> to_return;
 
   // We need at least 2 points to make an episegment
   if(curve->size() < 2)
@@ -71,17 +71,17 @@ becld_episeg_from_curve_converter::convert_curve(vsol_digital_curve_2d_sptr curv
   return to_return;
 }
 
-vcl_vector<becld_episeg_sptr>
+std::vector<becld_episeg_sptr>
 becld_episeg_from_curve_converter::convert_curve_using_tangents(
     vsol_digital_curve_2d_sptr curve,
-    vcl_vector<double> tangents,
+    std::vector<double> tangents,
     bbld_subsequence_set *partition,
     unsigned curve_id
     )
 {
   assert(tangents.size() == curve->size());
   assert(delta_theta_ != uninitialized_delta_theta);
-  vcl_vector<becld_episeg_sptr> to_return;
+  std::vector<becld_episeg_sptr> to_return;
 
   // We need at least 1 points to make an episegment
   if (curve->size() < 1)
@@ -117,12 +117,12 @@ becld_episeg_from_curve_converter::angle(vsol_digital_curve_2d_sptr curve, int i
 
 //: Link the episegs into a linked list
 void 
-becld_episeg_from_curve_converter::link_episegs(vcl_vector<becld_episeg_sptr>& segs) const
+becld_episeg_from_curve_converter::link_episegs(std::vector<becld_episeg_sptr>& segs) const
 {
   if(segs.size() < 2)
     return;
 
-  for( vcl_vector<becld_episeg_sptr>::iterator itr = segs.begin();
+  for( std::vector<becld_episeg_sptr>::iterator itr = segs.begin();
        itr+1 != segs.end();  ++itr )
   {
     (*itr)->next_seg_ = (itr+1)->ptr();

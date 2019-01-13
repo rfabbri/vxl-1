@@ -25,7 +25,7 @@
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_vector_3d.h>
 #include <bgld/bgld_param_curve_3d.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 // accuracy used for the computation of "t" (running parameter) from "s" (arclength)
 #define S_T_ACCURACY 10e-6
@@ -51,18 +51,18 @@ public:
 
   //: Constructor from coefficients, start point parameter value, and
   //  end point parameter value
-  bgld_eno_curve_3d(vcl_vector<double> coefs_x, 
-                    vcl_vector<double> coefs_y, 
-                    vcl_vector<double> coefs_z,
+  bgld_eno_curve_3d(std::vector<double> coefs_x, 
+                    std::vector<double> coefs_y, 
+                    std::vector<double> coefs_z,
                     double start_t,
                     double end_t);
 
   virtual ~bgld_eno_curve_3d();
 
-  static const vcl_type_info& type_id()
+  static const std::type_info& type_id()
   { return typeid(bgld_eno_curve_3d); }
 
-  virtual bool is_type( const vcl_type_info& type ) const
+  virtual bool is_type( const std::type_info& type ) const
   { return (typeid(bgld_eno_curve_3d) == type)!=0 ||
   this->bgld_eno_curve_3d::is_type(type);
   }
@@ -154,9 +154,9 @@ protected:
   double len_;
 
   //: vector of coefficients
-  vcl_vector<double> coefs_x_;
-  vcl_vector<double> coefs_y_;
-  vcl_vector<double> coefs_z_;
+  std::vector<double> coefs_x_;
+  std::vector<double> coefs_y_;
+  std::vector<double> coefs_z_;
 
   //: start_t_/end_t_ gives the coordinates of the starting/ending 
   //  point of the curve when evaluated

@@ -1,14 +1,14 @@
 //:
 // \file
 
-#include <vcl_cmath.h>
+#include <cmath>
 
 #include "bsold_curve_3d_algs.h"
 #include <bsold/bsold_interp_curve_3d.h>
 #include <bgld/bgld_eno_curve_3d.h>
 #include <bgld/bgld_linear_curve_3d.h>
 #include <vsol/vsol_polygon_2d.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <bnld/algo/bnld_eno_third_order.h>
 #include <vnl/vnl_vector.h>
 
@@ -22,13 +22,13 @@ bsold_curve_3d_algs::~bsold_curve_3d_algs()
 //: sample the input curve at the rate length()/size
 bool bsold_curve_3d_algs::
 sample(bsold_interp_curve_3d const &c, int size,
-       vcl_vector<vsol_point_3d_sptr>& pts)
+       std::vector<vsol_point_3d_sptr>& pts)
 {
   double L = c.length();
   double ds = L/size;
 #ifndef NDEBUG
-  vcl_cout << "Length of curve: " << L << " rate of sampling is: " << ds << vcl_endl;
-  vcl_cout << "Output size wanted is: " << size << vcl_endl;
+  std::cout << "Length of curve: " << L << " rate of sampling is: " << ds << std::endl;
+  std::cout << "Output size wanted is: " << size << std::endl;
 #endif
 
   pts.reserve(size);
@@ -44,16 +44,16 @@ sample(bsold_interp_curve_3d const &c, int size,
     pts.push_back(c.point_at(L));  
 
 #ifndef NDEBUG
-  vcl_cout << "after sampling pts size: " << pts.size() << " (should be " << size << ")\n";
+  std::cout << "after sampling pts size: " << pts.size() << " (should be " << size << ")\n";
 #endif
   return true;
 
 }
 
-bool bsold_curve_3d_algs::interpolate_linear_3d(bsold_interp_curve_3d *c, vcl_vector<vsol_point_3d_sptr> const &pts)
+bool bsold_curve_3d_algs::interpolate_linear_3d(bsold_interp_curve_3d *c, std::vector<vsol_point_3d_sptr> const &pts)
 {
   int num_points = pts.size();
-  vcl_vector<bgld_param_curve_3d *> ints(num_points-1);
+  std::vector<bgld_param_curve_3d *> ints(num_points-1);
   for(int i=0; i < num_points-1; i++)
   {
     vgl_vector_3d<double> start(pts[i]->x(), pts[i]->y(), pts[i]->z());
@@ -67,14 +67,14 @@ bool bsold_curve_3d_algs::interpolate_linear_3d(bsold_interp_curve_3d *c, vcl_ve
 }
 
 bool bsold_curve_3d_algs::interpolate_eno_3d(bsold_interp_curve_3d *c, 
-                                             vcl_vector<vsol_point_3d_sptr> const &pts,
-                                             vcl_vector<double> &sample_pts)
+                                             std::vector<vsol_point_3d_sptr> const &pts,
+                                             std::vector<double> &sample_pts)
 {
   int num_points = pts.size();
   
-  vcl_vector<double> data_x;
-  vcl_vector<double> data_y;
-  vcl_vector<double> data_z;
+  std::vector<double> data_x;
+  std::vector<double> data_y;
+  std::vector<double> data_z;
 
   // get the data
   for(int i=0; i < num_points; i++)
@@ -92,10 +92,10 @@ bool bsold_curve_3d_algs::interpolate_eno_3d(bsold_interp_curve_3d *c,
     sample_pts.push_back(cumulative_length);
     for(int i=1; i < num_points; i++)
     {
-      double diffx2 = vcl_pow(data_x[i] - data_x[i-1], 2.0);
-      double diffy2 = vcl_pow(data_y[i] - data_y[i-1], 2.0);
-      double diffz2 = vcl_pow(data_z[i] - data_z[i-1], 2.0);
-      double length = vcl_sqrt(diffx2 + diffy2 + diffz2);
+      double diffx2 = std::pow(data_x[i] - data_x[i-1], 2.0);
+      double diffy2 = std::pow(data_y[i] - data_y[i-1], 2.0);
+      double diffz2 = std::pow(data_z[i] - data_z[i-1], 2.0);
+      double length = std::sqrt(diffx2 + diffy2 + diffz2);
       cumulative_length += length;
       sample_pts.push_back(cumulative_length);
     }
@@ -109,11 +109,11 @@ bool bsold_curve_3d_algs::interpolate_eno_3d(bsold_interp_curve_3d *c,
   eno_y.interpolate(sample_pts, data_y);
   eno_z.interpolate(sample_pts, data_z);
 
-  vcl_vector<bgld_param_curve_3d *> ints(num_points-1);
+  std::vector<bgld_param_curve_3d *> ints(num_points-1);
 
-  vcl_vector<double> coefs_x;
-  vcl_vector<double> coefs_y;
-  vcl_vector<double> coefs_z;
+  std::vector<double> coefs_x;
+  std::vector<double> coefs_y;
+  std::vector<double> coefs_z;
 
   for(int i=0; i < num_points-1; i++)
   {

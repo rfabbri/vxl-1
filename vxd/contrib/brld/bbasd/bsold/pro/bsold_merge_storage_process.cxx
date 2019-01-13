@@ -34,7 +34,7 @@ bsold_merge_storage_process()
     //!parameters()->add("Number of times " , "-num_times" , (unsigned)1 )
     ) 
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -55,7 +55,7 @@ clone() const
 
 
 //: Return the name of this process
-vcl_string bsold_merge_storage_process::
+std::string bsold_merge_storage_process::
 name()
 {
   return "Merge vsol2D storages";
@@ -79,10 +79,10 @@ output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > bsold_merge_storage_process::
+std::vector< std::string > bsold_merge_storage_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   to_return.push_back( "vsol2D" );
   return to_return;
@@ -90,10 +90,10 @@ get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > bsold_merge_storage_process::
+std::vector< std::string > bsold_merge_storage_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   return to_return;
 }
 
@@ -105,7 +105,7 @@ execute()
 {
   if ( input_data_.size() != 1 )
   {
-    vcl_cout << "In bsold_merge_storage_process::execute() - not exactly 1"
+    std::cout << "In bsold_merge_storage_process::execute() - not exactly 1"
              << " input frames \n";
     return false;
   }

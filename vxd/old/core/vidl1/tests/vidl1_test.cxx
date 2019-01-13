@@ -1,8 +1,8 @@
 #include <vidl1/vidl1_movie.h>
 #include <vidl1/vidl1_frame.h>
 #include <vidl1/vidl1_io.h>
-#include <vcl_iostream.h>
-#include <vcl_cstdlib.h>
+#include <iostream>
+#include <cstdlib>
 
 int main ()
 {
@@ -19,7 +19,7 @@ int main ()
        pframe <= movie->last(); ++pframe)
   {
     vil_image_view_base_sptr im = pframe->get_view();
-    vcl_cout << "Got frame: " << im->ni() << 'x' << im->nj() << '\n';
+    std::cout << "Got frame: " << im->ni() << 'x' << im->nj() << '\n';
   }
 
   // Running through the frames 2 images at a time
@@ -27,7 +27,7 @@ int main ()
        pframe <= movie->last(); pframe += 2)
   {
     vil_image_view_base_sptr im = pframe->get_view();
-    vcl_cout << "Got frame: " << im->ni() << 'x' << im->nj() << '\n';
+    std::cout << "Got frame: " << im->ni() << 'x' << im->nj() << '\n';
   }
 
   // Running backwards through the image
@@ -35,7 +35,7 @@ int main ()
        pframe >= movie->first(); --pframe)
   {
     vil_image_view_base_sptr im = pframe->get_view();
-    vcl_cout << "Got frame: " << im->ni() << 'x' << im->nj() << '\n';
+    std::cout << "Got frame: " << im->ni() << 'x' << im->nj() << '\n';
   }
 
   // Backwards two at a time
@@ -43,7 +43,7 @@ int main ()
        pframe >= movie->first(); pframe -= 2)
   {
     vil_image_view_base_sptr im = pframe->get_view();
-    vcl_cout << "Got frame: " << im->ni() << 'x' << im->nj() << '\n';
+    std::cout << "Got frame: " << im->ni() << 'x' << im->nj() << '\n';
   }
 
   // Run over all pairs of images
@@ -56,7 +56,7 @@ int main ()
       vil_image_view_base_sptr im1 = pframe1->get_view();
       vil_image_view_base_sptr im2 = pframe2->get_view();
       if (im1 == im2)
-        vcl_cout << "Frames " << pframe1.current_frame_number()
+        std::cout << "Frames " << pframe1.current_frame_number()
                  << " and " << pframe2.current_frame_number() << " are equal\n";
     }
 
@@ -67,7 +67,7 @@ int main ()
     if (p>=10)
       pframe->get_view();
 
-  vcl_exit(0);
+  std::exit(0);
 
   // I want to test the signature, but couldn't be bothered checking
   // it works. IMS

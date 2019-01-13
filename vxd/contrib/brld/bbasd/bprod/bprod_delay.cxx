@@ -4,8 +4,8 @@
 // \file
 
 #include "bprod_delay.h"
-#include <vcl_iostream.h>
-#include <vcl_cstdlib.h>
+#include <iostream>
+#include <cstdlib>
 
 #include <bprod/bprod_config.h>
 #if BPROD_HAS_PTHREADS
@@ -93,8 +93,8 @@ bprod_delay::run(unsigned long timestamp,
     pthread_detach(thread);
     if(rc)
     {
-      vcl_cerr << "Error creating pthread, return code: "<<rc<<vcl_endl;
-      vcl_exit(-1);
+      std::cerr << "Error creating pthread, return code: "<<rc<<std::endl;
+      std::exit(-1);
     }
 #else
     // get the next round of data

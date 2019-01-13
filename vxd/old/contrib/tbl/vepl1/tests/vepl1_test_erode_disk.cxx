@@ -10,8 +10,8 @@
 // \date   12 sept. 2000
 
 #include <vepl1/vepl1_erode_disk.h>
-#include <vcl_iostream.h>
-#include <vcl_string.h>
+#include <iostream>
+#include <string>
 #include "test_driver.h"
 #include <vxl_config.h> // for vxl_byte
 
@@ -23,7 +23,7 @@
 
 int vepl1_test_erode_disk()
 {
-  vcl_cout << "Starting vepl1_erode_disk tests\n"
+  std::cout << "Starting vepl1_erode_disk tests\n"
            << "Creating test and output images ...";
   vil1_image byte_img = CreateTest8bitImage(32,32),  byte_ori = CreateTest8bitImage(32,32);
   vil1_image shrt_img = CreateTest16bitImage(32,32), shrt_ori = CreateTest16bitImage(32,32);
@@ -32,9 +32,9 @@ int vepl1_test_erode_disk()
   vil1_image colr_img = CreateTest24bitImage(32,32), colr_ori = CreateTest24bitImage(32,32);
 #endif
 
-  vcl_cout << " done\n";
+  std::cout << " done\n";
 
-  vcl_string m = "vepl1_erode_disk";
+  std::string m = "vepl1_erode_disk";
   ALL_TESTS(vepl1_erode_disk,0,m);
   return 0;
 }

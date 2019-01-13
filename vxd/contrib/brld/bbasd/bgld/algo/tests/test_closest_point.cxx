@@ -5,8 +5,8 @@
 
 #include <testlib/testlib_test.h>
 
-#include <vcl_iostream.h>
-#include <vcl_cmath.h>
+#include <iostream>
+#include <cmath>
 #include <vnl/vnl_math.h>
 #include <vgl/vgl_lineseg_test.h>
 #include <vgl/vgl_triangle_test.h>
@@ -17,7 +17,7 @@
 //: Test bgld_distance::lineseg_lineseg function
 void test_closest_point_lineseg_lineseg()
 {
-  vcl_cout << "In test_closest_point_lineseg_lineseg() \n";
+  std::cout << "In test_closest_point_lineseg_lineseg() \n";
   vgl_point_2d<double > p1(1, 5);
   vgl_point_2d<double > p2(9, 1);
   vgl_point_2d<double > p3(6, 0);
@@ -47,7 +47,7 @@ void test_closest_point_lineseg_lineseg()
 
   // case 2.1
   d = bgld_closest_point::lineseg_lineseg(p1, p2, p3, p4,ratio1, ratio2);
-  real_d = vcl_sqrt((double)5.0);
+  real_d = std::sqrt((double)5.0);
   real_ratio1 = 0.75;
   real_ratio2 = 0;
   TEST_NEAR("Distance between 2 non-intersecting lines", d, real_d, 1e-8);
@@ -56,7 +56,7 @@ void test_closest_point_lineseg_lineseg()
 
   // case 2.2
   d = bgld_closest_point::lineseg_lineseg(p1, p2, p4, p3, ratio1, ratio2);
-  real_d = vcl_sqrt((double)5.0);
+  real_d = std::sqrt((double)5.0);
   real_ratio1 = 0.75;
   real_ratio2 = 1;
   TEST_NEAR("Distance between 2 non-intersecting lines", d, real_d, 1e-8);
@@ -65,7 +65,7 @@ void test_closest_point_lineseg_lineseg()
 
   // case 2.3
   d = bgld_closest_point::lineseg_lineseg(p3, p4, p1, p2, ratio1, ratio2);
-  real_d = vcl_sqrt((double)5.0);
+  real_d = std::sqrt((double)5.0);
   real_ratio1 = 0;
   real_ratio2 = 0.75;
   TEST_NEAR("Distance between 2 non-intersecting lines", d, real_d, 1e-8);
@@ -75,7 +75,7 @@ void test_closest_point_lineseg_lineseg()
 
   // case 2.4
   d = bgld_closest_point::lineseg_lineseg(p4, p3, p2, p1, ratio1, ratio2);
-  real_d = vcl_sqrt((double)5.0);
+  real_d = std::sqrt((double)5.0);
   real_ratio1 = 1;
   real_ratio2 = 0.25;
   TEST_NEAR("Distance between 2 non-intersecting lines", d, real_d, 1e-8);
@@ -101,11 +101,11 @@ void test_closest_point_lineseg_lineseg()
   //      p3.x(), p3.y(), p4.x(), p4.y())) 
   //    
   //{
-  //  vcl_cout << "Two lines do not intersect\n";
+  //  std::cout << "Two lines do not intersect\n";
   //}
   //else
   //{
-  //  vcl_cout << "Two lines DO intersect\n";
+  //  std::cout << "Two lines DO intersect\n";
   //}
 
 
@@ -115,18 +115,18 @@ void test_closest_point_lineseg_lineseg()
   //d = vgl_triangle_test_discriminant<double >(x3, y3, x4, y4, x2, y2);
 
 
-  //vcl_cout << "a = " << a << vcl_endl;
-  //vcl_cout << "b = " << b << vcl_endl;
-  //vcl_cout << "c = " << c << vcl_endl;
-  //vcl_cout << "d = " << d << vcl_endl;
+  //std::cout << "a = " << a << std::endl;
+  //std::cout << "b = " << b << std::endl;
+  //std::cout << "c = " << c << std::endl;
+  //std::cout << "d = " << d << std::endl;
 
   //// when the two lines intersect, find the intersection 
   //// and modify the edges
   //d = bgld_closest_point::lineseg_lineseg(p1, p2, p3, p4, ratio1, ratio2);
 
-  //vcl_cout << "d = " << d << vcl_endl;
-  //vcl_cout << "ratio1 = " << ratio1 << vcl_endl;
-  //vcl_cout << "ratio2 = " << ratio2 << vcl_endl;
+  //std::cout << "d = " << d << std::endl;
+  //std::cout << "ratio1 = " << ratio1 << std::endl;
+  //std::cout << "ratio2 = " << ratio2 << std::endl;
 
   return;
 }
@@ -134,16 +134,16 @@ void test_closest_point_lineseg_lineseg()
 //: Test computing closest point from a point to a circular arc
 void test_closest_point_to_circular_arc()
 {
-  vcl_cout << "In test_closest_point_to_circular_arc() \n";
+  std::cout << "In test_closest_point_to_circular_arc() \n";
   
   // Parameters of circular arc
   vgl_point_2d<double > arc_p1(2, -1);
-  vgl_point_2d<double > arc_p2(5, vcl_sqrt(3.0)-1);
+  vgl_point_2d<double > arc_p2(5, std::sqrt(3.0)-1);
   double arc_k = -0.5;
 
   vgl_point_2d<double > query_pt(0,0);
-  double real_d = vcl_sqrt(17.0)-2;
-  double real_ratio = vcl_atan2(1.0, 4.0)/(2*vnl_math::pi/3);
+  double real_d = std::sqrt(17.0)-2;
+  double real_ratio = std::atan2(1.0, 4.0)/(2*vnl_math::pi/3);
   double ret_ratio = -1;
   double ret_d = bgld_closest_point::point_to_circular_arc(query_pt, arc_p1,
     arc_p2, arc_k, ret_ratio);
@@ -152,7 +152,7 @@ void test_closest_point_to_circular_arc()
     1e-12);
 
   query_pt.set(5, -2);
-  real_d = vcl_sqrt(3.0) + 1;
+  real_d = std::sqrt(3.0) + 1;
   real_ratio = 1;
   ret_d = bgld_closest_point::point_to_circular_arc(query_pt, arc_p1,
     arc_p2, arc_k, ret_ratio);
@@ -161,7 +161,7 @@ void test_closest_point_to_circular_arc()
     1e-12);
 
   query_pt.set(1, -2);
-  real_d = vcl_sqrt((double)2.0);
+  real_d = std::sqrt((double)2.0);
   real_ratio = 0;
   ret_d = bgld_closest_point::point_to_circular_arc(query_pt, arc_p1,
     arc_p2, arc_k, ret_ratio);
@@ -170,7 +170,7 @@ void test_closest_point_to_circular_arc()
     1e-12);
 
   query_pt.set(6, 0);
-  real_d = vcl_sqrt(1+vnl_math::sqr(vcl_sqrt(3.0)-1));
+  real_d = std::sqrt(1+vnl_math::sqr(std::sqrt(3.0)-1));
   real_ratio = 1;
   ret_d = bgld_closest_point::point_to_circular_arc(query_pt, arc_p1,
     arc_p2, arc_k, ret_ratio);
@@ -219,7 +219,7 @@ void test_closest_point_to_circle()
   query_pt.set(-1, 1);
   min_dist = bgld_closest_point::point_to_circle(query_pt, start, start_tangent, k, arc_length);
   
-  TEST_NEAR("point to circle - arc case - min_dist", min_dist, 2*vcl_sqrt(2.0)-2, 1e-12);
+  TEST_NEAR("point to circle - arc case - min_dist", min_dist, 2*std::sqrt(2.0)-2, 1e-12);
   TEST_NEAR("point to circle-arc case-arc length of closest pt", arc_length, -vnl_math::pi_over_2, 1e-10);
 
 
@@ -229,20 +229,20 @@ void test_closest_point_to_circle()
 //: Test computing closest point between a linesegment and circular arc
 void test_closest_point_lineseg_to_circular_arc()
 {
-  vcl_cout << "In test_closest_point_lineseg_to_circular_arc() \n";
+  std::cout << "In test_closest_point_lineseg_to_circular_arc() \n";
 
   // Case 1 - two intersections
 
   // Parameters of circular arc
   vgl_point_2d<double > arc_p1(2, -1);
-  vgl_point_2d<double > arc_p2(5, vcl_sqrt(3.0)-1);
+  vgl_point_2d<double > arc_p2(5, std::sqrt(3.0)-1);
   double arc_k = -0.5;
 
 
   // Parameter of line segment
   // line (x, y) = (4, 1) + t (sqrt(3), 1)
-  vgl_point_2d<double > line_p1(4 + vcl_sqrt(3.0)*(-2), 1+ 1*(-2));
-  vgl_point_2d<double > line_p2(4 + vcl_sqrt(3.0)*(0.5), 1+ 1*(0.5));
+  vgl_point_2d<double > line_p1(4 + std::sqrt(3.0)*(-2), 1+ 1*(-2));
+  vgl_point_2d<double > line_p2(4 + std::sqrt(3.0)*(0.5), 1+ 1*(0.5));
 
 
   double real_d = 0;
@@ -254,8 +254,8 @@ void test_closest_point_lineseg_to_circular_arc()
   real_arc_ratios[0] = 0.25;
   real_arc_ratios[1] = 0.75;
 
-  vcl_vector<double > line_ratios;
-  vcl_vector<double > arc_ratios;
+  std::vector<double > line_ratios;
+  std::vector<double > arc_ratios;
   double d = bgld_closest_point::lineseg_to_circular_arc(line_p1, line_p2, 
     arc_p1, arc_p2, arc_k, line_ratios, arc_ratios);
 
@@ -274,8 +274,8 @@ void test_closest_point_lineseg_to_circular_arc()
   // Case 2: one intesection
   // Parameter of line segment
   // line (x, y) = (4, 1) + t (sqrt(3), 1)
-  line_p1.set(4 + vcl_sqrt(3.0)*(-2), 1+ 1*(-2));
-  line_p2.set(4 + vcl_sqrt(3.0)*(-0.5), 1+ 1*(-0.5));
+  line_p1.set(4 + std::sqrt(3.0)*(-2), 1+ 1*(-2));
+  line_p2.set(4 + std::sqrt(3.0)*(-0.5), 1+ 1*(-0.5));
 
   real_d = 0;
   real_line_ratios[0] = 2.0/3;
@@ -336,7 +336,7 @@ void test_closest_point_lineseg_to_circular_arc()
   line_p1.set(4.5, 0);
   line_p2.set(6.5, 0);
 
-  real_d = vcl_sqrt(3.0)-1;
+  real_d = std::sqrt(3.0)-1;
   real_line_ratios[0] = 0.25;
   real_arc_ratios[0] = 1;
   d = bgld_closest_point::lineseg_to_circular_arc(line_p1, line_p2, 
@@ -354,7 +354,7 @@ void test_closest_point_lineseg_to_circular_arc()
 //: Test computing closest point between a linesegment and circular arc
 void test_closest_point_circular_arc_to_circular_arc()
 {
-  vcl_cout << "In test_closest_point_circular_arc_to_circular_arc() \n";
+  std::cout << "In test_closest_point_circular_arc_to_circular_arc() \n";
 
   // Case 1 - two intersections
 
@@ -362,18 +362,18 @@ void test_closest_point_circular_arc_to_circular_arc()
   // formular (x,y) = (5+r2 * cos(t), 0+ r2*sin(t));
   double r1 = 2;
   double t = (2.0/3) * vnl_math::pi;
-  vgl_point_2d<double > arc1_p1(3+vcl_sqrt(3.0) + r1 * vcl_cos(t), 1+ r1*vcl_sin(t));
+  vgl_point_2d<double > arc1_p1(3+std::sqrt(3.0) + r1 * std::cos(t), 1+ r1*std::sin(t));
   t = -(2.0/3)*vnl_math::pi;
-  vgl_point_2d<double > arc1_p2(3+vcl_sqrt(3.0) + r1 * vcl_cos(t), 1+ r1*vcl_sin(t));
+  vgl_point_2d<double > arc1_p2(3+std::sqrt(3.0) + r1 * std::cos(t), 1+ r1*std::sin(t));
   double arc1_k = 1/r1;
 
   // Parameters of arc2
   // formular (x,y) = (2+sqrt(2) * cos(t), 1+ sqrt(2)*sin(t));
-  double r2 = vcl_sqrt(2.0);
+  double r2 = std::sqrt(2.0);
   t = -(3.0/8) * vnl_math::pi;
-  vgl_point_2d<double > arc2_p1(2 + r2 * vcl_cos(t), 1+ r2*vcl_sin(t));
+  vgl_point_2d<double > arc2_p1(2 + r2 * std::cos(t), 1+ r2*std::sin(t));
   t = (3.0/8)*vnl_math::pi;
-  vgl_point_2d<double > arc2_p2(2 + r2 * vcl_cos(t), 1+ r2*vcl_sin(t));
+  vgl_point_2d<double > arc2_p2(2 + r2 * std::cos(t), 1+ r2*std::sin(t));
   double arc2_k = 1/r2;
 
 
@@ -384,14 +384,14 @@ void test_closest_point_circular_arc_to_circular_arc()
   real_arc1_ratios[1] = 3.0/4;
 
   //// For debugging purpose
-  //vcl_cout << "ARC 1: \n";
+  //std::cout << "ARC 1: \n";
   //bgld_circ_arc arc1(arc1_p1, arc1_p2, arc1_k);
   //for (int i=0; i<2; ++i)
   //{
-  //  vcl_cout << "Point at(" << real_arc1_ratios[i]*arc1.len() << ")= " << 
-  //    arc1.point_at_length(real_arc1_ratios[i]*arc1.len())<< vcl_endl; 
-  //  vcl_cout << "Tangent at(" << real_arc1_ratios[i]*arc1.len() << ")= " << 
-  //    arc1.tangent_at_length(real_arc1_ratios[i]*arc1.len())<< vcl_endl; 
+  //  std::cout << "Point at(" << real_arc1_ratios[i]*arc1.len() << ")= " << 
+  //    arc1.point_at_length(real_arc1_ratios[i]*arc1.len())<< std::endl; 
+  //  std::cout << "Tangent at(" << real_arc1_ratios[i]*arc1.len() << ")= " << 
+  //    arc1.tangent_at_length(real_arc1_ratios[i]*arc1.len())<< std::endl; 
   //}
 
   double real_arc2_ratios[2];
@@ -399,18 +399,18 @@ void test_closest_point_circular_arc_to_circular_arc()
   real_arc2_ratios[1] = 1.0/6;
 
   //// For debugging purpose
-  //vcl_cout << "ARC 2: \n";
+  //std::cout << "ARC 2: \n";
   //bgld_circ_arc arc2(arc2_p1, arc2_p2, arc2_k);
   //for (int i=0; i<2; ++i)
   //{
-  //  vcl_cout << "Point at(" << real_arc2_ratios[i]*arc2.len() << ")= " << 
-  //    arc2.point_at_length(real_arc2_ratios[i]*arc2.len())<< vcl_endl; 
-  //  vcl_cout << "Tangent at(" << real_arc2_ratios[i]*arc2.len() << ")= " << 
-  //    arc2.tangent_at_length(real_arc2_ratios[i]*arc2.len())<< vcl_endl; 
+  //  std::cout << "Point at(" << real_arc2_ratios[i]*arc2.len() << ")= " << 
+  //    arc2.point_at_length(real_arc2_ratios[i]*arc2.len())<< std::endl; 
+  //  std::cout << "Tangent at(" << real_arc2_ratios[i]*arc2.len() << ")= " << 
+  //    arc2.tangent_at_length(real_arc2_ratios[i]*arc2.len())<< std::endl; 
   //}
 
-  vcl_vector<double > arc1_ratios;
-  vcl_vector<double > arc2_ratios;
+  std::vector<double > arc1_ratios;
+  std::vector<double > arc2_ratios;
 
   double d = bgld_closest_point::circular_arc_to_circular_arc(arc1_p1, arc1_p2, arc1_k, 
     arc2_p1, arc2_p2, arc2_k, arc1_ratios, arc2_ratios);
@@ -429,11 +429,11 @@ void test_closest_point_circular_arc_to_circular_arc()
   // Case 2: one intesection
   // Parameters of arc2
   // formular (x,y) = (2+sqrt(2) * cos(t), 1+ sqrt(2)*sin(t));
-  r2 = vcl_sqrt(2.0);
+  r2 = std::sqrt(2.0);
   t = -(3.0/8) * vnl_math::pi;
-  arc2_p1.set(2 + r2 * vcl_cos(t), 1+ r2*vcl_sin(t));
+  arc2_p1.set(2 + r2 * std::cos(t), 1+ r2*std::sin(t));
   t = 0; //(3.0/8)*vnl_math::pi;
-  arc2_p2.set(2 + r2 * vcl_cos(t), 1+ r2*vcl_sin(t));
+  arc2_p2.set(2 + r2 * std::cos(t), 1+ r2*std::sin(t));
   arc2_k = 1/r2;
 
   // The 2 circles intersect at (3, 0) and (3, 2)
@@ -458,15 +458,15 @@ void test_closest_point_circular_arc_to_circular_arc()
   // Case 3: No intesection - local minimum
   // Parameters of arc2
   // formular (x,y) = (0+sqrt(2) * cos(t), 1+ sqrt(2)*sin(t));
-  r2 = vcl_sqrt(2.0);
+  r2 = std::sqrt(2.0);
   t = -(1.0/2) * vnl_math::pi;
-  arc2_p1.set(0 + r2 * vcl_cos(t), 1+ r2*vcl_sin(t));
+  arc2_p1.set(0 + r2 * std::cos(t), 1+ r2*std::sin(t));
   t = (1.0/4)*vnl_math::pi;
-  arc2_p2.set(0 + r2 * vcl_cos(t), 1+ r2*vcl_sin(t));
+  arc2_p2.set(0 + r2 * std::cos(t), 1+ r2*std::sin(t));
   arc2_k = 1/r2;
 
   // The 2 circles intersect at (3, 0) and (3, 2)
-  real_d = 3+vcl_sqrt(3.0) - vcl_sqrt(2.0)-2;
+  real_d = 3+std::sqrt(3.0) - std::sqrt(2.0)-2;
   real_arc1_ratios[0] = 1.0/2;
   real_arc2_ratios[0] = 2.0/3;
 
@@ -493,7 +493,7 @@ void test_closest_point_circular_arc_to_circular_arc()
   arc2_k = -1/r2;
 
   // The 2 circles intersect at (3, 0) and (3, 2)
-  real_d = 3+vcl_sqrt(3.0)-2;
+  real_d = 3+std::sqrt(3.0)-2;
   real_arc1_ratios[0] = 1.0/2;
   real_arc2_ratios[0] = 0;
 
@@ -516,7 +516,7 @@ void test_closest_point_circular_arc_to_circular_arc()
   arc1_p2.set(5, 0);
   arc1_k = 1.0/5;
 
-  arc2_p1.set(5*vcl_sqrt(2.0)/2, 5*vcl_sqrt(2.0)/2);
+  arc2_p1.set(5*std::sqrt(2.0)/2, 5*std::sqrt(2.0)/2);
   arc2_p2.set(0, 5);
   arc2_k = 1.0 / 5;
 
@@ -546,7 +546,7 @@ void test_closest_point_circular_arc_to_circular_arc()
   arc1_p2.set(5, 0);
   arc1_k = 1.0/5;
 
-  arc2_p1.set(5*vcl_sqrt(2.0)/2, -5*vcl_sqrt(2.0)/2);
+  arc2_p1.set(5*std::sqrt(2.0)/2, -5*std::sqrt(2.0)/2);
   arc2_p2.set(0, 5);
   arc2_k = 1.0 / 5;
 

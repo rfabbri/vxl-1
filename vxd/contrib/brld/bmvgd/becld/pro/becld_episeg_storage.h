@@ -19,23 +19,23 @@ public:
   becld_episeg_storage() {}
   //: Destructor
   virtual ~becld_episeg_storage() {}
-  virtual vcl_string type() const { return "episeg"; }
+  virtual std::string type() const { return "episeg"; }
 
   //: Create a copy of the object on the heap.
   // The caller is responsible for deletion
   virtual bpro1_storage* clone() const;
   
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "becld_episeg_storage"; }
+  virtual std::string is_a() const { return "becld_episeg_storage"; }
 
   //: Set the episegments
-  void set_episegs(const vcl_vector<becld_episeg_sptr>& episegs);
+  void set_episegs(const std::vector<becld_episeg_sptr>& episegs);
 
   //: Access the episegments
-  vcl_vector<becld_episeg_sptr> episegs() const;
+  std::vector<becld_episeg_sptr> episegs() const;
   
 private:
-  vcl_vector<becld_episeg_sptr> episegs_;
+  std::vector<becld_episeg_sptr> episegs_;
 
 };
 

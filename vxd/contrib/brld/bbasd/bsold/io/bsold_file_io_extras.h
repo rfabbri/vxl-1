@@ -18,8 +18,8 @@
 //   03/08/2008 Nhon Trinh  Added bsold_save_ps_file function
 // \endverbatim
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <vsol/vsol_spatial_object_2d_sptr.h>
 #include <vil/vil_rgb.h>
 #include <vil/vil_image_resource_sptr.h>
@@ -27,10 +27,10 @@
 
 //: Write an image and a vsol 2D objects to a ps file
 // TODO: we currently only handle polygons. Need to handle other types
-bool bsold_save_ps_file(const vcl_string& filename,
+bool bsold_save_ps_file(const std::string& filename,
                         const vil_image_resource_sptr& img, 
-                        const vcl_vector<vsol_spatial_object_2d_sptr >& vsol_data,
-                        const vcl_vector<vil_rgb<float > >& colors,
+                        const std::vector<vsol_spatial_object_2d_sptr >& vsol_data,
+                        const std::vector<vil_rgb<float > >& colors,
                         float line_width = 2.0f,
                         float point_size = 3.0f);
 

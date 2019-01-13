@@ -18,7 +18,7 @@
 #include <vidl1/vidl1_frame.h>
 #include <vidl1/vidl1_clip_sptr.h>
 #include <vil/vil_image_view_base.h>
-#include <vcl_list.h>
+#include <list>
 
 //: Video movie
 //   A vidl1_movie is a movie sequence.
@@ -46,7 +46,7 @@ class vidl1_movie : public vbl_ref_count
   unsigned int frame_rate() const {return frame_rate_;}
   void set_frame_rate(unsigned int fr) {frame_rate_ = fr;}
 
-  vcl_list<vidl1_clip_sptr> get_clips() const {return clip_;}
+  std::list<vidl1_clip_sptr> get_clips() const {return clip_;}
 
   int width() const;
   int height() const;
@@ -59,7 +59,7 @@ class vidl1_movie : public vbl_ref_count
 
  protected:
   // Data Members
-  vcl_list<vidl1_clip_sptr> clip_;
+  std::list<vidl1_clip_sptr> clip_;
 
 
   //----------------------------

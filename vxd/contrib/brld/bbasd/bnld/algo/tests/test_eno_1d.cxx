@@ -1,8 +1,8 @@
 #include <testlib/testlib_test.h>
 #include <bnld/algo/bnld_eno.h>
 #include <bnld/algo/bnld_eno_zerox.h>
-#include <vcl_iostream.h>
-#include <vcl_limits.h>
+#include <iostream>
+#include <limits>
 
 static double p1(double x);
 static void test_interval(double x, double x_ref, bnld_eno_1d &e,double tol);
@@ -11,10 +11,10 @@ MAIN( test_eno_1d )
 {
    START ("eno_1d");
 
-   double tol = vcl_numeric_limits<double>::epsilon()*1000;
+   double tol = std::numeric_limits<double>::epsilon()*1000;
 
    {
-   vcl_cout << "Testing samples of a polynomial with known zeros" << vcl_endl;
+   std::cout << "Testing samples of a polynomial with known zeros" << std::endl;
    bnld_eno_1d e;
 
    vnl_vector<double> data(4);
@@ -26,16 +26,16 @@ MAIN( test_eno_1d )
    data(3) = 2.99;
 
    e.interpolate(&data);
-   e.print(vcl_cout);
+   e.print(std::cout);
    
-   vcl_cout << "Computing zeros" << vcl_endl;
+   std::cout << "Computing zeros" << std::endl;
    bnld_eno_zerox_vector z(e);
-   z.print(e,vcl_cout);
+   z.print(e,std::cout);
    TEST_NEAR("Zero1",z[1].location(0),1.2,tol);
    TEST_NEAR("Zero2",z[1].location(1),1.8,tol);
    }
 
-   vcl_cout << "Testing samples of a polynomial with known zeros" << vcl_endl;
+   std::cout << "Testing samples of a polynomial with known zeros" << std::endl;
    bnld_eno_1d e;
 
    vnl_vector<double> data(4), x(4);
@@ -51,11 +51,11 @@ MAIN( test_eno_1d )
    data(3) = p1(x(3));
 
    e.interpolate(&data,&x);
-   e.print(vcl_cout);
+   e.print(std::cout);
    
-   vcl_cout << "Computing zeros" << vcl_endl;
+   std::cout << "Computing zeros" << std::endl;
    bnld_eno_zerox_vector z(e);
-   z.print(e,vcl_cout);
+   z.print(e,std::cout);
    TEST_NEAR("Zero1",z[1].location(0),9.1,tol);
    TEST_NEAR("Zero2",z[1].location(1),10.8,tol);
 
@@ -77,7 +77,7 @@ MAIN( test_eno_1d )
 
 void test_interval(double x, double x_ref, bnld_eno_1d &e, double tol)
 {
-   vcl_cout << "Abscissa " << x << " in interval #" << e.interval_index(x) << vcl_endl;
+   std::cout << "Abscissa " << x << " in interval #" << e.interval_index(x) << std::endl;
    TEST_NEAR("Sample",e.sample(x),x_ref,tol);
 }
 

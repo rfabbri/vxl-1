@@ -20,14 +20,14 @@
 #include <vidpro1/storage/vidpro1_vsol3D_storage_sptr.h>
 #include <vsol/vsol_spatial_object_3d_sptr.h>
 
-#include <vcl_map.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <map>
+#include <vector>
+#include <string>
 
 class vidpro1_vsol3D_storage : public bpro1_storage {
 
 public:
-  typedef vcl_map< vcl_string, vcl_vector<vsol_spatial_object_3d_sptr> > data_map;
+  typedef std::map< std::string, std::vector<vsol_spatial_object_3d_sptr> > data_map;
 
   //: Constructor
   vidpro1_vsol3D_storage();
@@ -36,7 +36,7 @@ public:
   virtual ~vidpro1_vsol3D_storage();
 
   //: Return the type identifier string
-  virtual vcl_string type() const { return "vsol3D"; }
+  virtual std::string type() const { return "vsol3D"; }
     
   //: Register vsol_spatial_object_3d types for I/O
 //  virtual void register_binary_io() const;
@@ -55,33 +55,33 @@ public:
   virtual bpro1_storage* clone() const;
   
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "vidpro1_vsol3D_storage"; }
+  virtual std::string is_a() const { return "vidpro1_vsol3D_storage"; }
 
   //: Add a vector of vsol3D objects to the group named \p which
-  void add_objects( const vcl_vector< vsol_spatial_object_3d_sptr >& object , 
-                    const vcl_string& which = "default" );
+  void add_objects( const std::vector< vsol_spatial_object_3d_sptr >& object , 
+                    const std::string& which = "default" );
 
   //: Add an object to the group named \p which
   void add_object( const vsol_spatial_object_3d_sptr& object, 
-                   const vcl_string& which = "default" );
+                   const std::string& which = "default" );
 
   //: Search for the object in all groups and remove it
   // \retval The name of the group removed from of the empty string if not found
-  vcl_string remove_object( const vsol_spatial_object_3d_sptr& object );
+  std::string remove_object( const vsol_spatial_object_3d_sptr& object );
 
   //: Search for the object in the given group only and remove it
   // \return true if the object was successfully removed
   // \return false if the object was not found
-  bool remove_object( const vsol_spatial_object_3d_sptr& object, const vcl_string& group );
+  bool remove_object( const vsol_spatial_object_3d_sptr& object, const std::string& group );
 
   //: Return a vector of all vsol objects in the group named \p which
-  vcl_vector< vsol_spatial_object_3d_sptr > data_named( const vcl_string& which) const;
+  std::vector< vsol_spatial_object_3d_sptr > data_named( const std::string& which) const;
 
   //: Return a vector of all vsol objects in all groups
-  vcl_vector< vsol_spatial_object_3d_sptr > all_data() const;
+  std::vector< vsol_spatial_object_3d_sptr > all_data() const;
 
   //: Return the names of all groups 
-  vcl_vector< vcl_string > groups() const;
+  std::vector< std::string > groups() const;
   
   //: Erase all objects in all groups
   void clear_all();

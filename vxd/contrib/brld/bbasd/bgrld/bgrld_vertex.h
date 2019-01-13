@@ -18,8 +18,8 @@
 //                             the order of existing edge lists
 // \endverbatim
 
-#include <vcl_list.h>
-#include <vcl_iostream.h>
+#include <list>
+#include <iostream>
 #include <vbl/vbl_ref_count.h>
 #include <vbl/vbl_smart_ptr.h>
 
@@ -31,7 +31,7 @@ protected:
   typedef vbl_smart_ptr<E> E_sptr;
 
  public:
-  typedef typename vcl_list<E_sptr>::iterator edge_iterator;
+  typedef typename std::list<E_sptr>::iterator edge_iterator;
 
   //: Constructor
   bgrld_vertex() : vbl_ref_count(), out_edges_(), in_edges_() {}
@@ -40,10 +40,10 @@ protected:
   virtual ~bgrld_vertex(){}
 
   //:  returns all outgoing edges of this vertex  
-  const vcl_list<E_sptr>& out_edges() { return out_edges_; }
+  const std::list<E_sptr>& out_edges() { return out_edges_; }
 
   //:  returns all incoming edges of this vertex  
-  const vcl_list<E_sptr>& in_edges() { return in_edges_; }
+  const std::list<E_sptr>& in_edges() { return in_edges_; }
 
   //: Returns an iterator to the beginning of the set of incoming edges
   edge_iterator in_edges_begin() { return in_edges_.begin(); }
@@ -97,15 +97,15 @@ protected:
   void reverse_out_edges() { out_edges_.reverse(); }
 
   //: Print an ascii summary to the stream
-  virtual void print_summary(vcl_ostream &os) const;
+  virtual void print_summary(std::ostream &os) const;
 
  protected:
 
   //: The pointers to outgoing edges
-  vcl_list<E_sptr> out_edges_;
+  std::list<E_sptr> out_edges_;
 
   //: The pointers to incoming edges
-  vcl_list<E_sptr> in_edges_;
+  std::list<E_sptr> in_edges_;
 };
 
 #endif // bgrld_vertex_h_

@@ -76,8 +76,8 @@ void bvis1_tool_set_param(const void* doubleref)
 //: Use in menus to set the value of a string paramter
 void bvis1_tool_set_string(const void* vcl_stringref)
 {
-  vcl_string* dref = (vcl_string*)vcl_stringref;
-  vcl_string param_val = *dref;
+  std::string* dref = (std::string*)vcl_stringref;
+  std::string param_val = *dref;
   vgui_dialog param_dlg("Set Tool Param");
   param_dlg.field("Parameter Value", param_val);
   if(!param_dlg.ask())

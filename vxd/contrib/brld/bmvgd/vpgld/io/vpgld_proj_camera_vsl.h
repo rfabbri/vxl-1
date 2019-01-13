@@ -39,14 +39,14 @@ class vpgld_proj_camera_vsl
   short version() const {return 1;}
 
   //: Print an ascii summary to the stream
-  void print_summary(vcl_ostream &os) const { os << *this->get(); }
+  void print_summary(std::ostream &os) const { os << *this->get(); }
 
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return vcl_string("vpgl_proj_camera"); }
+  virtual std::string is_a() const { return std::string("vpgl_proj_camera"); }
 
   //: Return true if the argument matches the string identifying the class or any parent class
-  virtual bool is_class(vcl_string const& cls) const
-  { return cls==is_a() || cls==vcl_string("vpgl_camera"); }
+  virtual bool is_class(std::string const& cls) const
+  { return cls==is_a() || cls==std::string("vpgl_camera"); }
 
   //: Return `this' if `this' is a vpgl_proj_camera, 0 otherwise
   // This is used by e.g. polymorphic binary i/o

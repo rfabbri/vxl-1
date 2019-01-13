@@ -18,7 +18,7 @@ public:
    ~bnld_eno_measures() {}
 
    void compute(const bnld_eno_interp &I);
-   void print(vcl_ostream& = vcl_cerr) const;
+   void print(std::ostream& = std::cerr) const;
 
    /// Accessors
    double start_tangent() const {return start_tangent_;} 
@@ -45,7 +45,7 @@ angle_difference(double a,double b)
 // OBS: made more efficient than orig enolib
    double const diff = fmod(a,360.0) - fmod(b,360.0);
  
-   if (vcl_fabs(diff) < 180.0)
+   if (std::fabs(diff) < 180.0)
       return diff;
    if (diff > 0)
       return diff - 360.0;

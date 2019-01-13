@@ -1,11 +1,11 @@
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <iostream>
+#include <fstream>
 
 #include "bmcsd_save_discrete_corresp_process.h"
 
-#include <vcl_cstring.h>
-#include <vcl_string.h>
-#include <vcl_fstream.h>
+#include <cstring>
+#include <string>
+#include <fstream>
 
 #include <bmcsd/pro/bmcsd_discrete_corresp_storage.h>
 #include <bmcsd/pro/bmcsd_discrete_corresp_storage_3.h>
@@ -19,7 +19,7 @@ bmcsd_save_discrete_corresp_process::bmcsd_save_discrete_corresp_process() : bpr
       !parameters()->add( "Trinocular correspondence?" , "-trinocular_ftype" , true)
       )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -31,9 +31,9 @@ bmcsd_save_discrete_corresp_process::clone() const
   return new bmcsd_save_discrete_corresp_process(*this);
 }
 
-vcl_vector< vcl_string > bmcsd_save_discrete_corresp_process::get_input_type() 
+std::vector< std::string > bmcsd_save_discrete_corresp_process::get_input_type() 
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
 
   bool binocular_ftype=false;
   parameters()->get_value( "-binocular_ftype", binocular_ftype);
@@ -45,9 +45,9 @@ vcl_vector< vcl_string > bmcsd_save_discrete_corresp_process::get_input_type()
   return to_return;
 }
 
-vcl_vector< vcl_string > bmcsd_save_discrete_corresp_process::get_output_type() 
+std::vector< std::string > bmcsd_save_discrete_corresp_process::get_output_type() 
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   return to_return;
 }
 
@@ -56,14 +56,14 @@ bool bmcsd_save_discrete_corresp_process::execute()
 {
   bpro1_filepath input;
   parameters()->get_value( "-nameprefix" , input);
-  vcl_string fname = input.path;
+  std::string fname = input.path;
 
   vsl_b_ofstream bp_out(fname.c_str());
   if (!bp_out) {
-    vcl_cerr << "ERROR: while opening " << fname << " for reading\n";
+    std::cerr << "ERROR: while opening " << fname << " for reading\n";
     return false;
   }
-  vcl_cout << "Created " << fname << " for writing point correspondence\n";
+  std::cout << "Created " << fname << " for writing point correspondence\n";
 
   bool binocular_ftype=false;
   parameters()->get_value( "-binocular_ftype", binocular_ftype);

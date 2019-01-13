@@ -15,7 +15,7 @@
 //  Modifications 
 // \endverbatim
 
-#include <vcl_vector.h>
+#include <vector>
 //#include <vsol/vsol_spatial_object_2d_sptr.h>
 #include <vsol/vsol_point_2d_sptr.h>
 //#include <vsol/vsol_polygon_2d_sptr.h>
@@ -30,7 +30,7 @@ public:
 
   //: Break a polyline into two pieces, each is a polyline
   // Require: cut_position is a vertex on polyline
-  static vcl_vector<vsol_polyline_2d_sptr > cut_polyline(
+  static std::vector<vsol_polyline_2d_sptr > cut_polyline(
     const vsol_polyline_2d_sptr& polyline,
     const vsol_point_2d_sptr& cut_position);
 

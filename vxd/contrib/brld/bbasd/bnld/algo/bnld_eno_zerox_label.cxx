@@ -26,8 +26,8 @@ bnld_eno_zerox_label::
       else if (zc[i].number() == 2)
         label_two_zerox_in_interval(i,zc[i],data,label);
       else
-        vcl_cerr << "This should not be happening: No. of Zerox=" 
-          << zc[i].number() << vcl_endl;
+        std::cerr << "This should not be happening: No. of Zerox=" 
+          << zc[i].number() << std::endl;
     }
   }
 }
@@ -81,17 +81,17 @@ label_two_zerox_in_interval(
       label_[maxzeros*pos+1] = data_label[pos+1];
     }
     else{
-      vcl_cerr << "in label_two_zerox_in_interval:: hmm... zero crossings not sorted.." << vcl_endl;
+      std::cerr << "in label_two_zerox_in_interval:: hmm... zero crossings not sorted.." << std::endl;
       label_[maxzeros*pos+1] = data_label[pos];
       label_[maxzeros*pos]   = data_label[pos+1];
     }
   }
   else if (start < 0 || end < 0){
     if (start > 0 || end > 0)
-      vcl_cerr << 
+      std::cerr << 
         "label_two_zerox_in_interval: warning: we have two zero xings but function changes sign" 
-        << vcl_endl << "Start: " << start << " End: "
-        << end << " Pos: " << pos << vcl_endl;
+        << std::endl << "Start: " << start << " End: "
+        << end << " Pos: " << pos << std::endl;
     /*If end points are -ve cannot label the zerox*/
     label_[maxzeros*pos]=bnld_eno_zerox_label::unlabeled;
     label_[maxzeros*pos+1]=bnld_eno_zerox_label::unlabeled;
@@ -100,20 +100,20 @@ label_two_zerox_in_interval(
 
 //: print alongside bnld_eno_1d and zerox
 void bnld_eno_zerox_label::
-print(bnld_eno_1d &eno, bnld_eno_zerox_vector &zc, vcl_ostream& strm) const
+print(bnld_eno_1d &eno, bnld_eno_zerox_vector &zc, std::ostream& strm) const
 {
-   strm << "==== Eno 1D with Labeled Zerocrossings ====" << vcl_endl
-        << "len: " << eno.size() << vcl_endl;
+   strm << "==== Eno 1D with Labeled Zerocrossings ====" << std::endl
+        << "len: " << eno.size() << std::endl;
 
    unsigned i;
    for (i=0; i < eno.size(); ++i) {
       eno[i].print(strm);
       zc[i].print(strm);
-      vcl_cout << "Labels: ";
+      std::cout << "Labels: ";
 
       for (unsigned k=0; k < zc[i].number(); ++k) {
-        vcl_cout << LABEL_(i,k) << " ";
+        std::cout << LABEL_(i,k) << " ";
       }
-      vcl_cout << vcl_endl << vcl_endl << vcl_endl;
+      std::cout << std::endl << std::endl << std::endl;
    }
 }

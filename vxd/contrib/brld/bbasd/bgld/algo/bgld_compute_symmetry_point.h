@@ -15,7 +15,7 @@
 
 
 #include <bgld/algo/bgld_circ_arc.h>
-#include <vcl_vector.h>
+#include <vector>
 
 
 
@@ -27,7 +27,7 @@ void bgld_compute_symmetry_point_on_line(const vgl_point_2d<double >& right_line
                                          const vgl_point_2d<double >& right_line_end,
                                          const vgl_point_2d<double >& left_bnd_pt,
                                          const vgl_vector_2d<double >& left_bnd_tangent,
-                                         vcl_vector<double >& signed_distance_from_line_start);
+                                         std::vector<double >& signed_distance_from_line_start);
 
 
 //: Compute symmetry point on a right boundary arc given a point-tangent on the left boundary
@@ -37,7 +37,7 @@ void bgld_compute_symmetry_point_on_line(const vgl_point_2d<double >& right_line
 void bgld_compute_symmetry_point_on_circ_arc(const bgld_circ_arc& right_bnd_arc,
                                  const vgl_point_2d<double >& left_bnd_pt,
                                  const vgl_vector_2d<double >& left_bnd_tangent,
-                                 vcl_vector<double >& s_along_right_bnd_arc);
+                                 std::vector<double >& s_along_right_bnd_arc);
 
 
 

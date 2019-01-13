@@ -3,7 +3,7 @@
 #include <bsold/bsold_interp_curve_2d.h>
 #include <bgld/bgld_arc.h>
 #include <vsol/vsol_point_2d.h>
-#include <vcl_iostream.h>
+#include <iostream>
 //: Interpolation example
 
 int main()
@@ -11,7 +11,7 @@ int main()
 
    /*
    { // LINEAR
-   vcl_vector<vsol_point_2d_sptr> pts;
+   std::vector<vsol_point_2d_sptr> pts;
 
    pts.push_back(new vsol_point_2d(0,0));
    pts.push_back(new vsol_point_2d(1,1));
@@ -22,31 +22,31 @@ int main()
 
    bsold_curve_algs::interpolate_linear(&c,pts, false);
 
-   vcl_cout << c;
+   std::cout << c;
 
-   vcl_cout << "===== Sampling =====\n";
-   vcl_cout << "t\t(x(t),y(t))\n";
+   std::cout << "===== Sampling =====\n";
+   std::cout << "t\t(x(t),y(t))\n";
    double t,t_interval;
    unsigned t_idx;
    for (t=0; t<c.length(); t+=0.5) {
-      vcl_cout << t << "\t(" << c.point_at(t)->x() << ", " << c.point_at(t)->y() << 
+      std::cout << t << "\t(" << c.point_at(t)->x() << ", " << c.point_at(t)->y() << 
          ") ";
       t_idx = c.interval_index(t,&t_interval);
-      vcl_cout << "at interval #" << t_idx << "\tlocal parameter: " <<  t_interval << vcl_endl;
+      std::cout << "at interval #" << t_idx << "\tlocal parameter: " <<  t_interval << std::endl;
    }
    // do the last pt
    t = c.length();
-   vcl_cout << t << "\t(" << c.point_at(t)->x() << ", " << c.point_at(t)->y() << 
+   std::cout << t << "\t(" << c.point_at(t)->x() << ", " << c.point_at(t)->y() << 
       ") ";
    t_idx = c.interval_index(t,&t_interval);
-   vcl_cout << "at interval #" << t_idx << "\tlocal parameter: " <<  t_interval << vcl_endl;
+   std::cout << "at interval #" << t_idx << "\tlocal parameter: " <<  t_interval << std::endl;
    } // !LINEAR
 
    */
 
 
    { // GENO
-   vcl_vector<vsol_point_2d_sptr> pts;
+   std::vector<vsol_point_2d_sptr> pts;
    pts.push_back(new vsol_point_2d(355,68));
    pts.push_back(new vsol_point_2d(356,61));
    pts.push_back(new vsol_point_2d(359,52));
@@ -63,11 +63,11 @@ int main()
 
    bsold_geno_curve_2d c;
    bsold_geno::interpolate(&c,pts,false);
-   vcl_cout << c;
-   vcl_cout << "----------------------------\n";
+   std::cout << c;
+   std::cout << "----------------------------\n";
 
    /*
-   vcl_vector<vsol_point_2d_sptr> pts;
+   std::vector<vsol_point_2d_sptr> pts;
 
    // unit circle
    pts.push_back(new vsol_point_2d(1,0));
@@ -77,20 +77,20 @@ int main()
 
    bsold_geno_curve_2d c;
    bsold_geno::interpolate(&c,pts,true);
-   vcl_cout << c;
-   vcl_cout << "----------------------------\n";
+   std::cout << c;
+   std::cout << "----------------------------\n";
 
    bsold_geno::interpolate(&c,pts,false);
-   vcl_cout << c;
+   std::cout << c;
 
-   vcl_cout << "----------------------------\n";
+   std::cout << "----------------------------\n";
    pts.clear();
    pts.push_back(new vsol_point_2d(-1,0));
    pts.push_back(new vsol_point_2d(0,1));
    pts.push_back(new vsol_point_2d(1,0));
    pts.push_back(new vsol_point_2d(3.5,0.5));
    bsold_geno::interpolate(&c,pts,false);
-   vcl_cout << c;
+   std::cout << c;
    */
 
    }

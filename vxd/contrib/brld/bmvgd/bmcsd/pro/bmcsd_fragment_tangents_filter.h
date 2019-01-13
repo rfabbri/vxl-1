@@ -14,16 +14,16 @@
 
 class bmcsd_fragment_tangents_filter : public bprod_filter {
 public:
-  //: Assumes input pin 0 has a a vcl_vector< vsol_polyline_2d_sptr > curves
+  //: Assumes input pin 0 has a a std::vector< vsol_polyline_2d_sptr > curves
   bprod_signal execute() {
-    vcl_cout << "Started tgt computation.\n";
+    std::cout << "Started tgt computation.\n";
 
-    vcl_vector<vcl_vector<double> > tangents;
+    std::vector<std::vector<double> > tangents;
 
-    assert(input_type_id(0) == typeid(vcl_vector<vsol_polyline_2d_sptr>));
+    assert(input_type_id(0) == typeid(std::vector<vsol_polyline_2d_sptr>));
     
-    const vcl_vector<vsol_polyline_2d_sptr> &crvs =
-      input<vcl_vector<vsol_polyline_2d_sptr> >(0);
+    const std::vector<vsol_polyline_2d_sptr> &crvs =
+      input<std::vector<vsol_polyline_2d_sptr> >(0);
 
     tangents.resize(crvs.size());
     for (unsigned c=0; c < crvs.size(); ++c) {
@@ -38,7 +38,7 @@ public:
     }
 
     output(0, tangents);
-    vcl_cout << "Finished tgt computation.\n";
+    std::cout << "Finished tgt computation.\n";
     return BPROD_VALID;
   }
 };

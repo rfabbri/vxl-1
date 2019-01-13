@@ -1,12 +1,12 @@
 // This is core/vil1/io/tests/test_rgba_io.cxx
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vil1/io/vil1_io_rgba.h>
 #include <testlib/testlib_test.h>
 #include <vpl/vpl.h>
 
 void test_rgba_io()
 {
-  vcl_cout << "****************************\n"
+  std::cout << "****************************\n"
            << "Testing vil1_rgba<double> io\n"
            << "****************************\n";
 
@@ -34,8 +34,8 @@ void test_rgba_io()
         p_out.B()==p_in.B() &&
         p_out.A()==p_in.A() , true);
 
-  vsl_print_summary(vcl_cout, p_out);
-  vcl_cout << vcl_endl;
+  vsl_print_summary(std::cout, p_out);
+  std::cout << std::endl;
 }
 
 

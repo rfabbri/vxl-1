@@ -13,10 +13,10 @@
 // \endverbatim
 //--------------------------------------------------------------------------------
 
-#include <vcl_iosfwd.h>
+#include <iosfwd>
 
 #include <becld/becld_episeg_sptr.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <vgl/vgl_point_2d.h>
 #include <vgui/vgui_soview2D.h>
 
@@ -34,10 +34,10 @@ class becld_episeg_soview2D : public vgui_soview2D
   virtual void draw() const;
 
   //: Print details about this becld_episeg to the given stream.
-  virtual vcl_ostream& print(vcl_ostream&) const;
+  virtual std::ostream& print(std::ostream&) const;
 
   //: Returns the type of this class ('becld_episeg_soview2D').
-  vcl_string type_name() const { return "becld_episeg_soview2D"; }
+  std::string type_name() const { return "becld_episeg_soview2D"; }
 
   //: Returns the distance squared from this episeg to the given position.
   virtual float distance_squared(float x, float y) const;
@@ -59,7 +59,7 @@ protected:
   becld_episeg_sptr episeg_;
 
   //: A cached vector of sample points
-  vcl_vector<vgl_point_2d<double> > samples_;
+  std::vector<vgl_point_2d<double> > samples_;
 };
 
 

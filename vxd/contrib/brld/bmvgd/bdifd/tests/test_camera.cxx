@@ -1,8 +1,8 @@
 #include <testlib/testlib_test.h>
 
-#include <vcl_iostream.h> 
-#include <vcl_cmath.h>
-#include <vcl_limits.h>
+#include <iostream> 
+#include <cmath>
+#include <limits>
 
 #include <vgl/vgl_vector_2d.h>
 #include <vgl/algo/vgl_h_matrix_3d.h>
@@ -18,16 +18,16 @@
 
 
 
-static const double tolerance=vcl_numeric_limits<double>::epsilon()*100;
+static const double tolerance=std::numeric_limits<double>::epsilon()*100;
 
 /*
 static bool almost_equal3(const vgl_point_2d<double> &a, const vgl_point_2d<double> &b) {
-  if (vcl_fabs(a.x()-b.x()) < tolerance && vcl_fabs(a.y()-b.y()) < tolerance) {
+  if (std::fabs(a.x()-b.x()) < tolerance && std::fabs(a.y()-b.y()) < tolerance) {
     return true;
   } else {
-//    vcl_cerr << "Data about differing points" << vcl_endl;
-//    vcl_cerr << "Point 1: "  << a << vcl_endl;
-//    vcl_cerr << "Point 2: "  << b << vcl_endl;
+//    std::cerr << "Data about differing points" << std::endl;
+//    std::cerr << "Point 1: "  << a << std::endl;
+//    std::cerr << "Point 2: "  << b << std::endl;
     return false;
   }
 }
@@ -83,22 +83,22 @@ MAIN( test_camera )
   double theta=0;
   double r=130;
 
-  R[0][0] = vcl_cos(theta);
+  R[0][0] = std::cos(theta);
   R[0][1] = 0;
-  R[0][2] = vcl_sin(theta);
+  R[0][2] = std::sin(theta);
 
   R[1][0] = 0;
   R[1][1] = 1;
   R[1][2] = 0;
 
-  R[2][0] = -vcl_sin(theta);
+  R[2][0] = -std::sin(theta);
   R[2][1] = 0;
-  R[2][2] = vcl_cos(theta);
+  R[2][2] = std::cos(theta);
   
 
   vgl_rotation_3d<double> rot(R);
 
-  vgl_homg_point_3d<double> transl(-r*vcl_sin(theta), 0, -r*vcl_cos(theta));
+  vgl_homg_point_3d<double> transl(-r*std::sin(theta), 0, -r*std::cos(theta));
 
   vpgl_perspective_camera<double> Pcam (K, transl, rot);
 
@@ -107,7 +107,7 @@ MAIN( test_camera )
   exp_cam.set_p(Pcam);
 
   exp_cam.print();
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
 
   SUMMARY();
 }

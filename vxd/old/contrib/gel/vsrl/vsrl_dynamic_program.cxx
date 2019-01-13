@@ -1,11 +1,11 @@
 #include "vsrl_dynamic_program.h"
 // this class will perform a dynamic program
-#include <vcl_cstdlib.h>
+#include <cstdlib>
 #include <vsrl/vsrl_token.h>
 #include <vsrl/vsrl_null_token.h>
 #include <vsrl/vsrl_parameters.h>
-#include <vcl_cassert.h>
-#include <vcl_iostream.h>
+#include <cassert>
+#include <iostream>
 
 // constructor
 vsrl_dynamic_program::vsrl_dynamic_program()
@@ -44,7 +44,7 @@ void vsrl_dynamic_program::set_tokens(token_list &l1,
   // set the tokens for the assignments
   if (l1.empty() || l2.empty())
   {
-    vcl_cout << "warning empty list\n";
+    std::cout << "warning empty list\n";
     return;
   }
 
@@ -165,15 +165,15 @@ bool vsrl_dynamic_program::allocate_cost_matrix()
 
   if (!num_row_ || !num_col_)
   {
-    vcl_cout << "must set new token lists\n";
+    std::cout << "must set new token lists\n";
     cost_matrix_ = 0;
     return false;
   }
 
-  cost_matrix_ = (assignment_node**)(vcl_malloc(num_row_ * sizeof(*cost_matrix_)));
+  cost_matrix_ = (assignment_node**)(std::malloc(num_row_ * sizeof(*cost_matrix_)));
 
   for (int i=0;i<num_row_;i++)
-    cost_matrix_[i]=(assignment_node*)(vcl_malloc(num_col_ * sizeof(**cost_matrix_)));
+    cost_matrix_[i]=(assignment_node*)(std::malloc(num_col_ * sizeof(**cost_matrix_)));
 
   // initialize the matrix
 
@@ -195,9 +195,9 @@ void vsrl_dynamic_program::deallocate_cost_matrix()
   // free the memory associated with matrix
 
   for (int i=0;i<num_row_;i++)
-    vcl_free((char*)(cost_matrix_[i]));
+    std::free((char*)(cost_matrix_[i]));
 
-  vcl_free((char*)cost_matrix_);
+  std::free((char*)cost_matrix_);
 
   cost_matrix_=0;
   num_row_=0;
@@ -223,9 +223,9 @@ double vsrl_dynamic_program::execute()
 #ifdef DEBUG
   for (int i=0;i<num_row_;i++)
   {
-    vcl_cout<<'\n';
+    std::cout<<'\n';
     for (int j=lower_search_range_[i];j<upper_search_range_[i];j++)
-      vcl_cout<<cost_matrix_[i][j].cost<<' ';
+      std::cout<<cost_matrix_[i][j].cost<<' ';
   }
 #endif
   // we can now set the optimum assignment
@@ -488,7 +488,7 @@ void vsrl_dynamic_program::print_direct_cost(int i, int j)
 
     double direct_cost = tok1->cost(tok2);
 
-    vcl_cout << "Direct cost " << i << " -> " << j << ' ' << direct_cost <<'\n';
+    std::cout << "Direct cost " << i << " -> " << j << ' ' << direct_cost <<'\n';
   }
 }
 
@@ -500,13 +500,13 @@ void vsrl_dynamic_program::print_cost(int i, int j)
   assert(i>=0);
   assert(j>=0);
   if ((unsigned int)i < list1_.size() && (unsigned int)j< list2_.size())
-    vcl_cout << "cost "<< i <<" -> "<< j <<' '<<cost_matrix_[i][j].cost <<'\n';
+    std::cout << "cost "<< i <<" -> "<< j <<' '<<cost_matrix_[i][j].cost <<'\n';
 }
 
 void vsrl_dynamic_program::print_direct_costs(int i)
 {
   // print all the direct costs for token i on list1
-  vcl_cout << "Direct costs for token " << i << vcl_endl;
+  std::cout << "Direct costs for token " << i << std::endl;
   for (int j=lower_search_range_[i];j<upper_search_range_[i];j++)
     print_direct_cost(i,j);
 }
@@ -514,8 +514,8 @@ void vsrl_dynamic_program::print_direct_costs(int i)
 void vsrl_dynamic_program::print_costs(int i)
 {
   // print all the costs for token i on list1
-  vcl_cout << "Printing the costs for token " << i << " in the range " << lower_search_range_[i]
-           << " to " << upper_search_range_[i] << vcl_endl;
+  std::cout << "Printing the costs for token " << i << " in the range " << lower_search_range_[i]
+           << " to " << upper_search_range_[i] << std::endl;
 
   for (int j=lower_search_range_[i];j<upper_search_range_[i];j++)
     print_cost(i,j);
@@ -530,23 +530,23 @@ void vsrl_dynamic_program::print_assignment_nodes(int i)
 
 void vsrl_dynamic_program::print_assignment_node(int i, int j)
 {
-  vcl_cout << " assignment for node " << i << " -> " << j << vcl_endl
+  std::cout << " assignment for node " << i << " -> " << j << std::endl
            << "   prior assignment: " << cost_matrix_[i][j].prior_index1 << " -> "
-           << cost_matrix_[i][j].prior_index2 << vcl_endl
-           << "   cost: " << cost_matrix_[i][j].cost << vcl_endl << vcl_endl;
+           << cost_matrix_[i][j].prior_index2 << std::endl
+           << "   cost: " << cost_matrix_[i][j].cost << std::endl << std::endl;
 }
 
 void vsrl_dynamic_program::print_assignment(int i)
 {
   // we want to print the assignment for the i'th token
 
-  vcl_cout << "Token " << i << " goes to ";
+  std::cout << "Token " << i << " goes to ";
   vsrl_token *tok1 = (list1_[i]);
   vsrl_token *tok2 = tok1->get_assigned_token();
   if (tok2)
-    vcl_cout << "token " << tok2->get_x() << vcl_endl;
+    std::cout << "token " << tok2->get_x() << std::endl;
   else
-    vcl_cout << "the null token\n";
+    std::cout << "the null token\n";
 }
 
 void vsrl_dynamic_program::print_assignments()

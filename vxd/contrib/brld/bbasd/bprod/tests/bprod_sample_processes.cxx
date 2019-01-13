@@ -4,7 +4,7 @@
 // \file
 
 #include "bprod_sample_processes.h"
-#include <vcl_iostream.h>
+#include <iostream>
 #include <bprod/bprod_parameters.h>
 #include <vxl_config.h>
 

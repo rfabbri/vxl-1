@@ -1,11 +1,11 @@
 #include "bdifd_util.h"
 
 #include <vsol/vsol_point_2d.h>
-#include <vcl_cstring.h>
+#include <cstring>
 #include <vnl/vnl_vector_fixed.h>
 #include <vgl/algo/vgl_homg_operators_2d.h>
-#include <vcl_sstream.h>
-#include <vcl_fstream.h>
+#include <sstream>
+#include <fstream>
 
 //: transfers a point to a 3rd image given p1,p1,F13 and F23. It will intersect
 // the epipolar lines l13 and l23 on the 3rd image, returning p3.
@@ -37,9 +37,9 @@ reconstruct_pt_tangents(
       const vpgl_perspective_camera <double> &Pr1,
       const vpgl_perspective_camera <double> &Pr2,
       // Output: 
-      vcl_vector<vsol_point_2d_sptr> *Gamas,
-      vcl_vector<double> *error, // distance btw two rays in 3D
-      vcl_vector<vgl_vector_3d<double>> *Ts
+      std::vector<vsol_point_2d_sptr> *Gamas,
+      std::vector<double> *error, // distance btw two rays in 3D
+      std::vector<vgl_vector_3d<double>> *Ts
       )
       */
 
@@ -55,8 +55,8 @@ reconstruct_pt_tangents(
       // Output (caller's storage; we do not alloc em here): 
       double vnl_vector_fixed<double,3> *Gama_s,
       double vnl_vector_fixed<double,3> *Gama_sp,
-      vcl_vector<vgl_vector_3d<double>> *T_s,
-      vcl_vector<vgl_vector_3d<double>> *T_sp,
+      std::vector<vgl_vector_3d<double>> *T_s,
+      std::vector<vgl_vector_3d<double>> *T_sp,
       double *error_s1, // distance btw two rays in 3D
       double *error_s2, // distance btw two rays in 3D
       )
@@ -142,16 +142,16 @@ reconstruct_pt_tangents(
       vnl_svd<double> svd(A);
       vnl_vector<double> lambda = svd.solve(c2-c1);
     
-      vcl_cout << "Lambda:\n" << lambda << vcl_endl;
+      std::cout << "Lambda:\n" << lambda << std::endl;
       // the error is:   (A*lambda +c1 - c2).two_norm()
     
       vnl_vector_fixed<double,3> Cpt_v = c1 + lambda(0)*gama1;
       vgl_homg_point_3d<double> Cpt(Cpt_v(0), Cpt_v(1), Cpt_v(2));
-      vcl_cout << "Reconstructed point: " << Cpt << vcl_endl;
+      std::cout << "Reconstructed point: " << Cpt << std::endl;
 
      //=========== Tangents
-      vcl_cout << "\n\n\n";
-      vcl_cout << "================= Tangent reconstruction: =======================" << vcl_endl;
+      std::cout << "\n\n\n";
+      std::cout << "================= Tangent reconstruction: =======================" << std::endl;
     
       // Camera 1:
       vnl_vector_fixed<double,3> t1_cam_bkwd;
@@ -176,8 +176,8 @@ reconstruct_pt_tangents(
     
       t2_world_bkwd = Rct2*t2_cam_bkwd;
     
-      vcl_cout << "Test t1 dot F1 zero: " << dot_product(t1_world_bkwd,F1) << vcl_endl << vcl_endl;
-      vcl_cout << "Test t2 dot F2 zero: " << dot_product(t2_world_bkwd,F2) << vcl_endl << vcl_endl;
+      std::cout << "Test t1 dot F1 zero: " << dot_product(t1_world_bkwd,F1) << std::endl << std::endl;
+      std::cout << "Test t2 dot F2 zero: " << dot_product(t2_world_bkwd,F2) << std::endl << std::endl;
     
       T_rec = vnl_cross_3d( vnl_cross_3d(t1_world_bkwd,gama1), vnl_cross_3d(t2_world_bkwd,gama2) );
 

@@ -44,7 +44,7 @@ b_read_vpgld(vsl_b_istream &is, vpgl_calibration_matrix<T>* self)
 {
   if (!is) return;
   assert(self);
-  vcl_cerr << "[vpgld_io] Warning: using legacy I/O format\n";
+  std::cerr << "[vpgld_io] Warning: using legacy I/O format\n";
 
   vgl_point_2d<T> pp;
 
@@ -68,9 +68,9 @@ b_read_vpgld(vsl_b_istream &is, vpgl_calibration_matrix<T>* self)
      self->set_skew(tmp);
     break;
    default:
-    vcl_cerr << "I/O ERROR: vpgl_calibration_matrix::b_read(vsl_b_istream&)\n"
+    std::cerr << "I/O ERROR: vpgl_calibration_matrix::b_read(vsl_b_istream&)\n"
              << "           Unknown version number "<< ver << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }
@@ -79,7 +79,7 @@ b_read_vpgld(vsl_b_istream &is, vpgl_calibration_matrix<T>* self)
 template <class T> void 
 b_write_vpgld(vsl_b_ostream &os, const vpgl_calibration_matrix<T>* self)
 {
-  vcl_cerr << "[vpgld_io] Warning: using legacy I/O format\n";
+  std::cerr << "[vpgld_io] Warning: using legacy I/O format\n";
   vsl_b_write(os, 1);  // matches latest in b_read_vpgld
   vsl_b_write(os, self->focal_length());
   vsl_b_write(os, self->principal_point());
@@ -123,7 +123,7 @@ template <class T> void
 b_read_vpgld(vsl_b_istream &is, vpgl_perspective_camera<T>* self)
 {
   if (!is) return;
-  vcl_cerr << "[vpgld_io] Warning: using legacy I/O format\n";
+  std::cerr << "[vpgld_io] Warning: using legacy I/O format\n";
 
   vnl_matrix_fixed<T,4,4> Rot;
   vgl_rotation_3d<T> vglRot;
@@ -136,7 +136,7 @@ b_read_vpgld(vsl_b_istream &is, vpgl_perspective_camera<T>* self)
   switch (ver)
   {
    case 1:
-     vcl_cerr << "[vpgld_io] warning: camera i/o version 1 might also currently be the new vpgl I/O\n"; 
+     std::cerr << "[vpgld_io] warning: camera i/o version 1 might also currently be the new vpgl I/O\n"; 
      // vpgl_proj_camera<T>::b_read(is);
      vsl_b_read(is, * (static_cast<vpgl_proj_camera<T> *>(self)));
      b_read_vpgld(is, &K); // K.b_read(is);
@@ -158,9 +158,9 @@ b_read_vpgld(vsl_b_istream &is, vpgl_perspective_camera<T>* self)
      self->set_rotation(vgl_rotation_3d<T>(vnl_quaternion<T>(q)));
     break;
    default:
-    vcl_cerr << "I/O ERROR: vpgl_persperctive_camera::b_read(vsl_b_istream&)\n"
+    std::cerr << "I/O ERROR: vpgl_persperctive_camera::b_read(vsl_b_istream&)\n"
              << "           Unknown version number "<< ver << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }
@@ -169,7 +169,7 @@ b_read_vpgld(vsl_b_istream &is, vpgl_perspective_camera<T>* self)
 template <class T> void
 b_write_vpgld(vsl_b_ostream &os, const vpgl_perspective_camera<T>* self)
 {
-  vcl_cerr << "[vpgld_io] Warning: using legacy I/O format\n";
+  std::cerr << "[vpgld_io] Warning: using legacy I/O format\n";
   vsl_b_write(os, 2); // matches version 2 in b_read_vpgld
   vsl_b_write(os, *static_cast<const vpgl_proj_camera<T> *>(self));
   b_write_vpgld(os, &(self->get_calibration())); // K.b_read(is);
@@ -212,7 +212,7 @@ vsl_b_read_vpgld(vsl_b_istream &is, vpgl_perspective_camera<T>* &p)
 template <class T>
 void vsl_b_write_vpgld(vsl_b_ostream & os, vpgl_camera<T>* const camera)
 {
-  vcl_cerr << "[vpgld_io] Warning: using legacy I/O format\n";
+  std::cerr << "[vpgld_io] Warning: using legacy I/O format\n";
   if ( camera->type_name() == "vpgl_proj_camera" ){
     // projective camera
     vpgl_proj_camera<T>* procam = static_cast<vpgl_proj_camera<T>*>(camera);
@@ -248,8 +248,8 @@ void vsl_b_write_vpgld(vsl_b_ostream & os, vpgl_camera<T>* const camera)
     vsl_b_write(os,*lratcam);
   }
   else {
-    vcl_cerr << "tried to write unknown camera type!\n";
-    vcl_string cam_type("unknown");
+    std::cerr << "tried to write unknown camera type!\n";
+    std::string cam_type("unknown");
     vsl_b_write(os,cam_type);
   }
   return;
@@ -260,9 +260,9 @@ void vsl_b_write_vpgld(vsl_b_ostream & os, vpgl_camera<T>* const camera)
 template <class T>
 void vsl_b_read_vpgld(vsl_b_istream & is, vpgl_camera<T>* &camera)
 {
-  vcl_string cam_type;
+  std::string cam_type;
   vsl_b_read(is,cam_type);
-  vcl_cerr << "[vpgld_io] Warning: using legacy I/O format\n";
+  std::cerr << "[vpgld_io] Warning: using legacy I/O format\n";
 
   if (cam_type == "vpgl_proj_camera") {
     // projective camera
@@ -295,10 +295,10 @@ void vsl_b_read_vpgld(vsl_b_istream & is, vpgl_camera<T>* &camera)
     camera = lratcam;
   }
   else if (cam_type == "unknown") {
-    vcl_cerr << "cannot read camera of unknown type!\n";
+    std::cerr << "cannot read camera of unknown type!\n";
   }
   else {
-    vcl_cerr << "error reading vpgl_camera!\n";
+    std::cerr << "error reading vpgl_camera!\n";
   }
   return;
 }

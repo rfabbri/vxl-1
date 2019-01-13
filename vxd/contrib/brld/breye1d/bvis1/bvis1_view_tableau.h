@@ -30,7 +30,7 @@ class bvis1_view_tableau : public vgui_tableau
   ~bvis1_view_tableau();
 
   //: Returns the type of tableau ('bvis1_view_tableau').
-  vcl_string type_name() const;
+  std::string type_name() const;
 
   //: Handle all events sent to this tableau.
   bool handle(vgui_event const &);

@@ -103,9 +103,9 @@ void bgrld_vertex<E>::del_all_out_edges()
 
 //: Print an ascii summary to the stream
 template <class E>
-void bgrld_vertex<E>::print_summary( vcl_ostream& os ) const
+void bgrld_vertex<E>::print_summary( std::ostream& os ) const
 {
-  os << "[" << this->degree() << "]" << vcl_endl;
+  os << "[" << this->degree() << "]" << std::endl;
 }
 
 #define BGRLD_VERTEX_INSTANTIATE(E) \

@@ -3,7 +3,7 @@
 
 #include "vidl1_clip.h"
 
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <vidl1/vidl1_codec_sptr.h>
 #include <vidl1/vidl1_image_list_codec.h>
@@ -30,7 +30,7 @@ vidl1_clip::vidl1_clip(
 }
 
 //: Constructor. Create a clip from a vector of images. Start, end and increment frames are optional.
-vidl1_clip::vidl1_clip(vcl_vector<vil_image_resource_sptr> &images,
+vidl1_clip::vidl1_clip(std::vector<vil_image_resource_sptr> &images,
                        int start,
                        int end,
                        int increment)
@@ -39,7 +39,7 @@ vidl1_clip::vidl1_clip(vcl_vector<vil_image_resource_sptr> &images,
                     // but that would be better
   vidl1_image_list_codec_sptr codec = new vidl1_image_list_codec(images);
 
-  for (vcl_vector<vil_image_resource_sptr>::iterator i=images.begin(); i!= images.end(); ++i)
+  for (std::vector<vil_image_resource_sptr>::iterator i=images.begin(); i!= images.end(); ++i)
   {
     vidl1_frame_sptr f = new vidl1_frame(position, codec.ptr());
     frames_.push_back(f);
@@ -52,7 +52,7 @@ vidl1_clip::vidl1_clip(vcl_vector<vil_image_resource_sptr> &images,
 }
 
 //: Constructor. Create a clip from a list of images. Start, end and increment frames are optional.
-vidl1_clip::vidl1_clip(vcl_list<vil_image_resource_sptr> &images,
+vidl1_clip::vidl1_clip(std::list<vil_image_resource_sptr> &images,
                        int start,
                        int end,
                        int increment)
@@ -61,7 +61,7 @@ vidl1_clip::vidl1_clip(vcl_list<vil_image_resource_sptr> &images,
                     // but that would be better
   vidl1_image_list_codec_sptr codec = new vidl1_image_list_codec(images);
 
-  for (vcl_list<vil_image_resource_sptr>::iterator i=images.begin(); i!= images.end(); ++i)
+  for (std::list<vil_image_resource_sptr>::iterator i=images.begin(); i!= images.end(); ++i)
   {
     vidl1_frame_sptr f = new vidl1_frame(position, codec.ptr());
     frames_.push_back(f);
@@ -113,7 +113,7 @@ vidl1_frame_sptr vidl1_clip::get_frame(int n)
   // Check that the asked frame is in the clip
   if (n>=length() || n < 0)
   {
-    vcl_cerr << "vidl1_clip::get_frame Frame number " << n << " does not exist.\n";
+    std::cerr << "vidl1_clip::get_frame Frame number " << n << " does not exist.\n";
     return 0;
   }
 

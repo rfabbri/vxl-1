@@ -6,9 +6,9 @@
 //  http://jgt.akpeters.com/papers/MollerTrumbore97/
 //  See the bgld_moller_trumbore_jgt97.pdf in the same directory.
 
-#include <vcl_cassert.h>
-#include <vcl_cmath.h>
-#include <vcl_algorithm.h>
+#include <cassert>
+#include <cmath>
+#include <algorithm>
 #include "ray_tri.h"
 
 #define EPSILON 0.000001
@@ -187,7 +187,7 @@ int intersect_triangle (double orig[3], double dir[3],
    double dot12 = DOT (edge1, edge2);
    double dot13 = DOT (edge1, edge3);
    double dot23 = DOT (edge2, edge3);
-   double min_dot = vcl_min (vcl_min (dot12, dot13), dot23);
+   double min_dot = std::min (std::min (dot12, dot13), dot23);
    double epsln = EPSILON * min_dot;
    if (det > -epsln && det < epsln)
      return 0;
@@ -199,7 +199,7 @@ int intersect_triangle (double orig[3], double dir[3],
 
    // the instability:    
    if (*t < 0) {
-     ///assert (vcl_fabs(*t) < 1E-5); !!!
+     ///assert (std::fabs(*t) < 1E-5); !!!
      *t = 0;
    }
 
@@ -254,7 +254,7 @@ int intersect_triangle (double orig[3], double dir[3],
 
    // the instability:    
    if (*t < 0) {
-     assert (vcl_fabs(*t) < 1E-5);
+     assert (std::fabs(*t) < 1E-5);
      *t = 0;
    }
 

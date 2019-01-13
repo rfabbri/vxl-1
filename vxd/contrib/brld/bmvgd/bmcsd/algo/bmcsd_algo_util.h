@@ -8,7 +8,7 @@
 //\date 01/15/07 14:00:30 EST
 //
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vgl/vgl_fwd.h>
 #include <vpgl/vpgl_perspective_camera.h>
 #include <vsol/vsol_box_2d.h>
@@ -25,11 +25,11 @@ public:
   //:  Move world coordinates to first camera, updating each camera matrix accordingly
   // \todo test this separately.
   static void
-  move_world_to_1st_cam(vcl_vector<vpgl_perspective_camera<double> *> &cam);
+  move_world_to_1st_cam(std::vector<vpgl_perspective_camera<double> *> &cam);
 
   static void
-  move_world_to_1st_cam(vcl_vector<vpgl_perspective_camera<double> *> &cam,
-      vcl_vector<vgl_point_3d<double> > &pts);
+  move_world_to_1st_cam(std::vector<vpgl_perspective_camera<double> *> &cam,
+      std::vector<vgl_point_3d<double> > &pts);
 
   //: Computes an image-based reprojection error of points attributed with differential geometry, for
   // all pairs of views reprojected into the view \p v. 
@@ -39,8 +39,8 @@ public:
   // \return true in case at least one reprojection into current view has non-degenerate geometry
   static bool
   dg_reprojection_error(
-      vcl_vector<bdifd_3rd_order_point_2d> &pts, //:< pts[iv] points in view iv
-      const vcl_vector<bdifd_camera> &cam,
+      std::vector<bdifd_3rd_order_point_2d> &pts, //:< pts[iv] points in view iv
+      const std::vector<bdifd_camera> &cam,
       unsigned v,
       double &dpos,
       double &dtheta,
@@ -64,8 +64,8 @@ public:
   // \return false if all points lead to degenerate reprojection / singular geometry
   static bool
   dg_reprojection_error(
-      vcl_vector<bdifd_3rd_order_point_2d> &pts, //:< pts[iv] points in view iv
-      const vcl_vector<bdifd_camera> &cam,
+      std::vector<bdifd_3rd_order_point_2d> &pts, //:< pts[iv] points in view iv
+      const std::vector<bdifd_camera> &cam,
       // no parameter v - do it for all v.
       double &dpos,
       double &dtheta,
@@ -82,7 +82,7 @@ public:
   // returns the sdet_edgel with the correct position and orientation.
   static void bdifd_to_sdet(
       const bdifd_1st_order_curve_2d &crv_from, 
-      vcl_vector<sdet_edgel> *crv_to
+      std::vector<sdet_edgel> *crv_to
       )
   {
     crv_to->reserve(crv_from.size());
@@ -96,12 +96,12 @@ public:
   static void bdifd_to_sdet(const bdifd_1st_order_point_2d &from, sdet_edgel *to) 
   {
     to->pt.set(from.gama[0], from.gama[1]);
-    to->tangent = bmcsd_util::angle0To2Pi(vcl_atan2(from.t[1], from.t[0]));
+    to->tangent = bmcsd_util::angle0To2Pi(std::atan2(from.t[1], from.t[0]));
   }
 
   static void sdet_to_vsol(
       const sdet_edgel_list &edgels, 
-      vcl_vector<vsol_point_2d_sptr> *pcurve) 
+      std::vector<vsol_point_2d_sptr> *pcurve) 
   {
     pcurve->reserve(edgels.size());
     for (unsigned j=0; j < edgels.size(); j++)

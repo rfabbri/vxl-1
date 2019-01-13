@@ -31,7 +31,7 @@ bsold_smooth_contours_process(void)
     !parameters()->add("In-place smoothing (no new storage will be created)" , "-in_place_smoothing" , false)
     ) 
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -52,7 +52,7 @@ clone() const
 
 
 //: Return the name of this process
-vcl_string bsold_smooth_contours_process::
+std::string bsold_smooth_contours_process::
 name()
 {
   return "Smooth Contours";
@@ -76,20 +76,20 @@ output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > bsold_smooth_contours_process::
+std::vector< std::string > bsold_smooth_contours_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > bsold_smooth_contours_process::
+std::vector< std::string > bsold_smooth_contours_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
    bool in_place_smoothing = false;
   this->parameters()->get_value("-in_place_smoothing", in_place_smoothing);
   if (!in_place_smoothing)
@@ -105,7 +105,7 @@ execute()
 {
   if ( input_data_.size() != 1 )
   {
-    vcl_cout << "In bsold_smooth_contours_process::execute() - not exactly 1"
+    std::cout << "In bsold_smooth_contours_process::execute() - not exactly 1"
              << " input frames \n";
     return false;
   }
@@ -135,7 +135,7 @@ execute()
   // get vsol2D object from the storage class
   vidpro1_vsol2D_storage_sptr frame_vsol;
   frame_vsol.vertical_cast(input_data_[0][0]);
-  vcl_vector<vsol_spatial_object_2d_sptr > all_vsols = frame_vsol->all_data();
+  std::vector<vsol_spatial_object_2d_sptr > all_vsols = frame_vsol->all_data();
 
   // create the output storage class
   vidpro1_vsol2D_storage_sptr output_vsol = vidpro1_vsol2D_storage_new();
@@ -153,7 +153,7 @@ execute()
       vsol_polyline_2d_sptr polyline = vsol->cast_to_curve()->cast_to_polyline();
       
       // collect the points
-      vcl_vector<vgl_point_2d<double > > pts;
+      std::vector<vgl_point_2d<double > > pts;
       pts.reserve(polyline->size());
       for (unsigned i=0; i<polyline->size(); ++i)
       {
@@ -181,7 +181,7 @@ execute()
       assert(pts.size() == polyline->size());
 
       // construct the new polyline
-      vcl_vector<vsol_point_2d_sptr > vsol_pts;
+      std::vector<vsol_point_2d_sptr > vsol_pts;
       vsol_pts.reserve(pts.size());
       for (unsigned j=0; j<pts.size(); ++j)
       {
@@ -203,7 +203,7 @@ execute()
       vsol_polygon_2d_sptr poly = vsol->cast_to_region()->cast_to_polygon();
       
       // collect the points
-      vcl_vector<vgl_point_2d<double > > pts;
+      std::vector<vgl_point_2d<double > > pts;
       pts.reserve(poly->size());
       for (unsigned i=0; i<poly->size(); ++i)
       {
@@ -231,7 +231,7 @@ execute()
       assert(pts.size() == poly->size());
 
       // construct the new polyline
-      vcl_vector<vsol_point_2d_sptr > vsol_pts;
+      std::vector<vsol_point_2d_sptr > vsol_pts;
       vsol_pts.reserve(pts.size());
       for (unsigned j=0; j<pts.size(); ++j)
       {

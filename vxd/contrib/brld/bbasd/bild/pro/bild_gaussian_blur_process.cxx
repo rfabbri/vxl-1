@@ -22,7 +22,7 @@ bild_gaussian_blur_process::factory::default_params() const
   if(p->add("Gaussian Blur Sigma" , "sigma" , 1.0f ))
     return p;
 
-  vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+  std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   return NULL;
 }
 

@@ -9,8 +9,8 @@
 
 #include "bsold_file_io.h"
 
-#include <vcl_iostream.h>
-#include <vcl_cstring.h>
+#include <iostream>
+#include <cstring>
 #include <vsol/vsol_point_2d.h>
 #include <vsol/vsol_polygon_2d.h>
 #include <vsol/vsol_polyline_2d.h>
@@ -38,38 +38,38 @@
 //: Load a .CON file and save results to a vector of points and whether the 
 // contour is closed. Return false if loading fails
 bool bsold_load_con_file(char const* filename, 
-                         vcl_vector<vsol_point_2d_sptr >& points, 
+                         std::vector<vsol_point_2d_sptr >& points, 
                          bool & is_closed)
 {
   // open file for reading
-  vcl_ifstream infp(filename, vcl_ios_in);
+  std::ifstream infp(filename, std::ios::in);
   if (!infp) 
   {
-    vcl_cerr << " Error opening file  " << filename << vcl_endl;
+    std::cerr << " Error opening file  " << filename << std::endl;
     return false;
   }
 
   // check header
   char line_buffer[2000]; //200
   infp.getline(line_buffer,2000);
-  if (vcl_strncmp(line_buffer,"CONTOUR",7)) 
+  if (std::strncmp(line_buffer,"CONTOUR",7)) 
   {
-    vcl_cerr << "Invalid File " << filename << vcl_endl
-             << "Should be CONTOUR " << line_buffer << vcl_endl;
+    std::cerr << "Invalid File " << filename << std::endl
+             << "Should be CONTOUR " << line_buffer << std::endl;
     return false;
   }
 
   // check whether contour is open or closed
   char open_flag[2000];
   infp.getline(open_flag,2000);
-  if (!vcl_strncmp(open_flag,"OPEN",4))
+  if (!std::strncmp(open_flag,"OPEN",4))
     is_closed = false;
-  else if (!vcl_strncmp(open_flag,"CLOSE",5))
+  else if (!std::strncmp(open_flag,"CLOSE",5))
     is_closed = true;
   else
   {
-    vcl_cerr << "Invalid File " << filename << vcl_endl
-             << "Should be OPEN/CLOSE " << open_flag << vcl_endl;
+    std::cerr << "Invalid File " << filename << std::endl
+             << "Should be OPEN/CLOSE " << open_flag << std::endl;
     return false;
   }
 
@@ -103,7 +103,7 @@ bool bsold_load_con_file(char const* filename,
 // exact type
 vsol_spatial_object_2d_sptr bsold_load_con_file(char const* filename)
 {  
-  vcl_vector<vsol_point_2d_sptr > points;
+  std::vector<vsol_point_2d_sptr > points;
   bool is_closed;
   if (!bsold_load_con_file(filename, points, is_closed))
     return 0;
@@ -126,7 +126,7 @@ vsol_spatial_object_2d_sptr bsold_load_con_file(char const* filename)
 //: Save a polyline to a .CON file. Return false if saving fails
 bool bsold_save_con_file(char const* filename, vsol_polyline_2d_sptr polyline)
 {
-  vcl_vector<vsol_point_2d_sptr > pts;
+  std::vector<vsol_point_2d_sptr > pts;
   pts.reserve(polyline->size());
   for (unsigned int i=0; i<polyline->size(); ++i)
   {
@@ -140,7 +140,7 @@ bool bsold_save_con_file(char const* filename, vsol_polyline_2d_sptr polyline)
 //: Save a polygon to a .CON file. Return false if saving fails
 bool bsold_save_con_file(char const* filename, vsol_polygon_2d_sptr polygon)
 {
-  vcl_vector<vsol_point_2d_sptr > pts;
+  std::vector<vsol_point_2d_sptr > pts;
   pts.reserve(polygon->size());
   for (unsigned int i=0; i<polygon->size(); ++i)
   {
@@ -153,42 +153,42 @@ bool bsold_save_con_file(char const* filename, vsol_polygon_2d_sptr polygon)
 // ----------------------------------------------------------------------------
 //: Save a set of ordered points to a .CON file. Return false if saving fails
 bool bsold_save_con_file(char const* filename, 
-                         const vcl_vector<vsol_point_2d_sptr >& pts,
+                         const std::vector<vsol_point_2d_sptr >& pts,
                          bool is_closed)
 {
   // 1) create the file
-  //vcl_ifstream infp(filename, vcl_ios::in);
-  vcl_ofstream outfp(filename, vcl_ios_out);
+  //std::ifstream infp(filename, std::ios::in);
+  std::ofstream outfp(filename, std::ios::out);
   if (!outfp)
   {
-    vcl_cout << " Error writing file  " << filename << vcl_endl;
+    std::cout << " Error writing file  " << filename << std::endl;
     return false;
   }
 
   // 2) start writing out the contour to the file
   
   // header
-  outfp << "CONTOUR" << vcl_endl;
+  outfp << "CONTOUR" << std::endl;
 
   // The contour can either be a polyline producing an open contour 
   // or a polygon producing a close contour          
   if (is_closed)
   {
-    outfp << "CLOSE" << vcl_endl;
+    outfp << "CLOSE" << std::endl;
   }
   else
   {
-    outfp << "OPEN" << vcl_endl;
+    outfp << "OPEN" << std::endl;
   }
 
   // Number of points
-  outfp << pts.size() << vcl_endl;
+  outfp << pts.size() << std::endl;
 
   // Write coordinates of the points
   for (unsigned int i=0; i<pts.size(); ++i)
   {
     vsol_point_2d_sptr pt = pts[i];
-    outfp <<pt->x() << " " << pt->y() << vcl_endl;
+    outfp <<pt->x() << " " << pt->y() << std::endl;
   }
 
   // 3) close the file
@@ -199,36 +199,36 @@ bool bsold_save_con_file(char const* filename,
 
 
 #ifdef HAS_BOOST
-static bool bsold_load_cem_gzip(vcl_vector< vsol_spatial_object_2d_sptr >& contours, vcl_string filename);
-static bool bsold_save_cem_gzip(vcl_vector< vsol_spatial_object_2d_sptr >& vsol_list, vcl_string filename);
+static bool bsold_load_cem_gzip(std::vector< vsol_spatial_object_2d_sptr >& contours, std::string filename);
+static bool bsold_save_cem_gzip(std::vector< vsol_spatial_object_2d_sptr >& vsol_list, std::string filename);
 #endif
 
-static bool bsold_load_cem_ascii(vcl_vector< vsol_spatial_object_2d_sptr >& contours, vcl_string filename);
-static bool bsold_save_cem_ascii(vcl_vector< vsol_spatial_object_2d_sptr >& vsol_list, vcl_string filename);
+static bool bsold_load_cem_ascii(std::vector< vsol_spatial_object_2d_sptr >& contours, std::string filename);
+static bool bsold_save_cem_ascii(std::vector< vsol_spatial_object_2d_sptr >& vsol_list, std::string filename);
 
-bool bsold_load_cem(vcl_vector< vsol_spatial_object_2d_sptr >& contours, vcl_string filename)
+bool bsold_load_cem(std::vector< vsol_spatial_object_2d_sptr >& contours, std::string filename)
 {
-  vcl_string ext = vul_file::extension(filename);
+  std::string ext = vul_file::extension(filename);
 
   if (ext == ".gz") {
 #ifdef HAS_BOOST
     return bsold_load_cem_gzip(contours, filename);
 #else
-    vcl_cerr << "Error: .gz compressed file was provided, but boost wasn't found\n";
+    std::cerr << "Error: .gz compressed file was provided, but boost wasn't found\n";
 #endif
   } else
     return bsold_load_cem_ascii(contours, filename);
 }
 
-bool bsold_save_cem(vcl_vector< vsol_spatial_object_2d_sptr >& vsol_list, vcl_string filename)
+bool bsold_save_cem(std::vector< vsol_spatial_object_2d_sptr >& vsol_list, std::string filename)
 {
-  vcl_string ext = vul_file::extension(filename);
+  std::string ext = vul_file::extension(filename);
 
   if (ext == ".gz") {
 #ifdef HAS_BOOST
     return bsold_save_cem_gzip(vsol_list, filename);
 #else
-    vcl_cerr << "Error: .gz compressed filename was provided, but boost wasn't found\n";
+    std::cerr << "Error: .gz compressed filename was provided, but boost wasn't found\n";
 #endif
   } else
     return bsold_save_cem_ascii(vsol_list, filename);
@@ -237,7 +237,7 @@ bool bsold_save_cem(vcl_vector< vsol_spatial_object_2d_sptr >& vsol_list, vcl_st
 
 // -----------------------------------------------------------------------------
 // Load .CEM file
-bool bsold_load_cem_ascii(vcl_vector< vsol_spatial_object_2d_sptr >& contours, vcl_string filename)
+bool bsold_load_cem_ascii(std::vector< vsol_spatial_object_2d_sptr >& contours, std::string filename)
 {
   float x, y;
   char lineBuffer[1024];
@@ -246,10 +246,10 @@ bool bsold_load_cem_ascii(vcl_vector< vsol_spatial_object_2d_sptr >& contours, v
   double idir, iconf, dir, conf;
 
   //1)If file open fails, return.
-  vcl_ifstream infp(filename.c_str(), vcl_ios::in);
+  std::ifstream infp(filename.c_str(), std::ios::in);
 
   if (!infp){
-    vcl_cout << " Error opening file  " << filename.c_str() << vcl_endl;
+    std::cout << " Error opening file  " << filename.c_str() << std::endl;
     return false;
   }
 
@@ -263,14 +263,14 @@ bool bsold_load_cem_ascii(vcl_vector< vsol_spatial_object_2d_sptr >& contours, v
     //read the line with the contour count info
     if (!strncmp(lineBuffer, "CONTOUR_COUNT=", sizeof("CONTOUR_COUNT=")-1)){
       sscanf(lineBuffer,"CONTOUR_COUNT=%d",&(numContours));
-      //vcl_cout << numContours << vcl_endl;
+      //std::cout << numContours << std::endl;
       continue;
     }
 
     //read the line with the edge count info
     if (!strncmp(lineBuffer, "TOTAL_EDGE_COUNT=", sizeof("TOTAL_EDGE_COUNT=")-1)){
       sscanf(lineBuffer,"TOTAL_EDGE_COUNT=%d",&(numTotalEdges));
-      //vcl_cout << numTotalEdges << vcl_endl;
+      //std::cout << numTotalEdges << std::endl;
       continue;
     }
 
@@ -278,11 +278,11 @@ bool bsold_load_cem_ascii(vcl_vector< vsol_spatial_object_2d_sptr >& contours, v
     if (!strncmp(lineBuffer, "[BEGIN CONTOUR]", sizeof("[BEGIN CONTOUR]")-1)){
 
       //discarding other information for now...should really be outputting edgels
-      vcl_vector< vsol_point_2d_sptr > points;
+      std::vector< vsol_point_2d_sptr > points;
 
       infp.getline(lineBuffer,1024);
       sscanf(lineBuffer,"EDGE_COUNT=%d",&(numEdges));
-      //vcl_cout << numEdges << vcl_endl;
+      //std::cout << numEdges << std::endl;
 
       for (int j=0; j< numEdges; j++){
         //the rest should have data that goes into the current contour
@@ -314,7 +314,7 @@ bool bsold_load_cem_ascii(vcl_vector< vsol_spatial_object_2d_sptr >& contours, v
   }
   infp.close();
 
-  vcl_cout << "Loaded: " << filename.c_str() << ".\n";
+  std::cout << "Loaded: " << filename.c_str() << ".\n";
   return true;
 }
 
@@ -323,7 +323,7 @@ bool bsold_load_cem_ascii(vcl_vector< vsol_spatial_object_2d_sptr >& contours, v
 // Load .CEM file compressed with zlib, gzip style.
 // TODO: use templating and/or istream inheritance to avoid duplicating almost
 // identical code to bsold_load_cem_ascii
-bool bsold_load_cem_gzip(vcl_vector< vsol_spatial_object_2d_sptr >& contours, vcl_string filename)
+bool bsold_load_cem_gzip(std::vector< vsol_spatial_object_2d_sptr >& contours, std::string filename)
 {
   float x, y;
   char lineBuffer[1024];
@@ -332,10 +332,10 @@ bool bsold_load_cem_gzip(vcl_vector< vsol_spatial_object_2d_sptr >& contours, vc
   double idir, iconf, dir, conf;
 
   //1)If file open fails, return.
-  vcl_ifstream infp_orig(filename.c_str(), vcl_ios::in | vcl_ios::binary);
+  std::ifstream infp_orig(filename.c_str(), std::ios::in | std::ios::binary);
 
   if (!infp_orig){
-    vcl_cout << " Error opening file  " << filename.c_str() << vcl_endl;
+    std::cout << " Error opening file  " << filename.c_str() << std::endl;
     return false;
   }
 
@@ -353,14 +353,14 @@ bool bsold_load_cem_gzip(vcl_vector< vsol_spatial_object_2d_sptr >& contours, vc
     //read the line with the contour count info
     if (!strncmp(lineBuffer, "CONTOUR_COUNT=", sizeof("CONTOUR_COUNT=")-1)){
       sscanf(lineBuffer,"CONTOUR_COUNT=%d",&(numContours));
-      //vcl_cout << numContours << vcl_endl;
+      //std::cout << numContours << std::endl;
       continue;
     }
 
     //read the line with the edge count info
     if (!strncmp(lineBuffer, "TOTAL_EDGE_COUNT=", sizeof("TOTAL_EDGE_COUNT=")-1)){
       sscanf(lineBuffer,"TOTAL_EDGE_COUNT=%d",&(numTotalEdges));
-      //vcl_cout << numTotalEdges << vcl_endl;
+      //std::cout << numTotalEdges << std::endl;
       continue;
     }
 
@@ -368,11 +368,11 @@ bool bsold_load_cem_gzip(vcl_vector< vsol_spatial_object_2d_sptr >& contours, vc
     if (!strncmp(lineBuffer, "[BEGIN CONTOUR]", sizeof("[BEGIN CONTOUR]")-1)){
 
       //discarding other information for now...should really be outputting edgels
-      vcl_vector< vsol_point_2d_sptr > points;
+      std::vector< vsol_point_2d_sptr > points;
 
       infp.getline(lineBuffer,1024);
       sscanf(lineBuffer,"EDGE_COUNT=%d",&(numEdges));
-      //vcl_cout << numEdges << vcl_endl;
+      //std::cout << numEdges << std::endl;
 
       for (int j=0; j< numEdges; j++){
         //the rest should have data that goes into the current contour
@@ -403,41 +403,41 @@ bool bsold_load_cem_gzip(vcl_vector< vsol_spatial_object_2d_sptr >& contours, vc
     }
   }
 
-  vcl_cout << "Loaded: " << filename.c_str() << ".\n";
+  std::cout << "Loaded: " << filename.c_str() << ".\n";
   return true;
 }
 #endif //! HAS_BOOST
 
 // -----------------------------------------------------------------------------
 //: Save .CEM file
-bool bsold_save_cem_ascii(vcl_vector< vsol_spatial_object_2d_sptr >& vsol_list, vcl_string filename)
+bool bsold_save_cem_ascii(std::vector< vsol_spatial_object_2d_sptr >& vsol_list, std::string filename)
 {
   //1)If file open fails, return.
-  vcl_ofstream outfp(filename.c_str(), vcl_ios::out);
+  std::ofstream outfp(filename.c_str(), std::ios::out);
 
   if (!outfp){
-    vcl_cout << " Error opening file  " << filename.c_str() << vcl_endl;
+    std::cout << " Error opening file  " << filename.c_str() << std::endl;
     return false;
   }
 
   // output header information
-   outfp <<"# CONTOUR_EDGE_MAP : Logical-Linear + Shock_Grouping"<<vcl_endl;
-   outfp <<"# .cem files"<<vcl_endl;
-   outfp <<"#"<<vcl_endl;
-   outfp <<"# Format :"<<vcl_endl;
-   outfp <<"# Each contour block will consist of the following"<<vcl_endl;
-   outfp <<"# [BEGIN CONTOUR]"<<vcl_endl;
-   outfp <<"# EDGE_COUNT=num_of_edges"<<vcl_endl;
-   outfp <<"# [Pixel_Pos]  Pixel_Dir Pixel_Conf  [Sub_Pixel_Pos] Sub_Pixel_Dir Sub_Pixel_Conf "<<vcl_endl;
-   outfp <<"# ..."<<vcl_endl;
-   outfp <<"# ..."<<vcl_endl;
-   outfp <<"# [END CONTOUR]"<<vcl_endl;
+   outfp <<"# CONTOUR_EDGE_MAP : Logical-Linear + Shock_Grouping"<<std::endl;
+   outfp <<"# .cem files"<<std::endl;
+   outfp <<"#"<<std::endl;
+   outfp <<"# Format :"<<std::endl;
+   outfp <<"# Each contour block will consist of the following"<<std::endl;
+   outfp <<"# [BEGIN CONTOUR]"<<std::endl;
+   outfp <<"# EDGE_COUNT=num_of_edges"<<std::endl;
+   outfp <<"# [Pixel_Pos]  Pixel_Dir Pixel_Conf  [Sub_Pixel_Pos] Sub_Pixel_Dir Sub_Pixel_Conf "<<std::endl;
+   outfp <<"# ..."<<std::endl;
+   outfp <<"# ..."<<std::endl;
+   outfp <<"# [END CONTOUR]"<<std::endl;
 
-  outfp<<vcl_endl;
+  outfp<<std::endl;
 
   // Note: this count is currently missing
-   outfp <<"CONTOUR_COUNT="<< vcl_endl;
-   outfp <<"TOTAL_EDGE_COUNT="<<vcl_endl;
+   outfp <<"CONTOUR_COUNT="<< std::endl;
+   outfp <<"TOTAL_EDGE_COUNT="<<std::endl;
 
   // parse through all the vsol classes and save curve objects only
    
@@ -448,35 +448,35 @@ bool bsold_save_cem_ascii(vcl_vector< vsol_spatial_object_2d_sptr >& vsol_list, 
     {
       if( vsol_list[b]->cast_to_curve()->cast_to_polyline() )
       {
-        outfp <<"[BEGIN CONTOUR]"<<vcl_endl;
-        outfp <<"EDGE_COUNT="<< vsol_list[b]->cast_to_curve()->cast_to_polyline()->size() <<vcl_endl;
+        outfp <<"[BEGIN CONTOUR]"<<std::endl;
+        outfp <<"EDGE_COUNT="<< vsol_list[b]->cast_to_curve()->cast_to_polyline()->size() <<std::endl;
         
         for (unsigned int i=0; i<vsol_list[b]->cast_to_curve()->cast_to_polyline()->size();i++)
         {
           vsol_point_2d_sptr pt = vsol_list[b]->cast_to_curve()->cast_to_polyline()->vertex(i);
           //output as subpixel contours
           // [%d, %d]\t%lf\t%lf\t[%lf, %lf]\t%lf\t%lf
-          outfp <<" [0, 0]  0.0  0.0  [" << pt->x() << ", " << pt->y() << "]  0.0  0.0"  << vcl_endl;
+          outfp <<" [0, 0]  0.0  0.0  [" << pt->x() << ", " << pt->y() << "]  0.0  0.0"  << std::endl;
         }
-        outfp <<"[END CONTOUR]"<<vcl_endl<<vcl_endl;
+        outfp <<"[END CONTOUR]"<<std::endl<<std::endl;
       }
     } else if (vsol_list[b]->cast_to_region()) {
       if (vsol_list[b]->cast_to_region()->cast_to_polygon() )
       {
-        outfp <<"[BEGIN CONTOUR]"<<vcl_endl;
-        outfp <<"EDGE_COUNT="<< vsol_list[b]->cast_to_region()->cast_to_polygon()->size()+1 <<vcl_endl;
+        outfp <<"[BEGIN CONTOUR]"<<std::endl;
+        outfp <<"EDGE_COUNT="<< vsol_list[b]->cast_to_region()->cast_to_polygon()->size()+1 <<std::endl;
         
         for (unsigned int i=0; i<vsol_list[b]->cast_to_region()->cast_to_polygon()->size();i++)
         {
           vsol_point_2d_sptr pt = vsol_list[b]->cast_to_region()->cast_to_polygon()->vertex(i);
           //output as subpixel contours
           // [%d, %d]\t%lf\t%lf\t[%lf, %lf]\t%lf\t%lf
-          outfp <<" [0, 0]  0.0  0.0  [" << pt->x() << ", " << pt->y() << "]  0.0  0.0"  << vcl_endl;
+          outfp <<" [0, 0]  0.0  0.0  [" << pt->x() << ", " << pt->y() << "]  0.0  0.0"  << std::endl;
         }
         vsol_point_2d_sptr pt = vsol_list[b]->cast_to_region()->cast_to_polygon()->vertex(0);  // print the first point once more to include last edge
-        outfp <<" [0, 0]  0.0  0.0  [" << pt->x() << ", " << pt->y() << "]  0.0  0.0"  << vcl_endl;
+        outfp <<" [0, 0]  0.0  0.0  [" << pt->x() << ", " << pt->y() << "]  0.0  0.0"  << std::endl;
 
-        outfp <<"[END CONTOUR]"<<vcl_endl<<vcl_endl;
+        outfp <<"[END CONTOUR]"<<std::endl<<std::endl;
       }
     }
   }
@@ -487,13 +487,13 @@ bool bsold_save_cem_ascii(vcl_vector< vsol_spatial_object_2d_sptr >& vsol_list, 
 #ifdef HAS_BOOST
 // -----------------------------------------------------------------------------
 //: Save .CEM file
-bool bsold_save_cem_gzip(vcl_vector< vsol_spatial_object_2d_sptr >& vsol_list, vcl_string filename)
+bool bsold_save_cem_gzip(std::vector< vsol_spatial_object_2d_sptr >& vsol_list, std::string filename)
 {
   //1)If file open fails, return.
-  vcl_ofstream outfp_orig(filename.c_str(), vcl_ios::out | vcl_ios::binary);
+  std::ofstream outfp_orig(filename.c_str(), std::ios::out | std::ios::binary);
 
   if (!outfp_orig){
-    vcl_cout << " Error opening file  " << filename.c_str() << vcl_endl;
+    std::cout << " Error opening file  " << filename.c_str() << std::endl;
     return false;
   }
 
@@ -502,23 +502,23 @@ bool bsold_save_cem_gzip(vcl_vector< vsol_spatial_object_2d_sptr >& vsol_list, v
   outfp.push(outfp_orig);
 
   // output header information
-   outfp <<"# CONTOUR_EDGE_MAP : Logical-Linear + Shock_Grouping"<<vcl_endl;
-   outfp <<"# .cem files"<<vcl_endl;
-   outfp <<"#"<<vcl_endl;
-   outfp <<"# Format :"<<vcl_endl;
-   outfp <<"# Each contour block will consist of the following"<<vcl_endl;
-   outfp <<"# [BEGIN CONTOUR]"<<vcl_endl;
-   outfp <<"# EDGE_COUNT=num_of_edges"<<vcl_endl;
-   outfp <<"# [Pixel_Pos]  Pixel_Dir Pixel_Conf  [Sub_Pixel_Pos] Sub_Pixel_Dir Sub_Pixel_Conf "<<vcl_endl;
-   outfp <<"# ..."<<vcl_endl;
-   outfp <<"# ..."<<vcl_endl;
-   outfp <<"# [END CONTOUR]"<<vcl_endl;
+   outfp <<"# CONTOUR_EDGE_MAP : Logical-Linear + Shock_Grouping"<<std::endl;
+   outfp <<"# .cem files"<<std::endl;
+   outfp <<"#"<<std::endl;
+   outfp <<"# Format :"<<std::endl;
+   outfp <<"# Each contour block will consist of the following"<<std::endl;
+   outfp <<"# [BEGIN CONTOUR]"<<std::endl;
+   outfp <<"# EDGE_COUNT=num_of_edges"<<std::endl;
+   outfp <<"# [Pixel_Pos]  Pixel_Dir Pixel_Conf  [Sub_Pixel_Pos] Sub_Pixel_Dir Sub_Pixel_Conf "<<std::endl;
+   outfp <<"# ..."<<std::endl;
+   outfp <<"# ..."<<std::endl;
+   outfp <<"# [END CONTOUR]"<<std::endl;
 
-  outfp<<vcl_endl;
+  outfp<<std::endl;
 
   // Note: this count is currently missing
-   outfp <<"CONTOUR_COUNT="<< vcl_endl;
-   outfp <<"TOTAL_EDGE_COUNT="<<vcl_endl;
+   outfp <<"CONTOUR_COUNT="<< std::endl;
+   outfp <<"TOTAL_EDGE_COUNT="<<std::endl;
 
   // parse through all the vsol classes and save curve objects only
    
@@ -529,35 +529,35 @@ bool bsold_save_cem_gzip(vcl_vector< vsol_spatial_object_2d_sptr >& vsol_list, v
     {
       if( vsol_list[b]->cast_to_curve()->cast_to_polyline() )
       {
-        outfp <<"[BEGIN CONTOUR]"<<vcl_endl;
-        outfp <<"EDGE_COUNT="<< vsol_list[b]->cast_to_curve()->cast_to_polyline()->size() <<vcl_endl;
+        outfp <<"[BEGIN CONTOUR]"<<std::endl;
+        outfp <<"EDGE_COUNT="<< vsol_list[b]->cast_to_curve()->cast_to_polyline()->size() <<std::endl;
         
         for (unsigned int i=0; i<vsol_list[b]->cast_to_curve()->cast_to_polyline()->size();i++)
         {
           vsol_point_2d_sptr pt = vsol_list[b]->cast_to_curve()->cast_to_polyline()->vertex(i);
           //output as subpixel contours
           // [%d, %d]\t%lf\t%lf\t[%lf, %lf]\t%lf\t%lf
-          outfp <<" [0, 0]  0.0  0.0  [" << pt->x() << ", " << pt->y() << "]  0.0  0.0"  << vcl_endl;
+          outfp <<" [0, 0]  0.0  0.0  [" << pt->x() << ", " << pt->y() << "]  0.0  0.0"  << std::endl;
         }
-        outfp <<"[END CONTOUR]"<<vcl_endl<<vcl_endl;
+        outfp <<"[END CONTOUR]"<<std::endl<<std::endl;
       }
     } else if (vsol_list[b]->cast_to_region()) {
       if (vsol_list[b]->cast_to_region()->cast_to_polygon() )
       {
-        outfp <<"[BEGIN CONTOUR]"<<vcl_endl;
-        outfp <<"EDGE_COUNT="<< vsol_list[b]->cast_to_region()->cast_to_polygon()->size()+1 <<vcl_endl;
+        outfp <<"[BEGIN CONTOUR]"<<std::endl;
+        outfp <<"EDGE_COUNT="<< vsol_list[b]->cast_to_region()->cast_to_polygon()->size()+1 <<std::endl;
         
         for (unsigned int i=0; i<vsol_list[b]->cast_to_region()->cast_to_polygon()->size();i++)
         {
           vsol_point_2d_sptr pt = vsol_list[b]->cast_to_region()->cast_to_polygon()->vertex(i);
           //output as subpixel contours
           // [%d, %d]\t%lf\t%lf\t[%lf, %lf]\t%lf\t%lf
-          outfp <<" [0, 0]  0.0  0.0  [" << pt->x() << ", " << pt->y() << "]  0.0  0.0"  << vcl_endl;
+          outfp <<" [0, 0]  0.0  0.0  [" << pt->x() << ", " << pt->y() << "]  0.0  0.0"  << std::endl;
         }
         vsol_point_2d_sptr pt = vsol_list[b]->cast_to_region()->cast_to_polygon()->vertex(0);  // print the first point once more to include last edge
-        outfp <<" [0, 0]  0.0  0.0  [" << pt->x() << ", " << pt->y() << "]  0.0  0.0"  << vcl_endl;
+        outfp <<" [0, 0]  0.0  0.0  [" << pt->x() << ", " << pt->y() << "]  0.0  0.0"  << std::endl;
 
-        outfp <<"[END CONTOUR]"<<vcl_endl<<vcl_endl;
+        outfp <<"[END CONTOUR]"<<std::endl<<std::endl;
       }
     }
   }

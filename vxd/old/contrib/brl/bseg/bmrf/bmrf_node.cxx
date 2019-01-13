@@ -9,8 +9,8 @@
 #include <bmrf/bmrf_epi_seg_compare.h>
 #include <vsl/vsl_binary_io.h>
 #include <vbl/io/vbl_io_smart_ptr.h>
-#include <vcl_algorithm.h>
-#include <vcl_cmath.h>
+#include <algorithm>
+#include <cmath>
 
 
 //: Constructor
@@ -103,8 +103,8 @@ bmrf_node::gamma()
 
 
 static bool
-pair_dbl_arc_gt_cmp ( const vcl_pair<double,bmrf_node::arc_iterator>& lhs,
-                      const vcl_pair<double,bmrf_node::arc_iterator>& rhs )
+pair_dbl_arc_gt_cmp ( const std::pair<double,bmrf_node::arc_iterator>& lhs,
+                      const std::pair<double,bmrf_node::arc_iterator>& rhs )
 {
   return lhs.first > rhs.first;
 }
@@ -145,25 +145,25 @@ void
 bmrf_node::prune_by_probability(double threshold, bool relative)
 {
   // Compute a probability mass function
-  vcl_vector<vcl_pair<double,arc_iterator> > pmf;
+  std::vector<std::pair<double,arc_iterator> > pmf;
   for ( arc_iterator a_itr = this->begin(TIME);
         a_itr != this->end(TIME); ++a_itr )
   {
     // use the gamma function associated with the arc
     bmrf_gamma_func_sptr gamma_func = (*a_itr)->gamma_func();
-    pmf.push_back(vcl_pair<double,arc_iterator>( this->probability(gamma_func,-1)
+    pmf.push_back(std::pair<double,arc_iterator>( this->probability(gamma_func,-1)
                                                  *this->probability(gamma_func,1), a_itr));
   }
 
   // Sort the results by probability
-  vcl_sort(pmf.begin(), pmf.end(), pair_dbl_arc_gt_cmp);
+  std::sort(pmf.begin(), pmf.end(), pair_dbl_arc_gt_cmp);
 
   // if relative, modify the threshold relative to the maximum probability
   if ( relative )
     threshold *= pmf.front().first;
 
   // Remove arcs to neighbors that are below threshold
-  vcl_vector<vcl_pair<double,arc_iterator> >::iterator p_itr = pmf.begin();
+  std::vector<std::pair<double,arc_iterator> >::iterator p_itr = pmf.begin();
   while ( p_itr != pmf.end() && p_itr->first > threshold)  ++p_itr;
   for ( ; p_itr != pmf.end(); ++p_itr ) {
     remove_helper(p_itr->second, TIME);
@@ -233,7 +233,7 @@ bmrf_node::probability(const bmrf_gamma_func_sptr& gamma, int time_step)
 
     double alpha_range = (*a_itr)->max_alpha_ - (*a_itr)->min_alpha_;
     const double int_var = 0.001; // intensity variance
-    prob += alpha_range * vcl_exp(-error/2.0 - (*a_itr)->avg_intensity_error_/(2.0*int_var));
+    prob += alpha_range * std::exp(-error/2.0 - (*a_itr)->avg_intensity_error_/(2.0*int_var));
     total_alpha += alpha_range;
   }
 
@@ -340,7 +340,7 @@ bmrf_node::remove_helper( arc_iterator& a_itr, neighbor_type type)
     ++boundaries_[t];
 
   // find the pointer back from the other node
-  arc_iterator back_itr = vcl_find( (*a_itr)->to_->in_arcs_.begin(),
+  arc_iterator back_itr = std::find( (*a_itr)->to_->in_arcs_.begin(),
                                     (*a_itr)->to_->in_arcs_.end(),
                                     *a_itr );
 
@@ -407,7 +407,7 @@ bmrf_node::b_write( vsl_b_ostream& os ) const
     vsl_b_write(os, sizes_[t]);
 
   // write all the outgoing arcs
-  for (vcl_list<bmrf_arc_sptr>::const_iterator itr = out_arcs_.begin();
+  for (std::list<bmrf_arc_sptr>::const_iterator itr = out_arcs_.begin();
        itr != out_arcs_.end(); ++itr) {
     vsl_b_write(os, *itr);  // Save the arc
   }
@@ -415,7 +415,7 @@ bmrf_node::b_write( vsl_b_ostream& os ) const
   // write the number of incoming arcs
   vsl_b_write(os, (unsigned int) in_arcs_.size());
   // write all the incoming arcs
-  for (vcl_list<bmrf_arc_sptr>::const_iterator itr = in_arcs_.begin();
+  for (std::list<bmrf_arc_sptr>::const_iterator itr = in_arcs_.begin();
        itr != in_arcs_.end(); ++itr) {
     vsl_b_write(os, *itr);  // Save the arc
   }
@@ -479,9 +479,9 @@ bmrf_node::b_read( vsl_b_istream& is )
    }
 
    default:
-    vcl_cerr << "I/O ERROR: bmrf_node::b_read(vsl_b_istream&)\n"
+    std::cerr << "I/O ERROR: bmrf_node::b_read(vsl_b_istream&)\n"
              << "           Unknown version number "<< ver << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }
@@ -497,7 +497,7 @@ bmrf_node::version() const
 
 //: Print an ascii summary to the stream
 void
-bmrf_node::print_summary( vcl_ostream& os ) const
+bmrf_node::print_summary( std::ostream& os ) const
 {
   os << "pr=" << probability_ << ", frame=" << frame_num_;
 }
@@ -539,7 +539,7 @@ vsl_b_read(vsl_b_istream &is, bmrf_node* &n)
 
 //: Print an ASCII summary to the stream
 void
-vsl_print_summary(vcl_ostream &os, const bmrf_node* n)
+vsl_print_summary(std::ostream &os, const bmrf_node* n)
 {
   os << "bmrf_node{ ";
   n->print_summary(os);

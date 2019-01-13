@@ -22,7 +22,7 @@
 #include <vidpro1/storage/vidpro1_vtol_storage.h>
 #include <vidpro1/storage/vidpro1_vtol_storage_sptr.h>
 
-#include <vcl_vector.h>
+#include <vector>
 
 //: Process that takes vtol or vsol storage class as input and outputs a vsol2D storage class.
 //  Edge curves/chains with length shorter than a given threshold can be pruned during conversion if required.
@@ -38,12 +38,12 @@ public:
   //: Clone the process
   virtual bpro1_process* clone() const;
 
-  vcl_string name() {
+  std::string name() {
     return "Prune Edges";
   }
 
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
 
   int input_frames() {
     return 1;

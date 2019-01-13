@@ -6,9 +6,9 @@ int main()
 {
    
    /*
-   vcl_cout
-      << "------------------------------------" << vcl_endl
-      << "EXAMPLE 0" << vcl_endl;
+   std::cout
+      << "------------------------------------" << std::endl
+      << "EXAMPLE 0" << std::endl;
    {
    bnld_eno_shock_1d myeno;
 
@@ -23,14 +23,14 @@ int main()
    myeno.interpolate(&data);
    myeno.place_shocks(); 
    bnld_eno_zerox_vector z(myeno);
-   z.print(myeno, vcl_cout);
+   z.print(myeno, std::cout);
    }
    */
 
    /*
-   vcl_cout
-      << "------------------------------------" << vcl_endl
-      << "EXAMPLE 0" << vcl_endl;
+   std::cout
+      << "------------------------------------" << std::endl
+      << "EXAMPLE 0" << std::endl;
    {
    bnld_eno_shock_1d myeno;
 
@@ -46,15 +46,15 @@ int main()
    myeno.interpolate(&data);
    myeno.place_shocks(); 
    bnld_eno_zerox_vector z(myeno);
-   z.print(myeno, vcl_cout);
+   z.print(myeno, std::cout);
    }
    */
 
    // this is one case where 2nd order interpolation cannot caputure an
    // inflection point and causes a shock.
-   vcl_cout << vcl_endl 
-      << "------------------------------------" << vcl_endl
-      << "EXAMPLE 1" << vcl_endl;
+   std::cout << std::endl 
+      << "------------------------------------" << std::endl
+      << "EXAMPLE 1" << std::endl;
    {
    bnld_eno_shock_1d myeno;
 
@@ -67,13 +67,13 @@ int main()
    myeno.interpolate(data, 4);
    myeno.place_shocks();
    bnld_eno_zerox_vector z(myeno);
-   z.print(myeno, vcl_cout);
+   z.print(myeno, std::cout);
    }
 
    /*
-   vcl_cout << vcl_endl 
-      << "------------------------------------" << vcl_endl
-      << "EXAMPLE 2" << vcl_endl;
+   std::cout << std::endl 
+      << "------------------------------------" << std::endl
+      << "EXAMPLE 2" << std::endl;
    {
    bnld_eno_shock_1d myeno;
 
@@ -90,14 +90,14 @@ int main()
 
 //   for (int i=0; i<myeno.size(); ++i)
 //      if(myeno.test_shock(i))
-//         vcl_cerr << "shock at " << i << vcl_endl; 
+//         std::cerr << "shock at " << i << std::endl; 
 //   myeno.place_zerox();
-   myeno.print(vcl_cout);
+   myeno.print(std::cout);
    }
 
-   vcl_cout << vcl_endl 
-      << "------------------------------------" << vcl_endl
-      << "EXAMPLE: 6 points" << vcl_endl;
+   std::cout << std::endl 
+      << "------------------------------------" << std::endl
+      << "EXAMPLE: 6 points" << std::endl;
    {
    bnld_eno_shock_1d myeno;
 
@@ -112,7 +112,7 @@ int main()
    myeno.interpolate(data, 6);
    myeno.place_shocks();
 //   myeno.place_zerox();
-   myeno.print(vcl_cout);
+   myeno.print(std::cout);
    }
 */
    return 0;

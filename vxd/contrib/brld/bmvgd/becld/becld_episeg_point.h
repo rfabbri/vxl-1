@@ -10,7 +10,7 @@
 
 #include <vbl/vbl_ref_count.h>
 #include "becld_episeg_sptr.h"
-#include <vcl_utility.h>
+#include <utility>
 #include <vgl/vgl_point_2d.h>
 
 //: A point along an episegment.
@@ -19,7 +19,7 @@ public:
   //: Construct a point
   becld_episeg_point(becld_episeg_sptr = NULL, double = 0.0);
   //: Convert to pair
-  vcl_pair<becld_episeg_sptr,double> to_pair() const;
+  std::pair<becld_episeg_sptr,double> to_pair() const;
   //: Set the point
   void set_point(becld_episeg_sptr&, double);
   //: Get the curve

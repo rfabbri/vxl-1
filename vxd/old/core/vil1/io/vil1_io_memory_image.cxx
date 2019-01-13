@@ -39,9 +39,9 @@ void vsl_b_read(vsl_b_istream &is, vil1_memory_image & p)
     break;
 
    default:
-    vcl_cerr << "I/O ERROR: vsl_b_read(vsl_b_istream&, vil1_memory_image&)\n"
+    std::cerr << "I/O ERROR: vsl_b_read(vsl_b_istream&, vil1_memory_image&)\n"
              << "           Unknown version number "<< v << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }
@@ -49,7 +49,7 @@ void vsl_b_read(vsl_b_istream &is, vil1_memory_image & p)
 
 //========================================================================
 //: Output a human readable summary to the stream
-void vsl_print_summary(vcl_ostream& os,const vil1_memory_image & p)
+void vsl_print_summary(std::ostream& os,const vil1_memory_image & p)
 {
     vsl_print_summary(os, p.impl());
 }

@@ -40,7 +40,7 @@ vpgld_triangulate_3d_point_optimal_kanatani(
 // Given a set of perspective views of a point reconstruct the point according to least squares (SVD).
 // The cameras for each view are given.
 vgl_point_3d<double> 
-vpgld_reconstruct_3d_points_nviews_linear(const vcl_vector<vnl_double_2> &pts, const vcl_vector<vnl_double_3x4> &Ps);
+vpgld_reconstruct_3d_points_nviews_linear(const std::vector<vnl_double_2> &pts, const std::vector<vnl_double_3x4> &Ps);
 
 #endif // vpgld_triangulation_h
 

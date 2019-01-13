@@ -56,10 +56,10 @@ class vidl1_mpegcodec : public vidl1_codec
                  const vil_image_view_base & /*im*/,
                  int /*x0*/, int /*y0*/ ) { return false; }
 
-  virtual bool probe(vcl_string const& fname);
-  virtual vidl1_codec_sptr load(vcl_string const& fname, char mode = 'r' );
-  bool save(vidl1_movie* /*movie*/, vcl_string const& /*fname*/) { return true; }
-  virtual vcl_string type() const { return "MPEG"; }
+  virtual bool probe(std::string const& fname);
+  virtual vidl1_codec_sptr load(std::string const& fname, char mode = 'r' );
+  bool save(vidl1_movie* /*movie*/, std::string const& /*fname*/) { return true; }
+  virtual std::string type() const { return "MPEG"; }
 
   //-----------------------------------------------
   //initialization methods.
@@ -68,7 +68,7 @@ class vidl1_mpegcodec : public vidl1_codec
   //called.
   void set_grey_scale(bool grey);
   void set_demux_video();
-  void set_pid(vcl_string pid);
+  void set_pid(std::string pid);
   bool init();
 };
 

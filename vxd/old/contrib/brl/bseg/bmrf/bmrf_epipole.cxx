@@ -3,7 +3,7 @@
 // \file
 
 #include "bmrf_epipole.h"
-#include <vcl_cmath.h>
+#include <cmath>
 #include <vgl/vgl_line_segment_2d.h>
 #include <vgl/vgl_vector_2d.h>
 #include <vgl/vgl_distance.h>
@@ -52,8 +52,8 @@ bmrf_epipole::to_epi_coords(double u, double v, double &s, double &a) const
 vgl_point_2d<double>
 bmrf_epipole::to_img_coords(const vgl_point_2d<double>& s_a) const
 {
-  double u = s_a.x()*vcl_cos(s_a.y());
-  double v = s_a.x()*vcl_sin(s_a.y());
+  double u = s_a.x()*std::cos(s_a.y());
+  double v = s_a.x()*std::sin(s_a.y());
   return epi_ + vgl_vector_2d<double>(u,v);
 }
 

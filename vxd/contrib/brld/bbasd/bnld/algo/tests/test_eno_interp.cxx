@@ -1,20 +1,20 @@
 #include <testlib/testlib_test.h>
 #include <bnld/algo/bnld_eno.h>
 #include <bnld/algo/bnld_eno_measures.h>
-#include <vcl_iostream.h>
-#include <vcl_limits.h>
+#include <iostream>
+#include <limits>
 
 MAIN( test_eno_interp)
 {
    START ("eno_interp");
 
-   double tol = vcl_numeric_limits<double>::epsilon()*100;
+   double tol = std::numeric_limits<double>::epsilon()*100;
 
    {
    bnld_eno_interp e(1,2); // (start, end) coordinates of interval to interpolate
    double nhood[4];
 
-   vcl_cout << "Test 1: plain interpolation" << vcl_endl;
+   std::cout << "Test 1: plain interpolation" << std::endl;
    nhood[0] = 1;
    nhood[1] = 2;
    nhood[2] = 1;
@@ -31,7 +31,7 @@ MAIN( test_eno_interp)
    nhood[3] = 1;
 
    e.interpolate(nhood);
-   vcl_cerr << vcl_endl;
+   std::cerr << std::endl;
    e.print();
    TEST("Forward",e.forward(),true);
 
@@ -41,7 +41,7 @@ MAIN( test_eno_interp)
    bnld_eno_measures m;
 
    m.compute(e);
-   vcl_cerr.precision(3);
+   std::cerr.precision(3);
    m.print();
    double k1 = m.total_curvature();
 
@@ -51,7 +51,7 @@ MAIN( test_eno_interp)
    nhood[3] = 100;
 
    e.interpolate(nhood);
-   vcl_cerr << vcl_endl;
+   std::cerr << std::endl;
    e.print();  
 
    m.compute(e);
@@ -66,7 +66,7 @@ MAIN( test_eno_interp)
    double nhood[4];
    double x[4] = {-1, 0, 0.5, 2};
 
-   vcl_cout << "Test: p(x) = 7 + 2*x + x^2\n";
+   std::cout << "Test: p(x) = 7 + 2*x + x^2\n";
    nhood[0] = 1    +7+2*x[0];
    nhood[1] = 0    +7+2*x[1];
    nhood[2] = 0.25 +7+2*x[2];

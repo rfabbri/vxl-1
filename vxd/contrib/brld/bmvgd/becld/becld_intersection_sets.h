@@ -8,8 +8,8 @@
 //\date 11/21/2005 11:05:03 PM EST
 //
 
-#include <vcl_vector.h>
-#include <vcl_list.h>
+#include <vector>
+#include <list>
 
 #include <vgl/vgl_line_2d.h>
 #include <vgl/vgl_homg_point_2d.h>
@@ -34,25 +34,25 @@ class becld_intersection_sets {
   becld_intersection_sets();
 
   void compute(
-      const vcl_vector<vsol_polyline_2d_sptr> &c, //:< list of curves
-      const vcl_vector<vgl_homg_line_2d<double> > &ep //:< list of epipolars
+      const std::vector<vsol_polyline_2d_sptr> &c, //:< list of curves
+      const std::vector<vgl_homg_line_2d<double> > &ep //:< list of epipolars
       );
 
   ~becld_intersection_sets() {}
 
   void nhoods_intercepting_epipolar(
-      unsigned ep_i, vcl_vector< vcl_list<vcl_vector<unsigned> > > &Lst) const;
+      unsigned ep_i, std::vector< std::list<std::vector<unsigned> > > &Lst) const;
 
   void points_intercepting_epipolar(
-      unsigned ep_i, vcl_vector<vcl_list<unsigned> > &pts_idx) const;
+      unsigned ep_i, std::vector<std::list<unsigned> > &pts_idx) const;
 
   //: returns all points of all intersections. Some pts may be repeated due to nhood size.
   // Point coordinates are given by {curve index, point index within curve}
   // pt_idx[i] = vector of all intersection points of curve i
-  void all_points(vcl_vector<vcl_vector<unsigned> > &pts_idx) const;
+  void all_points(std::vector<std::vector<unsigned> > &pts_idx) const;
 
   //: same as all_points but remove dups
-  //  void all_unique_points(vcl_vector<unsigned> &pts_idx) const;
+  //  void all_unique_points(std::vector<unsigned> &pts_idx) const;
 
   //: return total number of intersection points (note some points may be repeated, due to nhood
   // size)
@@ -72,21 +72,21 @@ class becld_intersection_sets {
   mw_line_polyline_intersection_1(
       const vgl_homg_line_2d<double> *l, 
       const vsol_polyline_2d_sptr crv, 
-      vcl_vector<bool> &indices, 
+      std::vector<bool> &indices, 
       double maxdist=1.4);
 
   public:
     //: connected ordered set of points; a neighborhood around ideal intersection
     typedef struct intersection_nhood_ {
       unsigned ep_number; //:< pointer of epipolar line intersecting this hypothesis
-      vcl_vector<unsigned> index; //:< index[i] == index on the curve of the point
+      std::vector<unsigned> index; //:< index[i] == index on the curve of the point
       // we also cache the points (take this off if too heavy)
-      // vcl_vector<vgl_point_2d<unsigned>> pts;
+      // std::vector<vgl_point_2d<unsigned>> pts;
     } intersection_nhood_;
 
     //: list of intersections for a curve
     typedef struct curve_intersections_list_{
-      vcl_list<intersection_nhood_> intercepts;
+      std::list<intersection_nhood_> intercepts;
     } curve_intersections_list_;
 
     void print(const curve_intersections_list_ & c) const;
@@ -94,7 +94,7 @@ class becld_intersection_sets {
     //: L_[i] == list of intersections of ith curve
     // L_[i].index
     // L_[i].index
-    vcl_vector<curve_intersections_list_> L_;
+    std::vector<curve_intersections_list_> L_;
 };
 
 
@@ -110,7 +110,7 @@ becld_intersection_sets::
 mw_line_polyline_intersection_1(
     const vgl_homg_line_2d<double> *l, 
     const vsol_polyline_2d_sptr crv, 
-    vcl_vector<bool> &indices, 
+    std::vector<bool> &indices, 
     double maxdist)
 {
 // TODO

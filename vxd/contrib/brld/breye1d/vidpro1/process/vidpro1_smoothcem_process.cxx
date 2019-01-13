@@ -1,5 +1,5 @@
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <iostream>
+#include <fstream>
 #include <vidpro1/process/vidpro1_smoothcem_process.h>
 
 #include <vsol/vsol_polyline_2d.h>
@@ -18,7 +18,7 @@ vidpro1_smoothcem_process::vidpro1_smoothcem_process() : bpro1_process()
   if(!parameters()->add(  "Sigma" , "-sigma" , (float)1.0 ) ||
      !parameters()->add(  "Number of times" , "-times" , 5 ))
   {
-    vcl_cerr << "ERROR: Adding parameters in vidpro1_smoothcem_process::vidpro1_smoothcem_process()" << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in vidpro1_smoothcem_process::vidpro1_smoothcem_process()" << std::endl;
   }
 }
 
@@ -29,16 +29,16 @@ vidpro1_smoothcem_process::clone() const
   return new vidpro1_smoothcem_process(*this);
 }
 
-vcl_vector< vcl_string > vidpro1_smoothcem_process::get_input_type()
+std::vector< std::string > vidpro1_smoothcem_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   return to_return;
 }
 
-vcl_vector< vcl_string > vidpro1_smoothcem_process::get_output_type()
+std::vector< std::string > vidpro1_smoothcem_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   return to_return;
 }
@@ -54,12 +54,12 @@ bool vidpro1_smoothcem_process::execute()
   vidpro1_vsol2D_storage_sptr input_vsol;
   input_vsol.vertical_cast(input_data_[0][0]);
 
-  vcl_vector<vgl_point_2d<double> > curve;
+  std::vector<vgl_point_2d<double> > curve;
   curve.clear();
   
   
   
-    vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol->all_data();
+    std::vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol->all_data();
     for (unsigned int b = 0 ; b < vsol_list.size() ; b++ ) {
         if( vsol_list[b]->cast_to_curve()->cast_to_polyline() ) {
           for (unsigned int i=0; i<vsol_list[b]->cast_to_curve()->cast_to_polyline()->size();i++){
@@ -69,10 +69,10 @@ bool vidpro1_smoothcem_process::execute()
         }
      }
 
-  vcl_cout << "curve size: " << curve.size() << vcl_endl;
+  std::cout << "curve size: " << curve.size() << std::endl;
   for (int i = 0; i<times; i++) {
     bdgl_curve_algs::smooth_curve(curve, sigma);
-    vcl_cout << "curve size after smoothing: " << curve.size() << vcl_endl;
+    std::cout << "curve size after smoothing: " << curve.size() << std::endl;
 
     curve.erase(curve.begin());
     curve.erase(curve.begin());
@@ -82,13 +82,13 @@ bool vidpro1_smoothcem_process::execute()
     curve.erase(curve.end()-1);
     curve.erase(curve.end()-1);
 
-    vcl_cout << "curve size after erasing 6 points: " << curve.size() << vcl_endl;
+    std::cout << "curve size after erasing 6 points: " << curve.size() << std::endl;
   }
 
   // new vector to store the points
-  vcl_vector< vsol_spatial_object_2d_sptr > contours;
+  std::vector< vsol_spatial_object_2d_sptr > contours;
 
-  vcl_vector< vsol_point_2d_sptr > points; 
+  std::vector< vsol_point_2d_sptr > points; 
   for (unsigned int i = 0; i<curve.size(); i++) {
                                                 //curve[i].x(), curve[i].y())
     vsol_point_2d_sptr newPt = new vsol_point_2d (curve[i].x(), curve[i].y());

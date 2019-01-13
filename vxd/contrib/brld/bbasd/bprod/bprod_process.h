@@ -16,9 +16,9 @@
 // \endverbatim
 //--------------------------------------------------------------------------------
 
-#include <vcl_set.h>
-#include <vcl_map.h>
-#include <vcl_typeinfo.h>
+#include <set>
+#include <map>
+#include <typeinfo>
 #include <vbl/vbl_ref_count.h>
 
 
@@ -123,7 +123,7 @@ class bprod_process : public vbl_ref_count
   }
 
   //: Returns the typeinfo struct for the data type stored on the given pin
-  const vcl_type_info& input_type_id(unsigned int idx) const;
+  const std::type_info& input_type_id(unsigned int idx) const;
 
   //: Wrap the output data in a storage class and set on an output pin
   //  This should be called from the derived class execute call
@@ -137,7 +137,7 @@ class bprod_process : public vbl_ref_count
   unsigned int num_observers(unsigned int idx) const;
 
   //: Returns the set of all pins that have observers
-  vcl_set<unsigned int> observed_outputs() const;
+  std::set<unsigned int> observed_outputs() const;
 
   //: Access the storage class on the given input pin
   bprod_storage_sptr get_input(unsigned int idx) const;
@@ -147,9 +147,9 @@ class bprod_process : public vbl_ref_count
   bool set_output(unsigned int idx, const bprod_storage_sptr& data);
   
   
-  vcl_map<unsigned int, bprod_connector_sptr> input_connectors_;
-  vcl_map<unsigned int, bprod_storage_sptr > output_data_;
-  vcl_map<unsigned int, vcl_set<bprod_observer_sptr> > output_observers_;
+  std::map<unsigned int, bprod_connector_sptr> input_connectors_;
+  std::map<unsigned int, bprod_storage_sptr > output_data_;
+  std::map<unsigned int, std::set<bprod_observer_sptr> > output_observers_;
   
   //: the current timestamp
   unsigned long timestamp_;

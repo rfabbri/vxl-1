@@ -11,7 +11,7 @@
 
 #include <vsl/vsl_binary_io.h>
 #include <vil1/vil1_image_impl.h>
-#include <vcl_string.h>
+#include <string>
 
 //: Base for objects which provide IO for classes derived from vil1_image_impl
 class vil1_io_image_impl
@@ -35,14 +35,14 @@ class vil1_io_image_impl
                               vil1_image_impl& base) const;
 
   //: Print summary of derived class to os using vil1_image_impl reference
-  virtual void print_summary_by_base(vcl_ostream& os,
+  virtual void print_summary_by_base(std::ostream& os,
                                      const vil1_image_impl& base) const;
 
   //: Copy this object onto the heap and return a pointer
   virtual vil1_io_image_impl* clone() const =0;
 
   //: Return name of class for which this object provides IO
-  virtual vcl_string target_classname() const { return "vil1_image_impl"; }
+  virtual std::string target_classname() const { return "vil1_image_impl"; }
 
   //: Return true if b is of class target_classname()
   //  Typically this will just be "return b.is_a()==target_classname()"
@@ -64,7 +64,7 @@ void vsl_b_write(vsl_b_ostream &os, const vil1_image_impl * b);
 void vsl_b_read(vsl_b_istream &is, vil1_image_impl* &b);
 
 //: Print summary to stream by vil1_image_impl pointer
-void vsl_print_summary(vcl_ostream &os, const vil1_image_impl * b);
+void vsl_print_summary(std::ostream &os, const vil1_image_impl * b);
 
 //: Binary save vil1_real_polynomial to stream.
 void vsl_b_write(vsl_b_ostream &os, const vil1_image_impl & v);
@@ -73,6 +73,6 @@ void vsl_b_write(vsl_b_ostream &os, const vil1_image_impl & v);
 void vsl_b_read(vsl_b_istream &is, vil1_image_impl & v);
 
 //: Print human readable summary of object to a stream
-void vsl_print_summary(vcl_ostream& os,const vil1_image_impl & b);
+void vsl_print_summary(std::ostream& os,const vil1_image_impl & b);
 
 #endif // vil1_io_image_impl_h

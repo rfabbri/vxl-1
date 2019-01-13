@@ -1,5 +1,5 @@
 #include "bgld_arc_algo.h"
-#include <vcl_cstdio.h>
+#include <cstdio>
 
 // copied this definition from visualizer's base_defines.h
 #ifdef HUGE
@@ -28,18 +28,18 @@ compute_intersections(const bgld_arc &arc1, const bgld_arc &arc2,
 
   if (a1_curv_is_zero && a2_curv_is_zero) {
 #ifndef NDEBUG
-    vcl_printf("line-line \n");
+    std::printf("line-line \n");
 #endif
     return bgld_arc::compute_inters_ll(arc1.point_at(0), arc1.point_at(1), 
           arc2.point_at(0), arc2.point_at(1), intercept1);
   } else if (!a1_curv_is_zero && !a2_curv_is_zero) {
 #ifndef NDEBUG
-    vcl_printf("arc-arc \n");
+    std::printf("arc-arc \n");
 #endif
     return compute_inters_aa_bkk(arc1, arc2, intercept1, intercept2);
   } else {
 #ifndef NDEBUG
-    vcl_printf("arc-line \n");
+    std::printf("arc-line \n");
 #endif
     if(a2_curv_is_zero) {
       return compute_inters_al(arc1, arc2, intercept1, intercept2);
@@ -107,7 +107,7 @@ compute_inters_aa_bkk(const bgld_arc &arc1, const bgld_arc &arc2,
             return 1;
         }
         
-        d = vcl_sqrt(d);
+        d = std::sqrt(d);
 
         y_int1 = (-b + d) / (2.0 * a);
         y_int2 = (-b - d) / (2.0 * a);
@@ -137,7 +137,7 @@ compute_inters_aa_bkk(const bgld_arc &arc1, const bgld_arc &arc2,
         return 1;
     }
 
-    d = vcl_sqrt(d);
+    d = std::sqrt(d);
 
     x_int1 = (-b + d) / (2.0 * a);
     x_int2 = (-b - d) / (2.0 * a);
@@ -180,7 +180,7 @@ compute_inters_al(const bgld_arc &arc, const bgld_arc &line,
             return 1;
          } else if ( a-c <= x1 && x1 <= a+c ) {
             double rcost = x1-a;
-            double rsint = vcl_sqrt(c*c - rcost*rcost);
+            double rsint = std::sqrt(c*c - rcost*rcost);
             intercept1->set(x1, b + rsint);
             intercept2->set(x1, b - rsint);
             return 2;
@@ -207,8 +207,8 @@ compute_inters_al(const bgld_arc &arc, const bgld_arc &line,
             return 0;
         } else {
            double two_c1 = 2.0*const1;
-            x_int1 = (vcl_sqrt(arg) - const2) / two_c1;
-            x_int2 = (- vcl_sqrt(arg) - const2) / two_c1;
+            x_int1 = (std::sqrt(arg) - const2) / two_c1;
+            x_int2 = (- std::sqrt(arg) - const2) / two_c1;
 
             intercept1->set(x_int1, m * x_int1 + d);
             intercept2->set(x_int2, m * x_int2 + d);
@@ -228,22 +228,22 @@ compute_arc_radius_from_three_points(vgl_point_2d<double> p1,vgl_point_2d<double
   double s1x = (x1+x3)/2;  double s1y = (y1+y3)/2;
   double s2x = (x2+x3)/2;  double s2y = (y2+y3)/2;
 
-  double psi1 = vcl_atan2(y3-y1, x3-x1) + vnl_math::pi_over_2;
-  double psi2 = vcl_atan2(y3-y2, x3-x2) + vnl_math::pi_over_2;
+  double psi1 = std::atan2(y3-y1, x3-x1) + vnl_math::pi_over_2;
+  double psi2 = std::atan2(y3-y2, x3-x2) + vnl_math::pi_over_2;
 
-  double psihat = vcl_atan2(s2y - s1y, s2x - s1x);
+  double psihat = std::atan2(s2y - s1y, s2x - s1x);
 
-  if (vcl_fabs(vcl_sin(psi2 - psi1)) < 1e-7){// collinear points
+  if (std::fabs(std::sin(psi2 - psi1)) < 1e-7){// collinear points
     return HUGE;
   }
   else {
-    double s = vcl_sin(psi2 - psihat)/vcl_sin(psi2 - psi1);
-    double H = vcl_sqrt( (s1y-s2y)*(s1y-s2y) + (s1x-s2x)*(s1x-s2x) );
+    double s = std::sin(psi2 - psihat)/std::sin(psi2 - psi1);
+    double H = std::sqrt( (s1y-s2y)*(s1y-s2y) + (s1x-s2x)*(s1x-s2x) );
     
-    double cx = s1x + H*s*vcl_cos(psi1);
-    double cy = s1y + H*s*vcl_sin(psi1);
+    double cx = s1x + H*s*std::cos(psi1);
+    double cy = s1y + H*s*std::sin(psi1);
 
-    return vcl_sqrt((cx-x1)*(cx-x1) + (cy-y1)*(cy-y1));
+    return std::sqrt((cx-x1)*(cx-x1) + (cy-y1)*(cy-y1));
   }
 }
 

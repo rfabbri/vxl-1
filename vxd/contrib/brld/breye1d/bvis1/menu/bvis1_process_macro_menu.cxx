@@ -57,8 +57,8 @@ bvis1_process_macro_menu::view_process_list()
   //display current process list
   display_dialog.message("Current Process Queue:");
   
-  vcl_vector<vcl_string> process_list = bvis1_manager::instance()->process_manager()->get_process_queue_list();
-  vcl_vector<vcl_string>::iterator i = process_list.begin();
+  std::vector<std::string> process_list = bvis1_manager::instance()->process_manager()->get_process_queue_list();
+  std::vector<std::string>::iterator i = process_list.begin();
   for (; i!=process_list.end(); i++)
     display_dialog.message( (*i).c_str()); 
 

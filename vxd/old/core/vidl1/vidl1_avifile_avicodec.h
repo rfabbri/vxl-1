@@ -10,7 +10,7 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_cstddef.h> // for size_t, used in some of the avifile #includes
+#include <cstddef> // for size_t, used in some of the avifile #includes
 // FIXME Stubbed away: use vidl
 // #include <avifile.h>
 #include <vidl1/vidl1_codec.h>
@@ -35,17 +35,17 @@ class vidl1_avicodec : public vidl1_codec
                         int x0, int y0 );
 
   //-----------------------------------------------------
-  virtual bool probe(vcl_string const& fname);
-  virtual vidl1_codec_sptr load(vcl_string const& fname, char mode = 'r' );
-  virtual bool save(vidl1_movie* /*movie*/, vcl_string const& /*fname*/) { return false; }
-  virtual vcl_string type() const { return "AVI"; }
+  virtual bool probe(std::string const& fname);
+  virtual vidl1_codec_sptr load(std::string const& fname, char mode = 'r' );
+  virtual bool save(vidl1_movie* /*movie*/, std::string const& /*fname*/) { return false; }
+  virtual std::string type() const { return "AVI"; }
   virtual vidl1_avicodec* castto_vidl1_avicodec() { return this; }
 
  protected:
   int seek(int frame_num) const;
   int next_frame() const;
 
-  bool load_avi(vcl_string const& fname, char mode);
+  bool load_avi(std::string const& fname, char mode);
 
  private:
 

@@ -23,7 +23,7 @@ public:
    bnld_eno_shock_interp() {}
 
 
-   void print(vcl_ostream& = vcl_cerr) const;
+   void print(std::ostream& = std::cerr) const;
    //: abcissa of shock
    double loc() const {return loc_;}
    //: returns true when this is a shock but neighboring interpolants don't intersect
@@ -53,10 +53,10 @@ private:
 // e.interpolate(data);      // plain eno
 // e.place_shocks();     // eno with shocks
 // ..
-// vcl_cout << e[i][2];       // coefficient of x^2 at the i-th interval
+// std::cout << e[i][2];       // coefficient of x^2 at the i-th interval
 // ..
 // if (e.has_shock(i))
-//    vcl_cout << e.shock(i).loc(); // access shock coordinate at ith interval
+//    std::cout << e.shock(i).loc(); // access shock coordinate at ith interval
 //
 //\endcode
 //
@@ -69,7 +69,7 @@ public:
    static const double default_curvature_change_threshold
       VCL_STATIC_CONST_INIT_FLOAT_DECL(0.3);
 
-   bnld_eno_shock_1d(double border_value = vcl_numeric_limits<double>::max()/1e10) :
+   bnld_eno_shock_1d(double border_value = std::numeric_limits<double>::max()/1e10) :
       bnld_eno_1d(border_value),
       nshocks_(0) { }
 
@@ -102,7 +102,7 @@ public:
    //: did we compute and store the shocks already?
    bool shocks_computed() const { return s_.size() != 0; }
    unsigned nshocks() const {return nshocks_;}
-   void print(vcl_ostream& = vcl_cerr) const;
+   void print(std::ostream& = std::cerr) const;
 
    //: Function that tests whether an interval is a probable shock. 
    // It does not construct or store any information. It is not a member of
@@ -141,10 +141,10 @@ protected:
    //: vector of shock interpolants. shock_[i] == NULL if the interval have no
    //shock. It could be made into a list for efficient traversal of shocks if
    //this turns out to be important for some application.
-   vcl_vector<bnld_eno_shock_interp *> s_; 
+   std::vector<bnld_eno_shock_interp *> s_; 
    unsigned nshocks_;
    //: cache of tangent and curvature measurements of intervals
-   vcl_vector<bnld_eno_measures> m_;
+   std::vector<bnld_eno_measures> m_;
    //: used by shock functions to compute and store/cache measures for each interval 
    void compute_measures(); 
 };

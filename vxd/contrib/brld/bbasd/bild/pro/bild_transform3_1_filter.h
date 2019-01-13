@@ -39,9 +39,9 @@ public:
       out_img_ = vil_image_view<destT>();
     out_img_.set_size(ni,nj,1);
     
-    vcl_ptrdiff_t istep_in=image.istep(), jstep_in=image.jstep(); 
-    vcl_ptrdiff_t pstep_in=image.planestep();
-    vcl_ptrdiff_t istep_out=out_img_.istep(), jstep_out=out_img_.jstep();
+    std::ptrdiff_t istep_in=image.istep(), jstep_in=image.jstep(); 
+    std::ptrdiff_t pstep_in=image.planestep();
+    std::ptrdiff_t istep_out=out_img_.istep(), jstep_out=out_img_.jstep();
     const srcT* row_in = image.top_left_ptr();
     destT* row_out = out_img_.top_left_ptr();
     

@@ -14,7 +14,7 @@
 //
 // \endverbatim
 
-#include <vcl_string.h>
+#include <string>
 #include <vbl/vbl_ref_count.h>
 #include <vgui/vgui_event.h>
 #include <vgui/vgui_popup_params.h>
@@ -28,7 +28,7 @@ public:
   virtual ~bvis1_tool();
 
   //: Return the name of the tool
-  virtual vcl_string name() const = 0;
+  virtual std::string name() const = 0;
 
   //: Handle events
   // \note This function is called once for most events \b before the event

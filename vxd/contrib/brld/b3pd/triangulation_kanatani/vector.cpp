@@ -5,10 +5,10 @@
  *
  *                                    Time-stamp: <06/12/27 22:27:19 sugaya>
  * ************************************************************************* */
-#include <vcl_cstdio.h>
-#include <vcl_cstdlib.h>
-#include <vcl_cmath.h>
-#include <vcl_cstdarg.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <cstdarg>
 #include "macros.h"
 #include "vector.h"
 

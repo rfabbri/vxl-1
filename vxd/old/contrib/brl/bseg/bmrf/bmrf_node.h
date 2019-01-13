@@ -10,9 +10,9 @@
 // The MRF node contains a link to an epi-segment as well as
 // links to other neighboring nodes in the network
 
-#include <vcl_list.h>
-#include <vcl_vector.h>
-#include <vcl_iosfwd.h>
+#include <list>
+#include <vector>
+#include <iosfwd>
 #include <vbl/vbl_ref_count.h>
 #include <vsl/vsl_binary_io.h>
 #include <bmrf/bmrf_arc_sptr.h>
@@ -30,7 +30,7 @@ class bmrf_node : public vbl_ref_count
   friend class bmrf_arc;
 
   //: iterator over neighboring nodes
-  typedef vcl_list<bmrf_arc_sptr>::iterator arc_iterator;
+  typedef std::list<bmrf_arc_sptr>::iterator arc_iterator;
 
   //: The values of this enum categorize the neighbors
   // \note ALL is a special type and should be kept last
@@ -84,7 +84,7 @@ class bmrf_node : public vbl_ref_count
   short version() const;
 
   //: Print an ascii summary to the stream
-  void print_summary(vcl_ostream &os) const;
+  void print_summary(std::ostream &os) const;
 
  protected:
   //: Compute the conditional probability that this node is correct given its neighbors
@@ -140,16 +140,16 @@ class bmrf_node : public vbl_ref_count
   bmrf_gamma_func_sptr gamma_;
 
   //: The pointers to outgoing arcs
-  vcl_list<bmrf_arc_sptr> out_arcs_;
+  std::list<bmrf_arc_sptr> out_arcs_;
 
   //: The pointers to incoming arcs
-  vcl_list<bmrf_arc_sptr> in_arcs_;
+  std::list<bmrf_arc_sptr> in_arcs_;
 
   //: The the iterators into neighbors_ that represent the boundary between types
-  vcl_vector<arc_iterator> boundaries_;
+  std::vector<arc_iterator> boundaries_;
 
   //: The number of neighbors for each type
-  vcl_vector<int> sizes_;
+  std::vector<int> sizes_;
 };
 
 
@@ -160,7 +160,7 @@ void vsl_b_write(vsl_b_ostream &os, const bmrf_node* n);
 void vsl_b_read(vsl_b_istream &is, bmrf_node* &n);
 
 //: Print an ASCII summary to the stream
-void vsl_print_summary(vcl_ostream &os, const bmrf_node* n);
+void vsl_print_summary(std::ostream &os, const bmrf_node* n);
 
 
 #endif // bmrf_node_h_

@@ -19,15 +19,15 @@
 // for I/O:
 #include <vil1/vil1_load.h>
 #include <vil1/vil1_save.h>
-#include <vcl_iostream.h>
-#include <vcl_cstdlib.h> // for atoi()
+#include <iostream>
+#include <cstdlib> // for atoi()
 
 int
 main(int argc, char** argv)
 {
   if (argc < 3)
   {
-    vcl_cerr << "Syntax: example2_threshold file_in file_out [threshold]\n";
+    std::cerr << "Syntax: example2_threshold file_in file_out [threshold]\n";
     return 1;
   }
 
@@ -35,19 +35,19 @@ main(int argc, char** argv)
   vil1_image in = vil1_load(argv[1]);
   if (vil1_pixel_format(in) != VIL1_BYTE)
   {
-    vcl_cerr << "Please use a ubyte image as input\n";
+    std::cerr << "Please use a ubyte image as input\n";
     return 2;
   }
 
   // The threshold value:
-  vxl_byte threshold = (argc < 4) ? vxl_byte(128) : vxl_byte(vcl_atoi(argv[3]));
+  vxl_byte threshold = (argc < 4) ? vxl_byte(128) : vxl_byte(std::atoi(argv[3]));
 
   // perform thresholding:
   vil1_image out = vepl1_threshold(in,threshold,0,255);
 
   // Write output:
   vil1_save(out, argv[2], "pnm");
-  vcl_cout << "Written image of type PGM to " << argv[2] << vcl_endl;
+  std::cout << "Written image of type PGM to " << argv[2] << std::endl;
 
   return 0;
 }

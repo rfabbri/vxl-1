@@ -10,7 +10,7 @@
 //
 //-----------------------------------------------------------------------------
 
-#include <vcl_cfloat.h>
+#include <cfloat>
 #include <bgld/bgld_fuzzy_boolean.h>
 #include <bgld/algo/bgld_distance.h>
 

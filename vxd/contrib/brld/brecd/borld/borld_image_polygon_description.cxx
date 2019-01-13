@@ -8,22 +8,22 @@
 #include <vsol/vsol_polygon_2d.h>
 #include <vsol/vsol_point_2d.h>
 
-#include <vcl_iostream.h>
+#include <iostream>
 
-void borld_image_polygon_description::add_polygon(vcl_string cat, vsol_polygon_2d_sptr p)
+void borld_image_polygon_description::add_polygon(std::string cat, vsol_polygon_2d_sptr p)
 {
-  vcl_map<vcl_string, vcl_vector<vsol_polygon_2d_sptr> >::iterator iter = data_.find(cat);
+  std::map<std::string, std::vector<vsol_polygon_2d_sptr> >::iterator iter = data_.find(cat);
   if (iter == data_.end()) {
-    vcl_vector<vsol_polygon_2d_sptr> tmp(1, p);
+    std::vector<vsol_polygon_2d_sptr> tmp(1, p);
     data_[cat] = tmp;
   } else {
     (iter->second).push_back(p);
   }
 }
 
-vcl_vector<vsol_polygon_2d_sptr>& borld_image_polygon_description::get_polygon_vector(vcl_string cat)
+std::vector<vsol_polygon_2d_sptr>& borld_image_polygon_description::get_polygon_vector(std::string cat)
 {
-  vcl_map<vcl_string, vcl_vector<vsol_polygon_2d_sptr> >::iterator iter = data_.find(cat);
+  std::map<std::string, std::vector<vsol_polygon_2d_sptr> >::iterator iter = data_.find(cat);
   return iter->second;
 }
 
@@ -34,17 +34,17 @@ unsigned borld_image_polygon_description::version()
 
 void borld_image_polygon_description::b_read()
 {
-  vcl_cout << "IMPLEMENT: borld_image_polygon_description::b_read()\n";
+  std::cout << "IMPLEMENT: borld_image_polygon_description::b_read()\n";
 }
 
 void borld_image_polygon_description::b_write()
 {
-  vcl_cout << "IMPLEMENT: borld_image_polygon_description::b_write()\n";
+  std::cout << "IMPLEMENT: borld_image_polygon_description::b_write()\n";
 }
 
-void borld_image_polygon_description::write_xml(vcl_ostream& os)
+void borld_image_polygon_description::write_xml(std::ostream& os)
 {
-  for (vcl_map<vcl_string, vcl_vector<vsol_polygon_2d_sptr> >::iterator iter = data_.begin(); iter != data_.end(); iter++) {
+  for (std::map<std::string, std::vector<vsol_polygon_2d_sptr> >::iterator iter = data_.begin(); iter != data_.end(); iter++) {
     for (unsigned i = 0; i < (iter->second).size(); i++) {
       os << "\t\t<instance>\n";
       os << "\t\t\t<category>" << iter->first << "</category>\n";

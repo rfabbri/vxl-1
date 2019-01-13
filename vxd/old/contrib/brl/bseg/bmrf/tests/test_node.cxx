@@ -35,7 +35,7 @@ static void node()
        node_2->frame_num() == 2 &&
        node_3->frame_num() == 2, true);
 
-  vcl_cout << node_1->probability() << ' '
+  std::cout << node_1->probability() << ' '
            << node_2->probability() << ' '
            << node_3->probability() << '\n';
   TEST("Testing probability()",

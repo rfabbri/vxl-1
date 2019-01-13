@@ -12,19 +12,19 @@
 //
 // \endverbatim
 
-#include <vcl_fstream.h>
-#include <vcl_string.h>
+#include <fstream>
+#include <string>
 #include <sdet/sdet_edgemap.h>
 #include <sdet/sdet_edgemap_sptr.h>
 #include <sdet/sdet_curvelet_map.h>
 
 //: Loads an ascii file containing a curvelet map as well as the edgemap on which it is defined.
 //\author Based on original code by  Amir Tamrakar
-bool sdetd_load_cvlet_map(vcl_string filename, sdet_edgemap_sptr &edge_map, sdet_curvelet_map &cvlet_map);
+bool sdetd_load_cvlet_map(std::string filename, sdet_edgemap_sptr &edge_map, sdet_curvelet_map &cvlet_map);
 
 //: Save a curvelet map as a .cvlet file
 //\author Based on original code by  Amir Tamrakar
-bool sdetd_save_cvlet_map(vcl_string filename, sdet_curvelet_map &cvlet_map);
+bool sdetd_save_cvlet_map(std::string filename, sdet_curvelet_map &cvlet_map);
 
 #endif // sdetd_cvlet_map_io_h
 

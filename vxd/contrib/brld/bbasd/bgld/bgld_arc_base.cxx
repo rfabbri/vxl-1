@@ -7,13 +7,13 @@
 
 
 //: Write "<dbvgl_param_curve of type arc> to stream"
-//vcl_ostream& operator<<(vcl_ostream& s, bgld_arc_base const& c) {
+//std::ostream& operator<<(std::ostream& s, bgld_arc_base const& c) {
 //  s << "<dbvgl_param_curve of type arc ";
 //  return s << "> ";
 //}
 
 //: Read from stream
-//vcl_istream& operator>>(vcl_istream& is,  bgld_arc_base& q) {
+//std::istream& operator>>(std::istream& is,  bgld_arc_base& q) {
   //return is;
 //}
 

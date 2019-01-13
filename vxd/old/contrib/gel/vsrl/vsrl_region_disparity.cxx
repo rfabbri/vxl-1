@@ -9,7 +9,7 @@
 // Written at ORD on two LONG layovers...
 
 #include "vsrl_region_disparity.h"
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vtol/vtol_intensity_face.h>
 
 vsrl_region_disparity::vsrl_region_disparity()
@@ -34,23 +34,23 @@ vsrl_region_disparity::~vsrl_region_disparity()
 
 void vsrl_region_disparity::init()
 {
-  vcl_cout << "vsrl_region_disparity::init()\n";
+  std::cout << "vsrl_region_disparity::init()\n";
   if_regions_ = NULL;
   digi_regions_ = NULL;
   reg_disp_img_ = NULL;
   region_type_ = UNDEFINED;
 }
 
-void vsrl_region_disparity::SetRegions(vcl_vector<vtol_intensity_face_sptr>* regs)
+void vsrl_region_disparity::SetRegions(std::vector<vtol_intensity_face_sptr>* regs)
 {
-  vcl_cout << "vsrl_region_disparity::SetRegions(intensity faces)\n";
+  std::cout << "vsrl_region_disparity::SetRegions(intensity faces)\n";
   if_regions_ = regs;
   region_type_ = INTENSITY_FACE;
 }
 
-void vsrl_region_disparity::SetRegions(vcl_vector<vdgl_digital_region*>* regs)
+void vsrl_region_disparity::SetRegions(std::vector<vdgl_digital_region*>* regs)
 {
-  vcl_cout << "vsrl_region_disparity::SetRegions(digital regions)\n";
+  std::cout << "vsrl_region_disparity::SetRegions(digital regions)\n";
   digi_regions_ = regs;
   region_type_ = DIGITAL_REGION;
 }
@@ -61,16 +61,16 @@ bool vsrl_region_disparity::Execute()
   switch (region_type_)
   {
    case INTENSITY_FACE:
-    vcl_cout << "vsrl_region_disparity::Execute: region type: INTENSITY_FACE\n";
+    std::cout << "vsrl_region_disparity::Execute: region type: INTENSITY_FACE\n";
     result = run_intensity_faces();
     break;
    case DIGITAL_REGION:
-    vcl_cout << "vsrl_region_disparity::Execute: region type: DIGITAL_REGION\n";
+    std::cout << "vsrl_region_disparity::Execute: region type: DIGITAL_REGION\n";
     result = run_digital_regions();
     break;
    case UNDEFINED:
    default:
-    vcl_cerr << "vsrl_region_disparity::Execute: Error: region type is UNDEFINED.\n";
+    std::cerr << "vsrl_region_disparity::Execute: Error: region type is UNDEFINED.\n";
     result = false;
     break;
   }
@@ -82,9 +82,9 @@ bool vsrl_region_disparity::run_intensity_faces()
   // Remember, Intensity Faces contain digital regions.
   // Make sure intensity faces were established before proceeding.
   bool result = false;
-  vcl_cerr << "vsrl_region_disparity::run_intesity_faces...\n";
+  std::cerr << "vsrl_region_disparity::run_intesity_faces...\n";
   if (if_regions_ == NULL) {
-    vcl_cerr << "vsrl_region_disparity::run_intesity_faces: Error:\n"
+    std::cerr << "vsrl_region_disparity::run_intesity_faces: Error:\n"
              << "No intensity faces present.\n";
     return false;
   }
@@ -93,10 +93,10 @@ bool vsrl_region_disparity::run_intensity_faces()
   // scratch, it may have garbage in it and it may produce garbage.
   if (digi_regions_ != NULL) {
     delete digi_regions_;
-    digi_regions_ = new vcl_vector<vdgl_digital_region*>;
+    digi_regions_ = new std::vector<vdgl_digital_region*>;
   }
 
-  for (vcl_vector<vtol_intensity_face_sptr>::iterator fit = if_regions_->begin();
+  for (std::vector<vtol_intensity_face_sptr>::iterator fit = if_regions_->begin();
        fit != if_regions_->end(); fit++) {
     vdgl_digital_region* reg = (*fit)->cast_to_digital_region();
     digi_regions_->push_back(reg);
@@ -110,10 +110,10 @@ bool vsrl_region_disparity::run_intensity_faces()
 
 bool vsrl_region_disparity::run_digital_regions()
 {
-  vcl_cerr << "vsrl_region_disparity::run_digital_regions...\n";
+  std::cerr << "vsrl_region_disparity::run_digital_regions...\n";
   // Error checking
   if ( digi_regions_ == NULL) {
-    vcl_cerr << "vsrl_region_disparity::run_digital_regions: Error:\n"
+    std::cerr << "vsrl_region_disparity::run_digital_regions: Error:\n"
              << "No digital regions present.\n";
     return false;
   }
@@ -129,7 +129,7 @@ bool vsrl_region_disparity::run_digital_regions()
   }
 
   // iterate through all the regions
-  vcl_vector<vdgl_digital_region*>::iterator rit;
+  std::vector<vdgl_digital_region*>::iterator rit;
   for (rit = (*digi_regions_).begin(); rit != (*digi_regions_).end(); rit++) {
     // For each region, get the pixel coordinates
     double avg=0;
@@ -143,8 +143,8 @@ bool vsrl_region_disparity::run_digital_regions()
     }
     avg /= npix;  // Final division to get the average
 
-    vcl_cout << "Region average disparity: " << avg
-             << " Number of Pixels: " << npix << vcl_endl;
+    std::cout << "Region average disparity: " << avg
+             << " Number of Pixels: " << npix << std::endl;
 
     // Now that we have the average for the region, insert
     // it into every pixel of that region in the disparity image

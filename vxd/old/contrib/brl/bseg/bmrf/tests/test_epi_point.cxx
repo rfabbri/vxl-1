@@ -46,7 +46,7 @@ static void epi_point()
   //  epi_point_in_1->b_read(bep_in);
   vsl_b_read(bep_in, epi_point_in_1);
   bep_in.close();
-  vcl_cout << *epi_point_1 << '\n'
+  std::cout << *epi_point_1 << '\n'
            << *epi_point_in_1 << '\n';
   TEST("Testing io",
        epi_point_1->x()==epi_point_in_1->x() &&

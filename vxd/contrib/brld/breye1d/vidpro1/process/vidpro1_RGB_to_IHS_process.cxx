@@ -18,7 +18,7 @@ vidpro1_RGB_to_IHS_process::vidpro1_RGB_to_IHS_process()
 {
   if( !parameters()->add( "Output component images", "-bComps", true ))
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -37,27 +37,27 @@ vidpro1_RGB_to_IHS_process::clone() const
 }
 
 //: Returns the name of this process
-vcl_string 
+std::string 
 vidpro1_RGB_to_IHS_process::name()
 { 
   return "RGB to IHS"; 
 }
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > 
+std::vector< std::string > 
 vidpro1_RGB_to_IHS_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > 
+std::vector< std::string > 
 vidpro1_RGB_to_IHS_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
 
   bool bComps;
   parameters()->get_value( "-bComps", bComps);
@@ -93,8 +93,8 @@ bool
 vidpro1_RGB_to_IHS_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cerr << "In vidpro1_RGB_to_IHS_process::execute() - "
-             << "not exactly one input images" << vcl_endl;
+    std::cerr << "In vidpro1_RGB_to_IHS_process::execute() - "
+             << "not exactly one input images" << std::endl;
     return false;
   }
 

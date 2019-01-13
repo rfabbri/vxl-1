@@ -16,7 +16,7 @@
 
 
 #include <bprod/bprod_process.h>
-#include <vcl_vector.h>
+#include <vector>
 
 //=============================================================================
 // Filters
@@ -139,7 +139,7 @@ template <class T>
 class bprod_input_queue : public bprod_source
 {
  public:
-  bprod_input_queue(const vcl_vector<T>& d) : data(d) {}
+  bprod_input_queue(const std::vector<T>& d) : data(d) {}
 
   //: Execute the process
   bprod_signal execute()
@@ -153,7 +153,7 @@ class bprod_input_queue : public bprod_source
     return BPROD_VALID;
   }
 
-  vcl_vector<T> data;
+  std::vector<T> data;
 };
 
 
@@ -187,7 +187,7 @@ class bprod_output_queue : public bprod_sink
     return BPROD_VALID;
   }
 
-  vcl_vector<T> data;
+  std::vector<T> data;
 };
 
 

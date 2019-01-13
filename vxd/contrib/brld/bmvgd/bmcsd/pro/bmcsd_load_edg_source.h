@@ -20,7 +20,7 @@
 // sdet_edgemaps.
 class bmcsd_load_edg_source : public bprod_source {
 public:
-  bmcsd_load_edg_source(vcl_string fname, bool bSubPixel, double scale) 
+  bmcsd_load_edg_source(std::string fname, bool bSubPixel, double scale) 
     : fname_(fname),
       bSubPixel_(bSubPixel),
       scale_(scale) {};
@@ -34,14 +34,14 @@ public:
 
     output(0, edge_map);
 #ifndef NDEBUG
-    vcl_cout << "#edgels: " << edge_map->num_edgels() << "\n";
-    vcl_cout << "Finished with edge map loading.\n";
+    std::cout << "#edgels: " << edge_map->num_edgels() << "\n";
+    std::cout << "Finished with edge map loading.\n";
 #endif
     return BPROD_VALID;
   }
 
 private:
-  vcl_string fname_;
+  std::string fname_;
   bool bSubPixel_;
   double scale_;
 };

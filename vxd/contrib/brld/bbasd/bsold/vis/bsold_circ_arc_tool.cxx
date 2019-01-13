@@ -243,10 +243,10 @@ bsold_circ_arc_tool::handle( const vgui_event & e,
 /*************************************************************************
  * Function Name: bsold_circ_arc_tool::name
  * Parameters:
- * Returns: vcl_string
+ * Returns: std::string
  * Effects:
  *************************************************************************/
-vcl_string
+std::string
 bsold_circ_arc_tool::name() const
 {
   return "arc";

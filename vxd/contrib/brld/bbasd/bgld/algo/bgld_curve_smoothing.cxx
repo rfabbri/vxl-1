@@ -2,9 +2,9 @@
 //  Ricardo
 //  Ming-Ching Chang
 
-#include <vcl_cfloat.h>
-#include <vcl_algorithm.h>
-#include <vcl_iostream.h>
+#include <cfloat>
+#include <algorithm>
+#include <iostream>
 #include <vul/vul_printf.h>
 #include <vgl/vgl_distance.h>
 #include <vnl/algo/vnl_gaussian_kernel_1d.h>
@@ -26,7 +26,7 @@
 //
 void
 bgld_csm(
-    vcl_vector<vgl_point_2d<double> > &c,
+    std::vector<vgl_point_2d<double> > &c,
     double psi,
     unsigned nsteps
     )
@@ -34,7 +34,7 @@ bgld_csm(
   unsigned n = c.size();
   assert (n >= 3);
 
-  vcl_vector<vgl_point_2d<double> > cs;
+  std::vector<vgl_point_2d<double> > cs;
   cs.resize(n);
 
   cs[0] = vgl_point_2d<double> (c[0]);
@@ -77,14 +77,14 @@ bgld_csm(
 // the smoothed curve will not cross itself.
 // \param[in] nsteps : number of smoothing iterations
 //
-bool bgld_curve_shorten_3d (vcl_vector<vgl_point_3d<double> > &c,
+bool bgld_curve_shorten_3d (std::vector<vgl_point_3d<double> > &c,
                             double psi, unsigned nsteps)
 {
   unsigned n = c.size();
   if (n < 3)
     return false;
 
-  vcl_vector<vgl_point_3d<double> > cs;
+  std::vector<vgl_point_3d<double> > cs;
   cs.resize(n);
 
   cs[0] = vgl_point_3d<double> (c[0]);
@@ -120,13 +120,13 @@ bool bgld_curve_shorten_3d (vcl_vector<vgl_point_3d<double> > &c,
   return true;
 }
 
-void bgld_curve_shorten_z (vcl_vector<vgl_point_3d<double> > &c,
+void bgld_curve_shorten_z (std::vector<vgl_point_3d<double> > &c,
                            double psi, unsigned nsteps)
 {
   unsigned n = c.size();
   assert (n >= 3);
 
-  vcl_vector<vgl_point_3d<double> > cs;
+  std::vector<vgl_point_3d<double> > cs;
   cs.resize(n);
 
   cs[0] = vgl_point_3d<double> (c[0]);
@@ -162,7 +162,7 @@ void bgld_curve_shorten_z (vcl_vector<vgl_point_3d<double> > &c,
   }
 }
 
-void bgld_curve_shorten_3d_th (vcl_vector<vgl_point_3d<double> > &c, const double kernel_th,
+void bgld_curve_shorten_3d_th (std::vector<vgl_point_3d<double> > &c, const double kernel_th,
                                double stepsize, unsigned int nsteps)
 {  
   //For curve c, look for consecutive group of points from js to je
@@ -180,7 +180,7 @@ void bgld_curve_shorten_3d_th (vcl_vector<vgl_point_3d<double> > &c, const doubl
       je = c.size()-1;
 
     //smooth curve[js, je] with end points fixed
-    vcl_vector<vgl_point_3d<double> > curve;
+    std::vector<vgl_point_3d<double> > curve;
     curve.clear();
     for (unsigned int j=js; j<=je; j++)
       curve.push_back (c[j]);
@@ -202,7 +202,7 @@ void bgld_curve_shorten_3d_th (vcl_vector<vgl_point_3d<double> > &c, const doubl
 
 #define GK_SIZE 3
 
-void bgld_gaussian_smooth_curve_3d (vcl_vector<vgl_point_3d<double> >& curve, 
+void bgld_gaussian_smooth_curve_3d (std::vector<vgl_point_3d<double> >& curve, 
                                     const float sigma, const int nsteps)
 {
   vnl_gaussian_kernel_1d gauss_1d ((double) sigma);
@@ -244,7 +244,7 @@ void bgld_gaussian_smooth_curve_3d (vcl_vector<vgl_point_3d<double> >& curve,
 }
 
 
-void bgld_gaussian_smooth_curve_3d_th (vcl_vector<vgl_point_3d<double> >& curve, 
+void bgld_gaussian_smooth_curve_3d_th (std::vector<vgl_point_3d<double> >& curve, 
                                        const double kernel_th, const float sigma, const int nsteps)
 {
   vnl_gaussian_kernel_1d gauss_1d ((double) sigma);
@@ -288,7 +288,7 @@ void bgld_gaussian_smooth_curve_3d_th (vcl_vector<vgl_point_3d<double> >& curve,
   curve.erase(curve.end()-1);
 }
 
-void bgld_gaussian_smooth_curve_z_th (vcl_vector<vgl_point_3d<double> >& curve, 
+void bgld_gaussian_smooth_curve_z_th (std::vector<vgl_point_3d<double> >& curve, 
                                       const double kernel_th, const float sigma, const int nsteps)
 {
   vnl_gaussian_kernel_1d gauss_1d ((double) sigma);
@@ -328,7 +328,7 @@ void bgld_gaussian_smooth_curve_z_th (vcl_vector<vgl_point_3d<double> >& curve,
   curve.erase(curve.end()-1);
 }
 
-bool bgld_gaussian_smooth_curve_3d_fixedendpt (vcl_vector<vgl_point_3d<double> >& curve, 
+bool bgld_gaussian_smooth_curve_3d_fixedendpt (std::vector<vgl_point_3d<double> >& curve, 
                                                const float sigma, const int nsteps)
 {
   if (curve.size() < 2)
@@ -404,7 +404,7 @@ bool bgld_gaussian_smooth_curve_3d_fixedendpt (vcl_vector<vgl_point_3d<double> >
   return true;
 }
 
-void bgld_gaussian_smooth_curve_3d_th_fixedendpt (vcl_vector<vgl_point_3d<double> >& curve, 
+void bgld_gaussian_smooth_curve_3d_th_fixedendpt (std::vector<vgl_point_3d<double> >& curve, 
                                                   const double kernel_th, 
                                                   const float sigma, const int nsteps)
 {
@@ -473,7 +473,7 @@ void bgld_gaussian_smooth_curve_3d_th_fixedendpt (vcl_vector<vgl_point_3d<double
 }
 
 
-void bgld_gaussian_smooth_curve_z_th_fixedendpt (vcl_vector<vgl_point_3d<double> >& curve, 
+void bgld_gaussian_smooth_curve_z_th_fixedendpt (std::vector<vgl_point_3d<double> >& curve, 
                                                  const double kernel_th, 
                                                  const float sigma, const int nsteps)
 {
@@ -542,7 +542,7 @@ void bgld_gaussian_smooth_curve_z_th_fixedendpt (vcl_vector<vgl_point_3d<double>
 }
 
 //2D Gaussian smoothing on 2D scalar function.
-void bgld_gaussian_smooth_2d_th (vcl_vector<vcl_vector<double> >& range, 
+void bgld_gaussian_smooth_2d_th (std::vector<std::vector<double> >& range, 
                                  const float d_intra, const float d_inter, 
                                  const int nsteps,
                                  const float G_sigma_ratio,
@@ -552,27 +552,27 @@ void bgld_gaussian_smooth_2d_th (vcl_vector<vcl_vector<double> >& range,
   int s, i, j, k, l;
 
   //range2 to store the smoothed result.
-  vcl_vector<vcl_vector<double> > range2;
+  std::vector<std::vector<double> > range2;
   range2.resize (range.size());
   for (i=0; i<int(range.size()); i++)
     range2[i].resize(range[i].size());
 
   //Gaussian kernel parameters.
-  double sigma = vcl_max (d_intra, d_inter) * G_sigma_ratio;
+  double sigma = std::max (d_intra, d_inter) * G_sigma_ratio;
   vnl_gaussian_kernel_1d gauss1 ((double) sigma);
   vnl_gaussian_kernel_1d gauss2 ((double) sigma);
  
-  double ksize = vcl_max (d_intra, d_inter) * G_radius_ratio;
-  double kth = vcl_max (d_intra, d_inter) * G_th_ratio;
+  double ksize = std::max (d_intra, d_inter) * G_radius_ratio;
+  double kth = std::max (d_intra, d_inter) * G_th_ratio;
 
   int GK2_SIZE_JL = int (ksize / d_intra); //intra_scanline kernel size
   int GK2_SIZE_IK = int (ksize / d_inter); //inter_scanline kernel size
 
-  vul_printf (vcl_cout, "\nbgld_gaussian_smooth_2d_th():\n", sigma);
-  vul_printf (vcl_cout, "\td_intra: %f, d_inter: %f.\n", d_intra, d_inter);
-  vul_printf (vcl_cout, "\tsigma: %f, kernel_size: %f, kernel_th: %f.\n", sigma, ksize, kth);
-  vul_printf (vcl_cout, "\tkstep_intra: %d, kstep_inter: %d.\n", GK2_SIZE_JL, GK2_SIZE_IK);
-  vul_printf (vcl_cout, "\tApply Gaussian smoothing %d times.\n", nsteps);
+  vul_printf (std::cout, "\nbgld_gaussian_smooth_2d_th():\n", sigma);
+  vul_printf (std::cout, "\td_intra: %f, d_inter: %f.\n", d_intra, d_inter);
+  vul_printf (std::cout, "\tsigma: %f, kernel_size: %f, kernel_th: %f.\n", sigma, ksize, kth);
+  vul_printf (std::cout, "\tkstep_intra: %d, kstep_inter: %d.\n", GK2_SIZE_JL, GK2_SIZE_IK);
+  vul_printf (std::cout, "\tApply Gaussian smoothing %d times.\n", nsteps);
   
   for (s=0; s<nsteps; s++) {
     for (i=0; i<int(range.size()); i++) {
@@ -593,10 +593,10 @@ void bgld_gaussian_smooth_2d_th (vcl_vector<vcl_vector<double> >& range,
             if (range[ik][jl] == DBL_MAX)
               continue; //ignore non-data points
 
-            if (vcl_fabs(range[ik][jl] - range[i][j]) > kth)
+            if (std::fabs(range[ik][jl] - range[i][j]) > kth)
               continue; //ignore out of threshold points
 
-            //double gauss_2d = gauss1[vcl_abs(k*)] * gauss2[vcl_abs(l)];
+            //double gauss_2d = gauss1[std::abs(k*)] * gauss2[std::abs(l)];
             double gauss_2d = gauss1.G(k*d_inter) * gauss2.G(l*d_intra);
             sum_gauss += gauss_2d;
             sum_z += range[ik][jl] * gauss_2d;
@@ -617,5 +617,5 @@ void bgld_gaussian_smooth_2d_th (vcl_vector<vcl_vector<double> >& range,
 
   } //end iterations
 
-  vul_printf (vcl_cout, "\tdone.\n");
+  vul_printf (std::cout, "\tdone.\n");
 }

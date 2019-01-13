@@ -17,7 +17,7 @@ class bdifd_analytic {
       double rho,
       const bdifd_vector_3d &s0,
       const bdifd_vector_3d &c,
-      vcl_vector<bdifd_vector_3d> &Gamma,
+      std::vector<bdifd_vector_3d> &Gamma,
       bdifd_vector_3d &Gamma_center,
       double &Gamma_radius
       );
@@ -26,24 +26,24 @@ class bdifd_analytic {
       double rho,
       const bdifd_vector_3d &s0,
       const bdifd_vector_3d &c,
-      vcl_vector<bdifd_3rd_order_point_3d> &crv3d,
+      std::vector<bdifd_3rd_order_point_3d> &crv3d,
       bdifd_vector_3d &Gamma_center,
       double &Gamma_radius
       );
 
-  static void circle_curve( double radius, vcl_vector<bdifd_3rd_order_point_3d> &C, vcl_vector<double> &t,
+  static void circle_curve( double radius, std::vector<bdifd_3rd_order_point_3d> &C, std::vector<double> &t,
       double t_initial, double step, double range);
 
   static void circle_curve( 
       double radius, 
       const bdifd_vector_3d &translation,
-      vcl_vector<bdifd_3rd_order_point_3d> &C, vcl_vector<double> &t,
+      std::vector<bdifd_3rd_order_point_3d> &C, std::vector<double> &t,
       double t_initial, double step, double range);
 
   static void circle_curve(
       double radius,
       const bdifd_vector_2d &translation,
-      vcl_vector<bdifd_3rd_order_point_2d> &C, vcl_vector<double> &t,
+      std::vector<bdifd_3rd_order_point_2d> &C, std::vector<double> &t,
       double t_initial, double step, double range
       );
 
@@ -52,8 +52,8 @@ class bdifd_analytic {
       double a,
       double b,
       const bdifd_vector_2d &translation,
-      vcl_vector<bdifd_3rd_order_point_2d> &C, 
-      vcl_vector<double> &t,
+      std::vector<bdifd_3rd_order_point_2d> &C, 
+      std::vector<double> &t,
       double t_initial, double step, double range
       );
 
@@ -62,23 +62,23 @@ class bdifd_analytic {
       double a,
       double b,
       const bdifd_vector_3d &translation,
-      vcl_vector<bdifd_3rd_order_point_3d> &C, 
-      vcl_vector<double> &t,
+      std::vector<bdifd_3rd_order_point_3d> &C, 
+      std::vector<double> &t,
       double t_initial, double step, double range
       );
 
   static void helix_curve( 
       double radius, double alpha, 
       bdifd_vector_3d &translation,
-      vcl_vector<bdifd_3rd_order_point_3d> &C, 
-      vcl_vector<double> &t, double t_initial, double step, double range );
+      std::vector<bdifd_3rd_order_point_3d> &C, 
+      std::vector<double> &t, double t_initial, double step, double range );
 
   static void
   space_curve1(
       double radius, 
       bdifd_vector_3d &translation,
-      vcl_vector<bdifd_3rd_order_point_3d> &C, 
-      vcl_vector<double> &t,
+      std::vector<bdifd_3rd_order_point_3d> &C, 
+      std::vector<double> &t,
       double t_initial, double step, double range
       );
 
@@ -86,15 +86,15 @@ class bdifd_analytic {
   line(
       bdifd_vector_3d &translation,
       bdifd_vector_3d &direction,
-      vcl_vector<bdifd_3rd_order_point_3d> &C, 
-      vcl_vector<double> &t,
+      std::vector<bdifd_3rd_order_point_3d> &C, 
+      std::vector<double> &t,
       double t_final, double step
       );
 
   static bool
   limit_distance(
-      const vcl_vector<bdifd_3rd_order_point_2d> &C, 
-      vcl_vector<bdifd_3rd_order_point_2d> &C_limited);
+      const std::vector<bdifd_3rd_order_point_2d> &C, 
+      std::vector<bdifd_3rd_order_point_2d> &C_limited);
 
   static double
   perturb( double coord, double dp);
@@ -103,10 +103,10 @@ class bdifd_analytic {
   perturb( vgl_vector_2d<double> &t, double dt);
 
   static void 
-  rotate( vcl_vector<bdifd_3rd_order_point_3d> &c, const bdifd_vector_3d &axis);
+  rotate( std::vector<bdifd_3rd_order_point_3d> &c, const bdifd_vector_3d &axis);
 
   static void 
-  translate( vcl_vector<bdifd_3rd_order_point_3d> &c, const bdifd_vector_3d &transl);
+  translate( std::vector<bdifd_3rd_order_point_3d> &c, const bdifd_vector_3d &transl);
 };
 
 

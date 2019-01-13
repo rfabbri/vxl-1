@@ -9,8 +9,8 @@
 //
 
 
-#include <vcl_vector.h>
-#include <vcl_limits.h>
+#include <vector>
+#include <limits>
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_sparse_lst_sqr_function.h>
 #include <vgl/vgl_point_2d.h>
@@ -58,11 +58,11 @@ public:
   // floating point version, so that the Jacobian can make more sense near
   // Voronoi boundaries.
   vcpld_distmap_bundle_adj_lsqr(
-      const vcl_vector<vpgl_calibration_matrix<double> >& K,
-      const vcl_vector<vil_image_view<vxl_uint_32> > &dt,
-      const vcl_vector<vil_image_view<unsigned> > &label,
-      const vcl_vector<sdet_edgemap_sptr> &em,
-      const vcl_vector<vcl_vector<bool> >& mask);
+      const std::vector<vpgl_calibration_matrix<double> >& K,
+      const std::vector<vil_image_view<vxl_uint_32> > &dt,
+      const std::vector<vil_image_view<unsigned> > &label,
+      const std::vector<sdet_edgemap_sptr> &em,
+      const std::vector<std::vector<bool> >& mask);
 
   //: Compute the residuals from the ith component of a and the jth component of b.
   //  This is not normally used because f() has a self-contained efficient implementation
@@ -89,9 +89,9 @@ public:
   {
     double x2 = r[0]*r[0], y2 = r[1]*r[1], z2 = r[2]*r[2];
     double m = x2 + y2 + z2;
-    double theta = vcl_sqrt(m);
-    double s = vcl_sin(theta) / theta;
-    double c = (1.0 - vcl_cos(theta)) / m;
+    double theta = std::sqrt(m);
+    double s = std::sin(theta) / theta;
+    double c = (1.0 - std::cos(theta)) / m;
 
     vnl_matrix_fixed<double,3,3> R(0.0);
     R(0,0) = R(1,1) = R(2,2) = 1.0;
@@ -129,7 +129,7 @@ public:
 
   //: Create the parameter vector \p a from a vector of cameras
   static vnl_vector<double>
-  create_param_vector(const vcl_vector<vpgl_perspective_camera<double> >& cameras)
+  create_param_vector(const std::vector<vpgl_perspective_camera<double> >& cameras)
   {
     vnl_vector<double> a(6*cameras.size(),0.0);
     for (unsigned int i=0; i<cameras.size(); ++i)
@@ -150,7 +150,7 @@ public:
 
   //: Create the parameter vector \p b from a vector of 3D points
   static vnl_vector<double>
-  create_param_vector(const vcl_vector<vgl_point_3d<double> >& world_points)
+  create_param_vector(const std::vector<vgl_point_3d<double> >& world_points)
   {
     vnl_vector<double> b(3*world_points.size(),0.0);
     for (unsigned int j=0; j<world_points.size(); ++j){
@@ -186,19 +186,19 @@ private:
   typedef vil_image_view<vxl_uint_32> dt_type;
 
   //: The fixed internal camera calibration
-  vcl_vector<vpgl_calibration_matrix<double> > K_;
+  std::vector<vpgl_calibration_matrix<double> > K_;
   //: The fixed internal camera calibration in matrix form
-  vcl_vector<vnl_double_3x3> Km_;
+  std::vector<vnl_double_3x3> Km_;
 
   //: The distance maps for the measured projected features in each view being
   // optimized. This is fixed throughout.
-  vcl_vector<dt_type> dt_;
+  std::vector<dt_type> dt_;
   //: The nearest label maps for the measured projected features in each
   // view being optimized. This is fixed throughout.
-  vcl_vector<vil_image_view<unsigned> > label_;
+  std::vector<vil_image_view<unsigned> > label_;
 
   //: The subpixel edge maps for each view.
-  const vcl_vector<sdet_edgemap_sptr> em_;
+  const std::vector<sdet_edgemap_sptr> em_;
 
   unsigned iteration_count_;
 
@@ -216,23 +216,23 @@ private:
     unsigned p_j = static_cast<unsigned>(py+0.5);
 
     if (!label_[v].in_range(p_i, p_j)) {
-      e[0] = e[1] = vcl_numeric_limits<double>::infinity();
+      e[0] = e[1] = std::numeric_limits<double>::infinity();
       return;
     }
 
-    double min_d = vcl_numeric_limits<double>::infinity();
+    double min_d = std::numeric_limits<double>::infinity();
     unsigned l = label_[v](p_i, p_j);
-    const vcl_vector<sdet_edgel*> &ev = em_[v]->edge_cells.begin()[l];
+    const std::vector<sdet_edgel*> &ev = em_[v]->edge_cells.begin()[l];
     for (unsigned i=0; i < ev.size(); ++i) {
       // form a vector d betwen pt and ev
-      // project this vcl_vector onto the normal; this is our residual
+      // project this std::vector onto the normal; this is our residual
       double dx = px - ev[i]->pt.x();
       double dy = py - ev[i]->pt.y();
 
       if (dx*dx + dy*dy < min_d) {
         min_d = dx*dx + dy*dy;
-        double nx = -vcl_sin(ev[i]->tangent);
-        double ny = vcl_cos(ev[i]->tangent);
+        double nx = -std::sin(ev[i]->tangent);
+        double ny = std::cos(ev[i]->tangent);
         double dt_dot_n = dx*nx + dy*ny;
         e[0] = dt_dot_n*nx;
         e[1] = dt_dot_n*ny;
@@ -244,7 +244,7 @@ private:
 //: Static functions for bundle adjustment
 class vcpld_distmap_bundle_adjust
 {
-  typedef vcl_vector<vgl_point_3d<double> > point_set;
+  typedef std::vector<vgl_point_3d<double> > point_set;
 
  public:
   //: Constructor
@@ -265,12 +265,12 @@ class vcpld_distmap_bundle_adjust
   const vnl_vector<double>& point_params() const { return b_; }
 
   //: Bundle Adjust
-  bool optimize(vcl_vector<vpgl_perspective_camera<double> > &cameras,
-                vcl_vector< point_set > &world_objects,
-                const vcl_vector<vil_image_view<vxl_uint_32> > &dt,
-                const vcl_vector<vil_image_view<unsigned> > &label,
-                const vcl_vector<sdet_edgemap_sptr> &em,
-                const vcl_vector<vcl_vector<bool> > &mask);
+  bool optimize(std::vector<vpgl_perspective_camera<double> > &cameras,
+                std::vector< point_set > &world_objects,
+                const std::vector<vil_image_view<vxl_uint_32> > &dt,
+                const std::vector<vil_image_view<unsigned> > &label,
+                const std::vector<sdet_edgemap_sptr> &em,
+                const std::vector<std::vector<bool> > &mask);
 
  private:
   //: The bundle adjustment error function

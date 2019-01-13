@@ -4,8 +4,8 @@
 
 #include "bgld_distance.h"
 
-#include <vcl_cmath.h>
-#include <vcl_algorithm.h>
+#include <cmath>
+#include <algorithm>
 #include <vgl/vgl_lineseg_test.h>
 #include <vgl/vgl_distance.h>
 //#include <vgl/vgl_closest_point.h>
@@ -16,7 +16,7 @@
 //double bgld_distance::point_point(const vgl_point_2d<double >& p1,
 //  vgl_point_2d<double >& p2)
 //{
-//  return vcl_sqrt((p2.x()-p1.x())*(p2.x()-p1.x())+
+//  return std::sqrt((p2.x()-p1.x())*(p2.x()-p1.x())+
 //    (p2.y()-p1.y())*(p2.y()-p1.y()) );
 //}
 
@@ -63,7 +63,7 @@ lineseg_lineseg(const vgl_point_2d<double >& line1_p1,
       if (d[i] < min_dist)
         min_dist = d[i];
     }
-    return vcl_sqrt(min_dist);
+    return std::sqrt(min_dist);
   }
 }
 

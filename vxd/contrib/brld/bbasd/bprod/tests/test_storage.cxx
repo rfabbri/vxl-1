@@ -1,6 +1,6 @@
 #include <testlib/testlib_test.h>
 #include <bprod/bprod_storage.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 
 MAIN( test_storage )

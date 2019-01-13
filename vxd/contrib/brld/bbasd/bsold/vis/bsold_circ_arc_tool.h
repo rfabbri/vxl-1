@@ -29,7 +29,7 @@ public:
   bool handle( const vgui_event & e, 
                const bvis1_view_tableau_sptr& view );
 
-  vcl_string name() const;
+  std::string name() const;
   void deactivate();
 
 protected:
@@ -61,7 +61,7 @@ private:
   vgl_vector_2d<double> v1_ortho;
   vgl_vector_2d<double> v2_v1;
   vgl_vector_2d<double> v3_v2;
-  vcl_vector< vsol_point_2d_sptr > arc_point_list;
+  std::vector< vsol_point_2d_sptr > arc_point_list;
   double last_x;
   double last_y;
   double temp_x;

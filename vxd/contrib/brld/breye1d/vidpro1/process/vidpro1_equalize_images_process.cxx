@@ -18,7 +18,7 @@
 vidpro1_equalize_images_process::vidpro1_equalize_images_process()
 {
   if( !parameters()->add( "Use Mask" ,    "-mask" ,   false ) ){
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__<< vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__<< std::endl;
   }
 }
 
@@ -38,7 +38,7 @@ vidpro1_equalize_images_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 vidpro1_equalize_images_process::name()
 {
   return "Equalize Images";
@@ -62,11 +62,11 @@ vidpro1_equalize_images_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > vidpro1_equalize_images_process::get_input_type()
+std::vector< std::string > vidpro1_equalize_images_process::get_input_type()
 {
   bool mask = false;
   parameters()->get_value( "-mask" , mask );
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   // add another input for the mask
   if(mask)
@@ -76,9 +76,9 @@ vcl_vector< vcl_string > vidpro1_equalize_images_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > vidpro1_equalize_images_process::get_output_type()
+std::vector< std::string > vidpro1_equalize_images_process::get_output_type()
 {  
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
@@ -89,7 +89,7 @@ bool
 vidpro1_equalize_images_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In vidpro1_equalize_images_process::execute() - "
+    std::cout << "In vidpro1_equalize_images_process::execute() - "
              << "not exactly one input images \n";
     return false;
   }

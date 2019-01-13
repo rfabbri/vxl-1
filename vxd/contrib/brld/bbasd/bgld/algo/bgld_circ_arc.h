@@ -17,8 +17,8 @@
 // \endverbatim
 
 
-#include <vcl_iostream.h>
-#include <vcl_cmath.h>
+#include <iostream>
+#include <cmath>
 #include <vgl/vgl_point_2d.h>
 
 
@@ -56,10 +56,10 @@ public:
   ////  check curvature, should be nonzero for a valid arc
   //bgld_arc(const vgl_point_2d<double> &start, const vgl_point_2d<double> &end, const vgl_point_2d<double> &other);
 
-  //static const vcl_type_info& type_id()
+  //static const std::type_info& type_id()
   //{ return typeid(bgld_arc); }
 
-  //virtual bool is_type( const vcl_type_info& type ) const
+  //virtual bool is_type( const std::type_info& type ) const
   //{ return (typeid(bgld_arc) == type)!=0 ||
   //          this->bgld_arc_base::is_type(type);
   //}
@@ -72,7 +72,7 @@ public:
   //inline bool operator!=(const bgld_arc &other) const {return !operator==(other);}
 
 
-  //vcl_ostream& print(vcl_ostream & = vcl_cerr) const;
+  //std::ostream& print(std::ostream & = std::cerr) const;
 
   //int orientation() const { return ccw_; }
 
@@ -180,7 +180,7 @@ public:
 
   //: Return the angle a
   inline double central_angle() const
-  { return 2*vcl_asin(this->k()*this->chord_len()/2); }
+  { return 2*std::asin(this->k()*this->chord_len()/2); }
 
 
   //: Return height of the arc, always non-negative
@@ -227,12 +227,12 @@ public:
   vgl_point_2d<double> point_at_length(double s) const;
 
   //: Sample the arc with a given sampling rate (length)
-  vcl_vector<vgl_point_2d<double > > compute_samples(double ds) const;
+  std::vector<vgl_point_2d<double > > compute_samples(double ds) const;
 
   //: Sample the arc with a given sampling rate (length)
   void compute_samples(double ds, 
-    vcl_vector<vgl_point_2d<double > >& pts,
-    vcl_vector<vgl_vector_2d<double > >& tangents) const;
+    std::vector<vgl_point_2d<double > >& pts,
+    std::vector<vgl_vector_2d<double > >& tangents) const;
 
 
 
@@ -275,7 +275,7 @@ public:
   //**************************************************************
   
   //: Print parameters of the circular arc
-  void print(vcl_ostream &os = vcl_cerr ) const;
+  void print(std::ostream &os = std::cerr ) const;
 
 
 protected:
@@ -283,9 +283,9 @@ protected:
   double sinc(double t) const
   {
     // for large t, use normal formula
-    if (vcl_abs(t) > bgld_circ_arc::taylor_4_bound)
+    if (std::abs(t) > bgld_circ_arc::taylor_4_bound)
     {
-      return vcl_sin(t)/t;
+      return std::sin(t)/t;
     }
 
     //for small t, approximate the function using 4th order Taylor expansion

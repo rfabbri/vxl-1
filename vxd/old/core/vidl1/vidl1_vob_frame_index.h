@@ -8,8 +8,8 @@
 // 10-18-02
 //
 //
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 
 struct vidl1_vob_frame_index_entry {
   int lba;
@@ -18,9 +18,9 @@ struct vidl1_vob_frame_index_entry {
  
 struct vidl1_vob_frame_index
 {
-  vcl_vector<vidl1_vob_frame_index_entry> l;
+  std::vector<vidl1_vob_frame_index_entry> l;
 
-  bool load(vcl_string const& filename);
+  bool load(std::string const& filename);
   int frame_to_lba_of_prev_I_frame(int frame_number, int* f_actual = 0);
 };
 

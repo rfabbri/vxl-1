@@ -33,7 +33,7 @@ bsold_roi_image_process::bsold_roi_image_process()
     !parameters()->add( "Image height " , "-height" , (unsigned)100 )
       ) 
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -53,7 +53,7 @@ clone() const
 
 
 //: Return the name of this process
-vcl_string bsold_roi_image_process::
+std::string bsold_roi_image_process::
 name()
 {
   return "ROI Image";
@@ -77,10 +77,10 @@ output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > bsold_roi_image_process::
+std::vector< std::string > bsold_roi_image_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   to_return.push_back( "image" );
   return to_return;
@@ -88,10 +88,10 @@ get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > bsold_roi_image_process::
+std::vector< std::string > bsold_roi_image_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back("image");
   return to_return;
 }
@@ -103,7 +103,7 @@ execute()
 {
   if ( input_data_.size() != 1 )
   {
-    vcl_cout << "In bsold_roi_image_process::execute() - not exactly 1"
+    std::cout << "In bsold_roi_image_process::execute() - not exactly 1"
              << " input frames \n";
     return false;
   }
@@ -121,7 +121,7 @@ execute()
   // get vsol2D object from the storage class
   vidpro1_vsol2D_storage_sptr frame_vsol;
   frame_vsol.vertical_cast(input_data_[0][0]);
-  vcl_vector<vsol_spatial_object_2d_sptr > all_vsols = frame_vsol->all_data();
+  std::vector<vsol_spatial_object_2d_sptr > all_vsols = frame_vsol->all_data();
 
   // construct binary image to return;
   vil_image_view<bool > mask;
@@ -164,7 +164,7 @@ execute()
         vsol_polygon_2d_sptr poly = region->cast_to_polygon();
 
         // turn into a vgl_polygon
-        vcl_vector<vgl_point_2d<double > > pts;
+        std::vector<vgl_point_2d<double > > pts;
         for (unsigned m=0; m<poly->size(); ++m)
         {
           pts.push_back(poly->vertex(m)->get_p());

@@ -25,7 +25,7 @@ class  bild_image_intensity_inspector : public bild_image_tool
   virtual ~bild_image_intensity_inspector(){}
 
   //: Returns the string name of this tool
-  virtual vcl_string name() const{return "Image Inspector";}
+  virtual std::string name() const{return "Image Inspector";}
 
   virtual bool set_storage ( const bpro1_storage_sptr& storage);
   

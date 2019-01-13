@@ -3,11 +3,11 @@
 // \file
 
 #include "bvis1_command.h"
-#include <vcl_vector.h>
-#include <vcl_set.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
-#include <vcl_cstdio.h>
+#include <vector>
+#include <set>
+#include <string>
+#include <iostream>
+#include <cstdio>
 #include <vgui/vgui_dialog.h>
 #include <bvis1/bvis1_manager.h>
 #include <bvis1/bvis1_util.h>
@@ -32,7 +32,7 @@ void
 bvis1_process_command::execute()
 {
   if(!process_.ptr()){
-    vcl_cerr << "Warning: not able to execute a Null process" << vcl_endl;
+    std::cerr << "Warning: not able to execute a Null process" << std::endl;
     return;
   }
   
@@ -43,9 +43,9 @@ bvis1_process_command::execute()
 
   bpro1_parameters_sptr param_sptr = process_->parameters();
 
-  vcl_vector< bpro1_param* > param_vector = param_sptr->get_param_list();
+  std::vector< bpro1_param* > param_vector = param_sptr->get_param_list();
 
-  for( vcl_vector< bpro1_param* >::iterator it = param_vector.begin();
+  for( std::vector< bpro1_param* >::iterator it = param_vector.begin();
        it != param_vector.end();  ++it ) {
 
     if( bpro1_param_type<int> * param = dynamic_cast<bpro1_param_type<int> *>(*it) ) {
@@ -63,7 +63,7 @@ bvis1_process_command::execute()
     else if( bpro1_param_type<double> * param = dynamic_cast<bpro1_param_type<double> *>(*it) ) {
       param_dialog.field( param->description().c_str() , param->temp_ref() );
     }
-    else if( bpro1_param_type<vcl_string> * param = dynamic_cast<bpro1_param_type<vcl_string> *>(*it) ) {
+    else if( bpro1_param_type<std::string> * param = dynamic_cast<bpro1_param_type<std::string> *>(*it) ) {
       param_dialog.field( param->description().c_str() , param->temp_ref() );
     }
     else if( bpro1_param_type<bool> * param = dynamic_cast<bpro1_param_type<bool> *>(*it) ) {
@@ -73,14 +73,14 @@ bvis1_process_command::execute()
       param_dialog.file( param->description().c_str(), param->temp_ref().ext, param->temp_ref().path );
     }
     else{
-      vcl_cerr << "No valid dialog interface for parameter: " << (*it)->name() << vcl_endl;
+      std::cerr << "No valid dialog interface for parameter: " << (*it)->name() << std::endl;
     }
   }
 
   if (!param_vector.empty()){
     if (param_dialog.ask()) {
 
-      for( vcl_vector< bpro1_param* >::iterator it = param_vector.begin();
+      for( std::vector< bpro1_param* >::iterator it = param_vector.begin();
           it != param_vector.end();
           ++it )
       {
@@ -108,14 +108,14 @@ bvis1_process_command::execute()
   vgui_dialog io_dialog("Select Inputs and outputs" );
 
   //display input options
-  vcl_vector< vcl_string > input_type_list = process_->get_input_type();
+  std::vector< std::string > input_type_list = process_->get_input_type();
   if (!input_type_list.empty())
     io_dialog.message("Select Input(s) From Available ones:");
 
   //store the choices
-  vcl_vector<int> input_choices(input_type_list.size());
-  vcl_vector< vcl_vector <vcl_string> > available_storage_classes(input_type_list.size());
-  vcl_vector< vcl_string > input_names(input_type_list.size());
+  std::vector<int> input_choices(input_type_list.size());
+  std::vector< std::vector <std::string> > available_storage_classes(input_type_list.size());
+  std::vector< std::string > input_names(input_type_list.size());
   
   for( unsigned int i = 0 ;
       i < input_type_list.size();
@@ -123,7 +123,7 @@ bvis1_process_command::execute()
   {
     //for this input type allow user to select from available storage classes in the repository
     for (unsigned f=0; f < process_->input_frames(); ++f) {
-      vcl_vector <vcl_string> cframe =  repository_sptr->get_all_storage_class_names(input_type_list[i], 
+      std::vector <std::string> cframe =  repository_sptr->get_all_storage_class_names(input_type_list[i], 
           repository_sptr->current_frame() - f);
       available_storage_classes[i].insert(available_storage_classes[i].end(), cframe.begin(), cframe.end());
     }
@@ -134,25 +134,25 @@ bvis1_process_command::execute()
   }
 
   //display output options
-  vcl_vector< vcl_string > output_type_list = process_->get_output_type();
-  vcl_vector< vcl_string > output_suggested_names = process_->suggest_output_names();
+  std::vector< std::string > output_type_list = process_->get_output_type();
+  std::vector< std::string > output_suggested_names = process_->suggest_output_names();
   if (!output_type_list.empty())
     io_dialog.message("Select Output(s) From Available ones:");
 
   //store the choices
-  vcl_vector<vcl_string> output_choices(output_type_list.size());
+  std::vector<std::string> output_choices(output_type_list.size());
 
   //since output storage classes don't exist yet we can only assign names
   //make sure that these names are assigned to the storage classes after the process is executed
   //first build up a collection of all existing names
-  vcl_map<vcl_string, vcl_set<vcl_string> > existing_names;
+  std::map<std::string, std::set<std::string> > existing_names;
   for( unsigned int i = 0 ;
       i < output_type_list.size();
       i++ )
   {
     if(existing_names.find(output_type_list[i]) == existing_names.end())
     {
-      vcl_vector<vcl_string> names = 
+      std::vector<std::string> names = 
         repository_sptr->get_all_storage_class_names(output_type_list[i]);
       for( unsigned int j=0; j<names.size(); ++j )
         existing_names[output_type_list[i]].insert(names[j]);
@@ -164,13 +164,13 @@ bvis1_process_command::execute()
       i++ )
   {
     //generate a default name that can be changed if desired
-    vcl_string suggested_name = output_type_list[i];
+    std::string suggested_name = output_type_list[i];
     if(i < output_suggested_names.size())
       suggested_name = output_suggested_names[i];
-    vcl_string name_str;
+    std::string name_str;
     int c = 0;
     do{
-      vcl_stringstream name_stream;
+      std::stringstream name_stream;
       name_stream << suggested_name << c++;
       name_str = name_stream.str();
     }while(existing_names[output_type_list[i]].count(name_str) != 0);
@@ -216,12 +216,12 @@ bvis1_process_command::execute()
           add_process_to_queue(process_to_run);
       }
 
-    vcl_set<bpro1_storage_sptr> modified;
+    std::set<bpro1_storage_sptr> modified;
     //now run the process
     bvis1_manager::instance()->process_manager()->run_process_on_current_frame(process_to_run, &modified);
 
     // update the display for any modified storage objects
-    for ( vcl_set<bpro1_storage_sptr>::iterator itr = modified.begin();
+    for ( std::set<bpro1_storage_sptr>::iterator itr = modified.begin();
           itr != modified.end(); ++itr ) {
       bvis1_manager::instance()->add_to_display(*itr);
     }

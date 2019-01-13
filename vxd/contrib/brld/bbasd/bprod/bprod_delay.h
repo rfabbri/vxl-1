@@ -16,7 +16,7 @@
 #include <bprod/bprod_process.h>
 #include <bprod/bprod_connector.h>
 #include <bprod/bprod_mutex.h>
-#include <vcl_deque.h>
+#include <deque>
 
 
 //: A process that intoduces a time delay
@@ -53,7 +53,7 @@ class bprod_delay : public bprod_process
   unsigned max_size_;
   unsigned long recieved_timestamp_;
   bprod_signal recieved_signal_;
-  vcl_deque<bprod_storage_sptr> queue_;
+  std::deque<bprod_storage_sptr> queue_;
 
   //: mutex for updating the queue
   bprod_mutex queue_mutex_;

@@ -5,12 +5,12 @@
 void bmcsd_data::
 get_capitol_building_subset(bmcsd_curve_stereo_data_path *d)
 {
-  vcl_string path("/usr/local/moredata/subset/");
-  vcl_vector<vcl_string> edgemaps_fnames;
-  vcl_vector<vcl_string> img_fnames; 
-  vcl_vector<vcl_string> cam_fnames;
-  vcl_vector<vcl_string> edg_fnames;
-  vcl_vector<vcl_string> frag_fnames;
+  std::string path("/usr/local/moredata/subset/");
+  std::vector<std::string> edgemaps_fnames;
+  std::vector<std::string> img_fnames; 
+  std::vector<std::string> cam_fnames;
+  std::vector<std::string> edg_fnames;
+  std::vector<std::string> frag_fnames;
 
   edgemaps_fnames.push_back("frame_00001-grad_thresh5.edg.gz"); //0 0 
   edgemaps_fnames.push_back("frame_00066-grad_thresh5.edg.gz"); //1 2
@@ -45,34 +45,34 @@ get_capitol_building_subset(bmcsd_curve_stereo_data_path *d)
 }
 
 bool bmcsd_curve_stereo_data_path::
-set(const vcl_string &path, 
-    const vcl_vector<vcl_string> &img_fnames, 
-    const vcl_vector<vcl_string> &cam_fnames,
-    const vcl_vector<vcl_string> &edg_fnames,
-    const vcl_vector<vcl_string> &frag_fnames,
+set(const std::string &path, 
+    const std::vector<std::string> &img_fnames, 
+    const std::vector<std::string> &cam_fnames,
+    const std::vector<std::string> &edg_fnames,
+    const std::vector<std::string> &frag_fnames,
     bmcsd_util::camera_file_type cam_ftype
     )
 {
   unsigned nviews = img_fnames.size();
   if (cam_fnames.size() != nviews)  {
-    vcl_cerr << "Error in bmcsd_curve_stereo_data_path::set():"
+    std::cerr << "Error in bmcsd_curve_stereo_data_path::set():"
              << "Num of camera files different than num of images.\n";
     return false;
   }
   if (edg_fnames.size() != nviews) {
-    vcl_cerr << "Error in bmcsd_curve_stereo_data_path::set():"
+    std::cerr << "Error in bmcsd_curve_stereo_data_path::set():"
              << "Num of edge files different than num of images.\n";
     return false;
   }
   if (frag_fnames.size() != nviews) {
-    vcl_cerr << "Error in bmcsd_curve_stereo_data_path::set():"
+    std::cerr << "Error in bmcsd_curve_stereo_data_path::set():"
              << "Num of curve fragments different than num of images.\n";
     return false;
   }
   views_.resize(nviews);
 
   for (unsigned i=0; i < nviews; ++i) {
-    views_[i].path_ = path + vcl_string("/");
+    views_[i].path_ = path + std::string("/");
     views_[i].img_fname_ = img_fnames[i];
     views_[i].edg_fname_ = edg_fnames[i];
     views_[i].cam_fname_ = cam_fnames[i];
@@ -83,11 +83,11 @@ set(const vcl_string &path,
 }
 
 bool bmcsd_curve_stereo_data_path::
-set_curvelets(const vcl_vector<vcl_string> &cvlet_fnames)
+set_curvelets(const std::vector<std::string> &cvlet_fnames)
 {
   unsigned nviews = views_.size();
   if (cvlet_fnames.size() != nviews)  {
-    vcl_cerr << "Error in bmcsd_curve_stereo_data_path::set():"
+    std::cerr << "Error in bmcsd_curve_stereo_data_path::set():"
              << "Num of camera files different than num of images.\n";
     return false;
   }
@@ -101,81 +101,81 @@ set_curvelets(const vcl_vector<vcl_string> &cvlet_fnames)
 
 bool bmcsd_data::
 read_frame_data_list_txt(
-    const vcl_string &path,
+    const std::string &path,
     bmcsd_curve_stereo_data_path *dataset,
     bmcsd_util::camera_file_type cam_type
     )
 {
-  vcl_string fname = path + vcl_string("/mcs_img_list.txt");
-  vcl_cout << "Reading " << fname << vcl_endl;
-  vcl_vector<vcl_string > img_fnames;
+  std::string fname = path + std::string("/mcs_img_list.txt");
+  std::cout << "Reading " << fname << std::endl;
+  std::vector<std::string > img_fnames;
   bool retval = buld_parse_string_list(fname, img_fnames);
   if (!retval) return false;
 
-  fname = path + vcl_string("/mcs_edg_list.txt");
-  vcl_cout << "Reading " << fname << vcl_endl;
-  vcl_vector<vcl_string > edg_fnames;
+  fname = path + std::string("/mcs_edg_list.txt");
+  std::cout << "Reading " << fname << std::endl;
+  std::vector<std::string > edg_fnames;
   retval = buld_parse_string_list(fname, edg_fnames);
   if (!retval) return false;
 
-  fname = path + vcl_string("/mcs_frag_list.txt");
-  vcl_cout << "Reading " << fname << vcl_endl;
-  vcl_vector<vcl_string > frag_fnames;
+  fname = path + std::string("/mcs_frag_list.txt");
+  std::cout << "Reading " << fname << std::endl;
+  std::vector<std::string > frag_fnames;
   retval = buld_parse_string_list(fname, frag_fnames);
   if (!retval) return false;
   
   retval = 
    dataset->set(path, img_fnames, img_fnames, edg_fnames, frag_fnames, cam_type);
   if (!retval)  {
-    vcl_cerr << "Problem calling set in read_frame_data_list_txt\n";
+    std::cerr << "Problem calling set in read_frame_data_list_txt\n";
     return false;
   }
 
-  fname = path + vcl_string("/mcs_cvlet_list.txt");
-  vcl_vector<vcl_string > cvlet_fnames;
+  fname = path + std::string("/mcs_cvlet_list.txt");
+  std::vector<std::string > cvlet_fnames;
   if (vul_file::exists(fname)) {
-    vcl_cout << "Reading " << fname << vcl_endl;
+    std::cout << "Reading " << fname << std::endl;
     retval = buld_parse_string_list(fname, cvlet_fnames);
     if (!retval) return false;
 
     retval = 
      dataset->set_curvelets(cvlet_fnames);
     if (!retval)  {
-      vcl_cerr << "Problem calling set_cvlet in read_frame_data_list_txt\n";
+      std::cerr << "Problem calling set_cvlet in read_frame_data_list_txt\n";
       return false;
     }
   } else {
-    vcl_cout << "No curvelets in this dataset.\n";
+    std::cout << "No curvelets in this dataset.\n";
   }
 
   return true;
 }
 
 // #define MW_VERBOSE_DEBUG 0
-vcl_ostream&  operator<<(vcl_ostream& s, const bmcsd_curve_stereo_data_path& p)
+std::ostream&  operator<<(std::ostream& s, const bmcsd_curve_stereo_data_path& p)
 {
-  s << "nviews: " << p.nviews() << vcl_endl;
+  s << "nviews: " << p.nviews() << std::endl;
   assert(p.nviews());
 
 #ifdef MW_VERBOSE_DEBUG
   for (unsigned i=0; i < p.nviews(); ++i) {
-    vcl_cout << "pth data view[" << i << "]:\n" << p[i] << vcl_endl;
+    std::cout << "pth data view[" << i << "]:\n" << p[i] << std::endl;
   }
 #else
-  s << "path data view[0]:\n" << p[0] << vcl_endl;
-  s << "path data view[end]:\n" << p[p.nviews()-1] << vcl_endl;
+  s << "path data view[0]:\n" << p[0] << std::endl;
+  s << "path data view[end]:\n" << p[p.nviews()-1] << std::endl;
 #endif
 
   return s;
 }
 
-vcl_ostream&  operator<<(vcl_ostream& s, const bmcsd_curve_stereo_frame_data_path& p)
+std::ostream&  operator<<(std::ostream& s, const bmcsd_curve_stereo_frame_data_path& p)
 {
-  s << "path: " << p.path_ << vcl_endl;
-  s << "cam_ftype: " << p.cam_ftype_ << vcl_endl;
-  s << "img_fname: " << p.img_fname_ << vcl_endl;
-  s << "edg_fname: " << p.edg_fname_ << vcl_endl;
-  s << "frag_fname: " << p.frag_fname_ << vcl_endl;
-  s << "cvlet_fname: " << p.cvlet_fname_ << vcl_endl;
+  s << "path: " << p.path_ << std::endl;
+  s << "cam_ftype: " << p.cam_ftype_ << std::endl;
+  s << "img_fname: " << p.img_fname_ << std::endl;
+  s << "edg_fname: " << p.edg_fname_ << std::endl;
+  s << "frag_fname: " << p.frag_fname_ << std::endl;
+  s << "cvlet_fname: " << p.cvlet_fname_ << std::endl;
   return s;
 }

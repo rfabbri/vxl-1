@@ -8,7 +8,7 @@
 //\date Wed May 25 15:53:23 BRT 2016
 //
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vgl/vgl_point_2d.h>
 #include <vnl/vnl_vector_fixed.h>
 
@@ -41,7 +41,7 @@
 //
 void 
 bgld_compute_curvature(
-    const vcl_vector< vgl_point_2d<double> > &vertices, 
+    const std::vector< vgl_point_2d<double> > &vertices, 
     vnl_vector<double> *k
     );
 
@@ -53,8 +53,8 @@ bgld_compute_curvature(
 //
 void 
 bgld_compute_normals(
-    const vcl_vector< vgl_point_2d<double> > &vertices, 
-    vcl_vector< vnl_vector_fixed<double, 2> > *n
+    const std::vector< vgl_point_2d<double> > &vertices, 
+    std::vector< vnl_vector_fixed<double, 2> > *n
     );
 
 #endif // bgld_diffgeom_h

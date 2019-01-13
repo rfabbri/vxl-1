@@ -10,7 +10,7 @@
 
 #include <vsol/vsol_digital_curve_2d.h>
 #include <vil/vil_image_view.h>
-#include <vcl_set.h>
+#include <set>
 
 class bspid_curve_distance {
 public:
@@ -31,7 +31,7 @@ public:
       const vsol_digital_curve_2d &c, double d_threshold,
       const vil_image_view<vxl_uint_32> &dt,
       const vil_image_view<vxl_uint_32> &label,
-      vcl_set<unsigned> *inliers
+      std::set<unsigned> *inliers
       );
 
   //: Sums up the squared distances at each sample of the curve.

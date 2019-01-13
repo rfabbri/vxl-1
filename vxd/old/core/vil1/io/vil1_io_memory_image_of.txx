@@ -40,9 +40,9 @@ void vsl_b_read(vsl_b_istream &is, vil1_memory_image_of<T> & p)
     break;
 
    default:
-    vcl_cerr << "I/O ERROR: vsl_b_read(vsl_b_istream&, vil1_memory_image_of<T>&)\n"
+    std::cerr << "I/O ERROR: vsl_b_read(vsl_b_istream&, vil1_memory_image_of<T>&)\n"
              << "           Unknown version number "<< v << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }
@@ -51,14 +51,14 @@ void vsl_b_read(vsl_b_istream &is, vil1_memory_image_of<T> & p)
 //========================================================================
 //: Output a human readable summary to the stream
 template <class T>
-void vsl_print_summary(vcl_ostream& os,const vil1_memory_image_of<T> & p)
+void vsl_print_summary(std::ostream& os,const vil1_memory_image_of<T> & p)
 {
   vsl_print_summary(os, p.impl());
 }
 
 
 #define VIL1_IO_MEMORY_IMAGE_OF_INSTANTIATE(T) \
-template void vsl_print_summary(vcl_ostream&, vil1_memory_image_of<T >const&); \
+template void vsl_print_summary(std::ostream&, vil1_memory_image_of<T >const&); \
 template void vsl_b_read(vsl_b_istream &, vil1_memory_image_of<T >&); \
 template void vsl_b_write(vsl_b_ostream &, const vil1_memory_image_of<T >&)
 

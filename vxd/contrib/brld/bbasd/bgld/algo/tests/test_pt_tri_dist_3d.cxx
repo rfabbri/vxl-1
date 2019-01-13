@@ -1,6 +1,6 @@
 //: This is bgld/algo/tests/test_pt_tri_dist_3d.cxx
-#include <vcl_iostream.h>
-#include <vcl_cmath.h>
+#include <iostream>
+#include <cmath>
 #include <testlib/testlib_test.h>
 
 #include <bgld/algo/bgld_distance.h>
@@ -10,7 +10,7 @@ MAIN( test_pt_tri_dist_3d )
 {
   START ("Point-to-Triangle Distance in R3");
 
-  vcl_cout << "Test point to triangle distance in R3:" << vcl_endl;
+  std::cout << "Test point to triangle distance in R3:" << std::endl;
   vgl_point_3d<double> P (0.0, 0.0, 0.0);
   vgl_point_3d<double> A (1.0, 0.0, 0.0);   
   vgl_point_3d<double> B (0.0, 1.0, 0.0);   

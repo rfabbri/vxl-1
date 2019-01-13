@@ -39,7 +39,7 @@ public:
   virtual ~vpgld_epipolar_region_tool() {}
   
   //: Returns the string name of this tool
-  vcl_string name() const;
+  std::string name() const;
 
   //: Handle events.
   bool handle( const vgui_event & e, 
@@ -65,8 +65,8 @@ protected:
   bgui_vsol2D_tableau_sptr tab_l_;
   bgui_vsol2D_tableau_sptr tab_r_;
 
-  vcl_vector<vgui_soview2D_point *> pt_pert_soviews_;
-  vcl_vector<vgui_soview2D_infinite_line *> ep_pert_soviews_;
+  std::vector<vgui_soview2D_point *> pt_pert_soviews_;
+  std::vector<vgui_soview2D_infinite_line *> ep_pert_soviews_;
 
   const vpgl_perspective_camera<double> *p1_;
   const vpgl_perspective_camera<double> *p2_;

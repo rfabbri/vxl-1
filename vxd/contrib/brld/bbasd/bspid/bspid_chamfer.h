@@ -34,7 +34,7 @@
 // indices where the NULL pointer or zero index casts to false.
 //
 // Distance types need to support addition, the <= operator, and
-// vcl_numeric_limits<DIST_T>::max().  They must also exibit
+// std::numeric_limits<DIST_T>::max().  They must also exibit
 // a strict weak ordering.  Distance types are typically \pint or \pfloat.
 template<class OBJ_T, class DIST_T>
 class bspid_chamfer

@@ -13,7 +13,7 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_string.h>
+#include <string>
 #include <bvis1/bvis1_displayer.h>
 
 #include <vgui/vgui_tableau_sptr.h>
@@ -28,7 +28,7 @@ public:
   becld_episeg_displayer();
 
   //: Return type string "episeg"
-  virtual vcl_string type() const { return "episeg"; }
+  virtual std::string type() const { return "episeg"; }
 
   //: Create a tableau if the storage object is of type episeg
   virtual vgui_tableau_sptr make_tableau( bpro1_storage_sptr ) const;

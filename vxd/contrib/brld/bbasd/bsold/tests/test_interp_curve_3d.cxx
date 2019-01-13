@@ -3,8 +3,8 @@
 #include <bgld/bgld_eno_curve_3d.h>
 #include <bsold/bsold_interp_curve_3d.h>
 
-#include <vcl_iostream.h>
-#include <vcl_cmath.h>
+#include <iostream>
+#include <cmath>
 #include <vnl/vnl_math.h>
 
 MAIN( test_interp_curve_3d )
@@ -18,23 +18,23 @@ MAIN( test_interp_curve_3d )
 
   double tolerance = 10e-3;
 
-  vcl_vector<double> coefs_x;
+  std::vector<double> coefs_x;
   coefs_x.push_back(1);
   coefs_x.push_back(-2);
   coefs_x.push_back(-2);
   coefs_x.push_back(1);
-  vcl_vector<double> coefs_y;
+  std::vector<double> coefs_y;
   coefs_y.push_back(-1);
   coefs_y.push_back(1);
   coefs_y.push_back(1);
   coefs_y.push_back(-2);
-  vcl_vector<double> coefs_z;
+  std::vector<double> coefs_z;
   coefs_z.push_back(2);
   coefs_z.push_back(2);
   coefs_z.push_back(-1);
   coefs_z.push_back(1);
 
-  vcl_vector<bgld_param_curve_3d *> ints(2);
+  std::vector<bgld_param_curve_3d *> ints(2);
   ints[0] = new bgld_eno_curve_3d(coefs_x, coefs_y, coefs_z, 0.0, 1.0);
   ints[1] = new bgld_eno_curve_3d(coefs_x, coefs_y, coefs_z, 1.0, 2.0);
 
@@ -116,41 +116,41 @@ void test_3d_curve_old ()
   curve3d.add_vertex (42.463413, 13, 0);
   //curve3d.computeProperties_old ();
 
-  vcl_cout<< "\ntest 3d polyline old:\n";
+  std::cout<< "\ntest 3d polyline old:\n";
 
   //number of vertices: size()
   for (int i=0; i<curve3d.size(); i++) {
     sprintf (s, "v[%d]= (%lf, %lf, %lf), s[%d]=%lf, arcLength[%d]= %lf\n", i, curve3d.x(i), curve3d.y(i), curve3d.z(i),
-          i, curve3d.s(i), i, curve3d.arcLength(i)); vcl_cout<< s;
+          i, curve3d.s(i), i, curve3d.arcLength(i)); std::cout<< s;
   }
 
   //first point:
-  sprintf (s, "p0= (%lf, %lf, %lf)\n", curve3d.p0()->x(), curve3d.p0()->y(), curve3d.p0()->z()); vcl_cout<< s;
+  sprintf (s, "p0= (%lf, %lf, %lf)\n", curve3d.p0()->x(), curve3d.p0()->y(), curve3d.p0()->z()); std::cout<< s;
   //last point:
-  sprintf (s, "p1= (%lf, %lf, %lf)\n", curve3d.p1()->x(), curve3d.p1()->y(), curve3d.p1()->z()); vcl_cout<< s;
+  sprintf (s, "p1= (%lf, %lf, %lf)\n", curve3d.p1()->x(), curve3d.p1()->y(), curve3d.p1()->z()); std::cout<< s;
 
   //arc length:
-  sprintf (s, "length= %lf\n", curve3d.length()); vcl_cout<< s;
-  sprintf (s, "totalCurvature= %lf\n", curve3d.totalCurvature()); vcl_cout<< s;
-  sprintf (s, "totalAngleChange= %lf\n", curve3d.totalAngleChange()); vcl_cout<< s;
+  sprintf (s, "length= %lf\n", curve3d.length()); std::cout<< s;
+  sprintf (s, "totalCurvature= %lf\n", curve3d.totalCurvature()); std::cout<< s;
+  sprintf (s, "totalAngleChange= %lf\n", curve3d.totalAngleChange()); std::cout<< s;
 
   for (int i=0; i<curve3d.size(); i++) {
     sprintf (s, "k[%d]= %lf, theta[%d]= %lf, norm. arcLength[%d]= %lf\n", 
-          i, curve3d.curvature(i), i, curve3d.theta(i), i, curve3d.normArcLength(i)); vcl_cout<< s;
+          i, curve3d.curvature(i), i, curve3d.theta(i), i, curve3d.normArcLength(i)); std::cout<< s;
   }
 
   for (int i=0; i<curve3d.size(); i++) {
     sprintf (s, "T[%d]= (%lf, %lf, %lf), N[%d]= (%lf, %lf, %lf)\n", 
           i, curve3d.Tangent(i)->x(), curve3d.Tangent(i)->y(), curve3d.Tangent(i)->z(),
-          i, curve3d.Normal(i)->x(), curve3d.Normal(i)->y(), curve3d.Normal(i)->z()); vcl_cout<< s;
+          i, curve3d.Normal(i)->x(), curve3d.Normal(i)->y(), curve3d.Normal(i)->z()); std::cout<< s;
   }
   for (int i=0; i<curve3d.size(); i++) {
     sprintf (s, "B[%d]= (%lf, %lf, %lf)\n", 
-          i, curve3d.Binormal(i)->x(), curve3d.Binormal(i)->y(), curve3d.Binormal(i)->z()); vcl_cout<< s;
+          i, curve3d.Binormal(i)->x(), curve3d.Binormal(i)->y(), curve3d.Binormal(i)->z()); std::cout<< s;
   }
 
   curve3d.SaveCON3File ("qqq.con3");
-  vcl_cout<<"\n\n";
+  std::cout<<"\n\n";
 }
 
 void test_3d_curve ()
@@ -160,30 +160,30 @@ void test_3d_curve ()
   bsol_intrinsic_curve_3d curve3d;
   curve3d.LoadCON3File ("qqq.con3");
 
-  vcl_cout<< "\ntest 3d polyline:\n";
+  std::cout<< "\ntest 3d polyline:\n";
 
   //number of vertices: size()
   for (int i=0; i<curve3d.size(); i++) {
     sprintf (s, "v[%d]= (%lf, %lf, %lf), s[%d]=%lf, arcLength[%d]= %lf\n", i, curve3d.x(i), curve3d.y(i), curve3d.z(i),
-          i, curve3d.s(i), i, curve3d.arcLength(i)); vcl_cout<< s;
+          i, curve3d.s(i), i, curve3d.arcLength(i)); std::cout<< s;
   }
 
   //first point:
-  sprintf (s, "p0= (%lf, %lf, %lf)\n", curve3d.p0()->x(), curve3d.p0()->y(), curve3d.p0()->z()); vcl_cout<< s;
+  sprintf (s, "p0= (%lf, %lf, %lf)\n", curve3d.p0()->x(), curve3d.p0()->y(), curve3d.p0()->z()); std::cout<< s;
   //last point:
-  sprintf (s, "p1= (%lf, %lf, %lf)\n", curve3d.p1()->x(), curve3d.p1()->y(), curve3d.p1()->z()); vcl_cout<< s;
+  sprintf (s, "p1= (%lf, %lf, %lf)\n", curve3d.p1()->x(), curve3d.p1()->y(), curve3d.p1()->z()); std::cout<< s;
 
   //Global properties:
-  sprintf (s, "length= %lf\n", curve3d.length()); vcl_cout<< s;
-  sprintf (s, "totalCurvature= %lf\n", curve3d.totalCurvature()); vcl_cout<< s;
-  sprintf (s, "totalAngleChange= %lf\n", curve3d.totalAngleChange()); vcl_cout<< s;
+  sprintf (s, "length= %lf\n", curve3d.length()); std::cout<< s;
+  sprintf (s, "totalCurvature= %lf\n", curve3d.totalCurvature()); std::cout<< s;
+  sprintf (s, "totalAngleChange= %lf\n", curve3d.totalAngleChange()); std::cout<< s;
 
   //arc length
   for (int i=0; i<curve3d.size(); i++) {
     sprintf (s, "s[%d]= %lf, arcLength[%d]= %lf, normalized arcLength[%d]= %lf\n", 
           i, curve3d.s(i), 
           i, curve3d.arcLength(i), 
-          i, curve3d.normArcLength(i)); vcl_cout<< s;
+          i, curve3d.normArcLength(i)); std::cout<< s;
   }
 
   //phi and derivatives
@@ -191,7 +191,7 @@ void test_3d_curve ()
     sprintf (s, "phi[%d]= %lf, phi_s[%d]= %lf, phi_ss[%d]= %lf\n", 
           i, curve3d.phi(i), 
           i, curve3d.phis(i), 
-          i, curve3d.phiss(i)); vcl_cout<< s;
+          i, curve3d.phiss(i)); std::cout<< s;
   }
 
   //theta and derivatives
@@ -199,27 +199,27 @@ void test_3d_curve ()
     sprintf (s, "theta[%d]= %lf, theta_s[%d]= %lf, theta_ss[%d]= %lf\n", 
           i, curve3d.theta(i), 
           i, curve3d.thetas(i), 
-          i, curve3d.thetass(i)); vcl_cout<< s;
+          i, curve3d.thetass(i)); std::cout<< s;
   }
 
   for (int i=0; i<curve3d.size(); i++) {
     sprintf (s, "T[%d]= (%lf, %lf, %lf)\n", 
-          i, curve3d.Tangent(i)->x(), curve3d.Tangent(i)->y(), curve3d.Tangent(i)->z()); vcl_cout<< s;
+          i, curve3d.Tangent(i)->x(), curve3d.Tangent(i)->y(), curve3d.Tangent(i)->z()); std::cout<< s;
   }
   for (int i=0; i<curve3d.size(); i++) {
     sprintf (s, "N[%d]= (%lf, %lf, %lf)\n", 
-          i, curve3d.Normal(i)->x(), curve3d.Normal(i)->y(), curve3d.Normal(i)->z()); vcl_cout<< s;
+          i, curve3d.Normal(i)->x(), curve3d.Normal(i)->y(), curve3d.Normal(i)->z()); std::cout<< s;
   }
   for (int i=0; i<curve3d.size(); i++) {
     sprintf (s, "B[%d]= (%lf, %lf, %lf)\n", 
-          i, curve3d.Binormal(i)->x(), curve3d.Binormal(i)->y(), curve3d.Binormal(i)->z()); vcl_cout<< s;
+          i, curve3d.Binormal(i)->x(), curve3d.Binormal(i)->y(), curve3d.Binormal(i)->z()); std::cout<< s;
   }
 
   //curvature and torsion
   for (int i=0; i<curve3d.size(); i++) {
     sprintf (s, "curvature[%d]= %lf, torsion[%d]= %lf\n", 
           i, curve3d.curvature(i), 
-          i, curve3d.torsion(i)); vcl_cout<< s;
+          i, curve3d.torsion(i)); std::cout<< s;
   }
 
   curve3d.SaveCON3File ("qqq.con3");
@@ -247,28 +247,28 @@ void test_2d_curve ()
 
   curve2d.computeProperties ();
 
-  vcl_cout<< "\ntest 2d polyline:\n";
+  std::cout<< "\ntest 2d polyline:\n";
 
   //number of vertices: size()
   for (int i=0; i<curve2d.size(); i++) {
     sprintf (s, "v[%d]= (%lf, %lf), s[%d]=%lf, arcLength[%d]= %lf\n", i, curve2d.x(i), curve2d.y(i),
-          i, curve2d.s(i), i, curve2d.arcLength(i)); vcl_cout<< s;
+          i, curve2d.s(i), i, curve2d.arcLength(i)); std::cout<< s;
   }
 
   //first point:
-  //sprintf (s, "p0= (%lf, %lf)\n", curve2d.p0()->x(), curve2d.p0()->y()); vcl_cout<< s;
+  //sprintf (s, "p0= (%lf, %lf)\n", curve2d.p0()->x(), curve2d.p0()->y()); std::cout<< s;
   //last point:
-  //sprintf (s, "p1= (%lf, %lf)\n", curve2d.p1()->x(), curve2d.p1()->y()); vcl_cout<< s;
+  //sprintf (s, "p1= (%lf, %lf)\n", curve2d.p1()->x(), curve2d.p1()->y()); std::cout<< s;
 
   //arc length:
-  sprintf (s, "length= %lf\n", curve2d.length()); vcl_cout<< s;
-  sprintf (s, "totalCurvature= %lf\n", curve2d.totalCurvature()); vcl_cout<< s;
-  sprintf (s, "totalAngleChange= %lf\n", curve2d.totalAngleChange()); vcl_cout<< s;
+  sprintf (s, "length= %lf\n", curve2d.length()); std::cout<< s;
+  sprintf (s, "totalCurvature= %lf\n", curve2d.totalCurvature()); std::cout<< s;
+  sprintf (s, "totalAngleChange= %lf\n", curve2d.totalAngleChange()); std::cout<< s;
 
   //number ofdx
   for (int i=0; i<curve2d.size(); i++) {
     sprintf (s, "k[%d]= %lf, angle[%d]= %lf, norm. arcLength[%d]= %lf\n", 
-          i, curve2d.curvature(i), i, curve2d.angle(i), i, curve2d.normArcLength(i)); vcl_cout<< s;
+          i, curve2d.curvature(i), i, curve2d.angle(i), i, curve2d.normArcLength(i)); std::cout<< s;
   }
 */
 }

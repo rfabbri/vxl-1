@@ -19,7 +19,7 @@
 //: 1D Gaussian pdf function
 inline double bnld_gaussian_pdf(double x, double mu, double sigma)
 {
-  return vcl_exp( -(x-mu)*(x-mu) / (2 * sigma*sigma)) * 
+  return std::exp( -(x-mu)*(x-mu) / (2 * sigma*sigma)) * 
     vnl_math::two_over_sqrtpi * vnl_math::sqrt2 / (4*sigma) ;
 }
 

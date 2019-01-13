@@ -2,8 +2,8 @@
 //:
 // \file
 
-#include <vcl_cassert.h>
-#include <vcl_cmath.h>
+#include <cassert>
+#include <cmath>
 #include <bnld/bnld_cbrt.h>
 
 double bnld_cbrt (const double& inputx)
@@ -27,7 +27,7 @@ double bnld_cbrt (const double& inputx)
       w2 = 0.5 * (w1 + 3.0 * inputx / r);
     y1 = w1 * w1 * w1;
 
-    if (vcl_fabs(y1 - inputx) <= eps)
+    if (std::fabs(y1 - inputx) <= eps)
       return(w2);
     else  
       w1 = w2;

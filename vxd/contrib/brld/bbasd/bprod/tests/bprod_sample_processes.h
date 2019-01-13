@@ -17,8 +17,8 @@
 
 #include <bprod/bprod_process.h>
 #include <bprod/bprod_process_factory.h>
-#include <vcl_cmath.h>
-#include <vcl_vector.h>
+#include <cmath>
+#include <vector>
 
 //=============================================================================
 // Filters
@@ -80,7 +80,7 @@ class bprod_sqrt : public bprod_filter
   bprod_signal execute()
   {
     assert(input_type_id(0) == typeid(double));
-    output(0, vcl_sqrt(input<double>(0)));
+    output(0, std::sqrt(input<double>(0)));
     return BPROD_VALID;
   }
 };
@@ -95,7 +95,7 @@ template <class T>
 class bprod_input_queue : public bprod_source
 {
  public:
-  bprod_input_queue(const vcl_vector<T>& d) : data(d) {}
+  bprod_input_queue(const std::vector<T>& d) : data(d) {}
 
   //: Execute the process
   bprod_signal execute()
@@ -110,7 +110,7 @@ class bprod_input_queue : public bprod_source
     return BPROD_VALID;
   }
 
-  vcl_vector<T> data;
+  std::vector<T> data;
 };
 
 
@@ -133,7 +133,7 @@ class bprod_output_queue : public bprod_sink
     return BPROD_VALID;
   }
 
-  vcl_vector<T> data;
+  std::vector<T> data;
 };
 
 
@@ -152,7 +152,7 @@ class bprod_sum_factory : public bprod_process_factory
     virtual bprod_process_sptr create(const bprod_parameters_sptr& params) const;
 
     //: The name of the process
-    virtual vcl_string name() const { return vcl_string("Sum<")+typeid(T).name()+">"; }
+    virtual std::string name() const { return std::string("Sum<")+typeid(T).name()+">"; }
 
     virtual ~bprod_sum_factory() {}
 };

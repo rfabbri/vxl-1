@@ -5,8 +5,8 @@
 #include <testlib/testlib_test.h>
 //#include <bgld/algo/bgld_distance.h>
 //////#include <bgld/algo/bgld_biarc.h>
-//#include <vcl_iostream.h>
-//#include <vcl_cmath.h>
+//#include <iostream>
+//#include <cmath>
 //////#include <vnl/vnl_math.h>
 
 #include <vsol/vsol_point_2d.h>
@@ -21,7 +21,7 @@
 
 void test_file_io()
 {
-  vcl_vector<vsol_point_2d_sptr > pts;
+  std::vector<vsol_point_2d_sptr > pts;
   pts.push_back(new vsol_point_2d(0, 0));
   pts.push_back(new vsol_point_2d(1, 0));
   pts.push_back(new vsol_point_2d(1, 1));
@@ -29,7 +29,7 @@ void test_file_io()
 
   // TEST Polyline IO
   vsol_polyline_2d_sptr polyline = new vsol_polyline_2d(pts);
-  vcl_string polyline_filename = "test_polyline.con";
+  std::string polyline_filename = "test_polyline.con";
   bsold_save_con_file(polyline_filename.c_str(), polyline);
 
 
@@ -71,7 +71,7 @@ void test_file_io()
 
   // TEST Polygon IO
   vsol_polygon_2d_sptr polygon = new vsol_polygon_2d(pts);
-  vcl_string polygon_filename = "test_polygon.con";
+  std::string polygon_filename = "test_polygon.con";
   bsold_save_con_file(polygon_filename.c_str(), polygon);
 
 

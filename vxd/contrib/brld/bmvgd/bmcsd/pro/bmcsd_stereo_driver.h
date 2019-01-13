@@ -139,11 +139,11 @@ protected:
 
   //: Outputs
   bmcsd_curve_3d_sketch csk_;
-  vcl_vector< bdifd_1st_order_curve_3d > *crv3d_;
-  vcl_vector< bmcsd_curve_3d_attributes > *attr_;
+  std::vector< bdifd_1st_order_curve_3d > *crv3d_;
+  std::vector< bmcsd_curve_3d_attributes > *attr_;
 
   bprod_process_sptr output_job_;
-  vcl_vector<bmcsd_discrete_corresp> *corresp_;
+  std::vector<bmcsd_discrete_corresp> *corresp_;
 
   //: Parameters
   // TODO: include other parameters such as:
@@ -196,14 +196,14 @@ private:
   unsigned max_concurrent_matchers_;
 
   //: pool of processors.
-  vcl_vector<bprod_process_sptr> cam_src_;
-  vcl_vector<bprod_process_sptr> edg_src_;
-  vcl_vector<bprod_process_sptr> edg_dt_;
-  vcl_vector<bprod_process_sptr> frag_src_;
-  vcl_vector<bprod_process_sptr> cvlet_src_;
-  vcl_vector<bprod_process_sptr> frag_tangents_;
-  vcl_vector<bprod_process_sptr> curve_stereo_;
-  vcl_vector<bprod_process_sptr> curve_stereo_jobs_;
+  std::vector<bprod_process_sptr> cam_src_;
+  std::vector<bprod_process_sptr> edg_src_;
+  std::vector<bprod_process_sptr> edg_dt_;
+  std::vector<bprod_process_sptr> frag_src_;
+  std::vector<bprod_process_sptr> cvlet_src_;
+  std::vector<bprod_process_sptr> frag_tangents_;
+  std::vector<bprod_process_sptr> curve_stereo_;
+  std::vector<bprod_process_sptr> curve_stereo_jobs_;
   bprod_process_sptr output_job_;
 };
 

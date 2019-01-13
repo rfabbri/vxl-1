@@ -16,10 +16,10 @@
 #if !defined(_DBORL_DESCRIPTION_BASE_H)
 #define _DBORL_DESCRIPTION_BASE_H
 
-#include <vcl_map.h>
-#include <vcl_string.h>
+#include <map>
+#include <string>
 #include <vbl/vbl_ref_count.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 class borld_object_type
 {
@@ -37,21 +37,21 @@ class borld_image_description;
 class borld_description_base : public vbl_ref_count
 {
 public:
-  vcl_map<vcl_string, int> category_list_;
+  std::map<std::string, int> category_list_;
   virtual void b_read() = 0;
   virtual void b_write() = 0;
 
-  virtual void write_xml(vcl_ostream& os) = 0;
+  virtual void write_xml(std::ostream& os) = 0;
   
   virtual unsigned get_object_type() = 0;
 
-  void add_category(vcl_string cat) { category_list_[cat] = 1; }
-  void add_to_category_cnt(vcl_string cat, int cnt) { category_list_[cat] = category_list_[cat] + cnt; }
-  bool category_exists(vcl_string cat) { return category_list_.find(cat) != category_list_.end(); }
+  void add_category(std::string cat) { category_list_[cat] = 1; }
+  void add_to_category_cnt(std::string cat, int cnt) { category_list_[cat] = category_list_[cat] + cnt; }
+  bool category_exists(std::string cat) { return category_list_.find(cat) != category_list_.end(); }
 
   inline bool has_single_category() { return category_list_.size() == 1; }
-  inline vcl_string get_first_category() { return category_list_.begin()->first; }
-  inline int get_category_cnt(vcl_string cat) { return category_list_[cat]; }  // be careful if this entry does not exist, then adds it to the map
+  inline std::string get_first_category() { return category_list_.begin()->first; }
+  inline int get_category_cnt(std::string cat) { return category_list_[cat]; }  // be careful if this entry does not exist, then adds it to the map
 
   virtual borld_description_base* cast_to_description_base() { return this; }
   virtual borld_image_description* cast_to_image_description() = 0;

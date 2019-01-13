@@ -20,6 +20,6 @@ void vsl_b_read(vsl_b_istream &is, vil1_memory_image_of<T> & b);
 
 //: Print human readable summary of object to a stream
 template <class T>
-void vsl_print_summary(vcl_ostream& os,const vil1_memory_image_of<T> & b);
+void vsl_print_summary(std::ostream& os,const vil1_memory_image_of<T> & b);
 
 #endif // vil1_io_memory_image_of_h_

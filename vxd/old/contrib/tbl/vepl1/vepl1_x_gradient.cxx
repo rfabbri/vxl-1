@@ -66,7 +66,7 @@ vil1_image vepl1_x_gradient(vil1_image const& image, double scale, double shift)
 
   //
   else {
-    vcl_cerr << __FILE__ ": vepl1_x_gradient() not implemented for " << image << vcl_endl;
+    std::cerr << __FILE__ ": vepl1_x_gradient() not implemented for " << image << std::endl;
     return 0;
   }
 }

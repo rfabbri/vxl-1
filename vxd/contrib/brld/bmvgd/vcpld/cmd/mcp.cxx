@@ -1,4 +1,4 @@
-#include <vcl_iterator.h>
+#include <iterator>
 #include <vul/vul_arg.h>
 #include <vul/vul_file.h>
 #include <buld/buld_arg.h>
@@ -7,24 +7,24 @@
 #include <mw/pro/vcpld_bundle_adjust_driver.h>
 
 
-#define MW_ASSERT(msg, a, b) if ((a) != (b)) { vcl_cerr << (msg) << vcl_endl; abort(); }
+#define MW_ASSERT(msg, a, b) if ((a) != (b)) { std::cerr << (msg) << std::endl; abort(); }
 
 void 
 keep_only_curves_with_sufficient_inlier_views(
-    const vcl_set<unsigned> &viewset,
+    const std::set<unsigned> &viewset,
     bmcsd_curve_3d_sketch *csk);
 
 int
 main(int argc, char **argv)
 {
-  vcl_string prefix_default(".");
+  std::string prefix_default(".");
 
-  vul_arg<vcl_string> a_prefix("-prefix", 
+  vul_arg<std::string> a_prefix("-prefix", 
       "path to main directory of files",prefix_default.c_str());
-  vul_arg<vcl_string> a_cam_type("-cam_type",
+  vul_arg<std::string> a_cam_type("-cam_type",
       "camera type: intrinsic_extrinsic or projcamera","intrinsic_extrinsic");
-  vul_arg<vcl_string> a_csk("-curvesketch", "input 3D curve sketch file or directory", "out/");
-  vul_arg<vcl_string> a_out_dir("-outdir", "output directory relative to -prefix", "out-mcp/");
+  vul_arg<std::string> a_csk("-curvesketch", "input 3D curve sketch file or directory", "out/");
+  vul_arg<std::string> a_out_dir("-outdir", "output directory relative to -prefix", "out-mcp/");
   vul_arg<unsigned> a_total_support("-totalsupport", 
       "threshold on the total support of the curves", 0);
   vul_arg<unsigned> a_maxviews("-maxviews", 
@@ -34,16 +34,16 @@ main(int argc, char **argv)
 
   vul_arg<bool> a_curve_ransac("-curve_ransac", "if -onecam is on, this selects small subsets of curves to run optimization many times and return the best", false);
 
-  vul_arg<vcl_vector<unsigned> > a_views("-views","comma separated list of views to optimize. By not specifying this,  consecutive views up to maxviews will be used."); // TODO make it unsigned.
+  vul_arg<std::vector<unsigned> > a_views("-views","comma separated list of views to optimize. By not specifying this,  consecutive views up to maxviews will be used."); // TODO make it unsigned.
  
   vul_arg_parse(argc,argv);
-  vcl_cout << "\n";
+  std::cout << "\n";
 
-  vcl_cout << "view list arg (size " << a_views.value_.size() << "):\n";
-  print_value(vcl_cout, a_views);
-  vcl_cout << vcl_endl;
+  std::cout << "view list arg (size " << a_views.value_.size() << "):\n";
+  print_value(std::cout, a_views);
+  std::cout << std::endl;
 
-  vcl_set<unsigned> viewset;
+  std::set<unsigned> viewset;
 
   if (a_views.value_.size()) {
     viewset.insert(a_views.value_.begin(), a_views.value_.end());
@@ -52,9 +52,9 @@ main(int argc, char **argv)
       viewset.insert(i);
   }
 
-  vcl_cout << "view list (size " << viewset.size() << "):\n";
-  vcl_copy(viewset.begin(), viewset.end(), vcl_ostream_iterator<unsigned>(vcl_cout, " "));
-  vcl_cout << vcl_endl;
+  std::cout << "view list (size " << viewset.size() << "):\n";
+  std::copy(viewset.begin(), viewset.end(), std::ostream_iterator<unsigned>(std::cout, " "));
+  std::cout << std::endl;
   
 
   bmcsd_util::camera_file_type cam_type;
@@ -65,7 +65,7 @@ main(int argc, char **argv)
     if (a_cam_type() == "projcamera")
       cam_type = bmcsd_util::MW_3X4;
     else  {
-      vcl_cerr << "Error: invalid camera type " << a_cam_type() << vcl_endl;
+      std::cerr << "Error: invalid camera type " << a_cam_type() << std::endl;
       return 1;
     }
   }
@@ -74,19 +74,19 @@ main(int argc, char **argv)
   bool retval = 
     bmcsd_data::read_frame_data_list_txt(a_prefix(), &dpath, cam_type);
   if (!retval) return 1;
-  vcl_cout << "Dpath:\n" << dpath << vcl_endl;
+  std::cout << "Dpath:\n" << dpath << std::endl;
 
   // Run Bundle Adjustment
 
   bmcsd_curve_3d_sketch *csk = new bmcsd_curve_3d_sketch;
-  vcl_string csk_fname = a_prefix() + "/" + a_csk();
+  std::string csk_fname = a_prefix() + "/" + a_csk();
   retval  = csk->read_dir_format(csk_fname);
-  MW_ASSERT(vcl_string("Error reading 3D curve sketch: ") + csk_fname, retval, true);
+  MW_ASSERT(std::string("Error reading 3D curve sketch: ") + csk_fname, retval, true);
 
-  vcl_cout << "Pruning " << csk->num_curves() << 
-    " curves with cost < " << a_total_support() << vcl_endl;
+  std::cout << "Pruning " << csk->num_curves() << 
+    " curves with cost < " << a_total_support() << std::endl;
   csk->prune_by_total_support(a_total_support());
-  vcl_cout << "Pruned down to " << csk->num_curves() << " curves" << vcl_endl;
+  std::cout << "Pruned down to " << csk->num_curves() << " curves" << std::endl;
 
   // Trim all curves in CSK that have no inlier views within the given range
   keep_only_curves_with_sufficient_inlier_views(viewset, csk);
@@ -113,7 +113,7 @@ main(int argc, char **argv)
   assert(b.nviews() == b.optimized_cameras().size());
   assert(b.nviews() == b.views().size());
 
-  vcl_vector<vcl_string> cam_fnames_noext(b.nviews());
+  std::vector<std::string> cam_fnames_noext(b.nviews());
 
   for (unsigned i=0; i < b.nviews(); ++i) {
     unsigned v = b.views()[i];
@@ -121,7 +121,7 @@ main(int argc, char **argv)
   }
 
   if (vul_file::make_directory(a_out_dir()))
-    vcl_cout << "Making output directory " << a_out_dir() << vcl_endl;
+    std::cout << "Making output directory " << a_out_dir() << std::endl;
 
   retval = bmcsd_util::write_cams(a_out_dir(), cam_fnames_noext, 
       bmcsd_util::MW_INTRINSIC_EXTRINSIC, b.optimized_cameras());
@@ -141,16 +141,16 @@ main(int argc, char **argv)
 
 void 
 keep_only_curves_with_sufficient_inlier_views(
-    const vcl_set<unsigned> &viewset,
+    const std::set<unsigned> &viewset,
     bmcsd_curve_3d_sketch *csk)
 {
-  vcl_vector< bdifd_1st_order_curve_3d > crv3d_new;
-  vcl_vector< bmcsd_curve_3d_attributes > attr_new;
+  std::vector< bdifd_1st_order_curve_3d > crv3d_new;
+  std::vector< bmcsd_curve_3d_attributes > attr_new;
   crv3d_new.reserve(csk->num_curves());
   attr_new.reserve(csk->num_curves());
 
   for (unsigned c=0; c < csk->num_curves(); ++c) {
-    vcl_vector<unsigned> inlier_views;
+    std::vector<unsigned> inlier_views;
 
     //    souce views are not automatically an inlier view anymore, since they
     //    must be away from viewport boundaries.
@@ -173,7 +173,7 @@ keep_only_curves_with_sufficient_inlier_views(
 //        && (c == 38 || c == 37 || c == 30)/*XXX hack*/) {
 //        && (c == 8 || c == 10 || c == 15)/*XXX hack*/) {
 //        && (c == 6 || c == 30 || c == 37)/*XXX hack*/) {
-//      vcl_cout << "XXX Including curve with length: " << csk->curves_3d()[c].size() << vcl_endl;
+//      std::cout << "XXX Including curve with length: " << csk->curves_3d()[c].size() << std::endl;
       crv3d_new.push_back(csk->curves_3d()[c]);
       attr_new.push_back(csk->attributes()[c]);
     }

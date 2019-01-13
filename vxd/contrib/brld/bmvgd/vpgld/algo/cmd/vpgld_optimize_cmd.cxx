@@ -2,25 +2,25 @@
 // \file
 
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_point_3d.h>
 #include <vnl/vnl_double_3x4.h>
 #include <vnl/vnl_double_3x3.h>
 #include <vnl/vnl_inverse.h>
 #include <vpgl/algo/vpgl_optimize_camera.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <iostream>
+#include <fstream>
 
 
 // Based on code originally written by Kongbin Kang (@Brown.edu) from 
 // lems/bmvgd/brct/brct_algos.h
-bool read_target_corrs(vcl_ifstream& str,
-                  vcl_vector<bool>& valid,
-                  vcl_vector<vgl_point_2d<double> >& image_points,
-                  vcl_vector<vgl_point_3d<double> >& world_points)
+bool read_target_corrs(std::ifstream& str,
+                  std::vector<bool>& valid,
+                  std::vector<vgl_point_2d<double> >& image_points,
+                  std::vector<vgl_point_3d<double> >& world_points)
 {
-  vcl_string temp;
+  std::string temp;
   str >> temp;
   if (temp != "NUMPOINTS:")
     return false;
@@ -37,7 +37,7 @@ bool read_target_corrs(vcl_ifstream& str,
     vgl_point_3d<double> world_point;
     str >> val >> junk
         >> world_point >> image_point;
-    vcl_cout << "W " << world_point << "  I " << image_point << '\n';
+    std::cout << "W " << world_point << "  I " << image_point << '\n';
     valid.push_back(val);
     image_points.push_back(image_point);
     world_points.push_back(world_point);
@@ -49,34 +49,34 @@ bool read_target_corrs(vcl_ifstream& str,
 int main(int argc, char** argv)
 {
   if(argc != 3){
-    vcl_cout << "Usage: "<< argv[0] << " init_cam_file correspondence_file"<< vcl_endl;
+    std::cout << "Usage: "<< argv[0] << " init_cam_file correspondence_file"<< std::endl;
     return -1;
   }
 
   //=========================== load the files ==========================
-  vcl_ifstream istr(argv[1]);   
+  std::ifstream istr(argv[1]);   
   vnl_double_3x4 cam_matrix;
   istr >> cam_matrix;
   if(istr.fail()){
-    vcl_cerr << "Failed to read camera" << vcl_endl;
+    std::cerr << "Failed to read camera" << std::endl;
     return -1;
   }
   istr.close();
 
   istr.open(argv[2]);   
-  vcl_vector<bool> valid;
-  vcl_vector<vgl_point_2d<double> > i_pts;
-  vcl_vector<vgl_point_3d<double> > w_pts;
+  std::vector<bool> valid;
+  std::vector<vgl_point_2d<double> > i_pts;
+  std::vector<vgl_point_3d<double> > w_pts;
   if(!read_target_corrs(istr, valid, i_pts, w_pts) )
   {
-    vcl_cout << "Failed to read correspondences" << vcl_endl;
+    std::cout << "Failed to read correspondences" << std::endl;
     return -1;
   }
   istr.close();
 
 
-  vcl_vector<vgl_point_2d<double> > image_pts;
-  vcl_vector<vgl_homg_point_3d<double> > world_pts;
+  std::vector<vgl_point_2d<double> > image_pts;
+  std::vector<vgl_homg_point_3d<double> > world_pts;
   for( unsigned int i=0; i<valid.size(); ++i ){
     if(valid[i]){
       world_pts.push_back(vgl_homg_point_3d<double>(w_pts[i]));
@@ -86,12 +86,12 @@ int main(int argc, char** argv)
 
   //===========================  ==========================
 
-  vcl_cout << "======== Initial Camera Matrix ========="<<vcl_endl;
-  vcl_cout << cam_matrix  << vcl_endl;
+  std::cout << "======== Initial Camera Matrix ========="<<std::endl;
+  std::cout << cam_matrix  << std::endl;
   
   vpgl_perspective_camera<double> cam;
   if(!vpgl_perspective_decomposition(cam_matrix,cam)){
-    vcl_cerr << "Could not decompose matrix" << vcl_endl;
+    std::cerr << "Could not decompose matrix" << std::endl;
   }
 
   // This is the known internal calibration calibration
@@ -100,13 +100,13 @@ int main(int argc, char** argv)
 
   vpgl_perspective_camera<double> opt_cam = vpgl_optimize_camera::opt_orient_pos(cam,world_pts,image_pts);
 
-  vcl_cout << "======== Original Camera Parameters ========="<<vcl_endl;
-  vcl_cout << cam << vcl_endl;
-  vcl_cout << "======== Optimized Camera Parameters ========="<<vcl_endl;
-  vcl_cout << opt_cam << vcl_endl;
+  std::cout << "======== Original Camera Parameters ========="<<std::endl;
+  std::cout << cam << std::endl;
+  std::cout << "======== Optimized Camera Parameters ========="<<std::endl;
+  std::cout << opt_cam << std::endl;
 
-  vcl_cout << "======== Optimized Camera Matrix ========="<<vcl_endl;
-  vcl_cout << opt_cam.get_matrix() << vcl_endl;
+  std::cout << "======== Optimized Camera Matrix ========="<<std::endl;
+  std::cout << opt_cam.get_matrix() << std::endl;
   return 0;
 }
 

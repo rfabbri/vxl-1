@@ -1,7 +1,7 @@
 #include <testlib/testlib_test.h>
 
-#include <vcl_limits.h>
-#include <vcl_iostream.h>
+#include <limits>
+#include <iostream>
 
 #include <vgl/vgl_distance.h>
 #include <vgl/algo/vgl_norm_trans_2d.h>
@@ -20,7 +20,7 @@
 
 
 
-//static const double tolerance=vcl_numeric_limits<double>::epsilon()*10000;
+//static const double tolerance=std::numeric_limits<double>::epsilon()*10000;
 static const double tolerance=1e-5;
 
 
@@ -52,8 +52,8 @@ MAIN( test_fm_estimation )
   // There are no outliers, but the error in pixels has standard deviation of about 2px.
 
 
-  vcl_vector<vgl_point_2d<double> > vp0,vp1;
-  vcl_vector<vgl_homg_point_2d<double> > vp0_homg,vp1_homg;
+  std::vector<vgl_point_2d<double> > vp0,vp1;
+  std::vector<vgl_homg_point_2d<double> > vp0_homg,vp1_homg;
 
 
   // Points with same index correspond.
@@ -111,11 +111,11 @@ MAIN( test_fm_estimation )
     bool retval = fmc8.compute(vp0_homg,vp1_homg,f_vpgl);
 
     if (!retval) {
-      vcl_cerr << "Traditional 8-point fundamental matrix estimation was NOT successful\n";
+      std::cerr << "Traditional 8-point fundamental matrix estimation was NOT successful\n";
     }
     TEST("Traditional 8-point fundamental matrix method returned ok",retval,true);
 
-    vcl_cout << "Fundamental Matrix from VPGL 8 point linear method:\n" << f_vpgl.get_matrix() << vcl_endl;
+    std::cout << "Fundamental Matrix from VPGL 8 point linear method:\n" << f_vpgl.get_matrix() << std::endl;
   }
 
   FMatrix f_mvl;
@@ -125,7 +125,7 @@ MAIN( test_fm_estimation )
     FMatrixComputeLinear computor(true,true);
     f_mvl = computor.compute(vp0_homg, vp1_homg);
 
-    vcl_cout << "Fundamental matrix from MVL 8 Point linear method:\n" << f_mvl << vcl_endl;
+    std::cout << "Fundamental matrix from MVL 8 Point linear method:\n" << f_mvl << std::endl;
   }
 
 
@@ -141,8 +141,8 @@ MAIN( test_fm_estimation )
   f_mvl.get_epipoles(e0_mvl,e1_mvl);
   f_vpgl.get_epipoles(e0_vpgl,e1_vpgl);
 
-  vcl_cout << "vpgl epipoles: e0 = " << vgl_point_2d<double>(e0_vpgl) << "\te1 = " << vgl_point_2d<double>(e1_vpgl) << vcl_endl;
-  vcl_cout << " mvl epipoles: e0 = " << vgl_point_2d<double>(e0_mvl)  << "\te1 = " << vgl_point_2d<double>(e1_mvl)  << vcl_endl;
+  std::cout << "vpgl epipoles: e0 = " << vgl_point_2d<double>(e0_vpgl) << "\te1 = " << vgl_point_2d<double>(e1_vpgl) << std::endl;
+  std::cout << " mvl epipoles: e0 = " << vgl_point_2d<double>(e0_mvl)  << "\te1 = " << vgl_point_2d<double>(e1_mvl)  << std::endl;
 
 
   TEST_NEAR("Distance between epipole e0 from vpgl and mvl normalized 8 point",vgl_distance<double>(e0_vpgl,e0_mvl),0,tolerance);
@@ -151,7 +151,7 @@ MAIN( test_fm_estimation )
 
   // ----- Compare vgl and mvl normalizing tranformations -----
 
-  vcl_vector<vgl_homg_point_2d<double> > p0_norm_vgl;
+  std::vector<vgl_homg_point_2d<double> > p0_norm_vgl;
 
   { // vgl
     p0_norm_vgl.reserve(n);
@@ -164,7 +164,7 @@ MAIN( test_fm_estimation )
     }
   }
 
-  vcl_vector<vgl_homg_point_2d<double> > p0_norm_mvl;
+  std::vector<vgl_homg_point_2d<double> > p0_norm_mvl;
 
   { // mvl
     p0_norm_mvl.reserve(n);
@@ -176,16 +176,16 @@ MAIN( test_fm_estimation )
     }
   }
 
-  vcl_cout << "\nvgl normalized p0" << vcl_endl;
+  std::cout << "\nvgl normalized p0" << std::endl;
   for (unsigned i=0; i < n; ++i) {
-    vcl_cout << "\t" << p0_norm_vgl[i] << vcl_endl;
+    std::cout << "\t" << p0_norm_vgl[i] << std::endl;
   }
 
-  vcl_cout << "\nmvl normalized p0" << vcl_endl;
+  std::cout << "\nmvl normalized p0" << std::endl;
   for (unsigned i=0; i < n; ++i) {
-    vcl_cout << "\t" << p0_norm_mvl[i] << vcl_endl;
+    std::cout << "\t" << p0_norm_mvl[i] << std::endl;
   }
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
 
   for (unsigned i=0; i < n; ++i) {
     TEST_NEAR("Distance between vpgl and mvl normalized p0",vgl_distance<double>(p0_norm_vgl[i],p0_norm_mvl[i]),0,tolerance);

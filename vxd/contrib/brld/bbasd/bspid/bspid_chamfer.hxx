@@ -9,8 +9,8 @@
 
 
 #include "bspid_chamfer.h"
-#include <vcl_limits.h>
-#include <vcl_algorithm.h>
+#include <limits>
+#include <algorithm>
 
 
 //:  Constructor
@@ -20,7 +20,7 @@ bspid_chamfer<OBJ_T, DIST_T>::bspid_chamfer( const vbl_array_2d<OBJ_T>& object_m
  : dist1_(dist1), dist2_(dist2),
    xsize_(object_map.cols()), ysize_(object_map.rows()), 
    zero_count_(0),
-   distance_(ysize_, xsize_, vcl_numeric_limits<DIST_T>::max()- vcl_max(dist1,dist2)),
+   distance_(ysize_, xsize_, std::numeric_limits<DIST_T>::max()- std::max(dist1,dist2)),
    objects_(object_map)
 {
   // initialize the distance map and count zero distance elements

@@ -10,7 +10,7 @@
 
 #include <rrel/rrel_estimation_problem.h>
 #include <vpgl/vpgl_proj_camera.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <vgl/vgl_fwd.h>
 #include <vnl/vnl_fwd.h>
 
@@ -30,12 +30,12 @@ class vpgld_camera_compute_ransac
 
   //: Compute from two sets of corresponding points.
   // Put the resulting camera into camera, return true if successful.
-  bool compute( const vcl_vector< vgl_homg_point_2d<double> >& image_pts,
-                const vcl_vector< vgl_homg_point_3d<double> >& world_pts,
+  bool compute( const std::vector< vgl_homg_point_2d<double> >& image_pts,
+                const std::vector< vgl_homg_point_3d<double> >& world_pts,
                 vpgl_proj_camera<double>& camera );
 
   //: After "compute" this will have true in the indices determined to be outliers.
-  vcl_vector<bool> outliers;
+  std::vector<bool> outliers;
 };
 
 
@@ -44,8 +44,8 @@ class rrel_proj_problem : public rrel_estimation_problem
 {
  public:
   //: Construct the problem object with corresponding points.
-  rrel_proj_problem( const vcl_vector< vgl_homg_point_2d<double> >& image_pts,
-                const vcl_vector< vgl_homg_point_3d<double> >& world_pts);
+  rrel_proj_problem( const std::vector< vgl_homg_point_2d<double> >& image_pts,
+                const std::vector< vgl_homg_point_3d<double> >& world_pts);
 
   virtual ~rrel_proj_problem(){};
 
@@ -58,12 +58,12 @@ class rrel_proj_problem : public rrel_estimation_problem
   unsigned int residual_dof() const { return 5; }
 
   //: Generate a parameter estimate from a minimal sample.
-  bool fit_from_minimal_set( const vcl_vector<int>& point_indices,
+  bool fit_from_minimal_set( const std::vector<int>& point_indices,
                              vnl_vector<double>& params ) const;
 
   //: Compute unsigned fit residuals relative to the parameter estimate.
   void compute_residuals( const vnl_vector<double>& params,
-                          vcl_vector<double>& residuals ) const;
+                          std::vector<double>& residuals ) const;
 
   //: Convert a projective matrix into a parameter vector.
   virtual void  proj_to_params( const vpgl_proj_matrix<double>&  Pr,
@@ -76,14 +76,14 @@ class rrel_proj_problem : public rrel_estimation_problem
   //: Weighted least squares parameter estimate.
   //  The normalized covariance is not yet filled in.
   bool weighted_least_squares_fit( vnl_vector<double>& params,
-    vnl_matrix<double>& norm_covar, const vcl_vector<double>* weights=0 ) const;
+    vnl_matrix<double>& norm_covar, const std::vector<double>* weights=0 ) const;
 
   // Toggles detailed printing of computations.
   bool verbose;
 
  protected:
-  const vcl_vector< vgl_homg_point_2d<double> > *image_pts_;
-  const vcl_vector< vgl_homg_point_2d<double> > *world_pts_;
+  const std::vector< vgl_homg_point_2d<double> > *image_pts_;
+  const std::vector< vgl_homg_point_2d<double> > *world_pts_;
 };
 
 #endif // vpgld_camera_compute_ransac_h

@@ -22,7 +22,7 @@ bspid_curvemap_process::bspid_curvemap_process()
 {
   if( !parameters()->add( "width" ,  "-width" ,  (int)1024) ||
       !parameters()->add( "height" , "-height" ,  (int)768) ) {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -42,7 +42,7 @@ bspid_curvemap_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 bspid_curvemap_process::name()
 {
   return "Curve Distance Map";
@@ -66,9 +66,9 @@ bspid_curvemap_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > bspid_curvemap_process::get_input_type()
+std::vector< std::string > bspid_curvemap_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   to_return.push_back( "vsol2D" );
   return to_return;
@@ -76,9 +76,9 @@ vcl_vector< vcl_string > bspid_curvemap_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > bspid_curvemap_process::get_output_type()
+std::vector< std::string > bspid_curvemap_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
@@ -89,7 +89,7 @@ bool
 bspid_curvemap_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In bspid_curvemap_process::execute() - not exactly one"
+    std::cout << "In bspid_curvemap_process::execute() - not exactly one"
              << " input images \n";
     return false;
   }
@@ -99,9 +99,9 @@ bspid_curvemap_process::execute()
   vidpro1_vsol2D_storage_sptr frame_curves;
   frame_curves.vertical_cast(input_data_[0][0]);
 
-  vcl_vector<vsol_spatial_object_2d_sptr> objects = frame_curves->all_data();
-  vcl_vector<vsol_digital_curve_2d_sptr> curves;
-  for ( vcl_vector<vsol_spatial_object_2d_sptr>::const_iterator itr = objects.begin();
+  std::vector<vsol_spatial_object_2d_sptr> objects = frame_curves->all_data();
+  std::vector<vsol_digital_curve_2d_sptr> curves;
+  for ( std::vector<vsol_spatial_object_2d_sptr>::const_iterator itr = objects.begin();
         itr != objects.end();  ++itr )
   {
     if((*itr)->cast_to_curve()){
@@ -130,8 +130,8 @@ bspid_curvemap_process::execute()
   
   frame_curves.vertical_cast(input_data_[0][1]);
   objects = frame_curves->all_data();
-  vcl_vector<vsol_digital_curve_2d_sptr> curves2;
-  for ( vcl_vector<vsol_spatial_object_2d_sptr>::const_iterator itr = objects.begin();
+  std::vector<vsol_digital_curve_2d_sptr> curves2;
+  for ( std::vector<vsol_spatial_object_2d_sptr>::const_iterator itr = objects.begin();
         itr != objects.end();  ++itr )
   {
     if((*itr)->cast_to_curve()){
@@ -144,7 +144,7 @@ bspid_curvemap_process::execute()
 
   double tp, fp;
   comp.eval(curves2, tp, fp);
-  vcl_cout << "true pos = " << tp << "\tfalse pos = " << fp << vcl_endl;
+  std::cout << "true pos = " << tp << "\tfalse pos = " << fp << std::endl;
  
 
 

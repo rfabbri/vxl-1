@@ -13,14 +13,14 @@ int main(int argc, char** argv)
   vgui_menu menubar = vidl1_player_menus::get_menu();
   unsigned w = 640, h = 480;
 
-  vcl_cout << "-- Registered codecs --\n";
-  vcl_list<vcl_string> types = vidl1_io::supported_types();
-  for ( vcl_list<vcl_string>::iterator t = types.begin();
+  std::cout << "-- Registered codecs --\n";
+  std::list<std::string> types = vidl1_io::supported_types();
+  for ( std::list<std::string>::iterator t = types.begin();
         t != types.end(); ++t )
-    vcl_cout << *t << vcl_endl;
-  vcl_cout << "-----------------------\n";
+    std::cout << *t << std::endl;
+  std::cout << "-----------------------\n";
 
-  vcl_string title = "VIDL Video Player";
+  std::string title = "VIDL Video Player";
   vgui_window* win = vgui::produce_window(w, h, menubar, title);
   win->get_adaptor()->set_tableau(vidl1_player_manager::instance());
   win->set_statusbar(true);

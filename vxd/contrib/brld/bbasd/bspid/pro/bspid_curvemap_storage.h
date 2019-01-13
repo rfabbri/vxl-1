@@ -20,7 +20,7 @@ public:
 
   bspid_curvemap_storage();
   virtual ~bspid_curvemap_storage();
-  virtual vcl_string type() const { return "curvemap"; }
+  virtual std::string type() const { return "curvemap"; }
   
   //: Return IO version number;
   short version() const;
@@ -36,7 +36,7 @@ public:
   virtual bpro1_storage* clone() const;
   
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "bspid_curvemap_storage"; }
+  virtual std::string is_a() const { return "bspid_curvemap_storage"; }
 
   
 

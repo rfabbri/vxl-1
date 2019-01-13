@@ -11,11 +11,11 @@
 #include <vgl/vgl_polygon_scan_iterator.h>
 
 #include <vgl/vgl_box_2d.h>
-#include <vcl_stack.h>
-#include <vcl_map.h>
-#include <vcl_utility.h>
+#include <stack>
+#include <map>
+#include <utility>
 #include <vil/vil_image_view.h>
-#include <vcl_cmath.h>
+#include <cmath>
 
 
 struct becld_grid_cover_window {
@@ -38,7 +38,7 @@ struct becld_grid_cover_window {
   // from it.
   becld_grid_cover_window(const vgl_box_2d<double> &bbox, double dmax=1.5) 
     :
-    win_((int)vcl_floor(bbox.min_x() - dmax), (int)vcl_ceil(bbox.max_x() + dmax), (int)vcl_floor(bbox.min_y() - dmax), (int)vcl_ceil(bbox.max_y() + dmax)),
+    win_((int)std::floor(bbox.min_x() - dmax), (int)std::ceil(bbox.max_x() + dmax), (int)std::floor(bbox.min_y() - dmax), (int)std::ceil(bbox.max_y() + dmax)),
     label_buf_(win_.max_x() - win_.min_x()+1,win_.max_y() - win_.min_y()+1)
   {
     label_buf_.fill(unvisited);
@@ -79,7 +79,7 @@ becld_grid_cover_window(const vgl_polygon<double> &poly, double dmax)
       double max_y = min_y;
 
       for (unsigned is=0; is < poly.num_sheets(); ++is) {
-        const vcl_vector<vgl_point_2d<double> > &sheet = poly[is];
+        const std::vector<vgl_point_2d<double> > &sheet = poly[is];
         //: determine bbox
 
         for (unsigned i=1; i < sheet.size(); ++i) {
@@ -94,7 +94,7 @@ becld_grid_cover_window(const vgl_polygon<double> &poly, double dmax)
         }
       }
 
-      win_ = vgl_box_2d<int>((int)vcl_floor(min_x - dmax), (int)vcl_ceil(max_x + dmax), (int)vcl_floor(min_y - dmax), (int)vcl_ceil(max_y + dmax));
+      win_ = vgl_box_2d<int>((int)std::floor(min_x - dmax), (int)std::ceil(max_x + dmax), (int)std::floor(min_y - dmax), (int)std::ceil(max_y + dmax));
       label_buf_.set_size(win_.max_x() - win_.min_x()+1,win_.max_y() - win_.min_y()+1,1);
       label_buf_.fill(unvisited);
     }
@@ -128,8 +128,8 @@ private:
 
   vgl_polygon<double> poly_;
   bool empty_poly_;
-  vcl_stack<vgl_point_2d<int> > stk_;
-  vcl_stack<vgl_point_2d<int> > visited_pixels_;
+  std::stack<vgl_point_2d<int> > stk_;
+  std::stack<vgl_point_2d<int> > visited_pixels_;
   vgl_point_2d<int> p_; //:< current point
   becld_grid_cover_window &win_;
   double dmax_;
@@ -186,7 +186,7 @@ private:
 
   pixel_state label(vgl_point_2d<int> &p) const
    { 
-     vcl_map<vgl_point_2d<int>, pixel_state, ltpt>::const_iterator it
+     std::map<vgl_point_2d<int>, pixel_state, ltpt>::const_iterator it
        = label_.find(p);
      if (it == label_.end())
        return unvisited;
@@ -197,8 +197,8 @@ private:
   struct ltpt {
     bool operator()(const vgl_point_2d<int> &s1, const vgl_point_2d<int> &s2) const
       {
-         return vcl_pair<int,int> (s1.x(), s1.y()) < 
-                vcl_pair<int,int> (s2.x(),s2.y());
+         return std::pair<int,int> (s1.x(), s1.y()) < 
+                std::pair<int,int> (s2.x(),s2.y());
       }
   };
 
@@ -210,9 +210,9 @@ private:
   double dmax_;
   vgl_box_2d<double> win_;
   bool no_win_;
-  vcl_stack<vgl_point_2d<int> > stk_;
+  std::stack<vgl_point_2d<int> > stk_;
   vgl_point_2d<int> p_; //:< current point
-  vcl_map<vgl_point_2d<int>, pixel_state, ltpt> label_;
+  std::map<vgl_point_2d<int>, pixel_state, ltpt> label_;
 };
 
 

@@ -80,7 +80,7 @@ void vepl1_dyadic_sum(vil1_image im_out, vil1_image const& image)
 
   //
   else {
-    vcl_cerr << __FILE__ ": vepl1_dyadic_sum() not implemented for " << image << vcl_endl;
+    std::cerr << __FILE__ ": vepl1_dyadic_sum() not implemented for " << image << std::endl;
   }
 }
 
@@ -138,7 +138,7 @@ void vepl1_dyadic_dif(vil1_image im_out, vil1_image const& image)
 
   //
   else {
-    vcl_cerr << __FILE__ ": vepl1_dyadic_dif() not implemented for " << image << vcl_endl;
+    std::cerr << __FILE__ ": vepl1_dyadic_dif() not implemented for " << image << std::endl;
   }
 }
 
@@ -186,7 +186,7 @@ void vepl1_dyadic_min(vil1_image im_out, vil1_image const& image)
 
   //
   else {
-    vcl_cerr << __FILE__ ": vepl1_dyadic_min() not implemented for " << image << vcl_endl;
+    std::cerr << __FILE__ ": vepl1_dyadic_min() not implemented for " << image << std::endl;
   }
 }
 
@@ -234,7 +234,7 @@ void vepl1_dyadic_max(vil1_image im_out, vil1_image const& image)
 
   //
   else {
-    vcl_cerr << __FILE__ ": vepl1_dyadic_max() not implemented for " << image << vcl_endl;
+    std::cerr << __FILE__ ": vepl1_dyadic_max() not implemented for " << image << std::endl;
   }
 }
 

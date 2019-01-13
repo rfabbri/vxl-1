@@ -25,6 +25,6 @@ void vsl_b_read(vsl_b_istream &is, vil1_rgba<T>& v);
 
 //: Print human readable summary of a vil1_rgba object to a stream
 template <class T>
-void vsl_print_summary(vcl_ostream& os,const vil1_rgba<T>& v);
+void vsl_print_summary(std::ostream& os,const vil1_rgba<T>& v);
 
 #endif // #ifndef vil1_io_rgba_h_

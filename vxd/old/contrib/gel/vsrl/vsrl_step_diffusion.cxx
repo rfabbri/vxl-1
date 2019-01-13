@@ -1,6 +1,6 @@
 // This is gel/vsrl/vsrl_step_diffusion.cxx
 #include "vsrl_step_diffusion.h"
-#include <vcl_iostream.h>
+#include <iostream>
 
 vsrl_step_diffusion::vsrl_step_diffusion(vsrl_dense_matcher *matcher):
   vsrl_diffusion(matcher)
@@ -141,7 +141,7 @@ void vsrl_step_diffusion::diffuse_disparity()
   // We then start the diffusion process to smooth things
   // out.
 
-  vcl_cout << "Starting to diffuse\n";
+  std::cout << "Starting to diffuse\n";
 
   vnl_matrix<double> mat1= (*disparity_matrix_);
   vnl_matrix<double> T1 = mat1;
@@ -177,7 +177,7 @@ void vsrl_step_diffusion::diffuse_disparity()
 
    for (dif_num=0;dif_num<100;dif_num++)
    {
-     vcl_cout << "Iteration " << dif_num << '\r';
+     std::cout << "Iteration " << dif_num << '\r';
 
      for (x=1;x<get_width() -1;x++)
      {
@@ -223,7 +223,7 @@ void vsrl_step_diffusion::diffuse_disparity()
    // copy the new results
    (*disparity_matrix_)=(*mstar1);
 
-   vcl_cout << vcl_endl << "Finished the diffusion" << vcl_endl;
+   std::cout << std::endl << "Finished the diffusion" << std::endl;
 }
 
 void vsrl_step_diffusion::execute()

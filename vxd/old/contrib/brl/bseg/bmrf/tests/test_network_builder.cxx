@@ -1,7 +1,7 @@
 //:
 // \file
 #include <testlib/testlib_test.h>
-#include <vcl_sstream.h>
+#include <sstream>
 #include <vil/vil_save.h>
 #include <vil/vil_convert.h>
 #include <vdgl/vdgl_digital_curve.h>
@@ -23,7 +23,7 @@ static float sf(const int b, const int frame, const float s0,
 
 // To test network propagation, form a series of vertical greyscale
 // bars moving at constant velocity.
-static vcl_vector<vtol_edge_2d_sptr>
+static std::vector<vtol_edge_2d_sptr>
 construct_edges(const int frame,
                 const float gamma,
                 bmrf_network_builder const& nb,
@@ -33,7 +33,7 @@ construct_edges(const int frame,
                 const float bar_alpha_high,
                 const int n_bars)
 {
-  vcl_vector<vtol_edge_2d_sptr> edges;
+  std::vector<vtol_edge_2d_sptr> edges;
   //number of edges is n_bars +1
   for (int b = 0; b<=n_bars; b++)
   {
@@ -78,7 +78,7 @@ frame_image(const int frame,
   for (int b = 1; b<=n_bars; b++, low_grey=!low_grey)
   {
     float s = sf(b, frame, s_start, kappa, gamma);
-    if (!s||vcl_fabs(s-s0)<1)
+    if (!s||std::fabs(s-s0)<1)
     {
       s0 = s;
       continue;
@@ -132,7 +132,7 @@ static void network_builder()
   bmrf_network_builder nb(nbp);
   nb.init();
   int n_frames=3;
-  vcl_string file = "bmrf_node";
+  std::string file = "bmrf_node";
   for (int f = 0; f<n_frames; f++)
   {
     vil_image_view<float> image = frame_image(f,
@@ -146,7 +146,7 @@ static void network_builder()
                                               low_grey_level,
                                               high_grey_level);
 
-    vcl_vector<vtol_edge_2d_sptr> edges = construct_edges(f,
+    std::vector<vtol_edge_2d_sptr> edges = construct_edges(f,
                                                           gamma,
                                                           nbp,
                                                           s_start,
@@ -161,9 +161,9 @@ static void network_builder()
     vil_convert_stretch_range_limited(image,dimage,0.0f,1.0f,0.0,255.0);
     vil_convert_cast(dimage,temp);
 
-    vcl_stringstream str;
+    std::stringstream str;
     str << f;
-    vcl_string out_file = file + str.str() + ".tif";
+    std::string out_file = file + str.str() + ".tif";
     vil_save(temp, out_file.c_str());
     nb.set_edges(f, edges);
     nb.build();
@@ -172,7 +172,7 @@ static void network_builder()
   for (bmrf_network::seg_node_map::const_iterator nit = net->begin(1);
        nit != net->end(1);
        nit++)
-    vcl_cout << *((*nit).first);
+    std::cout << *((*nit).first);
 #if 0
   TEST("Testing build", true, true);
 #endif

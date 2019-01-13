@@ -1,7 +1,7 @@
 #include <testlib/testlib_test.h>
 #include <bnld/bnld_solve_quadratic_equation.h>
-#include <vcl_iostream.h>
-#include <vcl_cmath.h>
+#include <iostream>
+#include <cmath>
 
 
 //: Compare the values of Fresnel integral (cosin and sin) computed
@@ -14,7 +14,7 @@ MAIN( test_solve_quadratic_equation )
   double a = 2;
   double b = 2;
   double c = 1;
-  vcl_vector<double > roots;
+  std::vector<double > roots;
   bnld_solve_quadratic_equation(a, b, c, roots);
   TEST("Equation with no root", roots.empty(), true);
 

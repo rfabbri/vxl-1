@@ -11,7 +11,7 @@
 #include <vgui/vgui_dialog.h>
 #include <vsol/vsol_point_2d.h>
 #include <vsol/vsol_box_2d.h>
-#include <vcl_cstdlib.h>
+#include <cstdlib>
 
 /*************************************************************************
  * Function Name: bvis1_vsol2D_tool::bvis1_vsol2D_tool
@@ -106,7 +106,7 @@ class bvis1_vsol_group_command : public vgui_command
 {
   public:
   bvis1_vsol_group_command(bvis1_vsol2D_tool* tool, 
-                          const vcl_string& name) 
+                          const std::string& name) 
    : tool_(tool), name_(name) {}
   void execute()
   {
@@ -121,7 +121,7 @@ class bvis1_vsol_group_command : public vgui_command
   }
 
   bvis1_vsol2D_tool* tool_;
-  vcl_string name_;
+  std::string name_;
 };
 
 //: Allow the tool to add to the popup menu as a tableau would
@@ -131,12 +131,12 @@ bvis1_vsol2D_tool::get_popup(const vgui_popup_params& /*params*/, vgui_menu &men
   vidpro1_vsol2D_storage_sptr stg = this->storage();
   if(stg){
     vgui_menu grp_menu;
-    vcl_vector<vcl_string> names = stg->groups();
+    std::vector<std::string> names = stg->groups();
     grp_menu.add("New Group", new bvis1_vsol_group_command(this,""));
     for(unsigned int i=0; i<names.size(); ++i){
-      vcl_string label = "[";
+      std::string label = "[";
       label += (names[i] == active_group_)?"+":" ";
-      label += vcl_string("] ") + names[i];
+      label += std::string("] ") + names[i];
       grp_menu.add(label, new bvis1_vsol_group_command(this,names[i]));
     }
     menu.add("Active Group", grp_menu); 
@@ -208,10 +208,10 @@ bvis1_vsol2D_point_tool::handle( const vgui_event & e,
 /*************************************************************************
  * Function Name: bvis1_vsol2D_point_tool::name
  * Parameters:
- * Returns: vcl_string
+ * Returns: std::string
  * Effects:
  *************************************************************************/
-vcl_string
+std::string
 bvis1_vsol2D_point_tool::name() const
 {
   return "Point";
@@ -327,10 +327,10 @@ bvis1_vsol2D_line_tool::handle( const vgui_event & e,
 /*************************************************************************
  * Function Name: bvis1_vsol2D_line_tool::name
  * Parameters:
- * Returns: vcl_string
+ * Returns: std::string
  * Effects:
  *************************************************************************/
-vcl_string
+std::string
 bvis1_vsol2D_line_tool::name() const
 {
   return "Line";
@@ -463,10 +463,10 @@ bvis1_vsol2D_polyline_tool::handle( const vgui_event & e,
 /*************************************************************************
  * Function Name: bvis1_vsol2D_polyline_tool::name
  * Parameters:
- * Returns: vcl_string
+ * Returns: std::string
  * Effects:
  *************************************************************************/
-vcl_string
+std::string
 bvis1_vsol2D_polyline_tool::name() const
 {
   return "Polyline";
@@ -600,10 +600,10 @@ bvis1_vsol2D_polygon_tool::handle( const vgui_event & e,
 /*************************************************************************
  * Function Name: bvis1_vsol2D_polygon_tool::name
  * Parameters: 
- * Returns: vcl_string
+ * Returns: std::string
  * Effects: 
  *************************************************************************/
-vcl_string
+std::string
 bvis1_vsol2D_polygon_tool::name() const
 {
   return "Polygon";
@@ -721,7 +721,7 @@ bvis1_vsol2D_digital_curve_tool::handle( const vgui_event & e,
 
 
 //: Return the name
-vcl_string
+std::string
 bvis1_vsol2D_digital_curve_tool::name() const
 {
   return "Digital Curve";
@@ -782,7 +782,7 @@ bvis1_vsol2D_split_curve_tool::handle( const vgui_event & e,
   if( object_ && gesture_click(e) ) {
     vsol_digital_curve_2d_sptr out1, out2;
     if(split(object_->sptr(),index_,out1, out2)){
-      vcl_string group = storage()->remove_object(object_->sptr().ptr());
+      std::string group = storage()->remove_object(object_->sptr().ptr());
       tableau()->remove(object_);
 
       storage()->add_object(out1.ptr(), group);
@@ -808,7 +808,7 @@ bvis1_vsol2D_split_curve_tool::handle( const vgui_event & e,
 
 
 //: Return the name
-vcl_string
+std::string
 bvis1_vsol2D_split_curve_tool::name() const
 {
   return "Split Curves";
@@ -839,7 +839,7 @@ bvis1_vsol2D_inspect_tool::~bvis1_vsol2D_inspect_tool()
 
 
 //: Return the name of this tool
-vcl_string
+std::string
 bvis1_vsol2D_inspect_tool::name() const
 {
     return "Inspect";
@@ -868,7 +868,7 @@ bvis1_vsol2D_inspect_tool::handle( const vgui_event & e, const bvis1_view_tablea
 
 
     if( tableau_.ptr() && gesture_lift_(e) ){
-        //  vcl_cout<<"Click object";
+        //  std::cout<<"Click object";
         object_ = (vgui_soview2D*)tableau_->get_highlighted_soview();
         if( object_ != NULL ) {
             active_ = true;
@@ -882,11 +882,11 @@ bvis1_vsol2D_inspect_tool::handle( const vgui_event & e, const bvis1_view_tablea
                 (object_ptr->type_name()=="bgui_vsol_soview2D_polygon")
                 )
 
-                object_ptr->print(vcl_cout);
+                object_ptr->print(std::cout);
 
 
 
-            //vcl_cout<<object_ptr->type_name()<<"\n";
+            //std::cout<<object_ptr->type_name()<<"\n";
 
             return true;
         }
@@ -918,7 +918,7 @@ bvis1_vsol2D_selection_tool::~bvis1_vsol2D_selection_tool()
 
 
 //: Return the name of this tool
-vcl_string
+std::string
 bvis1_vsol2D_selection_tool::name() const
 {
     return "Select Subset";
@@ -944,13 +944,13 @@ bool
 bvis1_vsol2D_selection_tool::handle( const vgui_event & e, const bvis1_view_tableau_sptr& /*selector*/ )
 { 
     if( tableau_.ptr() && gesture_add_(e) ) {
-        //  vcl_cout<<"Click object";
+        //  std::cout<<"Click object";
         object_ = (vgui_soview2D*)tableau_->get_highlighted_soview();
         if( object_ != NULL ) {
             active_ = true;
             bgui_vsol_soview2D* object_ptr=(bgui_vsol_soview2D *)object_;
             objs_.insert(object_ptr->base_sptr());
-            vcl_cout<< "added a " << object_ptr->type_name() << "\n";
+            std::cout<< "added a " << object_ptr->type_name() << "\n";
             return true;
         }
     }
@@ -958,25 +958,25 @@ bvis1_vsol2D_selection_tool::handle( const vgui_event & e, const bvis1_view_tabl
     if (tableau_.ptr() && gesture_set_(e) ) {
       vidpro1_repository_sptr res = bvis1_manager::instance()->repository();
       if(!res) {
-        vcl_cout << "Could not access repository!\n";
+        std::cout << "Could not access repository!\n";
         return false;
       }
 
       vidpro1_vsol2D_storage_sptr output_vsol = vidpro1_vsol2D_storage_new();
-      vcl_set<vsol_spatial_object_2d_sptr>::iterator it;
+      std::set<vsol_spatial_object_2d_sptr>::iterator it;
       for ( it = objs_.begin(); it != objs_.end(); it++)
         output_vsol->add_object(*it);
-      vcl_set<bpro1_storage_sptr> st_set = res->get_all_storage_classes(res->current_frame());
-      vcl_string name_initial = "subvsol2D";
+      std::set<bpro1_storage_sptr> st_set = res->get_all_storage_classes(res->current_frame());
+      std::string name_initial = "subvsol2D";
       int len = name_initial.length();
       int max = 0;
-      for (vcl_set<bpro1_storage_sptr>::iterator iter = st_set.begin();
+      for (std::set<bpro1_storage_sptr>::iterator iter = st_set.begin();
         iter != st_set.end(); iter++) {
           if ((*iter)->type() == output_vsol->type() && 
-              (*iter)->name().find(name_initial) != vcl_string::npos) {
-            vcl_string name = (*iter)->name();
-            vcl_string numbr = name.substr(len, 3);
-            int n = vcl_atoi(numbr.c_str());
+              (*iter)->name().find(name_initial) != std::string::npos) {
+            std::string name = (*iter)->name();
+            std::string numbr = name.substr(len, 3);
+            int n = std::atoi(numbr.c_str());
             if (n > max)
               max = n;
           }
@@ -1019,7 +1019,7 @@ bvis1_vsol2D_adjust_tool::~bvis1_vsol2D_adjust_tool()
 
 
 //: Return the name of this tool
-vcl_string
+std::string
 bvis1_vsol2D_adjust_tool::name() const
 {
     return "Adjust";
@@ -1187,7 +1187,7 @@ bvis1_vsol2D_crop_tool::handle( const vgui_event & e,
   vgui_projection_inspector().window_to_image_coordinates(e.wx, e.wy, ix, iy);
 
 
-  vcl_vector<vsol_spatial_object_2d_sptr> croppedobjs;
+  std::vector<vsol_spatial_object_2d_sptr> croppedobjs;
   if( e.type == vgui_KEY_PRESS && e.key == 'p' && vgui_SHIFT  ) {
         
       vgui_soview2D *object_type = (vgui_soview2D*)tableau_->get_highlighted_soview();
@@ -1200,12 +1200,12 @@ bvis1_vsol2D_crop_tool::handle( const vgui_event & e,
                   object_->base_sptr()->cast_to_region()->cast_to_polygon();
 
               vsol_box_2d_sptr box=poly->get_bounding_box();
-              vcl_cout<<"\n box dimensions are "<<box->get_min_x()<<","<<box->get_min_y()<<"---->"<<box->get_max_x()<<","<<box->get_max_y()<<"\n";
+              std::cout<<"\n box dimensions are "<<box->get_min_x()<<","<<box->get_min_y()<<"---->"<<box->get_max_x()<<","<<box->get_max_y()<<"\n";
               double minx=box->get_min_x();
               double miny=box->get_min_y();
               double maxx=box->get_max_x();
               double maxy=box->get_max_y();
-              vcl_vector<vgui_soview*> all=tableau_->get_all();
+              std::vector<vgui_soview*> all=tableau_->get_all();
               
               for(unsigned i=0;i<all.size();i++)
                   {
@@ -1327,13 +1327,13 @@ void
 bvis1_vsol2D_crop_tool::get_popup( const vgui_popup_params& /*params*/, 
                                             vgui_menu &menu )
 {
-  vcl_string on = "[x] ", off = "[ ] ";
+  std::string on = "[x] ", off = "[ ] ";
   menu.add( ((draw_polygon_)?on:off)+"Draw Polygon ", 
             bvis1_tool_toggle, (void*)(&draw_polygon_) );
   
 }
 
-vcl_string
+std::string
 bvis1_vsol2D_crop_tool::name() const
 {
   return "Crop Vsol2D";

@@ -1,14 +1,14 @@
 #include <testlib/testlib_test.h>
 #include <bnld/algo/bnld_eno.h>
 #include <bnld/algo/bnld_eno_shock.h>
-#include <vcl_iostream.h>
-#include <vcl_limits.h>
+#include <iostream>
+#include <limits>
 MAIN( test_eno_shock_1d )
 {
    START ("eno_shock_1d");
 
    {
-   vcl_cout << "Testing samples of a polynomial with known zeros" << vcl_endl;
+   std::cout << "Testing samples of a polynomial with known zeros" << std::endl;
    bnld_eno_shock_1d e;
 
    vnl_vector<double> data(4);
@@ -22,9 +22,9 @@ MAIN( test_eno_shock_1d )
    e.interpolate(&data);
    e.place_shocks(); 
 //   e.place_zerox();
-   e.print(vcl_cout);
-//   TEST_NEAR("Zero1",e[1].zerox().location(0),1.2,vcl_numeric_limits<double>::epsilon()*10);
-//   TEST_NEAR("Zero2",e[1].zerox().location(1),1.8,vcl_numeric_limits<double>::epsilon()*10);
+   e.print(std::cout);
+//   TEST_NEAR("Zero1",e[1].zerox().location(0),1.2,std::numeric_limits<double>::epsilon()*10);
+//   TEST_NEAR("Zero2",e[1].zerox().location(1),1.8,std::numeric_limits<double>::epsilon()*10);
    }
 
 

@@ -11,22 +11,22 @@ void bmcsd_discrete_corresp_algo::
 print_difference(const bmcsd_discrete_corresp_n &c1, const bmcsd_discrete_corresp_n &c2)
 {
 
-  vcl_cout << "------ Comparing ------\n";
+  std::cout << "------ Comparing ------\n";
   if (c1.n() != c2.n()) {
-    vcl_cout << "Different dimensions.\n";
+    std::cout << "Different dimensions.\n";
     return;
   }
   
   vbl_sparse_array_base<bmcsd_match_attribute,bmcsd_ntuplet>::const_iterator r;
   for (r = c1.l_.begin(); r != c1.l_.end(); ++r){
     if (!c2.l_.fullp(r->first)) {
-      vcl_cout << "C1 contains: " << (r->first)<< " but C2 doesn't\n";
+      std::cout << "C1 contains: " << (r->first)<< " but C2 doesn't\n";
     }
   }
 
   for (r = c2.l_.begin(); r != c2.l_.end(); ++r){
     if (!c1.l_.fullp(r->first)) {
-      vcl_cout << "C2 contains: " << r->first << " but C1 doesn't\n";
+      std::cout << "C2 contains: " << r->first << " but C1 doesn't\n";
     }
   }
 }
@@ -75,8 +75,8 @@ compute_checksum(const bmcsd_curve_stereo &s)
 unsigned long 
 bmcsd_discrete_corresp_algo::
 compute_checksum(
-    const vcl_vector<vsol_polyline_2d_sptr> &pts0, 
-    const vcl_vector<vsol_polyline_2d_sptr> &pts1)
+    const std::vector<vsol_polyline_2d_sptr> &pts0, 
+    const std::vector<vsol_polyline_2d_sptr> &pts1)
 {
   unsigned long cksum=0;
   double len=0;
@@ -173,7 +173,7 @@ exp_stats_hitmiss(const bmcsd_discrete_corresp *cp, buld_exp_stat &s, const bmcs
   const bmcsd_discrete_corresp &c = *cp;
 
 #ifndef NDEBUG
-  vcl_cout << "corresp c size: " << c.size() << " gt size: " << gt.size() << vcl_endl;
+  std::cout << "corresp c size: " << c.size() << " gt size: " << gt.size() << std::endl;
   assert(c.size() == gt.size());
 #endif
 

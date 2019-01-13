@@ -13,8 +13,8 @@
 //
 //-----------------------------------------------------------------------------
 
-#include <vcl_cmath.h>
-#include <vcl_algorithm.h>
+#include <cmath>
+#include <algorithm>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_distance.h>
 #include <bgld/bgld_dist.h>

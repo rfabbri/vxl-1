@@ -6,7 +6,7 @@
 #include "bmrf_epi_seg.h"
 #include "bmrf_epi_seg_compare.h"
 #include "bmrf_epi_point.h"
-#include <vcl_utility.h>
+#include <utility>
 
 
 //: Constructor
@@ -37,7 +37,7 @@ bmrf_pwl_gamma_func::mean(double /*t*/) const
   if (knots_.size() == 1)
     return knots_.begin()->second;
 
-  vcl_map<double,double>::const_iterator k = knots_.begin(), last_k = k;
+  std::map<double,double>::const_iterator k = knots_.begin(), last_k = k;
   double sum = 0.0, min_alpha = k->first;
   for (++k; k != knots_.end();  last_k=k, ++k){
     sum += (k->second + last_k->second) * (k->first - last_k->first);
@@ -54,8 +54,8 @@ bmrf_pwl_gamma_func::value(double alpha, double /*t*/) const
   if ( knots_.empty() )
     return 0.0;
 
-  typedef vcl_map<double,double>::const_iterator k_itr;
-  vcl_pair<k_itr,k_itr> rng = knots_.equal_range(alpha);
+  typedef std::map<double,double>::const_iterator k_itr;
+  std::pair<k_itr,k_itr> rng = knots_.equal_range(alpha);
 
   // the value is at one of the knots
   if (rng.first != rng.second)

@@ -12,9 +12,9 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_typeinfo.h>
-#include <vcl_cassert.h>
-#include <vcl_iostream.h>
+#include <typeinfo>
+#include <cassert>
+#include <iostream>
 #include <vbl/vbl_ref_count.h>
 #include "bprod_fwd.h"
 #include "bprod_storage_sptr.h"
@@ -35,7 +35,7 @@ class bprod_storage : public vbl_ref_count
   virtual bprod_signal info() const = 0;
 
   //: Return the type of the stored data
-  virtual const vcl_type_info& type_id() const = 0;
+  virtual const std::type_info& type_id() const = 0;
 
   //: Returns true if a parameter exists with \p name and type \p T
   template<class T>
@@ -72,7 +72,7 @@ class bprod_storage_type : public bprod_storage
   const T& data() const { return data_; }
 
   //: Return the type of the stored data
-  const vcl_type_info& type_id() const { return typeid(T); }
+  const std::type_info& type_id() const { return typeid(T); }
 
  private:
   //: The stored data
@@ -96,7 +96,7 @@ class bprod_storage_type<bprod_signal> : public bprod_storage
   bprod_signal info() const { return info_; }
 
   //: Return the type of the stored data
-  const vcl_type_info& type_id() const { return typeid(bprod_signal); }
+  const std::type_info& type_id() const { return typeid(bprod_signal); }
 
   private:
   //: The message

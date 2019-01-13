@@ -34,7 +34,7 @@ class bgld_poly_curve_line : public bgld_poly_curve
   bgld_poly_curve_line() {}
 
   //: construct from vectors of coefs
-  bgld_poly_curve_line(double len, vcl_vector<double> coefs_x, vcl_vector<double> coefs_y) : 
+  bgld_poly_curve_line(double len, std::vector<double> coefs_x, std::vector<double> coefs_y) : 
   bgld_poly_curve(1, len, coefs_x, coefs_y) {}  
   //order_(1), len_(len), coefs_x_(coefs_x), coefs_y_(coefs_y) {}
 
@@ -49,10 +49,10 @@ class bgld_poly_curve_line : public bgld_poly_curve
   //:
   virtual ~bgld_poly_curve_line() {}
 
-  static const vcl_type_info& type_id()
+  static const std::type_info& type_id()
   { return typeid(bgld_poly_curve_line); }
 
-  virtual bool is_type( const vcl_type_info& type ) const
+  virtual bool is_type( const std::type_info& type ) const
   { return (typeid(bgld_poly_curve_line) == type)!=0 ||
             this->bgld_poly_curve::is_type(type);
   }

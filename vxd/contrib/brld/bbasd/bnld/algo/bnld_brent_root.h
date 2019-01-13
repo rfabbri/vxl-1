@@ -17,7 +17,7 @@
 
 
 #include <vnl/vnl_cost_function.h>
-#include <vcl_cassert.h>
+#include <cassert>
 
 
 

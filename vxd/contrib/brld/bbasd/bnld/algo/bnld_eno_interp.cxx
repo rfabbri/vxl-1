@@ -1,5 +1,5 @@
 #include "bnld_eno.h"
-#include <vcl_cstdio.h>
+#include <cstdio>
 //:
 // \file
 // \author Based on original code by  Ricardo Fabbri
@@ -30,7 +30,7 @@ interpolate(double const data[BNLD_ENO_DATA_LENGTH], double const x[BNLD_ENO_DAT
   b2 = (d32*data[0] -d31*data[1] +d21*data[2]  )/det;
 
   /* determine which direction to use for interpolation */
-  forward_ = vcl_fabs(a2) < vcl_fabs(b2);
+  forward_ = std::fabs(a2) < std::fabs(b2);
     
   /* choose polynomial with smaller variation, where variation is
      measured as absolute value of leading polynomial coefficient.*/
@@ -99,7 +99,7 @@ interpolate(double const data[BNLD_ENO_DATA_LENGTH])
   b2 = (data[off+1] - 2.0* data[off+0] + data[off-1])/2.0;
 
   /* determine which direction to use for interpolation */
-  forward_ = vcl_fabs(a2) < vcl_fabs(b2);
+  forward_ = std::fabs(a2) < std::fabs(b2);
     
   /* choose polynomial with smaller variation, where variation is
      measured as absolute value of leading polynomial coefficient.*/
@@ -115,11 +115,11 @@ interpolate(double const data[BNLD_ENO_DATA_LENGTH])
 }
 
 void bnld_eno_interp::
-print(vcl_ostream &strm) const
+print(std::ostream &strm) const
 {
-   strm << "==== Interpolant ====" << vcl_endl
-        << "forward: " << (forward_?"true":"false") << vcl_endl
-        << "start,end:  " << start_ << " , " << end_ << vcl_endl;
+   strm << "==== Interpolant ====" << std::endl
+        << "forward: " << (forward_?"true":"false") << std::endl
+        << "start,end:  " << start_ << " , " << end_ << std::endl;
 
    bnld_eno_poly::print(strm); 
 }

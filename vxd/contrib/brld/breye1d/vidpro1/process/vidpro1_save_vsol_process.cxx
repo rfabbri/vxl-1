@@ -1,7 +1,7 @@
 // This is dvidpro/process/vidpro1_save_vsol_process.h
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <iostream>
+#include <fstream>
 
 #include "vidpro1_save_vsol_process.h"
 #include <vnl/vnl_math.h>
@@ -13,7 +13,7 @@ vidpro1_save_vsol_process::vidpro1_save_vsol_process() : bpro1_process()
 {
   if( !parameters()->add( "Output file <filename...>" , "-fname" , bpro1_filepath("","*.cem") ))
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -26,16 +26,16 @@ vidpro1_save_vsol_process::clone() const
 }
 
 
-vcl_vector< vcl_string > vidpro1_save_vsol_process::get_input_type()
+std::vector< std::string > vidpro1_save_vsol_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   return to_return;
 }
 
-vcl_vector< vcl_string > vidpro1_save_vsol_process::get_output_type()
+std::vector< std::string > vidpro1_save_vsol_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.clear();
   return to_return;
 }
@@ -52,11 +52,11 @@ bool vidpro1_save_vsol_process::execute()
   vsl_b_ofstream bp_out(output.path);
 
   if (!bp_out){
-    vcl_cout << " Error opening file  " << output.path << vcl_endl;
+    std::cout << " Error opening file  " << output.path << std::endl;
     return false;
   }
 
-  vcl_cout << "Created " << output.path << " for writing vsol\n";
+  std::cout << "Created " << output.path << " for writing vsol\n";
 
   input_vsol->b_write(bp_out);
 

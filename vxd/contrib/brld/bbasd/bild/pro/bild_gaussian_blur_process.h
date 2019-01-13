@@ -13,8 +13,8 @@
 // \endverbatim
 
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <bprod/bprod_process.h>
 #include <bprod/bprod_process_factory.h>
 
@@ -32,7 +32,7 @@ class bild_gaussian_blur_process : public bprod_filter
     virtual bprod_process_sptr create(const bprod_parameters_sptr& params) const;
 
     //: The name of the process
-    virtual vcl_string name() const { return "Gaussian Blur"; }
+    virtual std::string name() const { return "Gaussian Blur"; }
 
     virtual ~factory() {}
   };

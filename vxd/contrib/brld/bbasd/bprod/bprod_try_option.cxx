@@ -5,7 +5,7 @@
 
 #include "bprod_try_option.h"
 #include "bprod_connector.h"
-#include <vcl_iostream.h>
+#include <iostream>
 
 //: Runs the filter
 bprod_signal
@@ -22,12 +22,12 @@ bprod_try_option::run(unsigned long timestamp,
     this->timestamp_ = timestamp;
 
     if(this->input_request_active_){
-      vcl_cerr << "Warning detected cycle in data flow" <<vcl_endl;
+      std::cerr << "Warning detected cycle in data flow" <<std::endl;
       return BPROD_INVALID;
     }
     this->input_request_active_ = true;
     bprod_signal retval = BPROD_INVALID;
-    typedef vcl_map<unsigned int, bprod_connector_sptr >::iterator Itr;
+    typedef std::map<unsigned int, bprod_connector_sptr >::iterator Itr;
     for(Itr i = input_connectors_.begin(); i != input_connectors_.end(); ++i)
     {
       bprod_connector_sptr connector = i->second;

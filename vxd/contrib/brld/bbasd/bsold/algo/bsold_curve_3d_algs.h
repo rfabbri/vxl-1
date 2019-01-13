@@ -31,17 +31,17 @@ public:
 
   //:Sample the curve and produce given number of samples
   static bool sample(bsold_interp_curve_3d const &c, int size,
-                     vcl_vector<vsol_point_3d_sptr>& pts);
+                     std::vector<vsol_point_3d_sptr>& pts);
 
   static bool interpolate_linear_3d(bsold_interp_curve_3d *c,
-                                    vcl_vector<vsol_point_3d_sptr> const &pts);
+                                    std::vector<vsol_point_3d_sptr> const &pts);
 
   //: If the last input parameter is an empty vector, simply-computed arclength
   //  (Euclidian distance between consecutive points) is used as the sampling 
   //  parameter for the ENO computations
   static bool interpolate_eno_3d(bsold_interp_curve_3d *c,
-                                 vcl_vector<vsol_point_3d_sptr> const &pts,
-                                 vcl_vector<double> &sample_pts);
+                                 std::vector<vsol_point_3d_sptr> const &pts,
+                                 std::vector<double> &sample_pts);
 
  private:
   bsold_curve_3d_algs();

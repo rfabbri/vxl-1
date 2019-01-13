@@ -149,10 +149,10 @@ bmrf_network::num_frames() const
 
 //: Returns the set of active frame numbers
 // \note frame_numbers().size() == num_frames() but the numbers do not start at zero in general
-vcl_set<int>
+std::set<int>
 bmrf_network::frame_numbers() const
 {
-  vcl_set<int> numbers;
+  std::set<int> numbers;
   for ( frame_node_map::const_iterator itr = nodes_from_frame_.begin();
         itr != nodes_from_frame_.end(); ++itr )
     numbers.insert(itr->first);
@@ -181,7 +181,7 @@ bmrf_network::probability()
         itr != node_from_seg_.end();  ++itr, ++count ){
     double prob = itr->second->probability();
     total_prob += prob;
-    vcl_cout << count << "\t prob=" << prob <<vcl_endl;
+    std::cout << count << "\t prob=" << prob <<std::endl;
   }
 
   return total_prob/count;
@@ -238,7 +238,7 @@ bmrf_network::prune_by_gamma(double min_gamma, double max_gamma)
 void
 bmrf_network::prune_directed()
 {
-  vcl_cout << "pruning directed" << vcl_endl;
+  std::cout << "pruning directed" << std::endl;
   for ( seg_node_map::const_iterator itr = node_from_seg_.begin();
         itr != node_from_seg_.end(); )
   {
@@ -325,7 +325,7 @@ bmrf_network::b_write( vsl_b_ostream& os ) const
   // write the number of epipoles
   vsl_b_write(os, (unsigned int)epipoles_.size());
   // write all the epipoles
-  for ( vcl_vector<bmrf_epipole>::const_iterator itr = epipoles_.begin();
+  for ( std::vector<bmrf_epipole>::const_iterator itr = epipoles_.begin();
         itr != epipoles_.end(); ++itr ) {
     vsl_b_write(os, itr->location().x());
     vsl_b_write(os, itr->location().y());
@@ -366,15 +366,15 @@ bmrf_network::b_read( vsl_b_istream& is )
       }
     }
     if (this->purge())
-      vcl_cerr << "I/O WARNING: bmrf_network::b_read(vsl_b_istream&)\n"
+      std::cerr << "I/O WARNING: bmrf_network::b_read(vsl_b_istream&)\n"
                << "             It is likely that the network object is corrupt.\n"
                << "             Invalid arcs have been purged.\n";
     break;
 
    default:
-    vcl_cerr << "I/O ERROR: bmrf_network::b_read(vsl_b_istream&)\n"
+    std::cerr << "I/O ERROR: bmrf_network::b_read(vsl_b_istream&)\n"
              << "           Unknown version number "<< ver << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }
@@ -382,7 +382,7 @@ bmrf_network::b_read( vsl_b_istream& is )
 
 //: Print an ascii summary to the stream
 void
-bmrf_network::print_summary( vcl_ostream& os ) const
+bmrf_network::print_summary( std::ostream& os ) const
 {
   os << ' ' << node_from_seg_.size() << " nodes in "<< nodes_from_frame_.size() <<" frames ";
 }
@@ -477,7 +477,7 @@ vsl_b_read(vsl_b_istream &is, bmrf_network* &n)
 
 //: Print an ASCII summary to the stream
 void
-vsl_print_summary(vcl_ostream &os, const bmrf_network* n)
+vsl_print_summary(std::ostream &os, const bmrf_network* n)
 {
   os << "bmrf_network{";
   n->print_summary(os);

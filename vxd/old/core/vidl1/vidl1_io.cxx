@@ -11,12 +11,12 @@
 #include <vul/vul_sequence_filename_map.h>
 #include <vul/vul_file_iterator.h>
 
-#include <vcl_cassert.h>
-#include <vcl_iostream.h>
-#include <vcl_list.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
-#include <vcl_algorithm.h>
+#include <cassert>
+#include <iostream>
+#include <list>
+#include <vector>
+#include <string>
+#include <algorithm>
 #ifdef HAS_MPEG2
 # include <vidl1/vidl1_mpegcodec.h>
 void (* vidl1_io::load_mpegcodec_callback)(vidl1_codec*) = 0;
@@ -24,13 +24,13 @@ void (* vidl1_io::load_mpegcodec_callback)(vidl1_codec*) = 0;
 
 
 static bool looks_like_a_file_list(const char* fname);
-static vidl1_clip_sptr load_from_file_list(vcl_string const& fname);
+static vidl1_clip_sptr load_from_file_list(std::string const& fname);
 
-static vidl1_clip_sptr load_from_directory(vcl_string const& fname, int start, int end, int increment)
+static vidl1_clip_sptr load_from_directory(std::string const& fname, int start, int end, int increment)
 {
-  vcl_vector<vcl_string> filenames;
+  std::vector<std::string> filenames;
 
-  vcl_string s(fname);
+  std::string s(fname);
   s += "/*.*";
   for (vul_file_iterator fit = s;fit; ++fit) {
     // check to see if file is a directory.
@@ -40,7 +40,7 @@ static vidl1_clip_sptr load_from_directory(vcl_string const& fname, int start, i
   }
   // Sort - because the file iterator uses readdir() it does not
   //        iterate over files in alphanumeric order 
-  vcl_sort(filenames.begin(),filenames.end());
+  std::sort(filenames.begin(),filenames.end());
 
   // Call load_images and return the result
   return vidl1_io::load_images(filenames, start, end, increment, 'r');
@@ -52,7 +52,7 @@ static vidl1_clip_sptr load_from_directory(vcl_string const& fname, int start, i
 //: Load a movie, takes a file name and return the created movie.
 // A starting frame, ending frame and increment number are optionals
 vidl1_movie_sptr vidl1_io::load_movie(
-        vcl_string const& fname,
+        std::string const& fname,
         int start,
         int end,
         int increment,
@@ -73,7 +73,7 @@ vidl1_movie_sptr vidl1_io::load_movie(
 //: Loads and creates movie from a list of image file names.
 // A starting frame, ending frame and increment number are optionals
 vidl1_movie_sptr  vidl1_io::load_movie(
-        const vcl_list<vcl_string> &fnames,
+        const std::list<std::string> &fnames,
         int start,
         int end,
         int increment,
@@ -94,7 +94,7 @@ vidl1_movie_sptr  vidl1_io::load_movie(
 //: Loads and creates movie from a vector of image file names.
 // A starting frame, ending frame and increment number are optionals
 vidl1_movie_sptr  vidl1_io::load_movie(
-        const vcl_vector<vcl_string> &fnames,
+        const std::vector<std::string> &fnames,
         int start,
         int end,
         int increment,
@@ -115,7 +115,7 @@ vidl1_movie_sptr  vidl1_io::load_movie(
 //: Load a clip, takes a file name and return the created clip.
 // A starting frame, ending frame and increment number are optionals
 vidl1_clip_sptr  vidl1_io::load_clip(
-        vcl_string const& fname,
+        std::string const& fname,
         int start,
         int end,
         int increment,
@@ -154,7 +154,7 @@ vidl1_clip_sptr  vidl1_io::load_clip(
 #endif
 
       vidl1_clip_sptr clip = new vidl1_clip(codec, start, end, increment);
-      vcl_cout << "vidl1_io::load_move. just got a new clip.\n";
+      std::cout << "vidl1_io::load_move. just got a new clip.\n";
       return clip;
     }
   }
@@ -168,7 +168,7 @@ vidl1_clip_sptr  vidl1_io::load_clip(
 //: Loads and creates clip from a list of image file names.
 // A starting frame, ending frame and increment number are optionals
 vidl1_clip_sptr vidl1_io::load_clip(
-        const vcl_list<vcl_string> &fnames,
+        const std::list<std::string> &fnames,
         int start,
         int end,
         int increment,
@@ -190,7 +190,7 @@ vidl1_clip_sptr vidl1_io::load_clip(
 //: Loads and creates clip from a list of image file names.
 // A starting frame, ending frame and increment number are optionals
 vidl1_clip_sptr  vidl1_io::load_clip(
-        const vcl_vector<vcl_string> &fnames,
+        const std::vector<std::string> &fnames,
         int start,
         int end,
         int increment,
@@ -213,7 +213,7 @@ vidl1_clip_sptr  vidl1_io::load_clip(
 // This function should not be called unless
 // you are sure you are dealing with images
 vidl1_clip_sptr  vidl1_io::load_images(
-        const vcl_list<vcl_string> &fnames,
+        const std::list<std::string> &fnames,
         int start,
         int end,
         int increment,
@@ -234,7 +234,7 @@ vidl1_clip_sptr  vidl1_io::load_images(
 // This function should not be called unless
 // you are sure you are dealing with images
 vidl1_clip_sptr  vidl1_io::load_images(
-        const vcl_vector<vcl_string> &fnames,
+        const std::vector<std::string> &fnames,
         int start,
         int end,
         int increment,
@@ -252,21 +252,21 @@ vidl1_clip_sptr  vidl1_io::load_images(
 }
 
 //: Save a video into a file "fname" as type "type"
-bool vidl1_io::save(vidl1_movie_sptr movie, vcl_string const& fname, vcl_string const& type)
+bool vidl1_io::save(vidl1_movie_sptr movie, std::string const& fname, std::string const& type)
 {
-  // Go along the vcl_list of supported videoCODECs,
+  // Go along the std::list of supported videoCODECs,
   // find the one of the type asked if it does exist.
   vidl1_codec_sptr* i = vidl1_codec::all_codecs();
   while ((*i) && (*i)->type() != type)
   {
 #ifdef DEBUG
-    vcl_cout << "debug : " << (*i)->type() << " type : " << type << vcl_endl;
+    std::cout << "debug : " << (*i)->type() << " type : " << type << std::endl;
 #endif
     ++i;
   }
 
   // Check if the type asked really exists in the context
-  // If it does not, Try the vcl_list of images mode.
+  // If it does not, Try the std::list of images mode.
   if (!(*i))
     return save_images(movie, fname, type);
 
@@ -275,7 +275,7 @@ bool vidl1_io::save(vidl1_movie_sptr movie, vcl_string const& fname, vcl_string 
 }
 
 // This function should be removed and integrated in save()
-bool vidl1_io::save_images(vidl1_movie_sptr movie, vcl_string const& fname,  vcl_string const& type)
+bool vidl1_io::save_images(vidl1_movie_sptr movie, std::string const& fname,  std::string const& type)
 {
   vidl1_image_list_codec codec;
 
@@ -284,14 +284,14 @@ bool vidl1_io::save_images(vidl1_movie_sptr movie, vcl_string const& fname,  vcl
 }
 
 //: Return the list of the supported video coder/decoder types
-vcl_list<vcl_string> vidl1_io::supported_types()
+std::list<std::string> vidl1_io::supported_types()
 {
-  // Create the vcl_list with type() for all the codecs
-  vcl_list<vcl_string> ret;
+  // Create the std::list with type() for all the codecs
+  std::list<std::string> ret;
   for (vidl1_codec_sptr* i = vidl1_codec::all_codecs(); *i; ++i)
     ret.push_back((*i)->type().c_str());
 
-  // Return the vcl_list of type supported codecs
+  // Return the std::list of type supported codecs
   return ret;
 }
 
@@ -306,16 +306,16 @@ static bool looks_like_a_file_list(const char* fname)
   return false;
 }
 
-static vidl1_clip_sptr load_from_file_list(vcl_string const& fname)
+static vidl1_clip_sptr load_from_file_list(std::string const& fname)
 {
-  // Declare the vcl_list of image filenames
-  vcl_list<vcl_string> filenames;
+  // Declare the std::list of image filenames
+  std::list<std::string> filenames;
 
   vul_sequence_filename_map map(fname);
 
   for (int i = 0;i < map.get_nviews(); ++i)
   {
-    vcl_string fullpath = map.image_name(i);
+    std::string fullpath = map.image_name(i);
     // check to see if file is a directory.
     if (vul_file::is_directory(fullpath))
       continue;

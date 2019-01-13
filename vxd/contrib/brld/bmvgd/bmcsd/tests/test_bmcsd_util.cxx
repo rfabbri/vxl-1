@@ -1,11 +1,11 @@
 #include <testlib/testlib_test.h>
 
 #include <bmcsd/bmcsd_util.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <bmcsd/bmcsd_view_set.h>
 #include <buld/buld_parse_simple_file.h>
 
-static const double tolerance=vcl_numeric_limits<double>::epsilon()*100;
+static const double tolerance=std::numeric_limits<double>::epsilon()*100;
 
 static void test_min_max_median();
 static void test_small_things();
@@ -59,7 +59,7 @@ test_min_max_median()
 
 
   {
-    vcl_vector<double> v;
+    std::vector<double> v;
     v.push_back(2);
     v.push_back(25);
     v.push_back(3.33);
@@ -67,29 +67,29 @@ test_min_max_median()
     v.push_back(10);
     v.push_back(2);
 
-    vcl_vector<double> v_sorted = v;
+    std::vector<double> v_sorted = v;
 
-    vcl_sort(v_sorted.begin(), v_sorted.end());
+    std::sort(v_sorted.begin(), v_sorted.end());
 
-    vcl_cout << "v(size " << v.size() << "): ";
+    std::cout << "v(size " << v.size() << "): ";
     for (unsigned i=0; i < v.size(); ++i)
-      vcl_cout << v[i] << ' ' ;
-    vcl_cout << vcl_endl;
+      std::cout << v[i] << ' ' ;
+    std::cout << std::endl;
 
-    vcl_cout << "v_sorted(size " << v_sorted.size() << "): ";
+    std::cout << "v_sorted(size " << v_sorted.size() << "): ";
     for (unsigned i=0; i < v_sorted.size(); ++i)
-      vcl_cout << v_sorted[i] << ' ' ;
-    vcl_cout << vcl_endl;
+      std::cout << v_sorted[i] << ' ' ;
+    std::cout << std::endl;
 
     double max, min, mean, median;
     unsigned imax, imin;
 
-    vcl_cout 
+    std::cout 
       <<   "Max: " << (max = bmcsd_util::max(v,imax)) << "," << imax
       << "\tMin: " << (min = bmcsd_util::min(v,imin)) << "," << imin
       << "\tAvg: " << (mean = bmcsd_util::mean(v))
       << "\tMed: " << (median = bmcsd_util::median(v))
-      << vcl_endl;
+      << std::endl;
 
     TEST("Max", max,25);
     TEST("Max index", imax,1);
@@ -100,36 +100,36 @@ test_min_max_median()
   }
 
   {
-    vcl_vector<double> v;
+    std::vector<double> v;
     v.push_back(25);
     v.push_back(3.33);
     v.push_back(-1.9);
     v.push_back(10);
     v.push_back(2);
 
-    vcl_vector<double> v_sorted = v;
+    std::vector<double> v_sorted = v;
 
-    vcl_sort(v_sorted.begin(), v_sorted.end());
+    std::sort(v_sorted.begin(), v_sorted.end());
 
-    vcl_cout << "v(size " << v.size() << "): ";
+    std::cout << "v(size " << v.size() << "): ";
     for (unsigned i=0; i < v.size(); ++i)
-      vcl_cout << v[i] << ' ' ;
-    vcl_cout << vcl_endl;
+      std::cout << v[i] << ' ' ;
+    std::cout << std::endl;
 
-    vcl_cout << "v_sorted(size " << v_sorted.size() << "): ";
+    std::cout << "v_sorted(size " << v_sorted.size() << "): ";
     for (unsigned i=0; i < v_sorted.size(); ++i)
-      vcl_cout << v_sorted[i] << ' ' ;
-    vcl_cout << vcl_endl;
+      std::cout << v_sorted[i] << ' ' ;
+    std::cout << std::endl;
 
     double max, min, mean, median;
     unsigned imax, imin;
 
-    vcl_cout 
+    std::cout 
       <<   "Max: " << (max = bmcsd_util::max(v,imax)) << "," << imax
       << "\tMin: " << (min = bmcsd_util::min(v,imin)) << "," << imin
       << "\tAvg: " << (mean = bmcsd_util::mean(v))
       << "\tMed: " << (median = bmcsd_util::median(v))
-      << vcl_endl;
+      << std::endl;
 
     TEST("Max", max,25);
     TEST("Max index", imax,0);
@@ -147,6 +147,6 @@ void test_view_set_io()
 
   bmcsd_view_set::read_txt("mcs_stereo_instances_example.txt", &frames_to_match);
 
-  vcl_cout << frames_to_match << vcl_endl;
+  std::cout << frames_to_match << std::endl;
 }
 */

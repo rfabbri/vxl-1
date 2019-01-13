@@ -21,11 +21,11 @@ bvis1_vsol2D_displayer::make_tableau( bpro1_storage_sptr storage) const
   // Create a new vsol2D tableau
   bgui_vsol2D_tableau_sptr vsol2D_tab;
   vsol2D_tab = bgui_vsol2D_tableau_new();
-  vcl_vector< vcl_string > names = vsol2D_storage->groups();
+  std::vector< std::string > names = vsol2D_storage->groups();
   //the old way without attributes
   if(!vsol2D_storage->attributes_defined()||!mapper_)
     {
-      vcl_vector<vgui_style_sptr> style_vector;
+      std::vector<vgui_style_sptr> style_vector;
       style_vector.push_back(vgui_style::new_style(1,0,0, 3.0, 3.0));
       style_vector.push_back(vgui_style::new_style(0,1,0, 3.0, 3.0));
       style_vector.push_back(vgui_style::new_style(0,0,1, 3.0, 3.0));
@@ -49,13 +49,13 @@ bvis1_vsol2D_displayer::make_tableau( bpro1_storage_sptr storage) const
       {
         vsol2D_tab->set_current_grouping( names[i] );
 
-        vcl_vector<double> attrs = vsol2D_storage->attributes_named( names[i]);
+        std::vector<double> attrs = vsol2D_storage->attributes_named( names[i]);
 
-        vcl_vector<vsol_spatial_object_2d_sptr> data = 
+        std::vector<vsol_spatial_object_2d_sptr> data = 
           vsol2D_storage->data_named( names[i]);
 
-        vcl_vector<double>::iterator ait = attrs.begin();
-        vcl_vector<vsol_spatial_object_2d_sptr>::iterator sit=data.begin();
+        std::vector<double>::iterator ait = attrs.begin();
+        std::vector<vsol_spatial_object_2d_sptr>::iterator sit=data.begin();
         for(;(sit != data.end()&&ait!=attrs.end());++sit, ++ait)
           vsol2D_tab->add_spatial_object(*sit, mapper_->style(*ait));
       }

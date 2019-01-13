@@ -19,8 +19,8 @@
 #include "vpgld_fm_storage_sptr.h"
 #include <vpgl/vpgl_fundamental_matrix.h>
 
-#include <vcl_map.h>
-#include <vcl_string.h>
+#include <map>
+#include <string>
 
 class vpgld_fm_storage : public bpro1_storage {
 
@@ -29,19 +29,19 @@ public:
   
   // Data is stored as vnl_double_3x3 rather than vpgld_fundamental_matrix, since 
   // all attempts at doing this properly have been rewarded only by SUFFERING.
-  typedef vcl_map< int, vcl_map< vcl_string, vnl_double_3x3 > > data_map;
+  typedef std::map< int, std::map< std::string, vnl_double_3x3 > > data_map;
 
   //: Constructor
-  vpgld_fm_storage(const vcl_string& from_name = "");
+  vpgld_fm_storage(const std::string& from_name = "");
 
   //: Destructor
   virtual ~vpgld_fm_storage();
 
   //: Return the type identifier string
-  virtual vcl_string type() const { return "vpgl fm"; }
+  virtual std::string type() const { return "vpgl fm"; }
 
   //: Return the name of the image that all fundamental matrices map from
-  vcl_string from_name() const { return from_name_; }
+  std::string from_name() const { return from_name_; }
         
   //: Return IO version number;
   short version() const;
@@ -57,18 +57,18 @@ public:
   virtual bpro1_storage* clone() const;
   
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "vpgld_fm_storage"; }
+  virtual std::string is_a() const { return "vpgld_fm_storage"; }
 
   //: Add a fundamental matrix related to an object with \p name at \p frame
-  void add_fm( const vpgl_fundamental_matrix<double>& fm, int frame, const vcl_string& name );
+  void add_fm( const vpgl_fundamental_matrix<double>& fm, int frame, const std::string& name );
 
   //: Retrieve a fundamental matrix related to an object with \p name at \p frame
-  bool get_fm( vpgl_fundamental_matrix<double>& fm, int frame, const vcl_string& name ) const;
+  bool get_fm( vpgl_fundamental_matrix<double>& fm, int frame, const std::string& name ) const;
 
 private:
 
   //: The name of the image that all fundamental matrices map from
-  const vcl_string from_name_;
+  const std::string from_name_;
   //: The data
   data_map f_map_; 
 
@@ -81,7 +81,7 @@ struct vpgld_fm_storage_new : public vpgld_fm_storage_sptr
   typedef vpgld_fm_storage_sptr base;
 
   //: Constructor - creates a default vidpro1_fmatrix_storage_sptr.
-  vpgld_fm_storage_new(const vcl_string& from_name = "") 
+  vpgld_fm_storage_new(const std::string& from_name = "") 
     : base(new vpgld_fm_storage(from_name)) { }
 };
 

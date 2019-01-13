@@ -24,7 +24,7 @@ public:
   bool handle( const vgui_event & e, 
                const bvis1_view_tableau_sptr& view );
 
-  vcl_string name() const;
+  std::string name() const;
   
 protected:
 

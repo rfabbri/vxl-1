@@ -1,5 +1,5 @@
 #include "bsold_gshock.h"
-#include <vcl_cmath.h>
+#include <cmath>
 #include <bgld/algo/bgld_arc_algo.h>
 
 #if !VCL_STATIC_CONST_INIT_FLOAT_NO_DEFN
@@ -21,7 +21,7 @@ make(const bgld_param_curve *prv, const bgld_param_curve *cur,
    anxt = dynamic_cast<const bgld_arc *> (nxt);
 
    if (!aprv || !acur || !anxt) {
-     vcl_cerr << "bsold_shock::make - only arcs are currently supported" << vcl_endl;
+     std::cerr << "bsold_shock::make - only arcs are currently supported" << std::endl;
      return 0;
    }
 
@@ -60,7 +60,7 @@ make(const bgld_param_curve *prv, const bgld_param_curve *cur,
    } else if (!n_intercepts)
       place_shock_at_endpoints(acur);
    else
-      vcl_cerr << "weird: invalid number of intersections!!\n";
+      std::cerr << "weird: invalid number of intersections!!\n";
 
    return loc_.size();
 }
@@ -84,16 +84,16 @@ fix_outofbound_shock(const bgld_arc *prv, const bgld_arc *cur, const bgld_arc *n
    pdist = vnl_math::hypot(loc.x() - pcenter.x(), loc.y() - pcenter.y());
    ndist = vnl_math::hypot(loc.x() - ncenter.x(), loc.y() - ncenter.y());
 
-   if (vcl_fabs(pdist - (1.0/prv->curvature()) ) < 0.2) {
+   if (std::fabs(pdist - (1.0/prv->curvature()) ) < 0.2) {
         // back
-        theta = vcl_atan2(loc.y() - pcenter.y(), loc.x() - pcenter.x());
+        theta = std::atan2(loc.y() - pcenter.y(), loc.x() - pcenter.x());
         theta = bsold_geno_measures::rad2deg(theta);
 
-        theta1 = vcl_atan2(prv->point_at(0).y() - pcenter.y(), 
+        theta1 = std::atan2(prv->point_at(0).y() - pcenter.y(), 
                            prv->point_at(0).x() - pcenter.x());
         theta1 = bsold_geno_measures::rad2deg(theta1);
 
-        theta2 = vcl_atan2(prv->point_at(1).y() - pcenter.y(), 
+        theta2 = std::atan2(prv->point_at(1).y() - pcenter.y(), 
                            prv->point_at(1).x() - pcenter.x());
         theta2 = bsold_geno_measures::rad2deg(theta2);
 
@@ -110,15 +110,15 @@ fix_outofbound_shock(const bgld_arc *prv, const bgld_arc *cur, const bgld_arc *n
         }
     }
 
-    if (vcl_fabs(ndist - (1/nxt->curvature())) < 0.2) {
+    if (std::fabs(ndist - (1/nxt->curvature())) < 0.2) {
          // forward
-        theta = vcl_atan2(loc.y() - ncenter.y(), loc.x() - ncenter.x());
+        theta = std::atan2(loc.y() - ncenter.y(), loc.x() - ncenter.x());
         theta = bsold_geno_measures::rad2deg(theta);
 
-        theta1 = vcl_atan2(nxt->point_at(0).y() - ncenter.y(), nxt->point_at(0).x() - ncenter.x());
+        theta1 = std::atan2(nxt->point_at(0).y() - ncenter.y(), nxt->point_at(0).x() - ncenter.x());
         theta1 = bsold_geno_measures::rad2deg(theta1);
 
-        theta2 = vcl_atan2(nxt->point_at(1).y() - ncenter.y(), nxt->point_at(1).x() - ncenter.x());
+        theta2 = std::atan2(nxt->point_at(1).y() - ncenter.y(), nxt->point_at(1).x() - ncenter.x());
         theta2 = bsold_geno_measures::rad2deg(theta2);
 
         theta3 = patchspan(theta2 - theta1);

@@ -1,6 +1,6 @@
 // This is bbasd/bgld/bgld_poly_curve.cxx
 #include "bgld_poly_curve.h"
-#include <vcl_cmath.h>
+#include <cmath>
 
 //: polynomial is parametrized by s (runs in [-infinity,+infinity]). 
 //  n --> order
@@ -38,7 +38,7 @@ double bgld_poly_curve::tangent_angle_at(double s) const
   double tangent_x = evaluate_derivative_x(s);
   double tangent_y = evaluate_derivative_y(s);
 
-  return vcl_atan2(tangent_y, tangent_x);
+  return std::atan2(tangent_y, tangent_x);
 }
 
 //: evaluate at s
@@ -46,7 +46,7 @@ double bgld_poly_curve::evaluate_x(double s) const
 {
   double sum=0;
   for (int i = 0; i<order_+1; i++) 
-    sum += coefs_x_[i]*vcl_pow(s, i);
+    sum += coefs_x_[i]*std::pow(s, i);
   return sum;
 }
 
@@ -54,7 +54,7 @@ double bgld_poly_curve::evaluate_y(double s) const
 {
   double sum=0;
   for (int i = 0; i<order_+1; i++) 
-    sum += coefs_y_[i]*vcl_pow(s, i);
+    sum += coefs_y_[i]*std::pow(s, i);
   return sum;
 }
 
@@ -62,7 +62,7 @@ double bgld_poly_curve::evaluate_derivative_x(double s) const
 {
   double sum=0;
   for (int i = 1; i<order_+1; i++) 
-    sum += i*coefs_x_[i]*vcl_pow(s, i-1);
+    sum += i*coefs_x_[i]*std::pow(s, i-1);
   return sum;
 }
 
@@ -70,7 +70,7 @@ double bgld_poly_curve::evaluate_derivative_y(double s) const
 {
   double sum=0;
   for (int i = 1; i<order_+1; i++) 
-    sum += i*coefs_y_[i]*vcl_pow(s, i-1);
+    sum += i*coefs_y_[i]*std::pow(s, i-1);
   return sum;
 }
 

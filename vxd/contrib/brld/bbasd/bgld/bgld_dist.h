@@ -3,7 +3,7 @@
 #ifndef bgld_dist_h_
 #define bgld_dist_h_
 
-#include <vcl_cmath.h>
+#include <cmath>
 #include <vnl/vnl_math.h>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_box_3d.h>
@@ -22,7 +22,7 @@
 inline double bgld_dist_3d (const double& x1, const double& y1, const double& z1,
                                   const double& x2, const double& y2, const double& z2)
 {
-   return vcl_sqrt ( ((double) x2-x1)*(x2-x1) + (y2-y1)*(y2-y1) + (z2-z1)*(z2-z1) );
+   return std::sqrt ( ((double) x2-x1)*(x2-x1) + (y2-y1)*(y2-y1) + (z2-z1)*(z2-z1) );
 }
 
 inline double bgld_sqdist_3d (const double& x1, const double& y1, const double& z1,

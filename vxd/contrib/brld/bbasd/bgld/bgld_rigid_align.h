@@ -4,13 +4,13 @@
 #ifndef bgld_rigid_align_h_
 #define bgld_rigid_align_h_
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vnl/vnl_matrix.h>
 #include <vnl/vnl_vector_fixed.h>
 #include <vgl/algo/vgl_h_matrix_3d.h>
 
-void bgld_get_rigid_alignment (vcl_vector<vgl_point_3d<double> >& cor_fixPS,
-                               vcl_vector<vgl_point_3d<double> >& cor_movPS,
+void bgld_get_rigid_alignment (std::vector<vgl_point_3d<double> >& cor_fixPS,
+                               std::vector<vgl_point_3d<double> >& cor_movPS,
                                vnl_matrix_fixed<double,3,3>& R, 
                                vnl_vector_fixed<double,3>& fixC, 
                                vnl_vector_fixed<double,3>& movC);

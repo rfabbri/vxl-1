@@ -3,9 +3,9 @@
 ***********************************************************/
 /* 行列操作の小道具集 */
 #include "matutil.h"
-#include <vcl_cmath.h>
-#include <vcl_cstdlib.h>
-#include <vcl_cstdio.h>
+#include <cmath>
+#include <cstdlib>
+#include <cstdio>
 
 void error(char *message)
 {

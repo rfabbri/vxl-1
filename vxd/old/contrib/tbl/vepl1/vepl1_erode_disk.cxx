@@ -83,7 +83,7 @@ vil1_image vepl1_erode_disk(vil1_image const& image, float radius)
 
   //
   else {
-    vcl_cerr << __FILE__ ": vepl1_erode_disk() not implemented for " << image << vcl_endl;
+    std::cerr << __FILE__ ": vepl1_erode_disk() not implemented for " << image << std::endl;
     return 0;
   }
 }

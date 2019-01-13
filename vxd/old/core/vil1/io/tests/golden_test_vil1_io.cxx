@@ -10,10 +10,10 @@
 // golden_test_vnl_io create
 // \endverbatim
 
-#include <vcl_string.h>
-#include <vcl_vector.h>
-#include <vcl_iostream.h>
-#include <vcl_cstdlib.h> // for vcl_exit()
+#include <string>
+#include <vector>
+#include <iostream>
+#include <cstdlib> // for std::exit()
 #include <vsl/vsl_binary_io.h>
 #include <vil1/vil1_memory_image_of_format.txx>
 #include <vil1/vil1_memory_image_impl.h>
@@ -31,7 +31,7 @@
 
 static void golden_test_vil1_io(bool save_file=false)
 {
-  vcl_cout << "***********************************************************\n"
+  std::cout << "***********************************************************\n"
            << " Testing a golden data file for cross platform consistency\n"
            << "***********************************************************\n";
 
@@ -93,8 +93,8 @@ static void golden_test_vil1_io(bool save_file=false)
       vsl_b_ofstream bfs_out("golden_test_vil1_io.bvl.new");
       if (!bfs_out)
       {
-        vcl_cerr<<"Problems opening file for output\n";
-        vcl_exit(1);
+        std::cerr<<"Problems opening file for output\n";
+        std::exit(1);
       }
       vsl_b_write(bfs_out, p_out_memory_image_of);
       vsl_b_write(bfs_out, p_out_memory_image_impl);
@@ -105,7 +105,7 @@ static void golden_test_vil1_io(bool save_file=false)
     }
 
     // Read in file to each class in turn
-    vcl_string gold_path=testlib_root_dir()+"/core/vil1/io/tests/golden_test_vil1_io.bvl";
+    std::string gold_path=testlib_root_dir()+"/core/vil1/io/tests/golden_test_vil1_io.bvl";
     vsl_b_ifstream bfs_in(gold_path.c_str());
     vsl_b_read(bfs_in, p_in_memory_image_of);
     vsl_b_read(bfs_in, p_in_memory_image_impl);
@@ -133,11 +133,11 @@ static void golden_test_vil1_io(bool save_file=false)
           p_out_memory_image_impl.component_format() == p_in_memory_image_impl.component_format(), true);
 
     // Now get the data and compare them
-    vcl_vector<int> buf1(p_in_memory_image_of.size());
+    std::vector<int> buf1(p_in_memory_image_of.size());
     p_out_memory_image_impl.get_section(&buf1[0], 0, 0,
                                         p_out_memory_image_impl.width(),
                                         p_out_memory_image_impl.height());
-    vcl_vector<int> buf2(p_in_memory_image_of.size());
+    std::vector<int> buf2(p_in_memory_image_of.size());
     p_in_memory_image_impl.get_section(&buf2[0], 0, 0,
                                        p_out_memory_image_impl.width(),
                                        p_out_memory_image_impl.height());
@@ -170,7 +170,7 @@ static void golden_test_vil1_io(bool save_file=false)
 
 static void golden_test_vil1_io(int argc, char* argv[])
 {
-  golden_test_vil1_io(argc==2 && vcl_string(argv[1])==vcl_string("create"));
+  golden_test_vil1_io(argc==2 && std::string(argv[1])==std::string("create"));
 }
 
 TESTMAIN_ARGS(golden_test_vil1_io);

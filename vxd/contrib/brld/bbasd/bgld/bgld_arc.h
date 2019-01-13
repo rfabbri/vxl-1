@@ -19,9 +19,9 @@
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_line_2d.h>
 #include <bgld/bgld_arc_base.h>
-#include <vcl_cmath.h>
+#include <cmath>
 #include <vnl/vnl_math.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 //: 
 // An arc segment class. \sa bgld_param_curve documentation, specially 
@@ -39,10 +39,10 @@
 class bgld_arc : public bgld_arc_base
 {
  public:
-    static const double near_zero_value
-      VCL_STATIC_CONST_INIT_FLOAT_DECL(1.0e-8);
-    static const double minimum_curvature
-      VCL_STATIC_CONST_INIT_FLOAT_DECL(0.00260416);  //(1/384.0)
+    static constexpr double near_zero_value
+       = (1.0e-8);
+    static constexpr double minimum_curvature
+       = (0.00260416);  //(1/384.0)
 
 
 
@@ -62,10 +62,10 @@ class bgld_arc : public bgld_arc_base
   //:
   virtual ~bgld_arc();
 
-  static const vcl_type_info& type_id()
+  static const std::type_info& type_id()
   { return typeid(bgld_arc); }
 
-  virtual bool is_type( const vcl_type_info& type ) const
+  virtual bool is_type( const std::type_info& type ) const
   { return (typeid(bgld_arc) == type)!=0 ||
             this->bgld_arc_base::is_type(type);
   }
@@ -84,9 +84,9 @@ class bgld_arc : public bgld_arc_base
   //: Write "<dbvgl_param_curve> to stream"
   // \relates dbvgl_param_curve
   //virtual
-  //vcl_ostream&  operator<<(vcl_ostream& s);
+  //std::ostream&  operator<<(std::ostream& s);
 
-  vcl_ostream& print(vcl_ostream & = vcl_cerr) const;
+  std::ostream& print(std::ostream & = std::cerr) const;
 
 
   // Property functions ----------------------------------------------
@@ -175,19 +175,19 @@ class bgld_arc : public bgld_arc_base
 // Inlined definitions -------------------------------------------
 inline bool bgld_arc::is_almost_zero(double x)
 {
-  return (vcl_fabs(x) < near_zero_value);
+  return (std::fabs(x) < near_zero_value);
 }
 
 inline bool bgld_arc::is_almost_equal(double val1, double val2, double tolerance)
 {
-  return (vcl_fabs(val1 - val2) < tolerance);
+  return (std::fabs(val1 - val2) < tolerance);
 }
 
 //: length of arc 
 inline double bgld_arc::length() const
 {
    if (curv_ != 0.0) {
-      double dif = vcl_fmod((TWOPI+ccw_*(alpha1_-alpha0_)),TWOPI);
+      double dif = std::fmod((TWOPI+ccw_*(alpha1_-alpha0_)),TWOPI);
       return dif/curv_;   // delta angle * radius
    } else
       return 2*vnl_math::hypot(center_.x()-alpha0_, center_.y()-alpha1_);

@@ -1,6 +1,6 @@
 #include <testlib/testlib_test.h>
 #include <bnld/algo/bnld_eno.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 MAIN( test_eno_poly )
 {

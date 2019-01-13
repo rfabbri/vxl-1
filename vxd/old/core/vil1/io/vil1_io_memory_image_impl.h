@@ -11,7 +11,7 @@
 
 #include <vsl/vsl_binary_io.h>
 #include <vil1/io/vil1_io_image_impl.h>
-#include <vcl_string.h>
+#include <string>
 
 class vil1_memory_image_impl;
 
@@ -38,7 +38,7 @@ class vil1_io_memory_image_impl : public vil1_io_image_impl
   virtual vil1_io_image_impl* clone() const;
 
   //: Return name of class for which this object provides IO
-  virtual vcl_string target_classname() const {return "vil1_memory_image_impl";}
+  virtual std::string target_classname() const {return "vil1_memory_image_impl";}
 
   //: Return true if b is of class vil1_memory_image_impl
   virtual bool is_io_for(const vil1_image_impl& b) const { return b.is_a()==target_classname(); }
@@ -52,7 +52,7 @@ void vsl_b_write(vsl_b_ostream &os, const vil1_memory_image_impl & v);
 void vsl_b_read(vsl_b_istream &is, vil1_memory_image_impl & v);
 
 //: Print human readable summary of vil1_memory_image_impl to a stream
-void vsl_print_summary(vcl_ostream& os, const vil1_memory_image_impl & b);
+void vsl_print_summary(std::ostream& os, const vil1_memory_image_impl & b);
 
 
 #endif // vil1_io_memory_image_impl_h

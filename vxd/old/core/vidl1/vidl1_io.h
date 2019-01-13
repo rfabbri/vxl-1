@@ -13,11 +13,11 @@
 // \endverbatim
 
 
-#include <vcl_string.h>
+#include <string>
 #include <vidl1/vidl1_clip_sptr.h>
 #include <vidl1/vidl1_movie_sptr.h>
-#include <vcl_vector.h>
-#include <vcl_list.h>
+#include <vector>
+#include <list>
 #include "dll.h"
 class vidl1_movie;
 class vidl1_codec;
@@ -42,14 +42,14 @@ class vidl1_io
   //---------------------------------------------------------
 
   static vidl1_movie_sptr load_movie(
-        vcl_string const& fname,
+        std::string const& fname,
         int start, int end,
         int increment,
         char mode = 'r'
         );
 
   static vidl1_movie_sptr load_movie(
-        const vcl_list<vcl_string> &fnames,
+        const std::list<std::string> &fnames,
         int start,
         int end,
         int increment,
@@ -57,7 +57,7 @@ class vidl1_io
         );
 
   static vidl1_movie_sptr load_movie(
-        const vcl_vector<vcl_string> &fnames,
+        const std::vector<std::string> &fnames,
         int start,
         int end,
         int increment,
@@ -65,17 +65,17 @@ class vidl1_io
         );
 
   static vidl1_movie_sptr load_movie(
-        vcl_string const& fname,
+        std::string const& fname,
         char mode = 'r'
         ) { return load_movie(fname, 0, 0, 1, mode); }
 
   static vidl1_movie_sptr load_movie(
-        const vcl_list<vcl_string> &fnames,
+        const std::list<std::string> &fnames,
         char mode = 'r'
         ) { return load_movie(fnames, 0, 0, 1, mode); }
 
   static vidl1_movie_sptr load_movie(
-        const vcl_vector<vcl_string> &fnames,
+        const std::vector<std::string> &fnames,
         char mode = 'r'
         ) { return load_movie(fnames, 0, 0, 1, mode); }
 
@@ -84,7 +84,7 @@ class vidl1_io
   //---------------------------------------------------------
 
   static vidl1_clip_sptr load_clip(
-        vcl_string const& fname,
+        std::string const& fname,
         int start,
         int end,
         int increment,
@@ -92,42 +92,42 @@ class vidl1_io
         );
 
   static vidl1_clip_sptr load_clip(
-        const vcl_list<vcl_string> &fnames,
+        const std::list<std::string> &fnames,
         int start, int end,
         int increment,
         char mode = 'r'
         );
 
   static vidl1_clip_sptr load_clip(
-        const vcl_vector<vcl_string> &fnames,
+        const std::vector<std::string> &fnames,
         int start, int end,
         int increment,
         char mode = 'r'
         );
 
   static vidl1_clip_sptr load_clip(
-        vcl_string const& fname,
+        std::string const& fname,
         char mode = 'r'
         ) { return load_clip(fname, 0, 0, 1, mode); }
 
   static vidl1_clip_sptr load_clip(
-        const vcl_list<vcl_string> &fnames,
+        const std::list<std::string> &fnames,
         char mode = 'r'
         ) { return load_clip(fnames, 0, 0, 1, mode); }
 
   static vidl1_clip_sptr load_clip(
-        const vcl_vector<vcl_string> &fnames,
+        const std::vector<std::string> &fnames,
         char mode = 'r'
         ) { return load_clip(fnames, 0, 0, 1, mode); }
 
   //---------------------------------------------------------
 
   static bool save(vidl1_movie_sptr movie,
-                   vcl_string const& fname,
-                   vcl_string const& type);
+                   std::string const& fname,
+                   std::string const& type);
 
-  // returns vcl_string names  for supported types
-  static vcl_list<vcl_string> supported_types();
+  // returns std::string names  for supported types
+  static std::list<std::string> supported_types();
 
   // This is no longer used by the new vidl1 approach of loading all
   // available codecs. This function is present simply to prevent code
@@ -148,7 +148,7 @@ class vidl1_io
   // they are dealing with images
 
   static vidl1_clip_sptr load_images(
-        const vcl_list<vcl_string> &fnames,
+        const std::list<std::string> &fnames,
         int start,
         int,
         int increment,
@@ -156,7 +156,7 @@ class vidl1_io
         );
 
   static vidl1_clip_sptr load_images(
-        const vcl_vector<vcl_string> &fnames,
+        const std::vector<std::string> &fnames,
         int start,
         int,
         int increment,
@@ -164,7 +164,7 @@ class vidl1_io
         );
 
   static vidl1_clip_sptr load_images(
-        const vcl_list<vcl_string> &fnames,
+        const std::list<std::string> &fnames,
         char mode = 'r'
         )
         {
@@ -172,7 +172,7 @@ class vidl1_io
         }
 
   static vidl1_clip_sptr load_images(
-        const vcl_vector<vcl_string> &fnames,
+        const std::vector<std::string> &fnames,
         char mode = 'r'
         )
         {
@@ -180,8 +180,8 @@ class vidl1_io
         }
 
   static bool save_images(vidl1_movie_sptr movie,
-                          vcl_string const& fname,
-                          vcl_string const& type);
+                          std::string const& fname,
+                          std::string const& type);
 };
 
 #endif // vidl1_io_h

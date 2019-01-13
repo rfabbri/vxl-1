@@ -14,7 +14,7 @@
 //--------------------------------------------------------------------------------
 
 
-#include <vcl_memory.h>
+#include <memory>
 
 //: A mutex used if threads are enabled 
 // If threads are not enabled, do nothing
@@ -38,7 +38,7 @@ private:
   //: private implementation struct
   struct pimpl;
   //: private implementation instance
-  vcl_unique_ptr<pimpl> data_;
+  std::unique_ptr<pimpl> data_;
 
 };
 

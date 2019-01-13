@@ -38,9 +38,9 @@ void vsl_b_read(vsl_b_istream &is, vil1_rgba<T>& v)
     break;
 
    default:
-    vcl_cerr << "I/O ERROR: vsl_b_read(vsl_b_istream&, vil1_rgba<T>&)\n"
+    std::cerr << "I/O ERROR: vsl_b_read(vsl_b_istream&, vil1_rgba<T>&)\n"
              << "           Unknown version number "<< w << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }
@@ -49,13 +49,13 @@ void vsl_b_read(vsl_b_istream &is, vil1_rgba<T>& v)
 //========================================================================
 //: Output a human readable summary of a vil1_rgba object to the stream
 template<class T>
-void vsl_print_summary(vcl_ostream &os, const vil1_rgba<T>& v)
+void vsl_print_summary(std::ostream &os, const vil1_rgba<T>& v)
 {
     os<<"Rgba : ( "<<v.R()<<" , "<<v.G()<<" , "<<v.B()<<" , "<<v.A()<<" )";
 }
 
 #define VIL1_IO_RGBA_INSTANTIATE(T) \
-template void vsl_print_summary(vcl_ostream &, const vil1_rgba<T >&); \
+template void vsl_print_summary(std::ostream &, const vil1_rgba<T >&); \
 template void vsl_b_read(vsl_b_istream &, vil1_rgba<T >&); \
 template void vsl_b_write(vsl_b_ostream &, const vil1_rgba<T >&)
 

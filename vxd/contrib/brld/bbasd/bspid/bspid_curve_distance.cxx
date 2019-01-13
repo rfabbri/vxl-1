@@ -7,7 +7,7 @@ num_inliers_dt(
     const vil_image_view<vxl_uint_32> &dt,
     const vil_image_view<vxl_uint_32> &label) 
 {
-  vcl_set<unsigned> inliers;
+  std::set<unsigned> inliers;
 
   return inliers_dt(c, d_threshold, dt, label, &inliers);
 }
@@ -17,7 +17,7 @@ inliers_dt(
     const vsol_digital_curve_2d &c, double d_threshold,
     const vil_image_view<vxl_uint_32> &dt,
     const vil_image_view<vxl_uint_32> &label,
-    vcl_set<unsigned> *inliers
+    std::set<unsigned> *inliers
     ) 
 {
   for (unsigned i=0; i < c.size();  ++i) {

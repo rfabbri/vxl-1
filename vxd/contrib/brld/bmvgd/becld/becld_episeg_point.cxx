@@ -12,8 +12,8 @@ becld_episeg_point::becld_episeg_point(becld_episeg_sptr seg, double i)  {
 }
 
 //: Conver to a pair
-vcl_pair<becld_episeg_sptr,double> becld_episeg_point::to_pair()  const {
-  return vcl_make_pair(_episeg,_index);
+std::pair<becld_episeg_sptr,double> becld_episeg_point::to_pair()  const {
+  return std::make_pair(_episeg,_index);
 }
 
 //: Set the point

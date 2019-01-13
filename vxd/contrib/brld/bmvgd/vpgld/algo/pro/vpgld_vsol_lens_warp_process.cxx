@@ -24,7 +24,7 @@ vpgld_vsol_lens_warp_process::vpgld_vsol_lens_warp_process()
       !parameters()->add( "k6" , "-k6" ,  0.0 ) ||
       !parameters()->add( "midpoint threshold" , "-mpthresh" ,  -1.0 ) ||
       !parameters()->add( "invert" , "-invert" ,  false ) ) {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   } 
 }
 
@@ -38,7 +38,7 @@ vpgld_vsol_lens_warp_process::clone() const
 
 
 //: Return the name of the process
-vcl_string
+std::string
 vpgld_vsol_lens_warp_process::name()
 {
   return "Lens Distort VSOL";
@@ -46,20 +46,20 @@ vpgld_vsol_lens_warp_process::name()
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string > 
+std::vector< std::string > 
 vpgld_vsol_lens_warp_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   return to_return;
 }
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string > 
+std::vector< std::string > 
 vpgld_vsol_lens_warp_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   return to_return;
 }
@@ -86,7 +86,7 @@ bool
 vpgld_vsol_lens_warp_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cerr << __FILE__ << " - not exactly one input frame" << vcl_endl;
+    std::cerr << __FILE__ << " - not exactly one input frame" << std::endl;
     return false;
   }
 
@@ -128,10 +128,10 @@ vpgld_vsol_lens_warp_process::execute()
   vidpro1_vsol2D_storage_sptr output_vsol = vidpro1_vsol2D_storage_new();
   output_data_[0].push_back(output_vsol);
   
-  vcl_vector<vcl_string> groups = frame_vsol->groups();
+  std::vector<std::string> groups = frame_vsol->groups();
   for(unsigned g=0; g<groups.size(); ++g)
   {
-    vcl_vector<vsol_spatial_object_2d_sptr> objs 
+    std::vector<vsol_spatial_object_2d_sptr> objs 
       = frame_vsol->data_named(groups[g]);
     for(unsigned v=0; v<objs.size(); ++v)
       output_vsol->add_object(bpgl_vsol_lens_warp(objs[v], *lens, invert, mpthresh), 

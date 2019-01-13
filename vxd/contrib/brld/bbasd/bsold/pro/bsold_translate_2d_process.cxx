@@ -17,7 +17,7 @@ bsold_translate_2d_process::bsold_translate_2d_process()
   if( !parameters()->add( "Translate dx = " , "-dx" , (int)0 ) ||
       !parameters()->add( "Translate dy = " , "-dy" , (int)0 )) 
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -37,7 +37,7 @@ bsold_translate_2d_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 bsold_translate_2d_process::name()
 {
   return "Translate vsol2D objects";
@@ -61,18 +61,18 @@ bsold_translate_2d_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > bsold_translate_2d_process::get_input_type()
+std::vector< std::string > bsold_translate_2d_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > bsold_translate_2d_process::get_output_type()
+std::vector< std::string > bsold_translate_2d_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   return to_return;
 }
 
@@ -83,7 +83,7 @@ bsold_translate_2d_process::execute()
 {
   if ( input_data_.size() != 1 )
   {
-    vcl_cout << "In bsold_translate_2d_process::execute() - not exactly 1"
+    std::cout << "In bsold_translate_2d_process::execute() - not exactly 1"
              << " input frames \n";
     return false;
   }
@@ -103,7 +103,7 @@ bsold_translate_2d_process::execute()
   // translate all vsol2D objects one by one
   vidpro1_vsol2D_storage_sptr vsol_storage;
   vsol_storage.vertical_cast(this->input_data_[0][0]);
-  vcl_vector< vsol_spatial_object_2d_sptr > vsol_data = vsol_storage->all_data();
+  std::vector< vsol_spatial_object_2d_sptr > vsol_data = vsol_storage->all_data();
   bool success = true;
   unsigned int count = 0;
   
@@ -116,7 +116,7 @@ bsold_translate_2d_process::execute()
   if (success)
     return true;
   
-  vcl_cout << "Translation could not be done on object " << vcl_endl;
+  std::cout << "Translation could not be done on object " << std::endl;
   vsol_data.at(count - 1)->print();
   
   translate_v = -translate_v;
@@ -124,7 +124,7 @@ bsold_translate_2d_process::execute()
   {
     bsold_linear_transform_2d::translate(vsol_data.at(i), translate_v);
   }
-  vcl_cout << "Translation failed. All objects remain at the original positions." << vcl_endl;
+  std::cout << "Translation failed. All objects remain at the original positions." << std::endl;
   return true;
 }
 

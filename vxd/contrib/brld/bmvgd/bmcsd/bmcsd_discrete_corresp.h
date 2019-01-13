@@ -11,10 +11,10 @@
 // Wed Sep 30 02:12:23 EDT 2009   Ricardo Fabbri  Renamed things: s/point/object/g
 //
 
-#include <vcl_cassert.h>
-#include <vcl_vector.h>
-#include <vcl_list.h>
-#include <vcl_algorithm.h>
+#include <cassert>
+#include <vector>
+#include <list>
+#include <algorithm>
 #include <vsl/vsl_binary_io.h>
 
 struct bmcsd_match_attribute {
@@ -54,11 +54,11 @@ public:
   short version() const;
 
   //: Print an ascii summary to the stream
-  void print_summary(vcl_ostream &os) const;
+  void print_summary(std::ostream &os) const;
 
-  vcl_string is_a() const;
+  std::string is_a() const;
 
-  friend vcl_ostream&  operator<<(vcl_ostream& s, const bmcsd_match_attribute &c);
+  friend std::ostream&  operator<<(std::ostream& s, const bmcsd_match_attribute &c);
 
 public:
    bool null_;
@@ -82,7 +82,7 @@ inline void vsl_b_read(vsl_b_istream &is, bmcsd_match_attribute & v)
   v.b_read(is);
 }
 
-inline void vsl_print_summary(vcl_ostream &os, const bmcsd_match_attribute &p)
+inline void vsl_print_summary(std::ostream &os, const bmcsd_match_attribute &p)
 {
   p.print_summary(os);
 }
@@ -132,17 +132,17 @@ public:
   short version() const;
   
   //: Print an ascii summary to the stream
-  void print_summary(vcl_ostream &os) const;
+  void print_summary(std::ostream &os) const;
 
-  friend vcl_ostream&  operator<<(vcl_ostream& s, const bmcsd_attributed_object &c);
+  friend std::ostream&  operator<<(std::ostream& s, const bmcsd_attributed_object &c);
 
-  vcl_string is_a() const;
+  std::string is_a() const;
 
 public:
    unsigned obj_; //:< objects are represented by some arbitrary numbering
 };
 
-class bmcsd_attributed_object_eq : public vcl_unary_function<bmcsd_attributed_object_eq, bool> {
+class bmcsd_attributed_object_eq : public std::unary_function<bmcsd_attributed_object_eq, bool> {
   unsigned p_;
 public:
   explicit bmcsd_attributed_object_eq(const unsigned pp) : p_(pp) { }; 
@@ -161,7 +161,7 @@ inline void vsl_b_read(vsl_b_istream &is, bmcsd_attributed_object & v)
   v.b_read(is);
 }
 
-inline void vsl_print_summary(vcl_ostream &os, const bmcsd_attributed_object &p)
+inline void vsl_print_summary(std::ostream &os, const bmcsd_attributed_object &p)
 {
   p.print_summary(os);
 }
@@ -179,10 +179,10 @@ inline void vsl_print_summary(vcl_ostream &os, const bmcsd_attributed_object &p)
 //
 struct bmcsd_discrete_corresp {
 public:
-  typedef vcl_list< bmcsd_attributed_object > one_corresp_list;
-  typedef vcl_list< bmcsd_attributed_object >::iterator one_corresp_list_iter;
-  typedef vcl_list< bmcsd_attributed_object >::const_iterator one_corresp_list_const_iter;
-  typedef vcl_vector < vcl_list< bmcsd_attributed_object > > corresp_data;
+  typedef std::list< bmcsd_attributed_object > one_corresp_list;
+  typedef std::list< bmcsd_attributed_object >::iterator one_corresp_list_iter;
+  typedef std::list< bmcsd_attributed_object >::const_iterator one_corresp_list_const_iter;
+  typedef std::vector < std::list< bmcsd_attributed_object > > corresp_data;
 
   bmcsd_discrete_corresp(unsigned num_objs0, unsigned num_objs1) 
      :
@@ -203,7 +203,7 @@ public:
 
   //: adds object, testing if is unique, and also resize corresp. list if needed
   bool add_unique(const bmcsd_attributed_object &e, unsigned i, 
-      vcl_list<bmcsd_attributed_object>::iterator *itr);
+      std::list<bmcsd_attributed_object>::iterator *itr);
 
   void threshold_by_cost(double cost);
   void threshold_by_cost_lteq(double cost);
@@ -265,7 +265,7 @@ public:
 
   // Functions to be moved to algo ----------------------------------------
 
-  vcl_list<bmcsd_attributed_object>::const_iterator 
+  std::list<bmcsd_attributed_object>::const_iterator 
   find_right_corresp_mincost(unsigned p1_idx, const bmcsd_discrete_corresp *gt) const;
 
   void 
@@ -278,7 +278,7 @@ public:
 
   //: \todo functional access
 
-  friend vcl_ostream&  operator<<(vcl_ostream& s, const bmcsd_discrete_corresp &c);
+  friend std::ostream&  operator<<(std::ostream& s, const bmcsd_discrete_corresp &c);
 
   //: Equality test
   inline bool operator==(bmcsd_discrete_corresp const &that) const
@@ -296,10 +296,10 @@ public:
   short version() const;
 
   //: Print an ascii summary to the stream
-  void print_summary(vcl_ostream &os) const;
+  void print_summary(std::ostream &os) const;
 
   //: Return a platform independent string identifying the class
-  vcl_string is_a() const;
+  std::string is_a() const;
 
   //: # objects in view 1; returns (unsigned) -1  in case nothing was initialized yet
   unsigned n_objects_view_0() const {return corresp_.size() - 1; }
@@ -313,8 +313,8 @@ public:
   // returns the number of objects (in image 1) having no correspondence.
   // If the dummy object has no correspondence, it also counts.
   unsigned count_empty() const { 
-    return vcl_count_if(corresp_.begin(), corresp_.end(), 
-                        vcl_mem_fun_ref(&one_corresp_list::empty )); 
+    return std::count_if(corresp_.begin(), corresp_.end(), 
+                        std::mem_fun_ref(&one_corresp_list::empty )); 
   }
 
   void compare_and_print( const bmcsd_discrete_corresp *gt) const;

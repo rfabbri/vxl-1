@@ -14,8 +14,8 @@
 //  Modifications:
 // \endverbatim
 
-#include <vcl_cmath.h>
-#include <vcl_limits.h>
+#include <cmath>
+#include <limits>
 #include <vnl/vnl_math.h>
 
 //: Sinc function, defined as
@@ -24,13 +24,13 @@
 // Reference: http://www.boost.org/boost/math/special_functions/sinc.hpp
 inline double bnld_sinc(double x)
 {
-  static double const taylor_0_bound = vcl_numeric_limits<double >::epsilon();
-  static double const taylor_2_bound = vcl_sqrt(taylor_0_bound);
-  static double const taylor_n_bound = vcl_sqrt(taylor_2_bound);
+  static double const taylor_0_bound = std::numeric_limits<double >::epsilon();
+  static double const taylor_2_bound = std::sqrt(taylor_0_bound);
+  static double const taylor_n_bound = std::sqrt(taylor_2_bound);
 
   if (vnl_math::abs(x) >= taylor_n_bound)
   {
-    return vcl_sin(x)/x;
+    return std::sin(x)/x;
   }
   else
   {

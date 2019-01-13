@@ -1,6 +1,6 @@
-#include <vcl_vector.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
+#include <vector>
+#include <string>
+#include <iostream>
 
 #include <vil/vil_image_resource.h>
 #include <vil/vil_load.h>
@@ -15,14 +15,14 @@ int main( int argc, char **argv)
   vgel_kl_params kl_params;
   kl_params.numpoints=500;
 
-  vcl_vector<vil_image_resource_sptr> images;
+  std::vector<vil_image_resource_sptr> images;
 
   if (argc < 4)
-    vcl_cerr << "Warning: you should give three image file names as command line arguments\n";
+    std::cerr << "Warning: you should give three image file names as command line arguments\n";
 
-  vcl_string file0 = (argc > 1) ? argv[1] : "C:/images/skull/a.000.jpg";
-  vcl_string file1 = (argc > 2) ? argv[2] : "C:/images/skull/a.001.jpg";
-  vcl_string file2 = (argc > 3) ? argv[3] : "C:/images/skull/a.002.jpg";
+  std::string file0 = (argc > 1) ? argv[1] : "C:/images/skull/a.000.jpg";
+  std::string file1 = (argc > 2) ? argv[2] : "C:/images/skull/a.001.jpg";
+  std::string file2 = (argc > 3) ? argv[3] : "C:/images/skull/a.002.jpg";
 
   vil_image_resource_sptr im0= vil_load_image_resource(file0.c_str());
   vil_image_resource_sptr im1= vil_load_image_resource(file1.c_str());
@@ -41,15 +41,15 @@ int main( int argc, char **argv)
 
   ////////////
 
-  vcl_vector<vtol_vertex_2d_sptr> pts1;
-  vcl_vector<vtol_vertex_2d_sptr> pts2;
-  vcl_vector<vtol_vertex_2d_sptr> pts3;
+  std::vector<vtol_vertex_2d_sptr> pts1;
+  std::vector<vtol_vertex_2d_sptr> pts2;
+  std::vector<vtol_vertex_2d_sptr> pts3;
 
   matched_points->get( 0,pts1);
   matched_points->get( 1,pts2);
   matched_points->get( 2,pts3);
 
-  vcl_cerr << pts1.size() << ' '
+  std::cerr << pts1.size() << ' '
            << pts2.size() << ' '
            << pts3.size() << '\n';
 

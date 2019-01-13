@@ -5,13 +5,13 @@
 
 #include <testlib/testlib_test.h>
 #include <bgld/algo/bgld_conic_arc.h>
-#include <vcl_cmath.h>
+#include <cmath>
 
 
 //: test functions of bgld_circ_arc class
 void test_conic_arc_functions()
 {
-  vcl_cout << "In test_conic_arc_functions()\n";
+  std::cout << "In test_conic_arc_functions()\n";
   const double epsilon = 1e-10;
 
   // constructing a parabola
@@ -30,12 +30,12 @@ void test_conic_arc_functions()
     for (double t=0; t<=1; t = t+0.1)
     {
       vgl_point_2d<double > pt = conic.point_at(t);
-      //vcl_cout << "point_at ( " << t << " )= " << pt << vcl_endl;
-      success = success && (vcl_abs(pt.y() - 3*pt.x()*pt.x()) < epsilon);
+      //std::cout << "point_at ( " << t << " )= " << pt << std::endl;
+      success = success && (std::abs(pt.y() - 3*pt.x()*pt.x()) < epsilon);
 
       vgl_vector_2d<double > tangent = conic.tangent_at(t);
       success = success && 
-        (vcl_abs(vcl_atan2(tangent.y(), tangent.x())-vcl_atan2(6.0*pt.x(), 1.0)) < epsilon);
+        (std::abs(std::atan2(tangent.y(), tangent.x())-std::atan2(6.0*pt.x(), 1.0)) < epsilon);
     }
     TEST("Test parabola y=3*x^2", success, true);
   }
@@ -80,7 +80,7 @@ void test_conic_arc_functions()
 
       vgl_vector_2d<double > tangent = conic.tangent_at(t);
       success = success && 
-        (vcl_abs(vcl_atan2(tangent.y(), tangent.x())-vcl_atan2(6.0*pt.x(), 1.0)) < epsilon);
+        (std::abs(std::atan2(tangent.y(), tangent.x())-std::atan2(6.0*pt.x(), 1.0)) < epsilon);
     }
     TEST("Construct from vgl - parabola y=3*x^2", success, true);
   }
@@ -108,18 +108,18 @@ void test_conic_arc_functions()
   // y'(u2) = -sqrt(2)
   // k(u2) = 4 * sqrt(10) / 25
 
-  vgl_point_2d<double > start(vcl_sqrt(3.0)/2 + 10, 21);
-  vgl_point_2d<double > end (-vcl_sqrt(2.0)/2 + 10, vcl_sqrt(2.0) + 20);
-  vgl_vector_2d<double > start_tangent(-1.0/2, vcl_sqrt(3.0));
-  vgl_vector_2d<double > end_tangent(-vcl_sqrt(2.0)/2, -vcl_sqrt(2.0));
-  double start_k = 16 * vcl_sqrt(13.0) / 169;
+  vgl_point_2d<double > start(std::sqrt(3.0)/2 + 10, 21);
+  vgl_point_2d<double > end (-std::sqrt(2.0)/2 + 10, std::sqrt(2.0) + 20);
+  vgl_vector_2d<double > start_tangent(-1.0/2, std::sqrt(3.0));
+  vgl_vector_2d<double > end_tangent(-std::sqrt(2.0)/2, -std::sqrt(2.0));
+  double start_k = 16 * std::sqrt(13.0) / 169;
 
   bgld_conic_arc conic;
   conic.set_from(start, end, start_tangent, end_tangent, start_k);
 
   
-  vcl_cout << "\nstart_k = " << start_k
-    << "\nconic.curvature_at(0) = " << conic.curvature_at(0) << vcl_endl;
+  std::cout << "\nstart_k = " << start_k
+    << "\nconic.curvature_at(0) = " << conic.curvature_at(0) << std::endl;
   TEST_NEAR("conic curvature", conic.curvature_at(0), start_k, 1e-8);
 
 
@@ -128,9 +128,9 @@ void test_conic_arc_functions()
   for (double t=0; t<=1; t = t+0.1)
   {
     vgl_point_2d<double > pt = conic.point_at(t);
-    //vcl_cout << "point_at ( " << t << " )= " << pt << vcl_endl;
+    //std::cout << "point_at ( " << t << " )= " << pt << std::endl;
     double error = (pt.x()-10)*(pt.x()-10) + (pt.y()-20)*(pt.y()-20)/4-1;
-    //vcl_cout << "error = " << error << vcl_endl;
+    //std::cout << "error = " << error << std::endl;
     success = success && (error < epsilon);
   }
   TEST("Test ellipse (x-10)^2 + (y-20)^2/4 = 1", success, true);
@@ -145,8 +145,8 @@ void test_conic_arc_functions()
   start_k = a/b;
   
   conic.set_from(start, end, start_tangent, end_tangent, start_k);
-  vcl_cout << "Tangent at t=0.7 is " << conic.tangent_at(0.7) << vcl_endl;
-  vcl_cout << "Point at t=0.7 is " << conic.point_at(0.7) << vcl_endl;
+  std::cout << "Tangent at t=0.7 is " << conic.tangent_at(0.7) << std::endl;
+  std::cout << "Point at t=0.7 is " << conic.point_at(0.7) << std::endl;
   
   success = ((conic.point_at(0.7)-start).length() < 1e-8) &&
     (signed_angle(conic.tangent_at(0.7), start_tangent) < 1e-8);
@@ -154,7 +154,7 @@ void test_conic_arc_functions()
   TEST("Test super degenerate conic arc (a point)", success, true);
   
 
-  vcl_cout << "End of test_conic_arc\n";
+  std::cout << "End of test_conic_arc\n";
   
   
 }

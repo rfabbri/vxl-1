@@ -8,8 +8,8 @@
 //\date 12/02/2008 03:45:22 PM EST
 //
 
-#include <vcl_vector.h>
-#include <vcl_iomanip.h>
+#include <vector>
+#include <iomanip>
 #include <vnl/vnl_vector_fixed.h>
 
 #define BMCSD_SIFT_CURVE_NUM_DIMS 128
@@ -21,7 +21,7 @@ private:
 public:
   // IMPORTANT: change to be consistent with whatever sift / implementation.
   typedef double t_descriptor_float; 
-  typedef vcl_vector<vcl_vector<vnl_vector_fixed<t_descriptor_float, num_dims_> > > 
+  typedef std::vector<std::vector<vnl_vector_fixed<t_descriptor_float, num_dims_> > > 
     descriptor_vector;
 
 
@@ -49,30 +49,30 @@ public:
 
   void print_all_descriptors() const
   {
-    vcl_cout << "Number of dimensions: " << num_dims() << vcl_endl;
+    std::cout << "Number of dimensions: " << num_dims() << std::endl;
     unsigned is=0;
     unsigned max_n_prints = 300;
 
     for (unsigned i=0; i < num_scales(); ++i) {
-      vcl_cout << vcl_setprecision(1);
-      vcl_cout << "\nScale #" << i+1 << vcl_endl;
+      std::cout << std::setprecision(1);
+      std::cout << "\nScale #" << i+1 << std::endl;
       if (!num_samples()) {
-        vcl_cout << "No samples\n";
+        std::cout << "No samples\n";
         return;
       }
       for (unsigned k=0; k < num_samples(); ++k) {
-        vcl_cout << "  sample " << k+1 << "\n";
+        std::cout << "  sample " << k+1 << "\n";
         if (is_valid(i,k)) {
           // output descriptor
           assert(num_dims());
           unsigned m=0;
           for (m=0; m+1 < num_dims(); ++m)
-            vcl_cout << descriptors_[i][k][m] << ", ";
-          vcl_cout << descriptors_[i][k][m] << ";" << vcl_endl;
+            std::cout << descriptors_[i][k][m] << ", ";
+          std::cout << descriptors_[i][k][m] << ";" << std::endl;
         } else {
-          vcl_cout << "EMPTY" << vcl_endl;
+          std::cout << "EMPTY" << std::endl;
         }
-        vcl_cout << vcl_endl;
+        std::cout << std::endl;
         ++is;
         if (is > max_n_prints)
           return;
@@ -106,13 +106,13 @@ public:
     return valid_[scale_index][sample_index];
   }
 
-  //: Access the the feature vcl_vector.
+  //: Access the the feature std::vector.
   const vnl_vector_fixed<t_descriptor_float, num_dims_> &
   descriptor(unsigned scale_index, unsigned sample_index) const {
     return descriptors_[scale_index][sample_index]; 
   }
 
-  //: For efficiency reasons, access directly the data block for the feature vcl_vector.
+  //: For efficiency reasons, access directly the data block for the feature std::vector.
   // This is OK since the feature vector is bound to be represented this way.
   t_descriptor_float *descriptor_data_block(unsigned scale_index, unsigned sample_index) {
     return descriptors_[scale_index][sample_index].data_block(); 
@@ -121,7 +121,7 @@ public:
 private:
   descriptor_vector descriptors_;
   unsigned num_samples_; //< number of curve samples per scale
-  vcl_vector< vcl_vector<bool> > valid_;
+  std::vector< std::vector<bool> > valid_;
 };
 
 #endif // BMCSD_SIFT_CURVE_H

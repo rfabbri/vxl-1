@@ -30,9 +30,9 @@ public:
   void set_id(int id){id_ = id;}
 
   //: Print an ascii summary to the stream
-  virtual void print_summary(vcl_ostream &os) const
+  virtual void print_summary(std::ostream &os) const
   {
-    os << id_ << ": [" << source_->id() << "] - [" << target_->id() << "]" << vcl_endl;
+    os << id_ << ": [" << source_->id() << "] - [" << target_->id() << "]" << std::endl;
   }
 
 };

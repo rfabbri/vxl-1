@@ -1,6 +1,6 @@
 #include <testlib/testlib_test.h>
 #include <bnld/bnld_newton_root.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vnl/vnl_math.h>
 
 // equation: f(x) = (sin(a) - sin(a + x)) / x - b = 0
@@ -9,10 +9,10 @@ class f2 : public bnld_newton_root_func
 public:
   f2(double a, double b): a_(a), b_(b){}
   virtual double f(double x){ 
-    return (vcl_sin(a_)-vcl_sin(a_ + x))/x -b_;
+    return (std::sin(a_)-std::sin(a_ + x))/x -b_;
   };
   virtual double df( double x){
-    return -vcl_cos(x+a_)/x - (vcl_sin(a_)-vcl_sin(a_+x))/ x/x;
+    return -std::cos(x+a_)/x - (std::sin(a_)-std::sin(a_+x))/ x/x;
   };
 private:
   double a_;
@@ -34,9 +34,9 @@ MAIN( test_newton_root )
                             x1, x2, xacc, & root);
    TEST("solve f(x) = (sin(a) - sin(a+x))/x - b = 0", 
      vnl_math::abs(root - 2.513274123) < 1e-6 && succeed, true);
-   vcl_cout << "a = " << vnl_math::pi_over_2 * 1.2 << vcl_endl;
-   vcl_cout << "b = " << .756826729 << vcl_endl;
-   vcl_cout << "root = " << root << vcl_endl;
+   std::cout << "a = " << vnl_math::pi_over_2 * 1.2 << std::endl;
+   std::cout << "b = " << .756826729 << std::endl;
+   std::cout << "root = " << root << std::endl;
 
    SUMMARY();
 }

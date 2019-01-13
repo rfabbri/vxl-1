@@ -75,8 +75,8 @@ vidpro1_image_storage::b_write(vsl_b_ostream &os) const
         break;
       }
     default:
-      vcl_cerr << "I/O ERROR: This pixel format is not supported: " 
-               << image_->pixel_format() << vcl_endl;
+      std::cerr << "I/O ERROR: This pixel format is not supported: " 
+               << image_->pixel_format() << std::endl;
       return; 
     }
   }
@@ -157,9 +157,9 @@ vidpro1_image_storage::b_read(vsl_b_istream &is)
           break;
         }
       default:
-        vcl_cerr << "I/O ERROR: This pixel format is not supported: " 
-                 << pixel_format << vcl_endl;
-        is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+        std::cerr << "I/O ERROR: This pixel format is not supported: " 
+                 << pixel_format << std::endl;
+        is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
         return; 
       }
     }
@@ -169,9 +169,9 @@ vidpro1_image_storage::b_read(vsl_b_istream &is)
   }
 
   default:
-    vcl_cerr << "I/O ERROR: vidpro1_image_storage::b_read(vsl_b_istream&)\n"
+    std::cerr << "I/O ERROR: vidpro1_image_storage::b_read(vsl_b_istream&)\n"
              << "           Unknown version number "<< ver << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }

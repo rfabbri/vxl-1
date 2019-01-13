@@ -6,37 +6,37 @@
 #include <vgl/vgl_vector_3d.h>
 #include <vnl/vnl_math.h>
 
-#include <vcl_iostream.h> 
-#include <vcl_cmath.h>
-#include <vcl_limits.h>
-#include <vcl_cstring.h>
-#include <vcl_iostream.h>
-#include <vcl_cstdlib.h>
+#include <iostream> 
+#include <cmath>
+#include <limits>
+#include <cstring>
+#include <iostream>
+#include <cstdlib>
 
-void loadCON(vcl_string fileName, vcl_vector<vsol_point_3d_sptr> &points)
+void loadCON(std::string fileName, std::vector<vsol_point_3d_sptr> &points)
 {
-  vcl_ifstream infp(fileName.c_str());
+  std::ifstream infp(fileName.c_str());
   char magicNum[200];
 
   infp.getline(magicNum,200);
   if (strncmp(magicNum,"CONTOUR",7))
   {
-    vcl_cerr << "Invalid File " << fileName.c_str() << vcl_endl;
-    vcl_cerr << "Should be CONTOUR " << magicNum << vcl_endl;
-    vcl_exit(1);
+    std::cerr << "Invalid File " << fileName.c_str() << std::endl;
+    std::cerr << "Should be CONTOUR " << magicNum << std::endl;
+    std::exit(1);
   }
 
   char openFlag[200];
   infp.getline(openFlag,200);
   if (!strncmp(openFlag,"OPEN",4))
-    vcl_cout << "Open Curve\n" << vcl_endl;
+    std::cout << "Open Curve\n" << std::endl;
   else if (!strncmp(openFlag,"CLOSE",5))
-    vcl_cout << "Closed Curve\n" << vcl_endl;
+    std::cout << "Closed Curve\n" << std::endl;
   else
   {
-    vcl_cerr << "Invalid File " << fileName.c_str() << vcl_endl;
-    vcl_cerr << "Should be OPEN/CLOSE " << openFlag << vcl_endl;
-    vcl_exit(1);
+    std::cerr << "Invalid File " << fileName.c_str() << std::endl;
+    std::cerr << "Should be OPEN/CLOSE " << openFlag << std::endl;
+    std::exit(1);
   }
 
   int i,numOfPoints;
@@ -57,7 +57,7 @@ MAIN( test_interp_eno_3d )
 
    double tolerance = 10e-3;
   
-   vcl_vector<vsol_point_3d_sptr> pts;
+   std::vector<vsol_point_3d_sptr> pts;
 
    // x(t) = 1 - 2t - 2t^2 + t^3
    // y(t) = -1 + t + t^2 - 2t^3
@@ -72,7 +72,7 @@ MAIN( test_interp_eno_3d )
    pts.push_back(new vsol_point_3d(-0.875, -23.5, 16.375)); // @ t=2.5
    pts.push_back(new vsol_point_3d(4, -43, 26)); // @ t=3
 
-   vcl_vector<double> samples;
+   std::vector<double> samples;
    samples.push_back(0.0);
    samples.push_back(0.5);
    samples.push_back(1.0);
@@ -83,7 +83,7 @@ MAIN( test_interp_eno_3d )
 
    bsold_interp_curve_3d c;
    bsold_curve_3d_algs::interpolate_eno_3d(&c,pts,samples);
-   vcl_cout << c;
+   std::cout << c;
 
    TEST_NEAR("length test: ", c.length_at(0), 0.0, tolerance);
    TEST_NEAR("length test: ", c.length_at(1), 1.7143, tolerance);

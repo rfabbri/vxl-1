@@ -19,8 +19,8 @@
 #include <vidl1/vidl1_codec_sptr.h>
 #include <vil/vil_image_resource.h>
 
-#include <vcl_vector.h>
-#include <vcl_list.h>
+#include <vector>
+#include <list>
 
 //: Sequence of frames, element of a movie
 //  A clip is a set of frames, it is part of a Movie.
@@ -42,12 +42,12 @@ class vidl1_clip : public vbl_ref_count
              int end = 0,
              int increment = 1);
 
-  vidl1_clip(vcl_list<vil_image_resource_sptr> &images,
+  vidl1_clip(std::list<vil_image_resource_sptr> &images,
              int start = 0,
              int end = 0,
              int increment = 1);
 
-  vidl1_clip(vcl_vector<vil_image_resource_sptr> &images,
+  vidl1_clip(std::vector<vil_image_resource_sptr> &images,
              int start = 0,
              int end = 0,
              int increment = 1);
@@ -79,7 +79,7 @@ class vidl1_clip : public vbl_ref_count
   void init(int start, int end, int increment);
 
   // Data Members
-  vcl_vector<vidl1_frame_sptr> frames_; //!< Where are the frames stored
+  std::vector<vidl1_frame_sptr> frames_; //!< Where are the frames stored
   int startframe_;                     //!< The clip begins at startframe_
   int endframe_;                       //!< The clip ends at startframe_
   int increment_;                      //!< The clip uses 1 frame every "increment_"

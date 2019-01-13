@@ -4,7 +4,7 @@
 // \file
 
 #include <bprod/bprod_process_factory.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 
 
@@ -20,13 +20,13 @@ bprod_process_factory::mut_registry()
 //: The Constructor for this struct registers an exemplar storage object with the base class
 bprod_process_factory::registrar::registrar(const bprod_process_factory* example)
 {
-  vcl_string name = example->name();
+  std::string name = example->name();
   // register with the base class
   Reg_Type& reg = bprod_process_factory::mut_registry();
   Reg_Type::iterator result = reg.find(name);
   if(result != reg.end()){
     delete result->second;
-    vcl_cerr << "Warning multiple processes registered with the name: "<< name <<vcl_endl;
+    std::cerr << "Warning multiple processes registered with the name: "<< name <<std::endl;
   }
 
   reg[name] = example;
@@ -35,7 +35,7 @@ bprod_process_factory::registrar::registrar(const bprod_process_factory* example
 
 //: Return the default parameters for a process with the given name
 bprod_parameters_sptr
-bprod_process_factory::default_params(const vcl_string& name)
+bprod_process_factory::default_params(const std::string& name)
 {
   const Reg_Type& reg = bprod_process_factory::registry();
   Reg_Type::const_iterator result = reg.find(name);
@@ -48,7 +48,7 @@ bprod_process_factory::default_params(const vcl_string& name)
 
 //: Construct a process with the given name and parameters
 bprod_process_sptr
-bprod_process_factory::create(const vcl_string& name,
+bprod_process_factory::create(const std::string& name,
                               const bprod_parameters_sptr& params)
 {
   const Reg_Type& reg = bprod_process_factory::registry();

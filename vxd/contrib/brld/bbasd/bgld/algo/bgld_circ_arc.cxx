@@ -4,8 +4,8 @@
 
 #include "bgld_circ_arc.h"
 
-#include <vcl_cmath.h>
-#include <vcl_limits.h>
+#include <cmath>
+#include <limits>
 
 const double bgld_circ_arc_pi = 3.14159265358979323846;
 
@@ -16,7 +16,7 @@ const double bgld_circ_arc_pi = 3.14159265358979323846;
 //**************************************************************
 
 const double bgld_circ_arc::taylor_4_bound = 
-    vcl_sqrt(vcl_sqrt(vcl_numeric_limits<double >::epsilon()));
+    std::sqrt(std::sqrt(std::numeric_limits<double >::epsilon()));
 const double bgld_circ_arc::epsilon = 1e-12;
 
 
@@ -60,13 +60,13 @@ set_from(const vgl_point_2d<double >& start,
   if ((middle-start).length() < bgld_circ_arc::epsilon ||
     (middle-end).length() < bgld_circ_arc::epsilon )
   {
-    vcl_cerr << "Error: middle point coincides with one of the end points.\n";
+    std::cerr << "Error: middle point coincides with one of the end points.\n";
     return false;
   }
 
   if (dot_product(middle-start, middle-end) > 0)
   {
-    vcl_cerr << "Error: Cannot create a less-than-half-a-circle arc from the given points\n";
+    std::cerr << "Error: Cannot create a less-than-half-a-circle arc from the given points\n";
     return false;
   }
 
@@ -97,13 +97,13 @@ set_from(const vgl_point_2d<double >& start,
   double radius;
   if ((radius = (center-start).length()) < bgld_circ_arc::epsilon)
   {
-    vcl_cerr << "Error: Circular center and starting point of the arc coincide.\n";
+    std::cerr << "Error: Circular center and starting point of the arc coincide.\n";
     return false;
   }
 
   if (end_normal_vector.length() < bgld_circ_arc::epsilon)
   {
-    vcl_cerr << "Error: non-zero end_normal_vector required.\n";
+    std::cerr << "Error: non-zero end_normal_vector required.\n";
     return false;
   }
 
@@ -162,7 +162,7 @@ set_from(const vgl_point_2d<double >& start,
          double arc_length)
 {
   // limit the arc to half a circle
-  if ( vcl_abs(curvature*arc_length) > bgld_circ_arc_pi )
+  if ( std::abs(curvature*arc_length) > bgld_circ_arc_pi )
     return false;
 
   // The only missing info is the position of the end point
@@ -171,8 +171,8 @@ set_from(const vgl_point_2d<double >& start,
   // y(s) = y0 - sinc(ks/2) sin(psi0 + ks/2) s
 
   double t = curvature * arc_length / 2;
-  double psi0 = vcl_atan2(start_tangent.y(), start_tangent.x());
-  vgl_vector_2d<double > v(vcl_cos(psi0+t), vcl_sin(psi0+t));
+  double psi0 = std::atan2(start_tangent.y(), start_tangent.x());
+  vgl_vector_2d<double > v(std::cos(psi0+t), std::sin(psi0+t));
   vgl_point_2d<double > end = start+ this->sinc(t)*arc_length*v;
 
   this->set(start, end, curvature);
@@ -191,7 +191,7 @@ set_from(double chord_length, double height,
 {
   // height of an arc is at most half the chord length
   // "=" occurs when half-circles
-  if (vcl_abs(height) > chord_length/2)
+  if (std::abs(height) > chord_length/2)
     return false;
 
   // start and end points are corners of the bounding box
@@ -219,7 +219,7 @@ height() const
 
   double kc2 = this->k()*this->chord_len()*this->chord_len();
 
-  return vcl_abs(kc2/(4*(1+vcl_sqrt(1-this->k()*kc2/4))));
+  return std::abs(kc2/(4*(1+std::sqrt(1-this->k()*kc2/4))));
 }
 
 
@@ -235,9 +235,9 @@ len() const
 
   // compute arcsin(t)/t
   // for large t, use normal formule
-  if (vcl_abs(t) > bgld_circ_arc::taylor_4_bound)
+  if (std::abs(t) > bgld_circ_arc::taylor_4_bound)
   {
-    asin_t_over_t = vcl_asin(t)/t;
+    asin_t_over_t = std::asin(t)/t;
   }
   // for small t, approximate the function using 4th order Taylor expansion
   // arcsin(t)/t = 1 + 1/6 t^2 + 3/40 * t^4 + 5/12 * t^6 + O(7);
@@ -257,7 +257,7 @@ double bgld_circ_arc::
 area() const
 {
   double s = this->length();
-  double a = vcl_abs(s * this->k());
+  double a = std::abs(s * this->k());
 
   // area = (1/2) * s^2 * (a - sin(a)) / (a^2)
   
@@ -265,9 +265,9 @@ area() const
   // Problematic when a --> 0. Use Taylor expansion
   // for large a, use normal formula
   double w = 0;
-  if (vcl_abs(a) > bgld_circ_arc::taylor_4_bound)
+  if (std::abs(a) > bgld_circ_arc::taylor_4_bound)
   {
-    w = (a - vcl_sin(a)) / (a*a);
+    w = (a - std::sin(a)) / (a*a);
   }
   // for small a, approximate w using Taylor expansion
   // w = a / 6 - a^3 / 120 
@@ -304,7 +304,7 @@ vgl_vector_2d<double > bgld_circ_arc::
 tangent_at_start() const
 {
   double sin_alpha = this->k()*this->chord_len() / 2;
-  double cos_alpha = vcl_sqrt(1-sin_alpha*sin_alpha);
+  double cos_alpha = std::sqrt(1-sin_alpha*sin_alpha);
 
   vgl_vector_2d<double > v = this->chord_dir();
 
@@ -324,7 +324,7 @@ vgl_vector_2d<double > bgld_circ_arc::
 tangent_at_end() const
 {
   double sin_alpha = this->k()*this->chord_len() / 2;
-  double cos_alpha = vcl_sqrt(1 - sin_alpha*sin_alpha);
+  double cos_alpha = std::sqrt(1 - sin_alpha*sin_alpha);
 
   vgl_vector_2d<double > v = this->chord_dir();
 
@@ -371,11 +371,11 @@ center() const
  if (this->k()==0)
  {
    return (vgl_point_2d<double >(0,0) + 
-   vcl_numeric_limits<double >::max()*this->normal_at_start());
+   std::numeric_limits<double >::max()*this->normal_at_start());
  }
  else
  {
-   return this->point1() + vcl_abs(1.0/this->k()) * this->normal_at_start();
+   return this->point1() + std::abs(1.0/this->k()) * this->normal_at_start();
  }
 }
 
@@ -404,9 +404,9 @@ point_at_length(double s) const
   double sinc_t = this->sinc(t);
 
   // for large t, use normal formula
-  if (vcl_abs(t) > bgld_circ_arc::taylor_4_bound)
+  if (std::abs(t) > bgld_circ_arc::taylor_4_bound)
   {
-    sinc_t = vcl_sin(t)/t;
+    sinc_t = std::sin(t)/t;
   }
    
   //for small t, approximate the function using 4th order Taylor expansion
@@ -417,8 +417,8 @@ point_at_length(double s) const
   }
 
   vgl_vector_2d<double > t1 = this->tangent_at_start();
-  double psi0 = vcl_atan2(t1.y(), t1.x());
-  vgl_vector_2d<double > v(vcl_cos(psi0+t), vcl_sin(psi0+t));
+  double psi0 = std::atan2(t1.y(), t1.x());
+  vgl_vector_2d<double > v(std::cos(psi0+t), std::sin(psi0+t));
 
   return (this->point1()+sinc_t*s*v);
 }
@@ -427,10 +427,10 @@ point_at_length(double s) const
 
 // ----------------------------------------------------------------------------
 //: Sample the arc with a given sampling rate
-vcl_vector<vgl_point_2d<double > > bgld_circ_arc::
+std::vector<vgl_point_2d<double > > bgld_circ_arc::
 compute_samples(double ds) const
 {
-  vcl_vector<vgl_point_2d<double > > pts;
+  std::vector<vgl_point_2d<double > > pts;
   double len = this->length();
   for (double s=0; s<= len; s = s+ds)
   {
@@ -444,8 +444,8 @@ compute_samples(double ds) const
 //: Sample the arc with a given sampling rate (length)
 void bgld_circ_arc::
 compute_samples(double ds, 
-                vcl_vector<vgl_point_2d<double > >& pts,
-                vcl_vector<vgl_vector_2d<double > >& tangents) const
+                std::vector<vgl_point_2d<double > >& pts,
+                std::vector<vgl_vector_2d<double > >& tangents) const
 {
   double len = this->length();
   int num_pts = int (len / ds) + 1;
@@ -483,8 +483,8 @@ tangent_at_length(double s) const
   // formula
   // psi(s) = psi0 + k * s
   vgl_vector_2d<double > t = this->tangent_at_start();
-  double cos_a = vcl_cos(this->k()*s);
-  double sin_a = vcl_sin(this->k()*s);
+  double cos_a = std::cos(this->k()*s);
+  double sin_a = std::sin(this->k()*s);
   return vgl_vector_2d<double >(cos_a*t.x()-sin_a*t.y(), 
     sin_a*t.x()+cos_a*t.y());
 }
@@ -539,7 +539,7 @@ int bgld_circ_arc::
 circ_region(const vgl_point_2d<double >& pt) const
 {
   double sin_alpha = this->k()*this->chord_len() / 2;
-  double cos_alpha = vcl_sqrt(1 - sin_alpha*sin_alpha);
+  double cos_alpha = std::sqrt(1 - sin_alpha*sin_alpha);
 
   // (p, q) ~ (cos(b), sin(b)) where b is view angle from `pt' to 
   // two endpoints of arc
@@ -548,7 +548,7 @@ circ_region(const vgl_point_2d<double >& pt) const
 
   double test = q*cos_alpha - p*sin_alpha;
   
-  if (vcl_abs(test) < bgld_circ_arc::epsilon) return 0;
+  if (std::abs(test) < bgld_circ_arc::epsilon) return 0;
   else if (test > 0) return 1;
   else return -1;
 }
@@ -562,7 +562,7 @@ circ_region(const vgl_point_2d<double >& pt) const
 // ------------------------------------------------------------------------
 //: Print parameters of the circular arc
 void bgld_circ_arc::
-print(vcl_ostream &os ) const
+print(std::ostream &os ) const
 {
   os << "<bgld_circ_arc> p1=(" << 
     this->point1().x() << "," << this->point1().y() << ")  p2=(" <<

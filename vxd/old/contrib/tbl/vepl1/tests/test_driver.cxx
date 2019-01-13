@@ -3,7 +3,7 @@
 #include "test_driver.h"
 #include <vil1/vil1_memory_image_of.h>
 #include <vil1/vil1_rgb_byte.h>
-#include <vcl_string.h>
+#include <string>
 #include <vxl_config.h> // for vxl_byte
 
 DECLARE( vepl1_test_erode_disk );
@@ -80,7 +80,7 @@ vil1_image CreateTestfloatImage(int wd, int ht)
 }
 
 // Compare two images and return true if their difference is not v
-bool difference(vil1_image const& a, vil1_image const& b, int v, vcl_string const& m)
+bool difference(vil1_image const& a, vil1_image const& b, int v, std::string const& m)
 {
   int sx = a.width(),  sy = a.height();
   TEST("Size of images match", sx == b.width() && sy == b.height(), true);
@@ -114,7 +114,7 @@ bool difference(vil1_image const& a, vil1_image const& b, int v, vcl_string cons
   }
   delete[] v1; delete[] v2;
   ret /= a.planes()*a.components();
-  vcl_cout<<m<<": expected "<<v<<", found "<<ret<<vcl_endl;
+  std::cout<<m<<": expected "<<v<<", found "<<ret<<std::endl;
   TEST(m.c_str(), ret, v);
   return v!=ret;
 }

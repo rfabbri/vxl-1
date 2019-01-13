@@ -79,9 +79,9 @@ void vsl_b_read(vsl_b_istream &is,  vil1_image& p)
       // This checks that the saving stream and reading stream
       // both agree on whether or not this is the first time they
       // have seen this object.
-      vcl_cerr << "I/O ERROR: vsl_b_read(vsl_b_istream&, vil1_image&)\n"
+      std::cerr << "I/O ERROR: vsl_b_read(vsl_b_istream&, vil1_image&)\n"
                << "           De-serialisation failure\n";
-      is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+      is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
       return;
     }
 
@@ -97,9 +97,9 @@ void vsl_b_read(vsl_b_istream &is,  vil1_image& p)
    }
 
    default:
-    vcl_cerr << "I/O ERROR: vsl_b_read(vsl_b_istream&, vil1_image&)\n"
+    std::cerr << "I/O ERROR: vsl_b_read(vsl_b_istream&, vil1_image&)\n"
              << "           Unknown version number "<< v << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }
@@ -107,7 +107,7 @@ void vsl_b_read(vsl_b_istream &is,  vil1_image& p)
 
 //=========================================================================
 //: Output a human readable summary to the stream
-void vsl_print_summary(vcl_ostream& os,const vil1_image & p)
+void vsl_print_summary(std::ostream& os,const vil1_image & p)
 {
   vsl_print_summary(os, p.impl());
 }

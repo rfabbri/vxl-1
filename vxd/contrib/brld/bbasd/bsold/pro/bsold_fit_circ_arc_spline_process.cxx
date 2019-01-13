@@ -42,7 +42,7 @@ bsold_fit_circ_arc_spline_process(void)
     !parameters()->add("Tolerance (max error allowed)", "-tolerance", 1.0f )
     ) 
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -63,7 +63,7 @@ clone() const
 
 
 //: Return the name of this process
-vcl_string bsold_fit_circ_arc_spline_process::
+std::string bsold_fit_circ_arc_spline_process::
 name()
 {
   return "Fit circular arc spline";
@@ -87,20 +87,20 @@ output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > bsold_fit_circ_arc_spline_process::
+std::vector< std::string > bsold_fit_circ_arc_spline_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > bsold_fit_circ_arc_spline_process::
+std::vector< std::string > bsold_fit_circ_arc_spline_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back("vsol2D");
   return to_return;
 }
@@ -113,7 +113,7 @@ execute()
 {
   if ( input_data_.size() != 1 )
   {
-    vcl_cout << "In bsold_fit_circ_arc_spline_process::execute() - not exactly 1"
+    std::cout << "In bsold_fit_circ_arc_spline_process::execute() - not exactly 1"
              << " input frames \n";
     return false;
   }
@@ -126,24 +126,24 @@ execute()
   // retrieve input storage : vsol2D
   vidpro1_vsol2D_storage_sptr frame_vsol;
   frame_vsol.vertical_cast(input_data_[0][0]);
-  vcl_vector<vsol_spatial_object_2d_sptr > all_vsols = frame_vsol->all_data();
+  std::vector<vsol_spatial_object_2d_sptr > all_vsols = frame_vsol->all_data();
 
   // create the output storage class
   vidpro1_vsol2D_storage_sptr output_vsol = vidpro1_vsol2D_storage_new();
   output_data_[0].push_back(output_vsol);
 
   // fit (the first found) the polyline or polygon with a circular arc spline
-  vcl_vector<bgld_circ_arc > arc_list;
+  std::vector<bgld_circ_arc > arc_list;
   for (unsigned int i=0; i<all_vsols.size(); ++i)
   {
     vsol_spatial_object_2d_sptr vsol = all_vsols[i];
     if (vsol->cast_to_curve() && vsol->cast_to_curve()->cast_to_polyline())
     {
       vsol_polyline_2d_sptr polyline = vsol->cast_to_curve()->cast_to_polyline();
-      vcl_cout << "Number of line segments in original contour = " << polyline->size()-1 << ".\n";
+      std::cout << "Number of line segments in original contour = " << polyline->size()-1 << ".\n";
       
       // collect the points
-      vcl_vector<vgl_point_2d<double > > pts(polyline->size());
+      std::vector<vgl_point_2d<double > > pts(polyline->size());
       for (unsigned i=0; i<polyline->size(); ++i)
       {
         pts[i] = polyline->vertex(i)->get_p();
@@ -160,11 +160,11 @@ execute()
       //  fitter.add_point(pts[i]);
       //}
       //fitter.fit();
-      //vcl_vector<vgl_line_segment_2d<double> >& segs = fitter.get_line_segs();
-      //vcl_cout << "Number of segments after line fitting = " << segs.size() << ".\n";
+      //std::vector<vgl_line_segment_2d<double> >& segs = fitter.get_line_segs();
+      //std::cout << "Number of segments after line fitting = " << segs.size() << ".\n";
 
       //// collect the points again
-      //vcl_vector<vgl_point_2d<double > > pts2;
+      //std::vector<vgl_point_2d<double > > pts2;
       //for (unsigned int i =0; i < segs.size(); ++i)
       //{
       //  // add a lot of points to reduce fitting error
@@ -206,10 +206,10 @@ execute()
     else if (vsol->cast_to_region() && vsol->cast_to_region()->cast_to_polygon()) 
     {
       vsol_polygon_2d_sptr polygon = vsol->cast_to_region()->cast_to_polygon();
-      vcl_cout << "Number of line segments in original contour = " << polygon->size() << ".\n";
+      std::cout << "Number of line segments in original contour = " << polygon->size() << ".\n";
       
       // collect the points
-      vcl_vector<vgl_point_2d<double > > pts(polygon->size());
+      std::vector<vgl_point_2d<double > > pts(polygon->size());
       for (unsigned i=0; i<polygon->size(); ++i)
       {
         pts[i] = polygon->vertex(i)->get_p();
@@ -221,7 +221,7 @@ execute()
     }
   }
 
-  vcl_cout << "Number of arc segments in final contour = " << arc_list.size() << ".\n";
+  std::cout << "Number of arc segments in final contour = " << arc_list.size() << ".\n";
 
   // putting each circular arc as a vsol2D object (since there is not poly-arc in vsol)
   for (unsigned i =0; i < arc_list.size(); ++i)
@@ -229,19 +229,19 @@ execute()
     bgld_circ_arc arc = arc_list[i];
 
     ////
-    //vcl_cout << "arc [ " << i << " ] = ";
-    //arc.print(vcl_cout);
-    //vcl_cout << "\n.";
+    //std::cout << "arc [ " << i << " ] = ";
+    //arc.print(std::cout);
+    //std::cout << "\n.";
 
     //// output a polyline for each arc with 5 pts
-    //vcl_vector<vsol_point_2d_sptr > arc_pts;
+    //std::vector<vsol_point_2d_sptr > arc_pts;
     //for (double t = 0; t <= 1; t = t + 0.2)
     //{
     //  arc_pts.push_back(new vsol_point_2d(arc.point_at(t)));
     //}
     //output_vsol->add_object(new vsol_polyline_2d(arc_pts));
 
-    if (vcl_abs(arc.k()) < 1e-4)
+    if (std::abs(arc.k()) < 1e-4)
     {
       vsol_line_2d_sptr line = new vsol_line_2d(arc.start(), arc.end());
       
@@ -252,7 +252,7 @@ execute()
     {
       // convert to vsol_conic
       vgl_point_2d<double > c = arc.center();
-      double r = 1 / vcl_abs(arc.k());
+      double r = 1 / std::abs(arc.k());
 
       // parameter of conic (circle)
       double conic_a = 1;

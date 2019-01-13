@@ -20,16 +20,16 @@
 #include "bmrf_epipole.h"
 #include <vsl/vsl_binary_io.h>
 #include <vbl/vbl_ref_count.h>
-#include <vcl_deque.h>
-#include <vcl_set.h>
-#include <vcl_iosfwd.h> // for std::ostream
+#include <deque>
+#include <set>
+#include <iosfwd> // for std::ostream
 
 //: The MRF network
 class bmrf_network : public vbl_ref_count
 {
  public:
-  typedef vcl_map<bmrf_epi_seg_sptr, bmrf_node_sptr> seg_node_map;
-  typedef vcl_map<int, seg_node_map > frame_node_map;
+  typedef std::map<bmrf_epi_seg_sptr, bmrf_node_sptr> seg_node_map;
+  typedef std::map<int, seg_node_map > frame_node_map;
 
   typedef bmrf_node::neighbor_type neighbor_type;
 
@@ -80,7 +80,7 @@ class bmrf_network : public vbl_ref_count
 
   //: Returns the set of active frame numbers
   // \note frame_numbers().size() == num_frames() but the numbers do not start at zero in general
-  vcl_set<int> frame_numbers() const;
+  std::set<int> frame_numbers() const;
 
   //: Returns the number of nodes in the network
   // \ note if the optional parameter \p frame is positive then the size is of that frame
@@ -122,7 +122,7 @@ class bmrf_network : public vbl_ref_count
   short version() const;
 
   //: Print an ascii summary to the stream
-  void print_summary(vcl_ostream &os) const;
+  void print_summary(std::ostream &os) const;
 
  private:
   //: The map from epi_seg pointers to nodes in the network
@@ -133,7 +133,7 @@ class bmrf_network : public vbl_ref_count
   frame_node_map nodes_from_frame_;
 
   //: The vector of epipoles (for each frame)
-  vcl_vector<bmrf_epipole> epipoles_;
+  std::vector<bmrf_epipole> epipoles_;
 
  public:
   class iterator
@@ -178,8 +178,8 @@ class bmrf_network : public vbl_ref_count
     //: Increment the current node
     void next_node();
 
-    vcl_deque<bmrf_node_sptr> eval_queue_;
-    vcl_set<bmrf_node_sptr> visited_;
+    std::deque<bmrf_node_sptr> eval_queue_;
+    std::set<bmrf_node_sptr> visited_;
   };
 
   // Breadth first search iterator
@@ -193,8 +193,8 @@ class bmrf_network : public vbl_ref_count
     //: Increment the current node
     void next_node();
 
-    vcl_deque<bmrf_node_sptr> eval_queue_;
-    vcl_set<bmrf_node_sptr> visited_;
+    std::deque<bmrf_node_sptr> eval_queue_;
+    std::set<bmrf_node_sptr> visited_;
   };
 
   //: Depth first search begin iterator
@@ -216,7 +216,7 @@ void vsl_b_write(vsl_b_ostream &os, const bmrf_network* n);
 void vsl_b_read(vsl_b_istream &is, bmrf_network* &n);
 
 //: Print an ASCII summary to the stream
-void vsl_print_summary(vcl_ostream &os, const bmrf_network* n);
+void vsl_print_summary(std::ostream &os, const bmrf_network* n);
 
 
 #endif // bmrf_network_h_

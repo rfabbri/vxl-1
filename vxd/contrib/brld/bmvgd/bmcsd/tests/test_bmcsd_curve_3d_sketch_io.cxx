@@ -1,5 +1,5 @@
 #include <testlib/testlib_test.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <bmcsd/bmcsd_util.h>
 #include <bmcsd/bmcsd_view_set.h>
 #include <bmcsd/bmcsd_curve_3d_attributes.h>
@@ -24,7 +24,7 @@ MAIN( test_bmcsd_curve_3d_sketch_io )
 void 
 test_bmcsd_curve_3d_sketch_io()
 {
-  vcl_vector< bdifd_1st_order_curve_3d > curves(2);
+  std::vector< bdifd_1st_order_curve_3d > curves(2);
 
   bdifd_1st_order_point_3d p;
   p.Gama[0] = 123.999;
@@ -54,7 +54,7 @@ test_bmcsd_curve_3d_sketch_io()
 
   // Fill up the data with 2 curves and 2 attribs
 
-  vcl_vector< bmcsd_curve_3d_attributes > attr(2);
+  std::vector< bmcsd_curve_3d_attributes > attr(2);
   {
   bmcsd_stereo_views_sptr vp = new bmcsd_stereo_views();
   bmcsd_stereo_views &v = *vp;

@@ -33,9 +33,9 @@ shared_vertex(const bgrld_edge<V >& other) const
 
 //: Print an ascii summary to the stream
 template <class V>
-void bgrld_edge<V>::print_summary( vcl_ostream& os ) const
+void bgrld_edge<V>::print_summary( std::ostream& os ) const
 {
-  os << vcl_endl;
+  os << std::endl;
 }
 
 #define BGRLD_EDGE_INSTANTIATE(E) \

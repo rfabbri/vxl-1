@@ -21,21 +21,21 @@ bpro1_storage::bpro1_storage()
 
 
 //: Constructor
-bpro1_storage::bpro1_storage(const vcl_string& name)
+bpro1_storage::bpro1_storage(const std::string& name)
  : name_(name)
 {
 }
 
 //: Set the name of this storage class instance
 void 
-bpro1_storage::set_name(const vcl_string& name)
+bpro1_storage::set_name(const std::string& name)
 {
   name_ = name;
 }
 
 
 //: Returns the name of this storage class instance
-vcl_string
+std::string
 bpro1_storage::name() const
 {
   return name_;
@@ -88,9 +88,9 @@ bpro1_storage::b_read(vsl_b_istream &is)
     break;
 
   default:
-    vcl_cerr << "I/O ERROR: bpro1_storage::b_read(vsl_b_istream&)\n"
+    std::cerr << "I/O ERROR: bpro1_storage::b_read(vsl_b_istream&)\n"
              << "           Unknown version number "<< ver << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }
@@ -122,7 +122,7 @@ void vsl_add_to_binary_loader(const bpro1_storage& b)
 
 //==============================================
 //: Stream summary output for base class pointer
-void vsl_print_summary(vcl_ostream& os,const bpro1_storage* s)
+void vsl_print_summary(std::ostream& os,const bpro1_storage* s)
 {
   if (s)
     os << "bpro1_storage{type:"<<s->type()<<"}";

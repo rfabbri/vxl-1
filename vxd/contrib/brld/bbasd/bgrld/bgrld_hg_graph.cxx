@@ -12,7 +12,7 @@
 void bgrld_hg_graph::_internal_add_vertex (bgrld_hg_vertex* vertex) 
 {
   assert (vertex->id() > 0);
-  vertices_.insert (vcl_pair<int, bgrld_hg_vertex*> (vertex->id(), vertex));
+  vertices_.insert (std::pair<int, bgrld_hg_vertex*> (vertex->id(), vertex));
 }
 
 bool bgrld_hg_graph::_internal_del_vertex (bgrld_hg_vertex* vertex) 
@@ -25,7 +25,7 @@ bool bgrld_hg_graph::_internal_del_vertex (bgrld_hg_vertex* vertex)
 void bgrld_hg_graph::_internal_add_edge (bgrld_hg_edge* edge) 
 {
   assert (edge->id() > 0);
-  edges_.insert (vcl_pair<int, bgrld_hg_edge*> (edge->id(), edge));
+  edges_.insert (std::pair<int, bgrld_hg_edge*> (edge->id(), edge));
 }
 
 bool bgrld_hg_graph::_internal_del_edge (bgrld_hg_edge* edge)
@@ -41,7 +41,7 @@ bool bgrld_hg_graph::_internal_del_edge (bgrld_hg_edge* edge)
 
 bool bgrld_hg_graph::remove_vertex (bgrld_hg_vertex* vertex)
 {
-  vcl_vector<bgrld_hg_edge*>::iterator it = vertex->connecting_edges().begin();
+  std::vector<bgrld_hg_edge*>::iterator it = vertex->connecting_edges().begin();
   while (it != vertex->connecting_edges().end()) {
     bgrld_hg_edge* edge = (*it);
     _internal_disconnect_edge_vertex (edge, vertex);

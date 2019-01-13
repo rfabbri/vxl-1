@@ -16,14 +16,14 @@ becld_episeg_storage::clone() const
 
 //: Set the episegments
 void 
-becld_episeg_storage::set_episegs(const vcl_vector<becld_episeg_sptr>& episegs)
+becld_episeg_storage::set_episegs(const std::vector<becld_episeg_sptr>& episegs)
 {
   episegs_ = episegs;
 }
 
 
 //: Access the episegments
-vcl_vector<becld_episeg_sptr> 
+std::vector<becld_episeg_sptr> 
 becld_episeg_storage::episegs() const
 {
   return episegs_;

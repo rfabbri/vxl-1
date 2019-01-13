@@ -19,7 +19,7 @@
 // for I/O:
 #include <vil1/vil1_load.h>
 #include <vil1/vil1_save.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <vxl_config.h> // for vxl_byte
 
@@ -28,7 +28,7 @@ main(int argc, char** argv)
 {
   if (argc < 3)
   {
-    vcl_cerr << "Syntax: example_vepl1_moment file_in file_out\n";
+    std::cerr << "Syntax: example_vepl1_moment file_in file_out\n";
     return 1;
   }
 
@@ -56,7 +56,7 @@ main(int argc, char** argv)
   vxl_byte dummy = 0;
   out = vepl1_convert(out, dummy);
   vil1_save(out, argv[2], "pnm");
-  vcl_cout << "Written image of type PGM to " << argv[2] << vcl_endl;
+  std::cout << "Written image of type PGM to " << argv[2] << std::endl;
 
   return 0;
 }

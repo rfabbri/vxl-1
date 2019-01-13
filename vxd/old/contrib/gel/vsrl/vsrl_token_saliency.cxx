@@ -1,7 +1,7 @@
 // This is gel/vsrl/vsrl_token_saliency.cxx
 #include "vsrl_token_saliency.h"
-#include <vcl_iostream.h>
-#include <vcl_cassert.h>
+#include <iostream>
+#include <cassert>
 #include <vil1/vil1_save.h>
 
 vsrl_token_saliency::vsrl_token_saliency(vsrl_image_correlation *image_correlation)
@@ -109,12 +109,12 @@ void vsrl_token_saliency::print_saliency_stats(int x, int y)
   double mean,std;
   get_saliency_stats(x,y,mean,std);
 
-  vcl_cout << "Pixel " << x << " " << y << " has a local corelation mean and std " << mean << " " << std << vcl_endl;
+  std::cout << "Pixel " << x << " " << y << " has a local corelation mean and std " << mean << " " << std << std::endl;
 }
 
 void vsrl_token_saliency::print_saliency(int x, int y)
 {
-  vcl_cout << "Pixel " << x << " " << y << " has saliency " << get_saliency(x,y)  << vcl_endl;
+  std::cout << "Pixel " << x << " " << y << " has saliency " << get_saliency(x,y)  << std::endl;
 }
 
 void vsrl_token_saliency::print_saliency_stats(int y)

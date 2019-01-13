@@ -11,9 +11,9 @@
 //\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri.github.io)
 //
 #include <testlib/testlib_test.h>
-#include <vcl_limits.h>
-#include <vcl_vector.h>
-#include <vcl_algorithm.h>
+#include <limits>
+#include <vector>
+#include <algorithm>
 #include <vnl/vnl_double_3x3.h>
 #include <bdifd/bdifd_util.h>
 #include <bdifd/bdifd_camera.h>
@@ -21,10 +21,10 @@
 #include <bdifd/bdifd_analytic.h>
 #include <bdifd/algo/bdifd_data.h>
 
-static const double tolerance=vcl_numeric_limits<double>::epsilon()*100;
+static const double tolerance=std::numeric_limits<double>::epsilon()*100;
 
 static void test_ellipse_differential_geometry();
-static void test_project_reconstruct(vcl_vector<bdifd_camera> &cam_, vcl_vector<vcl_vector<bdifd_3rd_order_point_3d> > &crv3d);
+static void test_project_reconstruct(std::vector<bdifd_camera> &cam_, std::vector<std::vector<bdifd_3rd_order_point_3d> > &crv3d);
 
 //: tests multiview projection + reconstruction of differential geometry
 MAIN( test_diff_geometry )
@@ -35,12 +35,12 @@ MAIN( test_diff_geometry )
   test_ellipse_differential_geometry();
 
   //: ideal cams
-  vcl_vector<bdifd_camera> cam_gt_;
+  std::vector<bdifd_camera> cam_gt_;
   unsigned nviews_=3;
   cam_gt_.resize(nviews_);
 
   //: perturbed cams
-  //  vcl_vector<bdifd_camera> cam_;
+  //  std::vector<bdifd_camera> cam_;
   //  cam_.resize(nviews_);
 
   /*
@@ -53,7 +53,7 @@ MAIN( test_diff_geometry )
    */ 
 
   { // ---------- Digital Camera Setup
-  vcl_cout << "\n\n\n ========== TESTING FOR DIGITAL CAMERA TURNTABLE ========== \n\n\n";
+  std::cout << "\n\n\n ========== TESTING FOR DIGITAL CAMERA TURNTABLE ========== \n\n\n";
 
   unsigned  crop_origin_x_ = 450;
   unsigned  crop_origin_y_ = 1750;
@@ -73,10 +73,10 @@ MAIN( test_diff_geometry )
   P = bdifd_turntable::camera_olympus(60, K);
   cam_gt_[2].set_p(*P);
 
-  vcl_vector<vcl_vector<bdifd_3rd_order_point_3d> > crv3d;
+  std::vector<std::vector<bdifd_3rd_order_point_3d> > crv3d;
   bdifd_data::space_curves_olympus_turntable( crv3d );
 
-  //  mywritev(vcl_string("dat/synth_data3d_rec.dat"), C_rec);
+  //  mywritev(std::string("dat/synth_data3d_rec.dat"), C_rec);
 
   test_project_reconstruct(cam_gt_, crv3d);
   }
@@ -85,12 +85,12 @@ MAIN( test_diff_geometry )
 }
 
 void 
-test_project_reconstruct(vcl_vector<bdifd_camera> &cam_, vcl_vector<vcl_vector<bdifd_3rd_order_point_3d> > &crv3d)
+test_project_reconstruct(std::vector<bdifd_camera> &cam_, std::vector<std::vector<bdifd_3rd_order_point_3d> > &crv3d)
 {
 
   unsigned nviews_=cam_.size();
   { // Test without intrinsics (do everything in world coordinates)
-        vcl_vector< vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > > crv2d_gt_;
+        std::vector< std::vector<std::vector<bdifd_3rd_order_point_2d> > > crv2d_gt_;
     
       //  bdifd_data::project_into_cams(crv3d, cam_, crv2d_gt_);
 
@@ -106,7 +106,7 @@ test_project_reconstruct(vcl_vector<bdifd_camera> &cam_, vcl_vector<vcl_vector<b
           }
         }
         
-        vcl_vector<vcl_vector<bdifd_3rd_order_point_3d> > C_rec;
+        std::vector<std::vector<bdifd_3rd_order_point_3d> > C_rec;
 
         bdifd_rig rig(cam_[0].Pr_,cam_[1].Pr_);
 
@@ -133,7 +133,7 @@ test_project_reconstruct(vcl_vector<bdifd_camera> &cam_, vcl_vector<vcl_vector<b
 
 
         //: error for each curve 
-        vcl_vector<double> err_pos, err_tan, err_k, err_kdot, err_tau, err_n, err_b, min_err_k, max_err_k,
+        std::vector<double> err_pos, err_tan, err_k, err_kdot, err_tau, err_n, err_b, min_err_k, max_err_k,
           min_err_k_angle, max_err_k_angle, max_err_speed, min_err_speed, max_err_tau, max_err_tau_angle;
 
         err_pos.resize(C_rec.size(),0);
@@ -141,7 +141,7 @@ test_project_reconstruct(vcl_vector<bdifd_camera> &cam_, vcl_vector<vcl_vector<b
         err_n.resize(C_rec.size(),0);
         err_b.resize(C_rec.size(),0);
         err_k.resize(C_rec.size(),0);
-        min_err_k.resize(C_rec.size(),vcl_numeric_limits<double>::infinity());
+        min_err_k.resize(C_rec.size(),std::numeric_limits<double>::infinity());
         max_err_k.resize(C_rec.size(),0);
         max_err_tau.resize(C_rec.size(),0);
         max_err_speed.resize(C_rec.size(),0);
@@ -155,8 +155,8 @@ test_project_reconstruct(vcl_vector<bdifd_camera> &cam_, vcl_vector<vcl_vector<b
         assert(C_rec.size() == crv3d.size());
         for (unsigned  ic=0; ic < C_rec.size(); ++ic) {
           assert(C_rec[ic].size() == crv3d[ic].size());
-          vcl_cout << "=========================================\n";
-          vcl_cout << "Curve #" << ic+1 << " " << " npoints: " << C_rec[ic].size();
+          std::cout << "=========================================\n";
+          std::cout << "Curve #" << ic+1 << " " << " npoints: " << C_rec[ic].size();
           unsigned  nvalid=0;
           unsigned  nvalid2=0;
           for (unsigned  i=0; i < C_rec[ic].size(); ++i) {
@@ -166,7 +166,7 @@ test_project_reconstruct(vcl_vector<bdifd_camera> &cam_, vcl_vector<vcl_vector<b
             ++nvalid;
             err_pos[ic]  += (C_rec[ic][i].Gama - crv3d[ic][i].Gama).two_norm();
             err_tan[ic]  += (C_rec[ic][i].T - crv3d[ic][i].T).two_norm();
-            double err_k_current = vcl_fabs(C_rec[ic][i].K - crv3d[ic][i].K);
+            double err_k_current = std::fabs(C_rec[ic][i].K - crv3d[ic][i].K);
             err_k[ic]    += err_k_current;
             if (err_k_current < min_err_k[ic]) {
               min_err_k[ic] = err_k_current;
@@ -193,9 +193,9 @@ test_project_reconstruct(vcl_vector<bdifd_camera> &cam_, vcl_vector<vcl_vector<b
               ++nvalid2;
               err_n[ic]    += (C_rec[ic][i].N - crv3d[ic][i].N).two_norm();
               err_b[ic]    += (C_rec[ic][i].B - crv3d[ic][i].B).two_norm();
-              err_kdot[ic] += vcl_fabs(C_rec[ic][i].Kdot - crv3d[ic][i].Kdot);
-              err_tau[ic]  += vcl_fabs(C_rec[ic][i].Tau - crv3d[ic][i].Tau);
-              double err_tau_current = vcl_fabs(C_rec[ic][i].Tau - crv3d[ic][i].Tau);
+              err_kdot[ic] += std::fabs(C_rec[ic][i].Kdot - crv3d[ic][i].Kdot);
+              err_tau[ic]  += std::fabs(C_rec[ic][i].Tau - crv3d[ic][i].Tau);
+              double err_tau_current = std::fabs(C_rec[ic][i].Tau - crv3d[ic][i].Tau);
               if (err_tau_current > max_err_tau[ic]) {
                 max_err_tau[ic] = err_tau_current;
 
@@ -208,26 +208,26 @@ test_project_reconstruct(vcl_vector<bdifd_camera> &cam_, vcl_vector<vcl_vector<b
             } else {
               if (!bdifd_util::near_zero(C_rec[ic][i].Kdot) || !bdifd_util::near_zero(C_rec[ic][i].Tau)) {
                 TEST("Kdot and Tau !=0 while K = 0",0,1);
-                vcl_cout << "Kdot: " << C_rec[ic][i].Kdot << " Tau: " << C_rec[ic][i].Tau << vcl_endl;
+                std::cout << "Kdot: " << C_rec[ic][i].Kdot << " Tau: " << C_rec[ic][i].Tau << std::endl;
               }
             }
             // OBS: should have 0 Torsion and 0 Kdot if K == 0, although N is
             // undefined
           }
-          vcl_cout << " nvalid: " << nvalid << " nvalid2: " << nvalid2;
+          std::cout << " nvalid: " << nvalid << " nvalid2: " << nvalid2;
           if (nvalid) {
             err_pos[ic] /= nvalid;
             err_tan[ic] /= nvalid;
             err_k[ic] /= nvalid;
 
-            vcl_cout << " err_tan: " << err_tan[ic] << vcl_endl;
-            vcl_cout << " err_k: " << err_k[ic] << " max_err_k: " << max_err_k[ic] << 
+            std::cout << " err_tan: " << err_tan[ic] << std::endl;
+            std::cout << " err_k: " << err_k[ic] << " max_err_k: " << max_err_k[ic] << 
               "(theta " << max_err_k_angle[ic]*(180.0/vnl_math::pi) << ")" <<
               " max_err_speed: " << max_err_speed[ic] << 
               " min_err_k: " << min_err_k[ic] << 
               "(theta " << min_err_k_angle[ic]*(180.0/vnl_math::pi) << ")" <<
               " min_err_speed: " << min_err_speed[ic] << 
-              vcl_endl;
+              std::endl;
 
             TEST_NEAR("Pos error", err_pos[ic], 0, 1e-5);
             TEST_NEAR("Tan error", err_tan[ic], 0, 1e-5);
@@ -239,18 +239,18 @@ test_project_reconstruct(vcl_vector<bdifd_camera> &cam_, vcl_vector<vcl_vector<b
               err_n[ic] /= nvalid2;
               err_b[ic] /= nvalid2;
 
-              vcl_cout << " err_n: " << err_n[ic];
-              vcl_cout << " err_b: " << err_b[ic];
-              vcl_cout << " err_kdot: " << err_kdot[ic];
-              vcl_cout << " err_tau: " << err_tau[ic] << " max_err_tau: " << max_err_tau[ic] << 
-              "(theta " << max_err_tau_angle[ic]*(180.0/vnl_math::pi) << ")" << vcl_endl;
+              std::cout << " err_n: " << err_n[ic];
+              std::cout << " err_b: " << err_b[ic];
+              std::cout << " err_kdot: " << err_kdot[ic];
+              std::cout << " err_tau: " << err_tau[ic] << " max_err_tau: " << max_err_tau[ic] << 
+              "(theta " << max_err_tau_angle[ic]*(180.0/vnl_math::pi) << ")" << std::endl;
               TEST_NEAR("Normal error", err_n[ic], 0, 1e-5);
               TEST_NEAR("Binormal error", err_b[ic], 0, 1e-5);
               TEST_NEAR("Kdot error", err_kdot[ic], 0, 1e-5);
               TEST_NEAR("Torsion error", err_tau[ic], 0, 1e-4);
             }
           } else {
-            vcl_cout << vcl_endl;
+            std::cout << std::endl;
           }
         }
   }// ! block: test without intrinsics
@@ -258,10 +258,10 @@ test_project_reconstruct(vcl_vector<bdifd_camera> &cam_, vcl_vector<vcl_vector<b
 
   { // Test with intrinsics
 
-    vcl_vector< vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > > crv2d_gt_;
+    std::vector< std::vector<std::vector<bdifd_3rd_order_point_2d> > > crv2d_gt_;
       //  bdifd_data::project_into_cams(crv3d, cam_, crv2d_gt_);
 
-        vcl_cout << "Projecting curves (with intrinsics) \n";
+        std::cout << "Projecting curves (with intrinsics) \n";
         crv2d_gt_.resize(nviews_);
         for (unsigned i=0; i < nviews_; ++i) { // nviews
           crv2d_gt_[i].resize(crv3d.size());
@@ -275,9 +275,9 @@ test_project_reconstruct(vcl_vector<bdifd_camera> &cam_, vcl_vector<vcl_vector<b
         }
 
 
-        vcl_cout << "Reconstructing curves (with intrinsics) \n";
+        std::cout << "Reconstructing curves (with intrinsics) \n";
 
-        vcl_vector<vcl_vector<bdifd_3rd_order_point_3d> > C_rec;
+        std::vector<std::vector<bdifd_3rd_order_point_3d> > C_rec;
 
         bdifd_rig rig(cam_[0].Pr_,cam_[1].Pr_);
 
@@ -299,14 +299,14 @@ test_project_reconstruct(vcl_vector<bdifd_camera> &cam_, vcl_vector<vcl_vector<b
               rig.reconstruct_3rd_order(p1_w, p2_w, &(C_rec[ic][i]));
             }
           }
-          vcl_cout << vcl_endl;
+          std::cout << std::endl;
         }
 
         // statistics
 
 
         //: error for each curve 
-        vcl_vector<double> err_pos, err_tan, err_k, err_kdot, err_tau, err_n, err_b, min_err_k, max_err_k,
+        std::vector<double> err_pos, err_tan, err_k, err_kdot, err_tau, err_n, err_b, min_err_k, max_err_k,
           min_err_k_angle, max_err_k_angle;
 
         err_pos.resize(C_rec.size(),0);
@@ -314,7 +314,7 @@ test_project_reconstruct(vcl_vector<bdifd_camera> &cam_, vcl_vector<vcl_vector<b
         err_n.resize(C_rec.size(),0);
         err_b.resize(C_rec.size(),0);
         err_k.resize(C_rec.size(),0);
-        min_err_k.resize(C_rec.size(),vcl_numeric_limits<double>::infinity());
+        min_err_k.resize(C_rec.size(),std::numeric_limits<double>::infinity());
         max_err_k.resize(C_rec.size(),0);
         min_err_k_angle.resize(C_rec.size(),0);
         max_err_k_angle.resize(C_rec.size(),0);
@@ -324,8 +324,8 @@ test_project_reconstruct(vcl_vector<bdifd_camera> &cam_, vcl_vector<vcl_vector<b
         assert(C_rec.size() == crv3d.size());
         for (unsigned  ic=0; ic < C_rec.size(); ++ic) {
           assert(C_rec[ic].size() == crv3d[ic].size());
-          vcl_cout << "=========================================\n";
-          vcl_cout << "Curve #" << ic+1 << " " << " npoints: " << C_rec[ic].size();
+          std::cout << "=========================================\n";
+          std::cout << "Curve #" << ic+1 << " " << " npoints: " << C_rec[ic].size();
           unsigned  nvalid=0;
           unsigned  nvalid2=0;
           for (unsigned  i=0; i < C_rec[ic].size(); ++i) {
@@ -335,7 +335,7 @@ test_project_reconstruct(vcl_vector<bdifd_camera> &cam_, vcl_vector<vcl_vector<b
             ++nvalid;
             err_pos[ic]  += (C_rec[ic][i].Gama - crv3d[ic][i].Gama).two_norm();
             err_tan[ic]  += (C_rec[ic][i].T - crv3d[ic][i].T).two_norm();
-            double err_k_current = vcl_fabs(C_rec[ic][i].K - crv3d[ic][i].K);
+            double err_k_current = std::fabs(C_rec[ic][i].K - crv3d[ic][i].K);
             err_k[ic]    += err_k_current;
             if (err_k_current < min_err_k[ic]) {
               min_err_k[ic] = err_k_current;
@@ -360,24 +360,24 @@ test_project_reconstruct(vcl_vector<bdifd_camera> &cam_, vcl_vector<vcl_vector<b
               ++nvalid2;
               err_n[ic]    += (C_rec[ic][i].N - crv3d[ic][i].N).two_norm();
               err_b[ic]    += (C_rec[ic][i].B - crv3d[ic][i].B).two_norm();
-              err_kdot[ic] += vcl_fabs(C_rec[ic][i].Kdot - crv3d[ic][i].Kdot);
-              err_tau[ic]  += vcl_fabs(C_rec[ic][i].Tau - crv3d[ic][i].Tau);
+              err_kdot[ic] += std::fabs(C_rec[ic][i].Kdot - crv3d[ic][i].Kdot);
+              err_tau[ic]  += std::fabs(C_rec[ic][i].Tau - crv3d[ic][i].Tau);
             }
             // OBS: should have 0 Torsion and 0 Kdot if K == 0, although N is
             // undefined
           }
-          vcl_cout << " nvalid: " << nvalid << " nvalid2: " << nvalid2;
+          std::cout << " nvalid: " << nvalid << " nvalid2: " << nvalid2;
           if (nvalid) {
             err_pos[ic] /= nvalid;
             err_tan[ic] /= nvalid;
             err_k[ic] /= nvalid;
 
-            vcl_cout << " err_tan: " << err_tan[ic] << vcl_endl;
-            vcl_cout << " err_k: " << err_k[ic] << " max_err_k: " << max_err_k[ic] << 
+            std::cout << " err_tan: " << err_tan[ic] << std::endl;
+            std::cout << " err_k: " << err_k[ic] << " max_err_k: " << max_err_k[ic] << 
               "(theta " << max_err_k_angle[ic]*(180.0/vnl_math::pi) << ")" <<
               " min_err_k: " << min_err_k[ic] << 
               "(theta " << min_err_k_angle[ic]*(180.0/vnl_math::pi) << ")" <<
-              vcl_endl;
+              std::endl;
 
             TEST_NEAR("Pos error", err_pos[ic], 0, 1e-5);
             TEST_NEAR("Tan error", err_tan[ic], 0, 1e-5);
@@ -389,17 +389,17 @@ test_project_reconstruct(vcl_vector<bdifd_camera> &cam_, vcl_vector<vcl_vector<b
               err_n[ic] /= nvalid2;
               err_b[ic] /= nvalid2;
 
-              vcl_cout << " err_n: " << err_n[ic];
-              vcl_cout << " err_b: " << err_b[ic];
-              vcl_cout << " err_kdot: " << err_kdot[ic];
-              vcl_cout << " err_tau: " << err_tau[ic] << vcl_endl;
+              std::cout << " err_n: " << err_n[ic];
+              std::cout << " err_b: " << err_b[ic];
+              std::cout << " err_kdot: " << err_kdot[ic];
+              std::cout << " err_tau: " << err_tau[ic] << std::endl;
               TEST_NEAR("Normal error", err_n[ic], 0, 1e-5);
               TEST_NEAR("Binormal error", err_b[ic], 0, 1e-5);
               TEST_NEAR("Kdot error", err_kdot[ic], 0, 1e-5);
               TEST_NEAR("Torsion error", err_tau[ic], 0, 1e-4);
             }
           } else {
-            vcl_cout << vcl_endl;
+            std::cout << std::endl;
           }
         }
   }// ! block: test with intrinsics
@@ -411,19 +411,19 @@ void
 test_ellipse_differential_geometry()
 {
 
-  vcl_vector<double> cv;
+  std::vector<double> cv;
   cv.push_back(0);
   cv.push_back(4);
   for (unsigned i_cv=0; i_cv < cv.size(); ++i_cv) {
     long double b=2945.29, a=2895.22, c=cv[i_cv];
 
-    vcl_vector<bdifd_3rd_order_point_2d > p;
+    std::vector<bdifd_3rd_order_point_2d > p;
     bdifd_vector_2d translation(0,0);
-    vcl_vector<double> v_theta;
+    std::vector<double> v_theta;
     bdifd_analytic::circle_curve( 1, translation, p, v_theta, 0., 5., 90.);
 
-    vcl_vector<double> v_theta_2;
-    vcl_vector<bdifd_3rd_order_point_2d > ell;
+    std::vector<double> v_theta_2;
+    std::vector<bdifd_3rd_order_point_2d > ell;
     bdifd_analytic::ellipse(a,b, translation, ell, v_theta_2, 0., 5., 90.);
 
     assert(v_theta.size() == v_theta_2.size());
@@ -448,7 +448,7 @@ test_ellipse_differential_geometry()
 
     //  assert(bdifd_util::near_zero( (L*L_inv).two_norm()) );
     for (unsigned i=0; i < p.size(); ++i) {
-      vcl_cout << "Sample point idx: " << i << " angle: " << v_theta[i]*(180.0/vnl_math::pi) << "(deg)" << vcl_endl;
+      std::cout << "Sample point idx: " << i << " angle: " << v_theta[i]*(180.0/vnl_math::pi) << "(deg)" << std::endl;
       // - linear transform p[i]
       // - compare k and kdot with values listed bellow
 
@@ -497,7 +497,7 @@ test_ellipse_differential_geometry()
         TEST("Ellipse_T == linear tr T", bdifd_util::near_zero((qq.t - ell[i].t).two_norm()),true);
         TEST("Ellipse_N == linear tr N", bdifd_util::near_zero((qq.n - ell[i].n).two_norm()),true);
         if (!bdifd_util::near_zero((qq.n - ell[i].n).two_norm()))
-          vcl_cout << "Ellipse n: " << ell[i].n << "   transf n: " << qq.n << vcl_endl;
+          std::cout << "Ellipse n: " << ell[i].n << "   transf n: " << qq.n << std::endl;
       }
 
       long double theta = v_theta[i];
@@ -512,7 +512,7 @@ test_ellipse_differential_geometry()
 
       TEST("linear_transform inversion", qq.valid && stat_rr && !bdifd_util::near_zero(p[i].k- rr.k, 1e-7), false);
       if (qq.valid && stat_rr && !bdifd_util::near_zero(p[i].k- rr.k, 1e-7))  {
-        vcl_cout << "INVERSION TEST: FAIL!  k_orig: " << p[i].k << " k_inverted: " << rr.k << vcl_endl;
+        std::cout << "INVERSION TEST: FAIL!  k_orig: " << p[i].k << " k_inverted: " << rr.k << std::endl;
       } 
 
       long double k_q = a * b * sqrtl(0.1e1L / (powl(cosl(theta), 0.4e1L) *
@@ -669,7 +669,7 @@ test_ellipse_differential_geometry()
       }
 
       if (qq.valid && !bdifd_util::near_zero((long double)(qq.k)- k_q, 1e-7))  {
-        vcl_cout << "Not equal! k_maple: " << k_q << " k_linear: " << qq.k << vcl_endl;
+        std::cout << "Not equal! k_maple: " << k_q << " k_linear: " << qq.k << std::endl;
       } 
 
       // Another test: use the inverse transform on the value from maple, and see what
@@ -680,12 +680,12 @@ test_ellipse_differential_geometry()
         TEST_NEAR("linear_transform Maple inversion", rr.k, p[i].k, 1e-6);
 
       if (qq.valid && stat_rr && stat_maple)
-        vcl_cout << "Ok\n";
+        std::cout << "Ok\n";
       else 
-        vcl_cout << "Invalid!\n";
+        std::cout << "Invalid!\n";
 
       if (qq.valid && stat_rr && !bdifd_util::near_zero(p[i].k- rr.k, 1e-7))  {
-        vcl_cout << "INVERSION TEST: FAIL!  k_orig: " << p[i].k << " k_inverted: " << rr.k << vcl_endl;
+        std::cout << "INVERSION TEST: FAIL!  k_orig: " << p[i].k << " k_inverted: " << rr.k << std::endl;
       }
     }
   }

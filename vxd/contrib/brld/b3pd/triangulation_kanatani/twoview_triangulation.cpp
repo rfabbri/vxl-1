@@ -6,7 +6,7 @@
  *                                    Time-stamp: <08/12/09 18:03:12 sugaya>
  * ************************************************************************* */
 //#include "libmatrix.h"
-#include <vcl_cmath.h>
+#include <cmath>
 #include "macros.h"
 #include "vector.h"
 #include "matrix.h"
@@ -45,7 +45,7 @@ two_view_triangulation (const Vector&   x1,
     J = (dx1[0] * dx1[0] + dx1[1] * dx1[1] +
          dx2[0] * dx2[0] + dx2[1] * dx2[1]) * f0 * f0;
     
-    if (vcl_fabs (J - J0) > convergence) {
+    if (std::fabs (J - J0) > convergence) {
       J0 = J;
       _x1 = x1 - dx1;
       _x2 = x2 - dx2;
@@ -170,7 +170,7 @@ two_view_triangulation_fast(const Vector&       x1,
     /* Step 6 */
     J = Dx1 * Dx1 + Dy1 * Dy1 + Dx2 * Dx2 + Dy2 * Dy2;
 
-    if (vcl_fabs (J - J0) > convergence) {
+    if (std::fabs (J - J0) > convergence) {
       J0= J;
       Tx1 = Ox1 - Dx1;
       Ty1 = Oy1 - Dy1;

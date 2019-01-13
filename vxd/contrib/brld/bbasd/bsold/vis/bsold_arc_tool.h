@@ -27,7 +27,7 @@ public:
   bool handle( const vgui_event & e, 
                const bvis1_view_tableau_sptr& view );
   //: name of the tool
-  vcl_string name() const;
+  std::string name() const;
   //: deactive the tool - stop tracking mouse position
   void deactivate();
   

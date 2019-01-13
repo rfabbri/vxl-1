@@ -1,9 +1,9 @@
 //This is vidpro1/process/vidpro1_load_con_process.cxx
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <iostream>
+#include <fstream>
 
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <vidpro1/process/vidpro1_load_con_process.h>
 #include <vsol/vsol_polyline_2d.h>
 #include <vsol/vsol_polyline_2d_sptr.h>
@@ -13,9 +13,9 @@
 #include <vsol/vsol_point_2d_sptr.h>
 #include <vgl/algo/vgl_h_matrix_2d.h>
 
-#include <vcl_cstring.h>
-#include <vcl_string.h>
-#include <vcl_fstream.h>
+#include <cstring>
+#include <string>
+#include <fstream>
 #include <vul/vul_file.h>
 #include <vul/vul_file_iterator.h>
 
@@ -27,7 +27,7 @@ vidpro1_load_con_process::vidpro1_load_con_process() : bpro1_process(), num_fram
       !parameters()->add( "Add all cons to the same frame" , "-bsame_frame" , (bool)false) ||
       !parameters()->add( "reverse frame sequence " , "-rev" , (bool)false ))
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -39,15 +39,15 @@ vidpro1_load_con_process::clone() const
   return new vidpro1_load_con_process(*this);
 }
 
-vcl_vector< vcl_string > vidpro1_load_con_process::get_input_type() 
+std::vector< std::string > vidpro1_load_con_process::get_input_type() 
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   return to_return;
 }
 
-vcl_vector< vcl_string > vidpro1_load_con_process::get_output_type() 
+std::vector< std::string > vidpro1_load_con_process::get_output_type() 
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   return to_return;
 }
@@ -56,7 +56,7 @@ bool vidpro1_load_con_process::execute()
 {
   bpro1_filepath input;
   parameters()->get_value( "-coninput" , input);
-  vcl_string input_file_path = input.path;
+  std::string input_file_path = input.path;
   
   int num_of_files = 0;
   output_data_.clear();
@@ -70,7 +70,7 @@ bool vidpro1_load_con_process::execute()
   // test if fname is a directory
   if (vul_file::is_directory(input_file_path))
   {
-    vcl_cout << input_file_path<<vcl_endl;
+    std::cout << input_file_path<<std::endl;
 
     bool bsame_frame;
     parameters()->get_value( "-bsame_frame" , bsame_frame);
@@ -78,10 +78,10 @@ bool vidpro1_load_con_process::execute()
     vul_file_iterator fn=input_file_path+"/*.con";
     for ( ; fn; ++fn) 
     {
-      vcl_string input_file = fn();
+      std::string input_file = fn();
   
       //load the con file      
-      vcl_vector< vsol_spatial_object_2d_sptr > contours;
+      std::vector< vsol_spatial_object_2d_sptr > contours;
       contours.push_back(bsold_load_con_file(input_file.c_str()));
 
       if (!bsame_frame){
@@ -89,7 +89,7 @@ bool vidpro1_load_con_process::execute()
         vidpro1_vsol2D_storage_sptr new_con = vidpro1_vsol2D_storage_new();
         new_con->add_objects(contours, input_file);
         
-        output_data_.push_back(vcl_vector< bpro1_storage_sptr > (1,new_con));
+        output_data_.push_back(std::vector< bpro1_storage_sptr > (1,new_con));
         num_of_files++;
       }
       else
@@ -97,7 +97,7 @@ bool vidpro1_load_con_process::execute()
     }
 
     if (bsame_frame){
-      output_data_.push_back(vcl_vector< bpro1_storage_sptr > (1,output_vsol));
+      output_data_.push_back(std::vector< bpro1_storage_sptr > (1,output_vsol));
       num_frames_ = 1;
     }
     else {
@@ -106,17 +106,17 @@ bool vidpro1_load_con_process::execute()
     }
   }
   else {
-    vcl_string input_file = input_file_path;
+    std::string input_file = input_file_path;
 
-    vcl_cout << input_file <<vcl_endl;
+    std::cout << input_file <<std::endl;
 
     //load the con file      
-    vcl_vector< vsol_spatial_object_2d_sptr > contours;
+    std::vector< vsol_spatial_object_2d_sptr > contours;
     contours.push_back(bsold_load_con_file(input_file.c_str()));
 
     output_vsol->add_objects(contours, input_file);
 
-    output_data_.push_back(vcl_vector< bpro1_storage_sptr > (1,output_vsol));
+    output_data_.push_back(std::vector< bpro1_storage_sptr > (1,output_vsol));
     num_frames_ = 1;
   }
 
@@ -125,7 +125,7 @@ bool vidpro1_load_con_process::execute()
 
   if (!rev){
     //reverse the order of the objects so that they come out in the right order
-    vcl_reverse(output_data_.begin(),output_data_.end());
+    std::reverse(output_data_.begin(),output_data_.end());
   }
 
   return true;

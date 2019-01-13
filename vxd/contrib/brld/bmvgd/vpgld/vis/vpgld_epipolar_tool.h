@@ -50,7 +50,7 @@ public:
   virtual ~vpgld_epipolar_tool() {}
   
   //: Returns the string name of this tool
-  vcl_string name() const;
+  std::string name() const;
 
   //: Handle events.
   bool handle( const vgui_event & e, 

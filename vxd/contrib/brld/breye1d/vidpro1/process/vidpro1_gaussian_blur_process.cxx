@@ -20,7 +20,7 @@ vidpro1_gaussian_blur_process::vidpro1_gaussian_blur_process()
 {
   if( !parameters()->add( "Gaussian Blur Sigma" , "-gbsigma" , 1.0f ) ||
       !parameters()->add( "Modify Source Image" , "-gbmodify", false ) ) {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -40,7 +40,7 @@ vidpro1_gaussian_blur_process::clone() const
 
 
 //: Return the name of the process
-vcl_string
+std::string
 vidpro1_gaussian_blur_process::name()
 {
   return "Gaussian Blur";
@@ -48,20 +48,20 @@ vidpro1_gaussian_blur_process::name()
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string > vidpro1_gaussian_blur_process::get_input_type()
+std::vector< std::string > vidpro1_gaussian_blur_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string > vidpro1_gaussian_blur_process::get_output_type()
+std::vector< std::string > vidpro1_gaussian_blur_process::get_output_type()
 {
   bool modify = false;
   parameters()->get_value( "-gbmodify" , modify );
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   if(!modify)
     to_return.push_back("image");
   return to_return;
@@ -90,7 +90,7 @@ vidpro1_gaussian_blur_process::execute()
 {
   if ( input_data_.size() != 1 )
   {
-      vcl_cout << "In vidpro1_gaussian_blur_process::execute() - not exactly one"
+      std::cout << "In vidpro1_gaussian_blur_process::execute() - not exactly one"
                << " input image \n";
       return false;
   }

@@ -25,8 +25,8 @@ public:
   //: You should be using this always with attributes, otherwise just use the
   // curve itself.
   bmcsd_curve_3d_sketch(
-      const vcl_vector< bdifd_1st_order_curve_3d > &crv3d,
-      const vcl_vector< bmcsd_curve_3d_attributes > &attr)
+      const std::vector< bdifd_1st_order_curve_3d > &crv3d,
+      const std::vector< bmcsd_curve_3d_attributes > &attr)
   : 
     crv3d_(crv3d),
     attr_(attr)
@@ -35,8 +35,8 @@ public:
   }
 
 
-  void set(const vcl_vector< bdifd_1st_order_curve_3d > &crv3d,
-      const vcl_vector< bmcsd_curve_3d_attributes > &attr)
+  void set(const std::vector< bdifd_1st_order_curve_3d > &crv3d,
+      const std::vector< bmcsd_curve_3d_attributes > &attr)
   {
     crv3d_ = crv3d;
     attr_ = attr;
@@ -47,8 +47,8 @@ public:
   // contain a file for each 3D curve, and for each 3D curve there will be a
   // corresponding entry on an attributes.vsl file with the remaining attributes
   // in text format.
-  bool write_dir_format(vcl_string dirname) const;
-  bool read_dir_format(vcl_string dirname);
+  bool write_dir_format(std::string dirname) const;
+  bool read_dir_format(std::string dirname);
   short dir_format_version() const { return 2;}
   unsigned num_curves() const { return crv3d_.size(); }
   unsigned total_num_points() const {
@@ -59,17 +59,17 @@ public:
   }
 
   //: Getters and setters. Setters should assert for consistency.
-  const vcl_vector< bdifd_1st_order_curve_3d > & curves_3d() const
+  const std::vector< bdifd_1st_order_curve_3d > & curves_3d() const
   { return crv3d_; }
-  const vcl_vector< bmcsd_curve_3d_attributes > &attributes() const
+  const std::vector< bmcsd_curve_3d_attributes > &attributes() const
   { return attr_; }
 
-  typedef vcl_vector<vgl_point_3d<double> > curve_points;
+  typedef std::vector<vgl_point_3d<double> > curve_points;
 
   void
-  get_curves_as_vgl_points(vcl_vector< curve_points > *pts3d_ptr) const
+  get_curves_as_vgl_points(std::vector< curve_points > *pts3d_ptr) const
   {
-    vcl_vector< curve_points > &pts3d = *pts3d_ptr;
+    std::vector< curve_points > &pts3d = *pts3d_ptr;
     pts3d.resize(crv3d_.size());
 
     for (unsigned c=0; c < num_curves(); ++c) {
@@ -88,8 +88,8 @@ public:
   //: prune
   void prune_by_total_support(double tau_support)
   {
-    vcl_vector< bdifd_1st_order_curve_3d > crv3d_new;
-    vcl_vector< bmcsd_curve_3d_attributes > attr_new;
+    std::vector< bdifd_1st_order_curve_3d > crv3d_new;
+    std::vector< bmcsd_curve_3d_attributes > attr_new;
 
     crv3d_new.reserve(num_curves());
     attr_new.reserve(num_curves());
@@ -109,8 +109,8 @@ public:
   unsigned totalReconCount_;
 
 //private:
-  vcl_vector< bdifd_1st_order_curve_3d > crv3d_;
-  vcl_vector< bmcsd_curve_3d_attributes > attr_;
+  std::vector< bdifd_1st_order_curve_3d > crv3d_;
+  std::vector< bmcsd_curve_3d_attributes > attr_;
 };
 
 #endif // bmcsd_curve_3d_sketch_h

@@ -1,7 +1,7 @@
 //:
 // \file
 
-#include <vcl_cmath.h>
+#include <cmath>
 
 #include "bsold_curve_algs.h"
 #include <bsold/bsold_interp_curve_2d.h>
@@ -12,7 +12,7 @@
 #include <vsol/vsol_polyline_2d.h>
 #include <vsol/vsol_box_2d.h>
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <bnld/algo/bnld_eno.h>
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_matrix.h>
@@ -21,7 +21,7 @@
 #include <vgl/algo/vgl_fit_lines_2d.h>
 #include <vgl/vgl_distance.h>
 #include <vnl/vnl_random.h>
-#include <vcl_ctime.h>
+#include <ctime>
 
 //: Destructor
 bsold_curve_algs::~bsold_curve_algs()
@@ -32,25 +32,25 @@ bsold_curve_algs::~bsold_curve_algs()
 //: sample the input curve at the rate length()/size
 bool bsold_curve_algs::
 sample(bsold_interp_curve_2d const &c, int size,
-       vcl_vector<vsol_point_2d_sptr>& pts)
+       std::vector<vsol_point_2d_sptr>& pts)
 {
   double L = c.length();
   double ds = L/size;
 #ifndef NDEBUG
-  vcl_cout << "Length of curve: " << L << " rate of sampling is: " << ds << vcl_endl;
-  vcl_cout << "Output size wanted is: " << size << vcl_endl;
+  std::cout << "Length of curve: " << L << " rate of sampling is: " << ds << std::endl;
+  std::cout << "Output size wanted is: " << size << std::endl;
 #endif
 
   pts.reserve(size);
 
   //for (int i = 0; i<c.intervals().size(); i++)
-  //  vcl_cout << "interval: " << i << "  length: " << (*c)[i].length() << vcl_endl; 
+  //  std::cout << "interval: " << i << "  length: " << (*c)[i].length() << std::endl; 
 
   double sum = 0;
   while (sum <= L)
   {
     pts.push_back(c.point_at(sum));
-    //vcl_cout << "sum: " << sum << " point: " << *(c.point_at(sum)) << vcl_endl;
+    //std::cout << "sum: " << sum << " point: " << *(c.point_at(sum)) << std::endl;
     sum += ds;
   }
 
@@ -58,7 +58,7 @@ sample(bsold_interp_curve_2d const &c, int size,
     pts.push_back(c.point_at(L));  
 
 #ifndef NDEBUG
-  vcl_cout << "after sampling pts size: " << pts.size() << " (should be " << size << ")\n";
+  std::cout << "after sampling pts size: " << pts.size() << " (should be " << size << ")\n";
 #endif
   return true;
 
@@ -70,7 +70,7 @@ sample(bsold_interp_curve_2d const &c, int size,
 //  no max length threshold to sample if negative
 bool bsold_curve_algs::
 sample(bsold_interp_curve_2d const &c, double ds,
-       vcl_vector<vsol_point_2d_sptr>& pts, vcl_vector<double>& tangents, double length_threshold)
+       std::vector<vsol_point_2d_sptr>& pts, std::vector<double>& tangents, double length_threshold)
 {
   double L;
   if (length_threshold > 0)
@@ -94,15 +94,15 @@ sample(bsold_interp_curve_2d const &c, double ds,
 //: sample a "region" evenly around this interp curve, 
 // (including the points right on the curve is optional, if not they start from delta away on the normal direction)
 void bsold_curve_algs::
-sample_region_along_curve(bsold_interp_curve_2d const &c, vcl_vector<vsol_point_2d_sptr>& region_pts, double delta, double length_threshold, float width, bool add_curve_points)
+sample_region_along_curve(bsold_interp_curve_2d const &c, std::vector<vsol_point_2d_sptr>& region_pts, double delta, double length_threshold, float width, bool add_curve_points)
 {
-  vcl_vector<double > tangents;
-  vcl_vector<vsol_point_2d_sptr> curve_pts;
+  std::vector<double > tangents;
+  std::vector<vsol_point_2d_sptr> curve_pts;
   sample(c, delta, curve_pts, tangents, length_threshold);  
 
   //: for each point, sample along the line that is normal to the curve as far as "width"
   //width += ds; // make sure that points at "width" are also used
-  vcl_vector<vsol_point_2d_sptr> plus_pts, minus_pts;  // plus from either side of the contour will be passed differently
+  std::vector<vsol_point_2d_sptr> plus_pts, minus_pts;  // plus from either side of the contour will be passed differently
   // so that user can pass them to different procedures
   // but if curve points are also added half of curve points 
   // will be considered in plus region and the other half in minus region
@@ -130,11 +130,11 @@ sample_region_along_curve(bsold_interp_curve_2d const &c, vcl_vector<vsol_point_
 }
 
 bool bsold_curve_algs::
-interpolate_linear(bsold_interp_curve_2d *c, vcl_vector<vsol_point_2d_sptr> const &pts, 
+interpolate_linear(bsold_interp_curve_2d *c, std::vector<vsol_point_2d_sptr> const &pts, 
                    bool closed)
 {
   if (!closed) {
-    vcl_vector<bgld_param_curve *> ints(pts.size()-1);
+    std::vector<bgld_param_curve *> ints(pts.size()-1);
 
     for (unsigned i=0; i<ints.size(); i++) {
       ints[i] = new bgld_poly_curve_line(pts[i]->get_p(), pts[i+1]->get_p());
@@ -143,7 +143,7 @@ interpolate_linear(bsold_interp_curve_2d *c, vcl_vector<vsol_point_2d_sptr> cons
     c->make(ints);
   } else {
 
-    vcl_vector<bgld_param_curve *> ints(pts.size());
+    std::vector<bgld_param_curve *> ints(pts.size());
 
     unsigned i;
     //: ozge changed all the loops in the following fashion with no paranthesis to the one below
@@ -161,10 +161,10 @@ interpolate_linear(bsold_interp_curve_2d *c, vcl_vector<vsol_point_2d_sptr> cons
 }
 
 bool bsold_curve_algs::
-interpolate_linear(bsold_interp_curve_2d *c, vcl_vector<vgl_point_2d<double> > const &pts, bool closed)
+interpolate_linear(bsold_interp_curve_2d *c, std::vector<vgl_point_2d<double> > const &pts, bool closed)
 {
   if (!closed) {
-    vcl_vector<bgld_param_curve *> ints(pts.size()-1);
+    std::vector<bgld_param_curve *> ints(pts.size()-1);
 
     //: ozge changed all the loops in the following fashion with no paranthesis to the one below
     //  there is a bug in an older version of gcc which is still used on one of our linux machines
@@ -176,7 +176,7 @@ interpolate_linear(bsold_interp_curve_2d *c, vcl_vector<vgl_point_2d<double> > c
     c->make(ints);
   } else {
 
-    vcl_vector<bgld_param_curve *> ints(pts.size());
+    std::vector<bgld_param_curve *> ints(pts.size());
 
     unsigned i;
     for (i=0; i<ints.size()-1; i++) {
@@ -193,7 +193,7 @@ interpolate_linear(bsold_interp_curve_2d *c, vcl_vector<vgl_point_2d<double> > c
 bool bsold_curve_algs::interpolate_linear(bsold_interp_curve_2d *c,
                                           vsol_polygon_2d_sptr poly)
 {
-  vcl_vector<bgld_param_curve *> ints(poly->size());
+  std::vector<bgld_param_curve *> ints(poly->size());
 
   unsigned i;
   for (i=0; i<poly->size()-1; i++) {
@@ -209,7 +209,7 @@ bool bsold_curve_algs::interpolate_linear(bsold_interp_curve_2d *c,
 bool bsold_curve_algs::interpolate_linear(bsold_interp_curve_2d *c,
                                  vsol_polyline_2d_sptr poly)
 {
-  vcl_vector<bgld_param_curve *> ints(poly->size()-1);
+  std::vector<bgld_param_curve *> ints(poly->size()-1);
 
   unsigned i;
   for (i=0; i<poly->size()-1; i++) {
@@ -221,11 +221,11 @@ bool bsold_curve_algs::interpolate_linear(bsold_interp_curve_2d *c,
 }
 
 bool bsold_curve_algs::
-interpolate_linear2(bsold_interp_curve_2d *c, vcl_vector<vsol_point_2d_sptr> const &pts, 
+interpolate_linear2(bsold_interp_curve_2d *c, std::vector<vsol_point_2d_sptr> const &pts, 
                     bool closed, int time)
 {
   if (!closed) {
-    vcl_vector<bgld_param_curve *> ints(pts.size()-1);
+    std::vector<bgld_param_curve *> ints(pts.size()-1);
 
     for (unsigned i=0; i<ints.size(); i++) {
       ints[i] = new bgld_poly_curve_line(pts[i]->get_p(), pts[i+1]->get_p());
@@ -234,7 +234,7 @@ interpolate_linear2(bsold_interp_curve_2d *c, vcl_vector<vsol_point_2d_sptr> con
     c->make(ints);
   } else {
 
-    vcl_vector<bgld_param_curve *> ints(pts.size());
+    std::vector<bgld_param_curve *> ints(pts.size());
 
     int size_looptarget = static_cast<int>(ints.size())-1;
     int i, j;
@@ -253,7 +253,7 @@ interpolate_linear2(bsold_interp_curve_2d *c, vcl_vector<vsol_point_2d_sptr> con
 }
 
 bool bsold_curve_algs::interpolate_eno(bsold_interp_curve_2d *c, 
-                                       vcl_vector<vsol_point_2d_sptr> const &pts,
+                                       std::vector<vsol_point_2d_sptr> const &pts,
                                        vnl_vector<double> &sample_pts)
 {
   int num_points = pts.size();
@@ -271,7 +271,7 @@ bool bsold_curve_algs::interpolate_eno(bsold_interp_curve_2d *c,
 }
 
 bool bsold_curve_algs::interpolate_eno(bsold_interp_curve_2d *c, 
-                                       vcl_vector<vsol_point_2d> const &pts,
+                                       std::vector<vsol_point_2d> const &pts,
                                        vnl_vector<double> &sample_pts)
 {
   int num_points = pts.size();
@@ -289,7 +289,7 @@ bool bsold_curve_algs::interpolate_eno(bsold_interp_curve_2d *c,
 }
 
 bool bsold_curve_algs::interpolate_eno(bsold_interp_curve_2d *c, 
-                                       vcl_vector<vgl_point_2d<double> > const &pts,
+                                       std::vector<vgl_point_2d<double> > const &pts,
                                        vnl_vector<double> &sample_pts)
 {
   int num_points = pts.size();
@@ -321,17 +321,17 @@ bool bsold_curve_algs::interpolate_eno_main(bsold_interp_curve_2d *c,
     sample_pts(0) = cumulative_length;
     for(int i=1; i < num_points; i++)
     {
-      double diffx2 = vcl_pow(data_x[i] - data_x[i-1], 2.0);
-      double diffy2 = vcl_pow(data_y[i] - data_y[i-1], 2.0);
-      double length = vcl_sqrt(diffx2 + diffy2);
+      double diffx2 = std::pow(data_x[i] - data_x[i-1], 2.0);
+      double diffy2 = std::pow(data_y[i] - data_y[i-1], 2.0);
+      double length = std::sqrt(diffx2 + diffy2);
       cumulative_length += length;
       sample_pts(i) = cumulative_length;
     }
   }
 
-  vcl_vector<bgld_param_curve *> ints(num_points-1);
-  vcl_vector<double> coefs_x;
-  vcl_vector<double> coefs_y;
+  std::vector<bgld_param_curve *> ints(num_points-1);
+  std::vector<double> coefs_x;
+  std::vector<double> coefs_y;
 
   if(num_points > 3)
   {
@@ -342,8 +342,8 @@ bool bsold_curve_algs::interpolate_eno_main(bsold_interp_curve_2d *c,
     eno_y.interpolate(&data_y, &sample_pts);
 
     // get the interpolants
-    vcl_vector<bnld_eno_interp> eno_interp_x = eno_x.interp();
-    vcl_vector<bnld_eno_interp> eno_interp_y = eno_y.interp();
+    std::vector<bnld_eno_interp> eno_interp_x = eno_x.interp();
+    std::vector<bnld_eno_interp> eno_interp_y = eno_y.interp();
 
     for(int i=0; i < num_points-1; i++)
     {
@@ -366,9 +366,9 @@ bool bsold_curve_algs::interpolate_eno_main(bsold_interp_curve_2d *c,
     y2(0,0) = data_y(0); y2(1,0) = data_y(1); y2(2,0) = data_y(2);
     
     vnl_matrix<double> x(3,3,1.0);
-    x(0,0) = vcl_pow(sample_pts(0),2.0); x(0,1) = sample_pts(0);
-    x(1,0) = vcl_pow(sample_pts(1),2.0); x(1,1) = sample_pts(1);
-    x(2,0) = vcl_pow(sample_pts(2),2.0); x(2,1) = sample_pts(2);
+    x(0,0) = std::pow(sample_pts(0),2.0); x(0,1) = sample_pts(0);
+    x(1,0) = std::pow(sample_pts(1),2.0); x(1,1) = sample_pts(1);
+    x(2,0) = std::pow(sample_pts(2),2.0); x(2,1) = sample_pts(2);
 
     vnl_svd<double> A(x);
     vnl_matrix<double> cx = A.solve(y1);
@@ -408,7 +408,7 @@ bool bsold_curve_algs::interpolate_eno_main(bsold_interp_curve_2d *c,
   }
   else
   {
-    vcl_cout << "Check the number of data points specified for ENO interpolation" << vcl_endl;
+    std::cout << "Check the number of data points specified for ENO interpolation" << std::endl;
     return false;
   }
   c->make(ints);
@@ -424,23 +424,23 @@ fit_lines_to_contour(vsol_polyline_2d_sptr poly, double rms) {
     vgl_fit_lines_2d<double> fitter; 
     fitter.set_min_fit_length(min_fit_length);
     fitter.set_rms_error_tol(rms);
-    //vcl_cout << "original polyline size: " << poly->size() << " ";
+    //std::cout << "original polyline size: " << poly->size() << " ";
     for (unsigned int i = 0; i<poly->size(); i++) {
       vgl_point_2d<double> p = poly->vertex(i)->get_p();
       fitter.add_point(p);
     }
     fitter.fit();
-    vcl_vector<vgl_line_segment_2d<double> >& segs = fitter.get_line_segs();
+    std::vector<vgl_line_segment_2d<double> >& segs = fitter.get_line_segs();
     if (!segs.size())
       return 0;
 
-    vcl_vector<vsol_point_2d_sptr > new_pts;
+    std::vector<vsol_point_2d_sptr > new_pts;
     new_pts.push_back(new vsol_point_2d(segs[0].point1().x(),segs[0].point1().y()));
     new_pts.push_back(new vsol_point_2d(segs[0].point2().x(),segs[0].point2().y()));
     for (unsigned int i = 1; i<segs.size(); i++) {
       new_pts.push_back(new vsol_point_2d(segs[i].point2().x(),segs[i].point2().y()));
     }
-    //vcl_cout << "fitted polyline size: " << new_pts.size() << vcl_endl;
+    //std::cout << "fitted polyline size: " << new_pts.size() << std::endl;
     return new vsol_polyline_2d(new_pts);
  } else
    return 0;
@@ -453,31 +453,31 @@ vsol_polygon_2d_sptr fit_lines_to_contour(vsol_polygon_2d_sptr poly, double rms)
     vgl_fit_lines_2d<double> fitter; 
     fitter.set_min_fit_length(min_fit_length);
     fitter.set_rms_error_tol(rms);
-    //vcl_cout << "original polygon size: " << poly->size() << " ";
+    //std::cout << "original polygon size: " << poly->size() << " ";
     for (unsigned int i = 0; i<poly->size(); i++) {
       vgl_point_2d<double> p = poly->vertex(i)->get_p();
       fitter.add_point(p);
     }
     fitter.fit();
-    vcl_vector<vgl_line_segment_2d<double> >& segs = fitter.get_line_segs();
+    std::vector<vgl_line_segment_2d<double> >& segs = fitter.get_line_segs();
     if (!segs.size())
       return 0;
 
-    vcl_vector<vsol_point_2d_sptr > new_pts;
+    std::vector<vsol_point_2d_sptr > new_pts;
     new_pts.push_back(new vsol_point_2d(segs[0].point1().x(),segs[0].point1().y()));
     new_pts.push_back(new vsol_point_2d(segs[0].point2().x(),segs[0].point2().y()));
     for (unsigned int i = 1; i<segs.size(); i++) {
       new_pts.push_back(new vsol_point_2d(segs[i].point2().x(),segs[i].point2().y()));
     }
-    //vcl_cout << "fitted polygon size: " << new_pts.size() << vcl_endl;
+    //std::cout << "fitted polygon size: " << new_pts.size() << std::endl;
     return new vsol_polygon_2d(new_pts);
  } else
    return 0;
 }
 
 //: returns a vector of size 0 if anything goes wrong
-void fit_lines_to_contour(vcl_vector<vsol_point_2d_sptr>& poly, double rms,
-                          vcl_vector<vsol_point_2d_sptr>& new_pts) 
+void fit_lines_to_contour(std::vector<vsol_point_2d_sptr>& poly, double rms,
+                          std::vector<vsol_point_2d_sptr>& new_pts) 
 {
   new_pts.clear();
 
@@ -486,13 +486,13 @@ void fit_lines_to_contour(vcl_vector<vsol_point_2d_sptr>& poly, double rms,
     vgl_fit_lines_2d<double> fitter; 
     fitter.set_min_fit_length(min_fit_length);
     fitter.set_rms_error_tol(rms);
-    //vcl_cout << "original polygon size: " << poly->size() << " ";
+    //std::cout << "original polygon size: " << poly->size() << " ";
     for (unsigned int i = 0; i<poly.size(); i++) {
       vgl_point_2d<double> p = poly[i]->get_p();
       fitter.add_point(p);
     }
     fitter.fit();
-    vcl_vector<vgl_line_segment_2d<double> >& segs = fitter.get_line_segs();
+    std::vector<vgl_line_segment_2d<double> >& segs = fitter.get_line_segs();
 
     if (segs.size()) {
       new_pts.push_back(new vsol_point_2d(segs[0].point1().x(),segs[0].point1().y()));
@@ -500,7 +500,7 @@ void fit_lines_to_contour(vcl_vector<vsol_point_2d_sptr>& poly, double rms,
       for (unsigned int i = 1; i<segs.size(); i++) {
         new_pts.push_back(new vsol_point_2d(segs[i].point2().x(),segs[i].point2().y()));
       }
-      //vcl_cout << "fitted polygon size: " << new_pts.size() << vcl_endl;
+      //std::cout << "fitted polygon size: " << new_pts.size() << std::endl;
     }
  }
 }
@@ -510,12 +510,12 @@ void fit_lines_to_contour(vcl_vector<vsol_point_2d_sptr>& poly, double rms,
 //  fromula from [Ghosh, Petkov, PAMI05], the divident is fixed at 8 in that paper
 bool bsold_curve_algs::
 segment_wise_deletion(const vsol_polygon_2d_sptr& p, 
-             vcl_vector<vsol_polyline_2d_sptr>& pieces, 
-             vcl_vector<vsol_polyline_2d_sptr>& del_pieces, float perc_d, float perc_sigma, float divident)
+             std::vector<vsol_polyline_2d_sptr>& pieces, 
+             std::vector<vsol_polyline_2d_sptr>& del_pieces, float perc_d, float perc_sigma, float divident)
 {
-  vcl_cout << "in segment_wise_deletion\n";
+  std::cout << "in segment_wise_deletion\n";
   if (!(p->size() > 3)) {
-    vcl_cout << "In bsold_algos::segment_wise_deletion() - polygon has too few vertices\n";
+    std::cout << "In bsold_algos::segment_wise_deletion() - polygon has too few vertices\n";
     return false;
   }
 
@@ -523,28 +523,28 @@ segment_wise_deletion(const vsol_polygon_2d_sptr& p,
   bsold_curve_algs::interpolate_linear(&curve, p);
 
   float length = (float)curve.length();
-  vcl_cout << "curve length:" << length << vcl_endl;
+  std::cout << "curve length:" << length << std::endl;
 
-  //int k = (int)vcl_ceil(log(perc_d/8.0)/log(2.0));
-  int k = (int)vcl_ceil(log(perc_d/divident)/log(2.0));
+  //int k = (int)std::ceil(log(perc_d/8.0)/log(2.0));
+  int k = (int)std::ceil(log(perc_d/divident)/log(2.0));
   if (!k)
     k = 1;
-  vcl_cout << "will delete " << k << " segments\n";
+  std::cout << "will delete " << k << " segments\n";
 
   //: delete k segments with a total of perc_d percent of the length 
   float to_be_deleted = (perc_d * length)/100.0f;
-  vcl_cout << "total length: " << length << " deletion percentage: " << perc_d << " will delete: " << to_be_deleted << vcl_endl;
+  std::cout << "total length: " << length << " deletion percentage: " << perc_d << " will delete: " << to_be_deleted << std::endl;
   
   float mean = to_be_deleted/k;
-  vcl_cout << "mean to be deleted: " << mean << vcl_endl;
+  std::cout << "mean to be deleted: " << mean << std::endl;
 
   //: keep a bool list for each vertex id whether it has been deleted or not
   unsigned vert_size = p->size();
-  vcl_cout << "there are " << vert_size << " vertices in the polygon\n";
-  vcl_vector<bool> deleted_vertices(vert_size, false);
+  std::cout << "there are " << vert_size << " vertices in the polygon\n";
+  std::vector<bool> deleted_vertices(vert_size, false);
 
   vnl_random gen;
-  gen.reseed((unsigned long)vcl_time(NULL));
+  gen.reseed((unsigned long)std::time(NULL));
     
   for (int i = 0; i < k; i++)
   {  
@@ -554,11 +554,11 @@ segment_wise_deletion(const vsol_polygon_2d_sptr& p,
     // if X ~ N(0, 1^2) then a*X + b ~ N(a*0 + b, (a*1)^2)
     // then set mean_to_be_deleted = b, and perc_sigma = a and get Y = aX + b
     double y = perc_sigma*x + mean;
-    vcl_cout << "i: " << i << " y: " << y << vcl_endl;
+    std::cout << "i: " << i << " y: " << y << std::endl;
 
     //: create a vector of possible starting points for deletion which has
     //  enough room for deletion up untill the first deleted segment
-    vcl_vector<unsigned> possibilities;
+    std::vector<unsigned> possibilities;
     for (unsigned jj = 0; jj < deleted_vertices.size(); jj++) {
       if (deleted_vertices[jj])
         continue;
@@ -588,7 +588,7 @@ segment_wise_deletion(const vsol_polygon_2d_sptr& p,
     }
       
     if (!possibilities.size()) {
-      vcl_cout << "cannot find any starting point with enough length\n";
+      std::cout << "cannot find any starting point with enough length\n";
       return false;
     }
 
@@ -637,7 +637,7 @@ segment_wise_deletion(const vsol_polygon_2d_sptr& p,
         break;
     
     if (jj < deleted_vertices.size()) {
-      vcl_vector<vsol_point_2d_sptr> pts;
+      std::vector<vsol_point_2d_sptr> pts;
       pts.push_back(p->vertex(jj));
       for (unsigned kk = jj + 1; kk != jj; kk++) {
         if (kk == deleted_vertices.size()) {
@@ -670,7 +670,7 @@ segment_wise_deletion(const vsol_polygon_2d_sptr& p,
         break;
     
     if (jj < deleted_vertices.size()) {
-      vcl_vector<vsol_point_2d_sptr> pts;
+      std::vector<vsol_point_2d_sptr> pts;
       pts.push_back(p->vertex(jj));
       for (unsigned kk = jj + 1; kk != jj; kk++) {
         if (kk == deleted_vertices.size()) {
@@ -696,13 +696,13 @@ segment_wise_deletion(const vsol_polygon_2d_sptr& p,
 //  add the segment with a random orientation from x-axis at a random region in or out of the contour
 //  output is a spatial object vector to be saved as a .cem file
 bool bsold_curve_algs::segment_addition(const vsol_polygon_2d_sptr& p,
-                        vcl_vector<vsol_spatial_object_2d_sptr>& pieces,
+                        std::vector<vsol_spatial_object_2d_sptr>& pieces,
                         float perc_d, float perc_sigma, float divident)
 {
 
-  vcl_cout << "in segment_addition\n";
+  std::cout << "in segment_addition\n";
   if (!(p->size() > 3)) {
-    vcl_cout << "In bsold_algos::segment_addition() - polygon has too few vertices\n";
+    std::cout << "In bsold_algos::segment_addition() - polygon has too few vertices\n";
     return false;
   }
 
@@ -710,21 +710,21 @@ bool bsold_curve_algs::segment_addition(const vsol_polygon_2d_sptr& p,
   bsold_curve_algs::interpolate_linear(&curve, p);
 
   float length = (float)curve.length();
-  vcl_cout << "curve length:" << length << vcl_endl;
+  std::cout << "curve length:" << length << std::endl;
 
-  //int k = (int)vcl_ceil(log(perc_d/8.0)/log(2.0));
-  int k = (int)vcl_ceil(log(perc_d/divident)/log(2.0));
-  //int k = (int)vcl_ceil((perc_d*length)/divident);
+  //int k = (int)std::ceil(log(perc_d/8.0)/log(2.0));
+  int k = (int)std::ceil(log(perc_d/divident)/log(2.0));
+  //int k = (int)std::ceil((perc_d*length)/divident);
   if (!k)
     k = 1;
-  vcl_cout << "will add " << k << " segments\n";
+  std::cout << "will add " << k << " segments\n";
 
   //: add k segments with a total of perc_d percent of the length 
   float to_be_added = (perc_d * length)/100.0f;
-  vcl_cout << "total length: " << length << " addition percentage: " << perc_d << " will add: " << to_be_added << vcl_endl;
+  std::cout << "total length: " << length << " addition percentage: " << perc_d << " will add: " << to_be_added << std::endl;
   
   float mean = to_be_added/k;
-  vcl_cout << "mean to be added: " << mean << vcl_endl;
+  std::cout << "mean to be added: " << mean << std::endl;
 
   // find the area of the region
   p->compute_bounding_box();
@@ -738,8 +738,8 @@ bool bsold_curve_algs::segment_addition(const vsol_polygon_2d_sptr& p,
   float box_height = (float)box->height();
 
   vnl_random gen;
-  //gen.reseed((unsigned long)vcl_time(NULL));
-  gen.reseed((unsigned long)vcl_clock() + (unsigned long)vcl_time(NULL));
+  //gen.reseed((unsigned long)std::time(NULL));
+  gen.reseed((unsigned long)std::clock() + (unsigned long)std::time(NULL));
     
   pieces.clear();
   pieces.push_back(p->cast_to_spatial_object());
@@ -752,7 +752,7 @@ bool bsold_curve_algs::segment_addition(const vsol_polygon_2d_sptr& p,
     // if X ~ N(0, 1^2) then a*X + b ~ N(a*0 + b, (a*1)^2)
     // then set mean_to_be_added = b, and perc_sigma = a and get Y = aX + b
     double y = perc_sigma*x + mean;
-    vcl_cout << "i: " << i << " y: " << y << vcl_endl;
+    std::cout << "i: " << i << " y: " << y << std::endl;
 
     //: find a random pt1 for the line segment
     float rw = (float)gen.drand32(0, box_width);
@@ -769,7 +769,7 @@ bool bsold_curve_algs::segment_addition(const vsol_polygon_2d_sptr& p,
     pt1.set(rx, ry);
     vgl_point_2d<float> pt2 = pt1 + r_final_v;
 
-    vcl_vector<vsol_point_2d_sptr> pts;
+    std::vector<vsol_point_2d_sptr> pts;
     pts.push_back(new vsol_point_2d(rx, ry));
     pts.push_back(new vsol_point_2d(pt2.x(), pt2.y()));
     vsol_polyline_2d_sptr poly = new vsol_polyline_2d(pts);
@@ -789,12 +789,12 @@ bool bsold_curve_algs::segment_addition(const vsol_polygon_2d_sptr& p,
 //  fromula from [Ghosh, Petkov, PAMI05], the divident is fixed at 8 in that paper
 //  output is a spatial object vector to be saved as a .cem file
 bool bsold_curve_algs::segment_addition_and_deletion(const vsol_polygon_2d_sptr& p, 
-                                            vcl_vector<vsol_spatial_object_2d_sptr>& pieces, 
-                                            vcl_vector<vsol_polyline_2d_sptr>& del_pieces,
+                                            std::vector<vsol_spatial_object_2d_sptr>& pieces, 
+                                            std::vector<vsol_polyline_2d_sptr>& del_pieces,
                                             float add_perc_d, float add_perc_sigma, float add_divident,
                                             float del_perc_d, float del_perc_sigma, float del_divident)
 {
-  vcl_vector<vsol_polyline_2d_sptr> temp_pieces;
+  std::vector<vsol_polyline_2d_sptr> temp_pieces;
   
   //: first delete the segments
   del_pieces.clear();
@@ -820,7 +820,7 @@ bool bsold_curve_algs::segment_addition_and_deletion(const vsol_polygon_2d_sptr&
 //  just like Thomas sebastian did
 vsol_polygon_2d_sptr bsold_subsample_contour(vsol_polygon_2d_sptr poly, double c_ds)
 {
-  vcl_vector<vsol_point_2d_sptr > new_pts;
+  std::vector<vsol_point_2d_sptr > new_pts;
 
   vgl_point_2d<double> last_pt = poly->vertex(0)->get_p();
   for (unsigned int i = 1; i<poly->size(); i++){
@@ -838,7 +838,7 @@ vsol_polygon_2d_sptr bsold_subsample_contour(vsol_polygon_2d_sptr poly, double c
 //: This function subsamples the points in the contour according to the c_ds value
 vsol_polygon_2d_sptr bsold_subsample_contour_smart(vsol_polygon_2d_sptr poly, double c_ds)
 {
-  vcl_vector<vsol_point_2d_sptr > new_pts;
+  std::vector<vsol_point_2d_sptr > new_pts;
   double d = 0;
   for (unsigned int i = 1; i<poly->size(); i++)
   {

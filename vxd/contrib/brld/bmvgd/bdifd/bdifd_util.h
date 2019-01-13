@@ -7,10 +7,10 @@
 //\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri.github.io)
 //\date 04/25/2005 10:28:03 AM EDT
 //
-#include <vcl_vector.h>
-#include <vcl_string.h>
-#include <vcl_algorithm.h>
-#include <vcl_iostream.h>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <iostream>
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_vector_fixed.h>
 #include <vpgl/vpgl_perspective_camera.h>
@@ -34,7 +34,7 @@ vgl_homg_point_2d<double> bdifd_epipolar_point_transfer(
 
 inline vgl_homg_line_2d<double>
 bdifd_normal_correspondence_line(
-  const vcl_vector<vsol_point_2d_sptr>  &con,
+  const std::vector<vsol_point_2d_sptr>  &con,
   unsigned k
     );
 
@@ -44,8 +44,8 @@ bdifd_normal_correspondence_line(
 
 class bdifd_util {
 public:
-  static bool near_zero(double x) { return vcl_fabs(x) < bdifd_tolerance; }
-  static bool near_zero(double x,double tol) { return vcl_fabs(x) < tol; }
+  static bool near_zero(double x) { return std::fabs(x) < bdifd_tolerance; }
+  static bool near_zero(double x,double tol) { return std::fabs(x) < tol; }
 
   //: Given two angles in the range [0, 2pi) representing the direction of a unit vector
   // \return the smallest angle between them in the range [0,pi)
@@ -59,13 +59,13 @@ public:
   static inline vnl_vector_fixed<double,3> vgl_to_vnl(const vgl_point_3d<double> &p);
 
   //: user must ensure vector is not empty
-  template <class T> static double max(const vcl_vector<T> &v, unsigned &idx);
+  template <class T> static double max(const std::vector<T> &v, unsigned &idx);
   //: user must ensure vector is not empty
-  static inline double min(const vcl_vector<double> &v, unsigned &idx);
+  static inline double min(const std::vector<double> &v, unsigned &idx);
   //: user must ensure vector is not empty
-  static inline double mean(const vcl_vector<double> &v);
+  static inline double mean(const std::vector<double> &v);
   //: user must ensure vector is not empty
-  static inline double median(const vcl_vector<double> &v);
+  static inline double median(const std::vector<double> &v);
 
 
   //: angle between two unit vectors
@@ -76,22 +76,22 @@ public:
 //: smallest angle between two unit vectors
 inline double bdifd_util::angle_unit(const bdifd_vector_3d &t1, const bdifd_vector_3d &t2)
 {
-  return vcl_acos(clump_to_acos(dot_product(t1,t2)));
+  return std::acos(clump_to_acos(dot_product(t1,t2)));
 }
 
 inline double bdifd_util::angle_difference(double angle1, double angle2) 
 { 
-   double dt_angle = vcl_fabs(angle1 - angle2);
+   double dt_angle = std::fabs(angle1 - angle2);
    return (dt_angle > vnl_math::pi)? (2*vnl_math::pi - dt_angle) : dt_angle;
 }
 
 //: user must ensure vector is not empty
-inline double bdifd_util::median(const vcl_vector<double> &v)
+inline double bdifd_util::median(const std::vector<double> &v)
 {
-  vcl_vector<double> v_sorted = v;
+  std::vector<double> v_sorted = v;
 
   // sort increasing
-  vcl_sort(v_sorted.begin(), v_sorted.end());
+  std::sort(v_sorted.begin(), v_sorted.end());
   
   unsigned median_idx = (v_sorted.size() - 1)/2;
   double median_val;
@@ -107,7 +107,7 @@ inline double bdifd_util::median(const vcl_vector<double> &v)
 }
 
 //: user must ensure vector is not empty
-template <class T> double bdifd_util::max(const vcl_vector<T> &v, unsigned &idx)
+template <class T> double bdifd_util::max(const std::vector<T> &v, unsigned &idx)
 {
   idx = 0;
   T maxval = v[0];
@@ -121,7 +121,7 @@ template <class T> double bdifd_util::max(const vcl_vector<T> &v, unsigned &idx)
 }
 
 //: user must ensure vector is not empty
-inline double bdifd_util::mean(const vcl_vector<double> &v)
+inline double bdifd_util::mean(const std::vector<double> &v)
 {
   double meanval = 0.0;
   for (unsigned i=0; i < v.size(); ++i) {
@@ -133,7 +133,7 @@ inline double bdifd_util::mean(const vcl_vector<double> &v)
 }
 
 //: user must ensure vector is not empty
-inline double bdifd_util::min(const vcl_vector<double> &v, unsigned &idx)
+inline double bdifd_util::min(const std::vector<double> &v, unsigned &idx)
 {
 idx = 0;
 double minval = v[0];
@@ -149,7 +149,7 @@ return minval;
 inline double bdifd_util::clump_to_acos(double x)
 { 
   if (x > 1.0 || x < -1.0) {
-    assert(vcl_fabs(vcl_fabs(x)-1) < 1e-5);
+    assert(std::fabs(std::fabs(x)-1) < 1e-5);
     if (x > 1.0)
       return 1.0;
     if (x < -1.0)
@@ -164,9 +164,9 @@ angle0To2Pi (double angle)
 {
   double a;
   if (angle>=2*vnl_math::pi)
-    a = vcl_fmod (angle,vnl_math::pi*2);
+    a = std::fmod (angle,vnl_math::pi*2);
   else if (angle < 0)
-    a = (2*vnl_math::pi+ vcl_fmod (angle,2*vnl_math::pi));
+    a = (2*vnl_math::pi+ std::fmod (angle,2*vnl_math::pi));
   else 
     a= angle;
 
@@ -186,7 +186,7 @@ angle0To2Pi (double angle)
 
 inline vgl_homg_line_2d<double>
 bdifd_normal_correspondence_line(
-  const vcl_vector<vsol_point_2d_sptr>  &con,
+  const std::vector<vsol_point_2d_sptr>  &con,
   unsigned k
     )
 {

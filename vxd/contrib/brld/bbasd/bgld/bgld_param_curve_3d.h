@@ -16,8 +16,8 @@
 
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_vector_3d.h>
-#include <vcl_typeinfo.h>
-#include <vcl_utility.h>
+#include <typeinfo>
+#include <utility>
 
 //: A 3D parametric curve
 //
@@ -70,10 +70,10 @@ class bgld_param_curve_3d
 
   virtual ~bgld_param_curve_3d() {}
 
-  static const vcl_type_info& type_id()
+  static const std::type_info& type_id()
   { return typeid(bgld_param_curve_3d); }
 
-  virtual bool is_type( const vcl_type_info& type ) const
+  virtual bool is_type( const std::type_info& type ) const
   { return (typeid(bgld_param_curve_3d) == type)!=0; }
 
   //: comparison operator.

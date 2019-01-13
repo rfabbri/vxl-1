@@ -15,10 +15,10 @@
 #define _DBORL_IMAGE_DATA_DESCRIPTION_BASE_H
 
 #include <vbl/vbl_ref_count.h>
-#include <vcl_vector.h>
-#include <vcl_map.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
+#include <vector>
+#include <map>
+#include <string>
+#include <iostream>
 
 class borld_image_data_description_type
 {
@@ -42,7 +42,7 @@ public:
   virtual unsigned version() = 0;
   virtual void b_read() = 0;
   virtual void b_write() = 0;
-  virtual void write_xml(vcl_ostream& os) = 0;
+  virtual void write_xml(std::ostream& os) = 0;
 
   virtual borld_image_data_description_base* cast_to_image_data_description_base() { return this; }
   virtual borld_image_bbox_description* cast_to_image_bbox_description() = 0;

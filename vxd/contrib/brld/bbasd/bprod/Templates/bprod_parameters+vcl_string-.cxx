@@ -1,4 +1,4 @@
-#include <vcl_string.h>
+#include <string>
 #include <bprod/bprod_parameters.hxx>
 
-BPROD_PARAMETERS_INSTANTIATE(vcl_string);
+BPROD_PARAMETERS_INSTANTIATE(std::string);

@@ -38,9 +38,9 @@ struct bdifd_3rd_order_point_3d : public bdifd_2nd_order_point_3d {
   double Gamma_3dot_abs() const { double k2 = K*K;  return k2*k2 + Kdot*Kdot + k2*Tau*Tau; }
 };
 
-typedef vcl_vector<bdifd_1st_order_point_3d> bdifd_1st_order_curve_3d;
-typedef vcl_vector<bdifd_2nd_order_point_3d> bdifd_2nd_order_curve_3d;
-typedef vcl_vector<bdifd_3rd_order_point_3d> bdifd_3rd_order_curve_3d;
+typedef std::vector<bdifd_1st_order_point_3d> bdifd_1st_order_curve_3d;
+typedef std::vector<bdifd_2nd_order_point_3d> bdifd_2nd_order_curve_3d;
+typedef std::vector<bdifd_3rd_order_point_3d> bdifd_3rd_order_curve_3d;
 
 //-- 2D --------------------------------------------------------------------
 
@@ -73,9 +73,9 @@ struct bdifd_3rd_order_point_2d : public bdifd_2nd_order_point_2d {
 //  bdifd_3rd_order_extras cache3;
 };
 
-typedef vcl_vector<bdifd_1st_order_point_2d> bdifd_1st_order_curve_2d;
-typedef vcl_vector<bdifd_2nd_order_point_2d> bdifd_2nd_order_curve_2d;
-typedef vcl_vector<bdifd_3rd_order_point_2d> bdifd_3rd_order_curve_2d;
+typedef std::vector<bdifd_1st_order_point_2d> bdifd_1st_order_curve_2d;
+typedef std::vector<bdifd_2nd_order_point_2d> bdifd_2nd_order_curve_2d;
+typedef std::vector<bdifd_3rd_order_point_2d> bdifd_3rd_order_curve_2d;
 
 //: Various utilities for manipulating frenet points.
 class bdifd_frenet {
@@ -135,9 +135,9 @@ linear_transform(
 
 //  if (bdifd_util::near_zero(g*g*g)) {
   /*
-    vcl_cout << "near zero!\n";
+    std::cout << "near zero!\n";
     if (bdifd_util::near_zero(t_p.two_norm()))
-      vcl_cout << "AND TP TOO\n";
+      std::cout << "AND TP TOO\n";
   */
 //    retval = false;
 //  }

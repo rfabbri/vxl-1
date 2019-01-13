@@ -4,7 +4,7 @@
 
 #include "bnld_newton_root.h"
 #include <vnl/vnl_math.h>
-#include <vcl_iostream.h>
+#include <iostream>
 // Maxinum allowed number of iterations
 #define max_iter 100 
 
@@ -25,7 +25,7 @@ bool bnld_newton_secant_root( bnld_newton_root_func& funcd,
   funcd.compute(x1, &fl, &df);
   funcd.compute(x2, &fh, &df);
   if ((fl > 0.0 && fh > 0.0) || (fl < 0.0 && fh < 0.0))
-    vcl_cerr << "Root must be bracketed in bnld_newton_secant_safe" << vcl_endl;
+    std::cerr << "Root must be bracketed in bnld_newton_secant_safe" << std::endl;
   if (fl == 0.0) {
     *root = x1;
     return true;
@@ -82,7 +82,7 @@ bool bnld_newton_secant_root( bnld_newton_root_func& funcd,
     else
       xh = rts;
   }
-  vcl_cerr << "Maximum number of iterations exceeded in bnld_newton_secant_root" << vcl_endl;
+  std::cerr << "Maximum number of iterations exceeded in bnld_newton_secant_root" << std::endl;
   return false; // should never get here
 
 }

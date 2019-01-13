@@ -19,8 +19,8 @@
 //   09/29/2009 Ricardo Fabbri Added support for savinng gzipped cem files
 // \endverbatim
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <vsol/vsol_spatial_object_2d_sptr.h>
 #include <vsol/vsol_point_2d_sptr.h>
 #include <vsol/vsol_polygon_2d_sptr.h>
@@ -30,7 +30,7 @@
 //: Load a .CON file and save results to a vector of points and whether the 
 // contour is closed. Return false if loading fails
 bool bsold_load_con_file(char const* filename, 
-                         vcl_vector<vsol_point_2d_sptr >& points, 
+                         std::vector<vsol_point_2d_sptr >& points, 
                          bool & is_closed);
 
 //: Load a .CON file and return a smart pointer to vsol_spatial_object_2d
@@ -46,14 +46,14 @@ bool bsold_save_con_file(char const* filename, vsol_polygon_2d_sptr polygon);
 
 //: Save a set of ordered points to a .CON file. Return false if saving fails
 bool bsold_save_con_file(char const* filename, 
-                         const vcl_vector<vsol_point_2d_sptr >& pts,
+                         const std::vector<vsol_point_2d_sptr >& pts,
                          bool is_closed);
 
 //: Save .CEM file
-bool bsold_save_cem(vcl_vector< vsol_spatial_object_2d_sptr >& vsol_list, vcl_string filename);
+bool bsold_save_cem(std::vector< vsol_spatial_object_2d_sptr >& vsol_list, std::string filename);
 
 //: Load .CEM file. Compressed files are supported, in the zlib/gzip format with
 // extension .gz, but for that you must have Boost installed.
-bool bsold_load_cem(vcl_vector< vsol_spatial_object_2d_sptr >& contours, vcl_string filename);
+bool bsold_load_cem(std::vector< vsol_spatial_object_2d_sptr >& contours, std::string filename);
 
 #endif // bsold_file_io_h

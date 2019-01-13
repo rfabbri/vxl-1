@@ -2,7 +2,7 @@
 
 #include <v3p_netlib.h>
 #include <vnl/vnl_fortran_copy.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 vnl_matrix<double>  multiply(vnl_matrix<double> &Am,vnl_matrix<double> &Bm, char At,char Bt )
     {

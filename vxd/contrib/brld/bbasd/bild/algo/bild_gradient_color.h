@@ -17,8 +17,8 @@
 // \endverbatim
 
 
-//#include <vcl_iostream.h>
-//#include <vcl_cmath.h>
+//#include <iostream>
+//#include <cmath>
 //#include <vgl/vgl_point_2d.h>
 
 

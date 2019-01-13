@@ -7,8 +7,8 @@
 #ifndef dbhg_hypergraph_h_
 #define dbhg_hypergraph_h_
 
-#include <vcl_map.h>
-#include <vcl_utility.h>
+#include <map>
+#include <utility>
 
 #include <bgrld/bgrld_hg_graph.h>
 #include <bgrld/bgrld_hg_hyperedge.h>
@@ -16,15 +16,15 @@
 class bgrld_hg_hypergraph : public bgrld_hg_graph
 {
 protected:
-  vcl_map<int, bgrld_hg_hyperedge*> hyperedges_;
+  std::map<int, bgrld_hg_hyperedge*> hyperedges_;
 
 public:
   //: ====== Hypergraph query functions ======
-  vcl_map<int, bgrld_hg_hyperedge*>& hyperedges() {
+  std::map<int, bgrld_hg_hyperedge*>& hyperedges() {
     return hyperedges_;
   }
   bgrld_hg_hyperedge* hyperedges (const int i) {
-    vcl_map<int, bgrld_hg_hyperedge*>::iterator H_it = hyperedges_.find (i);
+    std::map<int, bgrld_hg_hyperedge*>::iterator H_it = hyperedges_.find (i);
     if (H_it == hyperedges_.end())
       return NULL;
     

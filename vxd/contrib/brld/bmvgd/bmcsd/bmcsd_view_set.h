@@ -8,9 +8,9 @@
 //\date 08/31/2009 03:34:25 PM PDT
 //
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
+#include <vector>
+#include <string>
+#include <iostream>
 #include <assert.h>
 #include <vbl/vbl_ref_count.h>
 #include <vsl/vsl_binary_io.h>
@@ -57,7 +57,7 @@ public:
 private:
   unsigned stereo_0_;
   unsigned stereo_1_;
-  vcl_vector<unsigned> confirm_;
+  std::vector<unsigned> confirm_;
 };
 
 
@@ -92,16 +92,16 @@ public:
   bool empty() const { return v_.empty(); }
 
 private:
-  vcl_vector<bmcsd_stereo_views_sptr> v_;
+  std::vector<bmcsd_stereo_views_sptr> v_;
 };
 
 //: Write to stream
 // \relates bmcsd_stereo_instance_views
-vcl_ostream&  operator<<(vcl_ostream& s, const bmcsd_stereo_instance_views& p);
+std::ostream&  operator<<(std::ostream& s, const bmcsd_stereo_instance_views& p);
 
 //: Write to stream
 // \relates bmcsd_stereo_views
-vcl_ostream&  operator<<(vcl_ostream& s, const bmcsd_stereo_views & p);
+std::ostream&  operator<<(std::ostream& s, const bmcsd_stereo_views & p);
 
 //: This class gives general utilities to define the sets of views from a video
 // that should be passed to subsystems of multiview curve stereo.
@@ -116,7 +116,7 @@ public:
   //: Reads from text file.  For the format, see
   // tests/mcs_stereo_instances_example.txt
   static bool read_txt(
-      const vcl_string &fname,
+      const std::string &fname,
       bmcsd_stereo_instance_views *frames_to_match);
 };
 

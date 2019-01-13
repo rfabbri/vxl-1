@@ -15,7 +15,7 @@
 // \endverbatim
 //--------------------------------------------------------------------------------
 
-#include <vcl_iosfwd.h>
+#include <iosfwd>
 #include <vsol/vsol_point_2d_sptr.h>
 #include <vsol/vsol_point_2d.h>
 #include <bgui/bgui_vsol_soview2D.h>
@@ -35,8 +35,8 @@ class bsold_soview2D_circ_arc : public bgui_vsol_soview2D
   ~bsold_soview2D_circ_arc() {}
 
   //: Returns the type of this class ('bgui_vsol_soview2D_circ_arc').
-  static vcl_string type_name_() { return "bsold_soview2D_circ_arc"; }
-  vcl_string type_name() const { return type_name_(); }
+  static std::string type_name_() { return "bsold_soview2D_circ_arc"; }
+  std::string type_name() const { return type_name_(); }
 
   //: Render this 2D digital_curve on the display.
   virtual void draw() const;
@@ -63,7 +63,7 @@ class bsold_soview2D_circ_arc : public bgui_vsol_soview2D
     //: length of the arc
    double arclen;
    //: a list of arc points
-   vcl_vector< vsol_point_2d_sptr > arc_points;
+   std::vector< vsol_point_2d_sptr > arc_points;
 };
 
 #endif // dbgui_vsol_soview2D_h_

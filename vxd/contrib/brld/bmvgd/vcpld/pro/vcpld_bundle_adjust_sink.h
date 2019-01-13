@@ -14,7 +14,7 @@
 
 class vcpld_bundle_adjust_sink : public bprod_sink {
 public:
-  typedef vcl_vector<vgl_point_3d<double> > single_3d_curve;
+  typedef std::vector<vgl_point_3d<double> > single_3d_curve;
 
   typedef enum { CAM_ID, EDG_ID, DT_ID, LBL_ID } view_input_id;
 
@@ -45,7 +45,7 @@ public:
           mask_);
 
       if (!retval) {
-        vcl_cerr << "Problem calling optimize from bundle adj sink\n";
+        std::cerr << "Problem calling optimize from bundle adj sink\n";
         return BPROD_INVALID;
       }
     } else {
@@ -55,7 +55,7 @@ public:
 
         //: mask out points not to be used.
 
-        vcl_vector< single_3d_curve > pts3d_v;
+        std::vector< single_3d_curve > pts3d_v;
         pts3d_v.reserve(pts3d_.size());
 
         unsigned i=0;
@@ -91,16 +91,16 @@ public:
   }
 
   void setup_inputs(
-        vcl_vector<bprod_process_sptr> &cam_src, 
-        vcl_vector<bprod_process_sptr> &edg_src, 
-        vcl_vector<bprod_process_sptr> &edg_dt);
+        std::vector<bprod_process_sptr> &cam_src, 
+        std::vector<bprod_process_sptr> &edg_src, 
+        std::vector<bprod_process_sptr> &edg_dt);
 
   //: Driver sets mask_ and pts3d_ these before calling execute()
-  vcl_vector<vcl_vector<bool> > mask_;
+  std::vector<std::vector<bool> > mask_;
 
   // Driver reads these outputs:
-  vcl_vector<vpgl_perspective_camera<double> > cam_;
-  vcl_vector< single_3d_curve > pts3d_;
+  std::vector<vpgl_perspective_camera<double> > cam_;
+  std::vector< single_3d_curve > pts3d_;
 
 private:
   unsigned nviews() const { return nviews_; }
@@ -109,11 +109,11 @@ private:
   bool optimize_one_view_;
   bool curve_ransac_;
 
-  vcl_vector<sdet_edgemap_sptr> em_;
+  std::vector<sdet_edgemap_sptr> em_;
   typedef vil_image_view<vxl_uint_32> dt_t;
   typedef vil_image_view<unsigned> label_t;
-  vcl_vector<vil_image_view<vxl_uint_32> > dt_;
-  vcl_vector<vil_image_view<unsigned> > label_;
+  std::vector<vil_image_view<vxl_uint_32> > dt_;
+  std::vector<vil_image_view<unsigned> > label_;
   vcpld_distmap_bundle_adjust b_;
 
   void get_cameras();

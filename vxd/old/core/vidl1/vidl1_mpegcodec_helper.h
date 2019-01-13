@@ -25,9 +25,9 @@
 //   none
 // \endverbatim
 
-#include <vcl_string.h>
-#include <vcl_map.h>
-#include <vcl_iostream.h>
+#include <string>
+#include <map>
+#include <iostream>
 
 #define BUFFER_SIZE 4096
 #define DEMUX_PAYLOAD_START 1
@@ -89,7 +89,7 @@ class frame_buffer
 
   frame_buffer()
   {
-    buffers_ = new vcl_map<int,unsigned char *>;
+    buffers_ = new std::map<int,unsigned char *>;
   }
 
   void init(int width, int height, int bits_pixel)
@@ -105,12 +105,12 @@ class frame_buffer
 
   ~frame_buffer()
   {
-    vcl_cout << "frame_buffer DTOR. entering.\n";
-    vcl_map<int,unsigned char *>::iterator vmiuit = buffers_->begin();
+    std::cout << "frame_buffer DTOR. entering.\n";
+    std::map<int,unsigned char *>::iterator vmiuit = buffers_->begin();
     for (;vmiuit != buffers_->end(); vmiuit++)
       delete[] (*vmiuit).second;
     delete buffers_;
-    vcl_cout << "frame_buffer DTOR. exiting.\n";
+    std::cout << "frame_buffer DTOR. exiting.\n";
   }
 
   unsigned char * get_buff(int i) const { return (*buffers_)[i]; }
@@ -130,16 +130,16 @@ class frame_buffer
 
   void print()
   {
-    vcl_map<int,unsigned char *>::const_iterator vmiucit = buffers_->begin();
+    std::map<int,unsigned char *>::const_iterator vmiucit = buffers_->begin();
     for (;vmiucit != buffers_->end(); vmiucit++)
-      vcl_cout << (*vmiucit).first << vcl_endl;
+      std::cout << (*vmiucit).first << std::endl;
   }
 
   int first_frame_num() const { return (*buffers_->begin()).first;}
 
   bool reset()
   {
-    vcl_map<int,unsigned char *>::iterator vmit = buffers_->begin();
+    std::map<int,unsigned char *>::iterator vmit = buffers_->begin();
     for (int i=-30; vmit != buffers_->end(); vmit++,i++)
     {
       unsigned char * buf = (*vmit).second;
@@ -154,7 +154,7 @@ class frame_buffer
   }
 
  private:
-  vcl_map<int,unsigned char *> * buffers_;
+  std::map<int,unsigned char *> * buffers_;
 };
 
 struct vidl1_mpegcodec_data : public vo_instance_t
@@ -187,7 +187,7 @@ class vidl1_mpegcodec_helper
 
  public:
   vidl1_mpegcodec_helper(vo_open_t * vopen,
-                         vcl_string filename,
+                         std::string filename,
                          frame_buffer * buffers);
   ~vidl1_mpegcodec_helper();
   bool init();
@@ -218,7 +218,7 @@ class vidl1_mpegcodec_helper
   // and global in the original implementation
   // of mpeg2dec
   uint8_t buffer_[BUFFER_SIZE];
-  vcl_string filename_;
+  std::string filename_;
   vidl1_file_sequence * in_file_;
   int demux_track_;
   int demux_pid_;

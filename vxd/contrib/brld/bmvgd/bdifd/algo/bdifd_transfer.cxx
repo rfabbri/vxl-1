@@ -28,8 +28,8 @@ transfer_tangent_band(
 
   // determine 4 possible combinations in 3D
 
-  double c = vcl_cos(t_err);
-  double s = vcl_sin(t_err);
+  double c = std::cos(t_err);
+  double s = std::sin(t_err);
   
   bdifd_vector_3d t0_min (c*p0.t[0] + s*p0.t[1], -s*p0.t[0] + c*p0.t[1], 0);
   bdifd_vector_3d t0_max (c*p0.t[0] - s*p0.t[1], s*p0.t[0] + c*p0.t[1], 0);

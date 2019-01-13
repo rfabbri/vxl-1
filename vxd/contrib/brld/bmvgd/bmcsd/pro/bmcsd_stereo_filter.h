@@ -43,13 +43,13 @@ public:
     if (has_cvlet_)
       get_curvelets();
 
-    vcl_vector<bdifd_1st_order_curve_3d> crv3d;
-    vcl_vector< bmcsd_curve_3d_attributes > attr;
+    std::vector<bdifd_1st_order_curve_3d> crv3d;
+    std::vector< bmcsd_curve_3d_attributes > attr;
     bmcsd_discrete_corresp corresp;
 
     // TODO: set inlier views.
     if (!bmcsd_match_and_reconstruct_all_curves_attr(s_, &crv3d, &corresp, &attr)) {
-      vcl_cerr << "Error: while matching all views.\n";
+      std::cerr << "Error: while matching all views.\n";
       return BPROD_INVALID;
     }
 
@@ -64,12 +64,12 @@ public:
 
   void setup_inputs(
         const bmcsd_stereo_views_sptr &views,
-        vcl_vector<bprod_process_sptr> &cam_src, 
-        vcl_vector<bprod_process_sptr> &edg_src, 
-        vcl_vector<bprod_process_sptr> &edg_dt, 
-        vcl_vector<bprod_process_sptr> &frag_src,
-        vcl_vector<bprod_process_sptr> &cvlet_src,
-        vcl_vector<bprod_process_sptr> &frag_tangents
+        std::vector<bprod_process_sptr> &cam_src, 
+        std::vector<bprod_process_sptr> &edg_src, 
+        std::vector<bprod_process_sptr> &edg_dt, 
+        std::vector<bprod_process_sptr> &frag_src,
+        std::vector<bprod_process_sptr> &cvlet_src,
+        std::vector<bprod_process_sptr> &frag_tangents
         );
 
   bmcsd_odt_curve_stereo s_;
@@ -82,12 +82,12 @@ private:
 
   //: constructs an attribute data structure for each 3D curve.
   void set_remaining_attributes(
-      vcl_vector< bmcsd_curve_3d_attributes > *pattr, 
-      const vcl_vector<bdifd_1st_order_curve_3d> &crv3d,
+      std::vector< bmcsd_curve_3d_attributes > *pattr, 
+      const std::vector<bdifd_1st_order_curve_3d> &crv3d,
       const bmcsd_discrete_corresp &/*corresp*/
       )
   {
-    vcl_vector< bmcsd_curve_3d_attributes > &a = *pattr;
+    std::vector< bmcsd_curve_3d_attributes > &a = *pattr;
 
     assert(a.size() == crv3d.size());
     for (unsigned i=0; i < a.size(); ++i) {
@@ -113,14 +113,14 @@ public:
 
   bprod_signal execute() 
   {
-    vcl_vector< bdifd_1st_order_curve_3d > crv3d;
-    vcl_vector< bmcsd_curve_3d_attributes > attr;
-    vcl_vector<bmcsd_discrete_corresp> corresp;
+    std::vector< bdifd_1st_order_curve_3d > crv3d;
+    std::vector< bmcsd_curve_3d_attributes > attr;
+    std::vector<bmcsd_discrete_corresp> corresp;
 
     unsigned num_curves=0;
     for (unsigned i=0; i < num_matchers_; ++i) {
-      assert(input_type_id(3*i) == typeid(vcl_vector< bdifd_1st_order_curve_3d >));
-      num_curves += input<vcl_vector< bdifd_1st_order_curve_3d > >(3*i).size();
+      assert(input_type_id(3*i) == typeid(std::vector< bdifd_1st_order_curve_3d >));
+      num_curves += input<std::vector< bdifd_1st_order_curve_3d > >(3*i).size();
     }
 
     crv3d.reserve(num_curves);
@@ -129,14 +129,14 @@ public:
     corresp.reserve(num_matchers_);
 
     for (unsigned i=0; i < num_matchers_; ++i) {
-      assert(input_type_id(3*i) == typeid(vcl_vector< bdifd_1st_order_curve_3d >));
-      assert(input_type_id(3*i+1) == typeid(vcl_vector< bmcsd_curve_3d_attributes >));
+      assert(input_type_id(3*i) == typeid(std::vector< bdifd_1st_order_curve_3d >));
+      assert(input_type_id(3*i+1) == typeid(std::vector< bmcsd_curve_3d_attributes >));
       assert(input_type_id(3*i+2) == typeid(bmcsd_discrete_corresp));
-      const vcl_vector< bdifd_1st_order_curve_3d > &crv3d_i 
-        = input<vcl_vector< bdifd_1st_order_curve_3d > >(3*i);
+      const std::vector< bdifd_1st_order_curve_3d > &crv3d_i 
+        = input<std::vector< bdifd_1st_order_curve_3d > >(3*i);
 
-      const vcl_vector< bmcsd_curve_3d_attributes > attr_i
-        = input<vcl_vector< bmcsd_curve_3d_attributes> >(3*i + 1);
+      const std::vector< bmcsd_curve_3d_attributes > attr_i
+        = input<std::vector< bmcsd_curve_3d_attributes> >(3*i + 1);
 
       assert(attr_i.size() == crv3d_i.size());
 
@@ -170,13 +170,13 @@ public:
     unsigned inputs_per_job = 3;
     unsigned num_curves=0, num_corr=0, num_attribs=0;
     for (unsigned i=0; i < num_jobs_; ++i) {
-      assert(input_type_id(inputs_per_job*i) == typeid(vcl_vector< bdifd_1st_order_curve_3d >));
-      assert(input_type_id(inputs_per_job*i+1) == typeid(vcl_vector< bmcsd_curve_3d_attributes >));
-      assert(input_type_id(inputs_per_job*i+2) == typeid(vcl_vector< bmcsd_discrete_corresp >));
-      num_curves += input<vcl_vector< bdifd_1st_order_curve_3d > >(inputs_per_job*i).size();
-      num_attribs += input<vcl_vector< bmcsd_curve_3d_attributes > >(inputs_per_job*i+1).size();
+      assert(input_type_id(inputs_per_job*i) == typeid(std::vector< bdifd_1st_order_curve_3d >));
+      assert(input_type_id(inputs_per_job*i+1) == typeid(std::vector< bmcsd_curve_3d_attributes >));
+      assert(input_type_id(inputs_per_job*i+2) == typeid(std::vector< bmcsd_discrete_corresp >));
+      num_curves += input<std::vector< bdifd_1st_order_curve_3d > >(inputs_per_job*i).size();
+      num_attribs += input<std::vector< bmcsd_curve_3d_attributes > >(inputs_per_job*i+1).size();
       assert (num_curves == num_attribs);
-      num_corr +=  input<vcl_vector< bmcsd_discrete_corresp > >(inputs_per_job*i + 2).size();
+      num_corr +=  input<std::vector< bmcsd_discrete_corresp > >(inputs_per_job*i + 2).size();
     }
 
     crv3d_.reserve(num_curves);
@@ -184,17 +184,17 @@ public:
     corresp_.reserve(num_corr);
 
     for (unsigned i=0; i < num_jobs_; ++i) {
-      const vcl_vector< bdifd_1st_order_curve_3d > &crv3d_i 
-        = input<vcl_vector< bdifd_1st_order_curve_3d > >(inputs_per_job*i);
+      const std::vector< bdifd_1st_order_curve_3d > &crv3d_i 
+        = input<std::vector< bdifd_1st_order_curve_3d > >(inputs_per_job*i);
 
-      const vcl_vector< bmcsd_curve_3d_attributes > &attr_i
-        = input<vcl_vector< bmcsd_curve_3d_attributes> >(inputs_per_job*i + 1);
+      const std::vector< bmcsd_curve_3d_attributes > &attr_i
+        = input<std::vector< bmcsd_curve_3d_attributes> >(inputs_per_job*i + 1);
 
       crv3d_.insert(crv3d_.end(), crv3d_i.begin(), crv3d_i.end());
       attr_.insert(attr_.end(), attr_i.begin(), attr_i.end());
 
-      const vcl_vector< bmcsd_discrete_corresp > &corr_i
-        = input<vcl_vector<bmcsd_discrete_corresp> > (inputs_per_job*i + 2);
+      const std::vector< bmcsd_discrete_corresp > &corr_i
+        = input<std::vector<bmcsd_discrete_corresp> > (inputs_per_job*i + 2);
       corresp_.insert(corresp_.end(), corr_i.begin(), corr_i.end());
     }
 
@@ -205,9 +205,9 @@ public:
   bprod_signal run(unsigned long timestamp,
                    bprod_debug_observer* const debug = NULL);
 
-  vcl_vector< bdifd_1st_order_curve_3d > crv3d_;
-  vcl_vector< bmcsd_curve_3d_attributes > attr_;
-  vcl_vector< bmcsd_discrete_corresp > corresp_;
+  std::vector< bdifd_1st_order_curve_3d > crv3d_;
+  std::vector< bmcsd_curve_3d_attributes > attr_;
+  std::vector< bmcsd_discrete_corresp > corresp_;
 
 private:
   unsigned num_jobs_;

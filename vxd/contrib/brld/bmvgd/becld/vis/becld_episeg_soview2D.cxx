@@ -6,8 +6,8 @@
 #include <vsol/vsol_digital_curve_2d.h>
 #include <vsol/vsol_point_2d.h>
 
-#include <vcl_iostream.h>
-#include <vcl_cmath.h>
+#include <iostream>
+#include <cmath>
 #include <vgl/vgl_distance.h>
 #include <vgui/vgui_gl.h>
 
@@ -32,7 +32,7 @@ void
 becld_episeg_soview2D::draw() const
 {
   glBegin(GL_LINE_STRIP);
-  for( vcl_vector<vgl_point_2d<double> >::const_iterator p_itr = samples_.begin(); 
+  for( std::vector<vgl_point_2d<double> >::const_iterator p_itr = samples_.begin(); 
        p_itr != samples_.end(); ++p_itr)
     glVertex2f((*p_itr).x(), (*p_itr).y());
   glEnd();
@@ -40,8 +40,8 @@ becld_episeg_soview2D::draw() const
 
 
 //: Print details about this becld_episeg to the given stream.
-vcl_ostream&
-becld_episeg_soview2D::print(vcl_ostream&s) const
+std::ostream&
+becld_episeg_soview2D::print(std::ostream&s) const
 {
   return s << "becld_episeg[angle("<<episeg_->min_angle()<<","<<episeg_->max_angle()<<") "
            << "dist("<<episeg_->min_dist()<<","<<episeg_->max_dist()<<")]";
@@ -59,7 +59,7 @@ becld_episeg_soview2D::distance_squared(float x, float y) const
   }
   
   float dd = -1.0f;
-  for( vcl_vector<vgl_point_2d<double> >::const_iterator p_itr = samples_.begin(); 
+  for( std::vector<vgl_point_2d<double> >::const_iterator p_itr = samples_.begin(); 
        p_itr != samples_.end()-1; ++p_itr){
     float nd = vgl_distance2_to_linesegment(float((*p_itr).x()),     float((*p_itr).y()),
                                             float((*(p_itr+1)).x()), float((*(p_itr+1)).y()),
@@ -77,7 +77,7 @@ becld_episeg_soview2D::get_centroid(float* x, float* y) const
 {
   *x = 0;
   *y = 0;
-  for( vcl_vector<vgl_point_2d<double> >::const_iterator p_itr = samples_.begin(); 
+  for( std::vector<vgl_point_2d<double> >::const_iterator p_itr = samples_.begin(); 
        p_itr != samples_.end(); ++p_itr){
     *x += (*p_itr).x();
     *y += (*p_itr).y();
@@ -94,8 +94,8 @@ becld_episeg_soview2D::translate(float x, float y)
 {
   // WARNING - This updates x,y position of each point but DOES NOT
   //           adjust any other dependent variables such as s and alpha
-  int min_index = (int) vcl_ceil(episeg_->min_index());
-  int max_index = (int) vcl_floor(episeg_->max_index());
+  int min_index = (int) std::ceil(episeg_->min_index());
+  int max_index = (int) std::floor(episeg_->max_index());
   vsol_digital_curve_2d_sptr dc = episeg_->curve();
 
   for(int i=min_index; i<=max_index; ++i){
@@ -114,9 +114,9 @@ becld_episeg_soview2D::update_sample_points()
   samples_.clear();
 
   double min_i = episeg_->min_index();
-  int min_index = (int) vcl_ceil(min_i);
+  int min_index = (int) std::ceil(min_i);
   double max_i = episeg_->max_index();
-  int max_index = (int) vcl_floor(max_i);
+  int max_index = (int) std::floor(max_i);
   vsol_digital_curve_2d_sptr dc = episeg_->curve();
 
   if(min_i == max_i){

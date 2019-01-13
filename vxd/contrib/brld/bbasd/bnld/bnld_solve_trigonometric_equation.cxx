@@ -4,7 +4,7 @@
 
 #include "bnld_solve_trigonometric_equation.h"
 #include <vnl/vnl_math.h>
-#include <vcl_cmath.h>
+#include <cmath>
 
 
 const double bnld_solve_trigonometry_eps = 1e-12;
@@ -13,8 +13,8 @@ const double bnld_solve_trigonometry_eps = 1e-12;
 //: Solve trigonometry equation a sin(x) + b cos(x) + c = 0
 // returned roots have format: root(cos(x), sin(x))
 void bnld_solve_1st_order_trig_equation(double a, double b, double c,
-                                   vcl_vector<double >& sin_x,
-                                   vcl_vector<double >& cos_x)
+                                   std::vector<double >& sin_x,
+                                   std::vector<double >& cos_x)
 {
   // sanitize storage variables
   cos_x.clear();
@@ -44,7 +44,7 @@ void bnld_solve_1st_order_trig_equation(double a, double b, double c,
   }
 
   // no root because c > a^2 + b^2
-  double sin_t = -c / vcl_sqrt(a*a+b*b);
+  double sin_t = -c / std::sqrt(a*a+b*b);
   
   if (vnl_math::abs(sin_t) > 1) 
   {
@@ -52,8 +52,8 @@ void bnld_solve_1st_order_trig_equation(double a, double b, double c,
   }
 
 
-  double cos_alpha = a/vcl_sqrt(a*a+b*b);
-  double sin_alpha = b/vcl_sqrt(a*a+b*b);
+  double cos_alpha = a/std::sqrt(a*a+b*b);
+  double sin_alpha = b/std::sqrt(a*a+b*b);
 
   // one root
   if (vnl_math::abs(sin_t) == 1)
@@ -67,10 +67,10 @@ void bnld_solve_1st_order_trig_equation(double a, double b, double c,
   double cos_x_plus_alpha[2];
   double sin_x_plus_alpha[2];
 
-  cos_x_plus_alpha[0] = vcl_sqrt(1-sin_t*sin_t);
+  cos_x_plus_alpha[0] = std::sqrt(1-sin_t*sin_t);
   sin_x_plus_alpha[0] = sin_t;
 
-  cos_x_plus_alpha[1] = -vcl_sqrt(1-sin_t*sin_t);
+  cos_x_plus_alpha[1] = -std::sqrt(1-sin_t*sin_t);
   sin_x_plus_alpha[1] = sin_t;
 
   for (int i=0; i<2; ++i)

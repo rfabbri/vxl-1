@@ -1,8 +1,8 @@
 // This is gel/vsrl/vsrl_3d_output.cxx
 #include "vsrl_3d_output.h"
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
-#include <vcl_fstream.h>
+#include <iostream>
+#include <vector>
+#include <fstream>
 #include <vsrl/vsrl_step_diffusion.h>
 #include <vsrl/vsrl_token_saliency.h>
 #include <vsrl/vsrl_saliency_diffusion.h>
@@ -70,7 +70,7 @@ void vsrl_3d_output::write_output(const char *filename)
   this->write_disparity_image("test0_disp.ppm",&step_diffusion);
 
   // determine the saliency of each point in the image
-  vcl_cout << "Perform the image correlation routines\n";
+  std::cout << "Perform the image correlation routines\n";
   image_correlation_.initial_calculations();
 
   vsrl_token_saliency ts(&image_correlation_);
@@ -91,14 +91,14 @@ void vsrl_3d_output::write_output(const char *filename)
 
   // these are the outputs of the data
 
-  vcl_vector<double> X_out;
-  vcl_vector<double> Y_out;
-  vcl_vector<double> Z_out;
+  std::vector<double> X_out;
+  std::vector<double> Y_out;
+  std::vector<double> Z_out;
 
   // the texture coordinates
 
-  vcl_vector<double> tx_out;
-  vcl_vector<double> ty_out;
+  std::vector<double> tx_out;
+  std::vector<double> ty_out;
 
 
   // step 1 compute all the X for the interpretation
@@ -180,9 +180,9 @@ void vsrl_3d_output::write_output(const char *filename)
 
   // O.K we can now write out the data;
 
-  vcl_ofstream file(filename);
+  std::ofstream file(filename);
   int length = X_out.size();
-  file << length << vcl_endl;
+  file << length << std::endl;
 
   // Create a range image to dump the data into for further use.
   // Set initial image to zero.
@@ -191,16 +191,16 @@ void vsrl_3d_output::write_output(const char *filename)
     for (int y=0;y<height+1;y++)
       range_image_(x,y) = 0.0;
 
-  vcl_vector<double>::iterator iX=X_out.begin();
-  vcl_vector<double>::iterator iY=Y_out.begin();
-  vcl_vector<double>::iterator iZ=Z_out.begin();
-  vcl_vector<double>::iterator itx=tx_out.begin();
-  vcl_vector<double>::iterator ity=ty_out.begin();
+  std::vector<double>::iterator iX=X_out.begin();
+  std::vector<double>::iterator iY=Y_out.begin();
+  std::vector<double>::iterator iZ=Z_out.begin();
+  std::vector<double>::iterator itx=tx_out.begin();
+  std::vector<double>::iterator ity=ty_out.begin();
   double maxval=0.0; // assume that not all values in Z_out are negative - TODO
 
   for (; iX!=X_out.end(); ++iX, ++iY, ++iZ, ++itx, ++ity)
   {
-    file << (*iX) << ' ' << (*iY) << ' ' << (*iZ) << ' ' << *itx << ' ' << *ity << vcl_endl;
+    file << (*iX) << ' ' << (*iY) << ' ' << (*iZ) << ' ' << *itx << ' ' << *ity << std::endl;
     // populate the range image
     int ix = int(*iX+0.5), iy = int(*iY+0.5); // round to nearest integer
     range_image_(ix,height-iy) = *iZ;
@@ -219,17 +219,17 @@ void vsrl_3d_output::write_output(const char *filename)
     }
   }
   if (!vil1_save(rimage_,"range_image.tif"))
-    vcl_cerr << "vsrl_3d_output::write_output: Error saving range image!\n";
+    std::cerr << "vsrl_3d_output::write_output: Error saving range image!\n";
 
   // OK we can now compute the connectivity between points
 
-  vcl_cout << "computing the triangles\n";
+  std::cout << "computing the triangles\n";
 
   // these are the vertex lists
 
-  vcl_vector<int> vert1;
-  vcl_vector<int> vert2;
-  vcl_vector<int> vert3;
+  std::vector<int> vert1;
+  std::vector<int> vert2;
+  std::vector<int> vert3;
 
   // make all possible triangles
 
@@ -263,17 +263,17 @@ void vsrl_3d_output::write_output(const char *filename)
     }
   }
 
-  vcl_cout << "writing triangles\n";
+  std::cout << "writing triangles\n";
 
   // write the number of triangles
   length = vert1.size();
-  file << length << vcl_endl;
+  file << length << std::endl;
 
-  vcl_vector<int>::iterator v1,v2,v3;
+  std::vector<int>::iterator v1,v2,v3;
 
   for (v1=vert1.begin(), v2=vert2.begin(), v3=vert3.begin(); v1<vert1.end();
        v1++,v2++,v3++)
-    file << *v1 << ' ' << *v2 << ' ' << *v3 << vcl_endl;
+    file << *v1 << ' ' << *v2 << ' ' << *v3 << std::endl;
 }
 
 
@@ -286,8 +286,8 @@ void vsrl_3d_output::read_projective_transform(const char *filename)
   // where v and u are transposed, the first and second
   // column of H must be swapped
 
-  vcl_cout << "opening file " << filename << vcl_endl;
-  vcl_ifstream file(filename);
+  std::cout << "opening file " << filename << std::endl;
+  std::ifstream file(filename);
 
   // get rid of the header
 
@@ -304,14 +304,14 @@ void vsrl_3d_output::read_projective_transform(const char *filename)
     for (int col=0;col<4;col++){
       double value;
       file >> value;
-      vcl_cout << "Point r c " << value << ' ' << row << ' ' << col << vcl_endl;
+      std::cout << "Point r c " << value << ' ' << row << ' ' << col << std::endl;
 
       if (col>1) H(row,col)=value;
       else       H(row,1-col)=value;
     }
   }
 
-  vcl_cout << "Setting transform to\n" << H << vcl_endl;
+  std::cout << "Setting transform to\n" << H << std::endl;
   this->set_projective_transform(H);
 }
 

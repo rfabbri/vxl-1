@@ -1,11 +1,11 @@
 #include <iostream>
 #include <testlib/testlib_test.h>
 #include <bmcsd/bmcsd_discrete_corresp.h>
-#include <vcl_limits.h>
+#include <limits>
 #include <vnl/vnl_math.h>
 
 
-static const double tolerance=vcl_numeric_limits<double>::epsilon()*100;
+static const double tolerance=std::numeric_limits<double>::epsilon()*100;
 
 //: Currently tests both IO and other functions of bmcsd_discrete_corresp
 MAIN( test_discrete_corresp_io )
@@ -29,8 +29,8 @@ MAIN( test_discrete_corresp_io )
   // empty list 
   // cp_out.corresp_[3]
 
-  vcl_cout << "Initial data:" << vcl_endl;
-  vcl_cout << cp_out;
+  std::cout << "Initial data:" << std::endl;
+  std::cout << cp_out;
 
   // ------ Writing -------
   vsl_b_ofstream bfs_out("bmcsd_discrete_corresp.tmp");
@@ -50,19 +50,19 @@ MAIN( test_discrete_corresp_io )
   
   TEST("cp_out == cp_in", cp_out, cp_in);
 
-  vcl_cout << "Recovered data:" << vcl_endl;
-  vcl_cout << cp_in;
+  std::cout << "Recovered data:" << std::endl;
+  std::cout << cp_in;
 
 
   //----- OTHER TESTS ----------------------------------------------------------
   
   cp_out.sort();
-  vcl_cout << vcl_endl;
-  vcl_cout << "Sorted:\n " << cp_out << vcl_endl;
+  std::cout << std::endl;
+  std::cout << "Sorted:\n " << cp_out << std::endl;
 
   cp_out.threshold_by_cost(5);
-  vcl_cout << vcl_endl;
-  vcl_cout << "Remove all costs > 5:\n " << cp_out << vcl_endl;
+  std::cout << std::endl;
+  std::cout << "Remove all costs > 5:\n " << cp_out << std::endl;
 
   }
 

@@ -22,7 +22,7 @@ bild_monotone_process::factory::default_params() const
      p->add( "Blue Weight",   "bw",  0.0721f ) )
     return p;
 
-  vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+  std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   return NULL;
 }
 

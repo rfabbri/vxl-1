@@ -14,15 +14,15 @@
 //  Modifications:
 // \endverbatim
 
-//#include <vcl_cmath.h>
-//#include <vcl_limits.h>
+//#include <cmath>
+//#include <limits>
 //#include <vnl/vnl_math.h>
 
-#include <vcl_vector.h>
+#include <vector>
 
 //: Solve quadratic equation ax^2 + bx + c = 0, a != 0
 void bnld_solve_quadratic_equation(double a, double b, double c, 
-                                     vcl_vector<double >& roots);
+                                     std::vector<double >& roots);
 
 
 #endif // bbasd/bnld/bnld_solve_quadratic_equation.h

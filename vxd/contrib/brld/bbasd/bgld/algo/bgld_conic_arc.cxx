@@ -3,7 +3,7 @@
 // \file
 
 #include "bgld_conic_arc.h"
-#include <vcl_cmath.h>
+#include <cmath>
 #include <vgl/algo/vgl_homg_operators_2d.h>
 
 
@@ -62,7 +62,7 @@ set_from(const vgl_point_2d<double >& start,
   // only extrinsic parameters matters in this case
   if (chord_length < bgld_conic_arc::epsilon)
   {
-    double theta = vcl_atan2(chord_direction.y(), chord_direction.x());
+    double theta = std::atan2(chord_direction.y(), chord_direction.x());
     this->set_extrinsic(start, theta);
     this->set_intrinsic(0, 0, 0, 1); 
     
@@ -80,7 +80,7 @@ set_from(const vgl_point_2d<double >& start,
 
 
   // extrinsic params
-  double theta = vcl_atan2(chord_direction.y(), chord_direction.x());
+  double theta = std::atan2(chord_direction.y(), chord_direction.x());
   
   // intrinsic params
   // Transform all info into canonical coordinate system
@@ -92,11 +92,11 @@ set_from(const vgl_point_2d<double >& start,
 
   // -----------------------------------------------------
   // degenerate case : a straight line
-  if (vcl_abs(k0) < bgld_conic_arc::epsilon)
+  if (std::abs(k0) < bgld_conic_arc::epsilon)
   {
     // t0 and t2 need to be horizontal to make a straight line
-    if (vcl_abs(vcl_atan2(t0.y(), t0.x())) < 100*bgld_conic_arc::epsilon &&
-      vcl_abs(vcl_atan2(t0.y(), t0.x())) < 100*bgld_conic_arc::epsilon)
+    if (std::abs(std::atan2(t0.y(), t0.x())) < 100*bgld_conic_arc::epsilon &&
+      std::abs(std::atan2(t0.y(), t0.x())) < 100*bgld_conic_arc::epsilon)
     {
       // the straight line is parameterized wrt arclength
       this->set_extrinsic(start, theta);
@@ -115,7 +115,7 @@ set_from(const vgl_point_2d<double >& start,
   // required: a^2 >=0
   if (a_sqr < 0) return false;
 
-  double a = vcl_sqrt(a_sqr);
+  double a = std::sqrt(a_sqr);
 
   // w1 = a * sin(psi2 - psi0) / (x2 * sin(psi2))
   double w1 = a * (t2.y()*t0.x() - t2.x()*t0.y()) / (x2 * t2.y());
@@ -190,7 +190,7 @@ tangent_at(double t) const
   // for super degenerate case, when the chord length is zero
   // (the whole curve is just a point)
   if (this->x2()<bgld_conic_arc::epsilon) 
-    return vgl_vector_2d<double >(vcl_cos(this->theta()), vcl_sin(this->theta()));
+    return vgl_vector_2d<double >(std::cos(this->theta()), std::sin(this->theta()));
 
   // for regular case, including straight line
   // check Farin for the formulation
@@ -268,7 +268,7 @@ curvature_at(double t) const
 // ------------------------------------------------------------------------
 //: Print parameters of the circular arc
 void bgld_conic_arc::
-print(vcl_ostream &os )
+print(std::ostream &os )
 {
   os << "<bgld_conic_arc> \n";
 }

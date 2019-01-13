@@ -55,12 +55,12 @@ test_change( bgld_param_curve const   &, bsold_geno_measures const &prevm,
    delta_tan  = currm.patchspan(
          currm.rad2deg( prevm.end_tangent() - nextm.start_tangent() ));
 
-   delta_curv = vcl_fabs(prevm.end_curvature() - nextm.start_curvature());
+   delta_curv = std::fabs(prevm.end_curvature() - nextm.start_curvature());
 
    if (delta_tan >= tangent_threshold) {
       if (delta_curv < curv_threshold) {
 #ifndef NDEBUG
-      vcl_cerr << "Classified as shock due solely to large tangent change\n";
+      std::cerr << "Classified as shock due solely to large tangent change\n";
 #endif
       }
       return true;

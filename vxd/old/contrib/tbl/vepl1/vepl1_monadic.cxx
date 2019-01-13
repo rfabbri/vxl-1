@@ -3,14 +3,14 @@
 #include <vipl/accessors/vipl_accessors_vil1_image.h>
 #include <vipl/vipl_monadic.h>
 #include <vil1/vil1_memory_image_of.h>
-#include <vcl_cmath.h>
-#include <vcl_iostream.h>
+#include <cmath>
+#include <iostream>
 #include <vxl_config.h> // for vxl_byte
 
 float abs_float(float const& a) { return (a<0) ? -a : a; }
-double abs_double(double const& a) { return vcl_fabs(a); }
-float sqrt_float(float const& a) { return (a<0) ? -vcl_sqrt(a) : vcl_sqrt(a); }
-double sqrt_double(double const& a) { return (a<0) ? -vcl_sqrt(a) : vcl_sqrt(a); }
+double abs_double(double const& a) { return std::fabs(a); }
+float sqrt_float(float const& a) { return (a<0) ? -std::sqrt(a) : std::sqrt(a); }
+double sqrt_double(double const& a) { return (a<0) ? -std::sqrt(a) : std::sqrt(a); }
 vxl_byte sqr_ubyte(vxl_byte const& a) { return vxl_byte(a*a); }
 vxl_uint_16 sqr_ushort(vxl_uint_16 const& a) { return vxl_uint_16(a*a); }
 float sqr_float(float const& a) { return a*a; }
@@ -63,7 +63,7 @@ vil1_image vepl1_monadic_abs(vil1_image const& image)
 
   //
   else {
-    vcl_cerr << __FILE__ ": vepl1_monadic_abs() not implemented for " << image << vcl_endl;
+    std::cerr << __FILE__ ": vepl1_monadic_abs() not implemented for " << image << std::endl;
     return 0;
   }
 }
@@ -94,7 +94,7 @@ vil1_image vepl1_monadic_sqrt(vil1_image const& image)
 
   //
   else {
-    vcl_cerr << __FILE__ ": vepl1_monadic_sqrt() not implemented for " << image << vcl_endl;
+    std::cerr << __FILE__ ": vepl1_monadic_sqrt() not implemented for " << image << std::endl;
     return 0;
   }
 }
@@ -147,7 +147,7 @@ vil1_image vepl1_monadic_sqr(vil1_image const& image)
 
   //
   else {
-    vcl_cerr << __FILE__ ": vepl1_monadic_sqr() not implemented for " << image << vcl_endl;
+    std::cerr << __FILE__ ": vepl1_monadic_sqr() not implemented for " << image << std::endl;
     return 0;
   }
 }
@@ -202,7 +202,7 @@ vil1_image vepl1_monadic_shear(vil1_image const& image, double shift, double sca
 
   //
   else {
-    vcl_cerr << __FILE__ ": vepl1_monadic_shear() not implemented for " << image << vcl_endl;
+    std::cerr << __FILE__ ": vepl1_monadic_shear() not implemented for " << image << std::endl;
     return 0;
   }
 }

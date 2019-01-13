@@ -4,7 +4,7 @@
 
 #include "vsrl_parameters.h"
 #include <vil1/vil1_save.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 vsrl_stereo_dense_matcher::vsrl_stereo_dense_matcher(const vil1_image &im1, const vil1_image &im2):
   vsrl_dense_matcher(im1),
@@ -37,7 +37,7 @@ void vsrl_stereo_dense_matcher::execute()
 
   // start the dynamic program for each raster
 
-  vcl_cout << "Performing dynamic programs\n";
+  std::cout << "Performing dynamic programs\n";
 
   for (int i=0;i<num_raster_;i++)
     evaluate_raster(i);
@@ -50,7 +50,7 @@ void vsrl_stereo_dense_matcher::initial_calculations()
   // step 1 - compute the correlations between the two images
   //          so that the dynamic programs can perform their calculations efficiently
 
-  vcl_cout << "Performing image correlations\n";
+  std::cout << "Performing image correlations\n";
 
   image_correlation_.set_correlation_range(correlation_range_);
 
@@ -99,11 +99,11 @@ int vsrl_stereo_dense_matcher::get_assignment(int x, int y)
 void vsrl_stereo_dense_matcher::evaluate_raster(int i)
 {
   if (i<0 || i>= num_raster_)
-    vcl_cout << "Warning tried to evaluate inapropriate raster\n";
+    std::cout << "Warning tried to evaluate inapropriate raster\n";
 
   // we want to evaulate the raster i
 
-  vcl_cout << "evaluating raster " << i << vcl_endl;
+  std::cout << "evaluating raster " << i << std::endl;
 
   // set up the i'th raster array
   vsrl_raster_dp_setup *raster = new vsrl_raster_dp_setup(i, &image_correlation_);
@@ -165,8 +165,8 @@ void vsrl_stereo_dense_matcher::write_disparity_image(char *filename)
 
 void vsrl_stereo_dense_matcher::print_correlation_cost(int x, int y)
 {
-  vcl_cout << "Correlation costs for pixel " << x << ' ' << y << vcl_endl;
+  std::cout << "Correlation costs for pixel " << x << ' ' << y << std::endl;
 
   for (int disp = 0-correlation_range_;disp < correlation_range_;disp++)
-    vcl_cout << disp << " -> " << image_correlation_.get_correlation(x,y,disp) << vcl_endl;
+    std::cout << disp << " -> " << image_correlation_.get_correlation(x,y,disp) << std::endl;
 }

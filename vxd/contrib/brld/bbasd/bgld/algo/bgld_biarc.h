@@ -16,7 +16,7 @@
 // \endverbatim
 
 
-#include <vcl_ostream.h>
+#include <ostream>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_vector_2d.h>
 
@@ -146,7 +146,7 @@ public:
 
   // ---------------- MISCELLANEOUS ----------------------
   //: Print parameters of the biarc
-  void print(vcl_ostream &os ) const;
+  void print(std::ostream &os ) const;
 
 protected:
   // core member variables

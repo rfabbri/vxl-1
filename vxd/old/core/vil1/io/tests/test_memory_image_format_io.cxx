@@ -1,12 +1,12 @@
 // This is core/vil1/io/tests/test_memory_image_format_io.cxx
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vil1/io/vil1_io_memory_image_format.h>
 #include <testlib/testlib_test.h>
 #include <vpl/vpl.h>
 
 void test_memory_image_format_io()
 {
-  vcl_cout << "*******************************************\n"
+  std::cout << "*******************************************\n"
            << "Testing vil1_memory_image_format<double> io\n"
            << "*******************************************\n";
   //// test constructors, accessors
@@ -34,8 +34,8 @@ void test_memory_image_format_io()
         p_out.bits_per_component==p_in.bits_per_component &&
         p_out.component_format==p_in.component_format , true);
 
-  vsl_print_summary(vcl_cout, p_out);
-  vcl_cout << vcl_endl;
+  vsl_print_summary(std::cout, p_out);
+  std::cout << std::endl;
 }
 
 

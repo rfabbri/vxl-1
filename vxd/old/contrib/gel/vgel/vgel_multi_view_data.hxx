@@ -2,7 +2,7 @@
 #define vgel_multi_view_data_txx_
 
 #include "vgel_multi_view_data.h"
-#include <vcl_iostream.h>
+#include <iostream>
 
 template <class T>
 vgel_multi_view_data<T>::vgel_multi_view_data():
@@ -14,7 +14,7 @@ template <class T>
 vgel_multi_view_data<T>::vgel_multi_view_data(int nbviews):
 nbviews_(nbviews),size_vect_ft_(0),matchnum_(-1),closed_track_(true),MVM(0)
 {
-  //all_pts=new vcl_vector<T>();
+  //all_pts=new std::vector<T>();
 }
 
 template <class T>
@@ -32,8 +32,8 @@ template <class T>
 void vgel_multi_view_data<T>::set(int view_num,int matchnum,T feature)
 {
   all_pts.push_back(feature);
-  //vcl_cerr << "Matchnum:" <<matchnum<<vcl_endl;
-  //vcl_cerr << "Point number:" <<size_vect_pt_<<vcl_endl;
+  //std::cerr << "Matchnum:" <<matchnum<<std::endl;
+  //std::cerr << "Point number:" <<size_vect_pt_<<std::endl;
   if (matchnum>matchnum_)
   {
     matchnum_=matchnum;
@@ -79,13 +79,13 @@ void vgel_multi_view_data<T>::close_track()
 //put in point_vector all the points that have been detected and
 //matched in at least two views in the view view_num
 template <class T>
-void vgel_multi_view_data<T>::get(int view_num,vcl_vector<T> &ft_vector)
+void vgel_multi_view_data<T>::get(int view_num,std::vector<T> &ft_vector)
 {
   if ((view_num>=0) && (view_num<nbviews_))
   {
     ft_vector.clear();
     NViewMatches::iterator iter;
-    vcl_cerr << "MVM->size():"<<MVM.size()<<vcl_endl;
+    std::cerr << "MVM->size():"<<MVM.size()<<std::endl;
     for (iter=MVM.begin();iter!=MVM.end();iter++)
     {
       int ft_num=(*iter)[view_num];
@@ -102,8 +102,8 @@ void vgel_multi_view_data<T>::get(int view_num,vcl_vector<T> &ft_vector)
 //have been matched between thoses 2 views.
 template <class T>
 void vgel_multi_view_data<T>::get(int view_num1,int view_num2,
-                                  vcl_vector<T> &ft_vector1,
-                                  vcl_vector<T> &ft_vector2)
+                                  std::vector<T> &ft_vector1,
+                                  std::vector<T> &ft_vector2)
 {
   if ((view_num1>=0) && (view_num1<nbviews_) &&
       (view_num2>=0) && (view_num2<nbviews_) &&
@@ -129,9 +129,9 @@ void vgel_multi_view_data<T>::get(int view_num1,int view_num2,
 
 template <class T>
 void vgel_multi_view_data<T>::get(int view_num1,int view_num2,int view_num3,
-                                  vcl_vector<T> &ft_vector1,
-                                  vcl_vector<T> &ft_vector2,
-                                  vcl_vector<T> &ft_vector3)
+                                  std::vector<T> &ft_vector1,
+                                  std::vector<T> &ft_vector2,
+                                  std::vector<T> &ft_vector3)
 {
   if ((view_num1>=0) && (view_num1<nbviews_) &&
       (view_num2>=0) && (view_num2<nbviews_) &&
@@ -210,7 +210,7 @@ void vgel_multi_view_data<T>::remove(int view_num, T match)
 }
 
 template <class T>
-vcl_ostream& vgel_multi_view_data<T>::print(vcl_ostream& str)
+std::ostream& vgel_multi_view_data<T>::print(std::ostream& str)
 {
   for (unsigned int j=0;j<MVM.size();j++)
   {
@@ -223,7 +223,7 @@ vcl_ostream& vgel_multi_view_data<T>::print(vcl_ostream& str)
         str<<"  "<<MVM[j][i];
       else
         str<<" "<<MVM[j][i];
-    str<<vcl_endl;
+    str<<std::endl;
   }
   return str;
 }

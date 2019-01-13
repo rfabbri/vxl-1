@@ -11,8 +11,8 @@
 // \author
 //   L. Guichard
 //--------------------------------------------------------------------------------
-#include <vcl_vector.h>
-#include <vcl_iosfwd.h>
+#include <vector>
+#include <iosfwd>
 #include <mvl/NViewMatches.h>
 #include <vbl/vbl_ref_count.h>
 
@@ -36,19 +36,19 @@ class vgel_multi_view_data: public vbl_ref_count
   void set(int view_num,int matchnum,T);
   void set(int view_num,T);
 
-  void get(int, vcl_vector<T> &);
-  void get(int, int, vcl_vector<T> &,
-           vcl_vector<T> &);
-  void get(int, int, int, vcl_vector<T> &,
-           vcl_vector<T> &,
-           vcl_vector<T> &);
+  void get(int, std::vector<T> &);
+  void get(int, int, std::vector<T> &,
+           std::vector<T> &);
+  void get(int, int, int, std::vector<T> &,
+           std::vector<T> &,
+           std::vector<T> &);
 
   bool get_pred_match(int view_num,T obj,T & res);
   int get_nb_views() const {return nbviews_;}
 
   void remove(int view_num, T match);
 
-  vcl_ostream& print(vcl_ostream& str);
+  std::ostream& print(std::ostream& str);
 
  private:
   int nbviews_;
@@ -58,7 +58,7 @@ class vgel_multi_view_data: public vbl_ref_count
   bool closed_track_;
 
   NViewMatches MVM;
-  vcl_vector<T> all_pts;
+  std::vector<T> all_pts;
 };
 
 #endif // vgel_multi_view_data_

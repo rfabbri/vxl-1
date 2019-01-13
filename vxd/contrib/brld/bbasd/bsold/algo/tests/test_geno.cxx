@@ -6,20 +6,20 @@
 #include <vgl/vgl_vector_2d.h>
 #include <vnl/vnl_math.h>
 
-#include <vcl_iostream.h> 
-#include <vcl_cmath.h>
-#include <vcl_limits.h>
+#include <iostream> 
+#include <cmath>
+#include <limits>
 
 
-static const double tolerance=vcl_numeric_limits<double>::epsilon()*100;
+static const double tolerance=std::numeric_limits<double>::epsilon()*100;
 
 static bool almost_equal3(const vgl_point_2d<double> &a, const vgl_point_2d<double> &b) {
-  if (vcl_fabs(a.x()-b.x()) < tolerance && vcl_fabs(a.y()-b.y()) < tolerance) {
+  if (std::fabs(a.x()-b.x()) < tolerance && std::fabs(a.y()-b.y()) < tolerance) {
     return true;
   } else {
-//    vcl_cerr << "Data about differing points" << vcl_endl;
-//    vcl_cerr << "Point 1: "  << a << vcl_endl;
-//    vcl_cerr << "Point 2: "  << b << vcl_endl;
+//    std::cerr << "Data about differing points" << std::endl;
+//    std::cerr << "Point 1: "  << a << std::endl;
+//    std::cerr << "Point 2: "  << b << std::endl;
     return false;
   }
 }
@@ -33,7 +33,7 @@ MAIN( test_geno )
 
 
   {
-  vcl_vector<vsol_point_2d_sptr> pts;
+  std::vector<vsol_point_2d_sptr> pts;
   //---------- Open curve ---------
   // unit circle
   pts.push_back(new vsol_point_2d(1,0));
@@ -44,12 +44,12 @@ MAIN( test_geno )
   bsold_geno_curve_2d c;
   bsold_geno::interpolate(&c,pts,false);
 
-  vcl_cout << c;
+  std::cout << c;
   TEST("#Intervals",c.size(),3);
   TEST_NEAR("Total Length",c.length(),1.5*vnl_math::pi,
              tolerance);
 
-  vcl_cout  << "Recovering samples from point_at" << vcl_endl;
+  std::cout  << "Recovering samples from point_at" << std::endl;
   TEST("Point at arclength 0",almost_equal3(c.point_at(0)->get_p(),pts[0]->get_p()),true);
   TEST("Point at arclength pi/2",almost_equal3(c.point_at(vnl_math::pi/2.0)->get_p(),
                                                   pts[1]->get_p()),true);
@@ -59,7 +59,7 @@ MAIN( test_geno )
   TEST("Point at arclength 1.5pi",almost_equal3(c.point_at(1.5*vnl_math::pi)->get_p(),
                                                   pts[3]->get_p()),true);
 
-  vgl_point_2d<double> p1(vcl_sqrt(2.0)/2.0,vcl_sqrt(2.0)/2.0);
+  vgl_point_2d<double> p1(std::sqrt(2.0)/2.0,std::sqrt(2.0)/2.0);
   TEST("Point at arclength pi/4", almost_equal3(c.point_at(vnl_math::pi/4.0)->get_p(),p1),true);
 
   TEST("Point at total length",almost_equal3(c.point_at(c.length())->get_p(),
@@ -84,17 +84,17 @@ MAIN( test_geno )
   TEST("Uniform sampling and interval point_at consistency",error,false);
 
   if (error) {
-    vcl_cout << "Data regarding the error:" << vcl_endl;
-    vcl_cout << "    Arc length: " << s/vnl_math::pi << "*pi" << vcl_endl;
-    vcl_cout << "Analytic point: " << "(" << cos(s) << "," << sin(s) << ")" << vcl_endl;
-    vcl_cout << "    Geno point: " << "(" << pt->x() << "," << pt->y() << ")" << vcl_endl;
+    std::cout << "Data regarding the error:" << std::endl;
+    std::cout << "    Arc length: " << s/vnl_math::pi << "*pi" << std::endl;
+    std::cout << "Analytic point: " << "(" << cos(s) << "," << sin(s) << ")" << std::endl;
+    std::cout << "    Geno point: " << "(" << pt->x() << "," << pt->y() << ")" << std::endl;
   }
 
   } //< end block
 
   {
   //---------- Straight line samples ---------
-  vcl_vector<vsol_point_2d_sptr> pts;
+  std::vector<vsol_point_2d_sptr> pts;
   pts.push_back(new vsol_point_2d(0,0));
   pts.push_back(new vsol_point_2d(1,1));
   pts.push_back(new vsol_point_2d(2,2));
@@ -103,13 +103,13 @@ MAIN( test_geno )
   bsold_geno_curve_2d c;
   bsold_geno::interpolate(&c,pts,false);
 
-  vcl_cout << c;
+  std::cout << c;
 
-  const double sqrt2 = vcl_sqrt(2.0);
+  const double sqrt2 = std::sqrt(2.0);
   TEST("#Intervals",c.size(),3);
   TEST_NEAR("Total Length",c.length(),3*sqrt2, tolerance);
 
-  vcl_cout  << "Recovering samples from point_at" << vcl_endl;
+  std::cout  << "Recovering samples from point_at" << std::endl;
   TEST("Point at arclength 0",almost_equal3(c.point_at(0)->get_p(),pts[0]->get_p()),true);
   TEST("Point at arclength sqrt2",almost_equal3(c.point_at(sqrt2)->get_p(),
                                                   pts[1]->get_p()),true);
@@ -144,10 +144,10 @@ MAIN( test_geno )
   TEST("Uniform sampling and interval point_at consistency",error,false);
 
   if (error) {
-    vcl_cout << "Data regarding the error:" << vcl_endl;
-    vcl_cout << "    Arc length: " << s << vcl_endl;
-    vcl_cout << "Analytic point: " << "(" << s/sqrt2 << "," << s/sqrt2 << ")" << vcl_endl;
-    vcl_cout << "    Geno point: " << "(" << pt->x() << "," << pt->y() << ")" << vcl_endl;
+    std::cout << "Data regarding the error:" << std::endl;
+    std::cout << "    Arc length: " << s << std::endl;
+    std::cout << "Analytic point: " << "(" << s/sqrt2 << "," << s/sqrt2 << ")" << std::endl;
+    std::cout << "    Geno point: " << "(" << pt->x() << "," << pt->y() << ")" << std::endl;
   }
  
   
@@ -155,7 +155,7 @@ MAIN( test_geno )
 
   {
   //---------- Closed curve ---------
-  vcl_vector<vsol_point_2d_sptr> pts;
+  std::vector<vsol_point_2d_sptr> pts;
   
   // unit circle
   pts.push_back(new vsol_point_2d(1,0));
@@ -166,8 +166,8 @@ MAIN( test_geno )
   bsold_geno_curve_2d c;
   bsold_geno::interpolate(&c,pts, true);
 
-  vcl_cout << c;
-  vcl_cout << "----------------------------\n";
+  std::cout << c;
+  std::cout << "----------------------------\n";
   TEST("#Intervals",c.size(),4);
   TEST_NEAR("Total Length",c.length(),2*vnl_math::pi,
              tolerance);

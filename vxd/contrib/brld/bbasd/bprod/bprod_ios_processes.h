@@ -16,10 +16,10 @@
 
 
 #include <bprod/bprod_process.h>
-#include <vcl_vector.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_algorithm.h>
+#include <vector>
+#include <iostream>
+#include <fstream>
+#include <algorithm>
 #include <vul/vul_file_iterator.h>
 #include <vul/vul_file.h>
 
@@ -35,7 +35,7 @@ template <class T >
 class bprod_istream_source : public bprod_source
 {
  public:
-  bprod_istream_source(const vcl_istream& istream) : is(istream) {}
+  bprod_istream_source(const std::istream& istream) : is(istream) {}
 
   //: Execute the process
   bprod_signal execute()
@@ -48,7 +48,7 @@ class bprod_istream_source : public bprod_source
     output(0, data);
     return BPROD_VALID;
   }
-  vcl_istream is;
+  std::istream is;
 };
 
 
@@ -56,7 +56,7 @@ class bprod_istream_source : public bprod_source
 class bprod_ifstream_source_base : public bprod_source
 {
   public:
-    virtual bool open(const vcl_string& filename) = 0;
+    virtual bool open(const std::string& filename) = 0;
 };
 
 
@@ -65,9 +65,9 @@ template <class T >
 class bprod_ifstream_source : public bprod_ifstream_source_base
 {
   public:
-    bprod_ifstream_source(const vcl_string& filename) { open(filename.c_str()); }
+    bprod_ifstream_source(const std::string& filename) { open(filename.c_str()); }
         
-    bool open(const vcl_string& filename)
+    bool open(const std::string& filename)
     {
       ifs.open(filename.c_str());
       return ifs.is_open();
@@ -85,7 +85,7 @@ class bprod_ifstream_source : public bprod_ifstream_source_base
       return BPROD_VALID;
     }
     
-    vcl_ifstream ifs;
+    std::ifstream ifs;
 };
 
 
@@ -94,13 +94,13 @@ template <class T >
 class bprod_ifstream_list_source : public bprod_ifstream_source_base
 {
   public:
-    bprod_ifstream_list_source(const vcl_string& glob) 
+    bprod_ifstream_list_source(const std::string& glob) 
     : index(0) { open(glob); }
   
-    bprod_ifstream_list_source(const vcl_vector<vcl_string>& files) 
+    bprod_ifstream_list_source(const std::vector<std::string>& files) 
     : filenames(files), index(0) {}
   
-    bool open(const vcl_string& glob)
+    bool open(const std::string& glob)
     {
       filenames.clear();
       index = 0;
@@ -118,7 +118,7 @@ class bprod_ifstream_list_source : public bprod_ifstream_source_base
       
       // Sort - because the file iterator uses readdir() it does not
       //        iterate over files in alphanumeric order
-      vcl_sort(filenames.begin(),filenames.end());
+      std::sort(filenames.begin(),filenames.end());
       
       return true;
     }
@@ -129,7 +129,7 @@ class bprod_ifstream_list_source : public bprod_ifstream_source_base
       if(index >= filenames.size()){
         return BPROD_EOS;
       }
-      vcl_ifstream ifs(filenames[index++].c_str());
+      std::ifstream ifs(filenames[index++].c_str());
       if(!ifs.is_open()){
         return BPROD_INVALID;
       }
@@ -141,7 +141,7 @@ class bprod_ifstream_list_source : public bprod_ifstream_source_base
       return BPROD_VALID;
     }
   
-    vcl_vector<vcl_string> filenames;
+    std::vector<std::string> filenames;
     unsigned int index;
 };
 
@@ -159,7 +159,7 @@ template <class T >
 class bprod_ostream_sink : public bprod_sink
 {
  public:
-  bprod_ostream_sink(vcl_ostream& stream) : os(stream) {}
+  bprod_ostream_sink(std::ostream& stream) : os(stream) {}
 
   //: Execute the process
   bprod_signal execute()
@@ -168,7 +168,7 @@ class bprod_ostream_sink : public bprod_sink
     os << input<T>(0);
     return BPROD_VALID;
   }
-  vcl_ostream& os;
+  std::ostream& os;
 };
 
 

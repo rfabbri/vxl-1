@@ -13,8 +13,8 @@
 // \endverbatim
 
 #include <bpro1/bpro1_process.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 /*
   XXX This will not compile with latest VXL because vgel has been terminated
   There is a copy of it in lemsvxl/old/contrib/gel/vgel
@@ -34,7 +34,7 @@ public:
   vidpro1_kl_process();
   ~vidpro1_kl_process();
 
-  vcl_string name();
+  std::string name();
 
   //: Clone the process
   virtual bpro1_process* clone() const;
@@ -42,8 +42,8 @@ public:
   int input_frames();
   int output_frames();
 
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
 
   bool execute();
   bool finish();

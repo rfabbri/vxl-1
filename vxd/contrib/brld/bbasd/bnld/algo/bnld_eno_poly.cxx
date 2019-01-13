@@ -14,15 +14,15 @@ const unsigned  bnld_eno_poly::second_order_index
 #endif
 
 void bnld_eno_poly::
-print(vcl_ostream &strm) const
+print(std::ostream &strm) const
 {
-   strm << "==== Polynomial ====" << vcl_endl
-        << "order: " << order() << vcl_endl
+   strm << "==== Polynomial ====" << std::endl
+        << "order: " << order() << std::endl
         << "coefficients: ";
 
    for (unsigned i=0; i<=order(); ++i)
       strm << coeff(i) << " ";
-   strm << vcl_endl;
+   strm << std::endl;
 }
 
 bnld_eno_poly operator-(const bnld_eno_poly &f1, const bnld_eno_poly &f2)

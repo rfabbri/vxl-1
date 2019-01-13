@@ -2,7 +2,7 @@
 #include <vgl/vgl_distance.h>
 #include <bdifd/algo/bdifd_data.h>
 #include <vpgld/algo/vpgld_triangulation.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 
 static void test_two_view_triangulation();
 
@@ -18,8 +18,8 @@ test_triangulation()
 //
 static double
 test_reconstruction(
-    const vcl_vector<vgl_point_3d<double> > rec_world_pts,
-    const vcl_vector<vgl_point_3d<double> > gt_world_pts,
+    const std::vector<vgl_point_3d<double> > rec_world_pts,
+    const std::vector<vgl_point_3d<double> > gt_world_pts,
     bool formal_test
     )
 {
@@ -33,32 +33,32 @@ test_reconstruction(
   if (formal_test) {
     TEST_NEAR("Average reprojection error", reproj_error, 0, 0.0001);
   } else
-    vcl_cout << "Average reprojection error: " << reproj_error << vcl_endl;
+    std::cout << "Average reprojection error: " << reproj_error << std::endl;
 
   return reproj_error;
 }
 
 void 
 test_two_view_triangulation_on_gt_data(
-  const vcl_vector<vpgl_perspective_camera<double> > &gt_cams,
-  const vcl_vector<vcl_vector<vgl_point_2d<double> > > &gt_image_pts,
-  const vcl_vector<vgl_point_3d<double> > &gt_world_pts,
+  const std::vector<vpgl_perspective_camera<double> > &gt_cams,
+  const std::vector<std::vector<vgl_point_2d<double> > > &gt_image_pts,
+  const std::vector<vgl_point_3d<double> > &gt_world_pts,
   bool formal_test)
 {
 
   // Triangulate using linear least squares.
   double linear_reproj_error = -1;
   {
-  vcl_cout << "Linear least squares:\n";
-  vcl_vector<vgl_point_3d<double> > linear_world_pts(gt_world_pts.size());
+  std::cout << "Linear least squares:\n";
+  std::vector<vgl_point_3d<double> > linear_world_pts(gt_world_pts.size());
 
   {
-  vcl_vector<vnl_double_3x4> projs;
+  std::vector<vnl_double_3x4> projs;
   projs.push_back(gt_cams[0].get_matrix());
   projs.push_back(gt_cams[1].get_matrix());
 
   for (unsigned ip=0; ip < gt_world_pts.size(); ++ip) {
-    vcl_vector<vnl_double_2> corresp_pts;
+    std::vector<vnl_double_2> corresp_pts;
 
     corresp_pts.push_back(vnl_double_2(gt_image_pts[0][ip].x(), gt_image_pts[0][ip].y()));
     corresp_pts.push_back(vnl_double_2(gt_image_pts[1][ip].x(), gt_image_pts[1][ip].y()));
@@ -74,8 +74,8 @@ test_two_view_triangulation_on_gt_data(
   double kanatani_fast_reproj_error = -1;
   // Triangulate using Kanatani et. al's BMVC08 optimal triangulation fast version.
   {
-  vcl_cout << "Kanatani et. al.'s method:\n";
-  vcl_vector<vgl_point_3d<double> > kanatani_world_pts(gt_world_pts.size());
+  std::cout << "Kanatani et. al.'s method:\n";
+  std::vector<vgl_point_3d<double> > kanatani_world_pts(gt_world_pts.size());
 
   {
   for (unsigned ip=0; ip < gt_world_pts.size(); ++ip) {
@@ -90,12 +90,12 @@ test_two_view_triangulation_on_gt_data(
 
   TEST("Kanatani is really optimal", 
       kanatani_fast_reproj_error < linear_reproj_error || 
-      vcl_fabs(linear_reproj_error - kanatani_fast_reproj_error) < 0.0000001, true);
+      std::fabs(linear_reproj_error - kanatani_fast_reproj_error) < 0.0000001, true);
 
   // Triangulate using Kanatani et. al's BMVC08 optimal triangulation slow version.
 //  {
-//  vcl_cout << "Kanatani et. al.'s method:\n";
-//  vcl_vector<vgl_point_3d<double> > kanatani_world_pts(gt_world_pts.size());
+//  std::cout << "Kanatani et. al.'s method:\n";
+//  std::vector<vgl_point_3d<double> > kanatani_world_pts(gt_world_pts.size());
 
 //  {
 //  for (unsigned ip=0; ip < gt_world_pts.size(); ++ip) {
@@ -116,36 +116,36 @@ void
 test_two_view_triangulation()
 {
   // --- Perfect data ---
-  vcl_vector<vpgl_perspective_camera<double> > gt_cams;
-  vcl_vector<vcl_vector<vgl_point_2d<double> > > gt_image_pts;
-  vcl_vector<vgl_point_3d<double> > gt_world_pts;
+  std::vector<vpgl_perspective_camera<double> > gt_cams;
+  std::vector<std::vector<vgl_point_2d<double> > > gt_image_pts;
+  std::vector<vgl_point_3d<double> > gt_world_pts;
 
   {
-  vcl_vector<double> angles;
+  std::vector<double> angles;
   angles.push_back(30);
   angles.push_back(60);
 
   bdifd_data::get_digital_camera_point_dataset(&gt_cams, &gt_image_pts, &gt_world_pts, angles);
-  gt_image_pts.resize(vcl_min((size_t)500, gt_image_pts.size()));
-  gt_world_pts.resize(vcl_min((size_t)500, gt_image_pts.size()));
+  gt_image_pts.resize(std::min((size_t)500, gt_image_pts.size()));
+  gt_world_pts.resize(std::min((size_t)500, gt_image_pts.size()));
   }
 
   test_two_view_triangulation_on_gt_data(gt_cams, gt_image_pts, gt_world_pts, true);
 
   
   // --- Perturbed cams ---
-  vcl_vector<vpgl_perspective_camera<double> > perturbed_cams;
+  std::vector<vpgl_perspective_camera<double> > perturbed_cams;
 
   {
-  vcl_vector<double> angles;
+  std::vector<double> angles;
   angles.push_back(37);
   angles.push_back(50);
 
-  vcl_vector<vcl_vector<vgl_point_2d<double> > > gt_image_pts_dummy;
-  vcl_vector<vgl_point_3d<double> > gt_world_pts_dummy;
+  std::vector<std::vector<vgl_point_2d<double> > > gt_image_pts_dummy;
+  std::vector<vgl_point_3d<double> > gt_world_pts_dummy;
   bdifd_data::get_digital_camera_point_dataset(&perturbed_cams, &gt_image_pts_dummy, &gt_world_pts_dummy, angles);
-  gt_image_pts.resize(vcl_min((size_t)500, gt_image_pts.size()));
-  gt_world_pts.resize(vcl_min((size_t)500, gt_image_pts.size()));
+  gt_image_pts.resize(std::min((size_t)500, gt_image_pts.size()));
+  gt_world_pts.resize(std::min((size_t)500, gt_image_pts.size()));
   }
 
   test_two_view_triangulation_on_gt_data(perturbed_cams, gt_image_pts, gt_world_pts, false);

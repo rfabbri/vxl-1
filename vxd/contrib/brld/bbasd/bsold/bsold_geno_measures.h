@@ -13,7 +13,7 @@
 
 #include <bgld/bgld_param_curve.h>
 #include <vnl/vnl_math.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 //: Given a bgld_param_curve, this class computes and stores/cache some useful
 // measures.  Their primary purpose is to be used in shock detection.
@@ -23,7 +23,7 @@ public:
    ~bsold_geno_measures() {}
 
    void compute(const bgld_param_curve &c);
-   void print(vcl_ostream& = vcl_cerr) const;
+   void print(std::ostream& = std::cerr) const;
 
    /// Accessors
    double start_tangent() const {return start_tangent_;} 

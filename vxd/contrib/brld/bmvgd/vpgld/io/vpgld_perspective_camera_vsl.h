@@ -40,14 +40,14 @@ class vpgld_perspective_camera_vsl : public vpgld_proj_camera_vsl<T>
   short version() const {return 2;}
 
   //: Print an ascii summary to the stream
-  void print_summary(vcl_ostream &os) const { os << *this->get(); }
+  void print_summary(std::ostream &os) const { os << *this->get(); }
 
   //: Return a platform independent string identifying the class.
   // This is used by e.g. polymorphic binary i/o
-  virtual vcl_string is_a() const { return vcl_string("vpgl_perspective_camera"); }
+  virtual std::string is_a() const { return std::string("vpgl_perspective_camera"); }
 
   //: Return true if the argument matches the string identifying the class or any parent class
-  virtual bool is_class(vcl_string const& cls) const
+  virtual bool is_class(std::string const& cls) const
   { return cls==is_a() || vpgld_proj_camera_vsl<T>::is_class(cls); }
 
 };

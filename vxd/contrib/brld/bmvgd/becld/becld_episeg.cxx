@@ -2,9 +2,9 @@
 //:
 // \file
 
-#include <vcl_cmath.h>
-#include <vcl_algorithm.h>
-#include <vcl_limits.h>
+#include <cmath>
+#include <algorithm>
+#include <limits>
 #include "becld_episeg.h"
 #include <vsol/vsol_digital_curve_2d.h>
 #include <vgl/vgl_vector_2d.h>
@@ -73,7 +73,7 @@ double becld_episeg::index(double theta)  const
   assert(theta <= this->max_angle());
 
   // Binary search to find bounding sample points
-  int lower = index_search(theta, (int)vcl_floor(min_index_), (int)vcl_ceil(max_index_));
+  int lower = index_search(theta, (int)std::floor(min_index_), (int)std::ceil(max_index_));
 
   // Linearly interpolate the index as a linear function of angle
   // This uses the small angle approximation.
@@ -144,10 +144,10 @@ double becld_episeg::max_index()  const {
 //: Compute the bounds on distance
 void becld_episeg::compute_bounds() 
 {
-  min_dist_ = vcl_numeric_limits<double>::infinity();
-  max_dist_ = -vcl_numeric_limits<double>::infinity();
+  min_dist_ = std::numeric_limits<double>::infinity();
+  max_dist_ = -std::numeric_limits<double>::infinity();
 
-  for(int i = (int) vcl_ceil(min_index_); i <= (int) vcl_floor(max_index_); i++) {
+  for(int i = (int) std::ceil(min_index_); i <= (int) std::floor(max_index_); i++) {
     double d = epipole_->distance(curve_->interp(i));
     if(d > max_dist_) {
       max_dist_ = d;

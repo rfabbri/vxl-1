@@ -107,7 +107,7 @@ vpgld_triangulate_3d_point_optimal_kanatani(
 
 // Based on code by Kongbin Kang 2003 (@Brown.edu) from bmvl/brct
 vgl_point_3d<double> 
-vpgld_reconstruct_3d_points_nviews_linear(const vcl_vector<vnl_double_2> &pts, const vcl_vector<vnl_double_3x4> &Ps)
+vpgld_reconstruct_3d_points_nviews_linear(const std::vector<vnl_double_2> &pts, const std::vector<vnl_double_3x4> &Ps)
 {
   assert(pts.size() == Ps.size());
   unsigned int nviews = pts.size();

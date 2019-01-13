@@ -7,7 +7,7 @@
 #include <vipl/vipl_convert.h>
 #include <vil1/vil1_memory_image_of.h>
 #include <vxl_config.h> // for vxl_byte
-#include <vcl_iostream.h>
+#include <iostream>
 
 template <class D>
 vil1_image vepl1_convert(vil1_image const& image, D /*dummy*/)
@@ -58,7 +58,7 @@ vil1_image vepl1_convert(vil1_image const& image, D /*dummy*/)
 
   //
   else {
-    vcl_cerr << __FILE__ ": vepl1_convert() not implemented for " << image << vcl_endl;
+    std::cerr << __FILE__ ": vepl1_convert() not implemented for " << image << std::endl;
     return 0;
   }
 }

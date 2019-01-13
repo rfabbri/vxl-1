@@ -1,9 +1,9 @@
 #include <testlib/testlib_test.h>
 
 #include <bnld/bnld_solve_trigonometric_equation.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vnl/vnl_math.h>
-#include <vcl_cmath.h>
+#include <cmath>
 
 
 //: Compare the values of Fresnel integral (cosin and sin) computed
@@ -19,15 +19,15 @@ MAIN( test_solve_trigonometric_equation )
   double a = 3;
   double b = 4;
   double c = 6;
-  vcl_vector<double > cos_x;
-  vcl_vector<double > sin_x;
+  std::vector<double > cos_x;
+  std::vector<double > sin_x;
   bnld_solve_1st_order_trig_equation(a, b, c, sin_x, cos_x);
   TEST("Solve 1st-order trigonometric equation - no root", cos_x.empty() && sin_x.empty(), true);
 
   // one root
   a = 3;
   b = 5;
-  c = vcl_sqrt(a*a + b*b);
+  c = std::sqrt(a*a + b*b);
   bnld_solve_1st_order_trig_equation(a, b, c, sin_x, cos_x);
 
   TEST("Solve 1st-order trig. equation - one root - test #roots", cos_x.size() == 1 && sin_x.size()==1, true);
@@ -41,7 +41,7 @@ MAIN( test_solve_trigonometric_equation )
   // two roots
   a = 3;
   b = 5;
-  c = vcl_sqrt(a*a + b*b - 2);
+  c = std::sqrt(a*a + b*b - 2);
   bnld_solve_1st_order_trig_equation(a, b, c, sin_x, cos_x);
 
   TEST("Solve 1st-order trig. equation - two roots - test #roots", cos_x.size() == 2 && sin_x.size()==2, true);

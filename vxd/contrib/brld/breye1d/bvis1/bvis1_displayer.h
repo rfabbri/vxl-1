@@ -15,7 +15,7 @@
 // \endverbatim
 
 #include <vbl/vbl_ref_count.h>
-#include <vcl_string.h>
+#include <string>
 
 #include <vgui/vgui_tableau_sptr.h>
 #include <bpro1/bpro1_storage_sptr.h>
@@ -26,7 +26,7 @@ class bvis1_displayer : public vbl_ref_count{
 public:
   bvis1_displayer(): mapper_(0){}
   //: Abstract function to return a string description of the type
-  virtual vcl_string type() const = 0;
+  virtual std::string type() const = 0;
 
   //: Abstract function to generate a tableau from a storage object
   virtual vgui_tableau_sptr make_tableau( bpro1_storage_sptr ) const = 0;

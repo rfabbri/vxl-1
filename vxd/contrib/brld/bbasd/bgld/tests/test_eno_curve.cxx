@@ -1,7 +1,7 @@
 #include <testlib/testlib_test.h>
 #include <bgld/bgld_eno_curve.h>
-#include <vcl_iostream.h>
-#include <vcl_cmath.h>
+#include <iostream>
+#include <cmath>
 
 MAIN( test_eno_curve )
 {
@@ -9,11 +9,11 @@ MAIN( test_eno_curve )
 
   double tolerance = 10e-3;
 
-  vcl_vector<double> coefs_x;
+  std::vector<double> coefs_x;
   coefs_x.push_back(3.0);
   coefs_x.push_back(2.0);
   coefs_x.push_back(1.0);
-  vcl_vector<double> coefs_y;
+  std::vector<double> coefs_y;
   coefs_y.push_back(-1.0);
   coefs_y.push_back(-1.0);
   coefs_y.push_back(2.0);
@@ -58,7 +58,7 @@ MAIN( test_eno_curve )
   TEST_NEAR("tangent angle at length test: ", curve.tangent_angle_at_length(1.283259), 0.3218, tolerance);
   TEST_NEAR("tangent angle at length test: ", curve.tangent_angle_at_length(curve.length()), 0.6435, tolerance);
 
-  vcl_cout << "*******************" << vcl_endl;
+  std::cout << "*******************" << std::endl;
 
   coefs_x.clear();
   coefs_x.push_back(3.0);

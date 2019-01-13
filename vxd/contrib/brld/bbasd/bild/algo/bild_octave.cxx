@@ -8,7 +8,7 @@
 
 #include "bild_octave.h"
 
-#include <vcl_iostream.h>
+#include <iostream>
 
 vil_image_resource_sptr bild_convert_octave_array_to_image_resource(const buld_octave_uint8_array& oct_array)
 {
@@ -35,7 +35,7 @@ vil_image_resource_sptr bild_convert_octave_array_to_image_resource(const buld_o
     return img_ptr;
 }
 
-vil_image_resource_sptr bild_octave_imresize(const buld_octave_value& image_src, double factor, const vcl_string& interp)
+vil_image_resource_sptr bild_octave_imresize(const buld_octave_value& image_src, double factor, const std::string& interp)
 {
     buld_octave_argument_list function_arguments;
     buld_octave_argument_list return_argument;

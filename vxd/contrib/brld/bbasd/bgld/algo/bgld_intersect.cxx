@@ -2,8 +2,8 @@
 //:
 // \file
 
-#include <vcl_cmath.h>
-#include <vcl_iostream.h>
+#include <cmath>
+#include <iostream>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_distance.h>
 #include <vgl/vgl_sphere_3d.h>
@@ -252,7 +252,7 @@ plane_infinite_cylinder(const vgl_plane_3d<double >& plane,
   vgl_vector_3d<double > cylinder_t = normalized(cylinder.orientation());
 
   // first thing first: check whether the plane and the cylinder are parallel
-  if (vcl_abs(inner_product(plane_n, cylinder_t)) < 1e-10)
+  if (std::abs(inner_product(plane_n, cylinder_t)) < 1e-10)
   {
     ellipse_center = vgl_closest_point(plane, cylinder.center());
     ellipse_major_axis = normalized(cylinder.orientation());
@@ -272,7 +272,7 @@ plane_infinite_cylinder(const vgl_plane_3d<double >& plane,
   vgl_point_3d<double > proj = vgl_closest_point(ellipse_center + cylinder_t, plane);
   vgl_vector_3d<double > major = proj - ellipse_center;
   // let `a' be the angle between the center line and the major axis
-  double sin_a = vcl_sqrt(1 - major.sqr_length());
+  double sin_a = std::sqrt(1 - major.sqr_length());
   double length_major = cylinder.radius() / sin_a;
 
   // degenerate case: cylinder is orthogonal to the plane, the major axis is arbitrary
@@ -305,7 +305,7 @@ plane_infinite_cylinder(const vgl_plane_3d<double >& plane,
 
   // let `b' be the angle between the center line and the minor axis
   double cos_b = dot_product(cylinder_t, minor);
-  double sin_b = vcl_sqrt(1 - cos_b*cos_b);
+  double sin_b = std::sqrt(1 - cos_b*cos_b);
 
   double length_minor = cylinder.radius() / sin_b;
   ellipse_minor_axis = length_minor * minor;

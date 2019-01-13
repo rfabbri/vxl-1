@@ -12,7 +12,7 @@
 //
 //-----------------------------------------------------------------------------
 
-#include <vcl_cmath.h>
+#include <cmath>
 #include <vgl/vgl_point_3d.h>
 
 //: Compute the 16_delta^2 from given distance d.
@@ -24,19 +24,19 @@ inline double _delta2_16_d (const double& d12, const double& d23, const double& 
 //: Compute the 16_delta^2 from given square distance u.
 inline double _delta2_16_u (const double& u12, const double& u23, const double& u13)
 {
-  return vcl_fabs (u12 * (u12-u23-u13) + u13 * (u13-u12-u23) + u23 * (u23-u12-u13));
+  return std::fabs (u12 * (u12-u23-u13) + u13 * (u13-u12-u23) + u23 * (u23-u12-u13));
 }
 
 //: Compute triangle area from given distance d[3].
 inline double tri_area_d (double* d)
 {
-  return vcl_sqrt (_delta2_16_d(d[0], d[1], d[2])) * 0.25;
+  return std::sqrt (_delta2_16_d(d[0], d[1], d[2])) * 0.25;
 }
 
 //: Compute triangle area from given square distance u[3].
 inline double tri_area_u (double* u)
 {
-  return vcl_sqrt (_delta2_16_u(u[0], u[1], u[2])) * 0.25;
+  return std::sqrt (_delta2_16_u(u[0], u[1], u[2])) * 0.25;
 }
 
 //: Compute triangle compactness from given distane d[3] and area.

@@ -52,22 +52,22 @@ public:
 
   //:Sample the curve and produce given number of samples
   static bool sample(bsold_interp_curve_2d const &c, int size,
-                     vcl_vector<vsol_point_2d_sptr>& pts);
+                     std::vector<vsol_point_2d_sptr>& pts);
 
   //: return the samples and the tangents at those samples
   //  no max length threshold to sample if negative
   static bool sample(bsold_interp_curve_2d const &c, double ds,
-                     vcl_vector<vsol_point_2d_sptr>& pts, vcl_vector<double>& tangents, double length_threshold = -1);
+                     std::vector<vsol_point_2d_sptr>& pts, std::vector<double>& tangents, double length_threshold = -1);
 
   //: sample a "region" evenly around this interp curve, 
   // (including the points right on the curve is optional, if not they start from delta away on the normal direction)
-  static void sample_region_along_curve(bsold_interp_curve_2d const &curve, vcl_vector<vsol_point_2d_sptr>& region_pts, double delta, double length_threshold, float region_width, bool add_curve_points);
+  static void sample_region_along_curve(bsold_interp_curve_2d const &curve, std::vector<vsol_point_2d_sptr>& region_pts, double delta, double length_threshold, float region_width, bool add_curve_points);
 
   static bool interpolate_linear(bsold_interp_curve_2d *c,
-                       vcl_vector<vsol_point_2d_sptr> const &pts, bool closed=false);
+                       std::vector<vsol_point_2d_sptr> const &pts, bool closed=false);
 
   static bool interpolate_linear(bsold_interp_curve_2d *c,
-                       vcl_vector<vgl_point_2d<double> > const &pts, bool closed=false);
+                       std::vector<vgl_point_2d<double> > const &pts, bool closed=false);
 
   static bool interpolate_linear(bsold_interp_curve_2d *c,
                                  vsol_polygon_2d_sptr poly);   // closed 
@@ -76,18 +76,18 @@ public:
                                  vsol_polyline_2d_sptr poly);   // open 
   
   static bool interpolate_linear2(bsold_interp_curve_2d *c,
-                       vcl_vector<vsol_point_2d_sptr> const &pts, bool closed=false, int time=0);
+                       std::vector<vsol_point_2d_sptr> const &pts, bool closed=false, int time=0);
 
   static bool interpolate_eno(bsold_interp_curve_2d *c,
-                              vcl_vector<vsol_point_2d_sptr> const &pts,
+                              std::vector<vsol_point_2d_sptr> const &pts,
                               vnl_vector<double> &sample_pts);
 
   static bool interpolate_eno(bsold_interp_curve_2d *c,
-                              vcl_vector<vsol_point_2d> const &pts,
+                              std::vector<vsol_point_2d> const &pts,
                               vnl_vector<double> &sample_pts);
 
   static bool interpolate_eno(bsold_interp_curve_2d *c,
-                              vcl_vector< vgl_point_2d<double> > const &pts,
+                              std::vector< vgl_point_2d<double> > const &pts,
                               vnl_vector<double> &sample_pts);
 
   static bool interpolate_eno_main(bsold_interp_curve_2d *c,
@@ -99,8 +99,8 @@ public:
   //  the mean length of each deleted segment is ~perc_d/k percent of the total length with variance perc_sigma
   //  fromula from [Ghosh, Petkov, PAMI05], the divident is fixed at 8 in that paper
   static bool segment_wise_deletion(const vsol_polygon_2d_sptr& p, 
-                                    vcl_vector<vsol_polyline_2d_sptr>& pieces, 
-                                    vcl_vector<vsol_polyline_2d_sptr>& del_pieces, 
+                                    std::vector<vsol_polyline_2d_sptr>& pieces, 
+                                    std::vector<vsol_polyline_2d_sptr>& del_pieces, 
                                     float perc_d, float perc_sigma, float divident); 
 
   //: add k = ~ (perc_d*total_length)/divident many segments to p whose total length is ~perc_d percent of the original length
@@ -108,7 +108,7 @@ public:
   // add the segment with a random orientation from x-axis at a random region in or out of the contour
   // output is a spatial object vector to be saved as a .cem file
   static bool segment_addition(const vsol_polygon_2d_sptr& p, 
-                                    vcl_vector<vsol_spatial_object_2d_sptr>& pieces, 
+                                    std::vector<vsol_spatial_object_2d_sptr>& pieces, 
                                     float perc_d, float perc_sigma, float divident); 
 
   //: add k = ~ (perc_d*total_length)/divident many segments to p whose total length is ~perc_d percent of the original length
@@ -120,8 +120,8 @@ public:
   //  fromula from [Ghosh, Petkov, PAMI05], the divident is fixed at 8 in that paper
   //  output is a spatial object vector to be saved as a .cem file
   static bool segment_addition_and_deletion(const vsol_polygon_2d_sptr& p, 
-                                            vcl_vector<vsol_spatial_object_2d_sptr>& pieces, 
-                                            vcl_vector<vsol_polyline_2d_sptr>& del_pieces,
+                                            std::vector<vsol_spatial_object_2d_sptr>& pieces, 
+                                            std::vector<vsol_polyline_2d_sptr>& del_pieces,
                                             float add_perc_d, float add_perc_sigma, float add_divident,
                                             float del_perc_d, float del_perc_sigma, float del_divident); 
 
@@ -139,8 +139,8 @@ fit_lines_to_contour(vsol_polyline_2d_sptr poly, double rms) ;
 vsol_polygon_2d_sptr fit_lines_to_contour(vsol_polygon_2d_sptr poly, double rms);
 
 //: returns a vector of size 0 if anything goes wrong
-void fit_lines_to_contour(vcl_vector<vsol_point_2d_sptr>& poly, double rms,
-                          vcl_vector<vsol_point_2d_sptr>& new_pts); 
+void fit_lines_to_contour(std::vector<vsol_point_2d_sptr>& poly, double rms,
+                          std::vector<vsol_point_2d_sptr>& new_pts); 
 
 //: This function subsamples the points in the contour according to the c_ds value
 //  just like Thomas sebastian did

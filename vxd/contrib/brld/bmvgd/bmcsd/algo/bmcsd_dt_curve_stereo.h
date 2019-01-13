@@ -27,8 +27,8 @@ public:
 
   //: set the distance transforms and labels for the edgemaps of each views
   void set_all_dt_label(
-      const vcl_vector<vil_image_view<vxl_uint_32> > &dt,  
-      const vcl_vector<vil_image_view<unsigned> > &label);
+      const std::vector<vil_image_view<vxl_uint_32> > &dt,  
+      const std::vector<vil_image_view<unsigned> > &label);
 
   //: sets the threshold for wich an edgel is considered an inlier to the
   // reprojected curve in each view.
@@ -42,9 +42,9 @@ public:
   // are measured from the distance map. 
   //
   // \param[out] i_best : index into \c crv_candidates_ptrs() of top matching curve
-  // \param[out] votes : vcl_vector of the number of inliers, s.t. votes[i] ==
+  // \param[out] votes : std::vector of the number of inliers, s.t. votes[i] ==
   // total number of inliers for crv_candidates_ptrs(i).
-  bool match_using_dt(unsigned *i_best, vcl_vector<unsigned long> *votes);
+  bool match_using_dt(unsigned *i_best, std::vector<unsigned long> *votes);
   //: Convenient overload for match_using_dt
   bool match_using_dt(unsigned *i_best);
 
@@ -61,9 +61,9 @@ protected:
 
 private:
   //: distance transform images for each view
-  vcl_vector<vil_image_view<vxl_uint_32> > dt_;
+  std::vector<vil_image_view<vxl_uint_32> > dt_;
   //: closest label transform images for each view
-  vcl_vector<vil_image_view<unsigned> > label_;
+  std::vector<vil_image_view<unsigned> > label_;
   double tau_distance_squared_;
 };
 

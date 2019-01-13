@@ -19,15 +19,15 @@
 //  Modifications:
 // \endverbatim
 
-#include <vcl_cmath.h>
-#include <vcl_algorithm.h>
+#include <cmath>
+#include <algorithm>
 
 //: Convert an angle to [0, 2pi) range
 template <class T>
 inline T bnld_angle_0to2pi(T angle_in_radian)
 {
   const T twopi = static_cast<T>(6.28318530717958647692); //2*3.14159265358979323846;
-  T x = vcl_fmod(angle_in_radian, twopi);
+  T x = std::fmod(angle_in_radian, twopi);
   return (x < 0) ? (x + twopi) : x;
 };
 
@@ -59,7 +59,7 @@ inline void bnld_angle_sort_ascending(T* angle_array_in_radian, unsigned num_pts
   }
 
   // sort the angles
-  vcl_sort(x, x+num_pts);
+  std::sort(x, x+num_pts);
 
   // find the maximum difference between adjacent elements
   T* diff = new T[num_pts];

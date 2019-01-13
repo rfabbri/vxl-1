@@ -11,8 +11,8 @@
 
 #include <bgld/bgld_arc.h>
 #include <vgl/vgl_point_2d.h>
-#include <vcl_cmath.h>
-#include <vcl_limits.h>
+#include <cmath>
+#include <limits>
 
 class bgld_arc_algo
 {

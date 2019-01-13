@@ -6,7 +6,7 @@
 // \file
 
 #include "vidl1_frame_resource.h"
-#include <vcl_cstring.h>
+#include <cstring>
 #include <vil/vil_image_view_base.h>
 
 vidl1_frame_resource::vidl1_frame_resource(const vidl1_codec_sptr& codec, int frame)
@@ -59,10 +59,10 @@ vidl1_frame_resource::pixel_format() const
 bool
 vidl1_frame_resource::get_property(char const *key, void * value) const
 {
-  if (vcl_strcmp("description", key)==0)
+  if (std::strcmp("description", key)==0)
   {
     if (value)
-      *static_cast<vcl_string*>(value) = codec_->get_description();
+      *static_cast<std::string*>(value) = codec_->get_description();
     return true;
   }
 

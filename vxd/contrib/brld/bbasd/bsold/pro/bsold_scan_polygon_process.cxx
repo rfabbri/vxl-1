@@ -25,7 +25,7 @@ bsold_scan_polygon_process::bsold_scan_polygon_process()
       !parameters()->add( "Image Width" ,  "-width" ,       (unsigned int)340 ) ||
       !parameters()->add( "Image Height" , "-height" ,      (unsigned int)240 )||
           !parameters()->add( "Do you want to create global image" , "-isglobal" ,      (bool)true )){
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__<< vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__<< std::endl;
   }
 }
 
@@ -45,7 +45,7 @@ bsold_scan_polygon_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 bsold_scan_polygon_process::name()
 {
   return "Scan Convert Polygons";
@@ -69,18 +69,18 @@ bsold_scan_polygon_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > bsold_scan_polygon_process::get_input_type()
+std::vector< std::string > bsold_scan_polygon_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > bsold_scan_polygon_process::get_output_type()
+std::vector< std::string > bsold_scan_polygon_process::get_output_type()
 {  
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
@@ -91,7 +91,7 @@ bool
 bsold_scan_polygon_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In bsold_scan_polygon_process::execute() - "
+    std::cout << "In bsold_scan_polygon_process::execute() - "
              << "not exactly one input image \n";
     return false;
   }
@@ -108,19 +108,19 @@ bsold_scan_polygon_process::execute()
   // get contours from the storage class
   vidpro1_vsol2D_storage_sptr frame_vsol;
   frame_vsol.vertical_cast(input_data_[0][0]);
-  vcl_vector<vcl_string> groups = frame_vsol->groups();
+  std::vector<std::string> groups = frame_vsol->groups();
   vil_image_view<vxl_byte> label_image(w,h);
   label_image.fill(0);
   unsigned int curr_idx = label_step;
   if(label_step==0)
                 curr_idx=255;
-  for( vcl_vector<vcl_string>::const_iterator gitr = groups.begin();
+  for( std::vector<std::string>::const_iterator gitr = groups.begin();
        gitr != groups.end();  ++gitr, curr_idx+=label_step )
   {
-    vcl_vector<vsol_spatial_object_2d_sptr> contours = frame_vsol->data_named(*gitr);
+    std::vector<vsol_spatial_object_2d_sptr> contours = frame_vsol->data_named(*gitr);
 
     vgl_polygon<double> poly_region;
-    for( vcl_vector<vsol_spatial_object_2d_sptr>::const_iterator vitr = contours.begin();
+    for( std::vector<vsol_spatial_object_2d_sptr>::const_iterator vitr = contours.begin();
          vitr != contours.end();  ++vitr )
     {
       if(vsol_region_2d* r = (*vitr)->cast_to_region())

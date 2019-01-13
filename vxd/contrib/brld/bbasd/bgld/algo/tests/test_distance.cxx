@@ -3,8 +3,8 @@
 // \author Based on original code by  Nhon Trinh
 // \date Aug 11, 2005
 
-#include <vcl_iostream.h>
-#include <vcl_cmath.h>
+#include <iostream>
+#include <cmath>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_point_3d.h>
 #include <testlib/testlib_test.h>
@@ -13,11 +13,11 @@
 ////: Test bgld_distance::point_point function
 //void test_distance_point_point()
 //{
-//  vcl_cout << "In test_distance_point_point() \n";
+//  std::cout << "In test_distance_point_point() \n";
 //  vgl_point_2d<double > p1(1, 2);
 //  vgl_point_2d<double > p2(3, 5);
 //  double d = bgld_distance::point_point(p1, p2);
-//  double reald = vcl_sqrt(2.0*2.0 + 3.0*3.0);
+//  double reald = std::sqrt(2.0*2.0 + 3.0*3.0);
 //  TEST_NEAR("Test distance point-point", d, reald, 1e-8);
 //  return;
 //}
@@ -26,7 +26,7 @@
 //: Test bgld_distance::lineseg_lineseg function
 void test_distance_lineseg_lineseg()
 {
-  vcl_cout << "In test_distance_lineseg_linesegn() \n";
+  std::cout << "In test_distance_lineseg_linesegn() \n";
   vgl_point_2d<double > p1(1, 1);
   vgl_point_2d<double > p2(3, 3);
   vgl_point_2d<double > p3(2, 3);
@@ -45,7 +45,7 @@ void test_distance_lineseg_lineseg()
 
 
   d = bgld_distance::lineseg_lineseg(p1, p2, p3, p4);
-  double dreal = vcl_sqrt((double)2.0)/2;
+  double dreal = std::sqrt((double)2.0)/2;
   TEST_NEAR("Min-distance is b/w one endpoint and one midpoint", d, dreal, 1e-8);
 
   // case 3 - two line segments don't intersect
@@ -56,7 +56,7 @@ void test_distance_lineseg_lineseg()
   p4.set(5, 3);
   
   d = bgld_distance::lineseg_lineseg(p1, p2, p3, p4);
-  dreal = vcl_sqrt((double)1.0*1.0+2*2);
+  dreal = std::sqrt((double)1.0*1.0+2*2);
   TEST_NEAR("Min-distance is b/w 2 endpoints", d, dreal, 1e-8);
 
   // case 4 - two lines barely meet
@@ -75,7 +75,7 @@ void test_edge_direction_distance()
 
   //: Edges that are parallel
   //: Rememeber: edge distance is squared.
-  vcl_cout << "\nTestcase: Degeneracy 1 (Parallel edges)\n";
+  std::cout << "\nTestcase: Degeneracy 1 (Parallel edges)\n";
   {
   double x1,y1,x2,y2,theta1,theta2, dn12,dn21, dt12, de12, dt21, de21;
 
@@ -84,19 +84,19 @@ void test_edge_direction_distance()
 
   bgld_distance::projected_distance(x1,y1, x2,y2,theta2, &de12, &dn12, &dt12);
 
-  vcl_cout << "Testing d(E1,E2)" << vcl_endl;
+  std::cout << "Testing d(E1,E2)" << std::endl;
   TEST_NEAR("Edge distance",de12,1,tol);
   TEST_NEAR("Normal distance",dn12,1,tol);
   TEST_NEAR("Tangential distance",dt12,0,tol);
 
   bgld_distance::projected_distance(x2,y2,x1,y1,theta1, &de21, &dn21, &dt21);
-  vcl_cout << "Testing d(E2,E1)" << vcl_endl;
+  std::cout << "Testing d(E2,E1)" << std::endl;
   TEST_NEAR("Edge distance",de21,1,tol);
   TEST_NEAR("Normal distance",dn21,1,tol);
   TEST_NEAR("Tangential distance",dt12,0,tol);
   }
 
-  vcl_cout << "\nTestcase A\n";
+  std::cout << "\nTestcase A\n";
   {
   double x1,y1,x2,y2,theta1,theta2, dn12,dn21, dt12, de12, dt21, de21;
 
@@ -105,43 +105,43 @@ void test_edge_direction_distance()
 
   bgld_distance::projected_distance(x1,y1, x2,y2,theta2, &de12, &dn12, &dt12);
 
-  vcl_cout << "Testing d(E1,E2)" << vcl_endl;
-  TEST_NEAR("Edge distance",de12,vcl_sqrt(2.0),tol);
-  TEST_NEAR("Normal distance",dn12,vcl_sqrt(2.0),tol);
+  std::cout << "Testing d(E1,E2)" << std::endl;
+  TEST_NEAR("Edge distance",de12,std::sqrt(2.0),tol);
+  TEST_NEAR("Normal distance",dn12,std::sqrt(2.0),tol);
   TEST_NEAR("Tangential distance",0,0,tol);
 
   bgld_distance::projected_distance(x2,y2, x1,y1,theta1, &de21, &dn21, &dt21);
-  vcl_cout << "Testing d(E2,E1)" << vcl_endl;
-  TEST_NEAR("Edge distance",de21,vcl_sqrt(2.0),tol);
+  std::cout << "Testing d(E2,E1)" << std::endl;
+  TEST_NEAR("Edge distance",de21,std::sqrt(2.0),tol);
   TEST_NEAR("Normal distance",dn21,1,tol);
   TEST_NEAR("Tangential distance",dt21,1,tol);
   }
 
-  vcl_cout << "\nTestcase A rotated\n";
+  std::cout << "\nTestcase A rotated\n";
   {
   double x1,y1,x2,y2,theta1,theta2, dn12,dn21, dt12, de12, dt21, de21;
 
   x1 = 0; y1 = 0; theta1 = 0 + vnl_math::pi/3.0; // E1
   x2 = 1; y2 = 1; theta2 = 3.0*vnl_math::pi/4.0 + vnl_math::pi/3.0; // E2
 
-  x2 = vcl_cos(vnl_math::pi/3.0) - vcl_sin(vnl_math::pi/3);
-  y2 = vcl_sin(vnl_math::pi/3.0) + vcl_cos(vnl_math::pi/3);
+  x2 = std::cos(vnl_math::pi/3.0) - std::sin(vnl_math::pi/3);
+  y2 = std::sin(vnl_math::pi/3.0) + std::cos(vnl_math::pi/3);
 
   bgld_distance::projected_distance(x1,y1, x2,y2,theta2, &de12, &dn12, &dt12);
 
-  vcl_cout << "Testing d(E1,E2)" << vcl_endl;
-  TEST_NEAR("Edge distance",de12,vcl_sqrt(2.0),tol);
-  TEST_NEAR("Normal distance",dn12,vcl_sqrt(2.0),tol);
+  std::cout << "Testing d(E1,E2)" << std::endl;
+  TEST_NEAR("Edge distance",de12,std::sqrt(2.0),tol);
+  TEST_NEAR("Normal distance",dn12,std::sqrt(2.0),tol);
   TEST_NEAR("Tangential distance",dt12,0,tol);
 
   bgld_distance::projected_distance(x2,y2, x1,y1, theta1, &de21, &dn21, &dt21);
-  vcl_cout << "Testing d(E2,E1)" << vcl_endl;
-  TEST_NEAR("Edge distance",de21,vcl_sqrt(2.0),tol);
+  std::cout << "Testing d(E2,E1)" << std::endl;
+  TEST_NEAR("Edge distance",de21,std::sqrt(2.0),tol);
   TEST_NEAR("Normal distance",dn21,1,tol);
   TEST_NEAR("Tangential distance",dt21,1,tol);
   }
 
-  vcl_cout << "\nTestcase: Degeneracy 3 (edge 2 direction in line of projection)\n";
+  std::cout << "\nTestcase: Degeneracy 3 (edge 2 direction in line of projection)\n";
   {
   double x1,y1,x2,y2,theta1,theta2, dn12,dn21, dt12, de12, dt21, de21;
 
@@ -150,38 +150,38 @@ void test_edge_direction_distance()
 
   bgld_distance::projected_distance(x1,y1, x2,y2,theta2, &de12, &dn12, &dt12);
 
-  vcl_cout << "Testing d(E1,E2)" << vcl_endl;
-  TEST_NEAR("Edge distance",de12,vcl_sqrt(2.0),tol);
+  std::cout << "Testing d(E1,E2)" << std::endl;
+  TEST_NEAR("Edge distance",de12,std::sqrt(2.0),tol);
   TEST_NEAR("Normal distance",dn12,0,tol);
-  TEST_NEAR("Tangential distance",dt12,vcl_sqrt(2.0),tol);
+  TEST_NEAR("Tangential distance",dt12,std::sqrt(2.0),tol);
 
   bgld_distance::projected_distance(x2,y2, x1,y1, theta1, &de21, &dn21, &dt21);
-  vcl_cout << "Testing d(E2,E1)" << vcl_endl;
-  TEST_NEAR("Edge distance",de21,vcl_sqrt(2.0),tol);
+  std::cout << "Testing d(E2,E1)" << std::endl;
+  TEST_NEAR("Edge distance",de21,std::sqrt(2.0),tol);
   TEST_NEAR("Normal distance",dn21,1,tol);
   TEST_NEAR("Tangential distance",dt21,1,tol);
   }
 
-  vcl_cout << "\nTestcase: Degeneracy 3 (edge 2 direction in line of projection - rotated)\n";
+  std::cout << "\nTestcase: Degeneracy 3 (edge 2 direction in line of projection - rotated)\n";
   {
   double x1,y1,x2,y2,theta1,theta2, dn12,dn21, dt12, de12, dt21, de21;
 
   x1 = 0; y1 = 0; theta1 = 0 + vnl_math::pi/3.0; // E1
   x2 = 1; y2 = 1; theta2 = vnl_math::pi/4.0 + vnl_math::pi/3.0; // E2
 
-  x2 = vcl_cos(vnl_math::pi/3.0) - vcl_sin(vnl_math::pi/3);
-  y2 = vcl_sin(vnl_math::pi/3.0) + vcl_cos(vnl_math::pi/3);
+  x2 = std::cos(vnl_math::pi/3.0) - std::sin(vnl_math::pi/3);
+  y2 = std::sin(vnl_math::pi/3.0) + std::cos(vnl_math::pi/3);
 
   bgld_distance::projected_distance(x1,y1, x2,y2,theta2, &de12, &dn12, &dt12);
 
-  vcl_cout << "Testing d(E1,E2)" << vcl_endl;
-  TEST_NEAR("Edge distance",de12,vcl_sqrt(2.0),tol);
+  std::cout << "Testing d(E1,E2)" << std::endl;
+  TEST_NEAR("Edge distance",de12,std::sqrt(2.0),tol);
   TEST_NEAR("Normal distance",dn12,0,tol);
-  TEST_NEAR("Tangential distance",dt12,vcl_sqrt(2.0),tol);
+  TEST_NEAR("Tangential distance",dt12,std::sqrt(2.0),tol);
 
   bgld_distance::projected_distance(x2,y2, x1,y1, theta1, &de21, &dn21, &dt21);
-  vcl_cout << "Testing d(E2,E1)" << vcl_endl;
-  TEST_NEAR("Edge distance",de21,vcl_sqrt(2.0),tol);
+  std::cout << "Testing d(E2,E1)" << std::endl;
+  TEST_NEAR("Edge distance",de21,std::sqrt(2.0),tol);
   TEST_NEAR("Normal distance",dn21,1,tol);
   TEST_NEAR("Tangential distance",dt21,1,tol);
   }

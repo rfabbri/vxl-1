@@ -7,8 +7,8 @@
 #ifndef _bgrld_hg_hyperedge_h_
 #define _bgrld_hg_hyperedge_h_
 
-#include <vcl_vector.h>
-#include <vcl_cassert.h>
+#include <vector>
+#include <cassert>
 
 class bgrld_hg_vertex;
 class bgrld_hg_edge;
@@ -18,8 +18,8 @@ class bgrld_hg_hyperedge
 protected:
   int id_;
   //: e1=(v1, v2), e2=(v2, v3), ..., en=(vn, v1) 
-  vcl_vector<bgrld_hg_edge*>    connecting_edges_;
-  vcl_vector<bgrld_hg_vertex*>  connecting_vertices_;
+  std::vector<bgrld_hg_edge*>    connecting_edges_;
+  std::vector<bgrld_hg_vertex*>  connecting_vertices_;
 
 public:
   const int id() const {
@@ -33,7 +33,7 @@ public:
     assert (i<connecting_edges_.size());
     return connecting_edges_[i];
   }
-  vcl_vector<bgrld_hg_edge*>& connecting_edges() {
+  std::vector<bgrld_hg_edge*>& connecting_edges() {
     return connecting_edges_;
   }
 
@@ -41,7 +41,7 @@ public:
     assert (i<connecting_vertices_.size());
     return connecting_vertices_[i];
   }
-  vcl_vector<bgrld_hg_vertex*>& connecting_vertices() {
+  std::vector<bgrld_hg_vertex*>& connecting_vertices() {
     return connecting_vertices_;
   }
 
@@ -50,7 +50,7 @@ public:
     connecting_edges_.push_back (edge);
   }
   bool disconnect_edge (bgrld_hg_edge* edge) {
-    vcl_vector<bgrld_hg_edge*>::iterator it = connecting_edges_.begin();
+    std::vector<bgrld_hg_edge*>::iterator it = connecting_edges_.begin();
     for (; it != connecting_edges_.end(); it++) {
       bgrld_hg_edge* e = (*it);
       if (e == edge) { //found it
@@ -66,7 +66,7 @@ public:
     connecting_vertices_.push_back (vertex);
   }
   bool disconnect_vertex (bgrld_hg_vertex* vertex) {
-    vcl_vector<bgrld_hg_vertex*>::iterator it = connecting_vertices_.begin();
+    std::vector<bgrld_hg_vertex*>::iterator it = connecting_vertices_.begin();
     for (; it != connecting_vertices_.end(); it++) {
       bgrld_hg_vertex* v = (*it);
       if (v == vertex) { //found it

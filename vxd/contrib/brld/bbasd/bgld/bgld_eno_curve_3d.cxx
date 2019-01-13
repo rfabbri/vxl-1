@@ -1,13 +1,13 @@
 // This is bbasd/bgld/bgld_eno_curve_3d.cxx
 #include "bgld_eno_curve_3d.h"
-#include <vcl_cmath.h>
+#include <cmath>
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_analytic_integrant.h>
 #include <vnl/algo/vnl_adaptsimpson_integral.h>
 
-bgld_eno_curve_3d::bgld_eno_curve_3d(vcl_vector<double> coefs_x, 
-                                     vcl_vector<double> coefs_y, 
-                                     vcl_vector<double> coefs_z,
+bgld_eno_curve_3d::bgld_eno_curve_3d(std::vector<double> coefs_x, 
+                                     std::vector<double> coefs_y, 
+                                     std::vector<double> coefs_z,
                                      double start_t,
                                      double end_t)
 {
@@ -43,7 +43,7 @@ double bgld_eno_curve_3d::s_to_t(double s, double accuracy) const
   {
     double k_guess = (k_start + k_end) / 2;
     double len = length_at_t(k_guess);
-    if(vcl_fabs(s-len) < accuracy || vcl_fabs(k_start-k_end) < accuracy)
+    if(std::fabs(s-len) < accuracy || std::fabs(k_start-k_end) < accuracy)
       return k_guess;
     else if(s < len)
       k_end = k_guess;
@@ -62,7 +62,7 @@ public:
 
   double f_(double t)
   { 
-    return vcl_sqrt(A_ * vcl_pow(t, 4.0) + B_ * vcl_pow(t, 3.0) + C_ * vcl_pow(t, 2.0) + D_ * t + E_);
+    return std::sqrt(A_ * std::pow(t, 4.0) + B_ * std::pow(t, 3.0) + C_ * std::pow(t, 2.0) + D_ * t + E_);
   }
 protected:
   double A_, B_, C_, D_, E_;
@@ -91,11 +91,11 @@ double bgld_eno_curve_3d::length_at_t(double t) const
   double c2 = coefs_z_[2];
   double c3 = coefs_z_[3];
 
-  double A = 9 * (vcl_pow(a3,2.0) + vcl_pow(b3,2.0) + vcl_pow(c3,2.0));
+  double A = 9 * (std::pow(a3,2.0) + std::pow(b3,2.0) + std::pow(c3,2.0));
   double B = 12 * (a2*a3 + b2*b3 + c2*c3);
-  double C = 6 * (a1*a3 + b1*b3 + c1*c3) + 4 * (vcl_pow(a2,2.0) + vcl_pow(b2,2.0) + vcl_pow(c2,2.0));
+  double C = 6 * (a1*a3 + b1*b3 + c1*c3) + 4 * (std::pow(a2,2.0) + std::pow(b2,2.0) + std::pow(c2,2.0));
   double D = 4 * (a1*a2 + b1*b2 + c1*c2);
-  double E = vcl_pow(a1,2.0) + vcl_pow(b1,2.0) + vcl_pow(c1,2.0);
+  double E = std::pow(a1,2.0) + std::pow(b1,2.0) + std::pow(c1,2.0);
 
   my_integrant f(A, B, C, D, E);
   vnl_adaptsimpson_integral simpson_integral;
@@ -152,9 +152,9 @@ vgl_vector_3d<double> bgld_eno_curve_3d::tangent_at_t(double t) const
   struct tangent_angles ta = tangent_angles_at_t(t);
   double phi = ta.phi_;
   double theta = ta.theta_;
-  return vgl_vector_3d<double> (vcl_sin(phi)*vcl_cos(theta), 
-                                vcl_sin(phi)*vcl_sin(theta), 
-                                vcl_cos(phi));
+  return vgl_vector_3d<double> (std::sin(phi)*std::cos(theta), 
+                                std::sin(phi)*std::sin(theta), 
+                                std::cos(phi));
 }
 
 vgl_vector_3d<double> bgld_eno_curve_3d::normal_at(double s) const
@@ -216,11 +216,11 @@ struct tangent_angles bgld_eno_curve_3d::tangent_angles_at_t(double t) const
 
   struct tangent_angles ta;
 
-  ta.theta_ = vcl_atan2(dy, dx);
+  ta.theta_ = std::atan2(dy, dx);
   if(ta.theta_ < 0)
     ta.theta_ += 2*vnl_math::pi;
 
-  ta.phi_ = vcl_atan2(vcl_sqrt(vcl_pow(dx,2.0) + vcl_pow(dy,2.0)), dz);
+  ta.phi_ = std::atan2(std::sqrt(std::pow(dx,2.0) + std::pow(dy,2.0)), dz);
   if(ta.phi_ < 0)
     ta.phi_ += 2*vnl_math::pi;
 
@@ -259,11 +259,11 @@ double bgld_eno_curve_3d::curvature_at_t(double t) const
   double val2 = -u1*v3 + u3*v1;
   double val3 = u1*v2 - u2*v1;
   // |c' x c''| value
-  double n = vcl_sqrt(vcl_pow(val1, 2.0) + vcl_pow(val2, 2.0) + vcl_pow(val3, 2.0));
+  double n = std::sqrt(std::pow(val1, 2.0) + std::pow(val2, 2.0) + std::pow(val3, 2.0));
   // |c'| value
-  double d = vcl_sqrt(vcl_pow(u1, 2.0) + vcl_pow(u2, 2.0) + vcl_pow(u3, 2.0));
+  double d = std::sqrt(std::pow(u1, 2.0) + std::pow(u2, 2.0) + std::pow(u3, 2.0));
 
-  return n / (vcl_pow(d, 3.0));
+  return n / (std::pow(d, 3.0));
 }
 
 double bgld_eno_curve_3d::torsion_at(double s) const
@@ -303,7 +303,7 @@ double bgld_eno_curve_3d::torsion_at_t(double t) const
   double val2 = -u1*v3 + u3*v1;
   double val3 = u1*v2 - u2*v1;
   // |c' x c''|^2 value
-  double d = vcl_pow(val1, 2.0) + vcl_pow(val2, 2.0) + vcl_pow(val3, 2.0);
+  double d = std::pow(val1, 2.0) + std::pow(val2, 2.0) + std::pow(val3, 2.0);
   // (c' x c'').c''' computation
   double n = val1 * t1 + val2 * t2 + val3 * t3;
 
@@ -312,32 +312,32 @@ double bgld_eno_curve_3d::torsion_at_t(double t) const
 
 double bgld_eno_curve_3d::evaluate_x(double t) const
 {
-  return coefs_x_[0] + coefs_x_[1] * t + coefs_x_[2] * vcl_pow(t, 2.0) + coefs_x_[3] * vcl_pow(t, 3.0);
+  return coefs_x_[0] + coefs_x_[1] * t + coefs_x_[2] * std::pow(t, 2.0) + coefs_x_[3] * std::pow(t, 3.0);
 }
 
 double bgld_eno_curve_3d::evaluate_y(double t) const
 {
-  return coefs_y_[0] + coefs_y_[1] * t + coefs_y_[2] * vcl_pow(t, 2.0) + coefs_y_[3] * vcl_pow(t, 3.0);
+  return coefs_y_[0] + coefs_y_[1] * t + coefs_y_[2] * std::pow(t, 2.0) + coefs_y_[3] * std::pow(t, 3.0);
 }
 
 double bgld_eno_curve_3d::evaluate_z(double t) const
 {
-  return coefs_z_[0] + coefs_z_[1] * t + coefs_z_[2] * vcl_pow(t, 2.0) + coefs_z_[3] * vcl_pow(t, 3.0);
+  return coefs_z_[0] + coefs_z_[1] * t + coefs_z_[2] * std::pow(t, 2.0) + coefs_z_[3] * std::pow(t, 3.0);
 }
 
 double bgld_eno_curve_3d::evaluate_first_derivative_x(double t) const
 {
-  return coefs_x_[1] + 2 * coefs_x_[2] * t + 3 * coefs_x_[3] * vcl_pow(t, 2.0);
+  return coefs_x_[1] + 2 * coefs_x_[2] * t + 3 * coefs_x_[3] * std::pow(t, 2.0);
 }
 
 double bgld_eno_curve_3d::evaluate_first_derivative_y(double t) const
 {
-  return coefs_y_[1] + 2 * coefs_y_[2] * t + 3 * coefs_y_[3] * vcl_pow(t, 2.0);
+  return coefs_y_[1] + 2 * coefs_y_[2] * t + 3 * coefs_y_[3] * std::pow(t, 2.0);
 }
 
 double bgld_eno_curve_3d::evaluate_first_derivative_z(double t) const
 {
-  return coefs_z_[1] + 2 * coefs_z_[2] * t + 3 * coefs_z_[3] * vcl_pow(t, 2.0);
+  return coefs_z_[1] + 2 * coefs_z_[2] * t + 3 * coefs_z_[3] * std::pow(t, 2.0);
 }
 
 double bgld_eno_curve_3d::evaluate_second_derivative_x(double t) const

@@ -7,8 +7,8 @@
 #ifndef _bgrld_hg_edge_h_
 #define _bgrld_hg_edge_h_
 
-#include <vcl_vector.h>
-#include <vcl_cassert.h>
+#include <vector>
+#include <cassert>
 
 #include <bgrld/bgrld_edge.h>
 
@@ -23,7 +23,7 @@ protected:
   //  connecting_vertices_[1] is the ending vertex.
   bgrld_hg_vertex*                connecting_vertices_[2];
 
-  vcl_vector<bgrld_hg_hyperedge*> connecting_hyperedges_;
+  std::vector<bgrld_hg_hyperedge*> connecting_hyperedges_;
 
 public:
   const int id() const {
@@ -58,7 +58,7 @@ public:
     assert (i<connecting_hyperedges_.size());
     return connecting_hyperedges_[i];
   }
-  vcl_vector<bgrld_hg_hyperedge*>& connecting_hyperedges() {
+  std::vector<bgrld_hg_hyperedge*>& connecting_hyperedges() {
     return connecting_hyperedges_;
   }
 
@@ -76,7 +76,7 @@ public:
     connecting_hyperedges_.push_back (hyperedge);
   }
   bool disconnect_hyperedge (bgrld_hg_hyperedge* hyperedge) {
-    vcl_vector<bgrld_hg_hyperedge*>::iterator it = connecting_hyperedges_.begin();
+    std::vector<bgrld_hg_hyperedge*>::iterator it = connecting_hyperedges_.begin();
     for (; it != connecting_hyperedges_.end(); it++) {
       bgrld_hg_hyperedge* he = (*it);
       if (he == hyperedge) { //found it

@@ -8,7 +8,7 @@
 //\date 02/05/07 14:52:58 EST
 //
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_point_3d.h>
 
@@ -27,44 +27,44 @@
 // 
 //
 //
-void bgld_csm( vcl_vector<vgl_point_2d<double> > &c, double psi, unsigned nsteps);
+void bgld_csm( std::vector<vgl_point_2d<double> > &c, double psi, unsigned nsteps);
 
-bool bgld_curve_shorten_3d (vcl_vector<vgl_point_3d<double> > &c, double psi, unsigned nsteps);
+bool bgld_curve_shorten_3d (std::vector<vgl_point_3d<double> > &c, double psi, unsigned nsteps);
 
-void bgld_curve_shorten_3d_th (vcl_vector<vgl_point_3d<double> > &c, const double kernel_th,
+void bgld_curve_shorten_3d_th (std::vector<vgl_point_3d<double> > &c, const double kernel_th,
                                double psi, unsigned nsteps);
 
 //: curve shortening only in z(x,y) value.
-void bgld_curve_shorten_z (vcl_vector<vgl_point_3d<double> > &c, double psi, unsigned nsteps);
+void bgld_curve_shorten_z (std::vector<vgl_point_3d<double> > &c, double psi, unsigned nsteps);
 
 // ###############################################################
 // Ming: gaussian 3D curve smoothing
 
 //: Gaussian curve smoothing.
-void bgld_gaussian_smooth_curve_3d (vcl_vector<vgl_point_3d<double> > &curve, 
+void bgld_gaussian_smooth_curve_3d (std::vector<vgl_point_3d<double> > &curve, 
                                     const float sigma, const int nsteps);
 
 //: Gaussian curve smoothing with a specified kernel_th.
-void bgld_gaussian_smooth_curve_3d_th (vcl_vector<vgl_point_3d<double> >& curve, 
+void bgld_gaussian_smooth_curve_3d_th (std::vector<vgl_point_3d<double> >& curve, 
                                        const double kernel_th, const float sigma, const int nsteps);
 
 //: Gaussian curve smoothing with a specified kernel_th.
-void bgld_gaussian_smooth_curve_z_th (vcl_vector<vgl_point_3d<double> >& curve, 
+void bgld_gaussian_smooth_curve_z_th (std::vector<vgl_point_3d<double> >& curve, 
                                       const double kernel_th, const float sigma, const int nsteps);
 
-bool bgld_gaussian_smooth_curve_3d_fixedendpt (vcl_vector<vgl_point_3d<double> >& curve, 
+bool bgld_gaussian_smooth_curve_3d_fixedendpt (std::vector<vgl_point_3d<double> >& curve, 
                                                const float sigma, int nsteps);
 
-void bgld_gaussian_smooth_curve_3d_th_fixedendpt (vcl_vector<vgl_point_3d<double> >& curve, 
+void bgld_gaussian_smooth_curve_3d_th_fixedendpt (std::vector<vgl_point_3d<double> >& curve, 
                                                   const double kernel_th, 
                                                   const float sigma, const int nsteps);
 
-void bgld_gaussian_smooth_curve_z_th_fixedendpt (vcl_vector<vgl_point_3d<double> >& curve, 
+void bgld_gaussian_smooth_curve_z_th_fixedendpt (std::vector<vgl_point_3d<double> >& curve, 
                                                  const double kernel_th, 
                                                  const float sigma, const int nsteps);
 
 //2D Gaussian smoothing on 2D scalar function.
-void bgld_gaussian_smooth_2d_th (vcl_vector<vcl_vector<double> >& range, 
+void bgld_gaussian_smooth_2d_th (std::vector<std::vector<double> >& range, 
                                  const float d_intra, const float d_inter, 
                                  const int nsteps,
                                  const float G_sigma_ratio,

@@ -3,21 +3,21 @@
 #include <testlib/testlib_test.h>
 #include <bgld/algo/bgld_arc_algo.h>
 #include <vgl/vgl_point_2d.h>
-#include <vcl_iostream.h>
-#include <vcl_cmath.h>
-#include <vcl_limits.h>
+#include <iostream>
+#include <cmath>
+#include <limits>
 #include <vnl/vnl_math.h>
 
 //: Test intersections between arcs
 MAIN( test_arc_intersect )
 {
-   const double tolerance=vcl_numeric_limits<double>::epsilon() *1e5;
+   const double tolerance=std::numeric_limits<double>::epsilon() *1e5;
 
    vgl_point_2d<double> p1, p2, p3, i1,i2;
 
    // arc of circle with radius 3 centered at (0,0)
-   p1.set(3*vcl_sqrt(2.0)/2,3*vcl_sqrt(2.0)/2);
-   p2.set(3*vcl_sqrt(2.0)/2,-3*vcl_sqrt(2.0)/2);
+   p1.set(3*std::sqrt(2.0)/2,3*std::sqrt(2.0)/2);
+   p2.set(3*std::sqrt(2.0)/2,-3*std::sqrt(2.0)/2);
    p3.set(3,0);
    bgld_arc a1(p1,p2,p3);
    a1.print();
@@ -31,10 +31,10 @@ MAIN( test_arc_intersect )
       bgld_arc a2(p1,p2,p3);
 
       unsigned n=bgld_arc_algo::compute_intersections(a1,a2,&i1,&i2);
-      vcl_cout << "Number: " << n << vcl_endl;
+      std::cout << "Number: " << n << std::endl;
       TEST("Number",n,2);
-      vcl_cout << "Intesections: (" << i1.x() << ", "<< i1.y()<<")  "  <<
-                                "(" << i2.x() << ", "<< i2.y()<<")" << vcl_endl;
+      std::cout << "Intesections: (" << i1.x() << ", "<< i1.y()<<")  "  <<
+                                "(" << i2.x() << ", "<< i2.y()<<")" << std::endl;
       TEST_NEAR("Intersection1.x",i1.x(),0,tolerance);
       TEST_NEAR("Intersection2.x",i2.x(),0,tolerance);
       TEST_NEAR("Intersection1.y",vnl_math::max(i1.y(),i2.y()), 3,tolerance);
@@ -51,9 +51,9 @@ MAIN( test_arc_intersect )
    a2.print();
 
    unsigned n=bgld_arc_algo::compute_intersections(a1,a2,&i1,&i2);
-   vcl_cout << "Number: " << n << vcl_endl;
+   std::cout << "Number: " << n << std::endl;
    TEST("Number",n,1);
-   vcl_cout << "Intesection: (" << i1.x() << ", "<< i1.y()<<")  " << vcl_endl;
+   std::cout << "Intesection: (" << i1.x() << ", "<< i1.y()<<")  " << std::endl;
    TEST_NEAR("Intersection1.x",i1.x(),-3,tolerance);
    TEST_NEAR("Intersection1.y",i1.y(),0,tolerance);
    }
@@ -67,9 +67,9 @@ MAIN( test_arc_intersect )
    a2.print();
 
    unsigned n=bgld_arc_algo::compute_intersections(a1,a2,&i1,&i2);
-   vcl_cout << "Number: " << n << vcl_endl;
+   std::cout << "Number: " << n << std::endl;
    TEST("Number",n,1);
-   vcl_cout << "Intesection: (" << i1.x() << ", "<< i1.y()<<")  " << vcl_endl;
+   std::cout << "Intesection: (" << i1.x() << ", "<< i1.y()<<")  " << std::endl;
    TEST_NEAR("Intersection1.x",i1.x(),0,tolerance);
    TEST_NEAR("Intersection1.y",i1.y(),3,tolerance);
    }
@@ -84,9 +84,9 @@ MAIN( test_arc_intersect )
 
    i1.set(-10,-10); //< clear it
    unsigned n=bgld_arc_algo::compute_intersections(a1,a2,&i1,&i2);
-   vcl_cout << "Number: " << n << vcl_endl;
+   std::cout << "Number: " << n << std::endl;
    TEST("Number",n,1);
-   vcl_cout << "Intesection: (" << i1.x() << ", "<< i1.y()<<")  " << vcl_endl;
+   std::cout << "Intesection: (" << i1.x() << ", "<< i1.y()<<")  " << std::endl;
    TEST_NEAR("Intersection1.x",i1.x(),0,tolerance);
    TEST_NEAR("Intersection1.y",i1.y(),3,tolerance);
    }
@@ -95,7 +95,7 @@ MAIN( test_arc_intersect )
    // coinciding circles
    i1.set(-10,-10); //< clear it
    unsigned n=bgld_arc_algo::compute_intersections(a1,a1,&i1,&i2);
-   vcl_cout << "Number: " << n << vcl_endl;
+   std::cout << "Number: " << n << std::endl;
    TEST("Number",n,3);
    }
 
@@ -109,10 +109,10 @@ MAIN( test_arc_intersect )
 
    i1.set(-10,-10); //< clear it
    unsigned n=bgld_arc_algo::compute_intersections(a1,a2,&i1,&i2);
-   vcl_cout << "Number: " << n << vcl_endl;
+   std::cout << "Number: " << n << std::endl;
    TEST("Number",n,2);
-   vcl_cout << "Intesections: (" << i1.x() << ", "<< i1.y()<<")  "  <<
-                             "(" << i2.x() << ", "<< i2.y()<<")" << vcl_endl;
+   std::cout << "Intesections: (" << i1.x() << ", "<< i1.y()<<")  "  <<
+                             "(" << i2.x() << ", "<< i2.y()<<")" << std::endl;
    TEST_NEAR("Intersection1.x",i1.x(),a1.point_at(0).x(),tolerance);
    TEST_NEAR("Intersection1.y",i1.y(),a1.point_at(0).y(),tolerance);
    TEST_NEAR("Intersection2.x",i2.x(),a1.point_at_length((2.0/3.0)*a1.length()).x(),tolerance);
@@ -130,9 +130,9 @@ MAIN( test_arc_intersect )
 
    i1.set(-10,-10); //< clear it
    unsigned n=bgld_arc_algo::compute_intersections(a1,a2,&i1,&i2);
-   vcl_cout << "Number: " << n << vcl_endl;
+   std::cout << "Number: " << n << std::endl;
    TEST("Number",n,1);
-   vcl_cout << "Intesection: (" << i1.x() << ", "<< i1.y()<<")  " << vcl_endl;
+   std::cout << "Intesection: (" << i1.x() << ", "<< i1.y()<<")  " << std::endl;
    TEST_NEAR("Intersection1.x",i1.x(),-delta,tolerance);
    TEST_NEAR("Intersection1.y",i1.y(),delta,tolerance);
    }
@@ -146,7 +146,7 @@ MAIN( test_arc_intersect )
    bgld_arc a2(p1,p2,p3);
 
    unsigned n=bgld_arc_algo::compute_intersections(a1,a2,&i1,&i2);
-   vcl_cout << "Number: " << n << vcl_endl;
+   std::cout << "Number: " << n << std::endl;
    TEST("Number",n,0);
    }
 
@@ -156,8 +156,8 @@ MAIN( test_arc_intersect )
    {
    // arc of circle with radius 3 centered at (-10,200)
 
-   p1.set(3*vcl_sqrt(2.0)/2-10,3*vcl_sqrt(2.0)/2 +200);
-   p2.set(3*vcl_sqrt(2.0)/2-10,-3*vcl_sqrt(2.0)/2 +200);
+   p1.set(3*std::sqrt(2.0)/2-10,3*std::sqrt(2.0)/2 +200);
+   p2.set(3*std::sqrt(2.0)/2-10,-3*std::sqrt(2.0)/2 +200);
    p3.set(3-10,0+200);
    bgld_arc a3(p1,p2,p3);
 
@@ -170,9 +170,9 @@ MAIN( test_arc_intersect )
 
    i1.set(-10,-10); //< clear it
    unsigned n=bgld_arc_algo::compute_intersections(a2,a3,&i1,&i2);
-   vcl_cout << "Number: " << n << vcl_endl;
+   std::cout << "Number: " << n << std::endl;
    TEST("Number",n,1);
-   vcl_cout << "Intesection: (" << i1.x() << ", "<< i1.y()<<")  " << vcl_endl;
+   std::cout << "Intesection: (" << i1.x() << ", "<< i1.y()<<")  " << std::endl;
    TEST_NEAR("Intersection1.x",i1.x(),-3 -10,tolerance);
    TEST_NEAR("Intersection1.y",i1.y(),0  +200,tolerance);
    }
@@ -180,8 +180,8 @@ MAIN( test_arc_intersect )
    {
    // arc of circle with radius 3 centered at (-10,200)
 
-   p1.set(3*vcl_sqrt(2.0)/2-10,3*vcl_sqrt(2.0)/2 +200);
-   p2.set(3*vcl_sqrt(2.0)/2-10,-3*vcl_sqrt(2.0)/2 +200);
+   p1.set(3*std::sqrt(2.0)/2-10,3*std::sqrt(2.0)/2 +200);
+   p2.set(3*std::sqrt(2.0)/2-10,-3*std::sqrt(2.0)/2 +200);
    p3.set(3-10,0+200);
    bgld_arc a3(p1,p2,p3);
 
@@ -194,10 +194,10 @@ MAIN( test_arc_intersect )
 
    i1.set(-10,-10); //< clear it
    unsigned n=bgld_arc_algo::compute_intersections(a2,a3,&i1,&i2);
-   vcl_cout << "Number: " << n << vcl_endl;
+   std::cout << "Number: " << n << std::endl;
    TEST("Number",n,2);
-   vcl_cout << "Intesections: (" << i1.x() << ", "<< i1.y()<<")  "  <<
-                             "(" << i2.x() << ", "<< i2.y()<<")" << vcl_endl;
+   std::cout << "Intesections: (" << i1.x() << ", "<< i1.y()<<")  "  <<
+                             "(" << i2.x() << ", "<< i2.y()<<")" << std::endl;
    TEST_NEAR("Intersection1.x",i1.x(),0-10,tolerance);
    TEST_NEAR("Intersection1.y",vnl_math::max(i1.y(),i2.y()),3+200,tolerance);
    TEST_NEAR("Intersection2.x",i2.x(),0-10,tolerance);
@@ -207,8 +207,8 @@ MAIN( test_arc_intersect )
    {
    // arc of circle with radius 3 centered at (-10,200)
 
-   p1.set(-3*vcl_sqrt(2.0)/2-10,+3*vcl_sqrt(2.0)/2 +200);
-   p2.set(-3*vcl_sqrt(2.0)/2-10,-3*vcl_sqrt(2.0)/2 +200);
+   p1.set(-3*std::sqrt(2.0)/2-10,+3*std::sqrt(2.0)/2 +200);
+   p2.set(-3*std::sqrt(2.0)/2-10,-3*std::sqrt(2.0)/2 +200);
    p3.set(-3-10,0+200);
    bgld_arc a3(p1,p2,p3);
 
@@ -221,9 +221,9 @@ MAIN( test_arc_intersect )
 
    i1.set(-10,-10); //< clear it
    unsigned n=bgld_arc_algo::compute_intersections(a2,a3,&i1,&i2);
-   vcl_cout << "Number: " << n << vcl_endl;
+   std::cout << "Number: " << n << std::endl;
    TEST("Number",n,1);
-   vcl_cout << "Intesection: (" << i1.x() << ", "<< i1.y()<<")  " << vcl_endl;
+   std::cout << "Intesection: (" << i1.x() << ", "<< i1.y()<<")  " << std::endl;
    TEST_NEAR("Intersection1.x",i1.x(),3 -10,tolerance);
    TEST_NEAR("Intersection1.y",i1.y(),0  +200,tolerance);
 

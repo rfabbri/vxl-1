@@ -19,14 +19,14 @@
 
 #include <borld/borld_image_description_sptr.h>
 #include <vsol/vsol_box_2d_sptr.h>
-#include <vcl_string.h>
-#include <vcl_vector.h>
+#include <string>
+#include <vector>
 
 //------------------------------------------------------------------------------
 //: extract bounding boxes of objects belong to a particular category from an 
 // image description. Return false if image description is not defined.
-bool borld_get_boxes(vcl_vector<vsol_box_2d_sptr>& boxes, 
-                     const borld_image_description_sptr& desc, const vcl_string& model_category);
+bool borld_get_boxes(std::vector<vsol_box_2d_sptr>& boxes, 
+                     const borld_image_description_sptr& desc, const std::string& model_category);
 
 
 #endif  //borld_image_description_utils_h_

@@ -16,8 +16,8 @@
 #include "borld_category_info.h"
 
 #include <vul/vul_awk.h>
-#include <vcl_string.h>
-#include <vcl_sstream.h>
+#include <string>
+#include <sstream>
 
 borld_category_info::borld_category_info(borld_category_info& other)
 {
@@ -32,17 +32,17 @@ void borld_category_info::set_color(vil_rgb<vxl_byte> c)
   color_ = c;
 }
 
-void borld_category_info::set_prefix_list(vcl_vector<vcl_string>& list)
+void borld_category_info::set_prefix_list(std::vector<std::string>& list)
 {
   prefix_list_.insert(prefix_list_.begin(), list.begin(), list.end());
 }
 
-void borld_category_info::add_prefix(vcl_string p)
+void borld_category_info::add_prefix(std::string p)
 {
   prefix_list_.push_back(p);
 }
 
-void borld_category_info::write_xml(vcl_ostream& os)
+void borld_category_info::write_xml(std::ostream& os)
 {
   os << "\t\t<category>\n";
   os << "\t\t\t<name>" << name_ << "</name>\n";
@@ -61,16 +61,16 @@ void borld_category_info_set::add_category(borld_category_info_sptr c)
 }
 
 //: assumes that we're given a simple file where each line is: <category_name> <category_id> or it is a comment line which start with the char: #
-bool borld_category_info_set::read_cats_from_a_simple_file(vcl_istream& is)
+bool borld_category_info_set::read_cats_from_a_simple_file(std::istream& is)
 {
   vul_awk awk( is );
   if (!awk)
     return false;
   for( ; awk ; ++awk) {
     if ( awk.NF() < 2 ) continue; 
-    vcl_string cat_name(awk[0]);    
+    std::string cat_name(awk[0]);    
     if (cat_name[0] == '#') continue;  // skip the comment lines
-    vcl_stringstream cat_id(awk[1]);
+    std::stringstream cat_id(awk[1]);
     int id; cat_id >> id;
     borld_category_info_sptr cinfo = new borld_category_info(cat_name, id);
     cats_.push_back(cinfo);
@@ -79,7 +79,7 @@ bool borld_category_info_set::read_cats_from_a_simple_file(vcl_istream& is)
 }
 
 //: return the class given by the name, return NULL if not in the list
-borld_category_info_sptr borld_category_info_set::find_category(const vcl_string class_name)
+borld_category_info_sptr borld_category_info_set::find_category(const std::string class_name)
 {
   borld_category_info_sptr out_c;
   for (unsigned i = 0; i < cats_.size(); i++) {
@@ -94,13 +94,13 @@ borld_category_info_sptr borld_category_info_set::find_category(const vcl_string
 //: Binary io, NOT IMPLEMENTED, signatures defined to use borld_category_info_set as a brdb_value
 void vsl_b_write(vsl_b_ostream & os, borld_category_info_set const &ph)
 {
-  vcl_cerr << "vsl_b_write() -- Binary io, NOT IMPLEMENTED, signatures defined to use brec_part_hierarchy as a brdb_value\n";
+  std::cerr << "vsl_b_write() -- Binary io, NOT IMPLEMENTED, signatures defined to use brec_part_hierarchy as a brdb_value\n";
   return;
 }
 
 void vsl_b_read(vsl_b_istream & is, borld_category_info_set &ph)
 {
-  vcl_cerr << "vsl_b_read() -- Binary io, NOT IMPLEMENTED, signatures defined to use brec_part_hierarchy as a brdb_value\n";
+  std::cerr << "vsl_b_read() -- Binary io, NOT IMPLEMENTED, signatures defined to use brec_part_hierarchy as a brdb_value\n";
   return;
 }
 

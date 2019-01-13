@@ -1,8 +1,8 @@
 #include "bnld_eno.h"
-#include <vcl_cstdio.h>
-#include <vcl_cassert.h>
-#include <vcl_limits.h>
-#include <vcl_algorithm.h>  
+#include <cstdio>
+#include <cassert>
+#include <limits>
+#include <algorithm>  
 
 //:
 // \file
@@ -35,7 +35,7 @@ interpolate(double const *data, unsigned len, ptrdiff_t stride)
    double nhood[BNLD_ENO_DATA_LENGTH]; /* storage for copying
                                            local neighborhood */
 
-   vcl_vector<bnld_eno_interp>::iterator interp_ptr;
+   std::vector<bnld_eno_interp>::iterator interp_ptr;
 
    stride_ = stride;
    interp_.resize(len*stride -1);
@@ -107,7 +107,7 @@ interpolate(double const *data, double const *x, unsigned len, ptrdiff_t stride)
    double nhood[BNLD_ENO_DATA_LENGTH]; /* storage for copying
                                            local neighborhood */
 
-   vcl_vector<bnld_eno_interp>::iterator interp_ptr;
+   std::vector<bnld_eno_interp>::iterator interp_ptr;
 
    stride_ = stride;
    interp_.resize(len*stride -1);
@@ -153,11 +153,11 @@ interpolate(double const *data, double const *x, unsigned len, ptrdiff_t stride)
 }
 
 void bnld_eno_1d::
-print(vcl_ostream& strm) const
+print(std::ostream& strm) const
 {
 
-   strm << "==== Eno 1D ====" << vcl_endl
-        << "len: " << size() << vcl_endl;
+   strm << "==== Eno 1D ====" << std::endl
+        << "len: " << size() << std::endl;
 
    unsigned i;
    for (i=0; i < size(); ++i)
@@ -196,7 +196,7 @@ interval_index(double x) const
 {
    // binary search for s in vector of arclens
    const vnl_vector<double>::const_iterator
-      p = vcl_lower_bound(abscissas_.begin(), abscissas_.end(), x);
+      p = std::lower_bound(abscissas_.begin(), abscissas_.end(), x);
 
    unsigned i = p - abscissas_.begin();
 

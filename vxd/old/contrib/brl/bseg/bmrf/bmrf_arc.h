@@ -13,7 +13,7 @@
 #include <vsl/vsl_binary_io.h>
 #include <bmrf/bmrf_node_sptr.h>
 #include <bmrf/bmrf_gamma_func_sptr.h>
-#include <vcl_iosfwd.h> // for std::ostream
+#include <iosfwd> // for std::ostream
 
 #include "bmrf_arc_sptr.h"
 
@@ -102,6 +102,6 @@ void vsl_b_write(vsl_b_ostream &os, const bmrf_arc* a);
 void vsl_b_read(vsl_b_istream &is, bmrf_arc* &a);
 
 //: Print an ASCII summary to the stream
-void vsl_print_summary(vcl_ostream &os, const bmrf_arc* a);
+void vsl_print_summary(std::ostream &os, const bmrf_arc* a);
 
 #endif // bmrf_arc_h_

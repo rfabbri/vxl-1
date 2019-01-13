@@ -1,24 +1,24 @@
 #include "vcpld_bundle_adjust_driver.h"
 #include <bmcsd/pro/bmcsd_fragment_tangents_filter.h>
 #include <vcpld/pro/vcpld_bundle_adjust_sink.h>
-#include <vcl_set.h>
-#include <vcl_algorithm.h>
+#include <set>
+#include <algorithm>
 
 
 void vcpld_bundle_adjust_driver::
 get_curve_visibility_using_reference_views(
-    vcl_vector<vcl_vector<bool> > *mask_ptr )
+    std::vector<std::vector<bool> > *mask_ptr )
 {
-  vcl_vector<vcl_vector<bool> > &mask = *mask_ptr;
+  std::vector<std::vector<bool> > &mask = *mask_ptr;
 
   mask.resize(nviews_, 
-      vcl_vector<bool>(csk_->total_num_points(), false));
+      std::vector<bool>(csk_->total_num_points(), false));
 
   unsigned i=0;
   for (unsigned c=0; c < csk_->num_curves(); ++c) {
-    vcl_cout << "Inliers for curve[" << c << "]: ";
+    std::cout << "Inliers for curve[" << c << "]: ";
 
-    vcl_vector<unsigned> inlier_views;
+    std::vector<unsigned> inlier_views;
 
     //    source views not automatically included since curves must be away from
     //    boundary to be inlier view to even their source views.
@@ -39,45 +39,45 @@ get_curve_visibility_using_reference_views(
 
     if (inlier_views.size() < 2) {
       i += csk_->curves_3d()[c].size();
-      vcl_cout << vcl_endl;
+      std::cout << std::endl;
       continue;
     }
 
     for (unsigned k=0; k < inlier_views.size(); ++k)
-      vcl_cout << inlier_views[k] << " ";
-    vcl_cout << vcl_endl;
+      std::cout << inlier_views[k] << " ";
+    std::cout << std::endl;
 
     for (unsigned p=0; p < csk_->curves_3d()[c].size(); ++p, ++i) {
       for (unsigned k=0; k < inlier_views.size(); ++k) {
-        vcl_vector<unsigned>::iterator 
+        std::vector<unsigned>::iterator 
           it = find(views_.begin(), views_.end(), inlier_views[k]);
         assert(it != views_.end());
         unsigned v_orig = it - views_.begin();
         mask[v_orig][i] = true;
       }
     }
-//    vcl_cout << vcl_endl;
+//    std::cout << std::endl;
   }
 //  for (unsigned i=0; i < maxviews_; ++i) {
-//    vcl_cout << "view[" << i <<"]";
+//    std::cout << "view[" << i <<"]";
 //    for (unsigned k=0; k < mask[k].size(); ++k) {
 //      if (mask[i][k])
-//        vcl_cout << k << " ";
+//        std::cout << k << " ";
 //    }
-//    vcl_cout << vcl_endl;
+//    std::cout << std::endl;
 //  }
 }
 
 bool vcpld_bundle_adjust_driver::
 get_views_to_optimize(
-    const vcl_set<unsigned> &viewset,
-    vcl_vector<unsigned> *views_ptr
+    const std::set<unsigned> &viewset,
+    std::vector<unsigned> *views_ptr
     )
 {
-  vcl_vector<unsigned> &views = *views_ptr;
+  std::vector<unsigned> &views = *views_ptr;
   views.reserve(dpath_.nviews());
 
-  vcl_vector<vcl_set<unsigned> > is_participating(dpath_.nviews());
+  std::vector<std::set<unsigned> > is_participating(dpath_.nviews());
 
   // We're assuming the input views were already chained, meaning the reference
   // views are like (i0,i1), (i1, i2), (i2, i3),...
@@ -114,13 +114,13 @@ get_views_to_optimize(
 //    if (is_participating[c].size() == 1) {
 //      num_endpoint_views++;
 //      if (num_endpoint_views > 2) {
-//        vcl_cerr << "vcpld_bundle_adjust_driver: error: input views are not chained.\n";
+//        std::cerr << "vcpld_bundle_adjust_driver: error: input views are not chained.\n";
 //        return false;
 //      }
 //    }
   }
 
-  vcl_cout << "vcpld_bundle_adjust_driver: views successfully chained\n";
+  std::cout << "vcpld_bundle_adjust_driver: views successfully chained\n";
   return true;
 }
 
@@ -148,12 +148,12 @@ init()
   //       - edg_src_[c]
   //       - edg_dt_[c]
 
-  vcl_cout << "Initializing bundle adjustment driver" << vcl_endl;
+  std::cout << "Initializing bundle adjustment driver" << std::endl;
 
   // Determine what views to use. Go through curve sketch, and gather the views.
   bool ret = get_views_to_optimize(viewset_, &views_);
   if (!ret) {
-    vcl_cerr << "Views to optimize could not be determined\n";
+    std::cerr << "Views to optimize could not be determined\n";
     return false;
   }
 
@@ -163,7 +163,7 @@ init()
   curve_bundler_ = cb;
   get_curve_visibility_using_reference_views(&cb->mask_);
 
-  vcl_cout << "Number of views being optimized: " << nviews() << vcl_endl;
+  std::cout << "Number of views being optimized: " << nviews() << std::endl;
   cam_src_.reserve(nviews());
   edg_src_.reserve(nviews());
   edg_dt_.reserve(nviews());
@@ -195,9 +195,9 @@ init()
 
   csk_->get_curves_as_vgl_points(&cb->pts3d_);
 
-  vcl_cout << 
+  std::cout << 
     "Optimizing " << cb->pts3d_.size() << " curves across " << nviews() << " views."
-    << vcl_endl;
+    << std::endl;
 
   cb->setup_inputs(
       cam_src_,
@@ -212,7 +212,7 @@ init()
 bool vcpld_bundle_adjust_driver::
 run(unsigned long timestamp)
 {
-  vcl_cout << "Running stereo driver.\n";
+  std::cout << "Running stereo driver.\n";
   assert(initialized_);
   bprod_signal retval = curve_bundler_->run(timestamp);
 

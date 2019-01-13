@@ -5,20 +5,8 @@
 // by Kwun Han.
 
 #include "bgld_arc.h"
-#include <vcl_cmath.h>
-#include <vcl_iostream.h>
-
-
-
-#if !VCL_STATIC_CONST_INIT_FLOAT_NO_DEFN
-const double  bgld_arc::near_zero_value
-      VCL_STATIC_CONST_INIT_FLOAT_DEFN(1.0e-8);
-const double bgld_arc::minimum_curvature
-      VCL_STATIC_CONST_INIT_FLOAT_DEFN(0.00260416);  //(1/384.0)
-#endif
-
-
-
+#include <cmath>
+#include <iostream>
 
 
 bool bgld_arc::is_colinear(const vgl_point_2d<double> &point1,
@@ -109,9 +97,9 @@ bgld_arc::bgld_arc(
      //: check for the linearity of the disecting lines
      if ( is_almost_equal((A * E),(B * D),near_zero_value)) {
         // this should't happen; maybe be radical and abort/assert?
-       vcl_cerr << "Found a set of parallel lines. But previous computation ";
-       vcl_cerr << "says these are not parallel: " << A*E << " " << B*D << "\n";
-       vcl_cerr << "p1: " << start << " p2: " << end << " p3: " << other << vcl_endl;
+       std::cerr << "Found a set of parallel lines. But previous computation ";
+       std::cerr << "says these are not parallel: " << A*E << " " << B*D << "\n";
+       std::cerr << "p1: " << start << " p2: " << end << " p3: " << other << std::endl;
        curv_ = 0.0;
        return;
      }
@@ -127,20 +115,20 @@ bgld_arc::bgld_arc(
        r  = (center_-start).length();
      else {
 #ifndef NDEBUG
-         vcl_cerr << "bgld_arc: no center found..\n";
+         std::cerr << "bgld_arc: no center found..\n";
 #endif
        r = 0.0;
      }
 
      if (is_almost_zero(r)) {
-        vcl_cerr << "bgld_arc: Radius 0 (not supported!)\n";
+        std::cerr << "bgld_arc: Radius 0 (not supported!)\n";
         curv_ = 0.0;
      } else
         curv_ = 1.0/r;
 
 
      if (curv_ < minimum_curvature){
-//         vcl_cerr << "bgld_arc: clipping curvature " << curv_ << " --> 0\n";
+//         std::cerr << "bgld_arc: clipping curvature " << curv_ << " --> 0\n";
          curv_ = 0.0;
          center_.x() = (end.x() + start.x()) / 2.0;
          center_.y() = (end.y() + start.y()) / 2.0;
@@ -151,15 +139,15 @@ bgld_arc::bgld_arc(
   }
 
   // ---- calculate angles and find direction ----
-  alpha0_ = vcl_atan2(start.y()-center_.y(), start.x()-center_.x());
+  alpha0_ = std::atan2(start.y()-center_.y(), start.x()-center_.x());
   // this is in [-pi,pi] sic, inclusive both -pi and pi
   
   if (alpha0_ < 0) alpha0_ = TWOPI+alpha0_; //:< now its in [0,2pi]
 
-  alpha1_ = vcl_atan2(end.y()-center_.y(), end.x()-center_.x());
+  alpha1_ = std::atan2(end.y()-center_.y(), end.x()-center_.x());
   if (alpha1_ < 0) alpha1_ = TWOPI+alpha1_;
   
-  double alpha2 = vcl_atan2(other.y()-center_.y(), other.x()-center_.x());
+  double alpha2 = std::atan2(other.y()-center_.y(), other.x()-center_.x());
   if (alpha2 < 0) alpha2 = TWOPI+alpha2;
 
   //: find the location of the "other" point to determine direction of the arc
@@ -222,7 +210,7 @@ bgld_arc::point_at(double s) const
      assert(curv_ > 0);
 
      // alpha = alpha0-(alpha0-alpha1)*s;  
-     double dif = vcl_fmod((TWOPI+ccw_*(alpha1_-alpha0_)),TWOPI);
+     double dif = std::fmod((TWOPI+ccw_*(alpha1_-alpha0_)),TWOPI);
 #if 0
 //this variable is not used in the code.  PLEASE FIX!  -MM
      double len = dif/curv_;   // delta angle * radius
@@ -253,7 +241,7 @@ double bgld_arc::tangent_angle_at(double s) const
 {
   if (curv_ == 0) { 
      // atan2: [-pi,pi]
-     double alpha = vcl_atan2(center_.y()-alpha1_, center_.x()-alpha0_);
+     double alpha = std::atan2(center_.y()-alpha1_, center_.x()-alpha0_);
      if (alpha < 0) alpha = TWOPI+alpha; // now [0,2pi]
      return alpha;
 
@@ -285,7 +273,7 @@ double bgld_arc::tangent_angle_at(double s) const
     if (alpha < 0)
       alpha = alpha + 6*PI;    // I proved that, after the above, alpha is > -6PI
 
-    alpha = vcl_fmod(alpha,TWOPI);
+    alpha = std::fmod(alpha,TWOPI);
     assert (alpha >=0);
     return alpha;
   }
@@ -340,14 +328,14 @@ compute_inters_ll(
     return 1;
 }
 
-vcl_ostream& 
+std::ostream& 
 bgld_arc::
-print(vcl_ostream &os) const
+print(std::ostream &os) const
 {
    
    
    os << "Center: " << center_.x() << ", " << center_.y() <<  "   "
-      << "Curvature: " << curv_ << "   CCW: " << ccw_ << vcl_endl;
+      << "Curvature: " << curv_ << "   CCW: " << ccw_ << std::endl;
 
    if (curvature() == 0.0) {
       os << "Other point: (" << alpha0_ << ", " << alpha1_ << ")\n";
@@ -356,7 +344,7 @@ print(vcl_ostream &os) const
    }
 
    os << "Length: " << length()
-      << vcl_endl;
+      << std::endl;
 
    return os;
 }

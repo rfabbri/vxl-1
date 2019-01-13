@@ -15,18 +15,18 @@
 
 
 #include <bgld/algo/bgld_circ_arc.h>
-#include <vcl_vector.h>
+#include <vector>
 
 
 //: Interpolate a set of points with a circular arc spline
-bool bgld_fit_circ_arc_spline_to_polyline(vcl_vector<bgld_circ_arc >& arc_list,
-                                 const vcl_vector<vgl_point_2d<double > >& pts,
+bool bgld_fit_circ_arc_spline_to_polyline(std::vector<bgld_circ_arc >& arc_list,
+                                 const std::vector<vgl_point_2d<double > >& pts,
                                  double tolerance = 1.0);
 
 //: Interpolate a polygon with circular-arc polygon, i.e., a closed smooth contour
 // consisting circular arc segments
-bool bgld_fit_circ_arc_spline_to_polygon(vcl_vector<bgld_circ_arc >& arc_list,
-                                 const vcl_vector<vgl_point_2d<double > >& pts,
+bool bgld_fit_circ_arc_spline_to_polygon(std::vector<bgld_circ_arc >& arc_list,
+                                 const std::vector<vgl_point_2d<double > >& pts,
                                  double tolerance = 1.0);
 
 

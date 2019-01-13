@@ -60,10 +60,10 @@ class vidl1_ffmpeg_codec : public vidl1_codec
                         int x0, int y0 );
 
   //-----------------------------------------------------
-  virtual bool probe(vcl_string const& fname);
-  virtual vidl1_codec_sptr load(vcl_string const& fname, char mode = 'r' );
-  virtual bool save(vidl1_movie* /*movie*/, vcl_string const& /*fname*/) { return false; }
-  virtual vcl_string type() const { return "FFMPEG"; }
+  virtual bool probe(std::string const& fname);
+  virtual vidl1_codec_sptr load(std::string const& fname, char mode = 'r' );
+  virtual bool save(vidl1_movie* /*movie*/, std::string const& /*fname*/) { return false; }
+  virtual std::string type() const { return "FFMPEG"; }
   virtual vidl1_ffmpeg_codec* castto_vidl1_ffmpeg_codec() { return this; }
 
   //: Advance to the next frame
@@ -84,7 +84,7 @@ class vidl1_ffmpeg_codec : public vidl1_codec
   //: Read the current frame.
   vil_image_view<vxl_byte> cur_frame() const;
 
-  bool open(vcl_string const& fname, char mode);
+  bool open(std::string const& fname, char mode);
   void close();
 
   //: initialize ffmpeg

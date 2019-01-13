@@ -1,12 +1,12 @@
 // This is core/vidl1/vidl1_mpegcodec.cxx
 #include "vidl1_mpegcodec.h"
 #include <vidl1/vidl1_yuv_2_rgb.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
+#include <string>
+#include <iostream>
 #undef sprintf // bug in libintl.h : defines sprintf to libintl_sprintf
-#include <vcl_cstdio.h>
-#include <vcl_cassert.h>
-#include <vcl_cstdlib.h> // for vcl_strtol()
+#include <cstdio>
+#include <cassert>
+#include <cstdlib> // for std::strtol()
 #include <vul/vul_file.h>
 #include <vil/vil_image_view.h>
 #include <vil/vil_rgb.h>
@@ -135,7 +135,7 @@ static int internal_setup(vo_instance_t* instance_,
   if ((p->y0+p->h)>height) p->h = height - p->y0;
 
   int hh = height>>1;
-  vcl_sprintf(instance->header, "P5\n%d %d\n255\n", width, hh * 3);
+  std::sprintf(instance->header, "P5\n%d %d\n255\n", width, hh * 3);
   return libvo_common_alloc_frames((vo_instance_t*)instance,
                                    width,
                                    height,
@@ -155,7 +155,7 @@ static void vil_im_draw_frame(vo_frame_t * frame)
   decode_request * p = instance->pending_decode;
   if (!p)
   {
-    vcl_cerr << "vidl1_mpegcodec.cxx, vil_im_draw_frame:"
+    std::cerr << "vidl1_mpegcodec.cxx, vil_im_draw_frame:"
              << " decode request was never set\n";
     return;
   }
@@ -207,14 +207,14 @@ vidl1_mpegcodec::vidl1_mpegcodec()
 
 vidl1_mpegcodec::~vidl1_mpegcodec()
 {
-  vcl_cout << "vidl1_mpegcodec::~vidl1_mpegcodec. entering\n";
+  std::cout << "vidl1_mpegcodec::~vidl1_mpegcodec. entering\n";
   if (decoder_) decoder_->print();
   buffers_->print();
-  vcl_cout << "first frame number in memory is: " << buffers_->first_frame_num() << vcl_endl;
+  std::cout << "first frame number in memory is: " << buffers_->first_frame_num() << std::endl;
   delete buffers_;
   if (decoder_) delete decoder_;
 
-  vcl_cout << "vidl1_mpegcodec::~vidl1_mpegcodec. exiting\n";
+  std::cout << "vidl1_mpegcodec::~vidl1_mpegcodec. exiting\n";
 }
 
 void
@@ -222,7 +222,7 @@ vidl1_mpegcodec::set_grey_scale(bool grey)
 {
   if (!decoder_)
   {
-    vcl_cout << "vidl1_mpegcodec::set_gray_scale. need to load file first.\n";
+    std::cout << "vidl1_mpegcodec::set_gray_scale. need to load file first.\n";
     return;
   }
 
@@ -234,7 +234,7 @@ vidl1_mpegcodec::set_grey_scale(bool grey)
 //like height, width, number of frames, bits per pixel, etc. however,
 //i don't have the time right now to write such a header. hopefully it
 //will be done someday.
-vidl1_codec_sptr vidl1_mpegcodec::load(vcl_string const& fname, char  /*mode*/)
+vidl1_codec_sptr vidl1_mpegcodec::load(std::string const& fname, char  /*mode*/)
 {
   //just running probe here just to be safe,
   //though the client is supposed to run this anyway before
@@ -327,9 +327,9 @@ vidl1_mpegcodec::get_view( int position,
 }
 
 bool
-vidl1_mpegcodec::probe(vcl_string const& fname)
+vidl1_mpegcodec::probe(std::string const& fname)
 {
-  vcl_string exten = vul_file::extension(fname);
+  std::string exten = vul_file::extension(fname);
   bool isthere = vul_file::exists(fname) && (exten == ".mpeg" ||
                                              exten == ".mpe"  ||
                                              exten == ".mpg"  ||
@@ -345,9 +345,9 @@ vidl1_mpegcodec::set_demux_video()
 }
 
 void
-vidl1_mpegcodec::set_pid(vcl_string pid)
+vidl1_mpegcodec::set_pid(std::string pid)
 {
-  decoder_->demux_pid_ = vcl_strtol(pid.c_str(),0,16);
+  decoder_->demux_pid_ = std::strtol(pid.c_str(),0,16);
 }
 
 //called by load method

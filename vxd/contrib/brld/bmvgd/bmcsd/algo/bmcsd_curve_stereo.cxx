@@ -37,7 +37,7 @@ bool bmcsd_curve_stereo::
 set_nviews(unsigned nv)
 {
   if (nv < 3) {
-    vcl_cerr << "Error: need at least " << 3 << " views for this tool" << vcl_endl;
+    std::cerr << "Error: need at least " << 3 << " views for this tool" << std::endl;
     return false;
   }
   nviews_ = nv;
@@ -73,53 +73,53 @@ reconstruct_multiview()
 
   for (unsigned v=0; v < nviews_; ++v)
     if (!selected_crv_[v]) {
-      vcl_cerr << "Error: a curve must be selected in all views.\n";
+      std::cerr << "Error: a curve must be selected in all views.\n";
       return;
     }
 
   unsigned ini_id, end_id;
   get_increasing_endpoints(&ini_id, &end_id); 
 
-  vcl_ofstream 
+  std::ofstream 
     fcrv_3d_2v, 
     fcrv_3d_3v, 
     fcrv_3d_linear, 
     fcrv_3d, 
     fcrv_2d;
 
-  vcl_string prefix("dat/reconstr-tracer-multi"); 
-  vcl_string prefix2("dat/curve2d-view0-tracer-multi");
-  vcl_string ext(".dat");
+  std::string prefix("dat/reconstr-tracer-multi"); 
+  std::string prefix2("dat/curve2d-view0-tracer-multi");
+  std::string ext(".dat");
 
-  vcl_string cmd;
-  cmd = vcl_string("rm -f ") + prefix + vcl_string("*dat  ") + prefix2 + vcl_string("*dat");
+  std::string cmd;
+  cmd = std::string("rm -f ") + prefix + std::string("*dat  ") + prefix2 + std::string("*dat");
 
   if (system(cmd.c_str()) == -1)
-    vcl_cout << "Error removing old reconstructions\n";
+    std::cout << "Error removing old reconstructions\n";
 
   //: notice string to distinguish this and the files from 'r' option
-  vcl_string fname = prefix + ext;
+  std::string fname = prefix + ext;
 
-  fcrv_3d.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
-  vcl_cout << "Writing 3d curve: " << fname << vcl_endl;
+  fcrv_3d.open(fname.c_str(),std::ios::out | std::ios::binary);
+  std::cout << "Writing 3d curve: " << fname << std::endl;
 
-  fname = prefix + vcl_string("-2v") + ext;
-  fcrv_3d_2v.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
-  vcl_cout << "Writing 3d curve: " << fname << vcl_endl;
+  fname = prefix + std::string("-2v") + ext;
+  fcrv_3d_2v.open(fname.c_str(),std::ios::out | std::ios::binary);
+  std::cout << "Writing 3d curve: " << fname << std::endl;
 
-  fname = prefix + vcl_string("-3v") + ext;
-  fcrv_3d_3v.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
-  vcl_cout << "Writing 3d curve: " << fname << vcl_endl;
+  fname = prefix + std::string("-3v") + ext;
+  fcrv_3d_3v.open(fname.c_str(),std::ios::out | std::ios::binary);
+  std::cout << "Writing 3d curve: " << fname << std::endl;
 
-  fname = prefix + vcl_string("-linear") + ext;
-  fcrv_3d_linear.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
-  vcl_cout << "Writing 3d curve: " << fname << vcl_endl;
+  fname = prefix + std::string("-linear") + ext;
+  fcrv_3d_linear.open(fname.c_str(),std::ios::out | std::ios::binary);
+  std::cout << "Writing 3d curve: " << fname << std::endl;
 
   fname = prefix2 + ext;
 
   // write corresp curve in view 2
-  fcrv_2d.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
-  vcl_cout << "Writing 2d curve of 2nd view: " << fname << vcl_endl;
+  fcrv_2d.open(fname.c_str(),std::ios::out | std::ios::binary);
+  std::cout << "Writing 2d curve of 2nd view: " << fname << std::endl;
 
   for (unsigned k=0; k < selected_crv_[v1()]->size(); ++k) {
     const vsol_point_2d_sptr pt = selected_crv_[v1()]->vertex(k);
@@ -137,9 +137,9 @@ reconstruct_multiview()
     bmcsd_vector_3d pt_3D, pt_3D_linear;
 
     { // reconstruct from all views
-      vcl_cout << "reconstruct from all views\n";
+      std::cout << "reconstruct from all views\n";
 
-      vcl_vector<unsigned> views; // views we want to use
+      std::vector<unsigned> views; // views we want to use
       views.reserve(nviews_-1); 
 
       for (unsigned v=1; v < nviews_; ++v)
@@ -151,8 +151,8 @@ reconstruct_multiview()
     fcrv_3d.write((char *)(pt_3D.data_block()),3*sizeof(double));
 
     { // for comparison, reconstruct from 2 views: first + last
-      vcl_cout << "reconstruct from 2 views\n";
-      vcl_vector<unsigned> views; // views we want to use
+      std::cout << "reconstruct from 2 views\n";
+      std::vector<unsigned> views; // views we want to use
       views.push_back(nviews_-1);
 
       get_reconstructions(views, ini_id, di0, &pt_3D, &pt_3D_linear);
@@ -160,8 +160,8 @@ reconstruct_multiview()
     fcrv_3d_2v.write((char *)(pt_3D.data_block()),3*sizeof(double));
 
     { // for comparison, reconstruct from 3 views: first + last + mid
-      vcl_cout << "reconstruct from 3 views\n";
-      vcl_vector<unsigned> views; // views we want to use
+      std::cout << "reconstruct from 3 views\n";
+      std::vector<unsigned> views; // views we want to use
       views.push_back((nviews_-1)/2);
       views.push_back(nviews_-1);
 
@@ -178,16 +178,16 @@ reconstruct_multiview()
 
 void bmcsd_curve_stereo::
 linearly_reconstruct_pts(
-    const vcl_vector<vsol_point_2d_sptr> &pt_img,
-    const vcl_vector<unsigned> &other_views,
+    const std::vector<vsol_point_2d_sptr> &pt_img,
+    const std::vector<unsigned> &other_views,
     vgl_point_3d<double> *pt_3D
     ) const 
 {
-  vcl_cout << "  Reconstructing linearly.\n";
+  std::cout << "  Reconstructing linearly.\n";
   assert(pt_img.size() > 1);
   assert(other_views.size() > 0);
-  vcl_vector<vnl_double_2> pts;
-  vcl_vector<vnl_double_3x4> projs;
+  std::vector<vnl_double_2> pts;
+  std::vector<vnl_double_3x4> projs;
 
   pts.push_back(vnl_double_2(pt_img[0]->x(), pt_img[0]->y()) );
   projs.push_back(cam_[v0()].Pr_.get_matrix());
@@ -201,19 +201,19 @@ linearly_reconstruct_pts(
 
 void bmcsd_curve_stereo::
 nonlinearly_optimize_reconstruction(
-    const vcl_vector<vsol_point_2d_sptr> &pt_img,
-    const vcl_vector<unsigned> &other_views,
+    const std::vector<vsol_point_2d_sptr> &pt_img,
+    const std::vector<unsigned> &other_views,
     const vgl_point_3d<double> &pt_3D_initial,
     vgl_point_3d<double> *pt_3D
     ) const
 {
-  vcl_cout << "  Reconstructing optimized.\n";
+  std::cout << "  Reconstructing optimized.\n";
   assert(pt_img.size() > 1);
   assert(other_views.size() > 0);
   vpgl_ray_intersect<double> isect(other_views.size()+1);
 
-  vcl_vector<vgl_point_2d<double> > pts;
-  vcl_vector<vpgl_camera<double> const * > projs;
+  std::vector<vgl_point_2d<double> > pts;
+  std::vector<vpgl_camera<double> const * > projs;
 
   pts.push_back(pt_img[0]->get_p());
   projs.push_back(new vpgl_perspective_camera <double> (cam_[v0()].Pr_) );
@@ -230,7 +230,7 @@ nonlinearly_optimize_reconstruction(
 
 void bmcsd_curve_stereo::
 get_reconstructions(
-    const vcl_vector<unsigned> &other_views, 
+    const std::vector<unsigned> &other_views, 
     unsigned ini_id, 
     unsigned di0, 
     bmcsd_vector_3d *pt_3D, 
@@ -238,7 +238,7 @@ get_reconstructions(
     ) const 
 {
   // Corresponding points
-  vcl_vector<vsol_point_2d_sptr> pt_img(other_views.size()+1);
+  std::vector<vsol_point_2d_sptr> pt_img(other_views.size()+1);
   pt_img[0] = selected_crv_[v0()]->vertex(ini_id + di0); 
   for (unsigned v=0; v < other_views.size(); ++v) {
     assert(v+1 < selected_crv_.size());
@@ -269,7 +269,7 @@ void bmcsd_curve_stereo::
 reconstruct_subcurve(
     unsigned ini_id_sub, 
     unsigned end_id_sub, 
-    vcl_vector<bmcsd_vector_3d> *curve_3d) const
+    std::vector<bmcsd_vector_3d> *curve_3d) const
 {
   curve_3d->reserve(end_id_sub - ini_id_sub + 1);
   for (unsigned di0=0; di0 + ini_id_sub <= end_id_sub; ++di0) {
@@ -306,11 +306,11 @@ void bmcsd_curve_stereo::
 reconstruct_and_reproject(
     unsigned crv2_id, 
     unsigned view, 
-    vcl_vector<vsol_point_2d_sptr> &reproj, 
+    std::vector<vsol_point_2d_sptr> &reproj, 
 
-    vcl_vector<bmcsd_vector_3d> &crv3d, 
-    vcl_vector<unsigned> &crv1_pt_id,
-    vcl_vector<unsigned> &crv2_pt_id,
+    std::vector<bmcsd_vector_3d> &crv3d, 
+    std::vector<unsigned> &crv1_pt_id,
+    std::vector<unsigned> &crv2_pt_id,
     bdifd_rig &rig) const
 {
   define_match_for_reconstruction(crv2_id, crv1_pt_id, crv2_pt_id, rig);
@@ -321,11 +321,11 @@ reconstruct_and_reproject(
 void bmcsd_curve_stereo::
 project_curve(
     unsigned view, 
-    const vcl_vector<bmcsd_vector_3d> &crv3d,
-    vcl_vector<vsol_point_2d_sptr> *proj_ptr
+    const std::vector<bmcsd_vector_3d> &crv3d,
+    std::vector<vsol_point_2d_sptr> *proj_ptr
     ) const
 {
-  vcl_vector<vsol_point_2d_sptr> &proj = *proj_ptr;
+  std::vector<vsol_point_2d_sptr> &proj = *proj_ptr;
 
   // Reproject into 3rd view
   proj.resize(crv3d.size());
@@ -340,8 +340,8 @@ project_curve(
 void bmcsd_curve_stereo::
 define_match_for_reconstruction(
     unsigned crv2_id,
-    vcl_vector<unsigned> &crv1_pt_id,
-    vcl_vector<unsigned> &crv2_pt_id,
+    std::vector<unsigned> &crv1_pt_id,
+    std::vector<unsigned> &crv2_pt_id,
     bdifd_rig &/*rig*/
     ) const
 {
@@ -357,7 +357,7 @@ define_match_for_reconstruction(
   j = crv_candidates_id_[crv2_id];
 
   // traverse L_[j] 
-  vcl_list<becld_intersection_sets::intersection_nhood_>::const_iterator ptr;
+  std::list<becld_intersection_sets::intersection_nhood_>::const_iterator ptr;
   for (ptr=isets_.L_[j].intercepts.begin(); ptr != isets_.L_[j].intercepts.end(); ++ptr) {
     unsigned k = ptr->ep_number;
     crv1_pt_id.push_back(ini_id + k);
@@ -366,7 +366,7 @@ define_match_for_reconstruction(
     unsigned lmin=0;
 
     { // determine point of this iset minimizing epipolar distance (assume accurate calib)
-      double cost_min = vcl_numeric_limits<double>::infinity(); 
+      double cost_min = std::numeric_limits<double>::infinity(); 
       double cost;
 
       assert(ptr->index.size() > 0);
@@ -388,9 +388,9 @@ define_match_for_reconstruction(
 void bmcsd_curve_stereo::
 reconstruct_one_candidate(
     unsigned crv2_id, 
-    vcl_vector<bmcsd_vector_3d> &crv3d, 
-    const vcl_vector<unsigned> &crv1_pt_id,
-    const vcl_vector<unsigned> &crv2_pt_id,
+    std::vector<bmcsd_vector_3d> &crv3d, 
+    const std::vector<unsigned> &crv1_pt_id,
+    const std::vector<unsigned> &crv2_pt_id,
     bdifd_rig &rig) const
 {
   crv3d.resize(crv1_pt_id.size());
@@ -414,14 +414,14 @@ reconstruct_one_candidate(
 
 void bmcsd_curve_stereo::
 break_curves_into_episegs_pairwise(
-    vcl_vector<vcl_vector< vsol_polyline_2d_sptr > > *broken_vsols,
-    vcl_vector<bbld_subsequence_set> *ss_ptr
+    std::vector<std::vector< vsol_polyline_2d_sptr > > *broken_vsols,
+    std::vector<bbld_subsequence_set> *ss_ptr
     ) const
 {
 #ifndef NDEBUG
-  vcl_cout << "bmcsd_curve_stereo::break_curves_into_episegs_pairwise" << vcl_endl;
+  std::cout << "bmcsd_curve_stereo::break_curves_into_episegs_pairwise" << std::endl;
 #endif
-  vcl_vector<bbld_subsequence_set> &ss = *ss_ptr;
+  std::vector<bbld_subsequence_set> &ss = *ss_ptr;
   broken_vsols->resize(nviews_);
   ss.resize(nviews_);
   vgl_homg_point_2d<double> e, e_prime;
@@ -440,8 +440,8 @@ break_curves_into_episegs_pairwise(
 
 void bmcsd_curve_stereo::
 break_curves_into_episegs(
-  const vcl_vector< vsol_polyline_2d_sptr >  &vsols,
-  vcl_vector<vsol_polyline_2d_sptr> *vsols2,
+  const std::vector< vsol_polyline_2d_sptr >  &vsols,
+  std::vector<vsol_polyline_2d_sptr> *vsols2,
   const vgl_homg_point_2d<double> &e,
   bbld_subsequence_set *ss_ptr
   )
@@ -455,26 +455,26 @@ break_curves_into_episegs(
 
   // A) For each vsol, do:
   
-  vcl_vector<becld_episeg_sptr> all_episegs;
+  std::vector<becld_episeg_sptr> all_episegs;
   all_episegs.reserve(2*vsols.size());
   ss.reserve(2*vsols.size());
   for (unsigned i=0; i < vsols.size(); ++i) {
     // A1 - convert to digital curve
-    vcl_vector<vsol_point_2d_sptr>  samples;
+    std::vector<vsol_point_2d_sptr>  samples;
     samples.reserve(vsols[i]->size());
     for (unsigned k=0; k < vsols[i]->size(); ++k)
       samples.push_back(vsols[i]->vertex(k));
 
     
     // A2 - apply episeg
-    vcl_vector<becld_episeg_sptr> eps = 
+    std::vector<becld_episeg_sptr> eps = 
       factory.convert_curve(new vsol_digital_curve_2d(samples));
 
-    for(vcl_vector<becld_episeg_sptr>::iterator itr = eps.begin(); 
+    for(std::vector<becld_episeg_sptr>::iterator itr = eps.begin(); 
         itr != eps.end();  ++itr) {
       all_episegs.push_back(*itr);
 
-      bbld_subsequence sub((unsigned) vcl_ceil((*itr)->min_index()),
+      bbld_subsequence sub((unsigned) std::ceil((*itr)->min_index()),
                          (unsigned)((*itr)->max_index()) + 1);
       sub.set_orig_id(i);
       ss.push_back(sub);
@@ -584,7 +584,7 @@ swap_endpoints()
     ep_tmp = ep_ini(i);
     ep_ini_[i] = ep_end(i);
     ep_end_[i] = ep_tmp;
-    vcl_reverse(ep_[i].begin(), ep_[i].end());
+    std::reverse(ep_[i].begin(), ep_[i].end());
   }
 }
 
@@ -592,8 +592,8 @@ void bmcsd_curve_stereo::
 compute_epipolar_beam_candidates()
 {
   //: index into s->vsols_[1] of candidate (whole) curves
-  vcl_list<unsigned> crv_prelim_candidates; 
-  vcl_vector<vsol_polyline_2d_sptr> crv_prelim_candidates_ptrs;
+  std::list<unsigned> crv_prelim_candidates; 
+  std::vector<vsol_polyline_2d_sptr> crv_prelim_candidates_ptrs;
 
   // clear previous crv_candidates (we're not incrementally updating)
 
@@ -601,7 +601,7 @@ compute_epipolar_beam_candidates()
   crv_candidates_ptrs_.clear();
   crv_candidates_id_.clear();
 
-  vcl_vector<bool> is_candidate(vsols_[v1()].size(), false);
+  std::vector<bool> is_candidate(vsols_[v1()].size(), false);
 
   unsigned ini_id, end_id;
   get_increasing_endpoints(&ini_id, &end_id);
@@ -667,7 +667,7 @@ compute_epipolar_beam_candidates()
   crv_candidates_ptrs_.reserve(isets_.ncurves());
   crv_candidates_id_.reserve(isets_.ncurves());
 
-  vcl_list<unsigned>::const_iterator itr = crv_prelim_candidates.begin(); 
+  std::list<unsigned>::const_iterator itr = crv_prelim_candidates.begin(); 
   for (unsigned j=0;  j < isets_.ncurves();  ++j, ++itr) {
     if ( isets_.L_[j].intercepts.size() >= tau_min_epipolar_overlap_) {
       crv_candidates_.push_back( *itr );
@@ -679,7 +679,7 @@ compute_epipolar_beam_candidates()
 }
   
 void bmcsd_curve_stereo::
-set_cams(const vcl_vector<bdifd_camera> &cams)
+set_cams(const std::vector<bdifd_camera> &cams)
 {
   assert(cam_.size() == nviews());
   cam_ = cams;
@@ -695,30 +695,30 @@ set_cams(const vcl_vector<bdifd_camera> &cams)
 }
 
 void bmcsd_curve_stereo::
-set_curves(const vcl_vector<vcl_vector< vsol_polyline_2d_sptr > > &curves)
+set_curves(const std::vector<std::vector< vsol_polyline_2d_sptr > > &curves)
 {
   assert (curves.size() == nviews());
   vsols_ = curves;
 }
 
 void bmcsd_curve_stereo::
-break_into_episegs_and_replace_curve(vcl_vector<bbld_subsequence_set> *pcurves_ss)
+break_into_episegs_and_replace_curve(std::vector<bbld_subsequence_set> *pcurves_ss)
 {
-  vcl_vector<vcl_vector< vsol_polyline_2d_sptr > > curves;
-  vcl_vector<bbld_subsequence_set> ss_break;
+  std::vector<std::vector< vsol_polyline_2d_sptr > > curves;
+  std::vector<bbld_subsequence_set> ss_break;
 
-  vcl_cout << "Orig   #curves in view 0: " << num_curves(0) << vcl_endl;
-  vcl_cout << "Orig   #curves in view 1: " << num_curves(1) << vcl_endl;
+  std::cout << "Orig   #curves in view 0: " << num_curves(0) << std::endl;
+  std::cout << "Orig   #curves in view 1: " << num_curves(1) << std::endl;
 
   break_curves_into_episegs_pairwise(&curves, &ss_break);
 
-  vcl_cout << "Broken #curves in view 0: " << curves[0].size() << vcl_endl;
-  vcl_cout << "Broken #curves in view 1: " << curves[1].size() << vcl_endl;
+  std::cout << "Broken #curves in view 0: " << curves[0].size() << std::endl;
+  std::cout << "Broken #curves in view 1: " << curves[1].size() << std::endl;
 
   const unsigned num_curve_sets = curves.size();
   assert(ss_break.size() == num_curve_sets);
 
-  vcl_vector<bbld_subsequence_set> &curves_ss = *pcurves_ss;
+  std::vector<bbld_subsequence_set> &curves_ss = *pcurves_ss;
   curves_ss.resize(num_curve_sets);
 
   for (unsigned i=0; i < num_curve_sets; ++i) {
@@ -731,11 +731,11 @@ break_into_episegs_and_replace_curve(vcl_vector<bbld_subsequence_set> *pcurves_s
           &curves[i], &curves_ss[i]);
     compose_subsequences(ss_break[i], &curves_ss[i]);
   }
-  vcl_cout << "Pruned #curves in view 0: " << curves[0].size() << vcl_endl;
-  vcl_cout << "Pruned #curves in view 1: " << curves[1].size() << vcl_endl;
+  std::cout << "Pruned #curves in view 0: " << curves[0].size() << std::endl;
+  std::cout << "Pruned #curves in view 1: " << curves[1].size() << std::endl;
   set_curves(curves);
-  vcl_cout << "Final  #curves in view 0: " << num_curves(0) << vcl_endl;
-  vcl_cout << "Final  #curves in view 1: " << num_curves(1) << vcl_endl;
+  std::cout << "Final  #curves in view 0: " << num_curves(0) << std::endl;
+  std::cout << "Final  #curves in view 1: " << num_curves(1) << std::endl;
 }
 
 bool bmcsd_curve_stereo::
@@ -756,7 +756,7 @@ get_index_of_curve(
 {
   if (view == v0()) {
     if (cached_curve_id_from_sptr_) {
-      vcl_map<vsol_polyline_2d_sptr, unsigned>::iterator itr
+      std::map<vsol_polyline_2d_sptr, unsigned>::iterator itr
        = curve_v0_id_from_sptr_.find(select_crv);
       if (itr == curve_v0_id_from_sptr_.end())
         return false;
@@ -783,20 +783,20 @@ get_index_of_curve(
 }
 
 void bmcsd_curve_stereo::
-reproject_in_all_views(unsigned crv2_id, vcl_vector< vcl_vector<vsol_point_2d_sptr> > *preproj)
+reproject_in_all_views(unsigned crv2_id, std::vector< std::vector<vsol_point_2d_sptr> > *preproj)
 {
-  vcl_vector< vcl_vector<vsol_point_2d_sptr> > &reproj = *preproj;
+  std::vector< std::vector<vsol_point_2d_sptr> > &reproj = *preproj;
   reproj.resize(nviews());
 
   bdifd_rig rig(cams(v0()).Pr_, cams(v1()).Pr_);
 
   for (unsigned v=2; v < nviews_; ++v) {
-    vcl_vector<bmcsd_vector_3d> crv3d; 
+    std::vector<bmcsd_vector_3d> crv3d; 
 
     //: These indicate an 1-1 alignment between the selected curve in view[v0()] and the
     // selected curve in view[v1()]. Both these vectors have the same size, and
     // crv1_pt_id[i] corresponds to crv2_pt_id[i].
-    vcl_vector<unsigned> crv1_pt_id, crv2_pt_id;
+    std::vector<unsigned> crv1_pt_id, crv2_pt_id;
 
     // TODO crvi_pt_id and crv3d should be computed only once outside this loop.
     reconstruct_and_reproject(crv2_id, v /*view*/, reproj[v], crv3d, 
@@ -836,13 +836,13 @@ get_matching_subcurve(
   unsigned const selected_subcurve_size = end_idx-ini_idx+1;
   assert(ep(0).size() == selected_subcurve_size);
 
-  vcl_vector<bool> no_intersections(selected_subcurve_size, true);
+  std::vector<bool> no_intersections(selected_subcurve_size, true);
 
   {
-    vcl_list<becld_intersection_sets::intersection_nhood_>::const_iterator  itr;
+    std::list<becld_intersection_sets::intersection_nhood_>::const_iterator  itr;
 
     assert(crv_candidates_id(candidate_index) < isets().L_.size());
-    const vcl_list<becld_intersection_sets::intersection_nhood_> &ilist 
+    const std::list<becld_intersection_sets::intersection_nhood_> &ilist 
       = isets().L_[ crv_candidates_id(candidate_index) ].intercepts;  
 
     for (itr = ilist.begin(); itr != ilist.end(); ++itr) {
@@ -876,14 +876,14 @@ get_matching_subcurve(
 }
 
 void bmcsd_curve_stereo::
-get_candidate_intercepts(vcl_vector<vcl_vector<unsigned> > *cand_pt_id_ptr)
+get_candidate_intercepts(std::vector<std::vector<unsigned> > *cand_pt_id_ptr)
 {
-  vcl_vector<vcl_vector<unsigned> > &pts_id_cand = *cand_pt_id_ptr;
+  std::vector<std::vector<unsigned> > &pts_id_cand = *cand_pt_id_ptr;
 
   if (!num_candidates())
     return;
 
-  vcl_vector<vcl_vector<unsigned> > pts_id;
+  std::vector<std::vector<unsigned> > pts_id;
   isets().all_points(pts_id);
 
   pts_id_cand.resize(num_candidates());

@@ -5,19 +5,19 @@
 #include "bsold_geno.h"
 #include <bgld/algo/bgld_eulerspiral.h>
 #include <vnl/vnl_math.h>
-#include <vcl_cmath.h>
+#include <cmath>
 
 //: 2nd order GENO (Geometric Non-Oscillatory) Interpolation
 void bsold_geno::
-interpolate(bsold_geno_curve_2d *c, vcl_vector<vsol_point_2d_sptr> const &pts, bool closed) 
+interpolate(bsold_geno_curve_2d *c, std::vector<vsol_point_2d_sptr> const &pts, bool closed) 
 {
    if (pts.size() <= 2){
-      vcl_cerr << "geno interpolation currently needs at least 2 points";
+      std::cerr << "geno interpolation currently needs at least 2 points";
       return;
    }
 
    if (!closed) {
-      vcl_vector<bgld_param_curve *> ints(pts.size()-1);
+      std::vector<bgld_param_curve *> ints(pts.size()-1);
       unsigned i;
       bool fwd;
 
@@ -40,7 +40,7 @@ interpolate(bsold_geno_curve_2d *c, vcl_vector<vsol_point_2d_sptr> const &pts, b
       c->make(ints,closed);
    } else {
 
-      vcl_vector<bgld_param_curve *> ints(pts.size());
+      std::vector<bgld_param_curve *> ints(pts.size());
       unsigned i;
       bool fwd;
 
@@ -84,13 +84,13 @@ interpolate(bsold_geno_curve_2d *c, vcl_vector<vsol_point_2d_sptr> const &pts, b
 //
 // TODO: should call interpolate3_from_tangents, to avoid repetition of code
 void bsold_geno::
-interpolate3_approx(bsold_geno_curve_2d *c, vcl_vector<vsol_point_2d_sptr> const &pts, bool closed) 
+interpolate3_approx(bsold_geno_curve_2d *c, std::vector<vsol_point_2d_sptr> const &pts, bool closed) 
 {
   if (pts.size() <= 2){
-     vcl_cerr << "interpolation needs least 2 points\n";
+     std::cerr << "interpolation needs least 2 points\n";
      return;
   } if (closed) {
-     vcl_cerr << "closed curves not yet supported\n";
+     std::cerr << "closed curves not yet supported\n";
      return;
   }
 
@@ -101,8 +101,8 @@ interpolate3_approx(bsold_geno_curve_2d *c, vcl_vector<vsol_point_2d_sptr> const
   bsold_geno_curve_2d arc_geno;
   interpolate(&arc_geno,pts,closed);
 
-  vcl_vector<double> tangents(pts.size());
-  vcl_vector<bool> tangent_reliable(pts.size(),true);
+  std::vector<double> tangents(pts.size());
+  std::vector<bool> tangent_reliable(pts.size(),true);
 
   // --- TANGENTS ---
   tangents[0] = arc_geno[0].tangent_angle_at(0);
@@ -114,28 +114,28 @@ interpolate3_approx(bsold_geno_curve_2d *c, vcl_vector<vsol_point_2d_sptr> const
 
     mid = (angle0 + angle1)/2;
     
-    if (vcl_fabs(angle1 - angle0) > vnl_math::pi) {
+    if (std::fabs(angle1 - angle0) > vnl_math::pi) {
       mid = mid + vnl_math::pi;
-      delta = 2*vnl_math::pi - vcl_fabs(angle1 - angle0);
+      delta = 2*vnl_math::pi - std::fabs(angle1 - angle0);
     } else
-      delta = vcl_fabs(angle1 - angle0);
+      delta = std::fabs(angle1 - angle0);
 
     if (delta > delta_angle_threshold)
       tangent_reliable[i] = false;
       
-    tangents[i] = vcl_fmod(mid,2*vnl_math::pi);
+    tangents[i] = std::fmod(mid,2*vnl_math::pi);
   }
 
   tangents[i] = arc_geno[i-1].tangent_angle_at(1);
 
   /* 
-  vcl_ofstream f_points, f_tangents;
+  std::ofstream f_points, f_tangents;
 
   f_points.open("/tmp/points.dat");
   f_tangents.open("/tmp/tangents.dat");
   for (i=0; i<pts.size(); ++i) {
-     f_points << pts[i]->x() << " " << pts[i]->y() << vcl_endl;
-     f_tangents << tangents[i] << vcl_endl;
+     f_points << pts[i]->x() << " " << pts[i]->y() << std::endl;
+     f_tangents << tangents[i] << std::endl;
   }
   f_points.close();
   f_tangents.close();
@@ -143,7 +143,7 @@ interpolate3_approx(bsold_geno_curve_2d *c, vcl_vector<vsol_point_2d_sptr> const
 
   // --- INTERPOLATION ---
 
-  vcl_vector<bgld_param_curve *> ints(pts.size()-1);
+  std::vector<bgld_param_curve *> ints(pts.size()-1);
 
   /*
   for (i=0; i<ints.size(); ++i) {
@@ -170,17 +170,17 @@ interpolate3_approx(bsold_geno_curve_2d *c, vcl_vector<vsol_point_2d_sptr> const
     ints[i] = new bgld_eulerspiral(pts[i]->get_p(),angle0,pts[i+1]->get_p(),angle1);
     /* Debugging code:
     if (i ==743 || i == 742 || i == 744) {
-      vcl_cout << "I: " << i << vcl_endl;
-      vcl_cout.precision(25);
-      vcl_cout << "angle0: " << angle0 << "   angle1: " << angle1 << vcl_endl;
-      vcl_cout << "ang_ints0: " << ints[i]->tangent_angle_at(0) << 
-               "    ang_ints1: " << ints[i]->tangent_angle_at(1) << vcl_endl;
+      std::cout << "I: " << i << std::endl;
+      std::cout.precision(25);
+      std::cout << "angle0: " << angle0 << "   angle1: " << angle1 << std::endl;
+      std::cout << "ang_ints0: " << ints[i]->tangent_angle_at(0) << 
+               "    ang_ints1: " << ints[i]->tangent_angle_at(1) << std::endl;
 
-      vcl_cout << "points:" << *(pts[i]) << " ; " << *(pts[i+1]) << vcl_endl;
-      vcl_cout << "Ints size: " << ints.size() << vcl_endl;
-      vcl_cout << "Kdot: " << (reinterpret_cast<bgld_eulerspiral*> (ints[i]))->gamma() << vcl_endl;
-      vcl_cout << "K_start: " << ints[i]->curvature_at(0) << "   K_end:" << ints[i]->curvature_at(1);
-      vcl_cout << "\n==========================\n\n\n" << vcl_endl;
+      std::cout << "points:" << *(pts[i]) << " ; " << *(pts[i+1]) << std::endl;
+      std::cout << "Ints size: " << ints.size() << std::endl;
+      std::cout << "Kdot: " << (reinterpret_cast<bgld_eulerspiral*> (ints[i]))->gamma() << std::endl;
+      std::cout << "K_start: " << ints[i]->curvature_at(0) << "   K_end:" << ints[i]->curvature_at(1);
+      std::cout << "\n==========================\n\n\n" << std::endl;
     }
     */
   }
@@ -202,15 +202,15 @@ interpolate3_approx(bsold_geno_curve_2d *c, vcl_vector<vsol_point_2d_sptr> const
 void bsold_geno::
 interpolate3_from_tangents(
     bsold_geno_curve_2d *c, 
-    vcl_vector<vsol_point_2d_sptr> const &pts, 
-    vcl_vector<double> const &tangent_angles,
+    std::vector<vsol_point_2d_sptr> const &pts, 
+    std::vector<double> const &tangent_angles,
     bool closed) 
 {
   if (pts.size() <= 2){
-     vcl_cerr << "interpolation needs least 2 points\n";
+     std::cerr << "interpolation needs least 2 points\n";
      return;
   } if (closed) {
-     vcl_cerr << "closed curves not yet supported\n";
+     std::cerr << "closed curves not yet supported\n";
      return;
   }
 
@@ -218,7 +218,7 @@ interpolate3_from_tangents(
 
   // --- INTERPOLATION ---
 
-  vcl_vector<bgld_param_curve *> ints(pts.size()-1);
+  std::vector<bgld_param_curve *> ints(pts.size()-1);
 
   for (i=0; i<ints.size(); ++i) {
     double angle0, angle1;

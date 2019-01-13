@@ -15,7 +15,7 @@ sdetd_sel_storage::version() const
 sdet_edgel_chain_list&
 sdetd_sel_storage::all_groups_frags()
 {
-  vcl_list<sdet_edgel_chain_list>::iterator l_it = c_groups_.begin();
+  std::list<sdet_edgel_chain_list>::iterator l_it = c_groups_.begin();
   
   for(; l_it != c_groups_.end(); l_it++)
   {

@@ -7,19 +7,19 @@
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_point_3d.h>
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_algorithm.h>
-#include <vcl_cassert.h>
+#include <iostream>
+#include <fstream>
+#include <algorithm>
+#include <cassert>
 
 //: Constructor
 vcpld_distmap_bundle_adj_lsqr::
 vcpld_distmap_bundle_adj_lsqr(
-  const vcl_vector<vpgl_calibration_matrix<double> > &K,
-  const vcl_vector<vil_image_view<vxl_uint_32> > &dt,
-  const vcl_vector<vil_image_view<unsigned> > &label,
-  const vcl_vector<sdet_edgemap_sptr> &em,
-  const vcl_vector<vcl_vector<bool> > &mask
+  const std::vector<vpgl_calibration_matrix<double> > &K,
+  const std::vector<vil_image_view<vxl_uint_32> > &dt,
+  const std::vector<vil_image_view<unsigned> > &label,
+  const std::vector<sdet_edgemap_sptr> &em,
+  const std::vector<std::vector<bool> > &mask
   )
  : 
    // The base
@@ -124,18 +124,18 @@ vcpld_distmap_bundle_adjust::
 
 //: Bundle Adjust
 bool vcpld_distmap_bundle_adjust::
-optimize(vcl_vector<vpgl_perspective_camera<double> > &cameras,
-         vcl_vector< point_set > &world_objects,
-         const vcl_vector<vil_image_view<vxl_uint_32> > &dt,
-         const vcl_vector<vil_image_view<unsigned> > &label,
-         const vcl_vector<sdet_edgemap_sptr> &em,
-         const vcl_vector<vcl_vector<bool> > &mask)
+optimize(std::vector<vpgl_perspective_camera<double> > &cameras,
+         std::vector< point_set > &world_objects,
+         const std::vector<vil_image_view<vxl_uint_32> > &dt,
+         const std::vector<vil_image_view<unsigned> > &label,
+         const std::vector<sdet_edgemap_sptr> &em,
+         const std::vector<std::vector<bool> > &mask)
 {
   // Extract the camera and point parameters
-  vcl_vector<vpgl_calibration_matrix<double> > K;
+  std::vector<vpgl_calibration_matrix<double> > K;
   a_ = vcpld_distmap_bundle_adj_lsqr::create_param_vector(cameras);
 
-  vcl_vector< vgl_point_3d<double> > world_points;
+  std::vector< vgl_point_3d<double> > world_points;
 
   unsigned npts = 0;
   for (unsigned c=0; c < world_objects.size(); ++c) 
@@ -160,7 +160,7 @@ optimize(vcl_vector<vpgl_perspective_camera<double> > &cameras,
   lm.set_verbose(true);
   vnl_vector<double> c_dummy;
   if (!lm.minimize(a_,b_, c_dummy))
-    vcl_cerr << "Warning: bundle adjustment did not converge properly" << vcl_endl;
+    std::cerr << "Warning: bundle adjustment did not converge properly" << std::endl;
 
   start_error_ = lm.get_start_error();
   end_error_ = lm.get_end_error();

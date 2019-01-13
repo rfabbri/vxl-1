@@ -84,7 +84,7 @@ bild_image_region_stats_tool::handle( const vgui_event & e,
   
   if( e.type == vgui_KEY_PRESS && e.key == vgui_DELETE ){
     // remove the last sheet
-    vcl_vector<vgl_polygon<float>::sheet_t> old_sheets;
+    std::vector<vgl_polygon<float>::sheet_t> old_sheets;
     for (unsigned int s = 0; s < region_.num_sheets()-1; ++s)
       old_sheets.push_back(region_[s]);
     region_.clear();
@@ -156,6 +156,6 @@ bild_image_region_stats_tool::display_stats_bar() const
   mean /= (count>0)?count:1;
   var = var - (mean*mean)*count;
   var /= (count>1)?count-1:1;
-  vgui::out << "intensity: mean="<<mean<<" stdev="<<vcl_sqrt(var)<<'\n';
+  vgui::out << "intensity: mean="<<mean<<" stdev="<<std::sqrt(var)<<'\n';
 }
 

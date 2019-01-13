@@ -5,8 +5,8 @@
 
 #include <bprod/bprod_process.h>
 
-#include <vcl_cassert.h>
-#include <vcl_cstdlib.h>
+#include <cassert>
+#include <cstdlib>
 
 #include <bprod/bprod_parameters.h>
 #include <bprod/bprod_storage.h>
@@ -145,18 +145,18 @@ bprod_process::bprod_process()
 //: Destructor
 bprod_process::~bprod_process()
 {
-  typedef vcl_map<unsigned int, bprod_connector_sptr >::iterator Itr;
+  typedef std::map<unsigned int, bprod_connector_sptr >::iterator Itr;
   for(Itr i = input_connectors_.begin(); 
       i != input_connectors_.end(); ++i)
   {
     i->second->unlink();
   }
 
-  typedef vcl_map<unsigned int, vcl_set<bprod_observer_sptr> >::iterator OItr;
+  typedef std::map<unsigned int, std::set<bprod_observer_sptr> >::iterator OItr;
   for(OItr obs = output_observers_.begin(); 
       obs != output_observers_.end(); ++obs)
   {
-    for( vcl_set<bprod_observer_sptr>::iterator ob = obs->second.begin();
+    for( std::set<bprod_observer_sptr>::iterator ob = obs->second.begin();
          ob != obs->second.end();  ++ob )
       (*ob)->unlink();
   }
@@ -167,7 +167,7 @@ bprod_process::~bprod_process()
 void
 bprod_process::clear()
 {
-  typedef vcl_map<unsigned int, bprod_connector_sptr >::iterator Itr;
+  typedef std::map<unsigned int, bprod_connector_sptr >::iterator Itr;
   for(Itr i = input_connectors_.begin(); 
       i != input_connectors_.end(); ++i)
   {
@@ -203,17 +203,17 @@ bprod_process::request_inputs(unsigned long timestamp,
                               bprod_debug_observer* const debug)
 {
   if(this->input_request_active_){
-    vcl_cerr << "Warning detected cycle in data flow" <<vcl_endl;
+    std::cerr << "Warning detected cycle in data flow" <<std::endl;
     return BPROD_INVALID;
   }
   this->input_request_active_ = true;
   bprod_signal retval = BPROD_VALID;
-  typedef vcl_map<unsigned int, bprod_connector_sptr >::iterator Itr;
+  typedef std::map<unsigned int, bprod_connector_sptr >::iterator Itr;
 
 #if BPROD_HAS_PTHREADS
   // the threaded version
   // find the processes that need to be run
-  vcl_vector<pthread_data> pd;
+  std::vector<pthread_data> pd;
   for(Itr i = input_connectors_.begin(); 
       i != input_connectors_.end(); ++i)
   {
@@ -251,8 +251,8 @@ bprod_process::request_inputs(unsigned long timestamp,
       int rc = pthread_create(&pd[i].thread, NULL, pthread_launcher, (void*) &pd[i] );
       if(rc)
       {
-        vcl_cerr << "Error creating pthread, return code: "<<rc<<vcl_endl;
-        vcl_exit(-1);
+        std::cerr << "Error creating pthread, return code: "<<rc<<std::endl;
+        std::exit(-1);
       }
     }
     // join the threads
@@ -267,8 +267,8 @@ bprod_process::request_inputs(unsigned long timestamp,
       bprod_signal s = reinterpret_cast<bprod_signal&> (status);
       if(rc)
       {
-        vcl_cerr << "Error joining pthread, return code: "<<rc<<vcl_endl;
-        vcl_exit(-1);
+        std::cerr << "Error joining pthread, return code: "<<rc<<std::endl;
+        std::exit(-1);
       }
       if(s != BPROD_VALID)
         retval = s;
@@ -307,12 +307,12 @@ bprod_process::request_inputs_serial(unsigned long timestamp,
                               bprod_debug_observer* const debug)
 {
   if(this->input_request_active_){
-    vcl_cerr << "Warning detected cycle in data flow" <<vcl_endl;
+    std::cerr << "Warning detected cycle in data flow" <<std::endl;
     return BPROD_INVALID;
   }
   this->input_request_active_ = true;
   bprod_signal retval = BPROD_VALID;
-  typedef vcl_map<unsigned int, bprod_connector_sptr >::iterator Itr;
+  typedef std::map<unsigned int, bprod_connector_sptr >::iterator Itr;
 
   // the serial (non-threaded) version 
   for(Itr i = input_connectors_.begin(); i != input_connectors_.end(); ++i)
@@ -341,8 +341,8 @@ bprod_process::request_inputs_serial(unsigned long timestamp,
 bool
 bprod_process::notify_observers(bprod_signal message)
 {
-  typedef vcl_map<unsigned int, bprod_storage_sptr >::const_iterator DItr;
-  typedef vcl_map<unsigned int, vcl_set<bprod_observer_sptr> >::iterator OItr;
+  typedef std::map<unsigned int, bprod_storage_sptr >::const_iterator DItr;
+  typedef std::map<unsigned int, std::set<bprod_observer_sptr> >::iterator OItr;
   // Do not send the message BPROD_VALID unless the data is valid
   if(message == BPROD_VALID)
     message = BPROD_INVALID;
@@ -365,7 +365,7 @@ bprod_process::notify_observers(bprod_signal message)
       data = d->second;
 
     // notify all of the observers of this pin
-    for( vcl_set<bprod_observer_sptr>::iterator ob = obs->second.begin();
+    for( std::set<bprod_observer_sptr>::iterator ob = obs->second.begin();
          ob != obs->second.end();  ++ob )
       (*ob)->notify(data,this->timestamp_);
   }
@@ -379,7 +379,7 @@ void
 bprod_process::connect_input(unsigned int in_idx,
                              const bprod_process_sptr& source, unsigned int out_idx)
 {
-  typedef vcl_map<unsigned int, bprod_connector_sptr >::iterator Itr;
+  typedef std::map<unsigned int, bprod_connector_sptr >::iterator Itr;
   assert(source);
   bprod_connector_sptr connector;
   Itr result = input_connectors_.find(in_idx);
@@ -398,7 +398,7 @@ bprod_process::connect_input(unsigned int in_idx,
 void
 bprod_process::disconnect_input(unsigned int in_idx)
 {
-  typedef vcl_map<unsigned int, bprod_connector_sptr >::iterator Itr;
+  typedef std::map<unsigned int, bprod_connector_sptr >::iterator Itr;
   Itr result = input_connectors_.find(in_idx);
   if(result != input_connectors_.end()){
     result->second->unlink();
@@ -419,7 +419,7 @@ bprod_process::add_output_observer(unsigned int idx, const bprod_observer_sptr& 
 bool
 bprod_process::remove_output_observer(unsigned int idx, const bprod_observer_sptr& obs)
 {
-  typedef vcl_map<unsigned int, vcl_set<bprod_observer_sptr> >::iterator Itr;
+  typedef std::map<unsigned int, std::set<bprod_observer_sptr> >::iterator Itr;
   Itr result = output_observers_.find(idx);
   if(result == output_observers_.end())
     return false;
@@ -432,7 +432,7 @@ bprod_process::remove_output_observer(unsigned int idx, const bprod_observer_spt
 bprod_storage_sptr
 bprod_process::get_input(unsigned int idx) const
 {
-  typedef vcl_map<unsigned int, bprod_connector_sptr>::const_iterator Itr;
+  typedef std::map<unsigned int, bprod_connector_sptr>::const_iterator Itr;
   Itr result = input_connectors_.find(idx);
   if(result == input_connectors_.end() || !result->second)
     return NULL;
@@ -441,7 +441,7 @@ bprod_process::get_input(unsigned int idx) const
 
 
 //: Returns the typeinfo struct for the data type stored on the given pin
-const vcl_type_info&
+const std::type_info&
 bprod_process::input_type_id(unsigned int idx) const
 {
   bprod_storage_sptr ptr = get_input(idx);
@@ -465,7 +465,7 @@ bprod_process::set_output(unsigned int idx, const bprod_storage_sptr& data)
 unsigned int
 bprod_process::num_observers(unsigned int idx) const
 {
-  typedef vcl_map<unsigned int, vcl_set<bprod_observer_sptr> >::const_iterator Itr;
+  typedef std::map<unsigned int, std::set<bprod_observer_sptr> >::const_iterator Itr;
   Itr result = output_observers_.find(idx);
   if(result == output_observers_.end())
     return 0;
@@ -475,11 +475,11 @@ bprod_process::num_observers(unsigned int idx) const
 
 
 //: Returns the set of all pins that have observers
-vcl_set<unsigned int>
+std::set<unsigned int>
 bprod_process::observed_outputs() const
 {
-  vcl_set<unsigned int> observed;
-  typedef vcl_map<unsigned int, vcl_set<bprod_observer_sptr> >::const_iterator OItr;
+  std::set<unsigned int> observed;
+  typedef std::map<unsigned int, std::set<bprod_observer_sptr> >::const_iterator OItr;
   for(OItr obs = output_observers_.begin(); 
       obs != output_observers_.end(); ++obs)
     observed.insert(obs->first);

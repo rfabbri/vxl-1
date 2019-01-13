@@ -14,16 +14,16 @@
 //  Modifications:
 // \endverbatim
 
-#include <vcl_algorithm.h>
+#include <algorithm>
 
 inline double bnld_min3 (const double& a, const double& b, const double& c)
 {
-  return vcl_min (vcl_min(a,b), vcl_min(b,c));
+  return std::min (std::min(a,b), std::min(b,c));
 }
 
 inline double bnld_max3 (const double& a, const double& b, const double& c)
 {
-  return vcl_max (vcl_max(a,b), vcl_max(b,c));
+  return std::max (std::max(a,b), std::max(b,c));
 }
 
 inline int bnld_max3 (const int& a, const int& b, const int& c)

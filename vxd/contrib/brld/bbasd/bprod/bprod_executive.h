@@ -13,8 +13,8 @@
 // \endverbatim
 
 
-#include <vcl_map.h>
-#include <vcl_string.h>
+#include <map>
+#include <string>
 #include <bprod/bprod_process.h>
 
 
@@ -34,10 +34,10 @@ class bprod_executive
        bprod_process* operator->() { return exec.find(name).as_pointer(); }
        bprod_process* ptr() { return exec.find(name).as_pointer(); }
      private:
-       proxy(bprod_executive& e, const vcl_string& n)
+       proxy(bprod_executive& e, const std::string& n)
        : exec(e), name(n) {}
        bprod_executive& exec;
-       vcl_string name;
+       std::string name;
    };
 
    //: Constructor
@@ -47,10 +47,10 @@ class bprod_executive
    ~bprod_executive() { delete debug_; }
 
   //: Accessor for assignment
-  proxy operator[](const vcl_string& name) { return proxy(*this,name); }
+  proxy operator[](const std::string& name) { return proxy(*this,name); }
 
   //: Accessor for const access
-  bprod_process_sptr operator[](const vcl_string& name) const  { return find(name); }
+  bprod_process_sptr operator[](const std::string& name) const  { return find(name); }
 
   //: Initialize the process graph
   //: Call this after adding processes but before running
@@ -66,15 +66,15 @@ class bprod_executive
   void enable_debug();
   
   //: Lookup a process name by process pointer
-  vcl_string process_name(const bprod_process* const pro) const;
+  std::string process_name(const bprod_process* const pro) const;
 
  private:
   //: Find a process by name or return NULL
-  bprod_process_sptr find(const vcl_string& name) const;
+  bprod_process_sptr find(const std::string& name) const;
   //: Map from names to processes
-  vcl_map<vcl_string, bprod_process_sptr> pmap_;
+  std::map<std::string, bprod_process_sptr> pmap_;
   //: The set of sinks
-  vcl_set<bprod_process_sptr> sinks_;
+  std::set<bprod_process_sptr> sinks_;
 
   //: The current time
   mutable unsigned long time_;

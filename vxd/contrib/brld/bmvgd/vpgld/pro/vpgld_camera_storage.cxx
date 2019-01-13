@@ -68,7 +68,7 @@ vpgld_camera_storage::b_read(vsl_b_istream &is)
   {
     bpro1_storage::b_read(is);
     vsl_b_read(is, camera_);  
-      //    to use the new one, can try this, but assumes type vcl_string in
+      //    to use the new one, can try this, but assumes type std::string in
       //    file, which is not the case for the legacy I/O
 //    vpgl_camera<double> *basecam;
 //    vsl_b_read(is, basecam); // or vsl_b_read_vpgld
@@ -77,9 +77,9 @@ vpgld_camera_storage::b_read(vsl_b_istream &is)
   }
 
   default:
-    vcl_cerr << "I/O ERROR: vpgld_camera_storage::b_read(vsl_b_istream&)\n"
+    std::cerr << "I/O ERROR: vpgld_camera_storage::b_read(vsl_b_istream&)\n"
              << "           Unknown version number "<< ver << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }

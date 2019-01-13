@@ -6,7 +6,7 @@
 #include <vgui/vgui_projection_inspector.h>
 #include <vgui/vgui_style.h>
 #include <vgui/vgui_dialog.h>
-#include <vcl_sstream.h>
+#include <sstream>
 #include <vnl/vnl_random.h>
 #include <vil/algo/vil_colour_space.h>
 
@@ -29,7 +29,7 @@ bvis1_translate_tool::~bvis1_translate_tool()
 
 
 //: Return the name of this tool
-vcl_string
+std::string
 bvis1_translate_tool::name() const
 {
   return "Translate";
@@ -117,7 +117,7 @@ bvis1_style_tool::~bvis1_style_tool()
 
 
 //: Return the name of this tool
-vcl_string
+std::string
 bvis1_style_tool::name() const
 {
   return "Change Style";
@@ -148,7 +148,7 @@ bvis1_style_tool::handle( const vgui_event & e,
         return false;
 
       vgui_dialog style_dlg("Change Style");
-      static vcl_string color = "";
+      static std::string color = "";
       float point_size = style->point_size;
       float line_width = style->line_width;
       bool random_color=false;
@@ -164,12 +164,12 @@ bvis1_style_tool::handle( const vgui_event & e,
       if (!random_color) {
         style->point_size = point_size;
         style->line_width = line_width;
-        vcl_istringstream color_strm(color);
+        std::istringstream color_strm(color);
         color_strm >> style->rgba[0] >> style->rgba[1] >> style->rgba[2];
       } else {
         // Loop through all objects and display in random colors
 
-        vcl_vector< vgui_soview * > objs = tableau_->get_all();
+        std::vector< vgui_soview * > objs = tableau_->get_all();
 
         for (unsigned i=0; i < objs.size(); ++i) {
           double r;
@@ -217,7 +217,7 @@ bvis1_keyhole_tool::~bvis1_keyhole_tool()
 
 
 //: Return the name of this tool
-vcl_string
+std::string
 bvis1_keyhole_tool::name() const
 {
   return "KeyHole Tool";
@@ -259,8 +259,8 @@ bvis1_keyhole_tool::handle( const vgui_event & e,
     
     //glBegin(GL_POLYGON);
     //for( int i=0; i<=45; i++){
-    //  glVertex2f(x0-r + r*vcl_cos(2*3.14159*i/180.0), 
-    //             y0-r + r*vcl_sin(2*3.14159*i/180.0));
+    //  glVertex2f(x0-r + r*std::cos(2*3.14159*i/180.0), 
+    //             y0-r + r*std::sin(2*3.14159*i/180.0));
     //}
     //glVertex2f(x0, y0);
     //glVertex2f(x0-r, 1000);

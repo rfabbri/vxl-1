@@ -10,7 +10,7 @@
 
 #include <bpro1/bpro1_process.h>
 #include <bpro1/bpro1_parameters.h>
-#include <vcl_vector.h>
+#include <vector>
 
 
 //: This process loads bmcsd_discrete_corresp binary file into a storage class
@@ -23,12 +23,12 @@ public:
   //: Clone the process
   virtual bpro1_process* clone() const;
   
-  vcl_string name() {
+  std::string name() {
     return "Save correspondences";
   }
   
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
   
   int input_frames() {
     return 1;

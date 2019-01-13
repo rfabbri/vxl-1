@@ -1,7 +1,7 @@
 // This is bbasd/bnld/algo/pro/bnld_function_sampling_process.cxx
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <iostream>
+#include <fstream>
 
 #include <bnld/algo/pro/bnld_function_sampling_process.h>
 #include <bnld/algo/bnld_eno.h>
@@ -11,11 +11,11 @@
 #include <vsol/vsol_region_2d.h>
 #include <vsol/vsol_polygon_2d.h>
 #include <vnl/vnl_math.h>
-#include <vcl_functional.h>
+#include <functional>
 
 
 struct less_x : 
-   public vcl_binary_function< vsol_point_2d_sptr, vsol_point_2d_sptr, bool> 
+   public std::binary_function< vsol_point_2d_sptr, vsol_point_2d_sptr, bool> 
 {
    bool operator()(const vsol_point_2d_sptr &p1, const vsol_point_2d_sptr &p2) { return p1->x() < p2->x(); }
 };
@@ -27,7 +27,7 @@ bnld_function_sampling_process() : bpro1_process()
   if( !parameters()->add(  "Number of samples in new curve:" , "-size" , 90 ) ||
       !parameters()->add(  "Order of interpolation to create curve: (1:linear, 2:eno)" , "-type" , 2 ))
   {
-    vcl_cerr << 
+    std::cerr << 
        "ERROR: Adding parameters in bnld_function_sampling_process::bnld_function_sampling_process()\n";
   }
 }
@@ -39,17 +39,17 @@ clone() const
   return new bnld_function_sampling_process(*this);
 }
 
-vcl_vector< vcl_string > bnld_function_sampling_process::
+std::vector< std::string > bnld_function_sampling_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   return to_return;
 }
 
-vcl_vector< vcl_string > bnld_function_sampling_process::get_output_type()
+std::vector< std::string > bnld_function_sampling_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   return to_return;
 }
@@ -71,15 +71,15 @@ function_upsample(int new_size, int type)
   // get input storage class
   vidpro1_vsol2D_storage_sptr input_vsol;
   input_vsol.vertical_cast(input_data_[0][0]);
-  vcl_vector<vsol_point_2d_sptr> inp;
+  std::vector<vsol_point_2d_sptr> inp;
 
   //  We only accept a set of points defined by
   //
   
-  vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol->all_data();
+  std::vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol->all_data();
 
   if (vsol_list.size() == 0) {
-     vcl_cerr << "Empty storage\n";
+     std::cerr << "Empty storage\n";
      return false;
   }
 
@@ -94,28 +94,28 @@ function_upsample(int new_size, int type)
                inp.push_back(pt);
               } 
            } else {
-             vcl_cerr << "Storage not supported\n";
+             std::cerr << "Storage not supported\n";
              return false;
            }
          } else {
-              vcl_cerr << "Storage not supported\n";
+              std::cerr << "Storage not supported\n";
               return false;
          }
      }
    }
 
-  vcl_cout << "Original curve size: " << inp.size() << vcl_endl;
+  std::cout << "Original curve size: " << inp.size() << std::endl;
   
   // SORT
-  vcl_sort(inp.begin(),inp.end(),less_x());
+  std::sort(inp.begin(),inp.end(),less_x());
 
   if (type == 2) {
      if (inp.size() <= 3) {
-        vcl_cerr << "Need at least 4 pts\n";
+        std::cerr << "Need at least 4 pts\n";
         return false;
      }
   } else {
-     vcl_cerr << "Type not supported\n";
+     std::cerr << "Type not supported\n";
      return false;
   }
 
@@ -137,7 +137,7 @@ function_upsample(int new_size, int type)
 
   e.sample(new_size, f,x);
 
-  vcl_vector < vsol_point_2d_sptr> points;
+  std::vector < vsol_point_2d_sptr> points;
   points.resize(f.size());
 
   for (i=0; i<f.size(); ++i)
@@ -154,18 +154,18 @@ function_upsample(int new_size, int type)
      curve = gcurve;
   }
 
-  vcl_vector < vsol_point_2d_sptr> points;
+  std::vector < vsol_point_2d_sptr> points;
   bsold_curve_algs::sample(*curve, new_size, points);
   
   if (!points.size()) {
-       vcl_cout << "Problems in upsampling process!\n";
+       std::cout << "Problems in upsampling process!\n";
        return false;
   }
 
-  vcl_cout << "New curve size after upsampling: " << points.size() << vcl_endl;
+  std::cout << "New curve size after upsampling: " << points.size() << std::endl;
   */
   
-  vcl_vector< vsol_spatial_object_2d_sptr > contours;
+  std::vector< vsol_spatial_object_2d_sptr > contours;
   vsol_polyline_2d_sptr newContour = new vsol_polyline_2d (points);
   contours.push_back(newContour->cast_to_spatial_object());
 

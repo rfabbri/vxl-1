@@ -186,7 +186,7 @@ vsl_b_read(vsl_b_istream &is, bmrf_arc* &a)
 
 //: Print an ASCII summary of a bmrf_arc to the stream (NYI)
 void
-vsl_print_summary(vcl_ostream &os, const bmrf_arc* )
+vsl_print_summary(std::ostream &os, const bmrf_arc* )
 {
   os << "bmrf_arc{}";
 }

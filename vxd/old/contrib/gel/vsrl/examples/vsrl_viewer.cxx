@@ -9,7 +9,7 @@ int main(int argc, char** argv)
   vgui::init(argc, argv);
   vgui_menu menubar = vsrl_menus::get_menus();
   unsigned w=512, h=512;
-  vcl_string title = "Dense Matcher Test Program";
+  std::string title = "Dense Matcher Test Program";
   vgui_window* vwin = vgui::produce_window(w, h, menubar, title);
   vsrl_manager* vman = vsrl_manager::instance();
   vwin->get_adaptor()->set_tableau(vman);

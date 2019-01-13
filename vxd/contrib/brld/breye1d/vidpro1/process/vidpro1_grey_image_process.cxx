@@ -19,7 +19,7 @@ vidpro1_grey_image_process::vidpro1_grey_image_process()
   if( !parameters()->add( "Red Weight" ,   "-gs_red" ,   0.2125f ) ||
       !parameters()->add( "Green Weight" , "-gs_green" , 0.7154f ) ||
       !parameters()->add( "Blue Weight" ,  "-gs_blue" ,  0.0721f ) ) {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -39,7 +39,7 @@ vidpro1_grey_image_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 vidpro1_grey_image_process::name()
 {
   return "Convert to Grey";
@@ -47,18 +47,18 @@ vidpro1_grey_image_process::name()
 
 
 //: Return the number of input frame for this process
-vcl_vector< vcl_string > vidpro1_grey_image_process::get_input_type()
+std::vector< std::string > vidpro1_grey_image_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
 
 
 //: Return the name of this process
-vcl_vector< vcl_string > vidpro1_grey_image_process::get_output_type()
+std::vector< std::string > vidpro1_grey_image_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
@@ -86,7 +86,7 @@ vidpro1_grey_image_process::execute()
 {
   if ( input_data_.size() != 1 )
   {
-      vcl_cout << "In vidpro1_grey_image_process::execute() - not exactly one"
+      std::cout << "In vidpro1_grey_image_process::execute() - not exactly one"
                << " input image \n";
       return false;
   }

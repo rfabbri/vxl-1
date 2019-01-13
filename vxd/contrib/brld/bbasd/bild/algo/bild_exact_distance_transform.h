@@ -8,7 +8,7 @@
 // \date   Mar 16, 2005
 
 #include <vil/vil_image_view.h>
-#include <vcl_vector.h>
+#include <vector>
 
 //: Linear-time, 2D exact Euclidean distance transform (Maurer's Algorithm)
 //
@@ -73,7 +73,7 @@ bool bild_exact_distance_transform_saito(vil_image_view<vxl_uint_32> &im, unsign
 //
 // \relates vil_image_view
 bool bild_exact_distance_transform_saito(vil_image_view<vxl_uint_32> &im,
-                                        unsigned plane_idx, const vcl_vector<unsigned > &sq);
+                                        unsigned plane_idx, const std::vector<unsigned > &sq);
 
 //: Exact 3D EDT
 //

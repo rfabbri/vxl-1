@@ -44,7 +44,7 @@ public:
 
   // Setters and Getters ------------------------------------------------------
 
-  //: Sets the number of views to \p nviews. The vcl_vector frames_v provides
+  //: Sets the number of views to \p nviews. The std::vector frames_v provides
   // the index of each view into a larger set of frames
   // \return false in case of any error.
   // \todo Perhaps protected and called from e.g. set_cameras?
@@ -60,12 +60,12 @@ public:
   unsigned v1() const { return 1; }
 
   //: set the cameras for each view
-  void set_cams(const vcl_vector<bdifd_camera> &cams);
+  void set_cams(const std::vector<bdifd_camera> &cams);
   const bdifd_camera &cams(unsigned v) const { return cam_[v]; }
 
   //: set the curve fragments from a vector of curves for each view.
   // curves[v0()] and curves[v1()] are required. The others are optional.
-  void set_curves(const vcl_vector<vcl_vector< vsol_polyline_2d_sptr > > &curves);
+  void set_curves(const std::vector<std::vector< vsol_polyline_2d_sptr > > &curves);
 
   //: returns the curve fragments from a vector of curves for each view
   const vsol_polyline_2d_sptr &curves(unsigned iview, unsigned icurve) const
@@ -125,7 +125,7 @@ public:
   //: Epipolar lines of all subcurve's points in view[v0()] in all other views.
   // Index to vector designates other views; index 0 is 2nd view and index 1 is
   // 3rd view.
-  const vcl_vector<vgl_homg_line_2d<double> > &ep(unsigned v) const 
+  const std::vector<vgl_homg_line_2d<double> > &ep(unsigned v) const 
     { assert (v < nviews_-1); return ep_[v]; }
 
   //: Epipolar lines of all the selected curve in view[v1()] in all other views.
@@ -136,7 +136,7 @@ public:
     { assert (v < nviews_-2); return ep_ini_v1_[v]; }
   const vgl_homg_line_2d<double> &ep_v1_end(unsigned v) const 
     { assert (v < nviews_-2); return ep_end_v1_[v]; }
-  const vcl_vector<vgl_homg_line_2d<double> > &ep_v1(unsigned v) const 
+  const std::vector<vgl_homg_line_2d<double> > &ep_v1(unsigned v) const 
     { assert (v < nviews_-2);  return ep_v1_[v]; }
 
   //: Epipolars in view[v0()] coming from view[v1()]. Index indicates point.
@@ -179,15 +179,15 @@ public:
   //: \param[in] other_views[i] specify from which other view does pt_img[i+1]
   // come from.  It is assumed that pt_img[v0()] always comes from views[v0()].
   void linearly_reconstruct_pts(
-      const vcl_vector<vsol_point_2d_sptr> &pt_img,
-      const vcl_vector<unsigned> &other_views,
+      const std::vector<vsol_point_2d_sptr> &pt_img,
+      const std::vector<unsigned> &other_views,
       vgl_point_3d<double> *pt_3D) const;
 
   //: \param[in] views: views[i] specify from which other view does pt_img[i+1]
   // come from.  It is assumed that pt_img[v0()] always comes from views[v0()].
   void nonlinearly_optimize_reconstruction(
-      const vcl_vector<vsol_point_2d_sptr> &pt_img,
-      const vcl_vector<unsigned> &other_views,
+      const std::vector<vsol_point_2d_sptr> &pt_img,
+      const std::vector<unsigned> &other_views,
       const vgl_point_3d<double> &pt_3D_initial,
       vgl_point_3d<double> *pt_3D) const;
 
@@ -197,7 +197,7 @@ public:
   // \seealso caller + implementation
   //
   void get_reconstructions(
-      const vcl_vector<unsigned> &other_views, 
+      const std::vector<unsigned> &other_views, 
       unsigned ini_id, 
       unsigned di0, 
       bmcsd_vector_3d *pt_3D, 
@@ -220,8 +220,8 @@ public:
 
   void project_curve(
       unsigned view, 
-      const vcl_vector<bmcsd_vector_3d> &crv3d,
-      vcl_vector<vsol_point_2d_sptr> *proj
+      const std::vector<bmcsd_vector_3d> &crv3d,
+      std::vector<vsol_point_2d_sptr> *proj
       ) const;
 
   //: Reprojects the selected subcurve into all views[i] for i >= 2 by
@@ -231,7 +231,7 @@ public:
   //
   // \param[in] crv2_id: index into crv_candidates_ptrs_ of the candidate curve to consider
   void reproject_in_all_views(
-      unsigned crv2_id, vcl_vector< vcl_vector<vsol_point_2d_sptr> > *reproj);
+      unsigned crv2_id, std::vector< std::vector<vsol_point_2d_sptr> > *reproj);
 
   //:
   // \param[in] crv2_id: index into crv_candidates_ptrs_ of the candidate curve to consider
@@ -246,10 +246,10 @@ public:
   void reconstruct_and_reproject(
       unsigned crv2_id, 
       unsigned view, 
-      vcl_vector<vsol_point_2d_sptr> &reproj, 
-      vcl_vector<bmcsd_vector_3d> &crv3d, 
-      vcl_vector<unsigned> &crv1_pt_id,
-      vcl_vector<unsigned> &crv2_pt_id,
+      std::vector<vsol_point_2d_sptr> &reproj, 
+      std::vector<bmcsd_vector_3d> &crv3d, 
+      std::vector<unsigned> &crv1_pt_id,
+      std::vector<unsigned> &crv2_pt_id,
       bdifd_rig &rig) const;
 
   //: 
@@ -266,9 +266,9 @@ public:
   //
   void reconstruct_one_candidate(
       unsigned crv2_id, 
-      vcl_vector<bmcsd_vector_3d> &crv3d, 
-      const vcl_vector<unsigned> &crv1_pt_id,
-      const vcl_vector<unsigned> &crv2_pt_id,
+      std::vector<bmcsd_vector_3d> &crv3d, 
+      const std::vector<unsigned> &crv1_pt_id,
+      const std::vector<unsigned> &crv2_pt_id,
       bdifd_rig &rig) const;
 
   //:
@@ -283,8 +283,8 @@ public:
   // \todo rewrite 
   void define_match_for_reconstruction(
       unsigned crv2_id,
-      vcl_vector<unsigned> &crv1_pt_id,
-      vcl_vector<unsigned> &crv2_pt_id,
+      std::vector<unsigned> &crv1_pt_id,
+      std::vector<unsigned> &crv2_pt_id,
       bdifd_rig &rig) const;
 
   //: Reconstructs subcurve given by curve selected_crv_[v0()] and endpoints with
@@ -293,7 +293,7 @@ public:
   void reconstruct_subcurve(
       unsigned ini_id_sub, 
       unsigned end_id_sub, 
-      vcl_vector<bmcsd_vector_3d> *curve_3d) const;
+      std::vector<bmcsd_vector_3d> *curve_3d) const;
 
   //: Input:
   //   - a selected subcurve curve in view_[v0()] specified by the
@@ -321,19 +321,19 @@ public:
   // Other Methods ------------------------------------------------------------
 
   //: Break curves into epipolar segments that are not epipolar tangent to any
-  // epipolar line formed from view[v0()]. The vcl_vector \p broken_vsols is
+  // epipolar line formed from view[v0()]. The std::vector \p broken_vsols is
   // appropriately resized.
   //
   // \todo find a true multiview way of breaking the curves
   virtual void break_curves_into_episegs_pairwise(
-      vcl_vector<vcl_vector< vsol_polyline_2d_sptr > > *broken_vsols,
-      vcl_vector<bbld_subsequence_set> *ss_ptr) const;
+      std::vector<std::vector< vsol_polyline_2d_sptr > > *broken_vsols,
+      std::vector<bbld_subsequence_set> *ss_ptr) const;
 
   //: Stand-alone episeg breaker.
   // \see break_curves_into_episegs_pairwise
   static void break_curves_into_episegs(
-    const vcl_vector< vsol_polyline_2d_sptr >  &vsols,
-    vcl_vector<vsol_polyline_2d_sptr> *vsols2,
+    const std::vector< vsol_polyline_2d_sptr >  &vsols,
+    std::vector<vsol_polyline_2d_sptr> *vsols2,
     const vgl_homg_point_2d<double> &e,
     bbld_subsequence_set *ss_ptr);
 
@@ -345,7 +345,7 @@ public:
   // \param[out] curves_ss : Represents a subset of subcurves from the pool of
   // original curves. This allows us to go back to the original curves after
   // breaking them into episegs and/or after pruning them.
-  virtual void break_into_episegs_and_replace_curve(vcl_vector<bbld_subsequence_set> *curves_ss);
+  virtual void break_into_episegs_and_replace_curve(std::vector<bbld_subsequence_set> *curves_ss);
 
   //: Grow the selected curve in view[v0()] by advancing the endpoint once. 
   // \return NULL if the result would be out of bounds, o.w. the new endpoint.
@@ -399,7 +399,7 @@ public:
   //: gets the points of intersection of the epipolar lines of subcurve() and all the
   // candidate curve fragments. This assumes as candidates those curves that
   // have been found using \c compute_epipolar_beam_candidates.
-  void get_candidate_intercepts(vcl_vector<vcl_vector<unsigned> > *cand_pt_id_ptr);
+  void get_candidate_intercepts(std::vector<std::vector<unsigned> > *cand_pt_id_ptr);
 
 protected:
 
@@ -409,22 +409,22 @@ protected:
     { assert(ic < num_candidates()); return crv_candidates_id_[ic]; }
 
   //: fundamental matrices for each pair of views
-  vcl_vector<vcl_vector<vpgl_fundamental_matrix<double> > > fm_;
+  std::vector<std::vector<vpgl_fundamental_matrix<double> > > fm_;
 
   //: set of curves at each view. vsols_[v0()] and vsols_[v1()] are required.
   // The others are optional.
-  vcl_vector<vcl_vector< vsol_polyline_2d_sptr > > vsols_; 
+  std::vector<std::vector< vsol_polyline_2d_sptr > > vsols_; 
 
 private:
   //: cameras for each view
-  vcl_vector<bdifd_camera> cam_; 
+  std::vector<bdifd_camera> cam_; 
   unsigned nviews_;
 
   //: \see selected_crv() 
-  vcl_vector<vsol_polyline_2d_sptr> selected_crv_; 
+  std::vector<vsol_polyline_2d_sptr> selected_crv_; 
 
   //: \see selected_crv_id() 
-  vcl_vector<unsigned> selected_crv_id_; 
+  std::vector<unsigned> selected_crv_id_; 
 
   //: subcurve endpoints p0 and pn
   unsigned p0_id_;
@@ -434,32 +434,32 @@ private:
   vsol_polyline_2d_sptr subcurve_;
 
   //: \see ep_ini()
-  vcl_vector<vgl_homg_line_2d<double> > ep_ini_;
+  std::vector<vgl_homg_line_2d<double> > ep_ini_;
 
   //: \see ep_end()
-  vcl_vector<vgl_homg_line_2d<double> > ep_end_;
+  std::vector<vgl_homg_line_2d<double> > ep_end_;
 
   //: \see ep()
-  vcl_vector<vcl_vector<vgl_homg_line_2d<double> > > ep_; 
+  std::vector<std::vector<vgl_homg_line_2d<double> > > ep_; 
 
   //: Epipolar lines from view[v1()] to view[i] for i >= 2.
   // Index to vector designates other views; index 0 is 3rd view, index 1 is
   // 4rth view, and so forth.
-  vcl_vector<vgl_homg_line_2d<double> >  ep_ini_v1_;
-  vcl_vector<vgl_homg_line_2d<double> >  ep_end_v1_;
-  vcl_vector<vcl_vector<vgl_homg_line_2d<double> > > ep_v1_; 
+  std::vector<vgl_homg_line_2d<double> >  ep_ini_v1_;
+  std::vector<vgl_homg_line_2d<double> >  ep_end_v1_;
+  std::vector<std::vector<vgl_homg_line_2d<double> > > ep_v1_; 
 
   // \see ep_left()
-  vcl_vector<vgl_homg_line_2d<double> > ep_left_; 
+  std::vector<vgl_homg_line_2d<double> > ep_left_; 
 
   //: index into vsols_[i2] of candidate (whole) curves
-  vcl_vector<unsigned> crv_candidates_;
+  std::vector<unsigned> crv_candidates_;
 
   //: \see crv_candidates_id() 
-  vcl_vector<unsigned> crv_candidates_id_;  
+  std::vector<unsigned> crv_candidates_id_;  
 
   //: is the following really needed?
-  vcl_vector<vsol_polyline_2d_sptr> crv_candidates_ptrs_;
+  std::vector<vsol_polyline_2d_sptr> crv_candidates_ptrs_;
 
   //: a representation of the points of intersection of curves in view[v1()] with
   // the beam of epipolar lines of the selected subcurve of view[v0()].
@@ -477,7 +477,7 @@ private:
   //: used in get_index_of_curve
   mutable bool cached_curve_id_from_sptr_;
   //: used in get_index_of_curve
-  mutable vcl_map<vsol_polyline_2d_sptr, unsigned> curve_v0_id_from_sptr_;
+  mutable std::map<vsol_polyline_2d_sptr, unsigned> curve_v0_id_from_sptr_;
 };
 
 inline void bmcsd_curve_stereo::

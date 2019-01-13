@@ -40,7 +40,7 @@ public:
   virtual void b_write();
 
   //: nothing to write to the xml file --> just empty implementation to prevent abstract class instantiation error (error C2259)
-  virtual void write_xml(vcl_ostream& os);
+  virtual void write_xml(std::ostream& os);
   
   virtual borld_image_bbox_description* cast_to_image_bbox_description() { return 0; }
   virtual borld_image_mask_description* cast_to_image_mask_description() { return this; }

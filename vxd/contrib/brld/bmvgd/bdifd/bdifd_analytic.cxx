@@ -9,12 +9,12 @@ sphere_occluding_contour(
     double rho,
     const bdifd_vector_3d &s0,
     const bdifd_vector_3d &c,
-    vcl_vector<bdifd_vector_3d> &Gamma,
+    std::vector<bdifd_vector_3d> &Gamma,
     bdifd_vector_3d &Gamma_center,
     double &Gamma_radius
     )
 {
-  vcl_vector<bdifd_3rd_order_point_3d> crv3d;
+  std::vector<bdifd_3rd_order_point_3d> crv3d;
   sphere_occluding_contour(rho, s0, c, crv3d, Gamma_center, Gamma_radius);
   Gamma.resize(crv3d.size());
   for (unsigned i=0; i < crv3d.size(); ++i)
@@ -35,7 +35,7 @@ sphere_occluding_contour(
     double rho,
     const bdifd_vector_3d &s0,
     const bdifd_vector_3d &c,
-    vcl_vector<bdifd_3rd_order_point_3d> &crv3d,
+    std::vector<bdifd_3rd_order_point_3d> &crv3d,
     bdifd_vector_3d &Gamma_center,
     double &Gamma_radius
     )
@@ -48,16 +48,16 @@ sphere_occluding_contour(
   unsigned ntheta = 628;
   unsigned i_big;
 
-  if ( vcl_fabs(nn(0)) > vcl_fabs(nn(1)) ) {
+  if ( std::fabs(nn(0)) > std::fabs(nn(1)) ) {
     i_big = 0;
   } else 
     i_big = 1;
 
-  if ( vcl_fabs(nn(2)) > vcl_fabs(nn(i_big)) )
+  if ( std::fabs(nn(2)) > std::fabs(nn(i_big)) )
     i_big = 2;
 
   if (bdifd_util::near_zero(nn(i_big),tol)) {
-    vcl_cout << "Error: camera center too close to sphere center\n";
+    std::cout << "Error: camera center too close to sphere center\n";
   }
 
 
@@ -101,8 +101,8 @@ sphere_occluding_contour(
     double theta = k*dtheta;
     bdifd_vector_3d vrad;
 
-    double c = vcl_cos(theta);
-    double s = vcl_sin(theta);
+    double c = std::cos(theta);
+    double s = std::sin(theta);
 
     vrad = c*u + s*v;
 
@@ -120,8 +120,8 @@ sphere_occluding_contour(
 void bdifd_analytic::
 circle_curve(
     double radius,
-    vcl_vector<bdifd_3rd_order_point_3d> &C, 
-    vcl_vector<double> &t,
+    std::vector<bdifd_3rd_order_point_3d> &C, 
+    std::vector<double> &t,
     double t_initial, double step, double range
     )
 {
@@ -139,8 +139,8 @@ void bdifd_analytic::
 circle_curve(
     double radius,
     const bdifd_vector_3d &translation,
-    vcl_vector<bdifd_3rd_order_point_3d> &C, 
-    vcl_vector<double> &t,
+    std::vector<bdifd_3rd_order_point_3d> &C, 
+    std::vector<double> &t,
     double t_initial, double step, double range
     )
 {
@@ -183,7 +183,7 @@ circle_curve(
     C.resize(i);
     t.resize(i);
   } else if (i > t.size()) {
-    vcl_cerr << "Error: vector overflow happened in circle code\n";
+    std::cerr << "Error: vector overflow happened in circle code\n";
     abort();
   }
 
@@ -198,8 +198,8 @@ void bdifd_analytic::
 circle_curve(
     double radius,
     const bdifd_vector_2d &translation,
-    vcl_vector<bdifd_3rd_order_point_2d> &C, 
-    vcl_vector<double> &t,
+    std::vector<bdifd_3rd_order_point_2d> &C, 
+    std::vector<double> &t,
     double t_initial, double step, double range
     )
 {
@@ -238,7 +238,7 @@ circle_curve(
     C.resize(i);
     t.resize(i);
   } else if (i > t.size()) {
-    vcl_cerr << "Error: vector overflow happened in circle code\n";
+    std::cerr << "Error: vector overflow happened in circle code\n";
     abort();
   }
 
@@ -254,8 +254,8 @@ ellipse(
     double a,
     double b,
     const bdifd_vector_2d &translation,
-    vcl_vector<bdifd_3rd_order_point_2d> &C, 
-    vcl_vector<double> &t,
+    std::vector<bdifd_3rd_order_point_2d> &C, 
+    std::vector<double> &t,
     double t_initial, double step, double range
     )
 {
@@ -272,10 +272,10 @@ ellipse(
   for (i=0; theta<=range+t_initial && i < t.size(); theta+=step) {
      t[i] = (theta/180.0)*vnl_math::pi;
 
-     double cost = vcl_cos(t[i]);
-     double sint = vcl_sin(t[i]);
+     double cost = std::cos(t[i]);
+     double sint = std::sin(t[i]);
      double cost2 = cost*cost;
-     double g = vcl_sqrt(a2*sint*sint + b2*cost2);
+     double g = std::sqrt(a2*sint*sint + b2*cost2);
 
      bdifd_3rd_order_point_2d &frame = C[i];
 
@@ -294,7 +294,7 @@ ellipse(
 
      double denom = b2*cost2 + a2*(1.0 - cost2);
      double denom3 = denom*denom*denom;
-     double denom_1_5 = vcl_sqrt(denom3);
+     double denom_1_5 = std::sqrt(denom3);
      frame.k = ab/denom_1_5;
 
      frame.kdot = -3*ab*cost*sint*(a2 - b2);
@@ -310,7 +310,7 @@ ellipse(
     C.resize(i);
     t.resize(i);
   } else if (i > t.size()) {
-    vcl_cerr << "Error: vector overflow happened in circle code\n";
+    std::cerr << "Error: vector overflow happened in circle code\n";
     abort();
   }
 
@@ -321,13 +321,13 @@ ellipse(
     double a,
     double b,
     const bdifd_vector_3d &translation,
-    vcl_vector<bdifd_3rd_order_point_3d> &C, 
-    vcl_vector<double> &t,
+    std::vector<bdifd_3rd_order_point_3d> &C, 
+    std::vector<double> &t,
     double t_initial, double step, double range
     )
 {
   bdifd_vector_2d translation_2(0,0);
-  vcl_vector<bdifd_3rd_order_point_2d> c2d; 
+  std::vector<bdifd_3rd_order_point_2d> c2d; 
 
   ellipse(a, b, translation_2, c2d, t, t_initial, step, range);
   C.resize(c2d.size());
@@ -365,8 +365,8 @@ void bdifd_analytic::
 helix_curve(
     double radius, double alpha,
     bdifd_vector_3d &translation,
-    vcl_vector<bdifd_3rd_order_point_3d> &C, 
-    vcl_vector<double> &t,
+    std::vector<bdifd_3rd_order_point_3d> &C, 
+    std::vector<double> &t,
     double t_initial, double step, double range
     )
 {
@@ -412,7 +412,7 @@ helix_curve(
     C.resize(i);
     t.resize(i);
   } else if (i > t.size()) {
-    vcl_cerr << "Error: vector overflow happened in circle code\n";
+    std::cerr << "Error: vector overflow happened in circle code\n";
     abort();
   }
 }
@@ -427,8 +427,8 @@ void bdifd_analytic::
 space_curve1(
     double radius, 
     bdifd_vector_3d &translation,
-    vcl_vector<bdifd_3rd_order_point_3d> &C, 
-    vcl_vector<double> &t,
+    std::vector<bdifd_3rd_order_point_3d> &C, 
+    std::vector<double> &t,
     double t_initial, double step, double range
     )
 {
@@ -463,21 +463,21 @@ space_curve1(
 
      /* code from Maple: */
 
-     Frame.K = sqrt(0.48e2 * vcl_pow(vcl_cos(t[i]), 0.4e1) - 0.48e2 * vcl_pow(vcl_cos(t[i]), 0.2e1) + 0.17e2) * vcl_pow(0.16e2 * vcl_pow(vcl_cos(t[i]), 0.2e1) + 0.1e1 - 0.16e2 * vcl_pow(vcl_cos(t[i]), 0.4e1), -0.3e1 / 0.2e1) / radius;
+     Frame.K = sqrt(0.48e2 * std::pow(std::cos(t[i]), 0.4e1) - 0.48e2 * std::pow(std::cos(t[i]), 0.2e1) + 0.17e2) * std::pow(0.16e2 * std::pow(std::cos(t[i]), 0.2e1) + 0.1e1 - 0.16e2 * std::pow(std::cos(t[i]), 0.4e1), -0.3e1 / 0.2e1) / radius;
 
      bdifd_vector_3d Nrm;
 
-     Nrm[0] = -0.1e1 / Frame.K * (0.17e2 + 0.16e2 * vcl_pow(vcl_cos(t[i]), 0.4e1) - 0.32e2 * vcl_pow(vcl_cos(t[i]), 0.2e1)) * vcl_cos(t[i]) / radius / (0.224e3 * vcl_pow(vcl_cos(t[i]), 0.4e1) + 0.32e2 * vcl_pow(vcl_cos(t[i]), 0.2e1) - 0.512e3 * vcl_pow(vcl_cos(t[i]), 0.6e1) + 0.1e1 + 0.256e3 * vcl_pow(vcl_cos(t[i]), 0.8e1)); 
+     Nrm[0] = -0.1e1 / Frame.K * (0.17e2 + 0.16e2 * std::pow(std::cos(t[i]), 0.4e1) - 0.32e2 * std::pow(std::cos(t[i]), 0.2e1)) * std::cos(t[i]) / radius / (0.224e3 * std::pow(std::cos(t[i]), 0.4e1) + 0.32e2 * std::pow(std::cos(t[i]), 0.2e1) - 0.512e3 * std::pow(std::cos(t[i]), 0.6e1) + 0.1e1 + 0.256e3 * std::pow(std::cos(t[i]), 0.8e1)); 
 
-     Nrm[1] = -0.1e1 / Frame.K * vcl_sin(t[i]) * (0.16e2 * vcl_pow(vcl_cos(t[i]), 0.4e1) + 0.1e1) / radius / (0.224e3 * vcl_pow(vcl_cos(t[i]), 0.4e1) + 0.32e2 * vcl_pow(vcl_cos(t[i]), 0.2e1) - 0.512e3 * vcl_pow(vcl_cos(t[i]), 0.6e1) + 0.1e1 + 0.256e3 * vcl_pow(vcl_cos(t[i]), 0.8e1));
+     Nrm[1] = -0.1e1 / Frame.K * std::sin(t[i]) * (0.16e2 * std::pow(std::cos(t[i]), 0.4e1) + 0.1e1) / radius / (0.224e3 * std::pow(std::cos(t[i]), 0.4e1) + 0.32e2 * std::pow(std::cos(t[i]), 0.2e1) - 0.512e3 * std::pow(std::cos(t[i]), 0.6e1) + 0.1e1 + 0.256e3 * std::pow(std::cos(t[i]), 0.8e1));
 
-     Nrm[2] = -0.4e1 / Frame.K * (0.2e1 * vcl_pow(vcl_cos(t[i]), 0.2e1) - 0.1e1) / radius / (0.224e3 * vcl_pow(vcl_cos(t[i]), 0.4e1) + 0.32e2 * vcl_pow(vcl_cos(t[i]), 0.2e1) - 0.512e3 * vcl_pow(vcl_cos(t[i]), 0.6e1) + 0.1e1 + 0.256e3 * vcl_pow(vcl_cos(t[i]), 0.8e1));
+     Nrm[2] = -0.4e1 / Frame.K * (0.2e1 * std::pow(std::cos(t[i]), 0.2e1) - 0.1e1) / radius / (0.224e3 * std::pow(std::cos(t[i]), 0.4e1) + 0.32e2 * std::pow(std::cos(t[i]), 0.2e1) - 0.512e3 * std::pow(std::cos(t[i]), 0.6e1) + 0.1e1 + 0.256e3 * std::pow(std::cos(t[i]), 0.8e1));
 
      Frame.set_normal(Nrm);
 
-     Frame.Tau = 0.12e2 * vcl_cos(t[i]) * vcl_sin(t[i]) / (0.48e2 * vcl_pow(vcl_cos(t[i]), 0.4e1) - 0.48e2 * vcl_pow(vcl_cos(t[i]), 0.2e1) + 0.17e2) / radius;
+     Frame.Tau = 0.12e2 * std::cos(t[i]) * std::sin(t[i]) / (0.48e2 * std::pow(std::cos(t[i]), 0.4e1) - 0.48e2 * std::pow(std::cos(t[i]), 0.2e1) + 0.17e2) / radius;
 
-     Frame.Kdot = 0.96e2 * vcl_sin(t[i]) * vcl_cos(t[i]) * (-0.48e2 * vcl_pow(vcl_cos(t[i]), 0.4e1) + 0.34e2 * vcl_pow(vcl_cos(t[i]), 0.2e1) - 0.9e1 + 0.32e2 * vcl_pow(vcl_cos(t[i]), 0.6e1)) * vcl_pow(radius, -0.2e1) * vcl_pow(0.48e2 * vcl_pow(vcl_cos(t[i]), 0.4e1) - 0.48e2 * vcl_pow(vcl_cos(t[i]), 0.2e1) + 0.17e2, -0.1e1 / 0.2e1) / (-0.1e1 - 0.48e2 * vcl_pow(vcl_cos(t[i]), 0.2e1) - 0.720e3 * vcl_pow(vcl_cos(t[i]), 0.4e1) - 0.2560e4 * vcl_pow(vcl_cos(t[i]), 0.6e1) + 0.11520e5 * vcl_pow(vcl_cos(t[i]), 0.8e1) - 0.12288e5 * vcl_pow(vcl_cos(t[i]), 0.10e2) + 0.4096e4 * vcl_pow(vcl_cos(t[i]), 0.12e2));
+     Frame.Kdot = 0.96e2 * std::sin(t[i]) * std::cos(t[i]) * (-0.48e2 * std::pow(std::cos(t[i]), 0.4e1) + 0.34e2 * std::pow(std::cos(t[i]), 0.2e1) - 0.9e1 + 0.32e2 * std::pow(std::cos(t[i]), 0.6e1)) * std::pow(radius, -0.2e1) * std::pow(0.48e2 * std::pow(std::cos(t[i]), 0.4e1) - 0.48e2 * std::pow(std::cos(t[i]), 0.2e1) + 0.17e2, -0.1e1 / 0.2e1) / (-0.1e1 - 0.48e2 * std::pow(std::cos(t[i]), 0.2e1) - 0.720e3 * std::pow(std::cos(t[i]), 0.4e1) - 0.2560e4 * std::pow(std::cos(t[i]), 0.6e1) + 0.11520e5 * std::pow(std::cos(t[i]), 0.8e1) - 0.12288e5 * std::pow(std::cos(t[i]), 0.10e2) + 0.4096e4 * std::pow(std::cos(t[i]), 0.12e2));
 
   }
 
@@ -485,7 +485,7 @@ space_curve1(
     C.resize(i);
     t.resize(i);
   } else if (i > t.size()) {
-    vcl_cerr << "Error: vector overflow happened in circle code\n";
+    std::cerr << "Error: vector overflow happened in circle code\n";
     abort();
   }
 
@@ -496,8 +496,8 @@ void bdifd_analytic::
 line(
     bdifd_vector_3d &translation,
     bdifd_vector_3d &direction,
-    vcl_vector<bdifd_3rd_order_point_3d> &C, 
-    vcl_vector<double> &t,
+    std::vector<bdifd_3rd_order_point_3d> &C, 
+    std::vector<double> &t,
     double t_final, double step
     )
 {
@@ -535,7 +535,7 @@ line(
     C.resize(i);
     t.resize(i);
   } else if (i > t.size()) {
-    vcl_cerr << "Error: vector overflow happened in circle code\n";
+    std::cerr << "Error: vector overflow happened in circle code\n";
     abort();
   }
 }
@@ -552,8 +552,8 @@ d_sqr(double x1, double y1, double x2, double y2)
 // \return true if all points are bellow a distance of sqrt(2)
 bool bdifd_analytic::
 limit_distance(
-    const vcl_vector<bdifd_3rd_order_point_2d> &C, 
-    vcl_vector<bdifd_3rd_order_point_2d> &C_limited)
+    const std::vector<bdifd_3rd_order_point_2d> &C, 
+    std::vector<bdifd_3rd_order_point_2d> &C_limited)
 {
   bool retval=true;
   C_limited.reserve(C.size());
@@ -585,15 +585,15 @@ perturb( vgl_vector_2d<double> &t, double dt)
 {
   dt = myrand.drand64(-dt,dt);
 
-  double sint = vcl_sin(dt);
-  double cost = vcl_cos(dt);
+  double sint = std::sin(dt);
+  double cost = std::cos(dt);
   t.set( cost*t.x() -sint*t.y(), 
          sint*t.x() +cost*t.y() );
 }
 
 //: rotate all points around specified  axis, by angle theta equal to \|axis\|
 void bdifd_analytic::
-rotate( vcl_vector<bdifd_3rd_order_point_3d> &c, const bdifd_vector_3d &axis)
+rotate( std::vector<bdifd_3rd_order_point_3d> &c, const bdifd_vector_3d &axis)
 {
   vnl_matrix<double> R(3,3);
 
@@ -608,7 +608,7 @@ rotate( vcl_vector<bdifd_3rd_order_point_3d> &c, const bdifd_vector_3d &axis)
 }
 
 void bdifd_analytic::
-translate( vcl_vector<bdifd_3rd_order_point_3d> &c, const bdifd_vector_3d &transl)
+translate( std::vector<bdifd_3rd_order_point_3d> &c, const bdifd_vector_3d &transl)
 {
   for (unsigned  i=0; i < c.size(); ++i) {
     c[i].Gama = c[i].Gama + transl;

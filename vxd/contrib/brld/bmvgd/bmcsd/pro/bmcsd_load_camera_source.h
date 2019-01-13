@@ -33,7 +33,7 @@ public:
   // /lib/data/frame_0001.camera
   //
   // is used.
-  bmcsd_load_camera_source(vcl_string fname_prefix, bmcsd_util::camera_file_type type) 
+  bmcsd_load_camera_source(std::string fname_prefix, bmcsd_util::camera_file_type type) 
     : name_prefix_(fname_prefix), ftype_(type) {}
 
   //: Execute the process
@@ -48,7 +48,7 @@ public:
     return BPROD_VALID;
   }
 
-  vcl_string name_prefix_;
+  std::string name_prefix_;
   bmcsd_util::camera_file_type ftype_;
 };
 

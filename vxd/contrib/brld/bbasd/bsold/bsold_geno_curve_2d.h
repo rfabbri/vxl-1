@@ -9,7 +9,7 @@
 //
 
 #include <bsold/bsold_interp_curve_2d.h>
-#include <vcl_vector.h>
+#include <vector>
 
 
 
@@ -31,18 +31,18 @@ class bsold_geno_curve_2d : public bsold_interp_curve_2d {
      order_(2) //:< just a default order; the interpolator algo may change this
       { }
 
-   bsold_geno_curve_2d(vcl_vector<bgld_param_curve *> inter,bool closed) :
+   bsold_geno_curve_2d(std::vector<bgld_param_curve *> inter,bool closed) :
       bsold_interp_curve_2d(inter),
       closed_(closed),order_(2) { }
 
 
-   virtual void make(const vcl_vector<bgld_param_curve *> &inter, bool closed) 
+   virtual void make(const std::vector<bgld_param_curve *> &inter, bool closed) 
       { bsold_interp_curve_2d::make(inter); closed_=closed;}
 
    //: algorithms
    friend class bsold_geno;
 
-   virtual void describe(vcl_ostream &strm, int blanking) const;
+   virtual void describe(std::ostream &strm, int blanking) const;
 
    //: stencil(i) is an integer that indicates the relative location of the
    // i-th stencil. leftmost is numbered 0; rightmost is n (order of
@@ -76,7 +76,7 @@ class bsold_geno_curve_2d : public bsold_interp_curve_2d {
    //: stencil_[i] is an integer that indicates the relative location of the
    // i-th stencil. leftmost is numbered 0; rightmost is n (order of
    // interpolation) minus 1.
-   vcl_vector<unsigned> stencil_;
+   std::vector<unsigned> stencil_;
 
    //: simple utility to store whether a stencil is leftmost or rightmost
    void set_upper(unsigned i,bool up)

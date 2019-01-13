@@ -69,7 +69,7 @@ vsrl_point_picker::get_easy2D_pointer(vgui_tableau_sptr const& tab)
   vgui_easy2D_tableau_sptr e2d_ptr;
   if (tab)
     e2d_ptr.vertical_cast(vgui_find_below_by_type_name(tab,
-                          vcl_string("vgui_easy2D_tableau")));
+                          std::string("vgui_easy2D_tableau")));
   return e2d_ptr;
 }
 
@@ -79,7 +79,7 @@ vsrl_point_picker::get_image_tab_pointer(vgui_tableau_sptr const& tab)
   vgui_image_tableau_sptr img_tab_ptr;
   if (tab)
     img_tab_ptr.vertical_cast(vgui_find_below_by_type_name(tab,
-                              vcl_string("vgui_image_tableau")));
+                              std::string("vgui_image_tableau")));
   return img_tab_ptr;
 }
 
@@ -131,7 +131,7 @@ int vsrl_point_picker::get_value(float x, float y)
    case VIL1_UINT32: { vxl_uint_32 value=0;
     img.get_section(&value,int(x),int(y),1,1); return int(value); }
    default:
-    vcl_cerr << "vsrl_point_picker::get_value() not implemented for this pixel type\n";
+    std::cerr << "vsrl_point_picker::get_value() not implemented for this pixel type\n";
     return -1;
   }
 }

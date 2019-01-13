@@ -69,7 +69,7 @@ vil1_image vepl1_sobel(vil1_image const& image)
 
   //
   else {
-    vcl_cerr << __FILE__ ": vepl1_sobel() not implemented for " << image << vcl_endl;
+    std::cerr << __FILE__ ": vepl1_sobel() not implemented for " << image << std::endl;
     return 0;
   }
 }

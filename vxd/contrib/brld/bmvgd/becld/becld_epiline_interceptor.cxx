@@ -7,11 +7,11 @@
 void becld_epiline_interceptor_brute::
 points_intercepting_epipolar(
     const vgl_homg_line_2d<double> *ep_l,
-    const vcl_vector<vsol_point_2d_sptr> &p,
-    vcl_list<unsigned> &p_idx
+    const std::vector<vsol_point_2d_sptr> &p,
+    std::list<unsigned> &p_idx
     ) const
 {
-  vcl_vector<bool> indices; 
+  std::vector<bool> indices; 
 
   compute(ep_l,p, indices);
 
@@ -39,9 +39,9 @@ becld_epiline_interceptor_fast_using_angle(n_points, dist)
 void becld_epiline_interceptor_fast_using_angle::
 print() const
 {
-  vcl_cout << "==== becld_epiline_interceptor ====" << vcl_endl;
-  vcl_cout << "npts: " << npts _ << ", angles.size(): " << angles.size() << vcl_endl;
-  vcl_cout << "==============================" << vcl_endl;
+  std::cout << "==== becld_epiline_interceptor ====" << std::endl;
+  std::cout << "npts: " << npts _ << ", angles.size(): " << angles.size() << std::endl;
+  std::cout << "==============================" << std::endl;
 }
 */
 

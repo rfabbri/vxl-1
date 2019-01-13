@@ -15,7 +15,7 @@
 //   Amir Tamrakar 02/30/05    Initial version.
 // \endverbatim
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vbl/vbl_ref_count.h>
 #include <vbl/vbl_smart_ptr.h>
 
@@ -56,7 +56,7 @@ protected:
   V_sptr shared_vertex(const bgrld_edge<V >& other) const;
 
   //: Print an ascii summary to the stream
-  virtual void print_summary(vcl_ostream &os) const;
+  virtual void print_summary(std::ostream &os) const;
 
  protected:
 

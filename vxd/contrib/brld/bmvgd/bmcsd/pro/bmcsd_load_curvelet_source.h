@@ -20,13 +20,13 @@
 //: Reads .cvlet files into curvelet maps
 class bmcsd_load_curvelet_source : public bprod_source {
 public:
-  bmcsd_load_curvelet_source(vcl_string fname)
+  bmcsd_load_curvelet_source(std::string fname)
     : fname_(fname)
       {}
 
   bprod_signal execute() {
 #ifndef NDEBUG
-    vcl_cout << "Started curvelet loading.\n";
+    std::cout << "Started curvelet loading.\n";
 #endif
     sdet_edgemap_sptr edge_map;
 
@@ -40,13 +40,13 @@ public:
 
     output(0, output_sel);
 #ifndef NDEBUG
-    vcl_cout << "Finished curvelet loading.\n";
+    std::cout << "Finished curvelet loading.\n";
 #endif
     return BPROD_VALID;
   }
 
 private:
-  vcl_string fname_;
+  std::string fname_;
 };
 
 #endif // bmcsd_load_curvelet_source_h

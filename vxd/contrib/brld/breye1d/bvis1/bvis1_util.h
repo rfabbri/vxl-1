@@ -7,19 +7,19 @@
 //\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri.github.io)
 //\date 05/14/2008 03:19:50 AM EDT
 //
-#include <vcl_string.h>
-#include <vcl_iostream.h>
+#include <string>
+#include <iostream>
 #include <vector>
 
 struct bvis1_util {
 
   //: Removes prefixes such as file:// before the filename.
-  static void handle_file_name_prefix(vcl_string &file_name)
+  static void handle_file_name_prefix(std::string &file_name)
   {
     if (file_name.size() >= 7) {
-      vcl_string p(file_name);
-      vcl_cout << "Original file name: " << p << vcl_endl;
-      vcl_string file_prefix("file://");
+      std::string p(file_name);
+      std::cout << "Original file name: " << p << std::endl;
+      std::string file_prefix("file://");
     
       file_name.clear();
       bool has_prefix = true;
@@ -39,7 +39,7 @@ struct bvis1_util {
       } else 
         file_name = p;
     
-      vcl_cout << "Final file name: " << file_name << vcl_endl;
+      std::cout << "Final file name: " << file_name << std::endl;
     }
   }
 
@@ -48,7 +48,7 @@ struct bvis1_util {
   // kind can be used to populate the frames over and over
   // TODO: std::vector<std::string> parameter for names
   static void
-  load_imgs_into_frames(const vcl_vector<vcl_string> &imgs_fnames, bool use_filenames=false);
+  load_imgs_into_frames(const std::vector<std::string> &imgs_fnames, bool use_filenames=false);
 };
 
 

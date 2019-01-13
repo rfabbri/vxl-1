@@ -12,8 +12,8 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <bprod/bprod_process.h>
 #include <bprod/bprod_process_factory.h>
 
@@ -37,7 +37,7 @@ public:
     virtual bprod_process_sptr create(const bprod_parameters_sptr& params) const;
 
     //: The name of the process
-    virtual vcl_string name() const { return "Convert to Monotone"; }
+    virtual std::string name() const { return "Convert to Monotone"; }
 
     virtual ~factory() {}
   };

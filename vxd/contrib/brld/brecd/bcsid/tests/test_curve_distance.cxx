@@ -7,11 +7,11 @@
 
 void
 test_num_inliers(
-    const vcl_vector<double> &d_threshold, 
-    const vcl_vector<double> &dtheta_threshold, 
-    const vcl_vector<unsigned> &num_inliers, 
+    const std::vector<double> &d_threshold, 
+    const std::vector<double> &dtheta_threshold, 
+    const std::vector<unsigned> &num_inliers, 
     sdet_edgemap &em, 
-    const vcl_vector<sdet_edgel> &curve, 
+    const std::vector<sdet_edgel> &curve, 
     bool verbose)
 {
   assert(d_threshold.size() == num_inliers.size());
@@ -37,8 +37,8 @@ test_num_inliers(
 
   for (unsigned i=0; i < d_threshold.size(); ++i) {
     if (verbose) {
-      vcl_cout << "distance threshold " << d_threshold[i] << vcl_endl;
-      vcl_cout << "orientation difference threshold (deg) " << dtheta_threshold[i]*180./vnl_math::pi << vcl_endl;
+      std::cout << "distance threshold " << d_threshold[i] << std::endl;
+      std::cout << "orientation difference threshold (deg) " << dtheta_threshold[i]*180./vnl_math::pi << std::endl;
     }
 
     unsigned num_inliers_computed = 
@@ -49,8 +49,8 @@ test_num_inliers(
     TEST("Number inliers equals ground truth", num_inliers_computed, num_inliers[i]);
 
     if (verbose)
-      vcl_cout  << "num_inliers = " << num_inliers_computed 
-        << "  num_inliers ground truth = " << num_inliers[i] << vcl_endl << vcl_endl;
+      std::cout  << "num_inliers = " << num_inliers_computed 
+        << "  num_inliers ground truth = " << num_inliers[i] << std::endl << std::endl;
   }
 }
 
@@ -59,10 +59,10 @@ MAIN( test_curve_distance )
   START ("bcsid curve distance aggregation");
 
   { 
-  vcl_cout << "2x2 image with two features at different distances from the curve,\n";
-  vcl_cout << "but the nearest edgel has a very different orientation.\n";
+  std::cout << "2x2 image with two features at different distances from the curve,\n";
+  std::cout << "but the nearest edgel has a very different orientation.\n";
   // -- Data
-  vcl_vector<sdet_edgel *> edgels;
+  std::vector<sdet_edgel *> edgels;
 
   edgels.push_back(new sdet_edgel(vgl_point_2d<double>(0.,0.), vnl_math::pi/4.0));
   edgels.push_back(new sdet_edgel(vgl_point_2d<double>(0.,1.), 2*vnl_math::pi/3.0));
@@ -70,13 +70,13 @@ MAIN( test_curve_distance )
   unsigned r=2,c=2;
   sdet_edgemap em(c,r, edgels); // this destroys the newed edgels.
 
-  vcl_vector<sdet_edgel> curve;
+  std::vector<sdet_edgel> curve;
   curve.push_back(sdet_edgel(vgl_point_2d<double>(1,0), 3*vnl_math::pi/4));
   
   // -- Ground truth
-  vcl_vector <double> d_threshold;
-  vcl_vector <double> dtheta_threshold;
-  vcl_vector <unsigned> num_inliers;
+  std::vector <double> d_threshold;
+  std::vector <double> dtheta_threshold;
+  std::vector <unsigned> num_inliers;
 
   d_threshold.push_back(1.01); dtheta_threshold.push_back(vnl_math::pi/2.);
   num_inliers.push_back(0);
@@ -100,9 +100,9 @@ MAIN( test_curve_distance )
   }
 
   { 
-  vcl_cout << "2x2 image with two features at different distances from the curve\n";
+  std::cout << "2x2 image with two features at different distances from the curve\n";
   // -- Data
-  vcl_vector<sdet_edgel *> edgels;
+  std::vector<sdet_edgel *> edgels;
 
   edgels.push_back(new sdet_edgel(vgl_point_2d<double>(0.,0.), vnl_math::pi/4.0));
   edgels.push_back(new sdet_edgel(vgl_point_2d<double>(0.,1.), 2*vnl_math::pi/3.0));
@@ -110,13 +110,13 @@ MAIN( test_curve_distance )
   unsigned r=2,c=2;
   sdet_edgemap em(c,r, edgels); // this destroys the newed edgels.
 
-  vcl_vector<sdet_edgel> curve;
+  std::vector<sdet_edgel> curve;
   curve.push_back(sdet_edgel(vgl_point_2d<double>(1,0), 3*vnl_math::pi/4));
   
   // -- Ground truth
-  vcl_vector <double> d_threshold;
-  vcl_vector <double> dtheta_threshold;
-  vcl_vector <unsigned> num_inliers;
+  std::vector <double> d_threshold;
+  std::vector <double> dtheta_threshold;
+  std::vector <unsigned> num_inliers;
 
   d_threshold.push_back(1.01); dtheta_threshold.push_back(vnl_math::pi/2.);
   num_inliers.push_back(0);
@@ -140,10 +140,10 @@ MAIN( test_curve_distance )
   }
 
   { 
-  vcl_cout << "2x2 image with two equidistant features from the curve and with \n"
+  std::cout << "2x2 image with two equidistant features from the curve and with \n"
     << "similar orientations. One of them will count (but _which_ one is undefined).\n";
   // -- Data
-  vcl_vector<sdet_edgel *> edgels;
+  std::vector<sdet_edgel *> edgels;
 
   edgels.push_back(new sdet_edgel(vgl_point_2d<double>(0.,0.), 60.*vnl_math::pi/180.));
   edgels.push_back(new sdet_edgel(vgl_point_2d<double>(1.,1.), 30.*vnl_math::pi/180.));
@@ -151,13 +151,13 @@ MAIN( test_curve_distance )
   unsigned r=2,c=2;
   sdet_edgemap em(c,r, edgels); // this destroys the newed edgels.
 
-  vcl_vector<sdet_edgel> curve;
+  std::vector<sdet_edgel> curve;
   curve.push_back(sdet_edgel(vgl_point_2d<double>(1,0), vnl_math::pi/4));
   
   // -- Ground truth
-  vcl_vector <double> d_threshold;
-  vcl_vector <double> dtheta_threshold;
-  vcl_vector <unsigned> num_inliers;
+  std::vector <double> d_threshold;
+  std::vector <double> dtheta_threshold;
+  std::vector <unsigned> num_inliers;
 
   d_threshold.push_back(1.01); dtheta_threshold.push_back(vnl_math::pi/2.);
   num_inliers.push_back(1);
@@ -184,9 +184,9 @@ MAIN( test_curve_distance )
   }
 
   { 
-  vcl_cout << "4x5 image\n";
+  std::cout << "4x5 image\n";
   // -- Data
-  vcl_vector<sdet_edgel *> edgels;
+  std::vector<sdet_edgel *> edgels;
 
   edgels.push_back(new sdet_edgel(vgl_point_2d<double>(2.,1.4), 210.*vnl_math::pi/180.));
   edgels.push_back(new sdet_edgel(vgl_point_2d<double>(2.3,0.7), 70.*vnl_math::pi/180.));
@@ -197,7 +197,7 @@ MAIN( test_curve_distance )
   unsigned r=5, c=4;
   sdet_edgemap em(c,r, edgels); // this destroys the newed edgels.
 
-  vcl_vector<sdet_edgel> curve;
+  std::vector<sdet_edgel> curve;
   curve.push_back(sdet_edgel(vgl_point_2d<double>(3,0), 0.));
   curve.push_back(sdet_edgel(vgl_point_2d<double>(2,0), 0.01));
   curve.push_back(sdet_edgel(vgl_point_2d<double>(1,1), vnl_math::pi/3.0));
@@ -205,9 +205,9 @@ MAIN( test_curve_distance )
   curve.push_back(sdet_edgel(vgl_point_2d<double>(2.2,3.4), 160.*vnl_math::pi/180.0));
   
   // -- Ground truth
-  vcl_vector <double> d_threshold;
-  vcl_vector <double> dtheta_threshold;
-  vcl_vector <unsigned> num_inliers;
+  std::vector <double> d_threshold;
+  std::vector <double> dtheta_threshold;
+  std::vector <unsigned> num_inliers;
 
   // one would think that this would yield 4 inliers, but don't forget that we
   // don't count the same inlier edgel at bucket 2,1 twice.

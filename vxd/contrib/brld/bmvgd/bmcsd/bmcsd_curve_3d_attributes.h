@@ -28,7 +28,7 @@ public:
   bmcsd_stereo_views_sptr v_;
 
   //: the inlier views when available.
-  vcl_vector<unsigned> inlier_views_;
+  std::vector<unsigned> inlier_views_;
 
   //: the total support this curve received during matching.
   unsigned total_support_;
@@ -53,9 +53,9 @@ public:
   void b_write(vsl_b_ostream &os) const;
 
   //: Print an ascii summary to the stream
-  void print_summary(vcl_ostream &os) const;
+  void print_summary(std::ostream &os) const;
 
-  vcl_string is_a() const { return "bmcsd_curve_3d_attributes"; }
+  std::string is_a() const { return "bmcsd_curve_3d_attributes"; }
 private:
   unsigned i0_;
   unsigned i1_;
@@ -73,7 +73,7 @@ inline void vsl_b_read(vsl_b_istream &is,  bmcsd_curve_3d_attributes &p)
   p.b_read(is);
 }
 
-inline void vsl_print_summary(vcl_ostream &os, const bmcsd_curve_3d_attributes &p)
+inline void vsl_print_summary(std::ostream &os, const bmcsd_curve_3d_attributes &p)
 {
   p.print_summary(os);
 }

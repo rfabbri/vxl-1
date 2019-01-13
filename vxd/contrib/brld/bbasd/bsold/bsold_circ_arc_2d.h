@@ -26,8 +26,8 @@
 #include <vsol/vsol_line_2d_sptr.h>
 #include <bsold/bsold_circ_arc_2d_sptr.h>
 #include <vnl/vnl_double_3x3.h>
-#include <vcl_list.h>
-#include <vcl_iostream.h>
+#include <list>
+#include <iostream>
 
 class bsold_circ_arc_2d : public vsol_curve_2d, public bgld_circ_arc
 {
@@ -191,7 +191,7 @@ public:
 
 
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "bsold_circ_arc_2d"; }
+  virtual std::string is_a() const { return "bsold_circ_arc_2d"; }
 
 
 

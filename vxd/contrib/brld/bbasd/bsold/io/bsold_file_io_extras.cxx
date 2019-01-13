@@ -9,8 +9,8 @@
 
 #include "bsold_file_io_extras.h"
 
-#include <vcl_iostream.h>
-#include <vcl_cstring.h>
+#include <iostream>
+#include <cstring>
 #include <vsol/vsol_point_2d.h>
 #include <vsol/vsol_polygon_2d.h>
 #include <vsol/vsol_polyline_2d.h>
@@ -30,25 +30,25 @@
 // -----------------------------------------------------------------------------
 //: Write an image and a set of polygons to a ps file
 // TODO: we currently only handle polygons. Need to handle other types
-bool bsold_save_ps_file(const vcl_string& filename,
+bool bsold_save_ps_file(const std::string& filename,
                         const vil_image_resource_sptr& img, 
-                        const vcl_vector<vsol_spatial_object_2d_sptr >& vsol_data,
-                        const vcl_vector<vil_rgb<float > >& colors,
+                        const std::vector<vsol_spatial_object_2d_sptr >& vsol_data,
+                        const std::vector<vil_rgb<float > >& colors,
                         float line_width,
                         float point_size)
 {
-  vcl_cout << "Save to postscript file\n";
+  std::cout << "Save to postscript file\n";
 
   //1)If file open fails, return.
   vul_psfile psfile(filename.c_str(), false);
 
   if (!psfile){
-    vcl_cout << "  Error opening file  " << filename.c_str() << vcl_endl;
+    std::cout << "  Error opening file  " << filename.c_str() << std::endl;
     return false;
   }
 
   if (!(vsol_data.size() == colors.size())) {
-    vcl_cout << "  vsol_data vector is not the same size as color vector!!!\n";
+    std::cout << "  vsol_data vector is not the same size as color vector!!!\n";
     return false;
   }
 
@@ -61,7 +61,7 @@ bool bsold_save_ps_file(const vcl_string& filename,
   unsigned char *buf = new unsigned char[sizex*sizey*3];
   if (planes == 3) 
   {
-    vcl_cout << "  processing color image ...";
+    std::cout << "  processing color image ...";
     for (int x=0; x<sizex; ++x) 
     {
       for (int y=0; y<sizey; ++y) 
@@ -74,7 +74,7 @@ bool bsold_save_ps_file(const vcl_string& filename,
   } 
   else if (planes == 1) 
   {
-    vcl_cout << "  processing grey image ...";
+    std::cout << "  processing grey image ...";
     for (int x=0; x<sizex; ++x) 
     {
       for (int y=0; y<sizey; ++y) 
@@ -87,13 +87,13 @@ bool bsold_save_ps_file(const vcl_string& filename,
   }
   psfile.print_color_image(buf,sizex,sizey);
   delete [] buf;
-  vcl_cout << "done.\n";
+  std::cout << "done.\n";
 
 
   // write vsol objects
   // we can only handle several types of vsol objects
 
-  vcl_cout << "  Processing vsol2D objects ... ";
+  std::cout << "  Processing vsol2D objects ... ";
   psfile.set_scale_x(50);
   psfile.set_scale_y(50);
 
@@ -207,7 +207,7 @@ bool bsold_save_ps_file(const vcl_string& filename,
       }
     }
   }
-  vcl_cout << " done.\n";
+  std::cout << " done.\n";
 
   ////close file
   //psfile1.close();

@@ -42,7 +42,7 @@ public:
 
 protected:
 //   bgld_param_curve *next_, *prev_; //< not in original kwh's GENO
-   vcl_vector< vgl_point_2d<double> > loc_;
+   std::vector< vgl_point_2d<double> > loc_;
    /*
    double speed_;
    double direction_;

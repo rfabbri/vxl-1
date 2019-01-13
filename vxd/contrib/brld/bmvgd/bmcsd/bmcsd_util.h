@@ -13,16 +13,16 @@
 //
 #include <vsol/vsol_point_2d_sptr.h>
 #include <vsol/vsol_polyline_2d.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
-#include <vcl_algorithm.h>
+#include <vector>
+#include <string>
+#include <algorithm>
 
 #include <vil/vil_image_view.h>
 #include <bsold/algo/bsold_geno.h>
 
 // Header files that are generally needed, but not necessarily here:
 
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_vector_fixed.h>
@@ -50,40 +50,40 @@ extern int n4[4][2];
 static const double rad_to_degree_ratio = vnl_math::pi/180.0;
 
 bool load_con_file(
-      vcl_string filename, 
-      vcl_vector<vsol_point_2d_sptr> &points, 
+      std::string filename, 
+      std::vector<vsol_point_2d_sptr> &points, 
       bool *is_open);
 
-bool con_filenames(vcl_string image_fname,vcl_vector<vcl_string> &con_fnames);
+bool con_filenames(std::string image_fname,std::vector<std::string> &con_fnames);
 
-bool myread(vcl_string fname, vcl_vector<double> &pts);
-bool myreadv(vcl_string fname, vcl_vector<vsol_point_2d_sptr> &pts);
-bool myreadv(vcl_string fname, vcl_vector<vgl_point_3d<double> > &pts);
-bool myreadv(vcl_string fname, vcl_vector<bmcsd_vector_3d> &pts);
+bool myread(std::string fname, std::vector<double> &pts);
+bool myreadv(std::string fname, std::vector<vsol_point_2d_sptr> &pts);
+bool myreadv(std::string fname, std::vector<vgl_point_3d<double> > &pts);
+bool myreadv(std::string fname, std::vector<bmcsd_vector_3d> &pts);
 //: Reads 3D curves to many files whose prefix and extension are given.
 // The output files will be named like $prefix-3dcurve-$crv_id-{points|tangents}$ext.
-// the input vcl_vector is assumed to be already resized to the correct number
+// the input std::vector is assumed to be already resized to the correct number
 // of curves.
-bool myreadv(vcl_string prefix, vcl_string ext, vcl_vector<bdifd_1st_order_curve_3d> &crv_3d);
+bool myreadv(std::string prefix, std::string ext, std::vector<bdifd_1st_order_curve_3d> &crv_3d);
 
-bool mywrite(vcl_string fname, const vcl_vector<double> &v);
-bool mywrite_ascii(vcl_string fname, const vcl_vector<double> &v);
-bool mywritev(vcl_string fname, const vcl_vector<vsol_point_2d_sptr> &pts);
-bool mywritev(vcl_string fname, const vcl_vector<bmcsd_vector_3d> &crv_3d);
-bool mywritev(vcl_string fname, const vcl_vector<vgl_point_3d<double> > &crv_3d);
+bool mywrite(std::string fname, const std::vector<double> &v);
+bool mywrite_ascii(std::string fname, const std::vector<double> &v);
+bool mywritev(std::string fname, const std::vector<vsol_point_2d_sptr> &pts);
+bool mywritev(std::string fname, const std::vector<bmcsd_vector_3d> &crv_3d);
+bool mywritev(std::string fname, const std::vector<vgl_point_3d<double> > &crv_3d);
 //: Writes 3D curves to many files whose prefix and extension are given.
 // The output files will be named like $prefix-3dcurve-$crv_id-{points|tangents}$ext
-bool mywritev(vcl_string prefix, vcl_string ext, const vcl_vector<bdifd_1st_order_curve_3d> &crv_3d);
+bool mywritev(std::string prefix, std::string ext, const std::vector<bdifd_1st_order_curve_3d> &crv_3d);
 
-bool read_cam(vcl_string img_name1, vcl_string img_name2, 
+bool read_cam(std::string img_name1, std::string img_name2, 
       vpgl_perspective_camera <double> *P1out,
       vpgl_perspective_camera <double> *P2out);
-bool read_cam( vcl_string img_name1, 
+bool read_cam( std::string img_name1, 
       vpgl_perspective_camera <double> *P1out);
-bool read_3x4_matrix_into_cam( vcl_string img_name1, 
+bool read_3x4_matrix_into_cam( std::string img_name1, 
       vpgl_perspective_camera <double> *P1out);
 
-bool bmcsd_get_prefix(vcl_string img_name, vcl_string *dir, vcl_string *noext);
+bool bmcsd_get_prefix(std::string img_name, std::string *dir, std::string *noext);
 
 vgl_homg_point_2d<double> bmcsd_epipolar_point_transfer( 
       const vgl_homg_point_2d<double> &p1, 
@@ -106,7 +106,7 @@ get_normal_arc(const bsold_geno_curve_2d &c, unsigned i, double *normal_x, doubl
 
 inline vgl_homg_line_2d<double>
 bmcsd_normal_correspondence_line(
-  const vcl_vector<vsol_point_2d_sptr>  &con,
+  const std::vector<vsol_point_2d_sptr>  &con,
   unsigned k
     );
 
@@ -119,8 +119,8 @@ public:
 
   typedef enum {BMCS_INTRINSIC_EXTRINSIC, BMCS_3X4} camera_file_type;
 
-  static bool near_zero(double x) { return vcl_fabs(x) < bmcsd_tolerance; }
-  static bool near_zero(double x,double tol) { return vcl_fabs(x) < tol; }
+  static bool near_zero(double x) { return std::fabs(x) < bmcsd_tolerance; }
+  static bool near_zero(double x,double tol) { return std::fabs(x) < tol; }
 
   //: takes two angles and return the smallest angle between them in the range [0,2pi)
   static inline double angle_difference(double angle1, double angle2); 
@@ -132,17 +132,17 @@ public:
 
   static inline vnl_vector_fixed<double,3> vgl_to_vnl(const vgl_point_3d<double> &p);
 
-  //: convert from vsol polyline to vcl_vector of vsol points
-  static void get_vsol_point_vector(const vsol_polyline_2d &crv, vcl_vector<vsol_point_2d_sptr> *pts);
+  //: convert from vsol polyline to std::vector of vsol points
+  static void get_vsol_point_vector(const vsol_polyline_2d &crv, std::vector<vsol_point_2d_sptr> *pts);
 
   //: user must ensure vector is not empty
-  template <class T> static double max(const vcl_vector<T> &v, unsigned &idx);
+  template <class T> static double max(const std::vector<T> &v, unsigned &idx);
   //: user must ensure vector is not empty
-  static inline double min(const vcl_vector<double> &v, unsigned &idx);
+  static inline double min(const std::vector<double> &v, unsigned &idx);
   //: user must ensure vector is not empty
-  static inline double mean(const vcl_vector<double> &v);
+  static inline double mean(const std::vector<double> &v);
   //: user must ensure vector is not empty
-  static inline double median(const vcl_vector<double> &v);
+  static inline double median(const std::vector<double> &v);
 
   //: angle between two unit vectors
   static inline double angle_unit(const bmcsd_vector_3d &t1, const bmcsd_vector_3d &t2);
@@ -152,7 +152,7 @@ public:
   // there might be multiple connected components.
   static void clip_to_img_bounds(
       const vil_image_view<vxl_uint_32> &img,
-      vcl_vector<vsol_point_2d_sptr> *curve); 
+      std::vector<vsol_point_2d_sptr> *curve); 
 
   //: Returns only the points of the curve that fall within bounds of the image.
   // After this operation, ordering along the curve doesn't matter anymore as
@@ -163,7 +163,7 @@ public:
 
   //: \return true if all points of the curve are within bounds.
   static bool
-  in_img_bounds( const vcl_vector<vsol_point_2d_sptr> &curve, 
+  in_img_bounds( const std::vector<vsol_point_2d_sptr> &curve, 
       const vil_image_view<vxl_uint_32> &img);
 
   //: \return true if all points of the curve are within bounds.
@@ -205,37 +205,37 @@ public:
   find_nearest_pt_using_double(const vsol_point_2d_sptr &pt, const vsol_polyline_2d_sptr &crv, double &mindist);
 
   static void prune_curves(
-      unsigned min_num_samples, vcl_vector< vsol_polyline_2d_sptr > *pcurves,
+      unsigned min_num_samples, std::vector< vsol_polyline_2d_sptr > *pcurves,
       bbld_subsequence_set *ss);
 
   static void prune_curves_by_length(
-      double min_length, vcl_vector< vsol_polyline_2d_sptr > *pcurves,
+      double min_length, std::vector< vsol_polyline_2d_sptr > *pcurves,
       bbld_subsequence_set *ss);
 
-  //: parses a vcl_string of ther form "listname val1 val2 val3..." into a vcl_string
+  //: parses a std::string of ther form "listname val1 val2 val3..." into a std::string
   // with the listname, and a list of numbers of type T.
-  template <typename T> static void parse_num_list(const vcl_string &stringlist, vcl_vector<T> *values);
+  template <typename T> static void parse_num_list(const std::string &stringlist, std::vector<T> *values);
 
-  static bool read_cam_anytype(vcl_string fname, camera_file_type type, 
+  static bool read_cam_anytype(std::string fname, camera_file_type type, 
     vpgl_perspective_camera<double> *cam);
 
-  //: writes a vcl_vector of cameras out.
-  static bool write_cams(vcl_string dir, vcl_string fname_prefix, camera_file_type type, 
-    const vcl_vector<vpgl_perspective_camera<double> > &cam);
+  //: writes a std::vector of cameras out.
+  static bool write_cams(std::string dir, std::string fname_prefix, camera_file_type type, 
+    const std::vector<vpgl_perspective_camera<double> > &cam);
 
   //: variant that accepts a name for each camera; the extension will be
   // appended by this function depending on the camera type.
   static bool write_cams(
-      vcl_string dir, 
-      vcl_vector<vcl_string> cam_fname_noexts, 
+      std::string dir, 
+      std::vector<std::string> cam_fname_noexts, 
       camera_file_type type, 
-      const vcl_vector<vpgl_perspective_camera<double> > &cam);
+      const std::vector<vpgl_perspective_camera<double> > &cam);
 };
 
 //: smallest angle between two unit vectors
 inline double bmcsd_util::angle_unit(const bmcsd_vector_3d &t1, const bmcsd_vector_3d &t2)
 {
-  return vcl_acos(clump_to_acos(dot_product(t1,t2)));
+  return std::acos(clump_to_acos(dot_product(t1,t2)));
 }
 
 
@@ -243,17 +243,17 @@ inline double bmcsd_util::angle_unit(const bmcsd_vector_3d &t1, const bmcsd_vect
 //[0,2pi)
 inline double bmcsd_util::angle_difference(double angle1, double angle2) 
 { 
-   double dt_angle = vcl_fabs(angle1 - angle2);
+   double dt_angle = std::fabs(angle1 - angle2);
    return (dt_angle > vnl_math::pi)? (2*vnl_math::pi - dt_angle) : dt_angle;
 }
 
 //: user must ensure vector is not empty
-inline double bmcsd_util::median(const vcl_vector<double> &v)
+inline double bmcsd_util::median(const std::vector<double> &v)
 {
-  vcl_vector<double> v_sorted = v;
+  std::vector<double> v_sorted = v;
 
   // sort increasing
-  vcl_sort(v_sorted.begin(), v_sorted.end());
+  std::sort(v_sorted.begin(), v_sorted.end());
   
   unsigned median_idx = (v_sorted.size() - 1)/2;
   double median_val;
@@ -269,7 +269,7 @@ inline double bmcsd_util::median(const vcl_vector<double> &v)
 }
 
 //: user must ensure vector is not empty
-template <class T> double bmcsd_util::max(const vcl_vector<T> &v, unsigned &idx)
+template <class T> double bmcsd_util::max(const std::vector<T> &v, unsigned &idx)
 {
   idx = 0;
   T maxval = v[0];
@@ -283,7 +283,7 @@ template <class T> double bmcsd_util::max(const vcl_vector<T> &v, unsigned &idx)
 }
 
 //: user must ensure vector is not empty
-inline double bmcsd_util::mean(const vcl_vector<double> &v)
+inline double bmcsd_util::mean(const std::vector<double> &v)
 {
   double meanval = 0.0;
   for (unsigned i=0; i < v.size(); ++i) {
@@ -295,7 +295,7 @@ inline double bmcsd_util::mean(const vcl_vector<double> &v)
 }
 
 //: user must ensure vector is not empty
-inline double bmcsd_util::min(const vcl_vector<double> &v, unsigned &idx)
+inline double bmcsd_util::min(const std::vector<double> &v, unsigned &idx)
 {
   idx = 0;
   double minval = v[0];
@@ -311,7 +311,7 @@ inline double bmcsd_util::min(const vcl_vector<double> &v, unsigned &idx)
 inline double bmcsd_util::clump_to_acos(double x)
 { 
   if (x > 1.0 || x < -1.0) {
-    assert(vcl_fabs(vcl_fabs(x)-1) < 1e-5);
+    assert(std::fabs(std::fabs(x)-1) < 1e-5);
     if (x > 1.0)
       return 1.0;
     if (x < -1.0)
@@ -326,9 +326,9 @@ angle0To2Pi (double angle)
 {
   double a;
   if (angle>=2*vnl_math::pi)
-    a = vcl_fmod (angle,vnl_math::pi*2);
+    a = std::fmod (angle,vnl_math::pi*2);
   else if (angle < 0)
-    a = (2*vnl_math::pi+ vcl_fmod (angle,2*vnl_math::pi));
+    a = (2*vnl_math::pi+ std::fmod (angle,2*vnl_math::pi));
   else 
     a= angle;
 
@@ -348,7 +348,7 @@ angle0To2Pi (double angle)
 
 inline vgl_homg_line_2d<double>
 bmcsd_normal_correspondence_line(
-  const vcl_vector<vsol_point_2d_sptr>  &con,
+  const std::vector<vsol_point_2d_sptr>  &con,
   unsigned k
     )
 {

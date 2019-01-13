@@ -15,7 +15,7 @@ bprod_xio_source::bprod_xio_source()
 
 
 //: Constructor
-bprod_xio_source::bprod_xio_source(const vcl_string& filename)
+bprod_xio_source::bprod_xio_source(const std::string& filename)
   : is_(filename.c_str()), reader_(1)
 {
 }
@@ -29,7 +29,7 @@ bprod_xio_source::~bprod_xio_source()
 
 
 //: Open a new file
-bool bprod_xio_source::open(const vcl_string& filename)
+bool bprod_xio_source::open(const std::string& filename)
 {
   is_.close();
 

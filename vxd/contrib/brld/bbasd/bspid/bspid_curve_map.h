@@ -19,8 +19,8 @@
 //
 
 #include "bspid_chamfer.h"
-#include <vcl_utility.h>
-#include <vcl_vector.h>
+#include <utility>
+#include <vector>
 #include <vsol/vsol_digital_curve_2d_sptr.h>
 #include <vgl/vgl_point_2d.h>
 
@@ -31,24 +31,24 @@ class bspid_curve_map
 {
  public: 
    //: The element of data at each point of the map describing the nearest curve
-  class map_element: public vcl_pair<vsol_digital_curve_2d*,unsigned int>
+  class map_element: public std::pair<vsol_digital_curve_2d*,unsigned int>
   {
    public:
     //: Default Constructor
     map_element()
-      : vcl_pair<vsol_digital_curve_2d*,unsigned int>() {}
+      : std::pair<vsol_digital_curve_2d*,unsigned int>() {}
     //: Constructor
     map_element(vsol_digital_curve_2d* dc, unsigned int i)
-      : vcl_pair<vsol_digital_curve_2d*,unsigned int>(dc,i) {}
+      : std::pair<vsol_digital_curve_2d*,unsigned int>(dc,i) {}
     //: Convert to bool
     operator bool() const{ return (this->first != NULL) || (this->second != 0); }
   };
 
   //: Constructor 
-  bspid_curve_map(const vcl_vector<vsol_digital_curve_2d_sptr>& curves);
+  bspid_curve_map(const std::vector<vsol_digital_curve_2d_sptr>& curves);
   //: Constructor - specify the map size and offset
   // \note all curves must lie within the map array
-  bspid_curve_map(const vcl_vector<vsol_digital_curve_2d_sptr>& curves,
+  bspid_curve_map(const std::vector<vsol_digital_curve_2d_sptr>& curves,
                   unsigned int width, unsigned int height,
                   int x_offset=0, int y_offset=0);
   //: Destructor
@@ -77,14 +77,14 @@ class bspid_curve_map
  private:
   //: Make an array from these curves with dimensions width and height
   static vbl_array_2d<map_element> 
-    make_array_fixed(const vcl_vector<vsol_digital_curve_2d_sptr>& curves,
+    make_array_fixed(const std::vector<vsol_digital_curve_2d_sptr>& curves,
                      unsigned int width, unsigned int height,
                      int x_offset = 0, int y_offset = 0);
 
   //: Make an array from these curves and return the offsets by reference
   static vbl_array_2d<map_element> 
     make_array(int& x_offset, int& y_offset,
-               const vcl_vector<vsol_digital_curve_2d_sptr>& curves);
+               const std::vector<vsol_digital_curve_2d_sptr>& curves);
 
   //: Recursive helper function to fill in the gaps between sample points
   static void

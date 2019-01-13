@@ -22,22 +22,22 @@
 //-----------------------------------------------------------------------------
 #include <bsold/bsold_interp_curve_2d.h>
 #include <vsol/vsol_point_2d.h>
-#include <vcl_vector.h>
+#include <vector>
 
 class bsold_corner_finder {
 public:
   bsold_corner_finder(){};
   ~bsold_corner_finder(){};
   // pre-defined thresholds are used
-  void find_corners(bsold_interp_curve_2d *c, bool is_open, vcl_string out_angle_diffs="");
+  void find_corners(bsold_interp_curve_2d *c, bool is_open, std::string out_angle_diffs="");
   void find_corners(bsold_interp_curve_2d *c, bool is_open, 
                     int vicinity, double dist_step, double min_tan_turn, 
-                    vcl_string out_angle_diffs="");
+                    std::string out_angle_diffs="");
   // threshold are specified by user
 /*  void find_corners(bsold_interp_curve_2d *c, bool is_open,
                     int VICINITY, double DIST_STEP, double MIN_TAN_TURN,
-                    vcl_string out_angle_diffs="");*/
-  vcl_vector<int> *get_corner_indices() { return &_extrema; };
+                    std::string out_angle_diffs="");*/
+  std::vector<int> *get_corner_indices() { return &_extrema; };
 protected:
   void get_tangent_angles();
   void compute_average_tangent_angles();
@@ -46,10 +46,10 @@ protected:
 
   bsold_interp_curve_2d *curve_;
   bool is_open_;
-  vcl_vector<double> _tangent;
-  vcl_vector< vcl_pair<double, double> > _aveTangent;
-  vcl_vector<int> _extrema;
-  vcl_string out_angle_diffs_;
+  std::vector<double> _tangent;
+  std::vector< std::pair<double, double> > _aveTangent;
+  std::vector<int> _extrema;
+  std::string out_angle_diffs_;
 private:
   int VICINITY_;
   double DIST_STEP_;

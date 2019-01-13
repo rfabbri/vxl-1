@@ -9,8 +9,8 @@
 
 
 #include "bpro1_parameters.h"
-#include <vcl_utility.h>
-#include <vcl_iostream.h>
+#include <utility>
+#include <iostream>
 
 
 //: Set the current value to \p val
@@ -28,10 +28,10 @@ bpro1_param_type<T>::set_value( const T& val )
 
 //: Create a string representation of the value
 template<class T>
-vcl_string
+std::string
 bpro1_param_type<T>::create_string(const T& val) const
 {
-  vcl_stringstream stm;
+  std::stringstream stm;
   stm << val;
   return stm.str();
 }
@@ -40,10 +40,10 @@ bpro1_param_type<T>::create_string(const T& val) const
 //: Parse a string representation of the value
 template<class T>
 T
-bpro1_param_type<T>::parse_string(const vcl_string& input) const
+bpro1_param_type<T>::parse_string(const std::string& input) const
 {
   T val;
-  vcl_istringstream strm(input);
+  std::istringstream strm(input);
   strm >> val;
   return val;
 }

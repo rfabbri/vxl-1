@@ -9,12 +9,12 @@
 //
 
 #include <vbl/vbl_sparse_array_base.h>
-#include <vcl_set.h>
-#include <vcl_algorithm.h>
-#include <vcl_vector.h>
+#include <set>
+#include <algorithm>
+#include <vector>
 #include <bmcsd/bmcsd_discrete_corresp.h>
 
-typedef vcl_vector<unsigned> bmcsd_ntuplet;
+typedef std::vector<unsigned> bmcsd_ntuplet;
 
 //: A class for storing and querying n-view correspondences.
 //
@@ -22,7 +22,7 @@ typedef vcl_vector<unsigned> bmcsd_ntuplet;
 // specialization.
 class bmcsd_discrete_corresp_n {
 public:
-  bmcsd_discrete_corresp_n (const vcl_vector<unsigned> &npts);
+  bmcsd_discrete_corresp_n (const std::vector<unsigned> &npts);
   
   /* XXX work in progress...
   bmcsd_discrete_corresp_n (const bmcsd_discrete_corresp_3 &c3);
@@ -30,18 +30,18 @@ public:
 
   bmcsd_discrete_corresp_n() {}
 
-  void set_size(const vcl_vector<unsigned> &npts);
+  void set_size(const std::vector<unsigned> &npts);
 
   ~bmcsd_discrete_corresp_n() {}
 
-  const vcl_vector<unsigned> &n() const { return n_; }
+  const std::vector<unsigned> &n() const { return n_; }
 
   //: Hash/organize the finite-cost triplets for fast query. Drawback: uses more memory.
   // OBS: user has to rehash after insertions/removals are done.
   void hash() { abort();}
 
   //  void
-  //  participating_points(vcl_vector<bool> &p0s,vcl_vector<bool> &p1s,vcl_vector<bool> &p2s) const;
+  //  participating_points(std::vector<bool> &p0s,std::vector<bool> &p1s,std::vector<bool> &p2s) const;
 
   //  void 
   //  number_of_correct_triplets(
@@ -55,18 +55,18 @@ public:
 
   //: return all n-tuplets containing point "point_id" of image "img_id"
   //
-  //  TODO const vcl_set<bmcsd_ntuplets> &ntuplets(unsigned img_id, unsigned point_id) const
+  //  TODO const std::set<bmcsd_ntuplets> &ntuplets(unsigned img_id, unsigned point_id) const
   //    { assert(is_hashed()); return hash_[img_id][point_id]; }
 
   //: return all triplets containing point with id "p1" of image "img1" and
   // point id "p2" of image "img2"
-  //  void triplets(unsigned img1, unsigned p1, unsigned img2, unsigned p2, vcl_set<triplet_uuu> &t) const
+  //  void triplets(unsigned img1, unsigned p1, unsigned img2, unsigned p2, std::set<triplet_uuu> &t) const
   //    { 
   //      assert(is_hashed());
-  //      const vcl_set<triplet_uuu> &s1 = triplets(img1,p1);
-  //      const vcl_set<triplet_uuu> &s2 = triplets(img2,p2);
+  //      const std::set<triplet_uuu> &s1 = triplets(img1,p1);
+  //      const std::set<triplet_uuu> &s2 = triplets(img2,p2);
 
-  //      vcl_set_intersection(s1.begin(),s1.end(), s2.begin(), s2.end(), inserter(t, t.begin()));
+  //      std::set_intersection(s1.begin(),s1.end(), s2.begin(), s2.end(), inserter(t, t.begin()));
   //    }
 
   //  bmcsd_match_attribute & operator() (unsigned i, unsigned j, unsigned k)
@@ -80,7 +80,7 @@ public:
 
   // Functions to be moved to algo ----------------------------------------
 
-  vcl_list<bmcsd_attributed_point>::const_iterator 
+  std::list<bmcsd_attributed_point>::const_iterator 
   find_right_corresp_mincost(unsigned p1_idx, const bmcsd_discrete_corresp *gt) const;
 
   void 
@@ -114,7 +114,7 @@ public:
   short version() const;
 
   //: Return a platform independent string identifying the class
-  vcl_string is_a() const;
+  std::string is_a() const;
 
   /*
   void 
@@ -122,10 +122,10 @@ public:
   */
 
   //  friend class bmcsd_discrete_corresp_algo;
-  friend vcl_ostream&  operator<<(vcl_ostream& s, const bmcsd_discrete_corresp_n &c);
+  friend std::ostream&  operator<<(std::ostream& s, const bmcsd_discrete_corresp_n &c);
   
   //: Print an ascii summary to the stream
-  void print_summary(vcl_ostream &os) const;
+  void print_summary(std::ostream &os) const;
 
 public:
 
@@ -135,12 +135,12 @@ public:
   vbl_sparse_array_base<bmcsd_match_attribute, bmcsd_ntuplet> l_;
 
   //: n_[i] == number of points in view i
-  vcl_vector<unsigned> n_;
+  std::vector<unsigned> n_;
 
   //: hash_[0][i] == set of triplets (i,*,*)
   //  hash_[1][i] == set of triplets (*,i,*)
   //  hash_[2][i] == set of triplets (*,*,i)
-//  vcl_vector<vcl_vector<vcl_set<bmcsd_ntuplet> > > hash_;
+//  std::vector<std::vector<std::set<bmcsd_ntuplet> > > hash_;
 protected:
   static bool equal(
       const vbl_sparse_array_base<bmcsd_match_attribute, bmcsd_ntuplet> &l1, 
@@ -159,7 +159,7 @@ inline void vsl_b_read(vsl_b_istream &is, bmcsd_discrete_corresp_n & v)
   v.b_read(is);
 }
 
-inline vcl_ostream&  operator<<(vcl_ostream& s, const bmcsd_ntuplet &x)
+inline std::ostream&  operator<<(std::ostream& s, const bmcsd_ntuplet &x)
 {
   s << "(" ;
   for (unsigned i=0; i < x.size(); ++i) {

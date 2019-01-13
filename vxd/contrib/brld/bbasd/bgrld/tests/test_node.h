@@ -27,9 +27,9 @@ public:
   void set_id(int id){id_ = id;}
 
   //: Print an ascii summary to the stream
-  virtual void print_summary(vcl_ostream &os) const
+  virtual void print_summary(std::ostream &os) const
   {
-    os << id_ << ": [" << this->degree() << "]" << vcl_endl;
+    os << id_ << ": [" << this->degree() << "]" << std::endl;
   }
   
 };

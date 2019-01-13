@@ -18,7 +18,7 @@
 #include <bpro1/bpro1_parameters.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage_sptr.h>
-#include <vcl_vector.h>
+#include <vector>
 
 class bsold_curve_sampling_process : public bpro1_process
 {
@@ -26,15 +26,15 @@ public:
   bsold_curve_sampling_process();
   ~bsold_curve_sampling_process() {}
   
-  vcl_string name() {
+  std::string name() {
     return "Sample Curve";
   }
 
   //: Clone the process
   virtual bpro1_process* clone() const;
   
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
   
   int input_frames() {
     return 1;

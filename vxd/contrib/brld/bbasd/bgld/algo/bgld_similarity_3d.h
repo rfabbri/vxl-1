@@ -19,7 +19,7 @@
 #include <vnl/vnl_inverse.h>
 #include <vnl/vnl_cross.h>
 #include <vnl/vnl_trace.h>
-#include <vcl_cmath.h>
+#include <cmath>
 #include <vgl/vgl_fwd.h>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_vector_3d.h>
@@ -27,8 +27,8 @@
 #include <vgl/algo/vgl_rotation_3d.h>
 #include <vgl/algo/vgl_h_matrix_3d.h>
 #include <vgl/vgl_tolerance.h>
-#include <vcl_vector.h>
-#include <vcl_iostream.h>
+#include <vector>
+#include <iostream>
 
 template <class T>
 class bgld_similarity_3d
@@ -45,7 +45,7 @@ class bgld_similarity_3d
   
   //: Construct from scale, rotation, and translation
   bgld_similarity_3d( const vnl_vector_fixed<T,7>& la )
-  : s_(vcl_exp(la[0])), R_(la.extract(3,1))
+  : s_(std::exp(la[0])), R_(la.extract(3,1))
     {
       const double& ls = la[0];
       vnl_vector_fixed_ref_const<double,3> r(la.data_block()+1);
@@ -136,7 +136,7 @@ class bgld_similarity_3d
     {
       vnl_matrix_fixed<T,3,3> A;
 
-      double ls = vcl_log(s_);
+      double ls = std::log(s_);
       vnl_vector_fixed<double,3> r = R_.as_rodrigues();
       T mag = ls*ls + r.squared_magnitude();
       // Avoid divide by zero when no rotation and no scale
@@ -184,14 +184,14 @@ class bgld_similarity_3d
           return A;
         }
         double r2 = r.squared_magnitude();
-        double c2 = 1.0/r2 - 0.5*vcl_sqrt((1+trace)/((3-trace)*r2));
+        double c2 = 1.0/r2 - 0.5*std::sqrt((1+trace)/((3-trace)*r2));
         double w[] = {0, -r[2], r[1], r[2], 0, -r[0], -r[1], r[0], 0};
         vnl_matrix_fixed<T,3,3> wx(w);
         A = c2*wx*wx - 0.5*wx;
         A(0,0) += 1; A(1,1) += 1; A(2,2) += 1;
       }
       else{
-        double ls = vcl_log(s_);
+        double ls = std::log(s_);
         double s_2 = s_*s_;
         double s_3 = s_2*s_;
         vnl_matrix_fixed<T,3,3> R(R_.as_matrix());
@@ -216,7 +216,7 @@ class bgld_similarity_3d
       vnl_vector_fixed<T,3> r = R_.as_rodrigues();
       vnl_vector_fixed<T,3> t;
       t[0]=t_.x(); t[1]=t_.y(); t[2]=t_.z();
-      s[0] = vcl_log(s_);
+      s[0] = std::log(s_);
       s.update(r,1);
 
       vnl_quaternion<T> q(R_.as_quaternion());
@@ -230,10 +230,10 @@ class bgld_similarity_3d
         if(trace == T(3.0))
           s.update(t,4);
         else{
-          vcl_cout << "using s_==1.0 case" <<vcl_endl;
+          std::cout << "using s_==1.0 case" <<std::endl;
           vnl_vector_fixed<T,3> r_x_t(vnl_cross_3d(r,t));
           double r2 = r.squared_magnitude();
-          double c2 = 1.0/r2 - 0.5*vcl_sqrt((1+trace)/((3-trace)*r2));
+          double c2 = 1.0/r2 - 0.5*std::sqrt((1+trace)/((3-trace)*r2));
           vnl_vector_fixed<T,3> v(t-0.5*r_x_t + c2*vnl_cross_3d(r,r_x_t));
           //vnl_vector_fixed<T,3> v(t+vnl_cross_3d(r,t));
           //v = ( (R_.inverse()*v)*T(2) + (R_*v) - trace*v) - (R_.inverse()*t) +t;
@@ -382,7 +382,7 @@ class bgld_similarity_3d
 // ----------------------------------------------------------------
 
 template <class T>
-vcl_ostream& operator<<(vcl_ostream& s, bgld_similarity_3d<T> const& S)
+std::ostream& operator<<(std::ostream& s, bgld_similarity_3d<T> const& S)
 {
   return s << "[s:"<<S.scale()<<", R:"<< S.rotation()<<", t:"<<S.translation()<<"]";
 }

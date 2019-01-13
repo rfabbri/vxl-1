@@ -16,10 +16,10 @@
 
 
 #include <bprod/bprod_process.h>
-#include <vcl_vector.h>
-#include <vcl_iostream.h>
+#include <vector>
+#include <iostream>
 #include <vsl/vsl_binary_io.h>
-#include <vcl_memory.h>
+#include <memory>
 
 
 //=============================================================================
@@ -31,18 +31,18 @@
 class bprod_b_istream_source_base : public bprod_source
 {
   public:
-    bprod_b_istream_source_base(const vcl_string& filename) 
+    bprod_b_istream_source_base(const std::string& filename) 
     : is(new vsl_b_ifstream(filename)) {}
     
-    void open(const vcl_string& filename) 
-    { is = vcl_unique_ptr<vsl_b_istream>(new vsl_b_ifstream(filename)); }
+    void open(const std::string& filename) 
+    { is = std::unique_ptr<vsl_b_istream>(new vsl_b_ifstream(filename)); }
     
     //: Execute the process
     bprod_signal execute()
     {
       return BPROD_INVALID;
     }
-    vcl_unique_ptr<vsl_b_istream> is;
+    std::unique_ptr<vsl_b_istream> is;
 };
 
 
@@ -51,7 +51,7 @@ template <class T >
 class bprod_b_istream_source : public bprod_b_istream_source_base
 {
  public:
-  bprod_b_istream_source(const vcl_string& filename) 
+  bprod_b_istream_source(const std::string& filename) 
   : bprod_b_istream_source_base(filename) {}
 
   //: Execute the process
@@ -78,11 +78,11 @@ class bprod_b_istream_source : public bprod_b_istream_source_base
 class bprod_b_ostream_sink_base : public bprod_sink
   {
   public:
-    bprod_b_ostream_sink_base(const vcl_string& filename) 
+    bprod_b_ostream_sink_base(const std::string& filename) 
     : os(new vsl_b_ofstream(filename)) {}
     
-    void open(const vcl_string& filename) 
-    { os = vcl_unique_ptr<vsl_b_ostream>(new vsl_b_ofstream(filename)); }
+    void open(const std::string& filename) 
+    { os = std::unique_ptr<vsl_b_ostream>(new vsl_b_ofstream(filename)); }
     
     bool enabled() const { return (os.get() != NULL && os->os().good()); }
     
@@ -91,7 +91,7 @@ class bprod_b_ostream_sink_base : public bprod_sink
     {
       return BPROD_INVALID;
     }
-    vcl_unique_ptr<vsl_b_ostream> os;
+    std::unique_ptr<vsl_b_ostream> os;
   };
 
 
@@ -100,7 +100,7 @@ template <class T >
 class bprod_b_ostream_sink : public bprod_b_ostream_sink_base
   {
   public:
-    bprod_b_ostream_sink(const vcl_string& filename) 
+    bprod_b_ostream_sink(const std::string& filename) 
     : bprod_b_ostream_sink_base(filename) {}
     
     //: Execute the process

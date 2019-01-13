@@ -8,7 +8,7 @@
 //\date 08/29/2009 01:54:15 PM PDT
 //
 
-#include <vcl_string.h>
+#include <string>
 #include <bmcsd/bmcsd_util.h>
 
 //: Paths/URLs for the data of 1 frame
@@ -17,19 +17,19 @@
 class bmcsd_curve_stereo_frame_data_path {
 public:
 
-  vcl_string cam_full_path() const { return path_ + cam_fname_; }
-  vcl_string edg_full_path() const { return path_ + edg_fname_; }
-  vcl_string frag_full_path() const { return path_ + frag_fname_; }
-  vcl_string img_full_path() const { return path_ + img_fname_; }
-  vcl_string cvlet_full_path() const { return path_ + cvlet_fname_; }
+  std::string cam_full_path() const { return path_ + cam_fname_; }
+  std::string edg_full_path() const { return path_ + edg_fname_; }
+  std::string frag_full_path() const { return path_ + frag_fname_; }
+  std::string img_full_path() const { return path_ + img_fname_; }
+  std::string cvlet_full_path() const { return path_ + cvlet_fname_; }
   bmcsd_util::camera_file_type cam_file_type() const  {return cam_ftype_; }
 
-  vcl_string path_;
-  vcl_string img_fname_;
-  vcl_string cam_fname_;
-  vcl_string edg_fname_;
-  vcl_string frag_fname_;
-  vcl_string cvlet_fname_;
+  std::string path_;
+  std::string img_fname_;
+  std::string cam_fname_;
+  std::string edg_fname_;
+  std::string frag_fname_;
+  std::string cvlet_fname_;
   bmcsd_util::camera_file_type cam_ftype_;
 };
 
@@ -69,7 +69,7 @@ public:
   //    - an edgemap file <fnameprefix>*.edg
   //    - a curve fragment file <fnameprefix>*.vsl
   //
-  //bool populate_from_path(const vcl_string &path, const vcl_string &fnameprefix) {
+  //bool populate_from_path(const std::string &path, const std::string &fnameprefix) {
     //
     // edgels:
     //   ls $path/$fnameprefix*edg
@@ -92,34 +92,34 @@ public:
   //}
 
   //: Load dataset info from an xml file
-  // bool populate_from_xml_config(const vcl_string &config_fname);
+  // bool populate_from_xml_config(const std::string &config_fname);
 
 
-  bool set(const vcl_string &path, 
-      const vcl_vector<vcl_string> &img_fnames, 
-      const vcl_vector<vcl_string> &cam_fnames,
-      const vcl_vector<vcl_string> &edg_fnames,
-      const vcl_vector<vcl_string> &frag_fnames,
+  bool set(const std::string &path, 
+      const std::vector<std::string> &img_fnames, 
+      const std::vector<std::string> &cam_fnames,
+      const std::vector<std::string> &edg_fnames,
+      const std::vector<std::string> &frag_fnames,
       bmcsd_util::camera_file_type cam_ftype
       );
 
-  bool set_curvelets(const vcl_vector<vcl_string> &cvlet_fnames);
+  bool set_curvelets(const std::vector<std::string> &cvlet_fnames);
 
   bool has_curvelets() 
   { return !views_.empty() && !views_[0].cvlet_fname_.empty(); }
 
   // Data -------------
 private:
-  vcl_vector<bmcsd_curve_stereo_frame_data_path> views_;
+  std::vector<bmcsd_curve_stereo_frame_data_path> views_;
 };
 
 //: Write to stream
 // \relates bmcsd_curve_stereo_data_path 
-vcl_ostream&  operator<<(vcl_ostream& s, const bmcsd_curve_stereo_data_path& p);
+std::ostream&  operator<<(std::ostream& s, const bmcsd_curve_stereo_data_path& p);
 
 //: Write to stream
 // \relates bmcsd_curve_stereo_frame_data_path
-vcl_ostream&  operator<<(vcl_ostream& s, const bmcsd_curve_stereo_frame_data_path& p);
+std::ostream&  operator<<(std::ostream& s, const bmcsd_curve_stereo_frame_data_path& p);
 
 struct bmcsd_data {
   // Commmon datasets I use, hardcoded.
@@ -129,7 +129,7 @@ struct bmcsd_data {
   //: Reads from text file.  For the format, see
   // tests/mcs_stereo_instances_example.txt
   static bool read_frame_data_list_txt(
-      const vcl_string &path,
+      const std::string &path,
       bmcsd_curve_stereo_data_path *dataset,
       bmcsd_util::camera_file_type cam_type);
 };

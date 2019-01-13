@@ -21,21 +21,21 @@
 //
 // \endverbatim
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <sdet/sdet_edgemap_sptr.h>
 #include <vsol/vsol_spatial_object_2d_sptr.h>
 
 //: Loads an ascii file describing edgels.
 //\author Based on original code by  Amir Tamrakar
-bool sdetd_load_edg(vcl_string input_file, bool bSubPixel, bool blines, double scale,
-                    vcl_vector< vsol_spatial_object_2d_sptr > &edgels);
+bool sdetd_load_edg(std::string input_file, bool bSubPixel, bool blines, double scale,
+                    std::vector< vsol_spatial_object_2d_sptr > &edgels);
 
-bool sdetd_load_edg(vcl_string input_file, bool bSubPixel, double scale, sdet_edgemap_sptr &edge_map);
+bool sdetd_load_edg(std::string input_file, bool bSubPixel, double scale, sdet_edgemap_sptr &edge_map);
 
 //: Save an edgemap as a .edg file
 //\author Based on original code by  Amir Tamrakar
-bool sdetd_save_edg(vcl_string filename, sdet_edgemap_sptr edgemap);
+bool sdetd_save_edg(std::string filename, sdet_edgemap_sptr edgemap);
 
 #endif // sdetd_load_edg_h
 

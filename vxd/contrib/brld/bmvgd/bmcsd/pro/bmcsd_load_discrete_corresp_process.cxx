@@ -1,11 +1,11 @@
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <iostream>
+#include <fstream>
 
 #include "bmcsd_load_discrete_corresp_process.h"
 
-#include <vcl_cstring.h>
-#include <vcl_string.h>
-#include <vcl_fstream.h>
+#include <cstring>
+#include <string>
+#include <fstream>
 #include <bmcsd/pro/bmcsd_discrete_corresp_storage.h>
 #include <bmcsd/pro/bmcsd_discrete_corresp_storage_3.h>
 
@@ -18,7 +18,7 @@ bmcsd_load_discrete_corresp_process::bmcsd_load_discrete_corresp_process() : bpr
       !parameters()->add( "Trinocular correspondence?" , "-trinocular_ftype" , true)
       )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -30,15 +30,15 @@ bmcsd_load_discrete_corresp_process::clone() const
   return new bmcsd_load_discrete_corresp_process(*this);
 }
 
-vcl_vector< vcl_string > bmcsd_load_discrete_corresp_process::get_input_type() 
+std::vector< std::string > bmcsd_load_discrete_corresp_process::get_input_type() 
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   return to_return;
 }
 
-vcl_vector< vcl_string > bmcsd_load_discrete_corresp_process::get_output_type() 
+std::vector< std::string > bmcsd_load_discrete_corresp_process::get_output_type() 
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
 
   bool binocular_ftype=false;
   parameters()->get_value( "-binocular_ftype", binocular_ftype);
@@ -55,11 +55,11 @@ bool bmcsd_load_discrete_corresp_process::execute()
 {
   bpro1_filepath input;
   parameters()->get_value( "-nameprefix" , input);
-  vcl_string input_file = input.path;
+  std::string input_file = input.path;
 
   vsl_b_ifstream bfs_in(input_file.c_str());
   if (!bfs_in) {
-    vcl_cerr << "ERROR: while opening " << input_file << " for reading\n";
+    std::cerr << "ERROR: while opening " << input_file << " for reading\n";
     return false;
   }
 
@@ -80,7 +80,7 @@ bool bmcsd_load_discrete_corresp_process::execute()
 
     output_data_[0].push_back(c_storage);
     
-    vcl_cout << "Corresp (process): \n" << *(c_storage->corresp());
+    std::cout << "Corresp (process): \n" << *(c_storage->corresp());
   } else {
     bmcsd_discrete_corresp_3 *cp_in_3 = new bmcsd_discrete_corresp_3();
     vsl_b_read(bfs_in, *cp_in_3);
@@ -94,7 +94,7 @@ bool bmcsd_load_discrete_corresp_process::execute()
 
     output_data_[0].push_back(c_storage);
     
-    vcl_cout << "Corresp (process): \n" << *(c_storage->corresp());
+    std::cout << "Corresp (process): \n" << *(c_storage->corresp());
   }
 
 

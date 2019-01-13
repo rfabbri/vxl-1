@@ -15,18 +15,18 @@
 #include <vnl/vnl_double_3x4.h>
 #include <vnl/vnl_double_4x4.h>
 #include <vgl/vgl_vector_3d.h>
-#include <vcl_utility.h>
-#include <vcl_set.h>
-#include <vcl_map.h>
-#include <vcl_vector.h>
+#include <utility>
+#include <set>
+#include <map>
+#include <vector>
 
 
 //: A 3D curve builder
 class bmrf_curve_3d_builder
 {
  public:
-  typedef vcl_pair<bmrf_arc_sptr, bmrf_curvel_3d_sptr> time_match;
-  typedef vcl_vector<time_match> match_vector;
+  typedef std::pair<bmrf_arc_sptr, bmrf_curvel_3d_sptr> time_match;
+  typedef std::vector<time_match> match_vector;
 
   //: Constructor
   bmrf_curve_3d_builder();
@@ -53,10 +53,10 @@ class bmrf_curve_3d_builder
   bool compute_bounding_box(const float *inlier_fractions = NULL, bool align_ep = false);
 
   //: Return the constructed curves
-  vcl_set<bmrf_curve_3d_sptr> curves() const;
+  std::set<bmrf_curve_3d_sptr> curves() const;
 
   //: Return the cameras used in the reconstruction
-  vcl_map<int,vnl_double_3x4> cameras() const;
+  std::map<int,vnl_double_3x4> cameras() const;
 
   //: Return the 3D direction of motion of the curves
   vgl_vector_3d<double> direction() const;
@@ -72,23 +72,23 @@ class bmrf_curve_3d_builder
   void find_alpha_bounds();
 
   //: Build curvels by linking across time through probable arcs
-  vcl_set<bmrf_curvel_3d_sptr>
-    build_curvels(vcl_set<bmrf_curvel_3d_sptr>& all_curvels, double alpha) const;
+  std::set<bmrf_curvel_3d_sptr>
+    build_curvels(std::set<bmrf_curvel_3d_sptr>& all_curvels, double alpha) const;
 
   //: extend all curves to the next alpha
-  vcl_set<bmrf_curvel_3d_sptr>
-    extend_curves( vcl_set<bmrf_curve_3d_sptr>& growing_curves,
+  std::set<bmrf_curvel_3d_sptr>
+    extend_curves( std::set<bmrf_curve_3d_sptr>& growing_curves,
                    double alpha );
 
   //: Find all arcs where both nodes are valid at \p alpha
-  vcl_vector<bmrf_arc_sptr> find_arcs_at(double alpha) const;
+  std::vector<bmrf_arc_sptr> find_arcs_at(double alpha) const;
 
   //: Reconstruct the 3d location of a curvel from its projections
   void reconstruct_point(bmrf_curvel_3d_sptr curvel) const;
 
   //: Match the \p curvels to the ends of the \p growing_curves
-  void append_curvels(vcl_set<bmrf_curvel_3d_sptr>& curvels,
-                      vcl_set<bmrf_curve_3d_sptr>& growing_curves,
+  void append_curvels(std::set<bmrf_curvel_3d_sptr>& curvels,
+                      std::set<bmrf_curve_3d_sptr>& growing_curves,
                       int min_prj);
 
   //: Return a measure (0.0 to 1.0) of how well \p new_c matches \p prev_c
@@ -102,13 +102,13 @@ class bmrf_curve_3d_builder
   double min_alpha_;
   double max_alpha_;
 
-  vcl_set<bmrf_curve_3d_sptr> curves_;
+  std::set<bmrf_curve_3d_sptr> curves_;
 
   //: Map from frame numbers to cameras
-  vcl_map<int,vnl_double_3x4> C_;
+  std::map<int,vnl_double_3x4> C_;
 
   //: Map from frame numbers to camera offsets
-  vcl_map<int,double> offsets_;
+  std::map<int,double> offsets_;
 
   //: 3D direction unit vector
   vgl_vector_3d<double> direction_;

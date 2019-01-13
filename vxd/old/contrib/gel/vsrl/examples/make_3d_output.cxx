@@ -1,5 +1,5 @@
 // This is gel/vsrl/examples/make_3d_output.cxx
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vsrl/vsrl_results_dense_matcher.h>
 #include <vsrl/vsrl_3d_output.h>
 
@@ -13,7 +13,7 @@
 int main(int argc, char ** argv)
 {
   if (argc < 4) {
-    vcl_cout << "make_3d_output im1 im2 disp_image 3d_outfile (params.dat) (transform.dat)\n";
+    std::cout << "make_3d_output im1 im2 disp_image 3d_outfile (params.dat) (transform.dat)\n";
     return 0;
   }
 

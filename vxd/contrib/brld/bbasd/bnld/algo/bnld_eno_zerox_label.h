@@ -4,8 +4,8 @@
 
 
 
-#include <vcl_limits.h>
-#include <vcl_vector.h>
+#include <limits>
+#include <vector>
 #include <bnld/algo/bnld_eno_zerox.h>
 
 //:
@@ -49,21 +49,21 @@ public:
   //: return labels for current interval in a 2-element array 
   // For example, if zl is an object of this class, then
   // zl[i][k] = label of k-th zero-crossing of i-th interval.
-  vcl_vector<unsigned>::const_iterator operator [] (unsigned i) const { return label_.begin() + maxzeros*i;}
+  std::vector<unsigned>::const_iterator operator [] (unsigned i) const { return label_.begin() + maxzeros*i;}
 ;
   //: number of intervals
   unsigned size() const {return label_.size()/maxzeros;}
 
-  void print (vcl_ostream&) const { vcl_cout << "Not yet coded\n";}
+  void print (std::ostream&) const { std::cout << "Not yet coded\n";}
 
-  void print(bnld_eno_1d &eno, bnld_eno_zerox_vector &zc, vcl_ostream& strm) const;
+  void print(bnld_eno_1d &eno, bnld_eno_zerox_vector &zc, std::ostream& strm) const;
 
 protected:
   //: The labeling of each zero-crossing is implemented by 1D vector
   //representing a 2D array, where the columns correspond to intervals, 
   // and rows to labels. This 2D array is stored in the vector "label_"
   // column-wise.
-  vcl_vector<unsigned> label_;
+  std::vector<unsigned> label_;
 
   // Internally used auxiliary function
   void label_one_zerox_in_interval(

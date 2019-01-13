@@ -126,7 +126,7 @@ public:
   //: use this whenever Pr change
   void compute_explicit_params();
 
-  void print(vcl_ostream &os=vcl_cout) const;
+  void print(std::ostream &os=std::cout) const;
 };
 
 inline void bdifd_camera::
@@ -192,8 +192,8 @@ img_to_world(
   p_img.gama[0] = pt.x();
   p_img.gama[1] = pt.y();
   p_img.gama[2] = 0;
-  p_img.t[0] = vcl_cos(theta_img);
-  p_img.t[1] = vcl_sin(theta_img);
+  p_img.t[0] = std::cos(theta_img);
+  p_img.t[1] = std::sin(theta_img);
   p_img.t[2] = 0;
 
   if (!vnl_math::isfinite(k_img))
@@ -230,7 +230,7 @@ img_to_world(const bdifd_3rd_order_point_2d *p_img, bdifd_3rd_order_point_2d *p_
   bool stat = bdifd_frenet::linear_transform(n_img, t_img, p_img->k, p_img->kdot, &(p_w->k), &(p_w->kdot),
       &tcam_2, &ncam_2, Kinv);
 //  if (!bdifd_util::near_zero((Rot_t*tcam_2 - p_w->t).two_norm(), 1e-8))
-//    vcl_cout << "Linear transform invalid in img to world\n";
+//    std::cout << "Linear transform invalid in img to world\n";
 
   bdifd_vector_3d tcam_3;
   tcam_3[0] = tcam_2[0];
@@ -261,9 +261,9 @@ img_to_world(const bdifd_3rd_order_point_2d *p_img, bdifd_3rd_order_point_2d *p_
 #ifndef NDEBUG
   if (!bdifd_util::near_zero(dot_product(p_w->n, p_w->t),1e-6)) {
     if (bdifd_util::near_zero(dot_product(p_img->t, p_img->n),1e-6)) {
-      vcl_cout << "PAU EM img_to_world_vector! " << dot_product(p_w->n, p_w->t) <<"\n";
+      std::cout << "PAU EM img_to_world_vector! " << dot_product(p_w->n, p_w->t) <<"\n";
     } else {
-      vcl_cout << "Spurious input in img_to_world_vector\n";
+      std::cout << "Spurious input in img_to_world_vector\n";
     }
   }
 #endif

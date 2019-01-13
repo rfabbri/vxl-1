@@ -21,10 +21,10 @@
 // manipulating the interpolated data.
 // \endverbatim
 
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
-#include <vcl_algorithm.h>
-#include <vcl_limits.h>
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <limits>
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_vector_fixed.h>
 
@@ -60,7 +60,7 @@ public:
 
    unsigned order() const  {return order_;}
    double coeff(unsigned i) const  {return coeffs_[i];}
-   void print(vcl_ostream& = vcl_cerr) const;    
+   void print(std::ostream& = std::cerr) const;    
 
    double sample(double x) const;
 
@@ -113,7 +113,7 @@ public:
    double start() const {return start_;} 
    double end() const {return end_;} 
    bool forward() const {return forward_;} 
-   void print(vcl_ostream& = vcl_cerr) const;    
+   void print(std::ostream& = std::cerr) const;    
 
 private:
    bool forward_;
@@ -152,7 +152,7 @@ private:
 //
 class bnld_eno_1d {
 public: 
-   bnld_eno_1d(double border_value = vcl_numeric_limits<double>::max()/1e10) 
+   bnld_eno_1d(double border_value = std::numeric_limits<double>::max()/1e10) 
       : border_value_(border_value) { }
 
    ~bnld_eno_1d() { }
@@ -173,7 +173,7 @@ public:
    const bnld_eno_interp &operator [] (unsigned i) const { return interp_[i];}
 
    //: Access to the vector of interpolants
-   vcl_vector<bnld_eno_interp>& interp() {return interp_;}
+   std::vector<bnld_eno_interp>& interp() {return interp_;}
 
    //: Access to the vector of abscissas
    double x(unsigned i) const {return abscissas_[i];}
@@ -185,9 +185,9 @@ public:
    bool sample(unsigned size, vnl_vector<double> &f, vnl_vector<double> &xx) const;
    unsigned interval_index(double x) const;
 
-   void print(vcl_ostream& = vcl_cerr) const;
+   void print(std::ostream& = std::cerr) const;
 protected:
-   vcl_vector<bnld_eno_interp> interp_;    //:< one interpolant for each interval
+   std::vector<bnld_eno_interp> interp_;    //:< one interpolant for each interval
    vnl_vector<double> abscissas_;
    ptrdiff_t stride_; //:< for use with images stored in big continuous memory blocks
    const double border_value_; //:< value of function outside of data bounds 

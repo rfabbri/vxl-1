@@ -7,8 +7,8 @@
 #include <bmrf/bmrf_epi_point_sptr.h>
 #include <bmrf/bmrf_epi_seg.h>
 #include <bmrf/bmrf_epi_seg_sptr.h>
-#include <vcl_vector.h>
-#include <vcl_cmath.h>
+#include <vector>
+#include <cmath>
 
 struct bmrf_tranformed_epi_seg : public bmrf_epi_seg
 {
@@ -17,7 +17,7 @@ struct bmrf_tranformed_epi_seg : public bmrf_epi_seg
                            double t, bool update_all )
     : bmrf_epi_seg(*ep)
   {
-    for (vcl_vector<bmrf_epi_point_sptr>::iterator s_itr = this->seg_.begin();
+    for (std::vector<bmrf_epi_point_sptr>::iterator s_itr = this->seg_.begin();
          s_itr != seg_.end();  ++s_itr) {
       *s_itr = bmrf_epi_transform(*s_itr, gamma, t, update_all);
     }
@@ -47,7 +47,7 @@ bmrf_epi_transform( const bmrf_epi_point_sptr& ep,
   if (update_all) {
     // update x, y, etc. here
     double ds = new_ep->s() - ep->s();
-    new_ep->set( ep->x()+ds*vcl_cos(ep->alpha()), ep->y()+ds*vcl_sin(ep->alpha()) );
+    new_ep->set( ep->x()+ds*std::cos(ep->alpha()), ep->y()+ds*std::sin(ep->alpha()) );
   }
   return new_ep;
 }

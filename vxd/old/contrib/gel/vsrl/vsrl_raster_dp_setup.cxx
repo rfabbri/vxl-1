@@ -7,7 +7,7 @@
 #include <vsrl/vsrl_intensity_token.h>
 #include <vsrl/vsrl_parameters.h>
 #include <vsrl/vsrl_token.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 // constructor
 vsrl_raster_dp_setup::vsrl_raster_dp_setup(int raster_line, vsrl_image_correlation *image_correlation)
@@ -54,7 +54,7 @@ int vsrl_raster_dp_setup::get_assignment(int x)
 
 void vsrl_raster_dp_setup::create_token_list(int width,
                                              vsrl_image_correlation *image_correlation,
-                                             vcl_vector<vsrl_intensity_token*> &tok_list,
+                                             std::vector<vsrl_intensity_token*> &tok_list,
                                              double /*step*/)
 {
   // we wish to create the token lists
@@ -89,11 +89,11 @@ void vsrl_raster_dp_setup::create_token_list(int width,
 }
 
 
-void vsrl_raster_dp_setup::clear_token_list(vcl_vector<vsrl_intensity_token*> &tok_list)
+void vsrl_raster_dp_setup::clear_token_list(std::vector<vsrl_intensity_token*> &tok_list)
 {
   // clear the token list
 
-  vcl_vector<vsrl_intensity_token*>::iterator i;
+  std::vector<vsrl_intensity_token*>::iterator i;
   for (i=tok_list.begin();i<tok_list.end();i++)
   {
     delete *i;
@@ -114,10 +114,10 @@ double vsrl_raster_dp_setup::execute()
 
   // create the right kind of list
 
-  vcl_vector<vsrl_token*> list1;
-  vcl_vector<vsrl_token*> list2;
+  std::vector<vsrl_token*> list1;
+  std::vector<vsrl_token*> list2;
 
-  vcl_vector<vsrl_intensity_token*>::iterator i;
+  std::vector<vsrl_intensity_token*>::iterator i;
 
   for (i=tok_list1.begin();i<tok_list1.end();i++)
   {
@@ -146,7 +146,7 @@ double vsrl_raster_dp_setup::execute()
   dyn_prog.set_inner_cost(outer_cost_);
   double total_cost = dyn_prog.execute();
 
-  vcl_cout << " Total cost is " << total_cost << vcl_endl;
+  std::cout << " Total cost is " << total_cost << std::endl;
 
   // dyn_prog.print_direct_costs(375);
   // dyn_prog.print_costs(375);
@@ -167,10 +167,10 @@ double vsrl_raster_dp_setup::execute(vnl_vector<int> curr_row)
 
   // create the right kind of list
 
-  vcl_vector<vsrl_token*> list1;
-  vcl_vector<vsrl_token*> list2;
+  std::vector<vsrl_token*> list1;
+  std::vector<vsrl_token*> list2;
 
-  vcl_vector<vsrl_intensity_token*>::iterator i;
+  std::vector<vsrl_intensity_token*>::iterator i;
 
   for (i=tok_list1.begin();i<tok_list1.end();i++)
   {
@@ -197,7 +197,7 @@ double vsrl_raster_dp_setup::execute(vnl_vector<int> curr_row)
 
   double total_cost = dyn_prog.execute();
 
-  vcl_cout << " Total cost is " << total_cost << vcl_endl;
+  std::cout << " Total cost is " << total_cost << std::endl;
 
   // dyn_prog.print_direct_costs(375);
   // dyn_prog.print_costs(375);
@@ -221,7 +221,7 @@ void vsrl_raster_dp_setup::set_token_biases()
   int y2=prior_raster_->get_raster_line();
 
 
-  vcl_vector<vsrl_intensity_token*>::iterator i;
+  std::vector<vsrl_intensity_token*>::iterator i;
 
   double bias_diff = vsrl_parameters::instance()->common_intensity_diff;
 

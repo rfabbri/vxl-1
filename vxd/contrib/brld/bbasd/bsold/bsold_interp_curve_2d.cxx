@@ -1,7 +1,7 @@
 // This is bbasd/bsold/bsold_interp_curve_2d.cxx
 #include "bsold_interp_curve_2d.h"
 #include <vsol/vsol_point_2d.h>
-#include <vcl_algorithm.h>  
+#include <algorithm>  
 //:
 // \file
 // \author Based on original code by  Ozge Can Ozcanli (design/declarations) 
@@ -12,7 +12,7 @@
 // Caution: the user of this constructor SHALL NOT delete the bgld_param_curve objects
 // pointed to by the 'inter' vector 
 bsold_interp_curve_2d::
-bsold_interp_curve_2d(vcl_vector<bgld_param_curve *> inter)
+bsold_interp_curve_2d(std::vector<bgld_param_curve *> inter)
     : ints_(inter), lengths_(ints_.size())
 {
    lengths_[0] = ints_[0]->length();
@@ -21,7 +21,7 @@ bsold_interp_curve_2d(vcl_vector<bgld_param_curve *> inter)
 }
 
 void bsold_interp_curve_2d::
-make(const vcl_vector<bgld_param_curve *> &inter)
+make(const std::vector<bgld_param_curve *> &inter)
 {
   for (unsigned i = 0; i<ints_.size(); i++) {
     delete ints_[i];
@@ -109,12 +109,12 @@ interval_index(double s) const
    
 
    // binary search for s in vector of arclens
-   const vcl_vector<double>::const_iterator
-      p = vcl_lower_bound(lengths_.begin(), lengths_.end(), s);
+   const std::vector<double>::const_iterator
+      p = std::lower_bound(lengths_.begin(), lengths_.end(), s);
 
    // remove this
-   //vcl_cout << "WARNING assertion on: p: lenth size: " << lengths_.size() << "\n";
-   //vcl_cout.flush();  
+   //std::cout << "WARNING assertion on: p: lenth size: " << lengths_.size() << "\n";
+   //std::cout.flush();  
 
    assert (p <  lengths_.begin() + lengths_.size() );
 
@@ -139,7 +139,7 @@ interval_index(double s, double *t) const
 
 //: Print an ascii summary to the stream
 void bsold_interp_curve_2d::
-print_summary(vcl_ostream &os) const
+print_summary(std::ostream &os) const
 {
   os << *this;
 }
@@ -147,16 +147,16 @@ print_summary(vcl_ostream &os) const
 
 //: blanking parameter not supported
 void bsold_interp_curve_2d::
-describe(vcl_ostream &strm, int blanking) const
+describe(std::ostream &strm, int blanking) const
 {
   if (blanking < 0) blanking = 0; while (blanking--) strm << ' ';
 
   strm << "=== bsold_interp_curve_2d ===\n";
-  strm << "#intervals: " << ints_.size() << "\t length: " << length() << vcl_endl;
+  strm << "#intervals: " << ints_.size() << "\t length: " << length() << std::endl;
   for (unsigned int i=0; i<ints_.size(); ++i) {
-     strm << "=== Interval " << i << " ===" << vcl_endl;
+     strm << "=== Interval " << i << " ===" << std::endl;
   // ints_[i]->print(strm);
-     strm << "Cummulative length: " << lengths_[i] << vcl_endl;
+     strm << "Cummulative length: " << lengths_[i] << std::endl;
   }
 
 }

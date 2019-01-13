@@ -1,8 +1,8 @@
 #include <testlib/testlib_test.h>
 #include <bnld/algo/bnld_eno_image.h>
 #include <bnld/algo/bnld_eno_zerox_image.h>
-#include <vcl_iostream.h>
-#include <vcl_limits.h>
+#include <iostream>
+#include <limits>
 #include <vil/vil_fill.h>
 #include <vil/vil_print.h>
 
@@ -15,7 +15,7 @@ MAIN( test_eno_image )
 {
   START ("eno_image");
 
-//  double tol = vcl_numeric_limits<double>::epsilon()*1000;
+//  double tol = std::numeric_limits<double>::epsilon()*1000;
 
   vil_image_view <double> image(6,5);
   vil_image_view <unsigned> label(6,5);
@@ -36,9 +36,9 @@ MAIN( test_eno_image )
   image(3,4) = 0;
   image(5,0) = 0;
 
-  vcl_cout << "original img:\n\n";
+  std::cout << "original img:\n\n";
 
-  vil_print_all(vcl_cout,image);
+  vil_print_all(std::cout,image);
 
   bnld_eno_image eim;
 
@@ -57,7 +57,7 @@ MAIN( test_eno_image )
 
 void test_interval(double x, double x_ref, bnld_eno_1d &e, double tol)
 {
-   vcl_cout << "Abscissa " << x << " in interval #" << e.interval_index(x) << vcl_endl;
+   std::cout << "Abscissa " << x << " in interval #" << e.interval_index(x) << std::endl;
    TEST_NEAR("Sample",e.sample(x),x_ref,tol);
 }
 

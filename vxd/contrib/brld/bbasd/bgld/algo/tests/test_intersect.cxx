@@ -2,8 +2,8 @@
 
 #include <testlib/testlib_test.h>
 #include <bgld/algo/bgld_intersect.h>
-#include <vcl_iostream.h>
-#include <vcl_cmath.h>
+#include <iostream>
+#include <cmath>
 #include <vgl/vgl_line_2d.h>
 #include <vgl/vgl_distance.h>
 #include <vgl/vgl_cylinder.h>
@@ -13,30 +13,30 @@
 
 void test_compute_line_sphere_intersect() {
 
-    vcl_cout << "Test intersection between a sphere and a line" << vcl_endl;
-    vcl_cout << "Case1: There is only one intersection point" << vcl_endl;
+    std::cout << "Test intersection between a sphere and a line" << std::endl;
+    std::cout << "Case1: There is only one intersection point" << std::endl;
     vgl_point_3d<double> center(10, 0, 0);
     vgl_sphere_3d<double> sphere(center, 5);
     vgl_homg_line_3d_2_points<double> line(vgl_homg_point_3d<double> (0,0,5,1), vgl_homg_point_3d<double> (10,0,5,1));
     double inters_length = bgld_intersect::sphere_homg_line_intersect(line, sphere);
     TEST_NEAR("Sphere line intersection", inters_length, 5, 1e-8);
 
-    vcl_cout << "Case2: There are two intersection points" << vcl_endl;
+    std::cout << "Case2: There are two intersection points" << std::endl;
     vgl_homg_line_3d_2_points<double> line2(vgl_homg_point_3d<double> (0,0,0,1), vgl_homg_point_3d<double> (10,0,3,1));
     inters_length = bgld_intersect::sphere_homg_line_intersect(line2, sphere);
-    vcl_cout << "length intersc-->" << inters_length << vcl_endl;
+    std::cout << "length intersc-->" << inters_length << std::endl;
     TEST_NEAR("Sphere line intersection", inters_length, 8, 1);
 
-    vcl_cout << "Case3: There are two intersection points" << vcl_endl;
+    std::cout << "Case3: There are two intersection points" << std::endl;
     vgl_homg_line_3d_2_points<double> line3(vgl_homg_point_3d<double> (0,0,0,1), vgl_homg_point_3d<double> (20,0,0,1));
     inters_length = bgld_intersect::sphere_homg_line_intersect(line3, sphere);
-    vcl_cout << "length intersc-->" << inters_length << vcl_endl;
+    std::cout << "length intersc-->" << inters_length << std::endl;
     TEST_NEAR("Sphere line intersection", inters_length, 10, 1e-8);
 
-    vcl_cout << "Case3: There are two intersection points" << vcl_endl;
+    std::cout << "Case3: There are two intersection points" << std::endl;
     vgl_homg_line_3d_2_points<double> line4(vgl_homg_point_3d<double> (0,0,0,1), vgl_homg_point_3d<double> (10,0,10,1));
     inters_length = bgld_intersect::sphere_homg_line_intersect(line4, sphere);
-    vcl_cout << "length intersc-->" << inters_length << vcl_endl;
+    std::cout << "length intersc-->" << inters_length << std::endl;
     TEST_NEAR("Sphere line intersection", inters_length, 0, 1e-8);
 }
 
@@ -72,7 +72,7 @@ test_line_lineseg_intersect()
 
 void test_plane_infinite_cylinder_intersect()
 {
-  vcl_cout << "Intersect a plane and an infinite cylinder\n";
+  std::cout << "Intersect a plane and an infinite cylinder\n";
   // define a right cylinder
   vgl_point_3d<double > cyl_center (1, 1, 0);
   vgl_vector_3d<double > cyl_orient(0, 0, 1);
@@ -94,10 +94,10 @@ void test_plane_infinite_cylinder_intersect()
   vgl_vector_3d<double > true_ellipse_major(0, -2, 2);
   vgl_vector_3d<double > true_ellipse_minor(2, 0, 0);
 
-  vcl_cout << "Intersection ellipse: "
+  std::cout << "Intersection ellipse: "
     << "\n  ellipse_center = " << ellipse_center
     << "\n  ellipse_major = " << ellipse_major
-    << "\n  ellipse_minor = " << ellipse_minor << vcl_endl;
+    << "\n  ellipse_minor = " << ellipse_minor << std::endl;
 
   TEST_NEAR("ellipse_center", (ellipse_center-true_ellipse_center).length(), 0, 1e-8);
   
@@ -117,10 +117,10 @@ void test_plane_infinite_cylinder_intersect()
   vgl_plane_3d<double > plane3(0, 0, 1, -18);
 
   vgl_point_3d<double > point(plane1, plane2, plane3);
-  vcl_cout << "\nplane 1 = " << plane1
+  std::cout << "\nplane 1 = " << plane1
     << "\nplane 2 = " << plane2
     << "\nplane 3 = " << plane3
-    << "\nintersection point = " << point << vcl_endl;
+    << "\nintersection point = " << point << std::endl;
 
   
 

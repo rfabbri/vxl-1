@@ -69,17 +69,17 @@ static void test_application(const bgld_similarity_3d<double>& sim)
 
   vgl_homg_line_3d_2_points<double> hl(hpt, vgl_homg_point_3d<double>(v.x(),v.y(),v.z(),0));
   vgl_homg_line_3d_2_points<double> s_hl = sim*hl;
-  vcl_cout << "Transformed hl = " << s_hl << vcl_endl;
+  std::cout << "Transformed hl = " << s_hl << std::endl;
   //FIXME  add test
 
   vgl_line_3d_2_points<double> l(pt, pt+v);
   vgl_line_3d_2_points<double> s_l = sim*l;
-  vcl_cout << "Transformed l = " << s_l << vcl_endl;
+  std::cout << "Transformed l = " << s_l << std::endl;
   //FIXME  add test
 
   vgl_line_segment_3d<double> s(pt, pt+v);
   vgl_line_segment_3d<double> s_s = sim*s;
-  vcl_cout << "Transformed s = " << s_s << vcl_endl;
+  std::cout << "Transformed s = " << s_s << std::endl;
   //FIXME  add test
 }
 
@@ -91,8 +91,8 @@ static void test_lie(const bgld_similarity_3d<double>& sim)
   bgld_similarity_3d<double> sim2(a);
   TEST_NEAR("Construct from Lie algebra basis",
             (sim.as_matrix() - sim2.as_matrix()).frobenius_norm(), 0.0, epsilon);
-  vcl_cout << "basis <"<<sim.lie_algebra_basis()<<">\n" << vcl_endl;
-  vcl_cout << "reformed "<<sim2.as_matrix()<<"\n" << vcl_endl;
+  std::cout << "basis <"<<sim.lie_algebra_basis()<<">\n" << std::endl;
+  std::cout << "reformed "<<sim2.as_matrix()<<"\n" << std::endl;
 
   TEST_NEAR("Exponental of Lie algebra basis",
             (sim.as_matrix() - vnl_matrix_exp(sim.lie_algebra())).frobenius_norm(),
@@ -114,13 +114,13 @@ static void test_lie(const bgld_similarity_3d<double>& sim)
 
 void test_similarity_3d()
 {
-  vcl_cout << "***************************\n"
+  std::cout << "***************************\n"
            << " Testing bgld_similarity_3d\n"
            << "***************************\n";
 
 
   {
-    vcl_cout << "\n1. 2x scale, rotation about the x axis over 90 degrees, translation (1,-2,3).\n";
+    std::cout << "\n1. 2x scale, rotation about the x axis over 90 degrees, translation (1,-2,3).\n";
     vgl_rotation_3d<double> rot(1.57079632679489661923, 0.0, 0.0);
     vgl_vector_3d<double> t(1.0, -2.0, 3.0);
     bgld_similarity_3d<double> sim(2.0,rot,t);
@@ -131,7 +131,7 @@ void test_similarity_3d()
   }
 
   {
-    vcl_cout << "\n2. no scale, rotation about the x axis over 90 degrees, translation (1,-2,3).\n";
+    std::cout << "\n2. no scale, rotation about the x axis over 90 degrees, translation (1,-2,3).\n";
     vgl_rotation_3d<double> rot(1.57079632679489661923, 0.0, 0.0);
     vgl_vector_3d<double> t(1.0, -2.0, 3.0);
     bgld_similarity_3d<double> sim(1.0,rot,t);
@@ -142,7 +142,7 @@ void test_similarity_3d()
   }
 
   {
-    vcl_cout << "\n3. 2x scale, no rotation, translation (1,-2,3).\n";
+    std::cout << "\n3. 2x scale, no rotation, translation (1,-2,3).\n";
     vgl_rotation_3d<double> rot;
     vgl_vector_3d<double> t(1.0, -2.0, 3.0);
     bgld_similarity_3d<double> sim(2.0,rot,t);
@@ -153,7 +153,7 @@ void test_similarity_3d()
   }
 
   {
-    vcl_cout << "\n4. no scale, no rotation, translation (1,-2,3).\n";
+    std::cout << "\n4. no scale, no rotation, translation (1,-2,3).\n";
     vgl_rotation_3d<double> rot;
     vgl_vector_3d<double> t(1.0, -2.0, 3.0);
     bgld_similarity_3d<double> sim(1.0,rot,t);
@@ -168,7 +168,7 @@ void test_similarity_3d()
     vgl_rotation_3d<double> rot(rnd.normal(), rnd.normal(), rnd.normal());
     vgl_vector_3d<double> t(rnd.normal(), rnd.normal(), rnd.normal());
     bgld_similarity_3d<double> sim(rnd.drand32()*10,rot,t);
-    vcl_cout << "\n5. Random Similarity: " << sim << vcl_endl;
+    std::cout << "\n5. Random Similarity: " << sim << std::endl;
     //test_conversions(sim);
     test_inverse(sim);
     test_application(sim);
