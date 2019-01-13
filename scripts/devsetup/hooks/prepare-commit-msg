@@ -35,4 +35,5 @@
 # SOB=$(git var GIT_AUTHOR_IDENT | sed -n 's/^\(.*>\).*$/Signed-off-by: \1/p')
 # grep -qs "^$SOB" "$1" || echo "$SOB" >> "$1"
 
-gsed -i 's/(cherry picked from commit /&lemsvpe@/' "$1"
+case `uname` in Darwin*) mysed=gsed ;; *) mysed=sed ;; esac
+$mysed -i 's/(cherry picked from commit /&lemsvpe@/' "$1"
