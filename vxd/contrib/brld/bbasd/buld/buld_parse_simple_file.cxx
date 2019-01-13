@@ -7,25 +7,25 @@
 // \file
 
 #include "buld_parse_simple_file.h"
-//#include <vcl_cstdlib.h>
+//#include <cstdlib>
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <iostream>
+#include <fstream>
 #include <vul/vul_string.h>
 #include <vul/vul_awk.h>
-#include <vcl_cstring.h>
-#include <vcl_utility.h>
+#include <cstring>
+#include <utility>
 
-bool buld_parse_string_list(const vcl_string& input_file, 
-                            vcl_vector<vcl_string >& string_list)
+bool buld_parse_string_list(const std::string& input_file, 
+                            std::vector<std::string >& string_list)
 {
   string_list.clear();
 
   // parse image list
-  vcl_ifstream ifs(input_file.c_str());
+  std::ifstream ifs(input_file.c_str());
   if (!ifs) 
   {
-    vcl_cout << "ERROR: Unable to open input file " << input_file << vcl_endl;
+    std::cout << "ERROR: Unable to open input file " << input_file << std::endl;
     return false;
   }
 
@@ -33,14 +33,14 @@ bool buld_parse_string_list(const vcl_string& input_file,
   while (!ifs.eof()) 
   {
     // read the full line in
-    vcl_string line;
-    vcl_getline(ifs, line);
+    std::string line;
+    std::getline(ifs, line);
     
     // ignore lines starting with "#"
     if (line.empty() || line[0] == '#') 
       continue;
 
-    vcl_string name = line.substr(0, line.find_first_of(' '));
+    std::string name = line.substr(0, line.find_first_of(' '));
     if (!name.empty())
       string_list.push_back(name);
   }
@@ -50,13 +50,13 @@ bool buld_parse_string_list(const vcl_string& input_file,
 
 bool 
 buld_parse_number_lists (
-      const vcl_string &fname,
-      vcl_vector< vcl_vector<int> > &number_lists)
+      const std::string &fname,
+      std::vector< std::vector<int> > &number_lists)
 {
-  vcl_ifstream infp(fname.c_str(), vcl_ios::in);
+  std::ifstream infp(fname.c_str(), std::ios::in);
   if (!infp) {
-    vcl_cerr << "buld: Error, unable to open file name " 
-      << fname << vcl_endl;
+    std::cerr << "buld: Error, unable to open file name " 
+      << fname << std::endl;
     return false;
   }
 
@@ -65,9 +65,9 @@ buld_parse_number_lists (
   for (; awk; ++awk) {
     if (!awk.NF())
       continue;
-    vcl_vector<int> line_list(awk.NF());
+    std::vector<int> line_list(awk.NF());
     for (int i=0; i < awk.NF(); ++i) {
-      // vcl_cout << "Line: " << awk.NR() << ", element[" << i << "] = " << awk[i] << vcl_endl;
+      // std::cout << "Line: " << awk.NR() << ", element[" << i << "] = " << awk[i] << std::endl;
       line_list[i] = vul_string_atoi(awk[i]);
     }
     number_lists.push_back(line_list);
@@ -101,14 +101,14 @@ buld_parse_number_lists (
 //
 // Output: a map with  key  : section name
 //                     value: list of key-value pairs in the section
-bool buld_parse_ini_file(const vcl_string& fname,
-                         vcl_map<vcl_string, vcl_map<vcl_string, vcl_string > >& section_params)
+bool buld_parse_ini_file(const std::string& fname,
+                         std::map<std::string, std::map<std::string, std::string > >& section_params)
 {
   section_params.clear();
-  vcl_map<vcl_string, vcl_string >* cur_sec = 0;
+  std::map<std::string, std::string >* cur_sec = 0;
 
 
-  vcl_ifstream infp(fname.c_str(), vcl_ios::in);
+  std::ifstream infp(fname.c_str(), std::ios::in);
 
   // Read in each line
   char line_buffer[1024];
@@ -118,23 +118,23 @@ bool buld_parse_ini_file(const vcl_string& fname,
     ++line_number;
 
     //ignore comment lines and empty lines
-    if (vcl_strlen(line_buffer)<2 || line_buffer[0]=='#' || line_buffer[0]==';')
+    if (std::strlen(line_buffer)<2 || line_buffer[0]=='#' || line_buffer[0]==';')
       continue;
 
-    vcl_string line(line_buffer);
+    std::string line(line_buffer);
 
     // begin a new section
     if (line[0] == '[') 
     {
       // fine the closing bracket
-      vcl_string::size_type closing_bracket = line.find_first_of(']');
-      if (closing_bracket == vcl_string::npos)
+      std::string::size_type closing_bracket = line.find_first_of(']');
+      if (closing_bracket == std::string::npos)
       {
-        vcl_cout << "\nERROR: can't process line " << line_number << ".";
+        std::cout << "\nERROR: can't process line " << line_number << ".";
         return false;
       }
 
-      vcl_string section_name = line.substr(1, closing_bracket-1);
+      std::string section_name = line.substr(1, closing_bracket-1);
       cur_sec = &(section_params[section_name]);
     }
     // parse value-pair
@@ -144,16 +144,16 @@ bool buld_parse_ini_file(const vcl_string& fname,
       if (!cur_sec)
         continue;
 
-      vcl_string::size_type equal_sign = line.find_first_of('=');
-      if (equal_sign == vcl_string::npos)
+      std::string::size_type equal_sign = line.find_first_of('=');
+      if (equal_sign == std::string::npos)
       {
-        vcl_cout << "\nERROR: can't process line " << line_number << ".";
+        std::cout << "\nERROR: can't process line " << line_number << ".";
         return false;
       }
       
       // key-value pair
-      vcl_string key = line.substr(0, equal_sign);
-      vcl_string value = line.substr(equal_sign+1, line.size()-equal_sign-1);
+      std::string key = line.substr(0, equal_sign);
+      std::string value = line.substr(equal_sign+1, line.size()-equal_sign-1);
 
       if (key.empty())
         continue;

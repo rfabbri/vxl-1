@@ -12,8 +12,8 @@
 
 #include <octave/oct.h>
 #include <octave/oct-map.h>
-#include <vcl_string.h>
-#include <vcl_vector.h>
+#include <string>
+#include <vector>
 #include <bxml/bxml_document.h>
 
 #define buld_octave_value_to_double(x) (x.scalar_value())
@@ -45,21 +45,21 @@ typedef octave_value buld_octave_value;
 class buld_octave_wrapper
 {
 private:
-    void add_path(const vcl_string& path);
-    void rm_path(const vcl_string& path);
+    void add_path(const std::string& path);
+    void rm_path(const std::string& path);
     void activate();
 
     bool is_activated_;
 public:
     buld_octave_wrapper();
     ~buld_octave_wrapper();
-    void run(const vcl_string& path, const vcl_string& name, buld_octave_argument_list& inargs, buld_octave_argument_list& outargs);
+    void run(const std::string& path, const std::string& name, buld_octave_argument_list& inargs, buld_octave_argument_list& outargs);
 };
 
-buld_octave_double_array buld_octave_get_empty_double_array(vcl_vector<int>& sizes);
-buld_octave_uint8_array buld_octave_get_empty_uint8_array(vcl_vector<int>& sizes);
-buld_octave_uint16_array buld_octave_get_empty_uint16_array(vcl_vector<int>& sizes);
-buld_octave_uint32_array buld_octave_get_empty_uint32_array(vcl_vector<int>& sizes);
+buld_octave_double_array buld_octave_get_empty_double_array(std::vector<int>& sizes);
+buld_octave_uint8_array buld_octave_get_empty_uint8_array(std::vector<int>& sizes);
+buld_octave_uint16_array buld_octave_get_empty_uint16_array(std::vector<int>& sizes);
+buld_octave_uint32_array buld_octave_get_empty_uint32_array(std::vector<int>& sizes);
 
 bool buld_octave_convert_xml_to_octave_value(const bxml_data_sptr& root_xml, buld_octave_value& ret);
 

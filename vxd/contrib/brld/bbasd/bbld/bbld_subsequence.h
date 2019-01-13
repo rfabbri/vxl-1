@@ -8,7 +8,7 @@
 //\date 09/02/2009 08:10:03 AM PDT
 //
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vsol/vsol_polyline_2d.h>
 #include <vsol/vsol_polyline_2d_sptr.h>
 #include <assert.h>
@@ -61,8 +61,8 @@ private:
 };
 
 //: Given a sequence of sequences, represent a subsequence of subsequences.
-// For example, given a  vcl_vector<vcl_vector<point> > v,
-// then this class represents another vcl_vector<vcl_vector<point> > w, such
+// For example, given a  std::vector<std::vector<point> > v,
+// then this class represents another std::vector<std::vector<point> > w, such
 // that all vectors in w are contained in v, and all vectors w[i] is a subset of
 // some v[k].
 //
@@ -97,12 +97,12 @@ public:
     return t;
   }
 
-  void trim_memory() { vcl_vector<bbld_subsequence >(ss_).swap(ss_); }
+  void trim_memory() { std::vector<bbld_subsequence >(ss_).swap(ss_); }
 
 private:
   //: s_[i] = (id, ini, end), where id is an index into v as in the above
   // example, and v[id][ini], v[id][ini+1], ..., v[id][end] is the subsequence,
-  vcl_vector<bbld_subsequence > ss_;
+  std::vector<bbld_subsequence > ss_;
 };
 
 //: param[in] a: a subsequence set from the original set O to an intermediary one I
@@ -125,16 +125,16 @@ inline void compose_subsequences(const bbld_subsequence_set &a, bbld_subsequence
 }
 
 //: Copy the elements themselves from the original sequence into a new
-// container. T has to behave like a vcl_vector and represents a sequence.
+// container. T has to behave like a std::vector and represents a sequence.
 template <typename T> void 
 consolidate_subsequences(
-    const vcl_vector<T> &seq,
+    const std::vector<T> &seq,
     bbld_subsequence_set s_ids,
-    vcl_vector<T> *ss_ptr
+    std::vector<T> *ss_ptr
     )
 {
   assert (&seq != ss_ptr);
-  vcl_vector<T> &ss = *ss_ptr;
+  std::vector<T> &ss = *ss_ptr;
 
   ss.resize(s_ids.num_subsequences());
   for (unsigned i=0; i < s_ids.num_subsequences(); ++i) {
@@ -149,17 +149,17 @@ consolidate_subsequences(
 //: Specialization of consolidate for vsol polylines
 inline void 
 consolidate_subsequences(
-    const vcl_vector<vsol_polyline_2d_sptr> &seq,
+    const std::vector<vsol_polyline_2d_sptr> &seq,
     bbld_subsequence_set s_ids,
-    vcl_vector<vsol_polyline_2d_sptr> *ss_ptr
+    std::vector<vsol_polyline_2d_sptr> *ss_ptr
     )
 {
   assert (&seq != ss_ptr);
-  vcl_vector<vsol_polyline_2d_sptr> &ss = *ss_ptr;
+  std::vector<vsol_polyline_2d_sptr> &ss = *ss_ptr;
 
   ss.reserve(s_ids.num_subsequences());
   for (unsigned i=0; i < s_ids.num_subsequences(); ++i) {
-    vcl_vector<vsol_point_2d_sptr> subcurve;
+    std::vector<vsol_point_2d_sptr> subcurve;
 
     const bbld_subsequence &ss_id = s_ids.subsequence(i);
 

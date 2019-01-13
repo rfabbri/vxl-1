@@ -1,12 +1,12 @@
 #include <testlib/testlib_test.h>
 #include <bbld/bbld_subsequence.h>
-#include <vcl_functional.h>
+#include <functional>
 
-class is_less_than_zero : public vcl_unary_function<unsigned, bool> {
+class is_less_than_zero : public std::unary_function<unsigned, bool> {
 public:
   //: delta_theta is effective if it is between 0 and vnl_math::pi/2. 
   is_less_than_zero(
-      const vcl_vector<int> &v)
+      const std::vector<int> &v)
     : v_(v)
   { }
 
@@ -15,16 +15,16 @@ public:
   }
 
 private:
-  const vcl_vector<int> &v_;
+  const std::vector<int> &v_;
 };
 
 MAIN( test_subsequence )
 {
   START ("subsequence");
 
-  //: We will partition this vcl_vector into all contiguous subsequences whose
+  //: We will partition this std::vector into all contiguous subsequences whose
   // elements are either all <0, or all >= 0.
-  vcl_vector<int> n;
+  std::vector<int> n;
   n.push_back(0);
   n.push_back(-1);
   n.push_back(4);
@@ -36,7 +36,7 @@ MAIN( test_subsequence )
   unsigned num_subsequences_gt = 4;
 
   //: ground truth indicates which contiguous subsequences are negative
-  vcl_vector<bool> is_negative_truth(4);
+  std::vector<bool> is_negative_truth(4);
   is_negative_truth[0] = false;
   is_negative_truth[1] = true;
   is_negative_truth[2] = false;
@@ -47,7 +47,7 @@ MAIN( test_subsequence )
   orig_seq.set_orig_id(169);  //< any id to represent n
   bbld_contiguous_partition(orig_seq, is_less_than_zero(n), &ss);
 
-  vcl_cout << "num subsequences " << ss.num_subsequences() << vcl_endl;
+  std::cout << "num subsequences " << ss.num_subsequences() << std::endl;
   TEST("num subsequences", ss.num_subsequences(), num_subsequences_gt);
   TEST("total size of subsequences", ss.total_size(), n.size());
   for (unsigned i=0; i < ss.num_subsequences(); ++i) {

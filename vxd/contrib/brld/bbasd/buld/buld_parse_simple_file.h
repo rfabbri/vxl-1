@@ -16,13 +16,13 @@
 //  Modifications  Ricardo Fabbri : added buld_parse_number_lists
 // \endverbatim
 
-#include <vcl_string.h>
-#include <vcl_vector.h>
-#include <vcl_map.h>
+#include <string>
+#include <vector>
+#include <map>
 
 //: Parse a file containing a list of strings (no space character), each string on one line
-bool buld_parse_string_list(const vcl_string& input_file, 
-                            vcl_vector<vcl_string >& string_list);
+bool buld_parse_string_list(const std::string& input_file, 
+                            std::vector<std::string >& string_list);
 
 //: Parse a file containing space-separated list of numbers, one list per line.
 // Each list can have a different length.
@@ -32,8 +32,8 @@ bool buld_parse_string_list(const vcl_string& input_file,
 //
 // \remarks this is efficient for small files.
 bool buld_parse_number_lists (
-      const vcl_string &fname,
-      vcl_vector< vcl_vector<int> > &number_lists);
+      const std::string &fname,
+      std::vector< std::vector<int> > &number_lists);
 
 
 //: Parse an ini-style parameter file
@@ -52,7 +52,7 @@ bool buld_parse_number_lists (
 //
 // Output: a map with  key  : section name
 //                     value: list of key-value pairs in the section
-bool buld_parse_ini_file(const vcl_string& fname,
-                         vcl_map<vcl_string, vcl_map<vcl_string, vcl_string > >& section_params);
+bool buld_parse_ini_file(const std::string& fname,
+                         std::map<std::string, std::map<std::string, std::string > >& section_params);
 
 #endif // buld_parse_simple_file_h_

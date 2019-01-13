@@ -13,31 +13,31 @@
 
 #include "buld_random.h"
 
-#include<vcl_cstdlib.h>
-#include<vcl_ctime.h>
+#include<cstdlib>
+#include<ctime>
 
 void buld_random_init()
 {
     static bool is_init = false;
     if(!is_init)
     {
-        vcl_srand((unsigned)vcl_time(NULL));
+        std::srand((unsigned)std::time(NULL));
         is_init = true;
     }
 }
 
-vcl_string buld_get_random_alphanumeric_string(int len)
+std::string buld_get_random_alphanumeric_string(int len)
 {
     buld_random_init();
-    vcl_string ret;
+    std::string ret;
     for (int i = 0; i < len; ++i) {
         char randomChar = rand()%(26+26+10);
         if (randomChar < 26)
-            ret += vcl_string(1, 'a' + randomChar);
+            ret += std::string(1, 'a' + randomChar);
         else if (randomChar < 26+26)
-            ret += vcl_string(1,'A' + randomChar - 26);
+            ret += std::string(1,'A' + randomChar - 26);
         else
-            ret += vcl_string(1,'0' + randomChar - 26 - 26);
+            ret += std::string(1,'0' + randomChar - 26 - 26);
     }
     return ret;
 }

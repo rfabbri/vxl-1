@@ -11,22 +11,22 @@
 // Modifications
 // \endverbatim
 
-#include <vcl_cstdio.h>
-#include <vcl_string.h>
+#include <cstdio>
+#include <string>
 
-vcl_string buld_get_dir (const vcl_string& filename);
-vcl_string buld_get_prefix (const vcl_string& filename);
-vcl_string buld_get_dir_prefix (const vcl_string& filename);
-vcl_string buld_get_dir_prefix2 (const vcl_string& filename);
-vcl_string buld_get_dir_file (const vcl_string& filename);
-vcl_string buld_get_file (const vcl_string& filename);
-vcl_string buld_get_suffix (const vcl_string& filename);
+std::string buld_get_dir (const std::string& filename);
+std::string buld_get_prefix (const std::string& filename);
+std::string buld_get_dir_prefix (const std::string& filename);
+std::string buld_get_dir_prefix2 (const std::string& filename);
+std::string buld_get_dir_file (const std::string& filename);
+std::string buld_get_file (const std::string& filename);
+std::string buld_get_suffix (const std::string& filename);
 
-vcl_string buld_get_str_prior (const vcl_string& str, const vcl_string& sub);
+std::string buld_get_str_prior (const std::string& str, const std::string& sub);
 
-vcl_string remove_commas (vcl_string& filename);
+std::string remove_commas (std::string& filename);
 
-bool buld_copy_file(const vcl_string& inf, const vcl_string& outf);
+bool buld_copy_file(const std::string& inf, const std::string& outf);
 
 #endif
 

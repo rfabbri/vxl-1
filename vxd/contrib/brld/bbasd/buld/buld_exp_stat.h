@@ -14,7 +14,7 @@
 //
 
 #include <vbl/vbl_ref_count.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vsl/vsl_binary_io.h>
 
 class buld_exp_stat : public vbl_ref_count
@@ -61,12 +61,12 @@ public:
 
   void print_stats();
   void print_only_stats();
-  void print_stats(vcl_ofstream& of);
-  void read_stats(vcl_ifstream& ifs);
+  void print_stats(std::ofstream& of);
+  void read_stats(std::ifstream& ifs);
 
   //: for some applications it is not possible to find number of true negatives
   // properly, in that case TN is not printed.
-  void print_stats(vcl_string name, vcl_ofstream& of, bool print_FN);
+  void print_stats(std::string name, std::ofstream& of, bool print_FN);
 };
 
 //

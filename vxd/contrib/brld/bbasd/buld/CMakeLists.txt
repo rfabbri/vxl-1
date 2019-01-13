@@ -23,7 +23,7 @@ aux_source_directory(Templates buld_sources)
 
 add_library(buld  ${buld_sources})
 
-target_link_libraries(buld vul vpl vsl)
+target_link_libraries(buld ${VXL_LIB_PREFIX}vul ${VXL_LIB_PREFIX}vpl ${VXL_LIB_PREFIX}vsl)
 
 if(OCTAVE_FOUND)
     target_link_libraries(buld octinterp bxml dbxml)

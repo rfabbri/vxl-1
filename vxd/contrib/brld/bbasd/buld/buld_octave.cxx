@@ -13,10 +13,10 @@
 #include <octave/parse.h>
 #include <octave/toplev.h>
 
-#include <vcl_cctype.h>
-#include <vcl_sstream.h>
-#include <vcl_cstdio.h>
-#include <vcl_map.h>
+#include <cctype>
+#include <sstream>
+#include <cstdio>
+#include <map>
 
 
 #define BULD_GET_EMPTY_ARRAY(T, get_method) \
@@ -57,20 +57,20 @@ void buld_octave_wrapper::activate()
     is_activated_ = true;
 }
 
-void buld_octave_wrapper::add_path(const vcl_string& path)
+void buld_octave_wrapper::add_path(const std::string& path)
 {
     buld_octave_argument_list function_arguments;
     function_arguments(0) = path.c_str();
     feval("addpath", function_arguments, 1);
 }
-void buld_octave_wrapper::rm_path(const vcl_string& path)
+void buld_octave_wrapper::rm_path(const std::string& path)
 {
     buld_octave_argument_list function_arguments;
     function_arguments(0) = path.c_str();
     feval("rmpath", function_arguments, 1);
 }
 
-void buld_octave_wrapper::run(const vcl_string& path, const vcl_string& name, buld_octave_argument_list& inargs, buld_octave_argument_list& outargs)
+void buld_octave_wrapper::run(const std::string& path, const std::string& name, buld_octave_argument_list& inargs, buld_octave_argument_list& outargs)
 {
     if(!is_activated_)
     {
@@ -83,40 +83,40 @@ void buld_octave_wrapper::run(const vcl_string& path, const vcl_string& name, bu
         rm_path(path);
 }
 
-buld_octave_double_array buld_octave_get_empty_double_array(vcl_vector<int>& sizes)
+buld_octave_double_array buld_octave_get_empty_double_array(std::vector<int>& sizes)
 {
     BULD_GET_EMPTY_ARRAY("double", array_value)
 }
 
-buld_octave_uint8_array buld_octave_get_empty_uint8_array(vcl_vector<int>& sizes)
+buld_octave_uint8_array buld_octave_get_empty_uint8_array(std::vector<int>& sizes)
 {
     BULD_GET_EMPTY_ARRAY("uint8", uint8_array_value)
 }
 
-buld_octave_uint16_array buld_octave_get_empty_uint16_array(vcl_vector<int>& sizes)
+buld_octave_uint16_array buld_octave_get_empty_uint16_array(std::vector<int>& sizes)
 {
     BULD_GET_EMPTY_ARRAY("uint16", uint16_array_value)
 }
 
-buld_octave_uint32_array buld_octave_get_empty_uint32_array(vcl_vector<int>& sizes)
+buld_octave_uint32_array buld_octave_get_empty_uint32_array(std::vector<int>& sizes)
 {
     BULD_GET_EMPTY_ARRAY("uint32", uint32_array_value)
 }
 
-vcl_string trim_whitespaces(const vcl_string& s)
+std::string trim_whitespaces(const std::string& s)
 {
     int b;
     int e;
     for(b = 0; b < s.length(); b++)
     {
-        if(!vcl_isspace(s[b]))
+        if(!std::isspace(s[b]))
         {
             break;
         }
     }
     for(e = s.length()-1; e > -1; e--)
     {
-        if(!vcl_isspace(s[e]))
+        if(!std::isspace(s[e]))
         {
             break;
         }
@@ -128,9 +128,9 @@ vcl_string trim_whitespaces(const vcl_string& s)
     return s.substr(b, e - b + 1);
 }
 
-bool is_numeric( vcl_string pszInput)
+bool is_numeric( std::string pszInput)
 {
-    vcl_istringstream iss( pszInput );
+    std::istringstream iss( pszInput );
     double dTestSink;
     iss >> dTestSink;
     if ( ! iss )
@@ -158,7 +158,7 @@ bool buld_octave_convert_xml_to_octave_value(const bxml_data_sptr& root_xml, bul
 
     int number_of_text = 0;
     buld_octave_value content;
-    vcl_map<vcl_string, vcl_vector<buld_octave_value> > temp_map;
+    std::map<std::string, std::vector<buld_octave_value> > temp_map;
     for(int i = 0; i < root_element->num_data(); ++dit, i++)
     {
         if(dit->ptr()->type() == bxml_data::ELEMENT)
@@ -175,7 +175,7 @@ bool buld_octave_convert_xml_to_octave_value(const bxml_data_sptr& root_xml, bul
         else
         {
             bxml_text* child_text = static_cast<bxml_text*>(dit->ptr());
-            vcl_string data = trim_whitespaces(child_text->data());
+            std::string data = trim_whitespaces(child_text->data());
             if(data == "")
             {
                 continue;
@@ -184,7 +184,7 @@ bool buld_octave_convert_xml_to_octave_value(const bxml_data_sptr& root_xml, bul
             if(is_numeric(data))
             {
                 double double_data;
-                vcl_sscanf(data.c_str(), "%lf", &double_data);
+                std::sscanf(data.c_str(), "%lf", &double_data);
                 content = double_data;
             }
             else
@@ -209,7 +209,7 @@ bool buld_octave_convert_xml_to_octave_value(const bxml_data_sptr& root_xml, bul
     {
         return false;
     }
-    vcl_map<vcl_string, vcl_vector<buld_octave_value> >::iterator it;
+    std::map<std::string, std::vector<buld_octave_value> >::iterator it;
     for(it = temp_map.begin(); it != temp_map.end(); it++)
     {
         if(it->second.size() == 1)

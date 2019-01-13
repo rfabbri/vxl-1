@@ -1,10 +1,10 @@
 #include "buld_arg.h"
-#include <vcl_iostream.h>
+#include <iostream>
 
 
-template <> void settype(vul_arg<vcl_vector<vcl_string> > &arg) { arg.type_ = "string list"; }
+template <> void settype(vul_arg<std::vector<std::string> > &arg) { arg.type_ = "string list"; }
 
-template <> void print_value(vcl_ostream &s, vul_arg<vcl_vector<vcl_string> > const &argmt)
+template <> void print_value(std::ostream &s, vul_arg<std::vector<std::string> > const &argmt)
 {
   for (unsigned int i=0; i<argmt().size(); ++i) {
     s << argmt()[i];
@@ -15,23 +15,23 @@ template <> void print_value(vcl_ostream &s, vul_arg<vcl_vector<vcl_string> > co
   }
 }
 
-template <> int parse(vul_arg<vcl_vector<vcl_string> >* argmt, char ** argv)
+template <> int parse(vul_arg<std::vector<std::string> >* argmt, char ** argv)
 {
   const char separator=' ';
 
   if ( !argv ||  !argv[0] ) {
     // no input
-    vcl_cerr << "vul_arg_parse: Expected string, none is provided.\n";
+    std::cerr << "vul_arg_parse: Expected string, none is provided.\n";
     return -1;
   }
 
   if (argv[0]) {
     argmt->value_.clear();
 
-    vcl_string str(argv[0]);
-    //    vcl_cout << "Argv[0]: " << str << vcl_endl;
+    std::string str(argv[0]);
+    //    std::cout << "Argv[0]: " << str << std::endl;
 
-    vcl_string substr;
+    std::string substr;
     for (unsigned i=0; i < str.length(); ++i) {
       if (str[i] == separator) {
         if (substr.length()) {
@@ -48,7 +48,7 @@ template <> int parse(vul_arg<vcl_vector<vcl_string> >* argmt, char ** argv)
     return 1;
   }
   else {
-    vcl_cerr << __FILE__ ": no argument to string list option\n";
+    std::cerr << __FILE__ ": no argument to string list option\n";
     return 0;
   }
 

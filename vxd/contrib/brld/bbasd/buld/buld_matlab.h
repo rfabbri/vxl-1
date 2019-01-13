@@ -11,8 +11,8 @@
 #define buld_matlab_H_
 
 #include <engine.h>
-#include <vcl_string.h>
-#include <vcl_vector.h>
+#include <string>
+#include <vector>
 
 typedef Engine buld_matlab_engine;
 
@@ -39,8 +39,8 @@ typedef octave_value buld_matlab_value;*/
 class buld_matlab_wrapper
 {
 private:
-    void add_path(const vcl_string& path);
-    void rm_path(const vcl_string& path);
+    void add_path(const std::string& path);
+    void rm_path(const std::string& path);
     void activate();
 
     buld_matlab_engine* engine_;
@@ -48,13 +48,13 @@ private:
 public:
     buld_matlab_wrapper();
     ~buld_matlab_wrapper();
-    void run(const vcl_string& path, const vcl_string& name, vcl_vector<mxArray*>& inargs, vcl_vector<mxArray*>& outargs);
+    void run(const std::string& path, const std::string& name, std::vector<mxArray*>& inargs, std::vector<mxArray*>& outargs);
 };
 
-/*buld_matlab_double_array buld_matlab_get_empty_double_array(vcl_vector<int>& sizes);
-buld_matlab_uint8_array buld_matlab_get_empty_uint8_array(vcl_vector<int>& sizes);
-buld_matlab_uint16_array buld_matlab_get_empty_uint16_array(vcl_vector<int>& sizes);
-buld_matlab_uint32_array buld_matlab_get_empty_uint32_array(vcl_vector<int>& sizes);*/
+/*buld_matlab_double_array buld_matlab_get_empty_double_array(std::vector<int>& sizes);
+buld_matlab_uint8_array buld_matlab_get_empty_uint8_array(std::vector<int>& sizes);
+buld_matlab_uint16_array buld_matlab_get_empty_uint16_array(std::vector<int>& sizes);
+buld_matlab_uint32_array buld_matlab_get_empty_uint32_array(std::vector<int>& sizes);*/
 
 extern buld_matlab_wrapper buld_matlab;
 

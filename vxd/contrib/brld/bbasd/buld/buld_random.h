@@ -14,8 +14,8 @@
 #ifndef BULD_RANDOM_H_
 #define BULD_RANDOM_H_
 
-#include<vcl_string.h>
+#include<string>
 
-vcl_string buld_get_random_alphanumeric_string(int len);
+std::string buld_get_random_alphanumeric_string(int len);
 
 #endif /* BULD_RANDOM_H_ */

@@ -4,13 +4,20 @@
 #   vxl-maintainers@lists.sf.net
 
 # Copied over from VXL:
+cmake_minimum_required(VERSION 3.10.2 FATAL_ERROR)
 if( "${CMAKE_CXX_STANDARD}" MATCHES "(11|14|17|20)")
    # If building for modern C++ language standards,
    # require use of newer cmake version
-   cmake_minimum_required(VERSION 3.9.5 FATAL_ERROR)
 else()
-   cmake_minimum_required(VERSION 3.3.0 FATAL_ERROR)
+   set(CMAKE_CXX_STANDARD "11")
 endif()
+if(NOT CMAKE_CXX_STANDARD_REQUIRED)
+  set(CMAKE_CXX_STANDARD_REQUIRED ON)
+endif()
+if(NOT CMAKE_CXX_EXTENSIONS)
+  set(CMAKE_CXX_EXTENSIONS OFF)
+endif()
+
 # Set policies consistent with newer versions of cmake
 # to ease integration with projects that require newer
 # cmake versions.
@@ -114,10 +121,10 @@ set( CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${VXD_EXTRA_CMAKE_S
 # compiler flag must be added.  Only do this if we are on a x86_64 *nix platform, we're building
 # static libraries, and the user has not explicitly requested position dependent code.
 if(UNIX)
-  if(NOT VXL_BUILD_SHARED_LIBS AND CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64")
-    option(BUILD_POSITION_DEPENDENT_CODE "Generate position dependent code (i.e. code cannot be used in shared library)" OFF)
-    mark_as_advanced(BUILD_POSITION_DEPENDENT_CODE)
-    if(NOT BUILD_POSITION_DEPENDENT_CODE)
+  if(NOT BUILD_SHARED_LIBS AND CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64")
+    option(VXL_BUILD_POSITION_DEPENDENT_CODE "Generate position dependent code (i.e. code cannot be used in shared library)" OFF)
+    mark_as_advanced(VXL_BUILD_POSITION_DEPENDENT_CODE)
+    if(NOT VXL_BUILD_POSITION_DEPENDENT_CODE)
       message(STATUS "Adding -fPIC compiler flag to generate position independent code.")
       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
       set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")

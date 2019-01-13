@@ -32,19 +32,19 @@ void buld_matlab_wrapper::activate()
     }
 }
 
-void buld_matlab_wrapper::add_path(const vcl_string& path)
+void buld_matlab_wrapper::add_path(const std::string& path)
 {
-    vcl_string cmd = vcl_string("addpath ") + path;
+    std::string cmd = std::string("addpath ") + path;
     engEvalString(engine_, cmd.c_str());
 }
 
-void buld_matlab_wrapper::rm_path(const vcl_string& path)
+void buld_matlab_wrapper::rm_path(const std::string& path)
 {
-    vcl_string cmd = vcl_string("rmpath ") + path;
+    std::string cmd = std::string("rmpath ") + path;
     engEvalString(engine_, cmd.c_str());
 }
 
-void buld_matlab_wrapper::run(const vcl_string& path, const vcl_string& name, vcl_vector<mxArray*>& inargs, vcl_vector<mxArray*>& outargs)
+void buld_matlab_wrapper::run(const std::string& path, const std::string& name, std::vector<mxArray*>& inargs, std::vector<mxArray*>& outargs)
 {
     if(!is_activated_)
     {
@@ -57,22 +57,22 @@ void buld_matlab_wrapper::run(const vcl_string& path, const vcl_string& name, vc
         rm_path(path);
 }
 
-/*buld_matlab_double_array buld_matlab_get_empty_double_array(vcl_vector<int>& sizes)
+/*buld_matlab_double_array buld_matlab_get_empty_double_array(std::vector<int>& sizes)
 {
     BULD_GET_EMPTY_ARRAY("double", array_value)
 }
 
-buld_matlab_uint8_array buld_matlab_get_empty_uint8_array(vcl_vector<int>& sizes)
+buld_matlab_uint8_array buld_matlab_get_empty_uint8_array(std::vector<int>& sizes)
 {
     BULD_GET_EMPTY_ARRAY("uint8", uint8_array_value)
 }
 
-buld_matlab_uint16_array buld_matlab_get_empty_uint16_array(vcl_vector<int>& sizes)
+buld_matlab_uint16_array buld_matlab_get_empty_uint16_array(std::vector<int>& sizes)
 {
     BULD_GET_EMPTY_ARRAY("uint16", uint16_array_value)
 }
 
-buld_matlab_uint32_array buld_matlab_get_empty_uint32_array(vcl_vector<int>& sizes)
+buld_matlab_uint32_array buld_matlab_get_empty_uint32_array(std::vector<int>& sizes)
 {
     BULD_GET_EMPTY_ARRAY("uint32", uint32_array_value)
 }*/

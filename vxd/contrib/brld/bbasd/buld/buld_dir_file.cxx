@@ -1,15 +1,15 @@
 // This is buld/buld_dir_file.cxx
 
-#include <vcl_cassert.h>
-#include <vcl_algorithm.h>
+#include <cassert>
+#include <algorithm>
 #include <buld/buld_dir_file.h>
-#include <vcl_fstream.h>
+#include <fstream>
 
 #define FILENAME_HUGE_INT 1000
 
 //: For the input "abc\def\prefix-ghi-jkl-mno.txt"
 //  return the directory "abc\def"
-vcl_string buld_get_dir (const vcl_string& filename) 
+std::string buld_get_dir (const std::string& filename) 
 {
     int end;
     end=filename.find_last_of('\\');
@@ -18,7 +18,7 @@ vcl_string buld_get_dir (const vcl_string& filename)
 
 //: For the input "abc\def\prefix-ghi-jkl-mno.txt"
 //  return the file prefix "prefix"
-vcl_string buld_get_prefix (const vcl_string& filename) 
+std::string buld_get_prefix (const std::string& filename) 
 {
     int start=filename.find_last_of ('\\');
     int end1 = filename.find_first_of ('-');
@@ -34,7 +34,7 @@ vcl_string buld_get_prefix (const vcl_string& filename)
 
 //: For the input "abc\def\prefix-ghi-jkl-mno.txt"
 //  return the dir-file prefix "abc\def\prefix"
-vcl_string buld_get_dir_prefix (const vcl_string& filename) 
+std::string buld_get_dir_prefix (const std::string& filename) 
 {
     int end1 = filename.find_first_of ('-');
     int end2 = filename.find_first_of ('.');
@@ -52,7 +52,7 @@ vcl_string buld_get_dir_prefix (const vcl_string& filename)
 
 //: For the input "abc\def\prefix_ghi_jkl-mno.txt"
 //  return the dir-file prefix "abc\def\prefix"
-vcl_string buld_get_dir_prefix2 (const vcl_string& filename) 
+std::string buld_get_dir_prefix2 (const std::string& filename) 
 {
     int end1 = filename.find_first_of ('_');
     int end2 = filename.find_first_of ('.');
@@ -70,7 +70,7 @@ vcl_string buld_get_dir_prefix2 (const vcl_string& filename)
 
 //Return true for the case of filename contains the parent directory ('..') 
 //and there is no suffix, such as "../../abc\def\prefix-ghi-jkl-mno".
-bool is_par_dir (const vcl_string& str)
+bool is_par_dir (const std::string& str)
 {
     bool b_par_dir = true;
     for (unsigned int i=0; i<str.size(); i++) {
@@ -84,12 +84,12 @@ bool is_par_dir (const vcl_string& str)
 
 //: For the input "abc\def\prefix-ghi-jkl-mno.txt"
 //  return the file prefix "abc\def\prefix-ghi-jkl-mno"
-vcl_string buld_get_dir_file (const vcl_string& filename)
+std::string buld_get_dir_file (const std::string& filename)
 {  
     int end=filename.find_last_of ('.');
 
     //Handle the case of filename contains the parent directory ('..') with no suffix.
-    vcl_string str = filename.substr (0, end);
+    std::string str = filename.substr (0, end);
     if (is_par_dir (str))
         return filename;
     else
@@ -98,11 +98,11 @@ vcl_string buld_get_dir_file (const vcl_string& filename)
 
 //: For the input "abc\def\prefix-ghi-jkl-mno.txt"
 //  return the file name "prefix-ghi-jkl-mno.txt"
-vcl_string buld_get_file (const vcl_string& filename)
+std::string buld_get_file (const std::string& filename)
 {
     int start1 = filename.find_last_of ('\\');
     int start2 = filename.find_last_of ('/');
-    int start = vcl_max (start1, start2);
+    int start = std::max (start1, start2);
     int end=filename.find_last_of ('\0');
     return filename.substr (start+1, end);
 }
@@ -110,7 +110,7 @@ vcl_string buld_get_file (const vcl_string& filename)
 //: For the input "abc\def\prefix-ghi-jkl-mno.txt"
 //  return the file suffix ".txt"
 //  For the input "..\..\abc\def\prefix-ghi-jkl-mno", return "".
-vcl_string buld_get_suffix (const vcl_string& filename)
+std::string buld_get_suffix (const std::string& filename)
 {
     int start,end;
     start=filename.find_last_of ('.');
@@ -120,7 +120,7 @@ vcl_string buld_get_suffix (const vcl_string& filename)
         return "\0";
     else {
         //Handle the case of filename contains the parent directory ('..') with no suffix.
-        vcl_string str = filename.substr (0, start);
+        std::string str = filename.substr (0, start);
         if (is_par_dir (str))
             return "\0";
         else
@@ -128,33 +128,33 @@ vcl_string buld_get_suffix (const vcl_string& filename)
     }
 }
 
-vcl_string buld_get_str_prior (const vcl_string& str, const vcl_string& sub)
+std::string buld_get_str_prior (const std::string& str, const std::string& sub)
 {
     int end = str.find (sub); //find_last_of
     return str.substr (0, end);
 }
 
-vcl_string remove_commas (vcl_string& filename)
+std::string remove_commas (std::string& filename)
 {
     int  start = filename.find_first_of( '.' ) ;
     filename.replace( start, 1, "," );
     return filename;
 }
 
-bool buld_copy_file(const vcl_string& inf, const vcl_string& outf)
+bool buld_copy_file(const std::string& inf, const std::string& outf)
 {
     char * buffer;
     long size;
 
-    vcl_ifstream infile (inf.c_str(), vcl_ifstream::binary);
-    vcl_ofstream outfile (outf.c_str(), vcl_ofstream::binary);
+    std::ifstream infile (inf.c_str(), std::ifstream::binary);
+    std::ofstream outfile (outf.c_str(), std::ofstream::binary);
     if(!infile.is_open() || !outfile.is_open())
     {
         return false;
     }
 
     // get size of file
-    infile.seekg(0, vcl_ifstream::end);
+    infile.seekg(0, std::ifstream::end);
     size = infile.tellg();
     infile.seekg(0);
 
