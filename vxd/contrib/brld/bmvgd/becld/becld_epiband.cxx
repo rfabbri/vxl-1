@@ -346,8 +346,8 @@ get_bounds(
 {
 
   if (!(poly.num_sheets() == 1 && poly[0].size() >= 2))
-    std::cerr << std::cout << "ERROR: poly.num_sheets(): " << poly.num_sheets() 
-                        << " poly[0].size(): " << poly[0].size() << std::endl;
+    std::cerr << "ERROR: poly.num_sheets(): " << poly.num_sheets() 
+              << " poly[0].size(): " << poly[0].size() << std::endl;
 
   assert(poly.num_sheets() == 1 && poly[0].size() >= 2);
 

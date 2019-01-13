@@ -235,7 +235,7 @@ reconstruct_3rd_order(
   V = svd.solve(Const);
   Fr->Kdot = dot_product(V,Fr->N);
   Fr->Tau  = dot_product(V,Fr->B) / Fr->K;
-  assert(vnl_math_isfinite(Fr->Tau));
+  assert(vnl_math::isfinite(Fr->Tau));
 }
 
 // -------------------------------------------------------------------------------
