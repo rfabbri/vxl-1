@@ -32,11 +32,11 @@ class bnld_eno_zerox_label {
 public:
 
   static const unsigned unlabeled 
-     VCL_STATIC_CONST_INIT_INT_DECL((unsigned) -1);
+      = ((unsigned) -1);
 
   //: max number of zeros per interval supported by this class
   static const unsigned maxzeros
-     VCL_STATIC_CONST_INIT_INT_DECL(4);
+      = (4);
 
   //: constructor does all the work and stores result in this object
   bnld_eno_zerox_label(

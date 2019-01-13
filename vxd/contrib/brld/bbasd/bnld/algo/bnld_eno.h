@@ -38,10 +38,10 @@ public:
 #define BNLD_ENO_DATA_LENGTH (BNLD_ENO_MAX_ORDER + 2)
 //: Maximum number of zero crossings in an interval.
 // A shock interval has 2 polys, and, hence, twice the number of max roots
-   static const double near_zero_value
-      VCL_STATIC_CONST_INIT_FLOAT_DECL(1.0e-8);
-   static const double interval_tolerance
-      VCL_STATIC_CONST_INIT_FLOAT_DECL(1.0e-8);
+   static constexpr double near_zero_value
+       = (1.0e-8);
+   static constexpr double interval_tolerance
+       = (1.0e-8);
 };
 
 // ---------------------------------------------------------------------------
@@ -50,9 +50,9 @@ public:
 // 2nd order ENO.
 class bnld_eno_poly {
 public:
-   static const unsigned zero_order_index   VCL_STATIC_CONST_INIT_INT_DECL(0);
-   static const unsigned first_order_index  VCL_STATIC_CONST_INIT_INT_DECL(1);
-   static const unsigned second_order_index VCL_STATIC_CONST_INIT_INT_DECL(2);
+   static constexpr unsigned zero_order_index    = (0);
+   static constexpr unsigned first_order_index   = (1);
+   static constexpr unsigned second_order_index  = (2);
 
    bnld_eno_poly() { }
    bnld_eno_poly(unsigned degree) {order_ = degree;}

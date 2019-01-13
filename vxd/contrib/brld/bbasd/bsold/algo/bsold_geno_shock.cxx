@@ -7,9 +7,9 @@
 
 #if !VCL_STATIC_CONST_INIT_FLOAT_NO_DEFN
 const double bsold_geno_shock::default_tangent_threshold
-   VCL_STATIC_CONST_INIT_FLOAT_DEFN(30.0);
+   
 const double bsold_geno_shock::default_curvature_threshold
-   VCL_STATIC_CONST_INIT_FLOAT_DEFN(0.3);
+   
 #endif
 
 

@@ -3,15 +3,6 @@
 #include <cassert>
 
 
-#if !VCL_STATIC_CONST_INIT_FLOAT_NO_DEFN
-const double bnld_eno_shock_1d::default_tangent_change_threshold
-      VCL_STATIC_CONST_INIT_FLOAT_DEFN(20.0);
-const double bnld_eno_shock_1d::default_curvature_change_threshold
-      VCL_STATIC_CONST_INIT_FLOAT_DEFN(0.3);
-#endif
-
-
-
 // ----------------------------------------------------------------------------
 // bnld_eno_shock_interp
 // ----------------------------------------------------------------------------

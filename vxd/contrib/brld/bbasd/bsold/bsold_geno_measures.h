@@ -33,8 +33,8 @@ public:
    double delta_tangent() const {return patchspan(end_tangent() - start_tangent());}
 
    /// Utilities to manipulate the measures
-   static const double degrees_per_radian 
-      VCL_STATIC_CONST_INIT_FLOAT_DECL(180.0/3.14159265358979323846);
+   static constexpr double degrees_per_radian 
+       = (180.0/3.14159265358979323846);
    static double rad2deg(double x) {return x*180 / 3.14159265358979323846;}
    //: angle in degrees
    static double patchspan(double x)

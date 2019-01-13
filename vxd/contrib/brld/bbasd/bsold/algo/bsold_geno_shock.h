@@ -23,9 +23,9 @@ class bsold_geno_shock
    //--- Constants/Parameters  ---------------------------------------
     
    static const double default_tangent_threshold
-      VCL_STATIC_CONST_INIT_FLOAT_DECL(30.0);
+       = (30.0);
    static const double default_curvature_threshold
-      VCL_STATIC_CONST_INIT_FLOAT_DECL(0.3);
+       = (0.3);
 
    //--- Shock Tests -----------------------------------------------
    

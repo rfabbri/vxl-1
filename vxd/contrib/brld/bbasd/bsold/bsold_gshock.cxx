@@ -2,11 +2,6 @@
 #include <cmath>
 #include <bgld/algo/bgld_arc_algo.h>
 
-#if !VCL_STATIC_CONST_INIT_FLOAT_NO_DEFN
-const double bsold_gshock::default_shock_point_dist_threshold
-   VCL_STATIC_CONST_INIT_FLOAT_DEFN(1.5);
-#endif
-
 unsigned bsold_gshock::
 make(const bgld_param_curve *prv, const bgld_param_curve *cur,
      const bgld_param_curve *nxt, const double shock_point_dist_threshold)

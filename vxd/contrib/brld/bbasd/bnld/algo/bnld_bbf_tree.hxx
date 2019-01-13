@@ -432,7 +432,5 @@ template class bnld_bbf_box< T,n >; \
 template class bnld_bbf_node< T,n >; \
 template class bnld_bbf_queue_entry< T,n >; \
 template class bnld_bbf_tree< T,n >; \
-VCL_INSTANTIATE_INLINE(bool first_less( const std::pair<T,int>& left, \
-                                        const std::pair<T,int>& right )); \
 typedef bnld_bbf_node<T,n> bnld_bbf_node_inst; \
 VBL_SMART_PTR_INSTANTIATE( bnld_bbf_node_inst );

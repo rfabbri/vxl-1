@@ -64,10 +64,10 @@ private:
 //
 class bnld_eno_shock_1d : public bnld_eno_1d {
 public:
-   static const double default_tangent_change_threshold
-      VCL_STATIC_CONST_INIT_FLOAT_DECL(20.0);
-   static const double default_curvature_change_threshold
-      VCL_STATIC_CONST_INIT_FLOAT_DECL(0.3);
+   static constexpr double default_tangent_change_threshold
+       = (20.0);
+   static constexpr double default_curvature_change_threshold
+       = (0.3);
 
    bnld_eno_shock_1d(double border_value = std::numeric_limits<double>::max()/1e10) :
       bnld_eno_1d(border_value),

@@ -3,16 +3,6 @@
 // \file
 // \author Based on original code by  Ricardo Fabbri
 
-// Constants
-#if !VCL_STATIC_CONST_INIT_INT_NO_DEFN
-const unsigned bnld_eno_poly::zero_order_index 
-      VCL_STATIC_CONST_INIT_INT_DEFN(0);
-const unsigned  bnld_eno_poly::first_order_index 
-      VCL_STATIC_CONST_INIT_INT_DEFN(1);
-const unsigned  bnld_eno_poly::second_order_index 
-      VCL_STATIC_CONST_INIT_INT_DEFN(2);
-#endif
-
 void bnld_eno_poly::
 print(std::ostream &strm) const
 {

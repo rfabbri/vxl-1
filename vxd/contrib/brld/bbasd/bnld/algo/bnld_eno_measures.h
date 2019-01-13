@@ -27,8 +27,8 @@ public:
    double end_curvature() const {return end_curvature_;} 
    double total_curvature() const {return total_curvature_;}
 
-   static const double degrees_per_radian 
-      VCL_STATIC_CONST_INIT_FLOAT_DECL(180.0/3.14159265358979323846);
+   static constexpr double degrees_per_radian 
+       = (180.0/3.14159265358979323846);
    static double angle_difference(double a,double b);
 
 protected:

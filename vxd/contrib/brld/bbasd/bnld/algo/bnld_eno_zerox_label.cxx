@@ -1,14 +1,6 @@
 #include "bnld_eno_zerox_label.h"
 #include <stdio.h>
 
-#if !VCL_STATIC_CONST_INIT_INT_NO_DEFN
-const unsigned bnld_eno_zerox_label::unlabeled
-      VCL_STATIC_CONST_INIT_INT_DEFN((unsigned)-1);
-
-const unsigned bnld_eno_zerox_label::maxzeros
-      VCL_STATIC_CONST_INIT_INT_DEFN(4);
-#endif
-
 bnld_eno_zerox_label::
   bnld_eno_zerox_label(
       const double *data,

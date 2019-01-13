@@ -1,11 +1,5 @@
 #include "bnld_eno_measures.h"
 
-#if !VCL_STATIC_CONST_INIT_FLOAT_NO_DEFN
-const double  bnld_eno_measures::degrees_per_radian 
-      VCL_STATIC_CONST_INIT_FLOAT_DEFN(180.0/vnl_math::pi);
-#endif
-
-
 /*
  * Computes start_tangent/curvature, end_tangent/curvature
  * and total_curvature.

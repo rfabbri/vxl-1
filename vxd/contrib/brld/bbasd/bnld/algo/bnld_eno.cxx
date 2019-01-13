@@ -8,13 +8,6 @@
 // \file
 // \author Based on original code by  Ricardo Fabbri
 
-#if !VCL_STATIC_CONST_INIT_FLOAT_NO_DEFN
-const double  bnld_eno::near_zero_value
-      VCL_STATIC_CONST_INIT_FLOAT_DEFN(1.0e-8);
-const double  bnld_eno::interval_tolerance
-      VCL_STATIC_CONST_INIT_FLOAT_DEFN(1.0e-8);
-#endif
-
 //:
 // \return true on success
 bool bnld_eno_1d::

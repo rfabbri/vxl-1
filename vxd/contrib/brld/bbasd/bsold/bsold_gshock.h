@@ -18,8 +18,8 @@
 class bsold_gshock : public vbl_ref_count {
 public:
    
-   static const double default_shock_point_dist_threshold
-      VCL_STATIC_CONST_INIT_FLOAT_DECL(1.5);
+   static constexpr double default_shock_point_dist_threshold
+       = (1.5);
    
    //: default constructor
    bsold_gshock(const bgld_param_curve *prv, const bgld_param_curve *cur, 
