@@ -4,8 +4,8 @@ dbcvr_open_space_cvmatch_even_grid::
 dbcvr_open_space_cvmatch_even_grid(bsold_interp_curve_3d *c1, bsold_interp_curve_3d *c2, 
                                    int grid_w, int grid_h, 
                                    double R1, double R2,
-                                   char *cost_formula_comput_type,
-                                   char *angle_der_comput_type,
+                                   const char *cost_formula_comput_type,
+                                   const char *angle_der_comput_type,
                                    int template_size
                                    )
 {

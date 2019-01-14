@@ -36,8 +36,8 @@ public:
   dbcvr_open_space_cvmatch_even_grid(bsold_interp_curve_3d *c1, bsold_interp_curve_3d *c2, 
                                      int grid_w, int grid_h, 
                                      double R1 = 0.7, double R2 = 0.07,
-                                     char *cost_formula_comput_type = "explicit",
-                                     char *angle_der_comput_type = NULL,
+                                     const char *cost_formula_comput_type = "explicit",
+                                     const char *angle_der_comput_type = NULL,
                                      int template_size = 3);
   virtual ~dbcvr_open_space_cvmatch_even_grid() {};
 
@@ -58,9 +58,9 @@ protected:
   // cost weight parameters for bending and twisting
   double R1_, R2_;
   // cost formula computation type, case-sensitive
-  char *cfct_;
+  const char *cfct_;
   // angle derivative computation type (only when cfct_ = "implicit"), case-sensitive
-  char *adct_;
+  const char *adct_;
   // template size for the dynamic programming
   int template_size_;
   // pointer to the dynamic programming object

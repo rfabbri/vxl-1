@@ -29,7 +29,7 @@ bool dbmsh3d_load_sg3pi (dbmsh3d_sg3pi* sg3pi, const char* file)
   int intensity, np;
   std::vector<dbmsh3d_sg3pi_pt*> scanline;
 
-  if (in == NULL) {
+  if (in.fail()) {
     return false;
   }
 
@@ -83,7 +83,7 @@ bool dbmsh3d_save_sg3pi (dbmsh3d_sg3pi* sg3pi, const char* file)
 
   int max_pn = sg3pi->get_max_pn ();
   std::fprintf (fp, "#:Number of Points per Profiles: %d\n", max_pn);
-  std::fprintf (fp, "#:Number of Profiles: %d\n", sg3pi->data().size());
+  std::fprintf (fp, "#:Number of Profiles: %lu\n", sg3pi->data().size());
   std::fprintf (fp, "#:Pose Transformation:\n");
   std::fprintf (fp, "#                      1.000000 0.000000 0.000000 0.000000\n");
   std::fprintf (fp, "#                      0.000000 1.000000 0.000000 0.000000\n");

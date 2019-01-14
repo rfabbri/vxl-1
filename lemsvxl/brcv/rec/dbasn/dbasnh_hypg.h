@@ -89,7 +89,7 @@ public:
     assert (links_[j][i] != 0);
     assert (links_[j][k] != 0);
     assert (links_[k][j] != 0);
-    assert (vnl_math_isnan(cost) == false);
+    assert (vnl_math::isnan(cost) == false);
 
     //After adding virtual link, this duplication becomes possible!!
     ///assert (corners_[i][j][k] == 0);
@@ -273,7 +273,7 @@ public:
     ///assert (links_[j][i] != 0);
     ///assert (links_[j][k] != 0);
     ///assert (links_[k][j] != 0);
-    assert (vnl_math_isnan(cost) == false);
+    assert (vnl_math::isnan(cost) == false);
     corner_nf_[i][j][k] = cost;
     corner_nf_[k][j][i] = cost;
 
@@ -289,7 +289,7 @@ public:
     ///assert (links_[j][i] != 0);
     ///assert (links_[j][k] != 0);
     ///assert (links_[k][j] != 0);
-    assert (vnl_math_isnan(cost) == false);
+    assert (vnl_math::isnan(cost) == false);
     corner_grad_r_[i][j][k] = cost;
     corner_grad_r_[k][j][i] = cost;
 

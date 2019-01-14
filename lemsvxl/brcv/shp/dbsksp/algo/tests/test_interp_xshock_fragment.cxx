@@ -40,8 +40,8 @@ bool dbsksp_is_valid_xfrag_interp(const dbsksp_xshock_node_descriptor& start,
 
     is_valid = is_valid && vgl_distance(a.bnd_pt_left(), b.bnd_pt_left()) < tol &&
       vgl_distance(a.bnd_pt_right(), b.bnd_pt_right()) < tol &&
-      vnl_math_abs(signed_angle(a.bnd_tangent_left(), b.bnd_tangent_left())) < tol &&
-      vnl_math_abs(signed_angle(a.bnd_tangent_right(), b.bnd_tangent_right())) < tol;
+      vnl_math::abs(signed_angle(a.bnd_tangent_left(), b.bnd_tangent_left())) < tol &&
+      vnl_math::abs(signed_angle(a.bnd_tangent_right(), b.bnd_tangent_right())) < tol;
   }
 
   return is_valid;

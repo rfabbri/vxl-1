@@ -432,13 +432,13 @@ determine_femur_inner_outer_contour(const vsol_polyline_2d_sptr& polyline1,
   for (unsigned i=0; i<polyline1->size(); ++i)
   {
     vsol_point_2d_sptr pt = polyline1->vertex(i);
-    moment_inertia1 += vnl_math_hypot(pt->x()-cg.x(), pt->y()-cg.y());
+    moment_inertia1 += vnl_math::hypot(pt->x()-cg.x(), pt->y()-cg.y());
   }
 
   for (unsigned i=0; i<polyline2->size(); ++i)
   {
     vsol_point_2d_sptr pt = polyline2->vertex(i);
-    moment_inertia2 += vnl_math_hypot(pt->x()-cg.x(), pt->y()-cg.y());
+    moment_inertia2 += vnl_math::hypot(pt->x()-cg.x(), pt->y()-cg.y());
   }
 
   // Determine inner and outer contour based on their interia momentum

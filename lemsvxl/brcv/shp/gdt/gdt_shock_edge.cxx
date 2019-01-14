@@ -40,8 +40,8 @@ void next_SRF_L_to_eL (const gdt_welm* Wa, const gdt_welm* Wb,
   tauL = _solve_tau_fix_bnd_value (A_nL, A_nH, Wa->mu(), B_nL, B_nH, Wb->mu(), tau_min, tau_max);  
 
   if (tau_min <= tauL && tauL <= tau_max) {
-    tL = Wa->mu() + vnl_math_hypot (tauL-A_nL, A_nH);    
-    assert (_eqD (tL, Wb->mu() + vnl_math_hypot (tauL-B_nL, B_nH)));
+    tL = Wa->mu() + vnl_math::hypot (tauL-A_nL, A_nH);    
+    assert (_eqD (tL, Wb->mu() + vnl_math::hypot (tauL-B_nL, B_nH)));
   }
 }
 
@@ -69,8 +69,8 @@ void next_SRF_L_to_eR (const gdt_welm* Wa, const gdt_welm* Wb,
   tauR = _solve_tau_fix_bnd_value (A_nL, A_nH, Wa->mu(), B_nL, B_nH, Wb->mu(), tau_min, tau_max);
 
   if (tau_min <= tauR && tauR <= tau_max) {
-    tR = Wb->mu() + vnl_math_hypot (tauR-B_nL, B_nH);    
-    assert (_eqD (tR, Wa->mu() + vnl_math_hypot (tauR-A_nL, A_nH)));
+    tR = Wb->mu() + vnl_math::hypot (tauR-B_nL, B_nH);    
+    assert (_eqD (tR, Wa->mu() + vnl_math::hypot (tauR-A_nL, A_nH)));
   }
 }
 
@@ -98,8 +98,8 @@ void next_SRF_R_to_eL (const gdt_welm* Wa, const gdt_welm* Wb,
   tauL = _solve_tau_fix_bnd_value (A_nL, A_nH, Wa->mu(), B_nL, B_nH, Wb->mu(), tau_min, tau_max);
 
   if (tau_min <= tauL && tauL <= tau_max) {
-    tL = Wa->mu() + vnl_math_hypot (tauL-A_nL, A_nH);    
-    assert (_eqD (tL, Wb->mu() + vnl_math_hypot (tauL-B_nL, B_nH)));
+    tL = Wa->mu() + vnl_math::hypot (tauL-A_nL, A_nH);    
+    assert (_eqD (tL, Wb->mu() + vnl_math::hypot (tauL-B_nL, B_nH)));
   }
 }
 
@@ -127,8 +127,8 @@ void next_SRF_R_to_eR (const gdt_welm* Wa, const gdt_welm* Wb,
   tauR = _solve_tau_fix_bnd_value (A_nL, A_nH, Wa->mu(), B_nL, B_nH, Wb->mu(), tau_min, tau_max);  
 
   if (tau_min <= tauR && tauR <= tau_max) {
-    tR = Wb->mu() + vnl_math_hypot (tauR-B_nL, B_nH);    
-    assert (_eqD (tR, Wa->mu() + vnl_math_hypot (tauR-A_nL, A_nH)));
+    tR = Wb->mu() + vnl_math::hypot (tauR-B_nL, B_nH);    
+    assert (_eqD (tR, Wa->mu() + vnl_math::hypot (tauR-A_nL, A_nH)));
   }
 }
 
@@ -155,8 +155,8 @@ void next_SE_to_eL (const gdt_welm* Wa, const gdt_welm* Wb,
   tauL = _solve_tau_fix_bnd_value (A_nL, A_nH, Wa->mu(), B_nL, B_nH, Wb->mu(), tau_min, tau_max);
 
   if (tau_min <= tauL && tauL <= tau_max) {
-    tL = Wa->mu() + vnl_math_hypot (tauL-A_nL, A_nH);
-    assert (_eqD (tL, Wb->mu() + vnl_math_hypot (tauL-B_nL, B_nH)));
+    tL = Wa->mu() + vnl_math::hypot (tauL-A_nL, A_nH);
+    assert (_eqD (tL, Wb->mu() + vnl_math::hypot (tauL-B_nL, B_nH)));
   }
 }
 
@@ -182,8 +182,8 @@ void next_SE_to_eR (const gdt_welm* Wa, const gdt_welm* Wb,
   tauR = _solve_tau_fix_bnd_value (A_nL, A_nH, Wa->mu(), B_nL, B_nH, Wb->mu(), tau_min, tau_max);
 
   if (tau_min <= tauR && tauR <= tau_max) {
-    tR = Wb->mu() + vnl_math_hypot (tauR-B_nL, B_nH);
-    assert (_eqD (tR, Wa->mu() + vnl_math_hypot (tauR-A_nL, A_nH)));
+    tR = Wb->mu() + vnl_math::hypot (tauR-B_nL, B_nH);
+    assert (_eqD (tR, Wa->mu() + vnl_math::hypot (tauR-A_nL, A_nH)));
   }
 }
 
@@ -229,8 +229,8 @@ void next_SV_to_eC (const gdt_welm* Wa, const gdt_welm* Wb,
   tauC = _solve_tau_fix_bnd_value (A_nL, A_nH, Wa->mu(), B_nL, B_nH, Wb->mu(), tau_min, tau_max);
 
   if (tau_min <= tauC && tauC <= tau_max) {
-    tC = Wa->mu() + vnl_math_hypot (tauC-A_nL, A_nH);    
-    assert (_eqD (tC, Wb->mu() + vnl_math_hypot (tauC-B_nL, B_nH)));
+    tC = Wa->mu() + vnl_math::hypot (tauC-A_nL, A_nH);    
+    assert (_eqD (tC, Wb->mu() + vnl_math::hypot (tauC-B_nL, B_nH)));
   }
 }
 
@@ -271,8 +271,8 @@ void next_SV_SVE_to_eL (const gdt_welm* Wa, const gdt_welm* Wb,
                                    tau_min, tau_max, existingTau);
 
   if (tau_min <= tauL && tauL <= tau_max) {
-    tL = Wa->mu() + vnl_math_hypot (tauL-A_nL, A_nH);    
-    assert (_eqD (tL, Wb->mu() + vnl_math_hypot (tauL-B_nL, B_nH)));
+    tL = Wa->mu() + vnl_math::hypot (tauL-A_nL, A_nH);    
+    assert (_eqD (tL, Wb->mu() + vnl_math::hypot (tauL-B_nL, B_nH)));
   }
 }
 
@@ -311,8 +311,8 @@ void next_SV_SVE_to_eR (const gdt_welm* Wa, const gdt_welm* Wb,
                                    tau_min, tau_max, existingTau);
 
   if (tau_min <= tauR && tauR <= tau_max) {
-    tR = Wb->mu() + vnl_math_hypot (tauR-B_nL, B_nH);
-    assert (_eqD (tR, Wa->mu() + vnl_math_hypot (tauR-A_nL, A_nH)));
+    tR = Wb->mu() + vnl_math::hypot (tauR-B_nL, B_nH);
+    assert (_eqD (tR, Wa->mu() + vnl_math::hypot (tauR-A_nL, A_nH)));
   }
 }
 
@@ -344,8 +344,8 @@ void next_SRF2_to_eL (const gdt_welm* Wa, const gdt_welm* Wb,
   tauL = _solve_tau_fix_bnd_value (A_nL, A_nH, Wa->mu(), B_nL, B_nH, Wb->mu(), tau_min, tau_max);
 
   if (tau_min <= tauL && tauL <= tau_max) {
-    tL = Wa->mu() + vnl_math_hypot (tauL-A_nL, A_nH);    
-    assert (_eqD (tL, Wb->mu() + vnl_math_hypot (tauL-B_nL, B_nH)));
+    tL = Wa->mu() + vnl_math::hypot (tauL-A_nL, A_nH);    
+    assert (_eqD (tL, Wb->mu() + vnl_math::hypot (tauL-B_nL, B_nH)));
   }
 }
 
@@ -375,8 +375,8 @@ void next_SRF2_to_eR (const gdt_welm* Wa, const gdt_welm* Wb,
   tauR = _solve_tau_fix_bnd_value (A_nL, A_nH, Wa->mu(), B_nL, B_nH, Wb->mu(), tau_min, tau_max);
 
   if (tau_min <= tauR && tauR <= tau_max) {
-    tR = Wb->mu() + vnl_math_hypot (tauR-B_nL, B_nH);    
-    assert (_eqD (tR, Wa->mu() + vnl_math_hypot (tauR-A_nL, A_nH)));
+    tR = Wb->mu() + vnl_math::hypot (tauR-B_nL, B_nH);    
+    assert (_eqD (tR, Wa->mu() + vnl_math::hypot (tauR-A_nL, A_nH)));
   }
 }
 
@@ -404,8 +404,8 @@ void next_SRF_L2_to_eR (const gdt_welm* Wa, const gdt_welm* Wb,
   tauR = _solve_tau_fix_bnd_value (A_nL, A_nH, Wa->mu(), B_nL, B_nH, Wb->mu(), tau_min, tau_max);
 
   if (tau_min <= tauR && tauR <= tau_max) {
-    tR = Wb->mu() + vnl_math_hypot (tauR-B_nL, B_nH);    
-    assert (_eqD (tR, Wa->mu() + vnl_math_hypot (tauR-A_nL, A_nH)));
+    tR = Wb->mu() + vnl_math::hypot (tauR-B_nL, B_nH);    
+    assert (_eqD (tR, Wa->mu() + vnl_math::hypot (tauR-A_nL, A_nH)));
   }
 }
 
@@ -433,8 +433,8 @@ void next_SRF_R2_to_eL (const gdt_welm* Wa, const gdt_welm* Wb,
   tauL = _solve_tau_fix_bnd_value (A_nL, A_nH, Wa->mu(), B_nL, B_nH, Wb->mu(), tau_min, tau_max);
 
   if (tau_min <= tauL && tauL <= tau_max) {
-    tL = Wa->mu() + vnl_math_hypot (tauL-A_nL, A_nH);    
-    assert (_eqD (tL, Wb->mu() + vnl_math_hypot (tauL-B_nL, B_nH)));
+    tL = Wa->mu() + vnl_math::hypot (tauL-A_nL, A_nH);    
+    assert (_eqD (tL, Wb->mu() + vnl_math::hypot (tauL-B_nL, B_nH)));
   }
 }
 
@@ -467,8 +467,8 @@ void next_SRF_L2_to_eC (const gdt_welm* Wa, const gdt_welm* Wb,
   tauC = _solve_tau_fix_bnd_value (A_nL, A_nH, Wa->mu(), B_nL, B_nH, Wb->mu(), tau_min, tau_max);  
 
   if (tau_min <= tauC && tauC <= tau_max) {
-    tC = Wa->mu() + vnl_math_hypot (tauC-A_nL, A_nH);    
-    assert (_eqD (tC, Wb->mu() + vnl_math_hypot (tauC-B_nL, B_nH)));
+    tC = Wa->mu() + vnl_math::hypot (tauC-A_nL, A_nH);    
+    assert (_eqD (tC, Wb->mu() + vnl_math::hypot (tauC-B_nL, B_nH)));
   }
 }
 
@@ -498,8 +498,8 @@ void next_SRF_R2_to_eC (const gdt_welm* Wa, const gdt_welm* Wb,
   tauC = _solve_tau_fix_bnd_value (A_nL, A_nH, Wa->mu(), B_nL, B_nH, Wb->mu(), tau_min, tau_max);  
 
   if (tau_min <= tauC && tauC <= tau_max) {
-    tC = Wb->mu() + vnl_math_hypot (tauC-B_nL, B_nH);    
-    assert (_eqD (tC, Wa->mu() + vnl_math_hypot (tauC-A_nL, A_nH)));
+    tC = Wb->mu() + vnl_math::hypot (tauC-B_nL, B_nH);    
+    assert (_eqD (tC, Wa->mu() + vnl_math::hypot (tauC-A_nL, A_nH)));
   }
 }
 

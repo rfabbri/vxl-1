@@ -55,7 +55,7 @@ bool buld_exp_stat_print_process_cons(bprb_func_process& pro)
   bool ok=false;
   std::vector<std::string> input_types;
   input_types.push_back("buld_exp_stat_sptr");
-  input_types.push_back(vcl_string"); // name of the output file
+  input_types.push_back("vcl_string"); // name of the output file
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
@@ -88,7 +88,7 @@ bool buld_exp_stat_read_process_cons(bprb_func_process& pro)
   bool ok=false;
   std::vector<std::string> input_types;
   input_types.push_back("buld_exp_stat_sptr");
-  input_types.push_back(vcl_string"); // name of the input file
+  input_types.push_back("vcl_string"); // name of the input file
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
   std::vector<std::string> output_types;
@@ -147,8 +147,8 @@ bool buld_exp_stat_eval_classification_process_cons(bprb_func_process& pro)
   bool ok=false;
   std::vector<std::string> input_types;
   input_types.push_back("buld_exp_stat_sptr");
-  input_types.push_back(vcl_string"); // gt class
-  input_types.push_back(vcl_string"); // outputted class by a classifier
+  input_types.push_back("vcl_string"); // gt class
+  input_types.push_back("vcl_string"); // outputted class by a classifier
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
@@ -180,7 +180,7 @@ bool dborl_category_info_set_create_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back(vcl_string"); // file name
+  input_types.push_back("vcl_string"); // file name
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
   std::vector<std::string> output_types;
@@ -214,7 +214,7 @@ bool dborl_category_info_set_write_xml_process_cons(bprb_func_process& pro)
   bool ok=false;
   std::vector<std::string> input_types;
   input_types.push_back("borld_category_info_set_sptr");
-  input_types.push_back(vcl_string"); // output file name
+  input_types.push_back("vcl_string"); // output file name
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
   std::vector<std::string> output_types;
@@ -243,7 +243,7 @@ bool dborl_category_info_set_get_id_process_cons(bprb_func_process& pro)
   bool ok=false;
   std::vector<std::string> input_types;
   input_types.push_back("borld_category_info_set_sptr");
-  input_types.push_back(vcl_string"); // category name
+  input_types.push_back("vcl_string"); // category name
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
   std::vector<std::string> output_types;
@@ -279,7 +279,7 @@ bool buld_exp_stat_eval_classification_using_id_process_cons(bprb_func_process& 
   std::vector<std::string> input_types;
   input_types.push_back("buld_exp_stat_sptr");
   input_types.push_back("borld_category_info_set_sptr");  // pass a category info set instance for this process to match the name to the id
-  input_types.push_back(vcl_string"); // gt class
+  input_types.push_back("vcl_string"); // gt class
   input_types.push_back("int"); // class id outputted by a classifier
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;

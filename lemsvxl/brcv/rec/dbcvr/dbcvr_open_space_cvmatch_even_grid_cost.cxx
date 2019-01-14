@@ -11,8 +11,8 @@ dbcvr_open_space_cvmatch_even_grid_cost(bsold_interp_curve_3d *c1,
                                         int num_samples_c1, 
                                         int num_samples_c2,
                                         double R1, double R2,
-                                        char *cost_formula_comput_type,
-                                        char *angle_der_comput_type)
+                                        const char *cost_formula_comput_type,
+                                        const char *angle_der_comput_type)
 {
   c1_ = c1;
   c2_ = c2;

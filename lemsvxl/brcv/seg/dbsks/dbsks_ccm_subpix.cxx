@@ -432,7 +432,7 @@ compute_matched_edgels_using_ocm_cost()
       {
         for (int wy = wmin_y; wy <= wmax_y; ++wy)
         {
-          if (vnl_math_hypot(wx-i, wy-j) > radius)
+          if (vnl_math::hypot(wx-i, wy-j) > radius)
             continue;
 
           const std::vector<dbdet_edgel* >& edgels = this->edgemap()->cell(wx, wy);

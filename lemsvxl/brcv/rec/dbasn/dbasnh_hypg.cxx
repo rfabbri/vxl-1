@@ -265,7 +265,7 @@ void dbasnh_hypg_aug::normalize_corner_nf_cost (const float max, const int verbo
         if (nf >= 1) { //Only proceed where there exists a ms_sheet.
           const double log_nf = std::log (double(nf));
           corner_nf_[i][j][k] = log_nf / log_max;
-          assert (vnl_math_isnan(corner_nf_[i][j][k]) == false);
+          assert (vnl_math::isnan(corner_nf_[i][j][k]) == false);
         }
       }
     }

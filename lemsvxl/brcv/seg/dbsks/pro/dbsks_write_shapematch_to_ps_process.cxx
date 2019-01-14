@@ -196,7 +196,7 @@ execute()
     std::ifstream ifs(image_list.path.c_str());
     if (!ifs) 
     {
-      std::cout << "ERROR: Unable to open file list " << ifs << std::endl;
+      std::cout << "ERROR: Unable to open file list " << image_list.path.c_str() << std::endl;
       return false;
     }
 

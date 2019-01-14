@@ -413,7 +413,7 @@ void dbskr_visualize_path_scurve_tool::draw_v_graph_nodes(dbskr_v_graph_sptr v, 
     glBegin( GL_POINTS );
       for (dbskr_v_graph::vertex_iterator v_itr = v->vertices_begin(); v_itr != v->vertices_end(); v_itr++) {
         dbsk2d_shock_node_sptr sn = (*v_itr)->original_shock_node_;
-        if (sn > 0)
+        if (sn != nullptr)
           glVertex2f(sn->ex_pts()[0].x(), sn->ex_pts()[0].y()); 
       }
     glEnd();

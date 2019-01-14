@@ -56,7 +56,7 @@ void loadCON(std::string fileName, std::vector<vsol_point_3d_sptr> &points)
 void writeCON(std::string fileName, bsold_interp_curve_3d &c, int numpoints)
 {
   std::ofstream outfp(fileName.c_str());
-  assert(outfp != NULL);
+  assert(outfp.fail());
   outfp << "CONTOUR" << std::endl;
   outfp << "OPEN" << std::endl;
   outfp << numpoints << std::endl;

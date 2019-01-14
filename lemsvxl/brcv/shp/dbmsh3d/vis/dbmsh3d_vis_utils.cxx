@@ -318,9 +318,9 @@ SoSeparator* draw_cylinder(float x1, float y1, float z1,
 
   SoCylinder* cylinder = new SoCylinder();
   cylinder->radius = radius;
-  cylinder->height = std::sqrt(vnl_math_sqr(x2-x1) + 
-    vnl_math_sqr(y2-y1) + 
-    vnl_math_sqr(z2-z1));
+  cylinder->height = std::sqrt(vnl_math::sqr(x2-x1) + 
+    vnl_math::sqr(y2-y1) + 
+    vnl_math::sqr(z2-z1));
 
   root->addChild(cylinder);
   return root;

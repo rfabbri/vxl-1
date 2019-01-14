@@ -239,7 +239,7 @@ bool dbmsh3d_save_xyzn1 (std::vector<std::pair<vgl_point_3d<double>, vgl_vector_
               file, ori_pts.size());
   
   //# of points.
-  std::fprintf (fp, "%d\n", ori_pts.size());
+  std::fprintf (fp, "%lu\n", ori_pts.size());
 
   std::vector<std::pair<vgl_point_3d<double>, vgl_vector_3d<double> > >::iterator it = ori_pts.begin();
   for (; it != ori_pts.end(); it++) {
@@ -400,7 +400,7 @@ bool dbmsh3d_save_p3d (dbmsh3d_pt_set* pointset, const char* file)
                file, pointset->vertexmap().size());
 
   std::fprintf (fp, "%d\n", 3);
-  std::fprintf (fp, "%u\n", pointset->vertexmap().size());
+  std::fprintf (fp, "%lu\n", pointset->vertexmap().size());
   
   std::map<int, dbmsh3d_vertex*>::iterator it = pointset->vertexmap().begin();
   for (; it != pointset->vertexmap().end(); it++) {
@@ -454,7 +454,7 @@ bool dbmsh3d_save_p3d (std::vector<vgl_point_3d<double> >& pts, const char* file
   vul_printf (std::cout, "  saving %s : %d points ...\n", file, pts.size());
 
   std::fprintf (fp, "%d\n", 3);
-  std::fprintf (fp, "%u\n", pts.size());
+  std::fprintf (fp, "%lu\n", pts.size());
   
   std::vector<vgl_point_3d<double> >::iterator it = pts.begin();
   for (; it != pts.end(); it++) {
@@ -510,7 +510,7 @@ bool dbmsh3d_save_p3d (std::vector<std::pair<int, vgl_point_3d<double> > >& idpt
   vul_printf (std::cout, "  saving %s : %d points ...\n", file, idpts.size());
 
   std::fprintf (fp, "%d\n", 3);
-  std::fprintf (fp, "%u\n", idpts.size());
+  std::fprintf (fp, "%lu\n", idpts.size());
   
   std::vector<std::pair<int, vgl_point_3d<double> > >::iterator it = idpts.begin();
   for (; it != idpts.end(); it++) {
@@ -640,8 +640,8 @@ bool dbmsh3d_save_ply2 (const std::vector<vgl_point_3d<double> >& pts,
   vul_printf (std::cout, "  saving %s : \n\t%d points, %d faces ...\n", 
               file, pts.size(), faces.size());
 
-  std::fprintf (fp, "%d\n", pts.size());
-  std::fprintf (fp, "%d\n", faces.size());
+  std::fprintf (fp, "%ld\n", pts.size());
+  std::fprintf (fp, "%lu\n", faces.size());
 
   for (unsigned int i=0; i<pts.size(); i++) {
     std::fprintf (fp, "%.16f ", pts[i].x());
@@ -651,7 +651,7 @@ bool dbmsh3d_save_ply2 (const std::vector<vgl_point_3d<double> >& pts,
   }
 
   for (unsigned int i=0; i<faces.size(); i++) {
-    std::fprintf (fp, "%d ", faces[i].size());
+    std::fprintf (fp, "%lu ", faces[i].size());
     assert (faces[i].size() != 0);
     for (unsigned int j=0; j<faces[i].size(); j++)
       std::fprintf (fp, "%d ", faces[i][j]);
@@ -707,8 +707,8 @@ bool dbmsh3d_save_ply2 (dbmsh3d_mesh* M, const char* file)
   vul_printf (std::cout, "  saving %s : \n\t%d points, %d faces ...\n", 
                file, M->vertexmap().size(), M->facemap().size());
 
-  std::fprintf (fp, "%d\n", M->vertexmap().size());
-  std::fprintf (fp, "%d\n", M->facemap().size());
+  std::fprintf (fp, "%lu\n", M->vertexmap().size());
+  std::fprintf (fp, "%lu\n", M->facemap().size());
 
   //Use v->vid() to re-index vertices, starting with id 0.
   int vidcounter = 0;
@@ -730,7 +730,7 @@ bool dbmsh3d_save_ply2 (dbmsh3d_mesh* M, const char* file)
     if (F->vertices().empty()) //skip if the vertices_[] is non-empty.
       F->_ifs_track_ordered_vertices ();
 
-    std::fprintf (fp, "%d ", F->vertices().size());
+    std::fprintf (fp, "%lu ", F->vertices().size());
     for (unsigned j=0; j<F->vertices().size(); j++) {
       dbmsh3d_vertex* V = F->vertices(j);
       std::fprintf (fp, "%d ", V->vid());
@@ -936,8 +936,8 @@ bool dbmsh3d_save_label_faces_ply2 (dbmsh3d_mesh* M, const int label, const char
   vul_printf (std::cout, "  saving %s : \n\t%d points, %d faces ...\n", 
               file, vertices.size(), faces.size());
 
-  std::fprintf (fp, "%d\n", vertices.size());
-  std::fprintf (fp, "%d\n", faces.size());
+  std::fprintf (fp, "%lu\n", vertices.size());
+  std::fprintf (fp, "%lu\n", faces.size());
 
   for (unsigned int i=0; i<vertices.size(); i++) {
     dbmsh3d_vertex* V = vertices[i];
@@ -956,7 +956,7 @@ bool dbmsh3d_save_label_faces_ply2 (dbmsh3d_mesh* M, const int label, const char
     std::vector<dbmsh3d_vertex*> vertices;
     F->get_bnd_Vs (vertices);
 
-    std::fprintf (fp, "%d ", vertices.size());
+    std::fprintf (fp, "%lu ", vertices.size());
     for (unsigned j=0; j<vertices.size(); j++) {
       dbmsh3d_vertex* V = vertices[j];
       std::fprintf (fp, "%d ", V->vid());
@@ -1032,8 +1032,8 @@ bool dbmsh3d_save_m (dbmsh3d_mesh* M, const char* file)
   vul_printf (std::cout, "  saving %s : \n\t%d points, %d faces ...\n", 
                file, M->vertexmap().size(), M->facemap().size());
 
-  std::fprintf (fp, "%d\n", M->vertexmap().size());
-  std::fprintf (fp, "%d\n", M->facemap().size());
+  std::fprintf (fp, "%lu\n", M->vertexmap().size());
+  std::fprintf (fp, "%lu\n", M->facemap().size());
 
   std::map<int, dbmsh3d_vertex*>::iterator it = M->vertexmap().begin();
   for (; it != M->vertexmap().end(); it++) {
@@ -1049,7 +1049,7 @@ bool dbmsh3d_save_m (dbmsh3d_mesh* M, const char* file)
   for (; fit != M->facemap().end(); fit++) {
     dbmsh3d_face* F = (*fit).second;
 
-    std::fprintf (fp, "%d ", F->vertices().size());
+    std::fprintf (fp, "%lu ", F->vertices().size());
     for (unsigned j=0; j<F->vertices().size(); j++) {
       dbmsh3d_vertex* V = F->vertices(j);
       std::fprintf (fp, "%d ", V->id());
@@ -1321,7 +1321,7 @@ bool dbmsh3d_read_list_file (const char* file,
   std::ifstream  in;
   std::string    linestr;
   in.open (filename.c_str());
-  if (in == false) {
+  if (in.fail()) {
     vul_printf (std::cout, "Can't open listfile %s\n", filename.c_str());
     return false; 
   }

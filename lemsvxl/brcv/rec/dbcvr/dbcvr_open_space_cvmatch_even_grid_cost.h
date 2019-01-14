@@ -37,8 +37,8 @@ public:
   dbcvr_open_space_cvmatch_even_grid_cost(bsold_interp_curve_3d *c1, bsold_interp_curve_3d *c2, 
                                           int num_samples_c1, int num_samples_c2, 
                                           double R1, double R2,
-                                          char *cost_formula_comput_type,
-                                          char *angle_der_comput_type = 0);
+                                          const char *cost_formula_comput_type,
+                                          const char *angle_der_comput_type = 0);
   virtual ~dbcvr_open_space_cvmatch_even_grid_cost() {};
   // compute properties of both curves
   void compute_properties();
@@ -63,9 +63,9 @@ protected:
   // cost weight parameters for bending and twisting
   double R1_, R2_;
   // cost formula computation type, case-sensitive
-  char *cfct_;
+  const char *cfct_;
   // angle derivative computation type (only when cfct_ = "implicit"), case-sensitive
-  char *adct_;
+  const char *adct_;
   // step size used for even resampling of the curves
   double ds1_, ds2_;
 

@@ -12,7 +12,7 @@ double angle_difference(double a, double b)
 {
   vgl_vector_2d<double > va(std::cos(a), std::sin(a));
   vgl_vector_2d<double > vb(std::cos(b), std::sin(b));
-  double diff = vnl_math_abs(signed_angle(va, vb));
+  double diff = vnl_math::abs(signed_angle(va, vb));
   return diff;
 }
 
@@ -40,7 +40,7 @@ void test_xshock_fragment()
   std::cout << "Computed area2 = " << computed_area2 << ".\n"
     << "True area2 = " << true_area2 << ".\n";
 
-  TEST_NEAR("are of terminal xfragment", vnl_math_abs(computed_area2-true_area2) / true_area2, 0, 1e-2);
+  TEST_NEAR("are of terminal xfragment", vnl_math::abs(computed_area2-true_area2) / true_area2, 0, 1e-2);
 }
 
 

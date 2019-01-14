@@ -71,7 +71,7 @@ unsigned int n2 = c2->size();
   // find total length of curve 2
   vsol_point_2d_sptr p2_last = c2->point_at_sample(c2->size()-1);
   vsol_point_2d_sptr p2_first = c2->point_at_sample(0);
-  length2_ = c2->length_at(c2->size()-1) + vnl_math_hypot(p2_last->x()-p2_first->x(),
+  length2_ = c2->length_at(c2->size()-1) + vnl_math::hypot(p2_last->x()-p2_first->x(),
                                                           p2_last->y()-p2_first->y());
 
   // add the correspondence of the final interval 

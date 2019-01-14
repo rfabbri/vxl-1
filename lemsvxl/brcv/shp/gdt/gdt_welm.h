@@ -230,9 +230,9 @@ public:
   void _set_simT_to_closest () {
     // Determine the status for Ip using the closet point.
     if (L_ < stau_)
-      simT_ = mu() + vnl_math_hypot (stau_-L_, H_);
+      simT_ = mu() + vnl_math::hypot (stau_-L_, H_);
     else if (L_ > etau_)
-      simT_ = mu() + vnl_math_hypot (L_-etau_, H_);
+      simT_ = mu() + vnl_math::hypot (L_-etau_, H_);
     else
       simT_ = mu() + H_;
   }
@@ -263,9 +263,9 @@ inline double _local_closest_dist (const double& stau,
                                    const double& H)
 {
   if (L<stau)
-    return vnl_math_hypot (stau - L, H);
+    return vnl_math::hypot (stau - L, H);
   else if (L>etau)
-    return vnl_math_hypot (L - etau, H);
+    return vnl_math::hypot (L - etau, H);
   else
     return H;
 }

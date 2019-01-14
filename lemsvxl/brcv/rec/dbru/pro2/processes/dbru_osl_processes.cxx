@@ -28,7 +28,7 @@ bool dbru_load_objects_process_cons(bprb_func_process& pro)
   //input
   bool ok=false;
   std::vector<std::string> input_types;
-  input_types.push_back(vcl_string"); //input objects file 
+  input_types.push_back("vcl_string"); //input objects file 
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
@@ -97,7 +97,7 @@ bool dbru_create_change_object_process_cons(bprb_func_process& pro)
   input_types.push_back("dbru_osl_sptr"); //input objects file 
   input_types.push_back("unsigned"); // video id
   input_types.push_back("unsigned"); // frame id
-  input_types.push_back(vcl_string"); // name of the output file
+  input_types.push_back("vcl_string"); // name of the output file
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
