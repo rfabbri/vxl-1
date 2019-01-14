@@ -23,12 +23,12 @@
 #include "dbxml_track_input_converter.h"
 #include "dbxml_dom.h"
 
-#include <vcl_string.h>
-#include <vcl_iostream.h>
+#include <string>
+#include <iostream>
 //#include <stdlib.h>
 
 
-vcl_vector<dbxml_input_converter_sptr > dbxml_io::input_converter_;
+std::vector<dbxml_input_converter_sptr > dbxml_io::input_converter_;
 
  
 dbxml_io::dbxml_io()
@@ -38,9 +38,9 @@ dbxml_io::dbxml_io()
     XMLPlatformUtils::Initialize();
   }
   catch(const XMLException &toCatch){
-    vcl_cerr << "Error during Xerces-c Initialization.\n"
+    std::cerr << "Error during Xerces-c Initialization.\n"
              << "  Exception message:"
-             << StrX(toCatch.getMessage()) << vcl_endl;
+             << StrX(toCatch.getMessage()) << std::endl;
   }
 
 }
@@ -53,11 +53,11 @@ dbxml_io::~dbxml_io()
 
 
 dbxml_input_converter_sptr
-dbxml_io::find_input_converter(const vcl_string& class_name)
+dbxml_io::find_input_converter(const std::string& class_name)
 {     
-  for (vcl_vector<dbxml_input_converter_sptr>::iterator cit=input_converter_.begin();
+  for (std::vector<dbxml_input_converter_sptr>::iterator cit=input_converter_.begin();
        cit != input_converter_.end(); cit++) {
-    vcl_string conv_name = (*cit)->get_class_name();
+    std::string conv_name = (*cit)->get_class_name();
     if (conv_name == class_name)
       return *cit;
   }
@@ -67,12 +67,12 @@ dbxml_io::find_input_converter(const vcl_string& class_name)
 
 
 dbxml_input_converter_sptr
-dbxml_io::find_converter_from_tag(const vcl_string& tag_name)
+dbxml_io::find_converter_from_tag(const std::string& tag_name)
 {      
-  for (vcl_vector<dbxml_input_converter_sptr>::iterator cit=input_converter_.begin();
+  for (std::vector<dbxml_input_converter_sptr>::iterator cit=input_converter_.begin();
        cit != input_converter_.end(); cit++) {
-    vcl_string tname = (*cit)->get_class_name();
-    vcl_string ref_tname = (*cit)->get_ref_tag_name();
+    std::string tname = (*cit)->get_class_name();
+    std::string ref_tname = (*cit)->get_ref_tag_name();
     if ( (tname == tag_name) || (ref_tname == tag_name) )
       return *cit;
   }
@@ -84,18 +84,18 @@ void
 dbxml_io::register_input_converter(const dbxml_input_converter_sptr& conv)
 {
   if (!conv) {
-    vcl_cerr << "Can not register null converter" << vcl_endl;
+    std::cerr << "Can not register null converter" << std::endl;
     return;
   }
 
   //see if converter already exists
-  vcl_string class_name = conv->get_class_name();
+  std::string class_name = conv->get_class_name();
   if (dbxml_io::find_input_converter(class_name))
     return;
 
   //if not found then add it
 #ifdef DEBUG
-  vcl_cout << "registering " << conv->get_class_name() << " converter\n";
+  std::cout << "registering " << conv->get_class_name() << " converter\n";
 #endif
 
  input_converter_.push_back(conv);
@@ -110,19 +110,19 @@ void dbxml_io::register_input_converters()
 }
 
 
-bool dbxml_io::parse_xml(char *xmlfile,  vcl_vector<dbxml_generic_ptr>& objs)
+bool dbxml_io::parse_xml(char *xmlfile,  std::vector<dbxml_generic_ptr>& objs)
 {
   DOMNode *childnext=0;
   DOMNode *root = dbxml_io::getroot(xmlfile);
   if (!root){
-    vcl_cerr << "Error: Unable to get root from file "  << vcl_endl;
+    std::cerr << "Error: Unable to get root from file "  << std::endl;
     return false;
   }
 
   dbxml_input_converter_sptr conv = find_converter_from_tag(XMLString::transcode(root->getNodeName()));
   if (!conv){
-    vcl_cerr << "Error: Unable to find converter from tag ="
-             << XMLString::transcode(root->getNodeName()) << vcl_endl;
+    std::cerr << "Error: Unable to find converter from tag ="
+             << XMLString::transcode(root->getNodeName()) << std::endl;
     return false;
   }
 
@@ -149,7 +149,7 @@ bool dbxml_io::parse_xml(char *xmlfile,  vcl_vector<dbxml_generic_ptr>& objs)
         if ((rc=conv->check_tag(paramchild, 2)) != 0){
 
 #ifdef DEBUG
-          vcl_cout << "calling " << conv->get_class_name() << vcl_endl;
+          std::cout << "calling " << conv->get_class_name() << std::endl;
 #endif
 
           if (rc == 2){
@@ -165,8 +165,8 @@ bool dbxml_io::parse_xml(char *xmlfile,  vcl_vector<dbxml_generic_ptr>& objs)
             dbxml_generic_ptr gp = conv->construct_object_3(objs);
           }
           else
-            vcl_cerr << "Error: unable to parse tag ="
-                     << XMLString::transcode(paramchild->getNodeName()) << vcl_endl;
+            std::cerr << "Error: unable to parse tag ="
+                     << XMLString::transcode(paramchild->getNodeName()) << std::endl;
         }
 
         childnext = paramchild->getNextSibling();
@@ -211,8 +211,8 @@ DOMNode *dbxml_io::getroot(char *xmlfile)
   }
   catch (const XMLException& e)
   {
-    vcl_cerr << "An error occurred during parsing\n   Message: "
-             << StrX(e.getMessage()) << vcl_endl;
+    std::cerr << "An error occurred during parsing\n   Message: "
+             << StrX(e.getMessage()) << std::endl;
     errorsOccured = true;
   }
   catch (const DOMException& e)
@@ -220,17 +220,17 @@ DOMNode *dbxml_io::getroot(char *xmlfile)
     const unsigned int maxChars = 2047;
     XMLCh errText[maxChars + 1];
 
-    vcl_cerr << "\nDOM Error during parsing: '" << xmlfile << "'\n"
-             << "DOMException code is:  " << e.code << vcl_endl;
+    std::cerr << "\nDOM Error during parsing: '" << xmlfile << "'\n"
+             << "DOMException code is:  " << e.code << std::endl;
 
     if (DOMImplementation::loadDOMExceptionMsg(e.code, errText, maxChars))
-      vcl_cerr << "Message is: " << StrX(errText) << vcl_endl;
+      std::cerr << "Message is: " << StrX(errText) << std::endl;
 
     errorsOccured = true;
   }
   catch (...)
   {
-    vcl_cerr << "An error occurred during parsing\n " << vcl_endl;
+    std::cerr << "An error occurred during parsing\n " << std::endl;
     errorsOccured = true;
   }
 
@@ -247,7 +247,7 @@ DOMNode *dbxml_io::getroot(char *xmlfile)
   short node_type = doc->getNodeType();
 
   if (node_type != DOMNode::DOCUMENT_NODE) {
-    vcl_cerr << "Error: node_type=" << node_type << vcl_endl;
+    std::cerr << "Error: node_type=" << node_type << std::endl;
     return NULL;
   }
   // char *tag = XMLString::transcode(doc->getNodeName());

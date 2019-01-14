@@ -25,7 +25,7 @@ dbgui_gnd_cal_tableau::dbgui_gnd_cal_tableau(const vpgl_perspective_camera<doubl
 
 //----------------------------------------------------------------------------
 //: Return the name of this tableau ('dbgui_gnd_cal_tableau').
-vcl_string dbgui_gnd_cal_tableau::type_name() const
+std::string dbgui_gnd_cal_tableau::type_name() const
 {
   return "dbgui_gnd_cal_tableau";
 }
@@ -41,7 +41,7 @@ void dbgui_gnd_cal_tableau::add_popup(vgui_menu& menu)
             new vgui_command_simple<dbgui_gnd_cal_tableau>(this,
                    &dbgui_gnd_cal_tableau::start_calib));
 
-  vcl_string name = "Draw Calibration";
+  std::string name = "Draw Calibration";
   name = (draw_calib_?"[X] ":"[ ] ") + name;
   popup.add(name.c_str(),
             new vgui_command_simple<dbgui_gnd_cal_tableau>(this,
@@ -100,15 +100,15 @@ void dbgui_gnd_cal_tableau::finish_calib()
   double world_pts[4][2] = {{0,0}, {width,0}, {width,height}, {0,height} };
 
 
-  vcl_vector< vgl_point_2d<double> > image_pts, ground_pts;
+  std::vector< vgl_point_2d<double> > image_pts, ground_pts;
   for(unsigned int i=0; i<4; ++i){
     image_pts.push_back(vgl_point_2d<double>(corners_[i][0],corners_[i][1]));
     ground_pts.push_back(vgl_point_2d<double>(world_pts[i][0],world_pts[i][1]));
   }
   if(!vpgl_perspective_camera_compute::compute(image_pts, ground_pts, camera_))
-    vcl_cout << "camera computation failed" << vcl_endl;
+    std::cout << "camera computation failed" << std::endl;
 
-  vcl_cout << "Camera = "<< camera_ << vcl_endl;
+  std::cout << "Camera = "<< camera_ << std::endl;
 
   if(mode_==SELECT){
     world_pts_.clear();

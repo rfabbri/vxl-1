@@ -1,7 +1,7 @@
 #include <testlib/testlib_test.h>
 #include <vil3d/vil3d_print.h>
-#include <vcl_cstdio.h>
-#include <vcl_cmath.h>
+#include <cstdio>
+#include <cmath>
 #include <vnl/vnl_random.h>
 #include <vnl/vnl_math.h>
 #include <dbil3d/algo/dbil3d_finite_differences.h>
@@ -68,7 +68,7 @@ MAIN( test_dbil3d_finite_second_differences )
   dbil3d_finite_differences(testim, dxp, dxm, dxc, dyp, dym, dyc ,dzp, dzm, dzc); 
   dbil3d_finite_second_differences(testim, dxp, dxm, dyp, dym,dzp,dzm,dxx,dyy,dzz,dxy,dxz,dyz); 
 
-  vcl_cout << "testing half-one half-zero (along i-axis) image" << vcl_endl;
+  std::cout << "testing half-one half-zero (along i-axis) image" << std::endl;
   for(unsigned k = 0 ; k < testim.nk(); k++){
   for(unsigned j = 0 ; j < testim.nj(); j++){
           unsigned i = 0;
@@ -123,7 +123,7 @@ MAIN( test_dbil3d_finite_second_differences )
   dbil3d_finite_differences(testim, dxp, dxm, dxc, dyp, dym, dyc ,dzp, dzm, dzc); 
   dbil3d_finite_second_differences(testim, dxp, dxm, dyp, dym,dzp,dzm,dxx,dyy,dzz,dxy,dxz,dyz); 
 
-  vcl_cout << "testing half-one half-zero (along j-axis) image" << vcl_endl;
+  std::cout << "testing half-one half-zero (along j-axis) image" << std::endl;
   for(unsigned k = 0 ; k < testim.nk(); k++){
   for(unsigned i = 0 ; i < testim.ni(); i++){
           unsigned j = 0;
@@ -179,7 +179,7 @@ MAIN( test_dbil3d_finite_second_differences )
   dbil3d_finite_differences(testim, dxp, dxm, dxc, dyp, dym, dyc ,dzp, dzm, dzc); 
   dbil3d_finite_second_differences(testim, dxp, dxm, dyp, dym,dzp,dzm,dxx,dyy,dzz,dxy,dxz,dyz); 
 
-  vcl_cout << "testing half-one half-zero (along k-axis) image" << vcl_endl;
+  std::cout << "testing half-one half-zero (along k-axis) image" << std::endl;
   for(unsigned j = 0 ; j < testim.nj(); j++){
   for(unsigned i = 0 ; i < testim.ni(); i++){
           unsigned k = 0;
@@ -236,30 +236,30 @@ MAIN( test_dbil3d_finite_second_differences )
   dbil3d_finite_differences(testim, dxp, dxm, dxc, dyp, dym, dyc ,dzp, dzm, dzc); 
   dbil3d_finite_second_differences(testim, dxp, dxm, dyp, dym,dzp,dzm,dxx,dyy,dzz,dxy,dxz,dyz); 
 
-  vcl_cout << "testing i/j diagonal image" << vcl_endl;
+  std::cout << "testing i/j diagonal image" << std::endl;
   for(unsigned k = 0 ; k < testim.nk(); k++){
   for(unsigned j = 0 ; j < testim.nj(); j++){
   for(unsigned i = 0 ; i < testim.ni(); i++){
           if(i == 0 && j == 0 || i == testim.ni()-1 && j == testim.nj()-1){
-                  vcl_cout << "corners on diagonal " << vcl_endl;
+                  std::cout << "corners on diagonal " << std::endl;
                   TEST_NEAR("D_xx"  ,     dxx(i,j,k)    ,    -1    ,     0.001);
                   TEST_NEAR("D_yy"  ,     dyy(i,j,k)    ,    -1    ,     0.001);
                   TEST_NEAR("D_zz"  ,     dzz(i,j,k)    ,     0    ,     0.001);
           }
           else if(i == j){
-                  vcl_cout << "non-corner on diagonal " << vcl_endl;
+                  std::cout << "non-corner on diagonal " << std::endl;
                   TEST_NEAR("D_xx"  ,     dxx(i,j,k)    ,    -2    ,     0.001);
                   TEST_NEAR("D_yy"  ,     dyy(i,j,k)    ,    -2    ,     0.001);
                   TEST_NEAR("D_zz"  ,     dzz(i,j,k)    ,     0    ,     0.001);
           }
           else if(i == j + 1 || i == j-1 ){
-                  vcl_cout << "super/sub diagonal " << vcl_endl;
+                  std::cout << "super/sub diagonal " << std::endl;
                   TEST_NEAR("D_xx"  ,     dxx(i,j,k)    ,     1    ,     0.001);
                   TEST_NEAR("D_yy"  ,     dyy(i,j,k)    ,     1    ,     0.001);
                   TEST_NEAR("D_zz"  ,     dzz(i,j,k)    ,     0    ,     0.001);
           }
           else{
-                  vcl_cout << "elsewhere " << vcl_endl;
+                  std::cout << "elsewhere " << std::endl;
                   TEST_NEAR("D_xx"  ,     dxx(i,j,k)    ,     0    ,     0.001);
                   TEST_NEAR("D_yy"  ,     dyy(i,j,k)    ,     0    ,     0.001);
                   TEST_NEAR("D_zz"  ,     dzz(i,j,k)    ,     0    ,     0.001);
@@ -273,29 +273,29 @@ MAIN( test_dbil3d_finite_second_differences )
   for(unsigned j = 0 ; j < testim.nj(); j++){
   for(unsigned i = 0 ; i < testim.ni(); i++){
           if(i == j){
-                  vcl_cout << "corner on diagonal " << vcl_endl;
-                  vcl_cout << "(" << i << "," << j << ")" << vcl_endl;;
+                  std::cout << "corner on diagonal " << std::endl;
+                  std::cout << "(" << i << "," << j << ")" << std::endl;;
                   TEST_NEAR("D_xy"  ,     dxy(i,j,k)    ,    0.5   ,     0.001);
           }
           else if(i == j - 2 || j == i- 2 ){
-                  vcl_cout << "second super/sub diagonals" << vcl_endl;
-                  vcl_cout << "(" << i << "," << j << ")" << vcl_endl;;
+                  std::cout << "second super/sub diagonals" << std::endl;
+                  std::cout << "(" << i << "," << j << ")" << std::endl;;
                   TEST_NEAR("D_xy"  ,     dxy(i,j,k)    ,    -0.25   ,     0.001);
           }
  
           else if(i + j == 1 || i + j == testim.ni() + testim.nj() - 3 ){
-                  vcl_cout << "i + j == 1 || i + j == testim.ni() + testim.nj() - 1" << vcl_endl;
-                  vcl_cout << "(" << i << "," << j << ")" << vcl_endl;;
+                  std::cout << "i + j == 1 || i + j == testim.ni() + testim.nj() - 1" << std::endl;
+                  std::cout << "(" << i << "," << j << ")" << std::endl;;
                   TEST_NEAR("D_xy"  ,     dxy(i,j,k)    ,    0.25   ,     0.001);
           }
           else if(i + j == 2 || i + j == testim.ni() + testim.nj() - 4 ){
-                  vcl_cout << "i + j == 2 || i + j == testim.ni() + testim.nj() - 2" << vcl_endl;
-                  vcl_cout << "(" << i << "," << j << ")" << vcl_endl;;
+                  std::cout << "i + j == 2 || i + j == testim.ni() + testim.nj() - 2" << std::endl;
+                  std::cout << "(" << i << "," << j << ")" << std::endl;;
                   TEST_NEAR("D_xy"  ,     dxy(i,j,k)    ,    -0.25   ,     0.001);
           }
           else{
-                  vcl_cout << "elsewhere " << vcl_endl;
-                  vcl_cout << "(" << i << "," << j << ")" << vcl_endl;;
+                  std::cout << "elsewhere " << std::endl;
+                  std::cout << "(" << i << "," << j << ")" << std::endl;;
                   TEST_NEAR("D_xy"  ,     dxy(i,j,k)    ,    0   ,     0.001);
           }
           TEST_NEAR("D_xz"  ,     dxz(i,j,k)    ,     0    ,     0.001);
@@ -322,30 +322,30 @@ MAIN( test_dbil3d_finite_second_differences )
   dbil3d_finite_differences(testim, dxp, dxm, dxc, dyp, dym, dyc ,dzp, dzm, dzc); 
   dbil3d_finite_second_differences(testim, dxp, dxm, dyp, dym,dzp,dzm,dxx,dyy,dzz,dxy,dxz,dyz); 
 
-  vcl_cout << "testing i/k diagonal image" << vcl_endl;
+  std::cout << "testing i/k diagonal image" << std::endl;
   for(unsigned k = 0 ; k < testim.nk(); k++){
   for(unsigned j = 0 ; j < testim.nj(); j++){
   for(unsigned i = 0 ; i < testim.ni(); i++){
           if(i == 0 && k == 0 || i == testim.ni()-1 && k == testim.nk()-1){
-                  vcl_cout << "corners on diagonal " << vcl_endl;
+                  std::cout << "corners on diagonal " << std::endl;
                   TEST_NEAR("D_xx"  ,     dxx(i,j,k)    ,    -1    ,     0.001);
                   TEST_NEAR("D_yy"  ,     dyy(i,j,k)    ,     0    ,     0.001);
                   TEST_NEAR("D_zz"  ,     dzz(i,j,k)    ,    -1    ,     0.001);
           }
           else if(i == k){
-                  vcl_cout << "non-corner on diagonal " << vcl_endl;
+                  std::cout << "non-corner on diagonal " << std::endl;
                   TEST_NEAR("D_xx"  ,     dxx(i,j,k)    ,    -2    ,     0.001);
                   TEST_NEAR("D_yy"  ,     dyy(i,j,k)    ,     0    ,     0.001);
                   TEST_NEAR("D_zz"  ,     dzz(i,j,k)    ,    -2    ,     0.001);
           }
           else if(i == k + 1 || i == k-1 ){
-                  vcl_cout << "super/sub diagonal " << vcl_endl;
+                  std::cout << "super/sub diagonal " << std::endl;
                   TEST_NEAR("D_xx"  ,     dxx(i,j,k)    ,     1    ,     0.001);
                   TEST_NEAR("D_yy"  ,     dyy(i,j,k)    ,     0    ,     0.001);
                   TEST_NEAR("D_zz"  ,     dzz(i,j,k)    ,     1    ,     0.001);
           }
           else{
-                  vcl_cout << "elsewhere " << vcl_endl;
+                  std::cout << "elsewhere " << std::endl;
                   TEST_NEAR("D_xx"  ,     dxx(i,j,k)    ,     0    ,     0.001);
                   TEST_NEAR("D_yy"  ,     dyy(i,j,k)    ,     0    ,     0.001);
                   TEST_NEAR("D_zz"  ,     dzz(i,j,k)    ,     0    ,     0.001);
@@ -359,24 +359,24 @@ MAIN( test_dbil3d_finite_second_differences )
   for(unsigned j = 0 ; j < testim.nj(); j++){
   for(unsigned i = 0 ; i < testim.ni(); i++){
           if(i == k){
-                  vcl_cout << "corner on diagonal " << vcl_endl;
+                  std::cout << "corner on diagonal " << std::endl;
                   TEST_NEAR("D_xz"  ,     dxz(i,j,k)    ,    0.5   ,     0.001);
           }
           else if(i == k - 2 || k == i- 2 ){
-                  vcl_cout << "second super/sub diagonals" << vcl_endl;
+                  std::cout << "second super/sub diagonals" << std::endl;
                   TEST_NEAR("D_xz"  ,     dxz(i,j,k)    ,    -0.25   ,     0.001);
           }
  
           else if(i + k == 1 || i + k == testim.ni() + testim.nk() - 3 ){
-                  vcl_cout << "i + k == 1 || i + k == testim.ni() + testim.nk() - 3" << vcl_endl;
+                  std::cout << "i + k == 1 || i + k == testim.ni() + testim.nk() - 3" << std::endl;
                   TEST_NEAR("D_xz"  ,     dxz(i,j,k)    ,    0.25   ,     0.001);
           }
           else if(i + k == 2 || i + k == testim.ni() + testim.nk() - 4 ){
-                  vcl_cout << "i + k == 2 || i + k == testim.ni() + testim.nk() - 4" << vcl_endl;
+                  std::cout << "i + k == 2 || i + k == testim.ni() + testim.nk() - 4" << std::endl;
                   TEST_NEAR("D_xz"  ,     dxz(i,j,k)    ,    -0.25   ,     0.001);
           }
           else{
-                  vcl_cout << "elsewhere " << vcl_endl;
+                  std::cout << "elsewhere " << std::endl;
                   TEST_NEAR("D_xz"  ,     dxz(i,j,k)    ,    0   ,     0.001);
           }
           TEST_NEAR("D_xy"  ,     dxy(i,j,k)    ,     0    ,     0.001);
@@ -403,30 +403,30 @@ MAIN( test_dbil3d_finite_second_differences )
   dbil3d_finite_differences(testim, dxp, dxm, dxc, dyp, dym, dyc ,dzp, dzm, dzc); 
   dbil3d_finite_second_differences(testim, dxp, dxm, dyp, dym,dzp,dzm,dxx,dyy,dzz,dxy,dxz,dyz); 
 
-  vcl_cout << "testing j/k diagonal image" << vcl_endl;
+  std::cout << "testing j/k diagonal image" << std::endl;
   for(unsigned k = 0 ; k < testim.nk(); k++){
   for(unsigned j = 0 ; j < testim.nj(); j++){
   for(unsigned i = 0 ; i < testim.ni(); i++){
           if(j == 0 && k == 0 || j == testim.nj()-1 && k == testim.nk()-1){
-                  vcl_cout << "corners on diagonal " << vcl_endl;
+                  std::cout << "corners on diagonal " << std::endl;
                   TEST_NEAR("D_xx"  ,     dxx(i,j,k)    ,     0    ,     0.001);
                   TEST_NEAR("D_yy"  ,     dyy(i,j,k)    ,    -1    ,     0.001);
                   TEST_NEAR("D_zz"  ,     dzz(i,j,k)    ,    -1    ,     0.001);
           }
           else if(j == k){
-                  vcl_cout << "non-corner on diagonal " << vcl_endl;
+                  std::cout << "non-corner on diagonal " << std::endl;
                   TEST_NEAR("D_xx"  ,     dxx(i,j,k)    ,     0    ,     0.001);
                   TEST_NEAR("D_yy"  ,     dyy(i,j,k)    ,    -2    ,     0.001);
                   TEST_NEAR("D_zz"  ,     dzz(i,j,k)    ,    -2    ,     0.001);
           }
           else if(j == k + 1 || j == k-1 ){
-                  vcl_cout << "super/sub diagonal " << vcl_endl;
+                  std::cout << "super/sub diagonal " << std::endl;
                   TEST_NEAR("D_xx"  ,     dxx(i,j,k)    ,     0    ,     0.001);
                   TEST_NEAR("D_yy"  ,     dyy(i,j,k)    ,     1    ,     0.001);
                   TEST_NEAR("D_zz"  ,     dzz(i,j,k)    ,     1    ,     0.001);
           }
           else{
-                  vcl_cout << "elsewhere " << vcl_endl;
+                  std::cout << "elsewhere " << std::endl;
                   TEST_NEAR("D_xx"  ,     dxx(i,j,k)    ,     0    ,     0.001);
                   TEST_NEAR("D_yy"  ,     dyy(i,j,k)    ,     0    ,     0.001);
                   TEST_NEAR("D_zz"  ,     dzz(i,j,k)    ,     0    ,     0.001);
@@ -440,24 +440,24 @@ MAIN( test_dbil3d_finite_second_differences )
   for(unsigned j = 0 ; j < testim.nj(); j++){
   for(unsigned i = 0 ; i < testim.ni(); i++){
           if(j == k){
-                  vcl_cout << "corner on diagonal " << vcl_endl;
+                  std::cout << "corner on diagonal " << std::endl;
                   TEST_NEAR("D_yz"  ,     dyz(i,j,k)    ,    0.5   ,     0.001);
           }
           else if(j == k - 2 || k == j - 2 ){
-                  vcl_cout << "second super/sub diagonals" << vcl_endl;
+                  std::cout << "second super/sub diagonals" << std::endl;
                   TEST_NEAR("D_yz"  ,     dyz(i,j,k)    ,    -0.25   ,     0.001);
           }
  
           else if(j + k == 1 || j + k == testim.nj() + testim.nk() - 3 ){
-                  vcl_cout << "j + k == 1 || j + k == testim.nj() + testim.nk() - 3" << vcl_endl;
+                  std::cout << "j + k == 1 || j + k == testim.nj() + testim.nk() - 3" << std::endl;
                   TEST_NEAR("D_yz"  ,     dyz(i,j,k)    ,    0.25   ,     0.001);
           }
           else if(j + k == 2 || j + k == testim.nj() + testim.nk() - 4 ){
-                  vcl_cout << "j + k == 2 || j + k == testim.nj() + testim.nk() - 4" << vcl_endl;
+                  std::cout << "j + k == 2 || j + k == testim.nj() + testim.nk() - 4" << std::endl;
                   TEST_NEAR("D_yz"  ,     dyz(i,j,k)    ,    -0.25   ,     0.001);
           }
           else{
-                  vcl_cout << "elsewhere " << vcl_endl;
+                  std::cout << "elsewhere " << std::endl;
                   TEST_NEAR("D_yz"  ,     dyz(i,j,k)    ,    0   ,     0.001);
           }
           TEST_NEAR("D_xy"  ,     dxy(i,j,k)    ,     0    ,     0.001);

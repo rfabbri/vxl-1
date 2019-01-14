@@ -62,7 +62,7 @@ class dbsta_mix_any_less_index_detector : public dbsta_detector<T>
   {
     assert(dynamic_cast<const dbsta_mixture<T>* >(&d));
     const dbsta_mixture<T>& mix = static_cast<const dbsta_mixture<T>& >(d);
-    unsigned int max_ind = vcl_min(index+1,mix.num_components());
+    unsigned int max_ind = std::min(index+1,mix.num_components());
     for(unsigned int i=0; i<max_ind; ++i)
       if( (*detect)(mix.distribution(i),sample) )
         return true;
@@ -95,7 +95,7 @@ class dbsta_mix_first_index_detector : public dbsta_detector<T>
     const dbsta_mixture<T>& mix = static_cast<const dbsta_mixture<T>& >(d);
     if(mix.num_components() <= index)
       return false;
-    unsigned int max_ind = vcl_min(index,mix.num_components()-1);
+    unsigned int max_ind = std::min(index,mix.num_components()-1);
     for(unsigned int i=0; i<max_ind; ++i)
       if( (*detect)(mix.distribution(i),sample) )
         return false;
@@ -130,7 +130,7 @@ class dbsta_mix_first_index_above_min_weight_detector : public dbsta_detector<T>
     const dbsta_mixture<T>& mix = static_cast<const dbsta_mixture<T>& >(d);
     if(mix.num_components() <= index)
       return false;
-    unsigned int max_ind = vcl_min(index,mix.num_components()-1);
+    unsigned int max_ind = std::min(index,mix.num_components()-1);
     for(unsigned int i=0; i<max_ind; ++i)
       if( (*detect)(mix.distribution(i),sample) )
         return true;

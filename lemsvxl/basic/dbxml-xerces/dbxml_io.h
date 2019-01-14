@@ -10,8 +10,8 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_string.h>
-#include <vcl_utility.h>
+#include <string>
+#include <utility>
 #include <vul/vul_arg.h>
 #include <dbxml/dbxml_generic_ptr.h>
 #include <dbxml/dbxml_input_converter.h>
@@ -34,10 +34,10 @@ class dbxml_io
   dbxml_io();
 
   //: Parse the command line parameters
-  static bool parse_xml(char *xmlfile,vcl_vector<dbxml_generic_ptr>& objs);
+  static bool parse_xml(char *xmlfile,std::vector<dbxml_generic_ptr>& objs);
   //: get input converter
-  static dbxml_input_converter_sptr find_converter_from_tag(const vcl_string& tag_name);
-  static dbxml_input_converter_sptr find_input_converter(const vcl_string& class_name);
+  static dbxml_input_converter_sptr find_converter_from_tag(const std::string& tag_name);
+  static dbxml_input_converter_sptr find_input_converter(const std::string& class_name);
   static void register_input_converter(const dbxml_input_converter_sptr& conv);
   static void register_input_converters();
 
@@ -47,7 +47,7 @@ class dbxml_io
   //: Initialize the arguments from the process
  static DOMNode *getroot(char *xmlfile);
 
- static vcl_vector<dbxml_input_converter_sptr > input_converter_;
+ static std::vector<dbxml_input_converter_sptr > input_converter_;
  // dbxml_generic_ptr extract_object_attrs(DOMNode *node);
  // void * extract_object_attrs(DOMNode *node);
 

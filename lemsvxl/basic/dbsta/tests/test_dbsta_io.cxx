@@ -4,8 +4,8 @@
 #include <dbsta/dbsta_gaussian_sphere.h>
 #include <dbsta/dbsta_mixture.h>
 #include <vnl/vnl_math.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
+#include <string>
+#include <iostream>
 #include <vpl/vpl.h>
 #include <dbsta/dbsta_gaussian.h>
 #include <dbsta/dbsta_distribution.h>
@@ -13,7 +13,7 @@
 //template void vsl_add_to_binary_loader(dbsta_distribution<float> const& b);
 //template void vsl_add_to_binary_loader(dbsta_distribution<double> const& b);
 template <class T>
-void test_dbsta_io(T epsilon, const vcl_string& type_name)
+void test_dbsta_io(T epsilon, const std::string& type_name)
 {
 
   vsl_add_to_binary_loader(dbsta_gaussian_indep<T,3>());
@@ -21,7 +21,7 @@ void test_dbsta_io(T epsilon, const vcl_string& type_name)
   vsl_add_to_binary_loader(dbsta_gaussian_sphere<T,3>());
   vsl_add_to_binary_loader(dbsta_mixture<T>());
 
- vcl_cout << "Testing I/O for dbsta_gaussian_full\n";
+ std::cout << "Testing I/O for dbsta_gaussian_full\n";
 
   vnl_vector_fixed<T,3> mean(T(1.0), T(2.0), T(4.0));
   vnl_matrix<T> covar(3,3,T(0));
@@ -65,7 +65,7 @@ void test_dbsta_io(T epsilon, const vcl_string& type_name)
 
    //: independent gaussian
 
-  vcl_cout << "Testing I/O for dbsta_gaussian_indep\n";
+  std::cout << "Testing I/O for dbsta_gaussian_indep\n";
 
   vnl_vector_fixed<T,3> indep_mean(T(1.0), T(2.0), T(4.0));
   vnl_vector_fixed<T,3> indep_diag_covar(T(0.5), T(1.0), T(0.5));
@@ -111,7 +111,7 @@ void test_dbsta_io(T epsilon, const vcl_string& type_name)
 
   //: sphere gaussian
 
-  vcl_cout << "Testing I/O for dbsta_gaussian_sphere\n";
+  std::cout << "Testing I/O for dbsta_gaussian_sphere\n";
 
   vnl_vector_fixed<T,3> sphere_mean(T(1.0), T(2.0), T(4.0));
   T var=T(0.5);
@@ -150,7 +150,7 @@ void test_dbsta_io(T epsilon, const vcl_string& type_name)
 
   //: Mixture of Gaussian
 
-  vcl_cout << "Testing I/O for dbsta_mixture\n";
+  std::cout << "Testing I/O for dbsta_mixture\n";
 
 
   vnl_vector_fixed<T,3> indep_mean1(T(1.0), T(2.0), T(4.0));

@@ -84,7 +84,7 @@ class dbsta_mixture_prob_functor : public dbsta_data_functor<T>
       }
     }
     if(normalize_){
-      if(tmp > vcl_numeric_limits<T>::epsilon()){
+      if(tmp > std::numeric_limits<T>::epsilon()){
         for(unsigned int i=0; i<mix.num_components(); ++i){
           result[i] /= tmp;
         }

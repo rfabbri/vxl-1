@@ -12,7 +12,7 @@
 // \verbatim
 // \endverbatim
 
-#include <vcl_string.h>
+#include <string>
 
 //: Return source root directory of LEMSVXL
 //  If the file dbtest_where_root_dir.h has been automatically generated
@@ -23,7 +23,7 @@
 //  the function will return empty space, or "".
 
 
-vcl_string dbtest_root_dir();
+std::string dbtest_root_dir();
 
 
 

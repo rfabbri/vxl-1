@@ -5,13 +5,13 @@
 //:
 // \file
 #include "dbsta_mixture.h"
-#include <vcl_cassert.h>
+#include <cassert>
 
 // to instantiate the private component_sptr
 #include <vbl/vbl_smart_ptr.hxx>
 #include <vbl/io/vbl_io_smart_ptr.hxx>
 #include <vsl/vsl_vector_io.h>
-#include <vcl_iostream.h>
+#include <iostream>
   
   
 
@@ -44,7 +44,7 @@ template <class T>
 void
 dbsta_mixture<T>::normalize_weights()
 {
-  typedef typename vcl_vector<component_sptr>::iterator comp_itr;
+  typedef typename std::vector<component_sptr>::iterator comp_itr;
   T sum = 0;
   for(comp_itr i = components_.begin(); i != components_.end(); ++i)
     sum += (*i)->weight;
@@ -60,7 +60,7 @@ template <class T>
 T 
 dbsta_mixture<T>::probability(const vnl_vector<T>& pt) const
 {
-  typedef typename vcl_vector<component_sptr>::const_iterator comp_itr;
+  typedef typename std::vector<component_sptr>::const_iterator comp_itr;
   T prob = 0;
   for(comp_itr i = components_.begin(); i != components_.end(); ++i)
     prob += (*i)->weight * (*i)->distribution->probability(pt);
@@ -98,7 +98,7 @@ void dbsta_mixture<T>::b_read(vsl_b_istream &is)
  
     break;
    default:
-    vcl_cerr << "dbsta_mixture: unknown I/O version " << ver << '\n';
+    std::cerr << "dbsta_mixture: unknown I/O version " << ver << '\n';
   }
 }
 

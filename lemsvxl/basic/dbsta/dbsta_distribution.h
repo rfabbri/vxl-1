@@ -12,8 +12,8 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_cassert.h>
-#include <vcl_string.h>
+#include <cassert>
+#include <string>
 #include <vsl/vsl_binary_loader.h>
 #include <vbl/vbl_ref_count.h>
 
@@ -78,7 +78,7 @@ class dbsta_distribution:public vbl_ref_count
   //: Binary load self from stream.
   virtual void b_read(vsl_b_istream &is)=0;
 
-  virtual vcl_string is_a() const=0;
+  virtual std::string is_a() const=0;
 
 
   

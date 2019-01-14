@@ -32,7 +32,7 @@ normalize(T tol)
     unsigned numcols = M_.cols();
 
     if (numrows != mcols_.size() || numcols != mrows_.size()) {
-        vcl_cout <<
+        std::cout <<
             "\n Dimension of the outliers and assignment matrix does not match ";
         return false;
     }

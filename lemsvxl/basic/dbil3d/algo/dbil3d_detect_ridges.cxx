@@ -34,8 +34,8 @@ void pickLargerEigenvalues(const vil3d_image_view<float>& e1,
         for(int k =0; k < nk; k++) {
         for(int j =0; j < nj; j++) {
         for(int i =0; i < ni; i++) {
-                if(vcl_fabs(l1(i,j,k)) < vcl_fabs(l2(i,j,k))){
-                        if(vcl_fabs(l2(i,j,k)) < vcl_fabs(l3(i,j,k))){
+                if(std::fabs(l1(i,j,k)) < std::fabs(l2(i,j,k))){
+                        if(std::fabs(l2(i,j,k)) < std::fabs(l3(i,j,k))){
                                 largest_eigen_x(i,j,k) = e3(i,j,k,0);
                                 largest_eigen_y(i,j,k) = e3(i,j,k,1);
                                 largest_eigen_z(i,j,k) = e3(i,j,k,2);
@@ -56,7 +56,7 @@ void pickLargerEigenvalues(const vil3d_image_view<float>& e1,
                                 largest_eigen_z(i,j,k) = e2(i,j,k,2);
                                 largest_lambda(i,j,k) = l2(i,j,k);
 
-                                if(vcl_fabs(l1(i,j,k)) < vcl_fabs(l3(i,j,k))){
+                                if(std::fabs(l1(i,j,k)) < std::fabs(l3(i,j,k))){
                                         second_largest_eigen_x(i,j,k) = e3(i,j,k,0);
                                         second_largest_eigen_y(i,j,k) = e3(i,j,k,1);
                                         second_largest_eigen_z(i,j,k) = e3(i,j,k,2);
@@ -80,7 +80,7 @@ void pickLargerEigenvalues(const vil3d_image_view<float>& e1,
                         }
                 }
                 else{
-                        if(vcl_fabs(l1(i,j,k)) < vcl_fabs(l3(i,j,k))){
+                        if(std::fabs(l1(i,j,k)) < std::fabs(l3(i,j,k))){
                                 largest_eigen_x(i,j,k) = e3(i,j,k,0);
                                 largest_eigen_y(i,j,k) = e3(i,j,k,1);
                                 largest_eigen_z(i,j,k) = e3(i,j,k,2);
@@ -101,7 +101,7 @@ void pickLargerEigenvalues(const vil3d_image_view<float>& e1,
                                 largest_eigen_z(i,j,k) = e1(i,j,k,2);
                                 largest_lambda(i,j,k) = l1(i,j,k);
 
-                                if(vcl_fabs(l2(i,j,k)) < vcl_fabs(l3(i,j,k))){
+                                if(std::fabs(l2(i,j,k)) < std::fabs(l3(i,j,k))){
                                         second_largest_eigen_x(i,j,k) = e3(i,j,k,0);
                                         second_largest_eigen_y(i,j,k) = e3(i,j,k,1);
                                         second_largest_eigen_z(i,j,k) = e3(i,j,k,2);
@@ -153,15 +153,15 @@ void computeRho3d(const vil3d_image_view<float>& Ix,
         const float* ydata = Iy.origin_ptr();
         const float* zdata = Iz.origin_ptr();
 
-        vcl_ptrdiff_t x_istep = Ix.istep();
-        vcl_ptrdiff_t x_jstep = Ix.jstep();
-        vcl_ptrdiff_t x_kstep = Ix.kstep();
-        vcl_ptrdiff_t y_istep = Iy.istep();
-        vcl_ptrdiff_t y_jstep = Iy.jstep();
-        vcl_ptrdiff_t y_kstep = Iy.kstep();
-        vcl_ptrdiff_t z_istep = Iz.istep();
-        vcl_ptrdiff_t z_jstep = Iz.jstep();
-        vcl_ptrdiff_t z_kstep = Iz.kstep();
+        std::ptrdiff_t x_istep = Ix.istep();
+        std::ptrdiff_t x_jstep = Ix.jstep();
+        std::ptrdiff_t x_kstep = Ix.kstep();
+        std::ptrdiff_t y_istep = Iy.istep();
+        std::ptrdiff_t y_jstep = Iy.jstep();
+        std::ptrdiff_t y_kstep = Iy.kstep();
+        std::ptrdiff_t z_istep = Iz.istep();
+        std::ptrdiff_t z_jstep = Iz.jstep();
+        std::ptrdiff_t z_kstep = Iz.kstep();
 
         for(int k =0; k < nk; k++) {
         for(int j =0; j < nj; j++) {
@@ -226,7 +226,7 @@ void computeRho3d(const vil3d_image_view<float>& Ix,
         for(int k =0; k < nk; k++) {
         for(int j =0; j < nj; j++) {
         for(int i =0; i < ni; i++) {
-        rho(i,j,k) = (int)(-0.5*SIGN(lambda(i,j,k))*vcl_abs(SIGN(gI_dot_nu_plus_e(i,j,k)) - SIGN(gI_dot_nu_minus_e(i,j,k))));
+        rho(i,j,k) = (int)(-0.5*SIGN(lambda(i,j,k))*std::abs(SIGN(gI_dot_nu_plus_e(i,j,k)) - SIGN(gI_dot_nu_minus_e(i,j,k))));
         }
         }
         }
@@ -301,44 +301,44 @@ void dbil3d_detect_ridges( const vil3d_image_view<float>& gradient_x,
         vil3d_image_view<float> l2;
         vil3d_image_view<float> l3;
 
-        vcl_cerr << " Hessian Decompose ...";
+        std::cerr << " Hessian Decompose ...";
         dbil3d_hessian_decompose( Im_xx, Im_yy, Im_zz, 
                                   Im_xy, Im_xz, Im_yz,
                                   e1, e2, e3,
                                   l1, l2, l3);
 
-        vcl_cerr << "done\n";
+        std::cerr << "done\n";
 
-        vcl_cerr << " Pick Larger Eigenvalues ...";
+        std::cerr << " Pick Larger Eigenvalues ...";
         pickLargerEigenvalues(e1, e2, e3, l1, l2, l3,
                               largest_eigen_x, largest_eigen_y, largest_eigen_z, 
                               lambda1, 
                               second_largest_eigen_x, second_largest_eigen_y, second_largest_eigen_z, 
                               lambda2,
                               eigenv3);
-        vcl_cerr << "done\n";
+        std::cerr << "done\n";
         }
         vil3d_image_view<int> rho_largest(ni,nj,nk);
         vil3d_image_view<int> rho_second_largest(ni,nj,nk);
 
-        vcl_cerr << " Compute Rho3d (largest) ...";
+        std::cerr << " Compute Rho3d (largest) ...";
      computeRho3d(gradient_x, gradient_y, gradient_z,
                   largest_eigen_x, largest_eigen_y, largest_eigen_z, 
                   lambda1,
                   epsilon, 
                   rho_largest);
-     vcl_cerr << "done\n";
+     std::cerr << "done\n";
 
-     vcl_cerr << " Compute Rho3d (2nd largest) ...";
+     std::cerr << " Compute Rho3d (2nd largest) ...";
      computeRho3d(gradient_x, gradient_y, gradient_z,
                   second_largest_eigen_x, second_largest_eigen_y, second_largest_eigen_z, 
                   lambda2,
                   epsilon,
                   rho_second_largest);
-     vcl_cerr << "done\n";
+     std::cerr << "done\n";
 
-     vcl_cerr << " Combine results ...";
+     std::cerr << " Combine results ...";
      vil3d_math_image_sum(rho_largest,rho_second_largest,rho);
      vil3d_math_scale_and_offset_values(rho, 0.5, 0);
-     vcl_cerr << "done\n";
+     std::cerr << "done\n";
 }

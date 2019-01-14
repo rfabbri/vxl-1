@@ -9,15 +9,15 @@
 // 
 //-----------------------------------------------------------------------------
 #include <vbl/vbl_ref_count.h>
-#include <vcl_string.h>
-#include <vcl_map.h>
+#include <string>
+#include <map>
 
-//#include <vcl_map.h>
+//#include <map>
 
 class dbxml_param : public vbl_ref_count
 {
  public:
-   dbxml_param(vcl_string command, vcl_string desc, vcl_string type, vcl_string value){
+   dbxml_param(std::string command, std::string desc, std::string type, std::string value){
    command_=command;
    desc_=desc;
    type_=type;
@@ -25,10 +25,10 @@ class dbxml_param : public vbl_ref_count
    };
    ~dbxml_param(){};
 
-  vcl_string command_;
-  vcl_string desc_;
-  vcl_string type_;
-  vcl_string value_;
+  std::string command_;
+  std::string desc_;
+  std::string type_;
+  std::string value_;
 
   //:specific sub_class string names
  

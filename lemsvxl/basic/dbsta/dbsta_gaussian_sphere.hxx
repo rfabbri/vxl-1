@@ -10,7 +10,7 @@
 #include <vnl/io/vnl_io_matrix.h>
 #include <vnl/io/vnl_io_vector_fixed.h>
 #include <vnl/io/vnl_io_diag_matrix.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 
 //: Update the covariance (and clear cached values)
@@ -72,7 +72,7 @@ T
 dbsta_gaussian_sphere<T,n>::norm_const() const
 {
   if(normalizing_constant_ < 0)
-    normalizing_constant_ = vcl_pow(var_/(2.0*vnl_math::pi),n/2.0);
+    normalizing_constant_ = std::pow(var_/(2.0*vnl_math::pi),n/2.0);
   return normalizing_constant_;
 }
 
@@ -108,7 +108,7 @@ void dbsta_gaussian_sphere<T,n>::b_read(vsl_b_istream &is)
 
     break;
    default:
-    vcl_cerr << "vsol_line_2d: unknown I/O version " << ver << '\n';
+    std::cerr << "vsol_line_2d: unknown I/O version " << ver << '\n';
   }
 }
 //: Return IO version number;
@@ -120,7 +120,7 @@ short dbsta_gaussian_sphere<T,n>::version() const
 
 //: Print an ascii summary to the stream
 template <class T, unsigned int n>
-void dbsta_gaussian_sphere<T,n>::print_summary(vcl_ostream &os) const
+void dbsta_gaussian_sphere<T,n>::print_summary(std::ostream &os) const
 {
   //os << *this;
 }

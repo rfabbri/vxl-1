@@ -1,5 +1,5 @@
 #include <dbvidl/dbvidl_parse_meta_file.h>
-#include <vcl_fstream.h>
+#include <fstream>
 dbvidl_parse_meta_file::dbvidl_parse_meta_file()
 {
 }
@@ -7,24 +7,24 @@ dbvidl_parse_meta_file::~dbvidl_parse_meta_file()
 {
 }
 
-bool dbvidl_parse_meta_file::parse(vcl_string filename)
+bool dbvidl_parse_meta_file::parse(std::string filename)
 {
-    vcl_ifstream ifile(filename.c_str());
+    std::ifstream ifile(filename.c_str());
     if(!ifile)
         return false;
 
     char buf[2500];
     while(ifile.getline(buf,2500))
     {
-        vcl_string str(buf);
-        if(str.find("<file")!= vcl_string::npos)
+        std::string str(buf);
+        if(str.find("<file")!= std::string::npos)
         {
             int bpos=str.find_first_of("\"",0)+1;
             int epos=str.find_first_of("\"",bpos);
 
-            vcl_string fname=str.substr(bpos,epos-bpos);
+            std::string fname=str.substr(bpos,epos-bpos);
             filenames.push_back(fname);
-            vcl_cout<<fname<<"\n";
+            std::cout<<fname<<"\n";
         }
 
     }
@@ -33,7 +33,7 @@ bool dbvidl_parse_meta_file::parse(vcl_string filename)
     return true;
 }
 
-vcl_list<vcl_string>  dbvidl_parse_meta_file::getlist()
+std::list<std::string>  dbvidl_parse_meta_file::getlist()
 {
     return filenames;
 }

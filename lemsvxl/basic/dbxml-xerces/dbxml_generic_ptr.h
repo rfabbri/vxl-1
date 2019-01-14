@@ -14,8 +14,8 @@
 //   Based on the original TargetJr design by R. Hoffman and J. Liu
 // \endverbatim
 //--------------------------------------------------------------------------------
-#include <vcl_ostream.h>
-#include <vcl_vector.h>
+#include <ostream>
+#include <vector>
 
 //forward declarations
 class vsol_spatial_object_2d;
@@ -36,12 +36,12 @@ class dbxml_generic_ptr
   inline void* get_anyobject() const {return ptrs_.anyobject_;}
 
   //:stream print
-  inline friend vcl_ostream& operator<<(vcl_ostream&, const dbxml_generic_ptr&);
+  inline friend std::ostream& operator<<(std::ostream&, const dbxml_generic_ptr&);
  private:
   union type_union
   {
     void*  anyobject_;
-    vcl_vector<void*>* vec_ptr_;
+    std::vector<void*>* vec_ptr_;
     vsol_spatial_object_2d* vso_ptr_;
   };
   //:utility functions
@@ -52,9 +52,9 @@ class dbxml_generic_ptr
 };
 
 //: Ostream inline function implementation
-inline vcl_ostream& operator<<(vcl_ostream& os, const dbxml_generic_ptr& ptr) 
+inline std::ostream& operator<<(std::ostream& os, const dbxml_generic_ptr& ptr) 
 {
-  os << " dbxml_generic_ptr type  " << int(ptr.type()) << vcl_endl;
+  os << " dbxml_generic_ptr type  " << int(ptr.type()) << std::endl;
   return os;
 }
 

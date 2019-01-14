@@ -13,8 +13,8 @@
 // \endverbatim
 
 
-#include <vcl_string.h>
-#include <vcl_vector.h>
+#include <string>
+#include <vector>
 #include <bprod/bprod_process.h>
 #include <vidl/vidl_istream_sptr.h>
 
@@ -27,7 +27,7 @@ class dbvidl2_multi_source : public bprod_source
   dbvidl2_multi_source() {}
 
   //: Constructor
-  dbvidl2_multi_source(const vcl_vector<vidl_istream_sptr>& streams)
+  dbvidl2_multi_source(const std::vector<vidl_istream_sptr>& streams)
    : istreams_(streams) {}
 
   //: Destructor
@@ -45,7 +45,7 @@ class dbvidl2_multi_source : public bprod_source
   bprod_signal execute();
 
  private:
-  vcl_vector<vidl_istream_sptr> istreams_;
+  std::vector<vidl_istream_sptr> istreams_;
 };
 
 #endif // dbvidl2_multi_source_h_

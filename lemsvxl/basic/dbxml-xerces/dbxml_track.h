@@ -9,17 +9,17 @@
 // 
 //-----------------------------------------------------------------------------
 #include <vbl/vbl_ref_count.h>
-#include <vcl_string.h>
-#include <vcl_map.h>
+#include <string>
+#include <map>
 #include <dbxml/dbxml_tracks.h>
 
 
-//#include <vcl_map.h>
+//#include <map>
 
 class dbxml_track : public vbl_ref_count
 {
  public:
-         dbxml_track(int startframe, int numframes, int width, int height,vcl_vector<dbxml_generic_ptr> tracks){
+         dbxml_track(int startframe, int numframes, int width, int height,std::vector<dbxml_generic_ptr> tracks){
    startframe_=startframe;
    numframes_ = numframes;
    width_ = width;
@@ -32,7 +32,7 @@ int startframe_;
 int numframes_;
 int width_;
 int height_;
-vcl_vector<dbxml_generic_ptr> tracks_;
+std::vector<dbxml_generic_ptr> tracks_;
 
         
   //:specific sub_class string names
@@ -54,10 +54,10 @@ vcl_vector<dbxml_generic_ptr> tracks_;
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 #include <vbl/vbl_ref_count.h>
-#include <vcl_string.h>
-#include <vcl_map.h>
+#include <string>
+#include <map>
 
-//#include <vcl_map.h>
+//#include <map>
 
 class dbxml_tracks : public vbl_ref_count
 {

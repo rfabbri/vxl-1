@@ -13,7 +13,7 @@
 // \endverbatim
 
 #include <vgui/vgui_tableau_sptr.h>
-#include <vcl_string.h>
+#include <string>
 
 //: More useful static functions to augment vgui_utils
 class dbgui_utils
@@ -26,7 +26,7 @@ class dbgui_utils
   // Options for output_type: ".ps", ".eps", ".pdf", ".txt" 
   // If file_type not provided, extension of output_file will be used
   static void render_to_ps(const vgui_tableau_sptr& tableau, 
-    const vcl_string output_file, const vcl_string& output_type = "");
+    const std::string output_file, const std::string& output_type = "");
 
 };
 

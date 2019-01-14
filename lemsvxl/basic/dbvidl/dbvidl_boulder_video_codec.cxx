@@ -1,6 +1,6 @@
 #include <dbvidl/dbvidl_boulder_video_codec.h>
-#include <vcl_ios.h>
-#include <vcl_cstdio.h>
+#include <ios>
+#include <cstdio>
 #include <vil/vil_memory_chunk.h>
 #include <vil/vil_image_view.h>
 #include <vxl_config.h>
@@ -18,7 +18,7 @@ dbvidl_boulder_video_codec::~dbvidl_boulder_video_codec()
 vil_image_view_base_sptr dbvidl_boulder_video_codec::get_view(int position, int x0, int w, int y0, int h) const
 {
   
-    vcl_ifstream infile(filename.c_str(),vcl_ios::in|vcl_ios::binary);
+    std::ifstream infile(filename.c_str(),std::ios::in|std::ios::binary);
     if(infile)
     {
         infile.seekg(0);
@@ -53,7 +53,7 @@ vil_image_view_base_sptr dbvidl_boulder_video_codec::get_view(int position, int 
 
 
 
-vidl1_codec_sptr dbvidl_boulder_video_codec::load(vcl_string const& fname, char mode  )
+vidl1_codec_sptr dbvidl_boulder_video_codec::load(std::string const& fname, char mode  )
 {
     dbvidl_boulder_video_codec *cloned_boulder_video_codec = new dbvidl_boulder_video_codec;
 
@@ -68,20 +68,20 @@ vidl1_codec_sptr dbvidl_boulder_video_codec::load(vcl_string const& fname, char 
 //: Put a section of pixels in function of the frame number, position and size.
 bool dbvidl_boulder_video_codec::put_view(int /*position*/, const vil_image_view_base & /*im*/, int /*x0*/, int /*y0*/)
 {
-  vcl_cerr << "dbvidl_boulder_video_codec::put_section not implemented\n";
+  std::cerr << "dbvidl_boulder_video_codec::put_section not implemented\n";
   return false;
 }
-bool dbvidl_boulder_video_codec::save(vidl1_movie* movie, vcl_string const& fname)
+bool dbvidl_boulder_video_codec::save(vidl1_movie* movie, std::string const& fname)
 {
-   vcl_cerr << "dbvidl_boulder_video_codec::save not implemented\n";
+   std::cerr << "dbvidl_boulder_video_codec::save not implemented\n";
    return false;
 }
-bool dbvidl_boulder_video_codec::probe(vcl_string const& fname)
+bool dbvidl_boulder_video_codec::probe(std::string const& fname)
 {
-    vcl_ifstream ifile(fname.c_str(),vcl_ios::in|vcl_ios::binary);
+    std::ifstream ifile(fname.c_str(),std::ios::in|std::ios::binary);
     if(!ifile)
     {
-        vcl_cout<<"\nError Opening File";
+        std::cout<<"\nError Opening File";
         return false;
     }
 
@@ -106,14 +106,14 @@ bool dbvidl_boulder_video_codec::probe(vcl_string const& fname)
 
 
 //: function will store all the offsets of the images
-bool dbvidl_boulder_video_codec::loadboulder(vcl_string inputvid)
+bool dbvidl_boulder_video_codec::loadboulder(std::string inputvid)
 {
     mapoffset.clear();
     filename=inputvid;
-    ifile= new vcl_ifstream(inputvid.c_str(),vcl_ios::in|vcl_ios::binary);
+    ifile= new std::ifstream(inputvid.c_str(),std::ios::in|std::ios::binary);
     if(!ifile->is_open())
     {
-        vcl_cout<<"\nError Opening File";
+        std::cout<<"\nError Opening File";
         return false;
     }
     if(readheader(ifile,'r'))
@@ -126,7 +126,7 @@ bool dbvidl_boulder_video_codec::loadboulder(vcl_string inputvid)
         ifile->seekg((long)ifile->tellg()+m_ulTimeStampBlockSize);
         if(isimageblock(ifile))
         {
-            mapoffset.push_back(vcl_make_pair(countframes,(long)ifile->tellg()));
+            mapoffset.push_back(std::make_pair(countframes,(long)ifile->tellg()));
             ifile->seekg((long)ifile->tellg()+datablocksize);
         }
         countframes++;
@@ -138,7 +138,7 @@ bool dbvidl_boulder_video_codec::loadboulder(vcl_string inputvid)
         return false;
     }
 }
-bool dbvidl_boulder_video_codec::readheader(vcl_ifstream *ifile, char mode )
+bool dbvidl_boulder_video_codec::readheader(std::ifstream *ifile, char mode )
 {
     typedef unsigned long ULONG;
     typedef enum
@@ -162,10 +162,10 @@ bool dbvidl_boulder_video_codec::readheader(vcl_ifstream *ifile, char mode )
         RTIA_FLOAT
     }RTIAImageFormat;
 
-    //vcl_ifstream ifile(fname.c_str(),vcl_ios::in|vcl_ios::binary);
+    //std::ifstream ifile(fname.c_str(),std::ios::in|std::ios::binary);
     if(!ifile)
     {
-        vcl_cout<<"\nError Opening File";
+        std::cout<<"\nError Opening File";
         return false;
     }
 
@@ -190,7 +190,7 @@ bool dbvidl_boulder_video_codec::readheader(vcl_ifstream *ifile, char mode )
     ifile->read((char*)&m_ulBitsPerPixel,sizeof( long));
     nframes=m_ulFramesInThisFile;
 
-    vcl_cout<<"Header Size = "<<m_ulBlockSize<<"\n "
+    std::cout<<"Header Size = "<<m_ulBlockSize<<"\n "
             <<"version No. = "<<m_ulBlockVersion<<"\n "
             <<"No of Frames = "<<m_ulFramesInThisFile<<"\n "
             <<"Width = "<<m_ulWidth<<"\n"
@@ -223,15 +223,15 @@ bool dbvidl_boulder_video_codec::readheader(vcl_ifstream *ifile, char mode )
             nplanes=1;
         }
         else
-            vcl_cerr<<"Format unexpected ";
+            std::cerr<<"Format unexpected ";
 
         ifile->read((char*)&m_ulCaptureInfoBlockSize,sizeof(long));
         ifile->read((char*)&m_ulTimeStampBlockSize,sizeof(long));
         ifile->read((char*)&m_ulFrameHeaderBlockSize,sizeof(long));
         ifile->read((char*)&m_ulFrameBlockSize,sizeof(long));
 
-        vcl_cout<<"Image Type "<<m_eType<<"\n";
-        vcl_cout<<"Image Format "<<m_eFormat<<"\n"
+        std::cout<<"Image Type "<<m_eType<<"\n";
+        std::cout<<"Image Format "<<m_eFormat<<"\n"
             <<"CaptureInfoBlockSize = "<<m_ulCaptureInfoBlockSize<<"\n"
             <<"TimeStampBlockSize = "<<m_ulTimeStampBlockSize<<"\n"
             <<"FrameHeaderBlockSize = "<<m_ulFrameHeaderBlockSize<<"\n"
@@ -263,7 +263,7 @@ bool dbvidl_boulder_video_codec::readheader(vcl_ifstream *ifile, char mode )
 
     return true;
 }
-bool dbvidl_boulder_video_codec::isimageblock(vcl_ifstream *ifile)
+bool dbvidl_boulder_video_codec::isimageblock(std::ifstream *ifile)
 {
     if(!ifile)
         return false;
@@ -278,7 +278,7 @@ bool dbvidl_boulder_video_codec::isimageblock(vcl_ifstream *ifile)
         ifile->read((char*)&m_ulBlock_Marker_2,sizeof( long));
         ifile->read((char*)&m_ulFrameBlockSize,sizeof( long));
 
-        //vcl_cout<<"\n the block size is "<<m_ulBlockSize;
+        //std::cout<<"\n the block size is "<<m_ulBlockSize;
 
         if(m_ulBlock_Marker_1==RAW_FRAME_MARKER_1 &&
            m_ulBlock_Marker_2==RAW_FRAME_MARKER_2)

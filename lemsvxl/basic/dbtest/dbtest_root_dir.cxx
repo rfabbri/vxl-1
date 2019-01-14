@@ -8,8 +8,8 @@
 
 #include "dbtest_root_dir.h"
 
-//#include <vcl_cstdlib.h>
-#include <vcl_iostream.h>
+//#include <cstdlib>
+#include <iostream>
 
 // The following should have been created automatically by the
 // configuration scripts from dbtest_where_root_dir.h.in
@@ -19,17 +19,17 @@
 #include <dbtest_where_root_dir.h>
 
 //: Return source root directory of LEMSVXL source
-vcl_string dbtest_root_dir()
+std::string dbtest_root_dir()
 {
-  return vcl_string(DBTEST_SOURCE_ROOT_DIR);
+  return std::string(DBTEST_SOURCE_ROOT_DIR);
 }
 #else
 //: Return source root directory of LEMSVXL source
-vcl_string dbtest_root_dir()
+std::string dbtest_root_dir()
 {
-  vcl_cerr << "ERROR: dbtest_root_dir() Unable to retrieve root directory.\n"
+  std::cerr << "ERROR: dbtest_root_dir() Unable to retrieve root directory.\n"
            << "Missing header file dbtest_where_root_dir.h. Please check configuration of dbtest.\n";
-  return vcl_string("");
+  return std::string("");
 }
 
 #endif

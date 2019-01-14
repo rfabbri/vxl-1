@@ -16,19 +16,19 @@
 //
 //-------------------------------------------------------------------------
 
-#include <vcl_vector.h>
-#include <vcl_utility.h>
+#include <vector>
+#include <utility>
 #include <assert.h>
 #include <vbl/vbl_ref_count.h>
 #include <dbdp/dbdp_cost.h>
-#include <vcl_cfloat.h>
+#include <cfloat>
 #include <cstddef>
 
 #define DP_VERY_LARGE_COST DBL_MAX
 
-typedef vcl_vector< vcl_vector<double> > DPCostType;
-typedef vcl_vector< vcl_vector< vcl_pair <int,int> > > DPMapType;
-typedef vcl_vector< vcl_pair<int,int> > FinalMapType;
+typedef std::vector< std::vector<double> > DPCostType;
+typedef std::vector< std::vector< std::pair <int,int> > > DPMapType;
+typedef std::vector< std::pair<int,int> > FinalMapType;
 
 class dbdp_engine : public vbl_ref_count
 {
@@ -40,7 +40,7 @@ public:
   DPCostType *DPCost() { return &DPCost_; }
   DPMapType *DPMap() { return &DPMap_; }
   FinalMapType *finalMap() { return &finalMap_; }
-  vcl_vector<double> *finalMapCost() { return &finalMapCost_; }
+  std::vector<double> *finalMapCost() { return &finalMapCost_; }
   double finalCost() { return finalCost_; }
 
   int getFMapFirst(int i) 
@@ -74,9 +74,9 @@ public:
 
 protected:
   DPCostType DPCost_;               //DPMap of cost: n*m array of double
-  DPMapType DPMap_;                 //DPMap of prev point vcl_map: n*m array of vcl_pair of index
+  DPMapType DPMap_;                 //DPMap of prev point std::map: n*m array of std::pair of index
   FinalMapType finalMap_;           //minimizing path
-  vcl_vector<double> finalMapCost_; //cost of minimizing path
+  std::vector<double> finalMapCost_; //cost of minimizing path
   double finalCost_;                //final cost
 
   // number of samples on the grid along each of the two directions
@@ -85,8 +85,8 @@ protected:
   int template_size_;
   // pointer to cost computation class
   dbdp_cost *cost_fnc_;
-  vcl_vector<int> XOFFSET;
-  vcl_vector<int> YOFFSET;
+  std::vector<int> XOFFSET;
+  std::vector<int> YOFFSET;
 };
 
 #endif

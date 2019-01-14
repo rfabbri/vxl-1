@@ -1,5 +1,5 @@
 #include "dbdp_engine.h"
-#include <vcl_cmath.h>
+#include <cmath>
 
 int max_of(int a, int b, int c)
 {
@@ -94,10 +94,10 @@ void dbdp_engine::initializeDPCosts()
 
   for (int i=0; i < grid_w_; i++) 
   {
-    vcl_vector<double> tmp1(grid_h_,DP_VERY_LARGE_COST);
+    std::vector<double> tmp1(grid_h_,DP_VERY_LARGE_COST);
     DPCost_.push_back(tmp1);
-    vcl_pair <int,int> tmp3(0,0);
-    vcl_vector< vcl_pair <int,int> > tmp2(grid_h_,tmp3);
+    std::pair <int,int> tmp3(0,0);
+    std::vector< std::pair <int,int> > tmp2(grid_h_,tmp3);
     DPMap_.push_back(tmp2);
   }
 
@@ -162,7 +162,7 @@ void dbdp_engine::findDPCorrespondence()
   i = grid_w_-1;
   j = grid_h_-1;
 
-  vcl_pair <int,int> p(ip,jp);
+  std::pair <int,int> p(ip,jp);
   finalMap_.push_back(p);
   finalMapCost_.push_back(DPCost_[p.first][p.second]);
 
@@ -170,7 +170,7 @@ void dbdp_engine::findDPCorrespondence()
   { //Ming: should be &&
     ip=DPMap_[i][j].first;
     jp=DPMap_[i][j].second;
-    vcl_pair <int,int> p(ip,jp);
+    std::pair <int,int> p(ip,jp);
     finalMap_.push_back(p);
     finalMapCost_.push_back(DPCost_[p.first][p.second]);
   

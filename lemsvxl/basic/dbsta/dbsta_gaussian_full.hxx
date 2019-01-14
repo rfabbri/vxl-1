@@ -10,8 +10,8 @@
 #include <vnl/algo/vnl_determinant.h>
 #include <vnl/vnl_inverse.h>
 #include <vnl/vnl_math.h>
-#include <vcl_algorithm.h>
-#include <vcl_iostream.h>
+#include <algorithm>
+#include <iostream>
 #include <vnl/io/vnl_io_matrix.h>
 #include <vnl/io/vnl_io_matrix_fixed.h>
 
@@ -54,7 +54,7 @@ dbsta_gaussian_full<T,n>::norm_const() const
     
   T z = 1.0,  two_pi = 2.0*vnl_math::pi;
   for(unsigned i=0; i<dim(); ++i) z *= two_pi;
-  return vcl_sqrt(1/(d * z));
+  return std::sqrt(1/(d * z));
 }
 
 
@@ -72,7 +72,7 @@ dbsta_gaussian_full<T,n>::inv_covar() const
       // Is this the best way to handle this?
       T lambda = T(0);
       for(unsigned i=0; i<n; ++i)
-        lambda = vcl_max(lambda,C(i,i));
+        lambda = std::max(lambda,C(i,i));
       lambda *= 1e-4;  
       for(unsigned i=0; i<n; ++i)
         C(i,i) += lambda;
@@ -117,7 +117,7 @@ void dbsta_gaussian_full<T,n>::b_read(vsl_b_istream &is)
 
     break;
    default:
-    vcl_cerr << "vsol_line_2d: unknown I/O version " << ver << '\n';
+    std::cerr << "vsol_line_2d: unknown I/O version " << ver << '\n';
   }
 }
 //: Return IO version number;
@@ -129,7 +129,7 @@ short dbsta_gaussian_full<T,n>::version() const
 
 //: Print an ascii summary to the stream
 template <class T, unsigned int n>
-void dbsta_gaussian_full<T,n>::print_summary(vcl_ostream &os) const
+void dbsta_gaussian_full<T,n>::print_summary(std::ostream &os) const
 {
   //os << *this;
 }

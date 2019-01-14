@@ -32,7 +32,7 @@ class dbgui_soview2D_circ_arc : public vgui_soview2D
   virtual ~dbgui_soview2D_circ_arc() {}
 
   //: Returns the type of this class
-  virtual vcl_string type_name() const {return "dbgui_soview_circ_arc"; }
+  virtual std::string type_name() const {return "dbgui_soview_circ_arc"; }
 
   //: Render this node on the display.
   virtual void draw() const;
@@ -47,7 +47,7 @@ class dbgui_soview2D_circ_arc : public vgui_soview2D
   virtual void get_centroid(float* x, float* y) const;
 
   //: Print details about this object to the given stream.
-  virtual vcl_ostream& print(vcl_ostream& os) const;
+  virtual std::ostream& print(std::ostream& os) const;
 
   //: Return a smart pointer to the node
   bgld_circ_arc circ_arc() const {return this->circ_arc_; }

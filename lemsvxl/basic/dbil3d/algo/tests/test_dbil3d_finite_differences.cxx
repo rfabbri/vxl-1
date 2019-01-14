@@ -1,8 +1,8 @@
 #include <testlib/testlib_test.h>
 #include <vil3d/vil3d_print.h>
 #include <vil3d/vil3d_copy.h>
-#include <vcl_cstdio.h>
-#include <vcl_cmath.h>
+#include <cstdio>
+#include <cmath>
 #include <vnl/vnl_random.h>
 #include <vnl/vnl_math.h>
 #include <dbil3d/algo/dbil3d_finite_differences.h>
@@ -49,7 +49,7 @@ MAIN( test_dbil3d_finite_differences )
   }
   }
 
-  vcl_cout << "Testing on constant image, differences should be zero everywhere" << vcl_endl; 
+  std::cout << "Testing on constant image, differences should be zero everywhere" << std::endl; 
    TEST_NEAR("D_x_plus", dxpsum,0, 0.001);
    TEST_NEAR("D_x_minus", dxmsum,0, 0.001);
    TEST_NEAR("D_x_center", dxcsum,0, 0.001);
@@ -78,11 +78,11 @@ MAIN( test_dbil3d_finite_differences )
                                     dyp, dym, dyc, 
                                     dzp, dzm, dzc); 
 
-  vcl_cout << "testing half-one half-zero (along i-axis) image" << vcl_endl;
+  std::cout << "testing half-one half-zero (along i-axis) image" << std::endl;
 
-//  vil3d_print_all(vcl_cout,dxp);
-//  vil3d_print_all(vcl_cout,dxm);
-//  vil3d_print_all(vcl_cout,dxc);
+//  vil3d_print_all(std::cout,dxp);
+//  vil3d_print_all(std::cout,dxm);
+//  vil3d_print_all(std::cout,dxc);
   for(unsigned k = 0 ; k < testim.nk(); k++){
   for(unsigned j = 0 ; j < testim.nj(); j++){
           TEST_NEAR("D_x_plus"    ,     dxp(0,j,k)    ,    0    ,     0.001);
@@ -139,10 +139,10 @@ MAIN( test_dbil3d_finite_differences )
                                     dzp, dzm, dzc); 
 
 
-  vcl_cout << "testing half-one half-zero (along j-axis) image" << vcl_endl;
-//  vil3d_print_all(vcl_cout,dyp);
-//  vil3d_print_all(vcl_cout,dym);
-//  vil3d_print_all(vcl_cout,dyc);
+  std::cout << "testing half-one half-zero (along j-axis) image" << std::endl;
+//  vil3d_print_all(std::cout,dyp);
+//  vil3d_print_all(std::cout,dym);
+//  vil3d_print_all(std::cout,dyc);
   for(unsigned k = 0 ; k < testim.nk(); k++){
   for(unsigned i = 0 ; i < testim.ni(); i++){
           TEST_NEAR("D_x_plus"    ,     dxp(i,0,k)    ,    0    ,     0.001);
@@ -192,10 +192,10 @@ for(unsigned k = 0 ; k < testim.nk(); k++){
                                     dzp, dzm, dzc); 
 
 
-  vcl_cout << "testing half-one half-zero (along k-axis) image" << vcl_endl;
-//  vil3d_print_all(vcl_cout,dzp);
-//  vil3d_print_all(vcl_cout,dzm);
-//  vil3d_print_all(vcl_cout,dzc);
+  std::cout << "testing half-one half-zero (along k-axis) image" << std::endl;
+//  vil3d_print_all(std::cout,dzp);
+//  vil3d_print_all(std::cout,dzm);
+//  vil3d_print_all(std::cout,dzc);
   for(unsigned j = 0 ; j < testim.nj(); j++){
   for(unsigned i = 0 ; i < testim.ni(); i++){
           unsigned k = 0;
@@ -250,10 +250,10 @@ for(unsigned j = 0 ; j < testim.nj(); j++){
                                     dyp, dym, dyc, 
                                     dzp, dzm, dzc); 
 
-  vcl_cout << "Testing on image at minimal i boundary   " << vcl_endl; 
-//  vil3d_print_all(vcl_cout,dxp);
-//  vil3d_print_all(vcl_cout,dxm);
-//  vil3d_print_all(vcl_cout,dxc);
+  std::cout << "Testing on image at minimal i boundary   " << std::endl; 
+//  vil3d_print_all(std::cout,dxp);
+//  vil3d_print_all(std::cout,dxm);
+//  vil3d_print_all(std::cout,dxc);
   for(unsigned k = 0 ; k < testim.nk(); k++){
   for(unsigned j = 0 ; j < testim.nj(); j++){
           unsigned i = 0;
@@ -312,10 +312,10 @@ for(unsigned j = 0 ; j < testim.nj(); j++){
 
 
 
-  vcl_cout << "Testing on image at minimal j boundary   " << vcl_endl; 
-  //vil3d_print_all(vcl_cout,dyp);
-  //vil3d_print_all(vcl_cout,dym);
-  //vil3d_print_all(vcl_cout,dyc);
+  std::cout << "Testing on image at minimal j boundary   " << std::endl; 
+  //vil3d_print_all(std::cout,dyp);
+  //vil3d_print_all(std::cout,dym);
+  //vil3d_print_all(std::cout,dyc);
   for(unsigned k = 0 ; k < testim.nk(); k++){
   for(unsigned i = 0 ; i < testim.ni(); i++){
           unsigned j = 0;
@@ -371,10 +371,10 @@ for(unsigned j = 0 ; j < testim.nj(); j++){
                                     dyp, dym, dyc, 
                                     dzp, dzm, dzc); 
 
-  vcl_cout << "Testing on image at minimal k boundary   " << vcl_endl; 
-//  vil3d_print_all(vcl_cout,dxp);
-//  vil3d_print_all(vcl_cout,dxm);
-//  vil3d_print_all(vcl_cout,dxc);
+  std::cout << "Testing on image at minimal k boundary   " << std::endl; 
+//  vil3d_print_all(std::cout,dxp);
+//  vil3d_print_all(std::cout,dxm);
+//  vil3d_print_all(std::cout,dxc);
   for(unsigned j = 0 ; j < testim.nj(); j++){
   for(unsigned i = 0 ; i < testim.ni(); i++){
           unsigned k = 0;
@@ -434,10 +434,10 @@ for(unsigned j = 0 ; j < testim.nj(); j++){
                                     dyp, dym, dyc, 
                                     dzp, dzm, dzc); 
 
-  vcl_cout << "Testing on image at extremal i boundary   " << vcl_endl; 
-//  vil3d_print_all(vcl_cout,dxp);
-//  vil3d_print_all(vcl_cout,dxm);
-//  vil3d_print_all(vcl_cout,dxc);
+  std::cout << "Testing on image at extremal i boundary   " << std::endl; 
+//  vil3d_print_all(std::cout,dxp);
+//  vil3d_print_all(std::cout,dxm);
+//  vil3d_print_all(std::cout,dxc);
   for(unsigned k = 0 ; k < testim.nk(); k++){
   for(unsigned j = 0 ; j < testim.nj(); j++){
           TEST_NEAR("D_x_plus"    ,     dxp(0,j,k)    ,    0    ,     0.001);
@@ -495,10 +495,10 @@ for(unsigned j = 0 ; j < testim.nj(); j++){
 
 
 
-  vcl_cout << "Testing on image at extremal j boundary   " << vcl_endl; 
-//  vil3d_print_all(vcl_cout,dyp);
-//  vil3d_print_all(vcl_cout,dym);
-//  vil3d_print_all(vcl_cout,dyc);
+  std::cout << "Testing on image at extremal j boundary   " << std::endl; 
+//  vil3d_print_all(std::cout,dyp);
+//  vil3d_print_all(std::cout,dym);
+//  vil3d_print_all(std::cout,dyc);
   for(unsigned k = 0 ; k < testim.nk(); k++){
   for(unsigned i = 0 ; i < testim.ni(); i++){
           TEST_NEAR("D_x_plus"    ,     dxp(i,0,k)    ,    0    ,     0.001);
@@ -551,10 +551,10 @@ for(unsigned j = 0 ; j < testim.nj(); j++){
                                     dyp, dym, dyc, 
                                     dzp, dzm, dzc); 
 
-  vcl_cout << "Testing on image at extremal k boundary   " << vcl_endl; 
-//  vil3d_print_all(vcl_cout,dxp);
-//  vil3d_print_all(vcl_cout,dxm);
-//  vil3d_print_all(vcl_cout,dxc);
+  std::cout << "Testing on image at extremal k boundary   " << std::endl; 
+//  vil3d_print_all(std::cout,dxp);
+//  vil3d_print_all(std::cout,dxm);
+//  vil3d_print_all(std::cout,dxc);
   for(unsigned j = 0 ; j < testim.nj(); j++){
   for(unsigned i = 0 ; i < testim.ni(); i++){
           unsigned k = 0;

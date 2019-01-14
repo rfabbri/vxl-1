@@ -3,12 +3,12 @@
 #include <dbsta/dbsta_gaussian_full.h>
 #include <dbsta/dbsta_gaussian_indep.h>
 #include <dbsta/dbsta_gaussian_sphere.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
+#include <string>
+#include <iostream>
 
 
 template <class T>
-void test_gaussian_stats_type(T epsilon, const vcl_string& type_name)
+void test_gaussian_stats_type(T epsilon, const std::string& type_name)
 {
   dbsta_gaussian_updater<T> updater;
   
@@ -71,7 +71,7 @@ void test_gaussian_stats_type(T epsilon, const vcl_string& type_name)
   TEST(("Indep covar <"+type_name+">").c_str(), 
        (gauss3D_indep.diag_covar() - diag_covar).diagonal().inf_norm() < epsilon, true);
   TEST(("Sphere var <"+type_name+">").c_str(), 
-       vcl_abs(gauss3D_sphere.var() - var) < epsilon, true);    
+       std::abs(gauss3D_sphere.var() - var) < epsilon, true);    
 
 }
 

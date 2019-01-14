@@ -3,7 +3,7 @@
 
 #include <vsl/vsl_fwd.h>
 #include <vbl/vbl_smart_ptr.h>
-#include <vcl_iosfwd.h>
+#include <iosfwd>
 #include <vsl/vsl_binary_io.h>
 
 //: Binary save vbl_smart_ptr to stream.

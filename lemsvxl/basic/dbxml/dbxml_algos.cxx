@@ -27,7 +27,7 @@ append_element(bxml_element* parent, bxml_element* child)
 //------------------------------------------------------------------------------
 //: Find the first element that matches the name
 bxml_element* dbxml_algos::
-find_by_name(const bxml_data_sptr& head, const vcl_string& query_name)
+find_by_name(const bxml_data_sptr& head, const std::string& query_name)
 {
   if (head->type() != bxml_data::ELEMENT)
      return 0;
@@ -57,8 +57,8 @@ find_by_name(const bxml_data_sptr& head, const vcl_string& query_name)
 // query_name
 void dbxml_algos::
 find_all_elems_by_name(const bxml_data_sptr& head,
-                       const vcl_string& query_name,
-                       vcl_vector<bxml_data_sptr>& data)
+                       const std::string& query_name,
+                       std::vector<bxml_data_sptr>& data)
 {
   // We cant do anything if first element isnt an element type
   if (head->type() != bxml_data::ELEMENT)
@@ -103,7 +103,7 @@ cast_to_element(const bxml_data_sptr& data)
 // Return a null pointer if the casting fails
 // This is a convenient way to check the type of bxml_data object
 bxml_element* dbxml_algos::
-cast_to_element(const bxml_data_sptr& data, const vcl_string& element_name)
+cast_to_element(const bxml_data_sptr& data, const std::string& element_name)
 {
   if (data->type() != bxml_data::ELEMENT)
     return 0;
@@ -116,7 +116,7 @@ cast_to_element(const bxml_data_sptr& data, const vcl_string& element_name)
 //------------------------------------------------------------------------------
 //: Get the first text data of the element (if there is one)
 bool dbxml_algos::
-get_first_text(const bxml_element* elm, vcl_string& text)
+get_first_text(const bxml_element* elm, std::string& text)
 {
   text = "";
   if (!elm)

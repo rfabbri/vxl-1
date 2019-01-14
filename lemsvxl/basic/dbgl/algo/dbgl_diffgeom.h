@@ -23,7 +23,7 @@ dbgl_compute_curvature(
 void 
 dbgl_compute_normals(
     const dbdet_edgel_chain &c, 
-    vcl_vector< vnl_vector_fixed<double, 2> > *n
+    std::vector< vnl_vector_fixed<double, 2> > *n
     );
 
 #endif // dbgl_diffgeom_h

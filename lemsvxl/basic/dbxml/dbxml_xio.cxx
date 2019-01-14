@@ -18,12 +18,12 @@
 
 //------------------------------------------------------------------------------
 //:
-bxml_element* xml_new(const vcl_string& name, double data)
+bxml_element* xml_new(const std::string& name, double data)
 {
   bxml_element* new_element = new bxml_element(name);
   new_element->set_attribute("type", "double");
 
-  vcl_stringstream strm;
+  std::stringstream strm;
   strm << data;
   new_element->append_text(strm.str());
   return new_element;
@@ -31,11 +31,11 @@ bxml_element* xml_new(const vcl_string& name, double data)
 
 //------------------------------------------------------------------------------
 //:
-bxml_element* xml_new(const vcl_string& name, float data)
+bxml_element* xml_new(const std::string& name, float data)
 {
   bxml_element* new_element = new bxml_element(name);
   new_element->set_attribute("type", "float");
-  vcl_stringstream strm;
+  std::stringstream strm;
   strm << data;
   new_element->append_text(strm.str());
   return new_element;
@@ -43,12 +43,12 @@ bxml_element* xml_new(const vcl_string& name, float data)
 
 //------------------------------------------------------------------------------
 //:
-bxml_element* xml_new(const vcl_string& name, int data)
+bxml_element* xml_new(const std::string& name, int data)
 {
   bxml_element* new_element = new bxml_element(name);
   new_element->set_attribute("type", "int");
 
-  vcl_stringstream strm;
+  std::stringstream strm;
   strm << data;
   new_element->append_text(strm.str());
   return new_element;
@@ -57,12 +57,12 @@ bxml_element* xml_new(const vcl_string& name, int data)
 
 //------------------------------------------------------------------------------
 //:
-bxml_element* xml_new(const vcl_string& name, unsigned data)
+bxml_element* xml_new(const std::string& name, unsigned data)
 {
   bxml_element* new_element = new bxml_element(name);
   new_element->set_attribute("type", "unsigned");
 
-  vcl_stringstream strm;
+  std::stringstream strm;
   strm << data;
   new_element->append_text(strm.str());
   return new_element;
@@ -71,12 +71,12 @@ bxml_element* xml_new(const vcl_string& name, unsigned data)
 
 //------------------------------------------------------------------------------
 //:
-bxml_element* xml_new(const vcl_string& name, const vcl_string& data)
+bxml_element* xml_new(const std::string& name, const std::string& data)
 {
   bxml_element* new_element = new bxml_element(name);
   new_element->set_attribute("type", "string");
 
-  vcl_stringstream strm;
+  std::stringstream strm;
   strm << data;
   new_element->append_text(strm.str());
   return new_element;
@@ -94,11 +94,11 @@ bxml_element* xml_new(const vcl_string& name, const vcl_string& data)
 //:
 bool xml_parse(const bxml_element* element, double& data)
 {
-  vcl_string text = "";
+  std::string text = "";
   if (!dbxml_algos::get_first_text(element, text))
     return false;
 
-  vcl_istringstream strm(text);
+  std::istringstream strm(text);
   strm >> data;
   return true;
 }
@@ -108,11 +108,11 @@ bool xml_parse(const bxml_element* element, double& data)
 //:
 bool xml_parse(const bxml_element* element, float& data)
 {
-  vcl_string text = "";
+  std::string text = "";
   if (!dbxml_algos::get_first_text(element, text))
     return false;
 
-  vcl_istringstream strm(text);
+  std::istringstream strm(text);
   strm >> data;
   return true;
 }
@@ -121,11 +121,11 @@ bool xml_parse(const bxml_element* element, float& data)
 //:
 bool xml_parse(const bxml_element* element, int& data)
 {
-  vcl_string text = "";
+  std::string text = "";
   if (!dbxml_algos::get_first_text(element, text))
     return false;
 
-  vcl_istringstream strm(text);
+  std::istringstream strm(text);
   strm >> data;
   return true;
 }
@@ -134,11 +134,11 @@ bool xml_parse(const bxml_element* element, int& data)
 //:
 bool xml_parse(const bxml_element* element, unsigned& data)
 {
-  vcl_string text = "";
+  std::string text = "";
   if (!dbxml_algos::get_first_text(element, text))
     return false;
 
-  vcl_istringstream strm(text);
+  std::istringstream strm(text);
   strm >> data;
   return true;
 }
@@ -146,9 +146,9 @@ bool xml_parse(const bxml_element* element, unsigned& data)
 
 //------------------------------------------------------------------------------
 //:
-bool xml_parse(const bxml_element* element, vcl_string& data)
+bool xml_parse(const bxml_element* element, std::string& data)
 {
-  vcl_string text = "";
+  std::string text = "";
   if (!dbxml_algos::get_first_text(element, text))
     return false;
 

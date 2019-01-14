@@ -1,6 +1,6 @@
 // Display 2d geometric objects on top of an image.
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include "GL/osmesa.h"
 #include <vgui/vgui.h> 
 #include <vgui/vgui_utils.h> 
@@ -37,11 +37,11 @@ int main(int argc, char **argv)
 
 
 
-  /*vcl_FILE *xmlFile;
+  /*std::FILE *xmlFile;
  
-  vul_arg<vcl_string> video_file("-video-path", "input video file");
-  vul_arg<vcl_string> image_dir("-image-path", "output file");
-  vul_arg<vcl_string> xml_file("-xml-path", "input xml file");
+  vul_arg<std::string> video_file("-video-path", "input video file");
+  vul_arg<std::string> image_dir("-image-path", "output file");
+  vul_arg<std::string> xml_file("-xml-path", "input xml file");
   vul_arg<int> frame_index("-frame-index", "starting frame");
   vul_arg<int> num_frames("-numframes", "number of frames");
 
@@ -50,7 +50,7 @@ int main(int argc, char **argv)
 
   if (video_file() == "" )
   {
-    vcl_cerr << "Please give an image filename on the command line" << vcl_endl;
+    std::cerr << "Please give an image filename on the command line" << std::endl;
     return 0;
   }
 
@@ -63,17 +63,17 @@ int main(int argc, char **argv)
 
   
 
- vcl_cout << " Parsing..\n";
+ std::cout << " Parsing..\n";
 
   if (  xml_file()!= "" ){
-      xmlFile = vcl_fopen(xml_file().c_str(), "r");
+      xmlFile = std::fopen(xml_file().c_str(), "r");
       if (xmlFile){
          if (strstr(xml_file().c_str(),"track.xml") == NULL){
            segmented_contours_parser parser(&sinfo);
             if (!parser.parseFile(xmlFile)) {
-               vcl_cerr << "Error: "  <<  XML_ErrorString(parser.XML_GetErrorCode()) 
+               std::cerr << "Error: "  <<  XML_ErrorString(parser.XML_GetErrorCode()) 
             << " at line "
-            << parser.XML_GetCurrentLineNumber()                     << vcl_endl;
+            << parser.XML_GetCurrentLineNumber()                     << std::endl;
             return 1;
             }
          }
@@ -81,22 +81,22 @@ int main(int argc, char **argv)
            track_parser parser(&tinfo);
             bIsTrack = true;
                    if (!parser.parseFile(xmlFile)) {
-             vcl_cerr << "Error: "  <<  XML_ErrorString(parser.XML_GetErrorCode()) 
+             std::cerr << "Error: "  <<  XML_ErrorString(parser.XML_GetErrorCode()) 
           << " at line "
-          << parser.XML_GetCurrentLineNumber()                     << vcl_endl;
+          << parser.XML_GetCurrentLineNumber()                     << std::endl;
           return 1;
           }
   
          }
       }
       else{
-        vcl_cerr <<  xml_file().c_str()  << " error on opening.  \n"   << vcl_endl; 
+        std::cerr <<  xml_file().c_str()  << " error on opening.  \n"   << std::endl; 
         return(1);
       }
     
 }
 else{
-       vcl_cout << " XML File not specified\n";
+       std::cout << " XML File not specified\n";
 
 }
   // long lTrackWidth =0;
@@ -104,15 +104,15 @@ else{
 int i =0;
 if (bIsTrack){
    i=tinfo.get_count();
-//   vcl_string trackwidth = info.getWidth();
- //  vcl_string trackheight = info.getHeight();
+//   std::string trackwidth = info.getWidth();
+ //  std::string trackheight = info.getHeight();
  //  lTrackWidth = strtoul(trackwidth.c_str(),&pEnd,0);
  //  lTrackHeight  = strtoul(trackheight.c_str(),&pEnd,0);
 }
 else 
     i=sinfo.get_count();
 
-   vcl_cout << " Parsing Done " << i << " Polygon(s) found.\n";
+   std::cout << " Parsing Done " << i << " Polygon(s) found.\n";
 
 
 
@@ -121,17 +121,17 @@ else
   my_movie = vidl1_io::load_movie(video_file().c_str());
   int currentframenumber=0;
   if (!my_movie){
-               vcl_cerr << "Error: loading movie " <<video_file().c_str()   << vcl_endl;
+               std::cerr << "Error: loading movie " <<video_file().c_str()   << std::endl;
                return(-1);
 
   }
-  vcl_cout << "Movie has " << my_movie->length() << " frames \n";
+  std::cout << "Movie has " << my_movie->length() << " frames \n";
 
 
 
      if(frame_index()<0||frame_index()>=my_movie->length())
     {
-      vcl_cout << "Frame index out of range \n";
+      std::cout << "Frame index out of range \n";
       return -2;
     }
   int start;
@@ -150,9 +150,9 @@ else
    long lastY=1;
    long lastX=1;
  
-   //      for (vcl_vector<vcl_string>::iterator arg_it = info.coordinates.begin();
+   //      for (std::vector<std::string>::iterator arg_it = info.coordinates.begin();
    //         arg_it != info.coordinates.end(); ++arg_it){
-  //              vcl_string c = *arg_it;
+  //              std::string c = *arg_it;
   //          }
 
 
@@ -258,20 +258,20 @@ int iFrameOffset = 0;
 
           const char comma = ',';
           const char space = ' ';
-          for (vcl_vector<vcl_string>::iterator arg_it = sinfo.coordinates.begin();
+          for (std::vector<std::string>::iterator arg_it = sinfo.coordinates.begin();
               arg_it != sinfo.coordinates.end(); ++arg_it){
                 if (iCoordFrameOffset++ == iFrameOffset){
                      char *pNext  = (char *)(*arg_it).c_str();
                      char *pEnd = (char *)(*arg_it).c_str() + strlen((*arg_it).c_str());
-                     //vcl_cout << "coord:  " <<  pNext << " \n";
+                     //std::cout << "coord:  " <<  pNext << " \n";
                      int iPoints=0;
                      while (pNext != NULL && strcmp(pNext,"") != 0 && iPoints < 500){
                        char *pX = strtok(pNext,",");
-                       //vcl_cout << "3 " << iNumPoints << "(" << pX << ") \n";
+                       //std::cout << "3 " << iNumPoints << "(" << pX << ") \n";
                        if (pX == NULL)
                            pX = pNext;
                        char *pY = strtok(pX+strlen(pX)+1," ");
-                       //vcl_cout << "- " << iNumPoints << "(" << pX << "," << pY << ") \n";
+                       //std::cout << "- " << iNumPoints << "(" << pX << "," << pY << ") \n";
                        xCoord[iNumPoints]=atof(pX);
                        yCoord[iNumPoints]= atof(pY);
                        iNumPoints++;
@@ -284,10 +284,10 @@ int iFrameOffset = 0;
           }
         }
         else{ //IsTrack== true
-           vcl_string x = "0";
-           vcl_string y ="0";
-           vcl_string x_margin="0";
-           vcl_string y_margin="0";
+           std::string x = "0";
+           std::string y ="0";
+           std::string x_margin="0";
+           std::string y_margin="0";
            long lTrackWidth =0;
            long lTrackHeight=0;
            char *pEnd;
@@ -296,7 +296,7 @@ int iFrameOffset = 0;
            lTrackHeight  = strtoul(tinfo.getHeight().c_str(),&pEnd,0);
 
            bool bNotFoundTrackInfo = true;
-           for (vcl_vector<track_coord_info>::iterator arg_it = tinfo.coordinates.begin();
+           for (std::vector<track_coord_info>::iterator arg_it = tinfo.coordinates.begin();
             arg_it != tinfo.coordinates.end(); ++arg_it){
               if (iCoordFrameOffset++ == iFrameOffset){
                 x = arg_it->x;
@@ -320,24 +320,24 @@ int iFrameOffset = 0;
 
               if (iX_High > maxX){
                   iX_High = maxX-1; 
-                  vcl_cout << " Width"  << iX <<" reduced to fit";
+                  std::cout << " Width"  << iX <<" reduced to fit";
 
               }
 
               if (iY_High > maxY){
                    iY_High = maxY-1;
-                   vcl_cout << " Height"  << iY <<" reduced to fit";
+                   std::cout << " Height"  << iY <<" reduced to fit";
 
               }
 
                if (iX  < 0) {
                   iX = 0;
-                  vcl_cout << " x"  << iX <<" changed to fit";
+                  std::cout << " x"  << iX <<" changed to fit";
               }
         
               if (iY  < 0 ){
                    iY = 0;
-                   vcl_cout << " y"  << iY <<" changed to fit";
+                   std::cout << " y"  << iY <<" changed to fit";
               }
   
 
@@ -404,7 +404,7 @@ int iFrameOffset = 0;
 
 
         if (iNumPoints > 0){
-          //vcl_cout << "Adding polygon with NumPoints " << iNumPoints << "..\n";
+          //std::cout << "Adding polygon with NumPoints " << iNumPoints << "..\n";
           easy2D->set_foreground(0,1,0); 
           easy2D->set_line_width(2); 
           easy2D->add_polygon(iNumPoints,xCoord,yCoord);
@@ -419,7 +419,7 @@ int iFrameOffset = 0;
         //  bool bresize = viewer->key_press(1280, 720, key,  modifier);
 
         viewer->handle(vgui_DRAW);
-        vcl_string currentname = vul_sprintf("%s%05d.%s", image_dir().c_str(),
+        std::string currentname = vul_sprintf("%s%05d.%s", image_dir().c_str(),
                                  currentframenumber++,"jpeg");
 
           //Print the image to a file.

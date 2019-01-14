@@ -36,7 +36,7 @@ draw() const
   num_segments = vnl_math::min(num_segments, 100);
 
   // list of points of the polyline to draw
-  vcl_vector<vgl_point_2d<double > > pts;
+  std::vector<vgl_point_2d<double > > pts;
   pts.reserve(num_segments + 1);
   for (int i=0; i<=num_segments; ++i)
   {
@@ -92,8 +92,8 @@ get_centroid(float* x, float* y) const
 
 // -----------------------------------------------------------------------------
 //: Print details about this object to the given stream.
-vcl_ostream& dbgui_soview2D_circ_arc::
-print(vcl_ostream& os) const
+std::ostream& dbgui_soview2D_circ_arc::
+print(std::ostream& os) const
 {
   this->circ_arc_.print(os);
   return vgui_soview2D::print(os);

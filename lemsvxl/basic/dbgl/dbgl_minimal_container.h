@@ -14,7 +14,7 @@
 //
 // \endverbatim
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_point_3d.h>
 
@@ -24,7 +24,7 @@
 //: Compute the smallest circle that encloses a set of 2D points
 // Return false if computation fails or point list is empty
 template<class T >
-bool dbgl_minimal_enclosing_circle(const vcl_vector<vgl_point_2d<T > >& points,
+bool dbgl_minimal_enclosing_circle(const std::vector<vgl_point_2d<T > >& points,
                                  vgl_point_2d<double >& center, 
                                  double& radius);
 
@@ -32,7 +32,7 @@ bool dbgl_minimal_enclosing_circle(const vcl_vector<vgl_point_2d<T > >& points,
 //: Compute the smallest sphere that encloses a set of 3D points
 // Return false if computation fails or point list is empty
 template<class T >
-bool dbgl_minimal_enclosing_sphere(const vcl_vector<vgl_point_3d<T > >& points,
+bool dbgl_minimal_enclosing_sphere(const std::vector<vgl_point_3d<T > >& points,
                                  vgl_point_3d<double >& center, 
                                  double& radius);
 

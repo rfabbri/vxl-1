@@ -3,7 +3,7 @@
 #define dbil3d_finite_second_differences_txx_
 
 #include "dbil3d_finite_second_differences.h"
-#include <vcl_iostream.h>
+#include <iostream>
 
 template <class T>
 void dbil3d_finite_second_differences(const vil3d_image_view<T>& src,
@@ -21,7 +21,7 @@ void dbil3d_finite_second_differences(const vil3d_image_view<T>& src,
                     vil3d_image_view<T>& dyz)
 {
   unsigned ni = src.ni(),nj = src.nj(),nk = src.nk(),np = src.nplanes();
-  vcl_ptrdiff_t istep=src.istep(),jstep=src.jstep(),kstep=src.kstep(),pstep = src.planestep();
+  std::ptrdiff_t istep=src.istep(),jstep=src.jstep(),kstep=src.kstep(),pstep = src.planestep();
 
   dxx.set_size(ni,nj,nk,np);
   dyy.set_size(ni,nj,nk,np);
@@ -132,12 +132,12 @@ void dbil3d_finite_second_differences(const vil3d_image_view<T>& src,
   //------------------------------------------------------------------
   
   
-  vcl_ptrdiff_t safe_istep_plus  =  istep;
-  vcl_ptrdiff_t safe_istep_minus = -istep;
-  vcl_ptrdiff_t safe_jstep_plus  =  jstep;
-  vcl_ptrdiff_t safe_jstep_minus = -jstep;
-  vcl_ptrdiff_t safe_kstep_plus  =  kstep;
-  vcl_ptrdiff_t safe_kstep_minus = -kstep;
+  std::ptrdiff_t safe_istep_plus  =  istep;
+  std::ptrdiff_t safe_istep_minus = -istep;
+  std::ptrdiff_t safe_jstep_plus  =  jstep;
+  std::ptrdiff_t safe_jstep_minus = -jstep;
+  std::ptrdiff_t safe_kstep_plus  =  kstep;
+  std::ptrdiff_t safe_kstep_minus = -kstep;
 
   //handle boundary cases for i = 0 and i = ni-1 
   //------------------------------------------------------------------

@@ -26,7 +26,7 @@ dbsta_image_statistics(const vil_image_view<T>& image,
                        const dbsta_data_updater<T>& updater)
 {
   unsigned ni = image.ni(), nj = image.nj(), np = image.nplanes();
-  vcl_ptrdiff_t istep=image.istep(), jstep=image.jstep(), pstep = image.planestep();
+  std::ptrdiff_t istep=image.istep(), jstep=image.jstep(), pstep = image.planestep();
   vnl_vector<T> sample(np);
   const T* row = image.top_left_ptr();
   for (unsigned j=0;j<nj;++j,row += jstep)
@@ -58,8 +58,8 @@ dbsta_image_statistics(const vil_image_view<T>& image,
   assert(mask.ni() == ni);
   assert(mask.nj() == nj);
   assert(mask.nplanes() == 1);
-  vcl_ptrdiff_t istep=image.istep(), jstep=image.jstep(), pstep = image.planestep();
-  vcl_ptrdiff_t istepM=mask.istep(), jstepM=mask.jstep();
+  std::ptrdiff_t istep=image.istep(), jstep=image.jstep(), pstep = image.planestep();
+  std::ptrdiff_t istepM=mask.istep(), jstepM=mask.jstep();
   vnl_vector<T> sample(np);
   const T* row = image.top_left_ptr();
   const bool* rowM = mask.top_left_ptr();
@@ -95,8 +95,8 @@ dbsta_image_statistics(const vil_image_view<T>& image,
   assert(labels.ni() == ni);
   assert(labels.nj() == nj);
   assert(labels.nplanes() == 1);
-  vcl_ptrdiff_t istep=image.istep(), jstep=image.jstep(), pstep = image.planestep();
-  vcl_ptrdiff_t istepL=labels.istep(), jstepL=labels.jstep();
+  std::ptrdiff_t istep=image.istep(), jstep=image.jstep(), pstep = image.planestep();
+  std::ptrdiff_t istepL=labels.istep(), jstepL=labels.jstep();
   vnl_vector<T> sample(np);
   const T* row = image.top_left_ptr();
   const vxl_byte* rowL = labels.top_left_ptr();

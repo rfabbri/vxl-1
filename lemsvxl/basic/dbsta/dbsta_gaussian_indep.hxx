@@ -7,9 +7,9 @@
 
 #include "dbsta_gaussian_indep.h"
 #include <vnl/vnl_math.h>
-#include <vcl_algorithm.h>
-#include <vcl_limits.h>
-#include <vcl_iostream.h>
+#include <algorithm>
+#include <limits>
+#include <iostream>
 #include <vnl/io/vnl_io_matrix.h>
 #include <vnl/io/vnl_io_vector_fixed.h>
 #include <vnl/io/vnl_io_diag_matrix.h>
@@ -70,7 +70,7 @@ dbsta_gaussian_indep<T,n>::norm_const() const
     
   T z = 1.0,  two_pi = 2.0*vnl_math::pi;
   for(unsigned i=0; i<dim(); ++i) z *= two_pi;
-  return vcl_sqrt(1/(d * z));
+  return std::sqrt(1/(d * z));
 }
 
  
@@ -82,10 +82,10 @@ dbsta_gaussian_indep<T,n>::sqr_mahalanobis_dist(const vnl_vector<T>& pt) const
   const vnl_vector<T> &d = mean_-pt;
      
   if(det_covar()==T(0))
-    return vcl_numeric_limits<T>::infinity();
+    return std::numeric_limits<T>::infinity();
   T result = dot_product(d,(covar_.solve(d)));
   if(result<T(0))
-    return vcl_numeric_limits<T>::infinity();
+    return std::numeric_limits<T>::infinity();
   
   return result;
 }
@@ -123,7 +123,7 @@ void dbsta_gaussian_indep<T,n>::b_read(vsl_b_istream &is)
 
     break;
    default:
-    vcl_cerr << "vsol_line_2d: unknown I/O version " << ver << '\n';
+    std::cerr << "vsol_line_2d: unknown I/O version " << ver << '\n';
   }
 }
 //: Return IO version number;
@@ -135,7 +135,7 @@ short dbsta_gaussian_indep<T,n>::version() const
 
 //: Print an ascii summary to the stream
 template <class T, unsigned int n>
-void dbsta_gaussian_indep<T,n>::print_summary(vcl_ostream &os) const
+void dbsta_gaussian_indep<T,n>::print_summary(std::ostream &os) const
 {
   //os << *this;
 }

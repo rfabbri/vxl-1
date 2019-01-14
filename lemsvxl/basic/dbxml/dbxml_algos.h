@@ -14,7 +14,7 @@
 // Modifications
 // \endverbatim
 
-#include <vcl_string.h>
+#include <string>
 #include <bxml/bxml_document.h>
 
 
@@ -33,14 +33,14 @@ public:
 
   //: Find the first element that matches the name
   static bxml_element* find_by_name(const bxml_data_sptr& head, 
-    const vcl_string& query_name);
+    const std::string& query_name);
 
   //: Get all element of a certain name
   // IMPORTANT: Head ptr must be immediate parent of element with query name
   // Returns all nodes at a certain depth
   static void find_all_elems_by_name(const bxml_data_sptr& head,
-                                     const vcl_string& query_name,
-                                     vcl_vector<bxml_data_sptr>& data);
+                                     const std::string& query_name,
+                                     std::vector<bxml_data_sptr>& data);
 
 
   //: Cast to an bxml element. Return 0 if the casting fails
@@ -52,10 +52,10 @@ public:
   // Return a null pointer if the casting fails
   // This is a convenient way to check the type of bxml_data object
   static bxml_element* cast_to_element(const bxml_data_sptr& data, 
-    const vcl_string& element_name);
+    const std::string& element_name);
 
   //: Get the first text data of the element (if there is one)
-  static bool get_first_text(const bxml_element* elm, vcl_string& text);
+  static bool get_first_text(const bxml_element* elm, std::string& text);
 
 private:
   dbxml_algos(){};

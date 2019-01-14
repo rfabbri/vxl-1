@@ -1,6 +1,6 @@
-#include <vcl_iostream.h>
-#include <vcl_cmath.h>
-#include <vcl_cassert.h>
+#include <iostream>
+#include <cmath>
+#include <cassert>
 #include <bgld/algo/bgld_diffgeom.h>
 #include "dbgl_diffgeom.h"
 
@@ -57,12 +57,12 @@ double compute_k(double xa, double x, double xb,
   double b2 = inv[0][1] * ya + inv[1][1] * y + inv[2][1] * yb;
   double b3 = inv[0][2] * ya + inv[1][2] * y + inv[2][2] * yb;
 
-  return 2.0 * (a2 * b3 - a3 * b2 ) / vcl_pow((a2 * a2 + b2 * b2), 3.0/2.0);
+  return 2.0 * (a2 * b3 - a3 * b2 ) / std::pow((a2 * a2 + b2 * b2), 3.0/2.0);
 }
 
 double compute_dist(double x1, double x2, double y1, double y2)
 {
-  return vcl_sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+  return std::sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
 }
 
 void 
@@ -118,7 +118,7 @@ dbgl_compute_curvature(
 
 void dbgl_compute_normals(
     const dbdet_edgel_chain &c, 
-    vcl_vector< vnl_vector_fixed<double, 2> > *n
+    std::vector< vnl_vector_fixed<double, 2> > *n
     )
 {
 
@@ -155,12 +155,12 @@ void dbgl_compute_normals(
     xx += lastx;
     yy += lasty;
 
-    double norm = vcl_sqrt(xx * xx + yy * yy);
+    double norm = std::sqrt(xx * xx + yy * yy);
     (*n)[i][0] = -yy / norm;
     (*n)[i][1] = xx / norm;
   }
 
-  double norm = vcl_sqrt(lastx * lastx + lasty * lasty);
+  double norm = std::sqrt(lastx * lastx + lasty * lasty);
   (*n)[size - 1][0] = -lasty / norm;
   (*n)[size - 1][1] = lastx / norm;
 }

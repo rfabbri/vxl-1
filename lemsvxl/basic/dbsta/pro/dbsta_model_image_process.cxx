@@ -22,7 +22,7 @@
 dbsta_model_image_process::dbsta_model_image_process()
 {
   if( !parameters()->add( "number of bins" ,   "-bins" ,   (unsigned int)32 ) ){
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__<< vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__<< std::endl;
   }
 }
 
@@ -42,7 +42,7 @@ dbsta_model_image_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbsta_model_image_process::name()
 {
   return "Image Stats";
@@ -66,9 +66,9 @@ dbsta_model_image_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbsta_model_image_process::get_input_type()
+std::vector< std::string > dbsta_model_image_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   to_return.push_back( "image" );
   return to_return;
@@ -76,9 +76,9 @@ vcl_vector< vcl_string > dbsta_model_image_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbsta_model_image_process::get_output_type()
+std::vector< std::string > dbsta_model_image_process::get_output_type()
 {  
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
@@ -89,7 +89,7 @@ bool
 dbsta_model_image_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbsta_model_image_process::execute() - "
+    std::cout << "In dbsta_model_image_process::execute() - "
              << "not exactly one input frame \n";
     return false;
   }
@@ -107,7 +107,7 @@ dbsta_model_image_process::execute()
   vil_image_view<float> img = vil_convert_cast(float(), image_rsc->get_view());
   float min_val, max_val;
   vil_math_value_range(img, min_val, max_val);
-  vcl_cout << min_val << " - "<<max_val<<vcl_endl;
+  std::cout << min_val << " - "<<max_val<<std::endl;
   
 
   frame_image.vertical_cast(input_data_[0][1]);
@@ -116,7 +116,7 @@ dbsta_model_image_process::execute()
   image_rsc = frame_image->get_image();
   vil_image_view<float> img2 = vil_convert_cast(float(), image_rsc->get_view());
   vil_math_value_range(img2, min_val, max_val);
-  vcl_cout << min_val << " - "<<max_val<<vcl_endl;
+  std::cout << min_val << " - "<<max_val<<std::endl;
   
   vil_image_view<float> joint_img(img.ni(), img.nj(), 2);
   vil_plane(joint_img,0).deep_copy(img);
@@ -134,9 +134,9 @@ dbsta_model_image_process::execute()
   }
   float sum = 0.0;
   vil_math_sum(sum,out_img,0);
-  vcl_cout << "total prob " << sum <<vcl_endl;
+  std::cout << "total prob " << sum <<std::endl;
   vil_math_value_range(out_img, min_val, max_val);
-  vcl_cout << "max prob "<<max_val << vcl_endl;
+  std::cout << "max prob "<<max_val << std::endl;
   vil_math_scale_values(out_img,1.0/max_val);
 
   vidpro1_image_storage_sptr output_storage = vidpro1_image_storage_new();

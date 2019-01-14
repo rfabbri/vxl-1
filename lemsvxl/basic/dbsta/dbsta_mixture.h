@@ -14,13 +14,13 @@
 
 
 #include "dbsta_distribution.h"
-#include <vcl_vector.h>
-#include <vcl_algorithm.h>
+#include <vector>
+#include <algorithm>
 #include <vbl/vbl_ref_count.h>
 #include <vbl/vbl_smart_ptr.h>
 #include <vsl/vsl_binary_io.h>
-#include <vcl_typeinfo.h>
-#include <vcl_iostream.h>
+#include <typeinfo>
+#include <iostream>
 
 //: A mixture of distributions
 template <class T>
@@ -80,7 +80,7 @@ class dbsta_mixture : public dbsta_distribution<T>
                 break;
 
             default:
-                vcl_cerr << "component: unknown I/O version " << ver << '\n';
+                std::cerr << "component: unknown I/O version " << ver << '\n';
             }
         };
 
@@ -114,7 +114,7 @@ class dbsta_mixture : public dbsta_distribution<T>
   };
   
   //: The vector of components
-  vcl_vector<component_sptr> components_;  
+  std::vector<component_sptr> components_;  
   
  public:
   //: Constructor
@@ -164,7 +164,7 @@ class dbsta_mixture : public dbsta_distribution<T>
   void normalize_weights();  
   
   //: Sort the components in order of decreasing weight
-  void sort() { vcl_sort(components_.begin(), components_.end(), sort_weight() ); } 
+  void sort() { std::sort(components_.begin(), components_.end(), sort_weight() ); } 
   
 
    //: Binary save self to stream.
@@ -176,8 +176,8 @@ class dbsta_mixture : public dbsta_distribution<T>
    //: Return IO version number;
   short version() const;
 
-  virtual vcl_string is_a() const{ 
-      return vcl_string("dbsta_gaussian_indep"+vcl_string(typeid(T).name()));}
+  virtual std::string is_a() const{ 
+      return std::string("dbsta_gaussian_indep"+std::string(typeid(T).name()));}
   //: Sort the components using any StrictWeakOrdering function
   // the prototype should be
   // \code
@@ -187,7 +187,7 @@ class dbsta_mixture : public dbsta_distribution<T>
   // \endcode
   template <class _comp_type>
   void sort(_comp_type comp) 
-  { vcl_sort(components_.begin(), components_.end(), sort_adaptor<_comp_type>(comp)); }
+  { std::sort(components_.begin(), components_.end(), sort_adaptor<_comp_type>(comp)); }
 
 };
 

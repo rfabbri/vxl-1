@@ -5,12 +5,12 @@
 #include <dbsta/dbsta_gaussian_full.h>
 #include <dbsta/dbsta_gaussian_indep.h>
 #include <dbsta/dbsta_gaussian_sphere.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
+#include <string>
+#include <iostream>
 
 
 template <class T>
-void test_statistical_updater_type(T epsilon, const vcl_string& type_name)
+void test_statistical_updater_type(T epsilon, const std::string& type_name)
 {
   // a model used when inserting new gaussians
   vnl_matrix_fixed<T,3,3> covar; covar.set_identity();
@@ -40,16 +40,16 @@ void test_statistical_updater_type(T epsilon, const vcl_string& type_name)
   
   for(unsigned int i=0; i<data_size; ++i){
     updater(mix_gauss, data[i]);
-    vcl_cout << "components " << mix_gauss.num_components() << vcl_endl;
+    std::cout << "components " << mix_gauss.num_components() << std::endl;
     for(unsigned int j=0; j<mix_gauss.num_components(); ++j){
       T count = static_cast<const dbsta_stats_data<T>&>(mix_gauss.distribution(j).data()).num_observations;
       const dbsta_gaussian_full<T,3>& g = static_cast<const dbsta_gaussian_full<T,3>&>(mix_gauss.distribution(j));
-      vcl_cout << "  G("<<j<<") with " << count << " observations" << vcl_endl;
-      vcl_cout << "    weight = "<<mix_gauss.weight(j) << vcl_endl;
-      vcl_cout << "    mean = "<<g.mean()<<vcl_endl;
-      vcl_cout << "    det(covar) = " << g.det_covar() << vcl_endl;
+      std::cout << "  G("<<j<<") with " << count << " observations" << std::endl;
+      std::cout << "    weight = "<<mix_gauss.weight(j) << std::endl;
+      std::cout << "    mean = "<<g.mean()<<std::endl;
+      std::cout << "    det(covar) = " << g.det_covar() << std::endl;
     }
-    vcl_cout << "============================================" << vcl_endl;
+    std::cout << "============================================" << std::endl;
   }
      
 

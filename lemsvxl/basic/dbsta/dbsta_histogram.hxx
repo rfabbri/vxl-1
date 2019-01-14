@@ -6,7 +6,7 @@
 // \file
 
 #include "dbsta_histogram.h"
-#include <vcl_iostream.h>
+#include <iostream>
 
 
 
@@ -25,9 +25,9 @@ dbsta_histogram<T>::dbsta_histogram( unsigned int dim, T min, T max,
 
 //: Constructor - each dimension has different parameters
 template <class T>
-dbsta_histogram<T>::dbsta_histogram( unsigned int dim, const vcl_vector<T>& min, 
-                                     const vcl_vector<T>& max, 
-                                     const vcl_vector<unsigned int>& bins)
+dbsta_histogram<T>::dbsta_histogram( unsigned int dim, const std::vector<T>& min, 
+                                     const std::vector<T>& max, 
+                                     const std::vector<unsigned int>& bins)
  : dbsta_discrete_base<T>(dim,min,max,bins), total_(0)
 {
   unsigned int array_size = this->num_bins_[0];
@@ -66,7 +66,7 @@ void dbsta_histogram<T>::b_read(vsl_b_istream &is)
   switch (ver)
   {
    default:
-    vcl_cerr << "dbsta_histogram: unknown I/O version " << ver << '\n';
+    std::cerr << "dbsta_histogram: unknown I/O version " << ver << '\n';
   }
 }
 

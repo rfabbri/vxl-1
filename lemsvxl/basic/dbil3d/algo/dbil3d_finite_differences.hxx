@@ -17,7 +17,7 @@ void dbil3d_finite_differences(const vil3d_image_view<T>& src,
                     vil3d_image_view<T>& dzc)
 {
   unsigned ni = src.ni(),nj = src.nj(),nk = src.nk(),np = src.nplanes();
-  vcl_ptrdiff_t istep=src.istep(),jstep=src.jstep(),kstep=src.kstep(),pstep = src.planestep();
+  std::ptrdiff_t istep=src.istep(),jstep=src.jstep(),kstep=src.kstep(),pstep = src.planestep();
 
 
   dxp.set_size(ni,nj,nk,np);

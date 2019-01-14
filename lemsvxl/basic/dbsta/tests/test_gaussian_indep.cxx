@@ -1,12 +1,12 @@
 #include <testlib/testlib_test.h>
 #include <dbsta/dbsta_gaussian_indep.h>
 #include <vnl/vnl_math.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
+#include <string>
+#include <iostream>
 
 
 template <class T>
-void test_gaussian_indep_type(T epsilon, const vcl_string& type_name)
+void test_gaussian_indep_type(T epsilon, const std::string& type_name)
 {
   dbsta_gaussian_indep<T,3> df_gauss;
   
@@ -38,7 +38,7 @@ void test_gaussian_indep_type(T epsilon, const vcl_string& type_name)
        gauss.sqr_mahalanobis_dist(test_pt), sqr_mah_dist);
        
   T two_pi = 2.0*vnl_math::pi;
-  T prob = 1.0/vcl_sqrt(two_pi*two_pi*two_pi*0.25) * vcl_exp(-sqr_mah_dist/2);
+  T prob = 1.0/std::sqrt(two_pi*two_pi*two_pi*0.25) * std::exp(-sqr_mah_dist/2);
   TEST_NEAR(("probability <"+type_name+">").c_str(), 
        gauss.probability(test_pt), prob, epsilon);
 

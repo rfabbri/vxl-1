@@ -6,7 +6,7 @@
 //Imlementation of Sinkhonr algorithm 
 //to convert a matrix into a doubly stochastic matrix
 // The class is templated over data type
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vnl/vnl_matrix.h>
 #include <vnl/vnl_vector.h>
 template <class T>

@@ -8,7 +8,7 @@
 #include "dbxml_input_converter.h"
 #include <string.h>
 #include <stdlib.h>
-#include <vcl_iostream.h> //cout
+#include <iostream> //cout
 #include "dbxml_param_input_converter.h"
 #include "dbxml_param.h"
  
@@ -35,14 +35,14 @@ bool dbxml_param_input_converter::extract_object_atrs(DOMNode *node) {
   else if (strcmp(type.c_str(),"integer")==0)
   int value = get_int_attr(node,"value");
   else if (strcmp(type.c_str(),"flag")==0){
-      vcl_string stringvalue = get_string_attr(node,"value");
+      std::string stringvalue = get_string_attr(node,"value");
         if (strcmp(stringvalue.c_str(), "on")== 0)
       bool value = true;
     else
       bool value = false;
       }
   else
-  vcl_string value = get_string_attr(node,"value");
+  std::string value = get_string_attr(node,"value");
 */
   return true;
 }
@@ -51,7 +51,7 @@ bool dbxml_param_input_converter::extract_from_dom_1(DOMNode *node) {
   new_or_ref = check_tag(node,1);
 
   if (new_or_ref == 0) {
-    vcl_cout << "dbxml_param_input_converter:: Error, bad tag\n";
+    std::cout << "dbxml_param_input_converter:: Error, bad tag\n";
     return false;
   }
 
@@ -61,7 +61,7 @@ bool dbxml_param_input_converter::extract_from_dom_2(DOMNode *node) {
   new_or_ref = check_tag(node,2);
 
   if (new_or_ref == 0) {
-    vcl_cout << "dbxml_param_input_converter:: Error, bad tag\n";
+    std::cout << "dbxml_param_input_converter:: Error, bad tag\n";
     return false;
   }
      extract_object_atrs(node);
@@ -81,16 +81,16 @@ bool dbxml_param_input_converter::extract_from_dom_3(DOMNode *node) {
 // have no way to reference count the pointer. We might be able to
 // deal with the problem in the destructor of the generic pointer
 
-dbxml_generic_ptr dbxml_param_input_converter::construct_object_1(vcl_vector<dbxml_generic_ptr>& objs)
+dbxml_generic_ptr dbxml_param_input_converter::construct_object_1(std::vector<dbxml_generic_ptr>& objs)
 {
   return NULL;
 }
-dbxml_generic_ptr dbxml_param_input_converter::construct_object_3(vcl_vector<dbxml_generic_ptr>& objs)
+dbxml_generic_ptr dbxml_param_input_converter::construct_object_3(std::vector<dbxml_generic_ptr>& objs)
 {
   return NULL;
 }
 
-dbxml_generic_ptr dbxml_param_input_converter::construct_object_2(vcl_vector<dbxml_generic_ptr>& objs)
+dbxml_generic_ptr dbxml_param_input_converter::construct_object_2(std::vector<dbxml_generic_ptr>& objs)
 {
   if (new_or_ref != 0) {
         dbxml_param *p = new dbxml_param(command_,desc_,type_,value_);

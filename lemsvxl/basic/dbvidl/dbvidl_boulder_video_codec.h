@@ -1,11 +1,11 @@
-#include<vcl_iostream.h>
-#include <vcl_fstream.h>
+#include<iostream>
+#include <fstream>
 #include<vil/vil_image_resource_sptr.h>
-#include<vcl_list.h>
+#include<list>
 #include<vidl1/vidl1_codec.h>
 #include<vil/vil_image_view.h>
-#include<vcl_vector.h>
-#include<vcl_utility.h>
+#include<vector>
+#include<utility>
 #define RAW_FILE_MARKER1     0xaf1ab90d
 #define RAW_FILE_MARKER2     0xba1ab91d
 
@@ -25,24 +25,24 @@ public:
     virtual bool put_view(int position, const vil_image_view_base &im, int x0, int y0);
 
 
-    virtual bool probe(vcl_string const& fname);
-    virtual bool save(vidl1_movie* movie, vcl_string const& fname);
-    virtual vidl1_codec_sptr load(vcl_string const& fname, char mode = 'r' );
+    virtual bool probe(std::string const& fname);
+    virtual bool save(vidl1_movie* movie, std::string const& fname);
+    virtual vidl1_codec_sptr load(std::string const& fname, char mode = 'r' );
 
-    vcl_string type() const { return "BOULDER RAW"; }
+    std::string type() const { return "BOULDER RAW"; }
 
     //: function reads the header
-    bool readheader(vcl_ifstream *infile, char mode = 'r' );
+    bool readheader(std::ifstream *infile, char mode = 'r' );
     //: check if the data block iss image block or not
-    bool isimageblock(vcl_ifstream *infile);
+    bool isimageblock(std::ifstream *infile);
    
-    bool loadboulder(vcl_string inputvid);
+    bool loadboulder(std::string inputvid);
     
 
 
 private:
     //: store the frames
-    vcl_list<vil_image_resource_sptr> frames_;
+    std::list<vil_image_resource_sptr> frames_;
     unsigned int no_of_bits_per_pixel;                   // Bits per pixel
 
     unsigned int nplanes;
@@ -56,9 +56,9 @@ private:
     unsigned long m_ulCaptureInfoBlockSize;
     unsigned long m_ulBlockSize;
 
-    vcl_vector<vcl_pair <int,long> > mapoffset;
+    std::vector<std::pair <int,long> > mapoffset;
 
-    vcl_ifstream *ifile;
-    vcl_string filename;
+    std::ifstream *ifile;
+    std::string filename;
 
 };

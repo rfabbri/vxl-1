@@ -10,10 +10,10 @@
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 #include <vbl/vbl_ref_count.h>
-#include <vcl_string.h>
-#include <vcl_map.h>
+#include <string>
+#include <map>
 
-//#include <vcl_map.h>
+//#include <map>
 
 class dbxml_tracks : public vbl_ref_count
 {

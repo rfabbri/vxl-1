@@ -6,7 +6,7 @@
 #include <dbvidl/pro/vidpro1_load_boulder_video_process.h>
 #include <dbvidl/dbvidl_boulder_video_codec_sptr.h>
 #include <dbvidl/dbvidl_boulder_video_codec.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <bpro1/bpro1_parameters.h>
 #include <vidpro1/storage/vidpro1_image_storage.h>
@@ -20,8 +20,8 @@
 #include <vidl1/vidl1_clip.h>
 
 #include <vidl1/vidl1_io.h>
-#include <vcl_cmath.h>
-#include <vcl_algorithm.h>
+#include <cmath>
+#include <algorithm>
 //: Constructor
 vidpro1_load_boulder_video_process::vidpro1_load_boulder_video_process() : bpro1_process(), num_frames_(0)
 {
@@ -36,7 +36,7 @@ vidpro1_load_boulder_video_process::vidpro1_load_boulder_video_process() : bpro1
         !parameters()->add( "ROI(Length y)" , "-leny",int(-1) )
         )
     {
-        vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
     }
 }
 
@@ -56,7 +56,7 @@ vidpro1_load_boulder_video_process::clone() const
 
 
 //: Return the name of the process
-vcl_string vidpro1_load_boulder_video_process::name()
+std::string vidpro1_load_boulder_video_process::name()
 {
     return "Load Boulder Video";
 }
@@ -72,10 +72,10 @@ vidpro1_load_boulder_video_process::clear_output()
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 vidpro1_load_boulder_video_process::get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     // no input type required
     to_return.clear();
 
@@ -84,10 +84,10 @@ vidpro1_load_boulder_video_process::get_input_type()
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 vidpro1_load_boulder_video_process::get_output_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "image" );
 
     return to_return;
@@ -136,7 +136,7 @@ vidpro1_load_boulder_video_process::execute()
     parameters()->get_value( "-isroi" , isroi );
 
 
-    vcl_string video_filename = video_path.path;
+    std::string video_filename = video_path.path;
 
 
     
@@ -150,7 +150,7 @@ vidpro1_load_boulder_video_process::execute()
    
     
     if (!my_movie) {
-        vcl_cerr << "Failed to load movie file: "<< video_filename << vcl_endl;
+        std::cerr << "Failed to load movie file: "<< video_filename << std::endl;
         return false;
     }
 
@@ -168,22 +168,22 @@ vidpro1_load_boulder_video_process::execute()
             int ni=img->ni();
             int nj=img->nj();
             if(topx_<ni)
-                topx_=vcl_max(0,topx_);
+                topx_=std::max(0,topx_);
             else
                 topx_=0;
 
             if(topy_<nj)
-                topy_=vcl_max(0,topy_);
+                topy_=std::max(0,topy_);
             else
                 topy_=0;
 
             if(lenx_>0)
-                lenx_=vcl_min(ni-topx_,lenx_);
+                lenx_=std::min(ni-topx_,lenx_);
             else
                 lenx_=0;
 
             if(leny_>0)
-                leny_=vcl_min(nj-topy_,leny_);
+                leny_=std::min(nj-topy_,leny_);
             else
                 leny_=0;
             vil_image_resource_sptr cropimg=vil_crop(img,topx_,lenx_,topy_,leny_);
@@ -192,7 +192,7 @@ vidpro1_load_boulder_video_process::execute()
         else
             image_storage->set_image( img );
 
-        output_data_.push_back(vcl_vector< bpro1_storage_sptr > (1,image_storage));
+        output_data_.push_back(std::vector< bpro1_storage_sptr > (1,image_storage));
         }
         
     

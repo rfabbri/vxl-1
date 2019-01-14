@@ -28,9 +28,9 @@ class dbsta_histogram : public dbsta_discrete_base<T>
                      unsigned int bins);
   
   //: Constructor - each dimension has different parameters
-  dbsta_histogram<T>(unsigned int dim, const vcl_vector<T>& min, 
-                     const vcl_vector<T>& max, 
-                     const vcl_vector<unsigned int>& bins);
+  dbsta_histogram<T>(unsigned int dim, const std::vector<T>& min, 
+                     const std::vector<T>& max, 
+                     const std::vector<unsigned int>& bins);
   
   //: Destructor
   virtual ~dbsta_histogram<T>(){}
@@ -54,7 +54,7 @@ class dbsta_histogram : public dbsta_discrete_base<T>
    //: Return IO version number;
   short version() const;
 
-    virtual vcl_string is_a() const{return "dbsta_histogram";}
+    virtual std::string is_a() const{return "dbsta_histogram";}
 
   
  protected:
@@ -68,7 +68,7 @@ class dbsta_histogram : public dbsta_discrete_base<T>
   }
    
  private:
-  vcl_vector<unsigned int> counts_;
+  std::vector<unsigned int> counts_;
   unsigned int total_;
 };
 

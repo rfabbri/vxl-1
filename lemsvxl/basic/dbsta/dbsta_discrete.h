@@ -14,7 +14,7 @@
 
 
 #include "dbsta_distribution.h"
-#include <vcl_vector.h>
+#include <vector>
 
 
 //: A discrete distribution 
@@ -45,9 +45,9 @@ class dbsta_discrete_base : public dbsta_distribution<T>
                          unsigned int bins);
   
   //: Constructor - each dimension has different parameters
-  dbsta_discrete_base<T>(unsigned int dim, const vcl_vector<T>& min, 
-                         const vcl_vector<T>& max, 
-                         const vcl_vector<unsigned int>& bins);
+  dbsta_discrete_base<T>(unsigned int dim, const std::vector<T>& min, 
+                         const std::vector<T>& max, 
+                         const std::vector<unsigned int>& bins);
                     
   //: return the probability for a given index
   virtual T prob_idx(unsigned int index) const = 0;
@@ -58,9 +58,9 @@ class dbsta_discrete_base : public dbsta_distribution<T>
 
   
   unsigned int dim_;
-  vcl_vector<T> min_vals_;
-  vcl_vector<T> max_vals_;
-  vcl_vector<unsigned int> num_bins_;
+  std::vector<T> min_vals_;
+  std::vector<T> max_vals_;
+  std::vector<unsigned int> num_bins_;
  
 };
 

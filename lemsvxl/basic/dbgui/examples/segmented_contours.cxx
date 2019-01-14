@@ -2,14 +2,14 @@
 \file segmented_countours.cpp
 Parses the segmented_contours.xml file and produces a segmented_contour_info structure with the coordinates attributes.
 */
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include "segmented_contours.h"
 #include <stdio.h>
 #include <string.h>
-#include <vcl_cstdio.h>
-#include <vcl_cassert.h>
-//#include <vcl_fstream.h>
+#include <cstdio>
+#include <cassert>
+//#include <fstream>
 #include <vul/vul_arg.h>
 #include <vil/vil_save.h>
 
@@ -42,12 +42,12 @@ segmented_contours_info::~segmented_contours_info()
 {
   //printf("~segmented_contours_info\n");
 
-  /*pInfo->coordinates.push_back(new vcl_string(get_full_string()););
+  /*pInfo->coordinates.push_back(new std::string(get_full_string()););
     pInfo->increment_count();
     pInfo->add_len(totallen+1);
 */
     if (pInfo)
-      pInfo->add_string(new vcl_string(get_full_string()));
+      pInfo->add_string(new std::string(get_full_string()));
 //    free up the  space
     coordinates.clear();
     count=0;
@@ -55,7 +55,7 @@ segmented_contours_info::~segmented_contours_info()
 }
 
 
-void segmented_contours_info::add_string(vcl_string *p)
+void segmented_contours_info::add_string(std::string *p)
 {
   increment_count();
   add_len(strlen(p->c_str()));
@@ -68,8 +68,8 @@ void segmented_contours_info::add_data(const char *s, int len)
   char v[5000];
   memcpy(v,s,len);
   v[len] = '\0';
-  //vcl_cout <<"String: " << v << ".\n";
-  add_string(new vcl_string(v));
+  //std::cout <<"String: " << v << ".\n";
+  add_string(new std::string(v));
 }
 
 void segmented_contours_info::increment_count()
@@ -80,7 +80,7 @@ void segmented_contours_info::increment_count()
 /*segmented_contours_info::init()
 
 {
-   for (vcl_vector<vcl_string>::iterator arg_it = coordinates.begin();
+   for (std::vector<std::string>::iterator arg_it = coordinates.begin();
   arg_it != coordinates.end(); ++arg_it){
     string_segments.coordinates.push_back(*p);
   }
@@ -89,10 +89,10 @@ void segmented_contours_info::increment_count()
   totallen = 0;
 }
 */
-vcl_string segmented_contours_info::get_full_string()
+std::string segmented_contours_info::get_full_string()
 {
- vcl_string s=""; 
- for (vcl_vector<vcl_string>::iterator arg_it = coordinates.begin();
+ std::string s=""; 
+ for (std::vector<std::string>::iterator arg_it = coordinates.begin();
   arg_it != coordinates.end(); ++arg_it){
       s = s + *arg_it;
   }
@@ -115,7 +115,7 @@ int segmented_contours_info::get_count()
 {
   return(count);
 }
-/*vcl_vector<vcl_string> segmented_contours_info::get_vector()
+/*std::vector<std::string> segmented_contours_info::get_vector()
 {
   return(count);
 }
@@ -176,14 +176,14 @@ void segmented_contours_parser ::endElement(const char* name)
     // Need to free the string_Segments and copy to the coordinates.
      int totallen =   string_segments.get_len() ;
       int count = string_segments.get_count();
- //   vcl_string *p = new vcl_string("test");
-     vcl_string *p = new vcl_string(string_segments.get_full_string());
+ //   std::string *p = new std::string("test");
+     std::string *p = new std::string(string_segments.get_full_string());
  //   pInfo->coordinates.push_back(*v);
     pInfo->coordinates.push_back(*p);
     */
     bIsPolygon=false;
     delete(pPolygon);
-  /*  pInfo->coordinates.push_back(new vcl_string(pPolygon->get_full_string()););
+  /*  pInfo->coordinates.push_back(new std::string(pPolygon->get_full_string()););
 
     pInfo->increment_count();
     pInfo->add_len(totallen+1);
@@ -216,9 +216,9 @@ segmented_contours_parser ::charData(const XML_Char *s, int len)
   /*char v[520];
   memcpy(v,s,len);
   memcpy(v+len,"",1);
-  //vcl_cout <<"String: " << v << ".\n";
-   pPolygon->add_string(new vcl_string(v));
-  vcl_string *p = new vcl_string(v);
+  //std::cout <<"String: " << v << ".\n";
+   pPolygon->add_string(new std::string(v));
+  std::string *p = new std::string(v);
   string_segments.add_len(len);
   string_segments.coordinates.push_back(*p);
   */
@@ -231,14 +231,14 @@ segmented_contours_parser ::charData(const XML_Char *s, int len)
 
 int main(int argc, char** argv)
 {
-  vcl_FILE *xmlFile;
+  std::FILE *xmlFile;
   segmented_contours_info info;
   segmented_contours_parser parser(&info);
 
   //int depth = 0;
   // --- Program Arguments ---
-  vul_arg<vcl_string> filename("-filename", "input xml file");
-  vul_arg<vcl_string> video("-video", "video file");
+  vul_arg<std::string> filename("-filename", "input xml file");
+  vul_arg<std::string> video("-video", "video file");
   vul_arg_parse(argc, argv);
   vidl1_movie_sptr my_movie ;
 
@@ -246,7 +246,7 @@ int main(int argc, char** argv)
     fprintf(stderr,"File not specified\n");
      return(1);
   }
-   xmlFile = vcl_fopen(filename().c_str(), "r");
+   xmlFile = std::fopen(filename().c_str(), "r");
    if (!xmlFile){
         fprintf(stderr, " %s error on opening", filename);
         return(1);
@@ -260,9 +260,9 @@ int main(int argc, char** argv)
        int i=info.get_count();
   
 
- for (vcl_vector<vcl_string>::iterator arg_it = info.coordinates.begin();
+ for (std::vector<std::string>::iterator arg_it = info.coordinates.begin();
   arg_it != info.coordinates.end(); ++arg_it){
-        vcl_string s = *arg_it;
+        std::string s = *arg_it;
         puts("\nPolygon");
         puts(s.c_str());
         i--;

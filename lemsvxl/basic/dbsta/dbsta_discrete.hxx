@@ -22,9 +22,9 @@ dbsta_discrete_base<T>::dbsta_discrete_base( unsigned int dim, T min, T max,
 //: Constructor
 template <class T>
 dbsta_discrete_base<T>::dbsta_discrete_base( unsigned int dim, 
-                                             const vcl_vector<T>& min, 
-                                             const vcl_vector<T>& max, 
-                                             const vcl_vector<unsigned int>& bins)
+                                             const std::vector<T>& min, 
+                                             const std::vector<T>& max, 
+                                             const std::vector<unsigned int>& bins)
  : dim_(dim), min_vals_(min), max_vals_(max), num_bins_(bins)
 {
   assert(dim > 0);
@@ -49,7 +49,7 @@ dbsta_discrete_base<T>::index(const vnl_vector<T>& pt) const
     if(val < min_vals_[i] || val >= max_vals_[i])
       return -1;
     T bin_float = (val - min_vals_[i])/(max_vals_[i]-min_vals_[i])*num_bins_[i];
-    int bin = static_cast<int>(vcl_floor(bin_float));
+    int bin = static_cast<int>(std::floor(bin_float));
     assert(bin >=0 && bin < (int)num_bins_[i]);
     index += bin;
   }

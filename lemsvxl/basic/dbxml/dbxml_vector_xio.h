@@ -8,7 +8,7 @@
 
 //:
 // \file
-// \brief Functions to create new bxml_element from a vcl_vector
+// \brief Functions to create new bxml_element from a std::vector
 // \author Nhon Trinh
 // \date August 9, 2009  
 //
@@ -18,19 +18,19 @@
 
 
 #include <bxml/bxml_document.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 
 //==============================================================================
 //: CREAT NEW XML ELEMENT
 // The caller is responsible for deleting the created objects
 //==============================================================================
 
-//: create new xml element for a vcl_vector (simple types only)
+//: create new xml element for a std::vector (simple types only)
 // Example of output:
 // <x type="vector+double" size="3">10 12 0.4</x>
 template<class T>
-bxml_element* xml_new(const vcl_string& name, const vcl_vector<T>& data);
+bxml_element* xml_new(const std::string& name, const std::vector<T>& data);
 
 
 //==============================================================================
@@ -38,9 +38,9 @@ bxml_element* xml_new(const vcl_string& name, const vcl_vector<T>& data);
 // No check for name or type of element
 //==============================================================================
 
-//: parse an xml element to a vcl_vector
+//: parse an xml element to a std::vector
 template<class T>
-bool xml_parse(const bxml_element* element, vcl_vector<T>& data);
+bool xml_parse(const bxml_element* element, std::vector<T>& data);
 
 
 

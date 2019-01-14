@@ -1,11 +1,11 @@
 #include <testlib/testlib_test.h>
 #include <dbsta/dbsta_mixture.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
+#include <string>
+#include <iostream>
 
 
 template <class T>
-void test_mixture_type(T dummy, const vcl_string& type_name)
+void test_mixture_type(T dummy, const std::string& type_name)
 {
   // test stuff here
   TEST(("Dummy test <"+type_name+">").c_str(), true, true);

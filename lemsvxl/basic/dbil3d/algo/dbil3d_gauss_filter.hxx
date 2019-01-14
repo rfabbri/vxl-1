@@ -4,17 +4,17 @@
 #include <vil/algo/vil_gauss_filter.h>
 #include <vil/algo/vil_gauss_filter.hxx>
 #include <vil3d/vil3d_image_view.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include "dbil3d_gauss_filter.h"
 
 
 template<class T,class U>
 void dbil3d_gauss_filter_i(const T* src_im,
                           unsigned src_ni, unsigned src_nj, unsigned src_nk,
-                          vcl_ptrdiff_t s_i_step, vcl_ptrdiff_t s_j_step, vcl_ptrdiff_t s_k_step,
+                          std::ptrdiff_t s_i_step, std::ptrdiff_t s_j_step, std::ptrdiff_t s_k_step,
                           const vil_gauss_filter_5tap_params& params,
                           U* dest_im,
-                          vcl_ptrdiff_t d_i_step, vcl_ptrdiff_t d_j_step, vcl_ptrdiff_t d_k_step)
+                          std::ptrdiff_t d_i_step, std::ptrdiff_t d_j_step, std::ptrdiff_t d_k_step)
 {
   vil_image_view<T> work(src_ni,src_nj);
 
@@ -99,10 +99,10 @@ void dbil3d_gauss_filter(const vil3d_image_view<T>& src_im,
 #define DBIL3D_GAUSS_FILTER_INSTANTIATE(T,U) \
 template void dbil3d_gauss_filter_i(const T* src_im,\
                           unsigned src_ni, unsigned src_nj, unsigned src_nk,\
-                          vcl_ptrdiff_t s_i_step, vcl_ptrdiff_t s_j_step, vcl_ptrdiff_t s_k_step,\
+                          std::ptrdiff_t s_i_step, std::ptrdiff_t s_j_step, std::ptrdiff_t s_k_step,\
                           const vil_gauss_filter_5tap_params& params,\
                           U* dest_im,\
-                          vcl_ptrdiff_t d_i_step, vcl_ptrdiff_t d_j_step, vcl_ptrdiff_t d_k_step);\
+                          std::ptrdiff_t d_i_step, std::ptrdiff_t d_j_step, std::ptrdiff_t d_k_step);\
 template void dbil3d_gauss_filter(const vil3d_image_view<T>& src_im,\
                         const float & sigma, \
                         vil3d_image_view<U>& dest_im,\

@@ -19,22 +19,22 @@
 
 
 //------------------------------------------------------------------------------
-//: create new xml element for a vcl_vector (simple types only)
+//: create new xml element for a std::vector (simple types only)
 template<class T>
-bxml_element* xml_new(const vcl_string& name, const vcl_vector<T>& data)
+bxml_element* xml_new(const std::string& name, const std::vector<T>& data)
 {
   bxml_element* new_element = new bxml_element(name);
 
-  // vcl_string DATA_TYPE must be defined in the implementation file
-  const vcl_string type = DATA_TYPE;
+  // std::string DATA_TYPE must be defined in the implementation file
+  const std::string type = DATA_TYPE;
   new_element->set_attribute("type", type);
 
   unsigned size = data.size();
   new_element->set_attribute("size", size);
 
-  const vcl_string delimiter = " ";
+  const std::string delimiter = " ";
   
-  vcl_stringstream strm;
+  std::stringstream strm;
   if (size > 0)
     strm << data[0];
   for (unsigned i =1; i < size; ++i)
@@ -53,18 +53,18 @@ bxml_element* xml_new(const vcl_string& name, const vcl_vector<T>& data)
 // No check for name of element
 //==============================================================================
 
-//: parse an xml element to a vcl_vector
+//: parse an xml element to a std::vector
 template<class T>
-bool xml_parse(const bxml_element* element, vcl_vector< T >& data)
+bool xml_parse(const bxml_element* element, std::vector< T >& data)
 {
   data.clear();
 
-  vcl_string text = "";
+  std::string text = "";
   if (!dbxml_algos::get_first_text(element, text))
     return false;
 
   // use a stringstream as a mediator
-  vcl_istringstream strm(text);
+  std::istringstream strm(text);
 
   // allocate memory
   unsigned size = 0;
@@ -97,10 +97,10 @@ bool xml_parse(const bxml_element* element, vcl_vector< T >& data)
 
 //===========================================================================================
 
-//: Macro to instantiate xio for vcl_vector<T>
+//: Macro to instantiate xio for std::vector<T>
 #define DBXML_VECTOR_XIO_INSTANTIATE(T) \
-template bxml_element* xml_new(const vcl_string& name, const vcl_vector<T>& data); \
-template bool          xml_parse(const bxml_element* element, vcl_vector< T >& data);
+template bxml_element* xml_new(const std::string& name, const std::vector<T>& data); \
+template bool          xml_parse(const bxml_element* element, std::vector< T >& data);
 #endif // dbxml_vector_xio_txx_
 
 

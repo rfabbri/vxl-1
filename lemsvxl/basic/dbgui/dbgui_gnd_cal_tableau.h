@@ -30,7 +30,7 @@ class dbgui_gnd_cal_tableau : public vgui_tableau, public vgui_observable
     dbgui_gnd_cal_tableau(const vpgl_perspective_camera<double>& cam);
 
     //: Return the name of this tableau ('dbgui_gnd_cal_tableau').
-    vcl_string type_name() const;
+    std::string type_name() const;
 
     //: Add option to the popup menu.
     void add_popup(vgui_menu&);
@@ -66,7 +66,7 @@ class dbgui_gnd_cal_tableau : public vgui_tableau, public vgui_observable
     vgui_event_condition gesture0, gesture1;
     float last_x, last_y;
 
-    vcl_vector<vgl_point_3d<double> > world_pts_;
+    std::vector<vgl_point_3d<double> > world_pts_;
 
     unsigned int min_x_;
     unsigned int max_x_;

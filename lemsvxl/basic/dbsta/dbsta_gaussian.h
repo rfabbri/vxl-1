@@ -12,7 +12,7 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_cmath.h>
+#include <cmath>
 #include "dbsta_distribution.h"
 #include <vnl/vnl_vector_ref.h>
 #include <vnl/vnl_diag_matrix.h>
@@ -55,18 +55,18 @@ class dbsta_gaussian : public dbsta_distribution<T>
   
   //: The Mahalanobis distance to this point
   T mahalanobis_dist(const vnl_vector<T>& pt) const 
-  { return vcl_sqrt(sqr_mahalanobis_dist(pt)); }
+  { return std::sqrt(sqr_mahalanobis_dist(pt)); }
   
   //: The Mahalanobis distance to this point
   /*T mahalanobis_dist_cyclic(const vnl_vector<T>& pt) const 
-  { return vcl_sqrt(sqr_mahalanobis_dist_cyclic(pt)); }*/
+  { return std::sqrt(sqr_mahalanobis_dist_cyclic(pt)); }*/
 
   //: The probability of this sample given square mahalanobis distance
   inline T dist_probability(const T& sqr_mahal_dist) const
   {
     T n = norm_const();
     if(n<=T(0)) return T(0);
-    return n*vcl_exp(-sqr_mahal_dist/2);
+    return n*std::exp(-sqr_mahal_dist/2);
   }
 
   //: The probability of this sample

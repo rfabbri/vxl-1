@@ -9,7 +9,7 @@
 
 
 #include "dbgl_minimal_container.h"
-#include <vcl_cmath.h>
+#include <cmath>
 #include "internals/miniball.hxx"
 
 
@@ -17,7 +17,7 @@
 //: Compute the smallest circle that encloses a set of 2D points
 // Return false if computation fails or point list is empty
 template<class T >
-bool dbgl_minimal_enclosing_circle(const vcl_vector<vgl_point_2d<T > >& points,
+bool dbgl_minimal_enclosing_circle(const std::vector<vgl_point_2d<T > >& points,
                                  vgl_point_2d<double >& center, 
                                  double& radius)
 {
@@ -43,7 +43,7 @@ bool dbgl_minimal_enclosing_circle(const vcl_vector<vgl_point_2d<T > >& points,
   mb.build();
 
   // Return values
-  radius = vcl_sqrt(mb.squared_radius());
+  radius = std::sqrt(mb.squared_radius());
   typename Miniball<d>::Point mb_center(mb.center());
   center.set(mb_center[0], mb_center[1]);
   return true;
@@ -54,7 +54,7 @@ bool dbgl_minimal_enclosing_circle(const vcl_vector<vgl_point_2d<T > >& points,
 //: Compute smallest sphere that encloses a set of 3D points
 // Return false if computation fails or point list is empty
 template<class T >
-bool dbgl_minimal_enclosing_sphere(const vcl_vector<vgl_point_3d<T > >& points,
+bool dbgl_minimal_enclosing_sphere(const std::vector<vgl_point_3d<T > >& points,
                                  vgl_point_3d<double >& center, 
                                  double& radius)
 {
@@ -81,7 +81,7 @@ bool dbgl_minimal_enclosing_sphere(const vcl_vector<vgl_point_3d<T > >& points,
   mb.build();
 
   // Return values
-  radius = vcl_sqrt(mb.squared_radius());
+  radius = std::sqrt(mb.squared_radius());
   typename Miniball<d>::Point mb_center(mb.center());
   center.set(mb_center[0], mb_center[1], mb_center[2]);
   return true;
@@ -91,8 +91,8 @@ bool dbgl_minimal_enclosing_sphere(const vcl_vector<vgl_point_3d<T > >& points,
 
 #undef DBGL_MINIMAL_CONTAINER_INSTANTIATE
 #define DBGL_MINIMAL_CONTAINER_INSTANTIATE(T) \
-template bool dbgl_minimal_enclosing_circle(const vcl_vector<vgl_point_2d<T > >&, vgl_point_2d<double >&, double&);\
-template bool dbgl_minimal_enclosing_sphere(const vcl_vector<vgl_point_3d<T > >&, vgl_point_3d<double >&, double&)
+template bool dbgl_minimal_enclosing_circle(const std::vector<vgl_point_2d<T > >&, vgl_point_2d<double >&, double&);\
+template bool dbgl_minimal_enclosing_sphere(const std::vector<vgl_point_3d<T > >&, vgl_point_3d<double >&, double&)
 
 #endif // dbgl_minimal_container_txx_
 

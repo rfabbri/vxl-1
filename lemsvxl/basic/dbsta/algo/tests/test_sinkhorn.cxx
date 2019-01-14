@@ -1,11 +1,11 @@
 #include <testlib/testlib_test.h>
 #include <dbsta/algo/dbsta_sinkhorn.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
+#include <string>
+#include <iostream>
 
 
 template <class T>
-void test_sinkhorn_type(T tol, const vcl_string& type_name)
+void test_sinkhorn_type(T tol, const std::string& type_name)
 {
 
   vnl_matrix<T> M(4,3,T(0));

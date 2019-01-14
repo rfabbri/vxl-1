@@ -5,8 +5,8 @@
 
 #include <testlib/testlib_test.h>
 #include <dbgl/dbgl_minimal_container.h>
-#include <vcl_iostream.h>
-#include <vcl_cmath.h>
+#include <iostream>
+#include <cmath>
 #include <vgl/vgl_distance.h>
 
 
@@ -14,7 +14,7 @@
 // ----------------------------------------------------------------------------
 void test_minimal_enclosing_circle()
 {
-  vcl_vector<vgl_point_2d<float > > points;
+  std::vector<vgl_point_2d<float > > points;
 
   // test sphere enclosing a rectangular box
   // center (5, 3)
@@ -32,11 +32,11 @@ void test_minimal_enclosing_circle()
   dbgl_minimal_enclosing_circle(points, center, radius);
 
   vgl_point_2d<double > true_center(5, 3);
-  double true_radius = vcl_sqrt(double(5*5+3*3));
+  double true_radius = std::sqrt(double(5*5+3*3));
   
 
   double center_err = vgl_distance(center, true_center);
-  double radius_err = vcl_abs(radius - true_radius);
+  double radius_err = std::abs(radius - true_radius);
 
   TEST_NEAR("Compute center of enclosing circle", center_err, 0, 1e-10);
   TEST_NEAR("Compute radius of enclosing circle", radius_err, 0, 1e-10);
@@ -46,7 +46,7 @@ void test_minimal_enclosing_circle()
 // ----------------------------------------------------------------------------
 void test_minimal_enclosing_sphere()
 {
-  vcl_vector<vgl_point_3d<float > > points;
+  std::vector<vgl_point_3d<float > > points;
 
   // test sphere enclosing a rectangular box
   // center (5, 3, 1)
@@ -69,11 +69,11 @@ void test_minimal_enclosing_sphere()
   dbgl_minimal_enclosing_sphere(points, center, radius);
 
   vgl_point_3d<double > true_center(5, 3, 1);
-  double true_radius = vcl_sqrt(double(5*5+3*3+1*1));
+  double true_radius = std::sqrt(double(5*5+3*3+1*1));
   
 
   double center_err = vgl_distance(center, true_center);
-  double radius_err = vcl_abs(radius - true_radius);
+  double radius_err = std::abs(radius - true_radius);
 
   TEST_NEAR("Compute center of enclosing sphere", center_err, 0, 1e-10);
   TEST_NEAR("Compute radius of enclosing sphere", radius_err, 0, 1e-10);

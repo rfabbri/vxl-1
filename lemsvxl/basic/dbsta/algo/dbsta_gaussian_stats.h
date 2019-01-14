@@ -48,7 +48,7 @@ class dbsta_mixture_weight_by_obs_updater : public dbsta_updater<T>
     assert(dynamic_cast<dbsta_mixture<T>*>(&d));
     dbsta_mixture<T>& mixture = static_cast<dbsta_mixture<T>&>(d); 
     T total = 0;
-    vcl_vector<T> new_weights(mixture.num_components(),T(0));
+    std::vector<T> new_weights(mixture.num_components(),T(0));
     for(unsigned int i=0; i<mixture.num_components(); ++i){
       dbsta_distribution<T>& d = mixture.distribution(i);
       assert(d.has_data());

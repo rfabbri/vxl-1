@@ -28,7 +28,7 @@ dbsta_model_image_regions_process::dbsta_model_image_regions_process()
 {
   if( !parameters()->add( "number of bins" ,   "-bins" ,   (unsigned int)32 ) ||
       !parameters()->add( "certainty ratio" ,  "-cratio" , 1.5f ) ){
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__<< vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__<< std::endl;
   }
 }
 
@@ -48,7 +48,7 @@ dbsta_model_image_regions_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbsta_model_image_regions_process::name()
 {
   return "Image Region Stats";
@@ -72,9 +72,9 @@ dbsta_model_image_regions_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbsta_model_image_regions_process::get_input_type()
+std::vector< std::string > dbsta_model_image_regions_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   to_return.push_back( "image" );
   to_return.push_back( "vsol2D" );
@@ -83,9 +83,9 @@ vcl_vector< vcl_string > dbsta_model_image_regions_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbsta_model_image_regions_process::get_output_type()
+std::vector< std::string > dbsta_model_image_regions_process::get_output_type()
 {  
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "image" );
   to_return.push_back( "image" );
   return to_return;
@@ -97,7 +97,7 @@ bool
 dbsta_model_image_regions_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbsta_model_image_regions_process::execute() - "
+    std::cout << "In dbsta_model_image_regions_process::execute() - "
              << "not exactly one input frame \n";
     return false;
   }
@@ -117,7 +117,7 @@ dbsta_model_image_regions_process::execute()
   vil_image_view<float> img = vil_convert_cast(float(), image_rsc->get_view());
   float min_val, max_val;
   vil_math_value_range(img, min_val, max_val);
-  vcl_cout << min_val << " - "<<max_val<<vcl_endl;
+  std::cout << min_val << " - "<<max_val<<std::endl;
   
 
   frame_image.vertical_cast(input_data_[0][1]);
@@ -126,7 +126,7 @@ dbsta_model_image_regions_process::execute()
   image_rsc = frame_image->get_image();
   vil_image_view<float> img2 = vil_convert_cast(float(), image_rsc->get_view());
   vil_math_value_range(img2, min_val, max_val);
-  vcl_cout << min_val << " - "<<max_val<<vcl_endl;
+  std::cout << min_val << " - "<<max_val<<std::endl;
   
   vil_image_view<float> joint_img(img.ni(), img.nj(), 2);
   vil_plane(joint_img,0).deep_copy(img);
@@ -136,17 +136,17 @@ dbsta_model_image_regions_process::execute()
   // get contours from the storage class
   vidpro1_vsol2D_storage_sptr frame_vsol;
   frame_vsol.vertical_cast(input_data_[0][2]);
-  vcl_vector<vcl_string> groups = frame_vsol->groups();
+  std::vector<std::string> groups = frame_vsol->groups();
   vil_image_view<vxl_byte> idx_image(joint_img.ni(), joint_img.nj(), 1); 
   idx_image.fill(0);
   vxl_byte curr_idx = 0;
-  for( vcl_vector<vcl_string>::const_iterator gitr = groups.begin();
+  for( std::vector<std::string>::const_iterator gitr = groups.begin();
        gitr != groups.end();  ++gitr)
   {
-    vcl_vector<vsol_spatial_object_2d_sptr> contours = frame_vsol->data_named(*gitr);
+    std::vector<vsol_spatial_object_2d_sptr> contours = frame_vsol->data_named(*gitr);
     
     vgl_polygon<double> poly_region;
-    for( vcl_vector<vsol_spatial_object_2d_sptr>::const_iterator vitr = contours.begin();
+    for( std::vector<vsol_spatial_object_2d_sptr>::const_iterator vitr = contours.begin();
          vitr != contours.end();  ++vitr )
     {
       if(vsol_region_2d* r = (*vitr)->cast_to_region())
@@ -181,7 +181,7 @@ dbsta_model_image_regions_process::execute()
 
   vil_image_view<float> out_img(num_bins,num_bins,3);
   out_img.fill(0.0);
-  vcl_cout << (int)curr_idx <<vcl_endl;
+  std::cout << (int)curr_idx <<std::endl;
   for(unsigned int p=0; p<curr_idx; ++p){
     const dbsta_distribution<float>& hist = hmix.distribution(p);
     for(unsigned int i=0; i<num_bins; ++i){
@@ -192,7 +192,7 @@ dbsta_model_image_regions_process::execute()
     }
   }
   vil_math_value_range(out_img, min_val, max_val);
-  vcl_cout << "max prob "<<max_val << vcl_endl;
+  std::cout << "max prob "<<max_val << std::endl;
   vil_math_scale_values(out_img,1.0/max_val);
 
   vidpro1_image_storage_sptr output_storage = vidpro1_image_storage_new();

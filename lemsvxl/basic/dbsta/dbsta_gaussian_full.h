@@ -15,10 +15,10 @@
 #include "dbsta_gaussian.h"
 #include <vnl/vnl_vector_fixed.h>
 #include <vnl/vnl_matrix_fixed.h>
-#include <vcl_limits.h>
+#include <limits>
 #include <vsl/vsl_binary_io.h>
-#include <vcl_sstream.h>
-#include <vcl_typeinfo.h>
+#include <sstream>
+#include <typeinfo>
 
 //: A Gaussian distribution of fixed dimensionality 
 // used as a component of the mixture
@@ -78,7 +78,7 @@ class dbsta_gaussian_full : public dbsta_gaussian<T>
    vnl_vector_fixed<T,n> d = mean_-pt;
    T result = dot_product(d,(inv_covar()*d));
    if(result<T(0))
-     return vcl_numeric_limits<T>::infinity();
+     return std::numeric_limits<T>::infinity();
    return result; 
   }
  
@@ -93,15 +93,15 @@ class dbsta_gaussian_full : public dbsta_gaussian<T>
   short version() const;
 
   //: Print an ascii summary to the stream
-  void print_summary(vcl_ostream &os) const;
+  void print_summary(std::ostream &os) const;
 
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { 
-      vcl_ostringstream os;os<<n;
-      return vcl_string("dbsta_gaussian_full_"+vcl_string(typeid(T).name())+os.str()); }
+  virtual std::string is_a() const { 
+      std::ostringstream os;os<<n;
+      return std::string("dbsta_gaussian_full_"+std::string(typeid(T).name())+os.str()); }
 
   //: Return true if the argument matches the string identifying the class or any parent class
-  virtual bool is_class(vcl_string const& cls) const { return cls==is_a(); }
+  virtual bool is_class(std::string const& cls) const { return cls==is_a(); }
   
  protected:
   //: Return the inverse of the covariance matrix

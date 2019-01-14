@@ -16,7 +16,7 @@
 // Modifications
 // \endverbatim
 
-#include <vcl_string.h>
+#include <string>
 
 class bxml_element;
 
@@ -24,11 +24,11 @@ class bxml_element;
 //==============================================================================
 //: Create new bxml_element from various data type
 // The caller is responsible for deleting the created objects
-bxml_element* xml_new(const vcl_string& name, double data);
-bxml_element* xml_new(const vcl_string& name, float data);
-bxml_element* xml_new(const vcl_string& name, int data);
-bxml_element* xml_new(const vcl_string& name, unsigned data);
-bxml_element* xml_new(const vcl_string& name, const vcl_string& data);
+bxml_element* xml_new(const std::string& name, double data);
+bxml_element* xml_new(const std::string& name, float data);
+bxml_element* xml_new(const std::string& name, int data);
+bxml_element* xml_new(const std::string& name, unsigned data);
+bxml_element* xml_new(const std::string& name, const std::string& data);
 
 
 //==============================================================================
@@ -38,7 +38,7 @@ bool xml_parse(const bxml_element* element, double& data);
 bool xml_parse(const bxml_element* element, float& data);
 bool xml_parse(const bxml_element* element, int& data);
 bool xml_parse(const bxml_element* element, unsigned& data);
-bool xml_parse(const bxml_element* element, vcl_string& data);
+bool xml_parse(const bxml_element* element, std::string& data);
 
 
 #endif // dbxml_xio_h_

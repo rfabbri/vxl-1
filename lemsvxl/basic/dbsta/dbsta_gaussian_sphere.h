@@ -15,7 +15,7 @@
 #include "dbsta_gaussian.h"
 #include <vnl/vnl_vector_fixed.h>
 #include <vsl/vsl_binary_io.h>
-#include <vcl_typeinfo.h>
+#include <typeinfo>
 
 //: A (hyper-)spherical Gaussian distribution
 // Thus, the covariance matrix is the identity times a scalar variance
@@ -83,14 +83,14 @@ class dbsta_gaussian_sphere : public dbsta_gaussian_sphere_base<T>
   short version() const;
 
   //: Print an ascii summary to the stream
-  void print_summary(vcl_ostream &os) const;
+  void print_summary(std::ostream &os) const;
 
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const {  vcl_ostringstream os;os<<n;
-      return vcl_string("dbsta_gaussian_sphere"+vcl_string(typeid(T).name())+os.str()); }
+  virtual std::string is_a() const {  std::ostringstream os;os<<n;
+      return std::string("dbsta_gaussian_sphere"+std::string(typeid(T).name())+os.str()); }
 
   //: Return true if the argument matches the string identifying the class or any parent class
-  virtual bool is_class(vcl_string const& cls) const { return cls==is_a(); }
+  virtual bool is_class(std::string const& cls) const { return cls==is_a(); }
   
  protected:
   

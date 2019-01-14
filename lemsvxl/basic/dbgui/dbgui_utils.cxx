@@ -8,7 +8,7 @@
 #include <vgui/vgui_tableau.h>
 #include <vgui/vgui_dialog.h>
 #include <vul/vul_file.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 //: Render the tableaux heirarchy to PostScript
 void dbgui_utils::
@@ -17,10 +17,10 @@ render_to_ps(const vgui_tableau_sptr& tableau)
   GLint file_type = 1;
   
   vgui_dialog save_ps_dlg("Render to PostScript");
-  static vcl_string file_name = "";
-  static vcl_string ext = "*.ps";
+  static std::string file_name = "";
+  static std::string ext = "*.ps";
   save_ps_dlg.file("File:", ext, file_name);
-  vcl_vector<vcl_string> types;
+  std::vector<std::string> types;
   types.push_back("(PS)  PostScript");
   types.push_back("(EPS) Encapsulated PostScript");
   types.push_back("(PDF) Portable Document Format");
@@ -30,7 +30,7 @@ render_to_ps(const vgui_tableau_sptr& tableau)
   if( !save_ps_dlg.ask())
     return;
 
-  vcl_string output_type = "";
+  std::string output_type = "";
   switch(type){
     case 0: output_type = ".ps";  break;
     case 1: output_type = ".eps"; break;
@@ -57,9 +57,9 @@ render_to_ps(const vgui_tableau_sptr& tableau)
 // If file_type not provided, extension of output_file will be used
 void dbgui_utils::
 render_to_ps(const vgui_tableau_sptr& tableau, 
-             const vcl_string file_name, const vcl_string& output_type)
+             const std::string file_name, const std::string& output_type)
 {
-  vcl_string ext = output_type;
+  std::string ext = output_type;
   if (ext == "") // default option, get extension from output file
   {
     ext = vul_file::extension(file_name);
@@ -86,7 +86,7 @@ render_to_ps(const vgui_tableau_sptr& tableau,
   }
   else
   {
-    vcl_cout << "\nUnknow output file type. No file created.\n";
+    std::cout << "\nUnknow output file type. No file created.\n";
     return;
   }
 
@@ -94,7 +94,7 @@ render_to_ps(const vgui_tableau_sptr& tableau,
 
   if (!fp)
   {
-    vcl_cerr << "\nERROR: can't open file: " << file_name << " for writing.\n";
+    std::cerr << "\nERROR: can't open file: " << file_name << " for writing.\n";
     return;
   }
 

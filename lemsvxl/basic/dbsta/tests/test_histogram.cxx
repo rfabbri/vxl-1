@@ -2,12 +2,12 @@
 #include <dbsta/dbsta_histogram.h>
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_vector_fixed.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
+#include <string>
+#include <iostream>
 
 
 template <class T>
-void test_histogram_type(T epsilon, const vcl_string& type_name)
+void test_histogram_type(T epsilon, const std::string& type_name)
 {
   {
     dbsta_histogram<T> hist(1,T(0),T(256),16);

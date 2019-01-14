@@ -6,11 +6,11 @@
 #include <stdio.h>
 #include <string.h>
 
-#include <vcl_cstdio.h>
-#include <vcl_cassert.h>
+#include <cstdio>
+#include <cassert>
 
 
-//#include <vcl_fstream.h>
+//#include <fstream>
 #include <vul/vul_arg.h>
 #include <vil/vil_save.h>
 
@@ -44,38 +44,38 @@ int track_info::get_count()
   return(count);
 }
 
-void track_info::setHeight(vcl_string *s)
+void track_info::setHeight(std::string *s)
 {
   height = *s;
 }
-void track_info::setWidth(vcl_string *s)
+void track_info::setWidth(std::string *s)
 {
   width = *s;
 }
-vcl_string track_info::getWidth()
+std::string track_info::getWidth()
 {
  return( width);
 }
-vcl_string track_info::getHeight()
+std::string track_info::getHeight()
 {
  return( height);
 }
 
 
-void track_info::setX(vcl_string *s)
+void track_info::setX(std::string *s)
 {
  pTrackCoordindateInfo->x = *s;
 }
-void track_info::setY(vcl_string *s)
+void track_info::setY(std::string *s)
 {
  pTrackCoordindateInfo->y = *s;
 } 
-void track_info::setYmargin(vcl_string *s)
+void track_info::setYmargin(std::string *s)
 {
  pTrackCoordindateInfo->y_margin = *s;  
 
 }
-void track_info::setXmargin(vcl_string *s)
+void track_info::setXmargin(std::string *s)
 {
  pTrackCoordindateInfo->x_margin = *s;  
 
@@ -90,7 +90,7 @@ void track_info::addTrackCoordinateInfo()
     increment_count();
 
 }
-/*vcl_vector<vcl_string> track_info::get_vector()
+/*std::vector<std::string> track_info::get_vector()
 {
   return(count);
 }
@@ -123,9 +123,9 @@ track_parser::handleWindowAtts(const XML_Char** atts)
 {
    for (int i=0; atts[i]; i++) {
       if (strcmp(atts[i],"width") ==0)
-        pInfo->setWidth(new vcl_string(atts[i+1]));
+        pInfo->setWidth(new std::string(atts[i+1]));
       else if (strcmp(atts[i],"height") ==0)
-        pInfo->setHeight(new vcl_string(atts[i+1]));
+        pInfo->setHeight(new std::string(atts[i+1]));
     }
 
 }
@@ -135,13 +135,13 @@ track_parser::handleTrackAtts(const XML_Char** atts)
 {
      for (int i=0; atts[i]; i++) {
       if (strcmp(atts[i],"x") ==0)
-        pInfo->setX(new vcl_string(atts[i+1]));
+        pInfo->setX(new std::string(atts[i+1]));
       else if (strcmp(atts[i],"y") ==0)
-        pInfo->setY(new vcl_string(atts[i+1]));
+        pInfo->setY(new std::string(atts[i+1]));
       else if (strcmp(atts[i],"y_margin") ==0)
-        pInfo->setYmargin(new vcl_string(atts[i+1]));
+        pInfo->setYmargin(new std::string(atts[i+1]));
       else if (strcmp(atts[i],"x_margin") ==0)
-        pInfo->setXmargin(new vcl_string(atts[i+1]));
+        pInfo->setXmargin(new std::string(atts[i+1]));
     }
 
 } 
@@ -189,7 +189,7 @@ track_parser ::endElement(const char* name)
 
 int main(int argc, char** argv)
 {
-  vcl_FILE *xmlFile;
+  std::FILE *xmlFile;
   track_info info;
   track_parser parser(&info);
 
@@ -198,8 +198,8 @@ int main(int argc, char** argv)
 
 
   // --- Program Arguments ---
-  vul_arg<vcl_string> filename("-filename", "input xml file");
-  vul_arg<vcl_string> video("-video", "video file");
+  vul_arg<std::string> filename("-filename", "input xml file");
+  vul_arg<std::string> video("-video", "video file");
   vul_arg_parse(argc, argv);
   vidl1_movie_sptr my_movie ;
 
@@ -209,7 +209,7 @@ int main(int argc, char** argv)
  
     return(1);
   }
-    xmlFile = vcl_fopen(filename().c_str(), "r");
+    xmlFile = std::fopen(filename().c_str(), "r");
     if (!xmlFile){
       fprintf(stderr, " %s error on opening", filename );
       return(1);
@@ -226,10 +226,10 @@ int main(int argc, char** argv)
 
   int i=info.get_count();
 
-  for (vcl_vector<track_coord_info>::iterator arg_it = info.coordinates.begin();
+  for (std::vector<track_coord_info>::iterator arg_it = info.coordinates.begin();
  arg_it != info.coordinates.end(); ++arg_it){
-    vcl_string sx = arg_it->x;
-    vcl_string sy = arg_it->y;
+    std::string sx = arg_it->x;
+    std::string sy = arg_it->y;
     puts("\nOuptupt x y");
     puts(sx.c_str());
     puts(sy.c_str());

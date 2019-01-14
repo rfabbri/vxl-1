@@ -13,7 +13,7 @@
 // \endverbatim
 
 
-#include <vcl_string.h>
+#include <string>
 #include <bprod/bprod_process.h>
 #include <vidl/vidl_istream_sptr.h>
 
