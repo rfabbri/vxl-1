@@ -479,6 +479,7 @@ git checkout vxl-integration
 # merge changes from master using subtree (_adapt_ to pick the commits you want)
 
 git cherry-pick -x --strategy=subtree -Xsubtree=vxl/ master
+# git cherry-pick -x --strategy=subtree -Xsubtree=vxl/ COMMIT_SHA1
 
 # check from git log or gitk if that generates a commit with the wrong prefix,
 # if so, undo the commit by resetting HEAD and give up, start again.
