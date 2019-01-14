@@ -1,4 +1,4 @@
-include_directories(${lems_SOURCE_DIR}/brcv/seg/)
+include_directories(${LEMS_SOURCE_DIR}/brcv/seg/)
 
 set( vox_test_index_label_sources
   vox_test_index_label_params.h 

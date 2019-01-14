@@ -2,7 +2,7 @@
 
 include_directories(${BRL_INCLUDE_DIR} )
 include_directories(${BRL_INCLUDE_DIR}/bseg )
-include_directories(${lems_SOURCE_DIR}/basic/dbtest )
+include_directories(${LEMS_SOURCE_DIR}/basic/dbtest )
 
 add_executable ( dbdet_algo_test_all
    # Driver source and utilities

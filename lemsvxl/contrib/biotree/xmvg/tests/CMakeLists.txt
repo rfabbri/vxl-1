@@ -1,6 +1,6 @@
 # contrib/biotree/xmvg/tests/CMakeLists.txt
 include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
-include_directories( ${lems_SOURCE_DIR}/contrib )
+include_directories( ${LEMS_SOURCE_DIR}/contrib )
 
 add_executable( xmvg_test_all   
   test_driver.cxx  

@@ -1,7 +1,7 @@
 # This is brcv/shp/dbmsh3d/algo/CMakeLists.txt
 # Brown 3D Mesh Algorithm Library
 
-include_directories( ${lems_SOURCE_DIR}/shp)
+include_directories( ${LEMS_SOURCE_DIR}/shp)
 
 set(gdt_sources
 

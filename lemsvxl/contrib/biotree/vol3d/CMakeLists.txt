@@ -2,7 +2,7 @@
 
 include_directories( ${VXL_MUL_INCLUDE_DIR} ${VXL_GEL_INCLUDE_DIR}/mrc )
 include_directories(${biotree_SOURCE_DIR}/resc)
-include_directories(${lems_SOURCE_DIR}/basic)
+include_directories(${LEMS_SOURCE_DIR}/basic)
 
 set(vol3d_src
     vol3d_radius_filter.cxx                     vol3d_radius_filter.h

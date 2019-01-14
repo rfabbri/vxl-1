@@ -2,7 +2,7 @@
 # Probabalistic Scene Modeling Algorithms
 
 include_directories( ${VXL_CORE_INCLUDE_DIR} )
-include_directories( ${lems_SOURCE_DIR}/contrib/dec )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/dec )
 include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
   
 #if(PSM_USE_OPENGL2_1)

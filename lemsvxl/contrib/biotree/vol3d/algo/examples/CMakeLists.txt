@@ -2,10 +2,10 @@ if(VXL_VGUI_FOUND)
   include( ${VXL_CMAKE_DIR}/UseBGUI3D.cmake)
 endif (VXL_VGUI_FOUND)
 
-include_directories(${lems_SOURCE_DIR}/basic ${VXL_GEL_INCLUDE_DIR}/mrc )
+include_directories(${LEMS_SOURCE_DIR}/basic ${VXL_GEL_INCLUDE_DIR}/mrc )
 include_directories(${VXL_GEL_INCLUDE_DIR})
 include_directories(${VXL_BRL_INCLUDE_DIR}/bbas )
-include_directories( ${lems_SOURCE_DIR}/db3p)
+include_directories( ${LEMS_SOURCE_DIR}/db3p)
 include_directories( ${lems_BIOTREE_INCLUDE_DIR}/biosim)
 
 if( BUILD_CONTRIB_BIOTREE_biov )

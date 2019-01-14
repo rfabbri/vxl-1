@@ -1,12 +1,12 @@
 # SIFT library
 # brcv/shp/dbsk2d/CMakeLists.txt
 
-include_directories( ${lems_SOURCE_DIR}/contrib/maruthi )
-include_directories( ${lems_SOURCE_DIR}/contrib/maruthi/vlfeat-0.9.16 )
-include_directories( ${lems_SOURCE_DIR}/contrib/maruthi/lbnn )
-include_directories( ${lems_SOURCE_DIR}/contrib/maruthi/flann-1.8.4-src/src/cpp )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/maruthi )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/maruthi/vlfeat-0.9.16 )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/maruthi/lbnn )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/maruthi/flann-1.8.4-src/src/cpp )
 
-link_directories(${lems_SOURCE_DIR}/contrib/maruthi/vlfeat-0.9.16/bin/glnxa64 )
+link_directories(${LEMS_SOURCE_DIR}/contrib/maruthi/vlfeat-0.9.16/bin/glnxa64 )
 link_directories(/usr/local/boost_1_42_0/stage/lib)
 
 project ( nbnn )
@@ -18,10 +18,10 @@ target_link_libraries ( lbnn_exec protobuf sift_lib gflags glog boost_filesystem
 # # SIFT library
 # # brcv/shp/dbsk2d/CMakeLists.txt
 
-# include_directories( ${lems_SOURCE_DIR}/contrib/maruthi )
-# include_directories( ${lems_SOURCE_DIR}/contrib/maruthi/vlfeat-0.9.16 )
+# include_directories( ${LEMS_SOURCE_DIR}/contrib/maruthi )
+# include_directories( ${LEMS_SOURCE_DIR}/contrib/maruthi/vlfeat-0.9.16 )
 
-# link_directories(${lems_SOURCE_DIR}/contrib/maruthi/vlfeat-0.9.16/bin/glnxa64 )
+# link_directories(${LEMS_SOURCE_DIR}/contrib/maruthi/vlfeat-0.9.16/bin/glnxa64 )
 # link_directories(/usr/local/boost_1_42_0/stage/lib)
 
 # project ( sift )

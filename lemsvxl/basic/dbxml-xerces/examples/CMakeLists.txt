@@ -1,6 +1,6 @@
 # dbxml/tests/CMakeLists.txt
 
-include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${LEMS_SOURCE_DIR}/basic )
 
 include_directories(${VXL_GEL_INCLUDE_DIR} )
 

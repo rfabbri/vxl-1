@@ -11,7 +11,7 @@ endif(WIN32)
   include_directories( ${VXL_GEL_INCLUDE_DIR} )
   include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc/vpgl )
   include_directories(${VXL_MUL_INCLUDE_DIR} )
-  include_directories( ${lems_SOURCE_DIR}/contrib )
+  include_directories( ${LEMS_SOURCE_DIR}/contrib )
 
   set(dbvxm_batch_sources      
           batch_dbvxm.h batch_dbvxm.cxx
@@ -53,8 +53,8 @@ endif(WIN32)
 #
 #    include_directories( ${VXL_GEL_INCLUDE_DIR})
 #
-#    include_directories( ${lems_SOURCE_DIR}/contrib/ )
-#    include_directories( ${lems_SOURCE_DIR}/contrib/dbvxm )
+#    include_directories( ${LEMS_SOURCE_DIR}/contrib/ )
+#    include_directories( ${LEMS_SOURCE_DIR}/contrib/dbvxm )
 #
 #    set(dbvxm_batch_sources
 #      batch_dbvxm.h batch_dbvxm.cxx

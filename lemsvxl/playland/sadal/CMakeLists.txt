@@ -1,7 +1,7 @@
 # playland/sadal/CMakeLists.txt
 # Brown personal testing area.
-include_directories( ${lems_SOURCE_DIR}/algo )
-include_directories( ${lems_SOURCE_DIR}/breye )
+include_directories( ${LEMS_SOURCE_DIR}/algo )
+include_directories( ${LEMS_SOURCE_DIR}/breye )
 
 
 include_directories( ${VXL_BRL_INCLUDE_DIR} )

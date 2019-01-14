@@ -1,7 +1,7 @@
 # This is brcv/rec/dbcvr/vis/CMakeLists.txt
 # Brown Curve Matching Library Visualization
 
-include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${LEMS_SOURCE_DIR}/breye1 )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 
 if (VXL_VGUI_FOUND)

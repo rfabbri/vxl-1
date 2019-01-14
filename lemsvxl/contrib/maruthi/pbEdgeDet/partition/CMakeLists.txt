@@ -1,4 +1,4 @@
-include_directories(${lems_SOURCE_DIR}/contrib/maruthi/pbEdgeDet/util)
+include_directories(${LEMS_SOURCE_DIR}/contrib/maruthi/pbEdgeDet/util)
 set(partition_sources dmatrix.cc smatrix.cc )
  
 

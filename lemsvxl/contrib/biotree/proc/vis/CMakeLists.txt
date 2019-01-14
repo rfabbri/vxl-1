@@ -8,7 +8,7 @@ endif (VXL_VGUI_FOUND)
 include_directories( ${VXL_GEL_INCLUDE_DIR})
 include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
 include_directories(${VXL_BRL_INCLUDE_DIR}/bbas)
-include_directories( ${lems_SOURCE_DIR}/db3p )
+include_directories( ${LEMS_SOURCE_DIR}/db3p )
 
 set(bioproc_vis_sources
 vis_manager.cxx  vis_manager.h

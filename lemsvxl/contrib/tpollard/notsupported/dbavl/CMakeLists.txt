@@ -5,8 +5,8 @@ include_directories( ${VXL_BRL_INCLUDE_DIR}/bmvl )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 include_directories( ${VXL_MUL_INCLUDE_DIR} )
 include_directories( ${VXL_RPL_INCLUDE_DIR})
-include_directories( ${lems_SOURCE_DIR}/brcv/mvg )
-include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/mvg )
+include_directories( ${LEMS_SOURCE_DIR}/basic )
 
 add_library( dbavl
   dbavl_tracker.h              dbavl_tracker.cxx

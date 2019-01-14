@@ -4,11 +4,11 @@ include_directories( ${VXL_GEL_INCLUDE_DIR} )
 include_directories( ${VXL_GEL_INCLUDE_DIR} )
 include_directories( ${VXL_MUL_INCLUDE_DIR} )
 
-include_directories( ${lems_SOURCE_DIR}/brcv/shp )
-include_directories( ${lems_SOURCE_DIR}/brcv )
-include_directories( ${lems_SOURCE_DIR}/brcv/seg )
-include_directories( ${lems_SOURCE_DIR}/brcv/rec )
-include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/shp )
+include_directories( ${LEMS_SOURCE_DIR}/brcv )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/seg )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/rec )
+include_directories( ${LEMS_SOURCE_DIR}/basic )
 
 set(dbsks_xgraph_likelihood_calculator_sources
        dbsks_xgraph_likelihood_calculator.cxx dbsks_xgraph_likelihood_calculator_utils.cxx

@@ -2,8 +2,8 @@
 # camera optimization library using probabilistic scene models
 
 
-include_directories( ${lems_SOURCE_DIR}/contrib/dec )
-include_directories( ${lems_SOURCE_DIR}/brcv/mvg )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/dec )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/mvg )
 include_directories( ${VXL_GEL_INCLUDE_DIR})
 include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
 include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc/vpgl )

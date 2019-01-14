@@ -1,10 +1,10 @@
 # contrib/mleotta/cmd/CMakeLists.txt
 # Command line programs for mleotta
 
-#include_directories( ${lems_SOURCE_DIR}/brcv/mvg )
-#include_directories( ${lems_SOURCE_DIR}/brcv/trk )
-#include_directories( ${lems_SOURCE_DIR}/brcv/rec )
-include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+#include_directories( ${LEMS_SOURCE_DIR}/brcv/mvg )
+#include_directories( ${LEMS_SOURCE_DIR}/brcv/trk )
+#include_directories( ${LEMS_SOURCE_DIR}/brcv/rec )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/seg )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )

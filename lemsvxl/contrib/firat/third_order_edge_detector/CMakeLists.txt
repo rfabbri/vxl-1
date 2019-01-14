@@ -2,7 +2,7 @@ include_directories( ${VXL_GEL_INCLUDE_DIR} )
 include_directories( ${VXL_MUL_INCLUDE_DIR} )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
-include_directories(${lems_SOURCE_DIR}/brcv/seg)
+include_directories(${LEMS_SOURCE_DIR}/brcv/seg)
 
 set(third_order_edge_detector_sources
        third_order_edge_detector.cxx

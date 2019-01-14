@@ -8,11 +8,11 @@ include_directories( ${VXL_OXL_INCLUDE_DIR} )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bmvl )
-include_directories( ${lems_SOURCE_DIR}/brcv/mvg )
-include_directories( ${lems_SOURCE_DIR} )
-include_directories( ${lems_SOURCE_DIR}/basic )
-include_directories( ${lems_SOURCE_DIR}/brcv/seg )
-include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/mvg )
+include_directories( ${LEMS_SOURCE_DIR} )
+include_directories( ${LEMS_SOURCE_DIR}/basic )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/seg )
+include_directories( ${LEMS_SOURCE_DIR}/breye1 )
 
 set(dbcri_whole_pro_sources
    dbcri_whole_process.cxx   dbcri_whole_process.h

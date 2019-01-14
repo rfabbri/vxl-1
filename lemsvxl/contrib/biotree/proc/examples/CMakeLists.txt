@@ -11,8 +11,8 @@ endif (VXL_VGUI_FOUND)
 # brown Volume Rendering
 
 include_directories( ${VXL_MUL_INCLUDE_DIR})
-include_directories( ${lems_SOURCE_DIR}/contrib/biotree/xmvg)
-include_directories( ${lems_SOURCE_DIR}/db3p )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/biotree/xmvg)
+include_directories( ${LEMS_SOURCE_DIR}/db3p )
 include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
 
 

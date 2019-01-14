@@ -1,8 +1,8 @@
 # This is contrib/anil/shock_flip/CMakeLists.txt
 # Brown Shock Recognition Library Executables
 
-include_directories( ${lems_SOURCE_DIR}/brcv/rec)
-include_directories( ${lems_SOURCE_DIR}/basic)
+include_directories( ${LEMS_SOURCE_DIR}/brcv/rec)
+include_directories( ${LEMS_SOURCE_DIR}/basic)
 include_directories(${VXL_BRL_INCLUDE_DIR}/bbas)
 
 set(test_cvmatch_sources

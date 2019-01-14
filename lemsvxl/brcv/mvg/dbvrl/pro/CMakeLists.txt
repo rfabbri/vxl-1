@@ -1,7 +1,7 @@
 # This is brcv/mvg/dbvrl/pro/CMakeLists.txt
 # Brown Video Registration Processing library
 
-include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${LEMS_SOURCE_DIR}/breye1 )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )      
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 include_directories( ${VXL_GEL_INCLUDE_DIR} )

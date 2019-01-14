@@ -15,7 +15,7 @@ endif(WIN32)
   include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
   include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc/vpgl )
   include_directories(${VXL_MUL_INCLUDE_DIR} )
-  include_directories( ${lems_SOURCE_DIR}/contrib )
+  include_directories( ${LEMS_SOURCE_DIR}/contrib )
 
    set(bvam_batch_sources
        batch_bvam.h batch_bvam.cxx

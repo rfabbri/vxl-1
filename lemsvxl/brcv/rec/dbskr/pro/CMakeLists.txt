@@ -3,9 +3,9 @@
 
 include_directories( ${VXL_GEL_INCLUDE_DIR} )
 include_directories( ${VXL_MUL_INCLUDE_DIR} )
-include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${LEMS_SOURCE_DIR}/breye1 )
 
-include_directories( ${lems_SOURCE_DIR}/contrib/ozge )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/ozge )
 
 set(dbskr_pro_sources
 # further algorithms beyond algo/ that depend on pro/

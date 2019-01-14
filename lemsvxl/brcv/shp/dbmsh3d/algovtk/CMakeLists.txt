@@ -19,10 +19,10 @@ include( ${LEMS_CMAKE_DIR}/Modules/UseVTK.cmake )
   
 if(HAS_VTK)
 
-# include_directories( ${lems_SOURCE_DIR}/basic )
+# include_directories( ${LEMS_SOURCE_DIR}/basic )
 
 include_directories( ${VXL_MUL_INCLUDE_DIR} )
-include_directories( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/shp )
 
 set(dbmsh3d_algovtk_sources
   dbmsh3d_isosurface.cxx          dbmsh3d_isosurface.h

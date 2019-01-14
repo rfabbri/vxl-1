@@ -1,7 +1,7 @@
 # This is lemsvxlsrc/basic/dbfs/CMakeLists.txt
 # Development Brown Feature Selection Library
 
-include_directories( ${lems_SOURCE_DIR}/contrib/dbrec_lib )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/dbrec_lib )
 
 set(dbfs_sources
   dbfs_selector.h  dbfs_selector.cxx    

@@ -1,7 +1,7 @@
 # contrib/dec/CMakeLists.txt
 # Developement for Dan Crispell
 
-#include_directories( ${lems_SOURCE_DIR}/breye )
+#include_directories( ${LEMS_SOURCE_DIR}/breye )
 
 # 3D registration of video
 add_subdirectory(breg3d)

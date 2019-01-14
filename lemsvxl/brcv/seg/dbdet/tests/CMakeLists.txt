@@ -1,7 +1,7 @@
 # brcv/seg/dbdet/tests/CMakeLists.txt
 
 #include_directories(${GEL_INCLUDE_DIR} )
-include_directories( ${lems_SOURCE_DIR}/basic/dbtest )
+include_directories( ${LEMS_SOURCE_DIR}/basic/dbtest )
 
 add_executable( dbdet_test_all
   test_driver.cxx

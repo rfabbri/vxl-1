@@ -1,7 +1,7 @@
 # contrib/edge_det/pro/CMakeLists.txt
 
-include_directories( ${lems_SOURCE_DIR}/basic )
-include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${LEMS_SOURCE_DIR}/basic )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/seg )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
 

@@ -1,7 +1,7 @@
 # This is brcv/seg/dbacm/vis/CMakeLists.txt
 # Visualization for Brown Active Contour Models Library
 
-include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${LEMS_SOURCE_DIR}/breye1 )
 
 set(dbacm_vis_sources
   dbacm_geodesic_active_contour_tool.h   dbacm_geodesic_active_contour_tool.cxx

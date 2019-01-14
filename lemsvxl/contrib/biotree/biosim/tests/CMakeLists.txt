@@ -1,13 +1,13 @@
 # contrib/biotree/biosim/tests/CMakeLists.txt
 
-include_directories( ${lems_SOURCE_DIR}/contrib )
+include_directories( ${LEMS_SOURCE_DIR}/contrib )
 
-configure_file(${lems_SOURCE_DIR}/contrib/biotree/biosim/tests/input.txt 
-               ${lems_BINARY_DIR}/contrib/biotree/biosim/tests/input.txt
+configure_file(${LEMS_SOURCE_DIR}/contrib/biotree/biosim/tests/input.txt 
+               ${LEMS_BINARY_DIR}/contrib/biotree/biosim/tests/input.txt
                  [COPYONLY])
 
-configure_file(${lems_SOURCE_DIR}/contrib/biotree/biosim/bnoise.pgm 
-               ${lems_BINARY_DIR}/contrib/biotree/biosim/tests/bnoise.pgm
+configure_file(${LEMS_SOURCE_DIR}/contrib/biotree/biosim/bnoise.pgm 
+               ${LEMS_BINARY_DIR}/contrib/biotree/biosim/tests/bnoise.pgm
                  [COPYONLY])
 
 add_executable( biosim_test_all

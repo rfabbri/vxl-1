@@ -1,6 +1,6 @@
 # contrib/biotree/proc/io/CMakeLists.txt
 
-include_directories( ${lems_SOURCE_DIR}/db3p )
+include_directories( ${LEMS_SOURCE_DIR}/db3p )
 
 set(io_sources
    proc_io_filter_xml_parser.cxx proc_io_filter_xml_parser.h

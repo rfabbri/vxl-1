@@ -2,10 +2,10 @@
 
 include_directories( ${VXL_GEL_INCLUDE_DIR} )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
-include_directories( ${lems_SOURCE_DIR}/breye1 )
-include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${LEMS_SOURCE_DIR}/breye1 )
+include_directories( ${LEMS_SOURCE_DIR}/basic )
 
-include_directories( ${lems_SOURCE_DIR}/contrib/Gregistration )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/Gregistration )
 
 set( georegistration_vis_sources
 dbrl_match_set_tableau.h        dbrl_match_set_tableau.cxx              dbrl_match_set_tableau_sptr.h

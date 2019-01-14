@@ -1,9 +1,9 @@
 # dbmsh3dapp Mesh Visualization and Processsing Application
 # contrib/dbmsh3dapp/CMakeLists.txt
 
-include_directories( ${lems_SOURCE_DIR}/brcv/shp )
-include_directories( ${lems_SOURCE_DIR}/brcv/rec )
-include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/shp )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/rec )
+include_directories( ${LEMS_SOURCE_DIR}/basic )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 include_directories( ${VXL_RPL_INCLUDE_DIR} )
 include_directories( ${VXL_GEL_INCLUDE_DIR} )

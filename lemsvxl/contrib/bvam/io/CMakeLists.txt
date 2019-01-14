@@ -1,7 +1,7 @@
 # contrib/bvam/io/CMakeLists.txt
 
 ##### old CMakeLists.txt ######
-#include_directories( ${lems_SOURCE_DIR}/db3p)
+#include_directories( ${LEMS_SOURCE_DIR}/db3p)
 
 #set(bvam_io_sources
 #   bvam_io_config_parser.cxx bvam_io_config_parser.h

@@ -1,7 +1,7 @@
 # This is brcv/trk/dbetrk/pro/CMakeLists.txt
 # Brown edgetracking Processing library
 
-include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${LEMS_SOURCE_DIR}/breye1 )
 
 set(dbetrk_pro_sources
    dbetrk_process.cxx          dbetrk_process.h

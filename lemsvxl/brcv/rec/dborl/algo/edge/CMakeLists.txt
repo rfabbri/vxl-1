@@ -1,5 +1,5 @@
-include_directories( ${lems_SOURCE_DIR}/db3p )
-include_directories( ${lems_SOURCE_DIR}/db3p/expatpp/expat/lib )
+include_directories( ${LEMS_SOURCE_DIR}/db3p )
+include_directories( ${LEMS_SOURCE_DIR}/db3p/expatpp/expat/lib )
 
 set( dborl_third_order_edge_det_sources
   dborl_third_order_edge_det_params.h 

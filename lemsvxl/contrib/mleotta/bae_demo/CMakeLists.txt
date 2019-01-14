@@ -7,8 +7,8 @@ include_directories( ${VXL_VGUI_INCLUDE_DIR} )
 include_directories( ${VXL_BRL_INCLUDE_DIR} )
 include_directories( ${VXL_GEL_INCLUDE_DIR} )
 include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
-include_directories( ${lems_SOURCE_DIR}/brcv/mvg )
-include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/mvg )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/seg )
 
 include( ${VXL_CMAKE_DIR}/UseBGUI3D.cmake )
 

@@ -1,7 +1,7 @@
 # This is brcv/shp/dbmsh3d/pro/CMakeLists.txt
 # Brown Mesh Processing library
 
-include_directories( ${lems_SOURCE_DIR}/shp)
+include_directories( ${LEMS_SOURCE_DIR}/shp)
 
 set ( dbmsh3d_pro_sources
 

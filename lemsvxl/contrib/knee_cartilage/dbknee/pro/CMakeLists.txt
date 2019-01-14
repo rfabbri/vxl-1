@@ -1,7 +1,7 @@
 # This is contrib/knee_cartilage/dbknee/pro/CMakeLists.txt
 # Brown Processing Library for the Knee cartilage
 
-include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${LEMS_SOURCE_DIR}/breye1 )
 
 set(dbknee_pro_sources                                               
   # Processes

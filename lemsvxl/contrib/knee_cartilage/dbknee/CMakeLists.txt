@@ -4,12 +4,12 @@
 include_directories( ${VXL_BRL_INCLUDE_DIR} )
 include_directories( ${VXL_GEL_INCLUDE_DIR} )
 include_directories( ${VXL_MUL_INCLUDE_DIR} )
-include_directories( ${lems_SOURCE_DIR}/brcv/seg )
-include_directories( ${lems_SOURCE_DIR}/brcv/rec )
-include_directories( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/seg )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/rec )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/shp )
 
 
-include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${LEMS_SOURCE_DIR}/breye1 )
 
 set( dbknee_sources
   dbknee_coord.h       dbknee_coord.cxx        dbknee_coord_sptr.h

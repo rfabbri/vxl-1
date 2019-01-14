@@ -1,8 +1,8 @@
 # brl/bseg/blem/contrib/itrack/tests/CMakeLists.txt
 include_directories( ${VXL_GEL_INCLUDE_DIR} )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
-include_directories( ${lems_SOURCE_DIR}/brcv/trk )
-include_directories( ${lems_SOURCE_DIR}/contrib/ )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/trk )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/ )
 add_executable( itrack_test_all
   test_driver.cxx
 )

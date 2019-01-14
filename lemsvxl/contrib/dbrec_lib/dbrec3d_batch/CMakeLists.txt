@@ -8,7 +8,7 @@ if( PYTHON_FOUND )
     include_directories( ${PYTHON_INCLUDE_PATH} )
     include_directories( ${VXL_BRL_INCLUDE_DIR} )   
     include_directories( ${VXLCORE_INCLUDE_DIR} )
-    include_directories( ${lems_SOURCE_DIR}/contrib/dbrec_lib)
+    include_directories( ${LEMS_SOURCE_DIR}/contrib/dbrec_lib)
       
     set(dbrec3d_batch_sources
       reg_dbrec3d.cxx          reg_dbrec3d.h

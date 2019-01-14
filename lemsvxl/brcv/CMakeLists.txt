@@ -2,8 +2,8 @@
 # Brown Computer Vision Libraries.
 
 include_directories( ${VXL_BRL_INCLUDE_DIR} )
-include_directories( ${lems_SOURCE_DIR}/db3p )
-include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${LEMS_SOURCE_DIR}/db3p )
+include_directories( ${LEMS_SOURCE_DIR}/basic )
 include_directories(${VXD_BRLD_INCLUDE_DIR})
 include_directories(${VXD_B3PD_INCLUDE_DIR})
 

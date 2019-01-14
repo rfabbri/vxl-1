@@ -6,9 +6,9 @@ include_directories( ${VXL_OXL_INCLUDE_DIR} )
 include_directories( ${VXL_BRL_INCLUDE_DIR} )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
-include_directories( ${lems_SOURCE_DIR}/breye1 )
-include_directories( ${lems_SOURCE_DIR}/brcv/seg )
-include_directories( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories( ${LEMS_SOURCE_DIR}/breye1 )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/seg )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/shp )
 
 set(dbmsh3d_algovtk_pro_sources
    dbmsh3d_isosurface_of_seg3d_process.h       dbmsh3d_isosurface_of_seg3d_process.cxx

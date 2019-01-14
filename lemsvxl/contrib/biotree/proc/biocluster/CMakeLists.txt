@@ -8,9 +8,9 @@
 # The "FindMPI" cmake include does the work including Windows vs. Linux
 option (BUILD_CONTRIB_biotree_cluster "Build biotree filter processing for clusters" NO)
 if (BUILD_CONTRIB_biotree_cluster)
-  include_directories(${lems_SOURCE_DIR}/basic)
-  include_directories(${lems_SOURCE_DIR}/db3p)
-  include_directories(${lems_SOURCE_DIR}/brcv/mvg ${biotree_SOURCE_DIR}/resc)
+  include_directories(${LEMS_SOURCE_DIR}/basic)
+  include_directories(${LEMS_SOURCE_DIR}/db3p)
+  include_directories(${LEMS_SOURCE_DIR}/brcv/mvg ${biotree_SOURCE_DIR}/resc)
   include_directories(${VXL_BRL_INCLUDE_DIR}/bbas)
   include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
 

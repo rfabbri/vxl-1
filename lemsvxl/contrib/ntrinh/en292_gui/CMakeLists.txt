@@ -7,7 +7,7 @@ include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
 include_directories( ${VXL_GEL_INCLUDE_DIR} )
 
-include_directories( ${lems_SOURCE_DIR}/contrib/ntrinh )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/ntrinh )
 
 set(en292_gui_sources
    en292_gui_menu.cxx       en292_gui_menu.h

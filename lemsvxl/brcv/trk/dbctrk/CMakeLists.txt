@@ -2,7 +2,7 @@
 # brcv/trk/dbctrk/CMakeLists.txt
 include_directories(${VXL_BRL_INCLUDE_DIR}/bbas )
 include_directories(${VXL_BRL_INCLUDE_DIR}/bseg )
-include_directories(${lems_SOURCE_DIR}/brcv/mvg/bmvl )
+include_directories(${LEMS_SOURCE_DIR}/brcv/mvg/bmvl )
 include_directories(${VXL_GEL_INCLUDE_DIR}/mrc )
 include_directories(${VXL_GEL_INCLUDE_DIR} )
 include_directories(${VXL_OXL_INCLUDE_DIR} )

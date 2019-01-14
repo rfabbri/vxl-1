@@ -1,5 +1,5 @@
 include_directories( ${VXLCORE_INCLUDE_DIR} )
-include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${LEMS_SOURCE_DIR}/basic )
 include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
 
 add_executable ( btpl_generate_roc btpl_generate_roc.cxx )

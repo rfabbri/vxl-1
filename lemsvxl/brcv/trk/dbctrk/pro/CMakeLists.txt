@@ -1,9 +1,9 @@
 # This is brcv/trk/dbctrk/pro/CMakeLists.txt
 # Brown curvetracking Processing library
 
-include_directories( ${lems_SOURCE_DIR}/breye1 )
-include_directories( ${lems_SOURCE_DIR}/brcv/shp )
-include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${LEMS_SOURCE_DIR}/breye1 )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/shp )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/seg )
 
 set(dbctrk_pro_sources
    dbctrk_process.cxx          dbctrk_process.h

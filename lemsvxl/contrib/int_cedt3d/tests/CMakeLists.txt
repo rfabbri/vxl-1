@@ -10,7 +10,7 @@
 
 include_directories( ${VXL_GEL_INCLUDE_DIR} )
 include_directories( ${VXL_MUL_INCLUDE_DIR} )
-include_directories( ${lems_SOURCE_DIR}/contrib/ )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/ )
 include_directories( ${VXL_CORE_INCLUDE_DIR} )
 
         add_executable( dbil3d_cedt_test_all

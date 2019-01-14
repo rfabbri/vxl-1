@@ -1,4 +1,4 @@
-include_directories(${lems_SOURCE_DIR}/contrib/biotree/proc/util/)
+include_directories(${LEMS_SOURCE_DIR}/contrib/biotree/proc/util/)
 
 set(util_src
     proc_filter_stats.cxx        proc_filter_stats.h

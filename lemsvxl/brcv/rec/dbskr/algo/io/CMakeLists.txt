@@ -3,10 +3,10 @@
 
 include_directories( ${VXL_GEL_INCLUDE_DIR} )
 include_directories( ${VXL_BRL_INCLUDE_DIR} )
-include_directories( ${lems_SOURCE_DIR}/brcv/shp)
-include_directories( ${lems_SOURCE_DIR}/brcv/rec)
-include_directories( ${lems_SOURCE_DIR}/brcv/seg)
-include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/shp)
+include_directories( ${LEMS_SOURCE_DIR}/brcv/rec)
+include_directories( ${LEMS_SOURCE_DIR}/brcv/seg)
+include_directories( ${LEMS_SOURCE_DIR}/basic )
 
 set( dbskr_algo_io_sources
    dbskr_extract_patch_params.h dbskr_extract_patch_params.cxx

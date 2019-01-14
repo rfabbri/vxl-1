@@ -3,7 +3,7 @@
 
 # include directories here if needed
 
-include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/seg )
 
 set(dbcll_sources
    dbcll_cluster.h                  dbcll_cluster_sptr.h

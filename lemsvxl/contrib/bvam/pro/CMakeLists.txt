@@ -6,9 +6,9 @@ include_directories( ${BRL_INCLUDE_DIR}/bseg )
 include_directories( ${BRL_INCLUDE_DIR}/bbas/dbil/algo )
 include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc/vpgl )
 include_directories( ${VXL_GEL_INCLUDE_DIR})
-include_directories( ${lems_SOURCE_DIR}/contrib )
-include_directories( ${lems_SOURCE_DIR}/basic )
-#include_directories( ${lems_SOURCE_DIR}/basic/dbil/algo )
+include_directories( ${LEMS_SOURCE_DIR}/contrib )
+include_directories( ${LEMS_SOURCE_DIR}/basic )
+#include_directories( ${LEMS_SOURCE_DIR}/basic/dbil/algo )
 
 set(bvam_pro_sources
 #   bvam_load_voxel_world_process.h       bvam_load_voxel_world_process.cxx

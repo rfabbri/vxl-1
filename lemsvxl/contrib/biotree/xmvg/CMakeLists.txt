@@ -1,4 +1,4 @@
-include_directories(${BIOTREE_SOURCE_DIR} ${lems_SOURCE_DIR}/brcv/mvg)
+include_directories(${BIOTREE_SOURCE_DIR} ${LEMS_SOURCE_DIR}/brcv/mvg)
 include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
 include_directories(${VXL_BRL_INCLUDE_DIR}/bbas)
 

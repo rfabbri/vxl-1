@@ -7,7 +7,7 @@ include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
 include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
 include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc/vpgl )
 include_directories( ${VXL_GEL_INCLUDE_DIR})
-include_directories( ${lems_SOURCE_DIR}/contrib/dec )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/dec )
 
 set(psm_mfa_pro_sources
     psm_mfa_processes.h

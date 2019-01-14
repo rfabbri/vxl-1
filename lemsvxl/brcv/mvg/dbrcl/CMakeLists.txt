@@ -3,8 +3,8 @@ include_directories( ${VXL_GEL_INCLUDE_DIR} )
 include_directories( ${VXL_OXL_INCLUDE_DIR} )
 include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
 include_directories(${VXD_UNMAINTAINED_GEL_INCLUDE_DIR})
-include_directories( ${lems_SOURCE_DIR}/brcv/mvg )
-include_directories( ${lems_SOURCE_DIR}/brcv/trk )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/mvg )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/trk )
 
 add_library( dbrcl 
              dbrcl_point_tracker.h                 dbrcl_point_tracker.cxx

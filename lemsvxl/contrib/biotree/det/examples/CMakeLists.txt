@@ -1,7 +1,7 @@
 if(SIMVOLEON_FOUND)
-  include_directories(${lems_SOURCE_DIR}/basic ${lems_SOURCE_DIR}/contrib/biotree/proc ${VXL_GEL_INCLUDE_DIR})
-  include_directories( ${lems_SOURCE_DIR}/db3p )
-  include_directories(${lems_SOURCE_DIR}/contrib/biotree/resc ${lems_SOURCE_DIR}/contrib/biotree/biosim)
+  include_directories(${LEMS_SOURCE_DIR}/basic ${LEMS_SOURCE_DIR}/contrib/biotree/proc ${VXL_GEL_INCLUDE_DIR})
+  include_directories( ${LEMS_SOURCE_DIR}/db3p )
+  include_directories(${LEMS_SOURCE_DIR}/contrib/biotree/resc ${LEMS_SOURCE_DIR}/contrib/biotree/biosim)
   include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
   include_directories( ${VXL_MUL_INCLUDE_DIR} )
 

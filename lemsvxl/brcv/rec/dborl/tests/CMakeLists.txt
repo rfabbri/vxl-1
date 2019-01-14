@@ -1,6 +1,6 @@
 # brcv/rec/dborl/tests/CMakeLists.txt
 
-include_directories( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/shp )
 
 add_executable( dborl_test_all
   test_driver.cxx

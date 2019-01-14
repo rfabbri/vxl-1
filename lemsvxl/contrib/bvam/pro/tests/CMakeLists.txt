@@ -1,5 +1,5 @@
 
-include_directories( ${lems_SOURCE_DIR}/contrib/bvam )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/bvam )
 
 add_executable( bvam_pro_test_all
   test_driver.cxx

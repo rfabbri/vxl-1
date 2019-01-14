@@ -3,9 +3,9 @@
 
 project(mleotta_contrib)
 
-include_directories( ${lems_SOURCE_DIR}/breye1 )
-include_directories( ${lems_SOURCE_DIR}/basic )
-include_directories( ${lems_SOURCE_DIR}/contrib/mleotta )
+include_directories( ${LEMS_SOURCE_DIR}/breye1 )
+include_directories( ${LEMS_SOURCE_DIR}/basic )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/mleotta )
 
 # 3D model based recognition
 add_subdirectory( modrec )

@@ -8,7 +8,7 @@ include_directories( ${VXL_EXPAT_INCLUDE_DIR} )
 include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc/vpgl )
 include_directories( ${VXL_GEL_INCLUDE_DIR})
 include_directories( ${VXL_MUL_INCLUDE_DIR})
-include_directories( ${lems_SOURCE_DIR}/brcv/rec)
+include_directories( ${LEMS_SOURCE_DIR}/brcv/rec)
 
 set(dborl_pro_sources
     dborl_register.h      dborl_register.cxx

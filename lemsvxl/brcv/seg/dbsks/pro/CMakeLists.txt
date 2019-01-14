@@ -1,7 +1,7 @@
 # This is brcv/seg/dbsks/pro
 # Brown Processing library for Symmetry-based segmentation
 
-include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${LEMS_SOURCE_DIR}/breye1 )
 
 set(dbsks_pro_sources                         
   # Processes

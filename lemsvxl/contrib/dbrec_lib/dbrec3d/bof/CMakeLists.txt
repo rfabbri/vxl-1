@@ -7,8 +7,8 @@ mark_as_advanced( VXL_FORCE_V3P_RPLY )
 
 if(VXL_EXPAT_FOUND)
 
-include_directories( ${lems_SOURCE_DIR}/brcv/seg/ )
-include_directories( ${lems_SOURCE_DIR}/contrib/dbrec_lib/dbrec3d )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/seg/ )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/dbrec_lib/dbrec3d )
 include_directories( ${VXL_V3P_INCLUDE_DIR_deprecated}/rply/ )
 
 set(bof_sources

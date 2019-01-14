@@ -5,8 +5,8 @@ include_directories(${VXL_GEL_INCLUDE_DIR})
 include_directories(${VXL_BRL_INCLUDE_DIR})
 include_directories(${VXL_BRL_INCLUDE_DIR}/bbas)
 include_directories(${VXL_BRL_INCLUDE_DIR}/bseg)
-include_directories( ${lems_SOURCE_DIR}/brcv/shp )
-include_directories( ${lems_SOURCE_DIR}/brcv/trk )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/shp )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/trk )
 include_directories( ${VXL_MUL_INCLUDE_DIR} )
 
 set(dber_sources

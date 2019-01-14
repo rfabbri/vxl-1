@@ -2,7 +2,7 @@
 option ( BUILD_CONTRIB_BIOTREE_biov "Build contrib/biotree/biov" ON)
 if ( BUILD_CONTRIB_BIOTREE_biov )
 
-include_directories(${lems_SOURCE_DIR}/basic)
+include_directories(${LEMS_SOURCE_DIR}/basic)
 
  set(biov_sources
   biov_examiner_tableau.cxx     biov_examiner_tableau.h     biov_examiner_tableau_sptr.h

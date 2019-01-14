@@ -1,7 +1,7 @@
 # contrib/biotree/det/tests/CMakeLists.txt
 
-include_directories( ${lems_SOURCE_DIR}/contrib ${VXL_GEL_INCLUDE_DIR})
-include_directories( ${lems_SOURCE_DIR}/db3p )
+include_directories( ${LEMS_SOURCE_DIR}/contrib ${VXL_GEL_INCLUDE_DIR})
+include_directories( ${LEMS_SOURCE_DIR}/db3p )
 
 add_executable( det_test_all   
   test_driver.cxx

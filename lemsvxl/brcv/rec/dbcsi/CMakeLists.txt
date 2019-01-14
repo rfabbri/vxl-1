@@ -3,8 +3,8 @@
 
 include_directories(${VXL_GEL_INCLUDE_DIR})
 include_directories(${VXL_BRL_INCLUDE_DIR})
-include_directories( ${lems_SOURCE_DIR}/brcv/seg )
-include_directories( ${lems_SOURCE_DIR}/brcv/rec )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/seg )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/rec )
 
 set(dbcsi_sources
     dbcsi_curve_distance.h          dbcsi_curve_distance.cxx

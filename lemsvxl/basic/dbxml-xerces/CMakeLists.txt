@@ -6,9 +6,9 @@
 
 
 include_directories( ${VXL_BRL_INCLUDE_DIR} )
-include_directories( ${lems_SOURCE_DIR}/algo )
-include_directories( ${lems_SOURCE_DIR}/basic )
-include_directories( ${lems_SOURCE_DIR}/breye )
+include_directories( ${LEMS_SOURCE_DIR}/algo )
+include_directories( ${LEMS_SOURCE_DIR}/basic )
+include_directories( ${LEMS_SOURCE_DIR}/breye )
 
 include_directories( ${BRL_INCLUDE_DIR} )
 include_directories( ${GEL_INCLUDE_DIR} )

@@ -2,8 +2,8 @@ include_directories( ${VXL_BRL_INCLUDE_DIR} )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 include_directories( ${VXL_GEL_INCLUDE_DIR} )
 include_directories( ${VXL_MUL_INCLUDE_DIR} )
-include_directories(${lems_SOURCE_DIR})
-include_directories(${lems_SOURCE_DIR}/basic)
+include_directories(${LEMS_SOURCE_DIR})
+include_directories(${LEMS_SOURCE_DIR}/basic)
 
 #added for livewire:
 #include_directories( ${VXL_OXL_INCLUDE_DIR} )

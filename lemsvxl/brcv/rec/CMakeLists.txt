@@ -1,7 +1,7 @@
 # brcv/rec/CMakeLists.txt
 # Brown Recognition Libraries.
 
-include_directories( ${lems_SOURCE_DIR}/brcv/rec )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/rec )
 
 # Brown 3D Mesh Recognition Library
 add_subdirectory( dbmsh3dr )

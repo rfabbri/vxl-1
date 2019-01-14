@@ -1,4 +1,4 @@
-include_directories( ${lems_SOURCE_DIR}/contrib/Gregistration )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/Gregistration )
 
 
 add_executable( dt_test_all

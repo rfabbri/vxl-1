@@ -1,7 +1,7 @@
 # contrib/pointmatching2d/CMakeLists.txt
 # Developement for :2D fetaure registration
 
-include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${LEMS_SOURCE_DIR}/breye1 )
 
 
 #main library

@@ -3,8 +3,8 @@
 
 
 # include directories into here if needed
-include_directories( ${lems_SOURCE_DIR}/breye1)
-include_directories( ${lems_SOURCE_DIR}/brcv/seg)
+include_directories( ${LEMS_SOURCE_DIR}/breye1)
+include_directories( ${LEMS_SOURCE_DIR}/brcv/seg)
 
 
 set(mleotta_pro_sources

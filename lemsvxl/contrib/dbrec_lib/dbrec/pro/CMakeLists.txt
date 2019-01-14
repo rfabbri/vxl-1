@@ -8,7 +8,7 @@ include_directories( ${VXL_GEL_INCLUDE_DIR})
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg/bvxm )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg/brec )
 
-include_directories( ${lems_SOURCE_DIR}/contrib/dbrec_lib )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/dbrec_lib )
 
 set(dbrec_pro_sources
     dbrec_register.h      dbrec_register.cxx

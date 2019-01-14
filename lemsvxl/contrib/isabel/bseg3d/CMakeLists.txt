@@ -5,7 +5,7 @@ include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
 include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
 include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc/vpgl )
 include_directories( ${VXL_MUL_INCLUDE_DIR})
-include_directories( ${lems_SOURCE_DIR}/contrib )
+include_directories( ${LEMS_SOURCE_DIR}/contrib )
 
 set(bseg3d_sources
 bseg3d_test.cxx

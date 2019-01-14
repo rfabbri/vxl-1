@@ -6,7 +6,7 @@ include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas/dbil/algo )
 include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc/vpgl )
 include_directories( ${VXL_GEL_INCLUDE_DIR})
-include_directories( ${lems_SOURCE_DIR}/contrib/dbvxm )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/dbvxm )
 
 set(dbvxm_pro_sources
     dbvxm_detect_instance_process.h                                 dbvxm_detect_instance_process.cxx

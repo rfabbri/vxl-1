@@ -1,7 +1,7 @@
 # brcv/trk/CMakeLists.txt
 # Brown Tracking Libraries.
 
-include_directories( ${lems_SOURCE_DIR}/brcv/trk )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/trk )
 
 # Brown Epipolar Curve Tracking Library
 add_subdirectory( dbetl )

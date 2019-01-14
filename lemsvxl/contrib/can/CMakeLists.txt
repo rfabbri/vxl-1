@@ -1,6 +1,6 @@
 # contrib/can/CMakeLists.txt
 
-include_directories( ${lems_SOURCE_DIR} )
+include_directories( ${LEMS_SOURCE_DIR} )
 
 add_subdirectory( gui )
 

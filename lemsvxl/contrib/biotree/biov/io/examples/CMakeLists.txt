@@ -1,4 +1,4 @@
-include_directories( ${lems_SOURCE_DIR} ${BIOTREE_SOURCE_DIR} ${VXL_DIR})
+include_directories( ${LEMS_SOURCE_DIR} ${BIOTREE_SOURCE_DIR} ${VXL_DIR})
 
 if(VXL_VGUI_FOUND)
    include( ${VXL_CMAKE_DIR}/UseBGUI3D.cmake)

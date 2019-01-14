@@ -1,4 +1,4 @@
-include_directories( ${lems_SOURCE_DIR}/contrib/can/3d_curve_matching )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/can/3d_curve_matching )
 
 add_executable( crvmtch3D_test_all   
   test_driver.cxx  

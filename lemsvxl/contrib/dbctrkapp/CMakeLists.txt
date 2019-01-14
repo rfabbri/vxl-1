@@ -1,7 +1,7 @@
 # contrib/dbctrkapp/CMakeLists.txt
 # Developement for : curve tracking
 
-include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${LEMS_SOURCE_DIR}/breye1 )
 
 # my bvis1 based GUI
 add_subdirectory( gui )

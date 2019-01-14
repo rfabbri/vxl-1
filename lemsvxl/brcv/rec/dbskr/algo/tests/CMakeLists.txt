@@ -4,10 +4,10 @@
 
 include_directories( ${VXL_GEL_INCLUDE_DIR} )
 include_directories( ${VXL_BRL_INCLUDE_DIR} )
-include_directories( ${lems_SOURCE_DIR}/brcv/shp)
-include_directories( ${lems_SOURCE_DIR}/brcv/rec)
-include_directories( ${lems_SOURCE_DIR}/brcv/seg)
-include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/shp)
+include_directories( ${LEMS_SOURCE_DIR}/brcv/rec)
+include_directories( ${LEMS_SOURCE_DIR}/brcv/seg)
+include_directories( ${LEMS_SOURCE_DIR}/breye1 )
 
 add_executable( dbskr_algo_test_all
   test_driver.cxx

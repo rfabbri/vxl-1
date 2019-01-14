@@ -1,10 +1,10 @@
 # SIFT library
 # brcv/shp/dbsk2d/CMakeLists.txt
 
-include_directories( ${lems_SOURCE_DIR}/contrib/maruthi )
-include_directories( ${lems_SOURCE_DIR}/contrib/maruthi/vlfeat-0.9.16 )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/maruthi )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/maruthi/vlfeat-0.9.16 )
 
-link_directories(${lems_SOURCE_DIR}/contrib/maruthi/vlfeat-0.9.16/bin/glnxa64 )
+link_directories(${LEMS_SOURCE_DIR}/contrib/maruthi/vlfeat-0.9.16/bin/glnxa64 )
 link_directories(/usr/local/boost_1_42_0/stage/lib)
 
 project ( sift )

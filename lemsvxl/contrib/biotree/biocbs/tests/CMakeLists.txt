@@ -1,6 +1,6 @@
 # contrib/biotree/biocbs/tests/CMakeLists.txt
 
-include_directories( ${lems_SOURCE_DIR}/contrib )
+include_directories( ${LEMS_SOURCE_DIR}/contrib )
 
 add_executable( biocbs_test_all
   test_driver.cxx

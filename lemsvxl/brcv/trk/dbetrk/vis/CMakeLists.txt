@@ -1,6 +1,6 @@
 # Visualization for Brown edge tracking library
 # brcv/trk/dbetrk/vis/CMakeLists.txt
-include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${LEMS_SOURCE_DIR}/breye1 )
 include( ${LEMS_CMAKE_DIR}/UseMATLAB.cmake )
 
 if (VXL_VGUI_FOUND)

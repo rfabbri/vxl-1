@@ -1,5 +1,5 @@
-include_directories( ${lems_SOURCE_DIR}/db3p )
-include_directories( ${lems_SOURCE_DIR}/db3p/expatpp/expat/lib )
+include_directories( ${LEMS_SOURCE_DIR}/db3p )
+include_directories( ${LEMS_SOURCE_DIR}/db3p/expatpp/expat/lib )
 
 set( dborl_bnd_generic_linker_sources
   dborl_bnd_generic_params.h 

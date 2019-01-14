@@ -1,4 +1,4 @@
-include_directories( ${lems_SOURCE_DIR}/db3p )
+include_directories( ${LEMS_SOURCE_DIR}/db3p )
 
 set( vox_convert_esf_to_xgraph_sources
   vox_convert_esf_to_xgraph_main.cxx

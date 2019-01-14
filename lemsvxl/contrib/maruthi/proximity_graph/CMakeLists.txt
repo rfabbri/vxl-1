@@ -4,9 +4,9 @@
 
 include_directories( ${VXL_GEL_INCLUDE_DIR} )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
-include_directories( ${lems_SOURCE_DIR}/brcv/rec)
-include_directories( ${lems_SOURCE_DIR}/breye1 )
-include_directories( ${lems_SOURCE_DIR}/contrib/maruthi )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/rec)
+include_directories( ${LEMS_SOURCE_DIR}/breye1 )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/maruthi )
 include_directories( /usr/local/boost_1_42_0 )
 
 link_directories(/usr/local/boost_1_42_0/stage/lib )

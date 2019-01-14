@@ -1,7 +1,7 @@
 # brcv/shp/CMakeLists.txt
 # Brown Shape Libraries.
 
-include_directories( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/shp )
 
 # Brown Shock 2D Library
 add_subdirectory( dbsk2d )

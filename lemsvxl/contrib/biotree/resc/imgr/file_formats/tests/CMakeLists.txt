@@ -1,4 +1,4 @@
-include_directories( ${lems_SOURCE_DIR}/contrib )
+include_directories( ${LEMS_SOURCE_DIR}/contrib )
 
 add_executable( imgr_ff_test_all
   test_driver.cxx  

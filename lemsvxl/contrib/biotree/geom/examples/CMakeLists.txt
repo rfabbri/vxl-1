@@ -1,4 +1,4 @@
-include_directories( ${lems_SOURCE_DIR}/contrib/biotree/geom ) 
+include_directories( ${LEMS_SOURCE_DIR}/contrib/biotree/geom ) 
 include_directories(${VXL_GEL_INCLUDE_DIR} )
 include_directories(${VXL_BRL_INCLUDE_DIR}/bbas )
 

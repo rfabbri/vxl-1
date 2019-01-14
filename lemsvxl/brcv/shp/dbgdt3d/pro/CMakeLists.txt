@@ -1,7 +1,7 @@
 # This is contrib/dbmsh3d/dbgdt3d/pro/CMakeLists.txt
 
-include_directories( ${lems_SOURCE_DIR}/basic )
-include_directories( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories( ${LEMS_SOURCE_DIR}/basic )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/shp )
 
 set ( dbgdt3d_vis_sources
    dbgdt3d_process.cxx              dbgdt3d_process.h

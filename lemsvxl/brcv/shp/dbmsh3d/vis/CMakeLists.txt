@@ -1,9 +1,9 @@
 # This is contrib/dbmsh3d/vis/CMakeLists.txt
 # 3D application 
 
-include_directories( ${lems_SOURCE_DIR}/basic )
-include_directories( ${lems_SOURCE_DIR}/brcv/shp )
-include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${LEMS_SOURCE_DIR}/basic )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/shp )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/seg )
 include_directories( ${VXL_BRL_INCLUDE_DIR} )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 

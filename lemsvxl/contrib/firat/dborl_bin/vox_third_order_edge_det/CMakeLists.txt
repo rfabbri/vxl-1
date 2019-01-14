@@ -1,4 +1,4 @@
-include_directories(${lems_SOURCE_DIR}/brcv/seg/)
+include_directories(${LEMS_SOURCE_DIR}/brcv/seg/)
 
 set( vox_third_order_edge_det_sources
   vox_third_order_edge_det_params.h 

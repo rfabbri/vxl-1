@@ -1,9 +1,9 @@
 # contrib/lems_firat/CMakeLists.txt
 # Developement for : lems_firat
 
-# include_directories( ${lems_SOURCE_DIR}/algo )
- include_directories( ${lems_SOURCE_DIR}/breye1 )
- include_directories( ${lems_SOURCE_DIR}/basic )
+# include_directories( ${LEMS_SOURCE_DIR}/algo )
+ include_directories( ${LEMS_SOURCE_DIR}/breye1 )
+ include_directories( ${LEMS_SOURCE_DIR}/basic )
 
 add_subdirectory( dbsksp_gui )
 #add_subdirectory( dborl_bin )

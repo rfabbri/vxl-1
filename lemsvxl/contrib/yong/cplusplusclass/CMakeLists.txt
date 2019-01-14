@@ -1,9 +1,9 @@
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
 include_directories( ${VXL_GEL_INCLUDE_DIR} )
-include_directories( ${lems_SOURCE_DIR}/contrib/yong )
-include_directories( ${lems_SOURCE_DIR}/breye )
-include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/yong )
+include_directories( ${LEMS_SOURCE_DIR}/breye )
+include_directories( ${LEMS_SOURCE_DIR}/basic )
 
 
 set(yong_cplusplusclass_sources

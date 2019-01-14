@@ -8,7 +8,7 @@ include_directories( ${VXL_OXL_INCLUDE_DIR} )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas/brdb )
-include_directories( ${lems_SOURCE_DIR}/basic/ )
+include_directories( ${LEMS_SOURCE_DIR}/basic/ )
 
 set(vidpro_sources
    vidpro_process_manager.cxx             vidpro_process_manager.h             vidpro_process_manager_sptr.h

@@ -5,7 +5,7 @@
 if (VXL_VGUI_FOUND)
 
 
-include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${LEMS_SOURCE_DIR}/basic )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
 include_directories( ${VXL_RPL_INCLUDE_DIR} )
@@ -13,11 +13,11 @@ include_directories( ${RPL_INCLUDE_DIR} )
 include_directories( ${VXL_BRL_INCLUDE_DIR} )
 include_directories( ${VXL_MUL_INCLUDE_DIR} )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bmvl )
-include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${LEMS_SOURCE_DIR}/breye1 )
 include_directories( ${VXL_RPL_INCLUDE_DIR}/rrel )
-include_directories( ${lems_SOURCE_DIR}/contrib/sadali/dbbbopt_vis )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/sadali/dbbbopt_vis )
 
-include_directories( ${lems_SOURCE_DIR}/contrib/sadali/dbbbopt_pro )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/sadali/dbbbopt_pro )
 
 set(sadal_gui_sources
 

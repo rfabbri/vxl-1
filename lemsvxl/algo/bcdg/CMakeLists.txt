@@ -3,7 +3,7 @@
 
 include_directories(${VXL_GEL_INCLUDE_DIR} )
 include_directories(${VXL_BRL_INCLUDE_DIR} )
-include_directories( ${lems_SOURCE_DIR}/brcv/mvg )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/mvg )
 
 set(bcdg_sources
   bcdg_algo0.cxx              bcdg_algo0.h            

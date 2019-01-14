@@ -1,9 +1,9 @@
 # If we're building for a cluster, add mpi include directory and the proc classes.
 # The "FindMPI" cmake include does the work including Windows vs. Linux
-include_directories(${lems_SOURCE_DIR}/basic)
-include_directories(${lems_SOURCE_DIR}/brcv/rec)
-include_directories(${lems_SOURCE_DIR}/brcv/trk )
-include_directories(${lems_SOURCE_DIR}/brcv/shp)
+include_directories(${LEMS_SOURCE_DIR}/basic)
+include_directories(${LEMS_SOURCE_DIR}/brcv/rec)
+include_directories(${LEMS_SOURCE_DIR}/brcv/trk )
+include_directories(${LEMS_SOURCE_DIR}/brcv/shp)
 include_directories(${VXL_BRL_INCLUDE_DIR}/bbas)
 include_directories(${VXL_BRL_INCLUDE_DIR}/bseg )
 include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )

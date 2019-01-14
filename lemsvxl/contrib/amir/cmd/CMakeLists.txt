@@ -4,7 +4,7 @@
 
 include_directories(${VXL_GEL_INCLUDE_DIR} )
 include_directories(${VXL_MUL_INCLUDE_DIR} )
-include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/seg )
 
 add_executable(sel_cmdline sel_cmdline.cxx)
 target_link_libraries(sel_cmdline dbgl_algo dbdet pdf1d)

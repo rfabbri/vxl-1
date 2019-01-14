@@ -1,7 +1,7 @@
 include_directories( ${VXLCORE_INCLUDE_DIR} )
 include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
 include_directories(${VXL_MUL_INCLUDE_DIR} )
-include_directories( ${lems_SOURCE_DIR}/contrib/tpollard )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/tpollard )
 
 add_library( bvaml
              bvaml_params.h             bvaml_params.cxx

@@ -1,5 +1,5 @@
 # /contrib/biotree/biob/CMakeLists.txt
-include_directories(${lems_SOURCE_DIR}/brcv/mvg ${biotree_SOURCE_DIR}/resc)
+include_directories(${LEMS_SOURCE_DIR}/brcv/mvg ${biotree_SOURCE_DIR}/resc)
 include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
 
 set(biob_src 

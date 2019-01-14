@@ -2,7 +2,7 @@
 # brl/bmvl/btom/CMakeLists.txt
 
 include_directories(${VXL_BRL_INCLUDE_DIR})
-include_directories(${lems_SOURCE_DIR}/brcv/mvg/bmvl )
+include_directories(${LEMS_SOURCE_DIR}/brcv/mvg/bmvl )
 include_directories(${VXL_GEL_INCLUDE_DIR} )
 
 set(btom_sources

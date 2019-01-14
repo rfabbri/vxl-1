@@ -8,17 +8,17 @@ include_directories(${VXL_GEL_INCLUDE_DIR} )
 include_directories(${VXL_OXL_INCLUDE_DIR} )
 include_directories(${VXL_MUL_INCLUDE_DIR} )
 
-include_directories( ${lems_SOURCE_DIR}/brcv/trk )
-include_directories( ${lems_SOURCE_DIR}/brcv/shp/dbsk2d/pro )
-include_directories( ${lems_SOURCE_DIR}/brcv/mvg )
-include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/trk )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/shp/dbsk2d/pro )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/mvg )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/seg )
 
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/../pro )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/../vis)
 
-include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/seg )
 
-include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${LEMS_SOURCE_DIR}/basic )
 
 set(dbctrkapp_gui_sources
    dbctrkapp_gui_menu.cxx       dbctrkapp_gui_menu.h

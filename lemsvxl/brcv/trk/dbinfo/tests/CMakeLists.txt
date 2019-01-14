@@ -1,6 +1,6 @@
 # brl/bseg/blem/brcv/trk/dbinfo/tests/CMakeLists.txt
 
-include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${LEMS_SOURCE_DIR}/breye1 )
 
 add_executable( dbinfo_test_all
   test_driver.cxx

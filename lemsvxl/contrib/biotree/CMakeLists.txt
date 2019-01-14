@@ -3,7 +3,7 @@ if (VXL_VGUI_FOUND)
 endif (VXL_VGUI_FOUND)
 
 
-set( biotree_SOURCE_DIR ${lems_SOURCE_DIR}/contrib/biotree )
+set( biotree_SOURCE_DIR ${LEMS_SOURCE_DIR}/contrib/biotree )
 
 include_directories( ${biotree_SOURCE_DIR} )
 

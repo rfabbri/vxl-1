@@ -2,7 +2,7 @@
 # Benjamin Gould
 
 
-include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/seg )
 
 set(dbcfg_structure_srcs
 

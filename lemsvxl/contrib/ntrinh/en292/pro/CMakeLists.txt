@@ -1,7 +1,7 @@
 # contrib/ntrinh/pro/CMakeLists.txt
 # Process for EN 294 project
 
-include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${LEMS_SOURCE_DIR}/breye1 )
 include_directories( ${VXL_GEL_INCLUDE_DIR} )
 include_directories( ${VXL_OXL_INCLUDE_DIR} )
 include_directories( ${VXL_RPL_INCLUDE_DIR} )
@@ -12,8 +12,8 @@ include_directories( ${VXL_BRL_INCLUDE_DIR})
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 
-include_directories( ${lems_SOURCE_DIR}/contrib/ntrinh )
-include_directories( ${lems_SOURCE_DIR}/contrib/ntrinh/en292 )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/ntrinh )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/ntrinh/en292 )
 
 set(en292_pro_sources
   vidpro1_klt_process.cxx               vidpro1_klt_process.h  

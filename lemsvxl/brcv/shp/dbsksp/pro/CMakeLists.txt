@@ -1,7 +1,7 @@
 # This is brcv/shp/dbsksp/pro/CMakeLists.txt
 # Brown Processing library for Shape Design Using Shock
 
-include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${LEMS_SOURCE_DIR}/breye1 )
 
 set(dbsksp_pro_sources
   # Storages

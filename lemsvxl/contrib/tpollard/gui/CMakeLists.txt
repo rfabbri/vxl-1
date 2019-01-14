@@ -1,8 +1,8 @@
 if (VXL_VGUI_FOUND)
 
-include_directories( ${lems_SOURCE_DIR}/contrib/tpollard )
-include_directories( ${lems_SOURCE_DIR}/breye1 )
-include_directories( ${lems_SOURCE_DIR}/brcv/mvg )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/tpollard )
+include_directories( ${LEMS_SOURCE_DIR}/breye1 )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/mvg )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 include_directories( ${VXL_GEL_INCLUDE_DIR} )

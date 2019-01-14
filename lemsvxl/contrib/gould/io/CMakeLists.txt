@@ -3,8 +3,8 @@
 
 
 include_directories( ${VXL_GEL_INCLUDE_DIR} )
-include_directories( ${lems_SOURCE_DIR}/brcv/seg )
-include_directories( ${lems_SOURCE_DIR}/contrib/fine )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/seg )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/fine )
 
 set(dbcfg_io_srcs
 

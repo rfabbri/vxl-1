@@ -6,19 +6,19 @@ include_directories(${VXL_OXL_INCLUDE_DIR} )
 include_directories(${VXL_MUL_INCLUDE_DIR} )
 include_directories(${VXL_SOURCE_DIR} )
 
-include_directories( ${lems_SOURCE_DIR}/contrib/vehicleseg/pro )
-include_directories( ${lems_SOURCE_DIR}/contrib/vehicleseg/vis)
+include_directories( ${LEMS_SOURCE_DIR}/contrib/vehicleseg/pro )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/vehicleseg/vis)
 
-include_directories( ${lems_SOURCE_DIR}/contrib/Gregistration )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/Gregistration )
 
 
-include_directories( ${lems_SOURCE_DIR}/brcv/seg )
-include_directories( ${lems_SOURCE_DIR}/bmvgd )
-include_directories( ${lems_SOURCE_DIR}/brcv/rec )
-include_directories( ${lems_SOURCE_DIR}/brcv/trk )
-include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/seg )
+include_directories( ${LEMS_SOURCE_DIR}/bmvgd )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/rec )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/trk )
+include_directories( ${LEMS_SOURCE_DIR}/basic )
 
-include_directories( ${lems_SOURCE_DIR}/contrib )
+include_directories( ${LEMS_SOURCE_DIR}/contrib )
 
 set( dborl_multi_frame_fg_edge_sources
   dborl_multi_frame_fg_edge_main.cxx 

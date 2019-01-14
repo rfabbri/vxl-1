@@ -1,5 +1,5 @@
 # /contrib/biotree/resc/splr/CMakeLists.txt
-include_directories(${biotree_SOURCE_DIR}/resc ${lems_SOURCE_DIR}/brcv/mvg)
+include_directories(${biotree_SOURCE_DIR}/resc ${LEMS_SOURCE_DIR}/brcv/mvg)
 include_directories(${VXL_BRL_INCLUDE_DIR}/bbas)
 include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
 

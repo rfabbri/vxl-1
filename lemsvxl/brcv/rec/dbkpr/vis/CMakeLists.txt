@@ -1,8 +1,8 @@
 # This is brcv/rec/dbkpr/vis/CMakeLists.txt
 # Brown Keypoint Recognition Visualization Library
 
-include_directories( ${lems_SOURCE_DIR}/breye1 )
-include_directories( ${lems_SOURCE_DIR}/bmvgd )
+include_directories( ${LEMS_SOURCE_DIR}/breye1 )
+include_directories( ${LEMS_SOURCE_DIR}/bmvgd )
 include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 

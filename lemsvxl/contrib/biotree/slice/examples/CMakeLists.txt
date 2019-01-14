@@ -1,7 +1,7 @@
 # /contrib/biotree/slice/examples/CMakeLists.txt
 
 include_directories(
-    ${lems_SOURCE_DIR}
+    ${LEMS_SOURCE_DIR}
     ${BIOTREE_SOURCE_DIR} 
     ${VXL_MUL_INCLUDE_DIR} 
     ${VXL_CORE_INCLUDE_DIR} 

@@ -1,9 +1,9 @@
 # breye1/vorl1/exec/CMakeLists.txt
 
-include_directories( ${lems_SOURCE_DIR}/brcv/mvg )
-include_directories( ${lems_SOURCE_DIR}/brcv/trk )
-include_directories( ${lems_SOURCE_DIR}/brcv/rec )
-include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/mvg )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/trk )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/rec )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/seg )
 
 include_directories(${VXL_BRL_INCLUDE_DIR}/bbas )
 include_directories(${VXL_BRL_INCLUDE_DIR}/bseg )
@@ -34,8 +34,8 @@ target_link_libraries(vorl1_bgbuilder_exec vorl1 dbbgm_pro vidpro1)
 #  target_link_libraries(vorl1_cri_curve  vorl1 dbcri_pro dbcri_accu_pro dbcri_accu_edge_pro  dbcri_whole_pro brct)
 
 if(BUILD_CONTRIB_vehicleseg) 
-  include_directories( ${lems_SOURCE_DIR}/contrib )
-  include_directories( ${lems_SOURCE_DIR}/contrib/vehicleseg )
+  include_directories( ${LEMS_SOURCE_DIR}/contrib )
+  include_directories( ${LEMS_SOURCE_DIR}/contrib/vehicleseg )
   add_executable(vorl1_fgdetect_blob_finder_exec vorl1_fgdetect_blob_finder_exec.cxx)
   target_link_libraries(vorl1_fgdetect_blob_finder_exec vorl1 dbdet_pro dbvrl_pro dbbgm_pro)
 

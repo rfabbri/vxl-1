@@ -1,17 +1,17 @@
 # This is contrib/ozge/bin/CMakeLists.txt
 # Brown Shock Recognition Library Executables
 
-include_directories( ${lems_SOURCE_DIR}/breye1 )
-include_directories( ${lems_SOURCE_DIR}/brcv/trk )
-include_directories( ${lems_SOURCE_DIR}/brcv/shp )
-include_directories( ${lems_SOURCE_DIR}/brcv/rec )
-include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${LEMS_SOURCE_DIR}/breye1 )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/trk )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/shp )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/rec )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/seg )
 include_directories(${VXL_BRL_INCLUDE_DIR}/bseg )
 include_directories(${VXL_BRL_INCLUDE_DIR}/bbas )
-#include_directories( ${lems_SOURCE_DIR}/contrib/Gregistration )
+#include_directories( ${LEMS_SOURCE_DIR}/contrib/Gregistration )
 include_directories( ${VXL_MUL_INCLUDE_DIR} )
-include_directories( ${lems_SOURCE_DIR}/db3p )
-include_directories( ${lems_SOURCE_DIR}/db3p/expatpp/expat/lib )
+include_directories( ${LEMS_SOURCE_DIR}/db3p )
+include_directories( ${LEMS_SOURCE_DIR}/db3p/expatpp/expat/lib )
 
 
 set( dbskr_visualize_patch_detections_sources

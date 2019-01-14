@@ -2,7 +2,7 @@ include_directories( ${VXL_BRL_SOURCE_DIR} )
 include_directories( ${VXL_BRL_SOURCE_DIR}/bseg/bvxm )
 include_directories( ${VXL_BRL_SOURCE_DIR}/bpro/core )
 
-include_directories( ${lems_SOURCE_DIR}/contrib/dbvxm )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/dbvxm )
 
 add_executable( dbvxm_rec_pro_test_all
   test_driver.cxx

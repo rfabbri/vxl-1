@@ -1,9 +1,9 @@
 # contrib/fine/CMakeLists.txt
 # Developement for : eli fine
 
-include_directories( ${lems_SOURCE_DIR}/breye )
-include_directories( ${lems_SOURCE_DIR}/basic )
-include_directories( ${lems_SOURCE_DIR}/contrib/fine )
+include_directories( ${LEMS_SOURCE_DIR}/breye )
+include_directories( ${LEMS_SOURCE_DIR}/basic )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/fine )
 
 # my bvis based GUI
 add_subdirectory( gui )

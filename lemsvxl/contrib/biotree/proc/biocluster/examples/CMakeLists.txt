@@ -3,9 +3,9 @@
 # any purpose, in any form or by any means, except as expressly
 # permitted in writing by Bio-Tree Systems, Inc.
     
-include_directories( ${lems_SOURCE_DIR}/contrib/biotree/xmvg)
-include_directories( ${lems_SOURCE_DIR}/db3p )
-include_directories( ${lems_SOURCE_DIR}/db3p/expatpp/expat/lib )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/biotree/xmvg)
+include_directories( ${LEMS_SOURCE_DIR}/db3p )
+include_directories( ${LEMS_SOURCE_DIR}/db3p/expatpp/expat/lib )
 
 if (BUILD_CONTRIB_biotree_cluster)
     add_executable (biocluster_volpart_example_xml biocluster_volpart_filtering_example_xml.cxx)

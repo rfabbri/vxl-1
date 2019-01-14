@@ -11,7 +11,7 @@ if(VXL_EXPAT_FOUND)
   include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
   include_directories( ${VXL_BRL_INCLUDE_DIR}/b3p/expatpp )
 
-include_directories( ${lems_SOURCE_DIR}/contrib/dbrec_lib )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/dbrec_lib )
 
 set(dbrec3d_sources
     dbrec3d_part.h                            dbrec3d_part.cxx                       

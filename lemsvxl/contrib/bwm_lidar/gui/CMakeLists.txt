@@ -5,7 +5,7 @@ if (VXL_VGUI_FOUND)
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
-include_directories( ${lems_SOURCE_DIR}/contrib/bwm_lidar/algo )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/bwm_lidar/algo )
 
 set(bwm_lidar_gui_sources
    bwm_lidar_gui_menu.cxx       bwm_lidar_gui_menu.h

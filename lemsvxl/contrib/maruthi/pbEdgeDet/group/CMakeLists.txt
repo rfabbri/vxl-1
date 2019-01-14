@@ -1,5 +1,5 @@
-include_directories(${lems_SOURCE_DIR}/contrib/maruthi/pbEdgeDet/partition)
-include_directories(${lems_SOURCE_DIR}/contrib/maruthi/pbEdgeDet/util)
+include_directories(${LEMS_SOURCE_DIR}/contrib/maruthi/pbEdgeDet/partition)
+include_directories(${LEMS_SOURCE_DIR}/contrib/maruthi/pbEdgeDet/util)
 
 set(group_sources affinity.cc
   color.cc     filterbank.cc

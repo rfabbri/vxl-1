@@ -1,5 +1,5 @@
-include_directories( ${lems_SOURCE_DIR}/contrib/biotree/xmvg)
-include_directories( ${lems_SOURCE_DIR}/basic)
+include_directories( ${LEMS_SOURCE_DIR}/contrib/biotree/xmvg)
+include_directories( ${LEMS_SOURCE_DIR}/basic)
 include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
 include_directories( ${VXL_GEL_INCLUDE_DIR} )
 

@@ -1,7 +1,7 @@
 # This is dbgl/algo/CMakeLists.txt
 # The Development Brown Geometry Library - Specific Algorithms
 
-include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/seg )
 include_directories(${VXD_BRLD_INCLUDE_DIR})
 
 set( dbgl_algo_sources

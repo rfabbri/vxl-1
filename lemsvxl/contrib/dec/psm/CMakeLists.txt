@@ -19,7 +19,7 @@
 
 include_directories( ${VXL_CORE_INCLUDE_DIR} )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
-include_directories( ${lems_SOURCE_DIR}/contrib/dec )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/dec )
 include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc/vpgl )
   
 set(psm_sources

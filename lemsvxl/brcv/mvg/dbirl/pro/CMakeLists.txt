@@ -1,6 +1,6 @@
 # This is brl/blem/brcv/mvg/dbirl/pro/CMakeLists.txt
 
-include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${LEMS_SOURCE_DIR}/breye1 )
 include_directories(${VXL_GEL_INCLUDE_DIR} )
 
 set(dbirl_pro_sources

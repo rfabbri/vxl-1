@@ -6,7 +6,7 @@ project( smw )
 #message( "smw_SOURCE_DIR = " ${smw_SOURCE_DIR} )
 include_directories( ${VXL_CORE_INCLUDE_DIR} )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg ) #bsta is next step down
-include_directories( ${lems_SOURCE_DIR}/contrib/bm )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/bm )
 include_directories( ${VXL_GEL_INCLUDE_DIR} )
 include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
 

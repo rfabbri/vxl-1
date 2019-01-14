@@ -9,8 +9,8 @@ if(PCL_FOUND)
 	include_directories(${PCL_INCLUDE_DIRS})
     link_directories(${PCL_LIBRARY_DIRS})
 	add_definitions(${PCL_DEFINITIONS})
-	include_directories( ${lems_SOURCE_DIR}/contrib/dbrec_lib/dbrec3d )
-  include_directories( ${lems_SOURCE_DIR}/brcv/seg/ )
+	include_directories( ${LEMS_SOURCE_DIR}/contrib/dbrec_lib/dbrec3d )
+  include_directories( ${LEMS_SOURCE_DIR}/brcv/seg/ )
 
 
 	set(dbrec3d_pcl_sources

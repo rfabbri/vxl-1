@@ -1,4 +1,4 @@
-include_directories( ${lems_SOURCE_DIR}/contrib/biotree/proc/ )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/biotree/proc/ )
 
 add_executable( bioproc_util_test_all   
   test_driver.cxx  

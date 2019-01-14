@@ -1,8 +1,8 @@
 # This is brcv/seg/dbkpr/pro/CMakeLists.txt
 # Brown Detection Processing library
 
-include_directories( ${lems_SOURCE_DIR}/breye1 )
-include_directories( ${lems_SOURCE_DIR}/bmvgd )
+include_directories( ${LEMS_SOURCE_DIR}/breye1 )
+include_directories( ${LEMS_SOURCE_DIR}/bmvgd )
 include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
 
 set(dbkpr_pro_sources

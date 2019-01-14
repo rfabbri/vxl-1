@@ -1,8 +1,8 @@
 # brcv/seg/dbdet/algo/CMakeLists.txt
 # Algorithms for Brown Detection Libraries
 
-include_directories( ${lems_SOURCE_DIR}/brcv/seg/dbdet )
-include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/seg/dbdet )
+include_directories( ${LEMS_SOURCE_DIR}/basic )
 
 set( dbdet_algo_sources
 

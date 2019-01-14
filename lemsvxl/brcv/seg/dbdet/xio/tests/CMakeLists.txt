@@ -1,7 +1,7 @@
 # medial_livewire/xio/tests/CMakeLists.txt
 
-include_directories( ${lems_SOURCE_DIR}/contrib )
-include_directories( ${lems_SOURCE_DIR}/contrib/medial_livewire )
+include_directories( ${LEMS_SOURCE_DIR}/contrib )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/medial_livewire )
 
 add_executable( dbdet_xio_test_all
   test_driver.cxx

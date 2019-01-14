@@ -16,7 +16,7 @@ endif(WIN32)
   include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc/vpgl )
   include_directories( ${VXL_MUL_INCLUDE_DIR} )
 
-  include_directories( ${lems_SOURCE_DIR}/contrib/dec )
+  include_directories( ${LEMS_SOURCE_DIR}/contrib/dec )
 
    set(breg3d_batch_sources
        batch_breg3d.h batch_breg3d.cxx

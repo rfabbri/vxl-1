@@ -3,12 +3,12 @@
 # any purpose, in any form or by any means, except as expressly
 # permitted in writing by Bio-Tree Systems, Inc.
 
-include_directories(${lems_SOURCE_DIR}/basic ${lems_SOURCE_DIR}/brcv/mvg ${biotree_SOURCE_DIR}/resc)
+include_directories(${LEMS_SOURCE_DIR}/basic ${LEMS_SOURCE_DIR}/brcv/mvg ${biotree_SOURCE_DIR}/resc)
 include_directories(${VXL_BRL_INCLUDE_DIR}/bbas)
 include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
 include_directories( ${VXL_MUL_INCLUDE_DIR})
-include_directories( ${lems_SOURCE_DIR}/db3p )
-include_directories( ${lems_SOURCE_DIR}/db3p/expatpp/expat/lib )
+include_directories( ${LEMS_SOURCE_DIR}/db3p )
+include_directories( ${LEMS_SOURCE_DIR}/db3p/expatpp/expat/lib )
 
 set(bioproc_src
     bioproc_filtering_proc.hxx        bioproc_filtering_proc.h

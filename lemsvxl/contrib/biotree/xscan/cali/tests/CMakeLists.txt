@@ -1,5 +1,5 @@
 
-include_directories( ${lems_SOURCE_DIR}/contrib )
+include_directories( ${LEMS_SOURCE_DIR}/contrib )
 include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
 
 add_executable( cali_test_all

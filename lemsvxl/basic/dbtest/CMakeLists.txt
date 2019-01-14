@@ -10,7 +10,7 @@ configure_file(
 
 find_path(DBTEST_WHERE_ROOT_DIR_H_DIRECTORY
           dbtest_where_root_dir.h
-          ${lems_BINARY_DIR}/basic/dbtest 
+          ${LEMS_BINARY_DIR}/basic/dbtest 
           DOC "Path to directory containing the file dbtest_where_root_dir.h")
 
 if (DBTEST_WHERE_ROOT_DIR_H_DIRECTORY)

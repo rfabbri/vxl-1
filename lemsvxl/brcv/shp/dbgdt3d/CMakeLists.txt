@@ -1,7 +1,7 @@
 # This is brcv/shp/dbgdt3d/algo/CMakeLists.txt
 # Debug Brown Geodesic Distance Transform 3D Library
 
-include_directories( ${lems_SOURCE_DIR}/shp)
+include_directories( ${LEMS_SOURCE_DIR}/shp)
 
 set(dbgdt3d_sources
 

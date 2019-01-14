@@ -1,4 +1,4 @@
-include_directories( ${lems_SOURCE_DIR}/db3p )
+include_directories( ${LEMS_SOURCE_DIR}/db3p )
 
 set( vox_average_two_xgraphs_sources
   vox_average_two_xgraphs_main.cxx

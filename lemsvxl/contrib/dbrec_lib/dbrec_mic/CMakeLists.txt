@@ -9,8 +9,8 @@ include_directories( ${VXL_MUL_INCLUDE_DIR} )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas/bsta )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg/ )
-include_directories( ${lems_SOURCE_DIR}/contrib/dbrec_lib )
-include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/dbrec_lib )
+include_directories( ${LEMS_SOURCE_DIR}/basic )
 
 set(dbrec_mic_sources
     dbrec_pca_utils.h    dbrec_pca_utils.cxx

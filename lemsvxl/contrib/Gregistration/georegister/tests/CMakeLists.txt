@@ -1,6 +1,6 @@
 # contrib/Gregistration/georegister/tests/CMakeLists.txt
 # Tests for dbsta library
-include_directories( ${lems_SOURCE_DIR}/contrib/Gregistration )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/Gregistration )
 add_executable( georegister_test_all
   test_driver.cxx
   test_dbrl_io.cxx

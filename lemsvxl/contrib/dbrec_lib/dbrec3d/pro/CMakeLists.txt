@@ -6,7 +6,7 @@ include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg/bvxm )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg/brec )
 
-include_directories( ${lems_SOURCE_DIR}/contrib/dbrec_lib )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/dbrec_lib )
 
 set(dbrec3d_pro_sources
     dbrec3d_register.h      dbrec3d_register.cxx

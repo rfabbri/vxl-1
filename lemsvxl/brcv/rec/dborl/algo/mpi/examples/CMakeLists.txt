@@ -1,5 +1,5 @@
-include_directories( ${lems_SOURCE_DIR}/db3p )
-include_directories( ${lems_SOURCE_DIR}/db3p/expatpp/expat/lib )
+include_directories( ${LEMS_SOURCE_DIR}/db3p )
+include_directories( ${LEMS_SOURCE_DIR}/db3p/expatpp/expat/lib )
 
 if (BUILD_dborl_cluster)
     add_executable (dborl_example_processor example_main.cxx example_processor.h example_processor.cxx dborl_cluster+int-example_processor-float-.cxx)

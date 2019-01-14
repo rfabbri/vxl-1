@@ -3,7 +3,7 @@
 # 
 
 
-include_directories ( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories ( ${LEMS_SOURCE_DIR}/brcv/shp )
 
 add_executable(mesh2ply dbmsh3d_mesh2ply.cxx)
 target_link_libraries( mesh2ply dbmsh3d_algo vul )

@@ -16,9 +16,9 @@ if( PYTHON_FOUND )
     include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg/brec )
     include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg/bvxm )
 
-    include_directories( ${lems_SOURCE_DIR}/contrib/dbrec_lib )
-    include_directories( ${lems_SOURCE_DIR}/basic )
-    include_directories( ${lems_SOURCE_DIR}/brcv/rec )
+    include_directories( ${LEMS_SOURCE_DIR}/contrib/dbrec_lib )
+    include_directories( ${LEMS_SOURCE_DIR}/basic )
+    include_directories( ${LEMS_SOURCE_DIR}/brcv/rec )
       
     set(dbrec_batch_sources
       reg_dbrec.cxx          reg_dbrec.h

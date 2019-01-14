@@ -1,5 +1,5 @@
 
-include_directories( ${lems_SOURCE_DIR}/contrib/rfabbri )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/rfabbri )
 
 set(mw_pro_sources
 #old/mw_cvmatch_process.cxx old/mw_cvmatch_process.h

@@ -1,4 +1,4 @@
-include_directories( ${lems_SOURCE_DIR}/db3p )
+include_directories( ${LEMS_SOURCE_DIR}/db3p )
 include_directories( ${VXL_MUL_INCLUDE_DIR} )
 
 link_directories(${CMAKE_VLFEAT_LIBS})

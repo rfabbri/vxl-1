@@ -1,4 +1,4 @@
-include_directories(${BIOTREE_SOURCE_DIR} ${lems_SOURCE_DIR}/basic)
+include_directories(${BIOTREE_SOURCE_DIR} ${LEMS_SOURCE_DIR}/basic)
 
 set(xmvg_algo_src
     xmvg_dot_product_2d.hxx             xmvg_dot_product_2d.h

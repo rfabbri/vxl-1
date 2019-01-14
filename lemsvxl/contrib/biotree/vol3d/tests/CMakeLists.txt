@@ -1,4 +1,4 @@
-#include_directories( ${lems_SOURCE_DIR}/contrib )
+#include_directories( ${LEMS_SOURCE_DIR}/contrib )
 
 set(vol3d_test_src
   test_driver.cxx 

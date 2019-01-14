@@ -1,8 +1,8 @@
 # brcv/seg/CMakeLists.txt
 # Brown Segmentation Libraries.
 
-include_directories( ${lems_SOURCE_DIR}/brcv/seg )
-include_directories( ${lems_BINARY_DIR}/brcv/seg )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/seg )
+include_directories( ${LEMS_BINARY_DIR}/brcv/seg )
 
 # Brown Detection Library 
 add_subdirectory( dbdet )

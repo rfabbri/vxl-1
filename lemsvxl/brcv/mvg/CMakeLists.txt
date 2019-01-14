@@ -1,7 +1,7 @@
 # brcv/mvg/CMakeLists.txt
 # Brown Multi-View Geometry Libraries.
 
-include_directories( ${lems_SOURCE_DIR}/brcv/mvg )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/mvg )
 
 # Brown VXL multi-view library
 add_subdirectory( bmvl )

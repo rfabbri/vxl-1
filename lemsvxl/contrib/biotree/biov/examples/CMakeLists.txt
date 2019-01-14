@@ -1,5 +1,5 @@
 # library for storing / loading 3d image 
-include_directories(${lems_SOURCE_DIR}/basic ${lems_SOURCE_DIR}/brcv/mvg ${biotree_SOURCE_DIR}/resc)
+include_directories(${LEMS_SOURCE_DIR}/basic ${LEMS_SOURCE_DIR}/brcv/mvg ${biotree_SOURCE_DIR}/resc)
 
 if(SIMVOLEON_FOUND)
 

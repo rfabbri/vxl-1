@@ -2,7 +2,7 @@
 # main package for LEMS algorithms.
 include_directories( ${VXL_BRL_INCLUDE_DIR} )
 #include_directories( ${VXL_OXL_INCLUDE_DIR} )
-include_directories( ${lems_SOURCE_DIR}/algo )
+include_directories( ${LEMS_SOURCE_DIR}/algo )
 
 # extrautils library
 add_subdirectory( extrautils )

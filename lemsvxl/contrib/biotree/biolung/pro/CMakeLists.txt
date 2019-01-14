@@ -1,7 +1,7 @@
 # This is contrib/biotree/biolung/pro/CMakeLists.txt
 
-include_directories( ${lems_SOURCE_DIR}/contrib )
-include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${LEMS_SOURCE_DIR}/contrib )
+include_directories( ${LEMS_SOURCE_DIR}/breye1 )
 
 set(biolung_process_sources
    biolung_process.cxx          biolung_process.h

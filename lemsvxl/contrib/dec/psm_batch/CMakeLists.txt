@@ -10,7 +10,7 @@ if( PYTHON_FOUND )
     include_directories( ${VXL_CORE_INCLUDE_DIR} )
     include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
     include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc/vpgl )
-    include_directories( ${lems_SOURCE_DIR}/contrib/dec )
+    include_directories( ${LEMS_SOURCE_DIR}/contrib/dec )
   
      set(psm_batch_sources
        reg_psm.h reg_psm.cxx

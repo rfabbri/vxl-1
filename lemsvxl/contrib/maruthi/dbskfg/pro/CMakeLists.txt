@@ -5,7 +5,7 @@ include_directories( ${VXL_GEL_INCLUDE_DIR} )
 include_directories( ${VXL_BRL_INCLUDE_DIR} )
 include_directories( ${VXL_MUL_INCLUDE_DIR} )
 include_directories( ${VXL_RPL_INCLUDE_DIR} )
-include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${LEMS_SOURCE_DIR}/breye1 )
 include_directories( ${CMAKE_VLFEAT_INCLUDES} )
 
 link_directories(${CMAKE_VLFEAT_LIBS})

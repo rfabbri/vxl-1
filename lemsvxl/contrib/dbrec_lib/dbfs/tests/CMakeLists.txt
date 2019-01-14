@@ -1,6 +1,6 @@
 # This basic/dbfs/tests/CMakeLists.txt
 
-include_directories( ${lems_SOURCE_DIR}/contrib/dbrec_lib )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/dbrec_lib )
 
 set( dbfs_test_sources
   test_driver.cxx

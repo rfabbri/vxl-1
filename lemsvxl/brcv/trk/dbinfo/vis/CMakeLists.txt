@@ -1,7 +1,7 @@
 # This is brcv/trk/dbinfo/vis/CMakeLists.txt
 # Brown Tracking Visualization library
 
-include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${LEMS_SOURCE_DIR}/breye1 )
 #include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 
 if (VXL_VGUI_FOUND)

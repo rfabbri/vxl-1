@@ -2,8 +2,8 @@
 # contrib/tpollard/btpl/CMakeLists.txt
 
 include_directories( ${VXLCORE_INCLUDE_DIR} )
-include_directories( ${lems_SOURCE_DIR}/basic )
-include_directories( ${lems_SOURCE_DIR}/contrib/tpollard )
+include_directories( ${LEMS_SOURCE_DIR}/basic )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/tpollard )
 include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
 include_directories( ${VXL_GEL_INCLUDE_DIR})
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )

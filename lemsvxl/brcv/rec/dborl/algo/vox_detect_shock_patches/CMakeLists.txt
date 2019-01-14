@@ -1,4 +1,4 @@
-include_directories( ${lems_SOURCE_DIR}/db3p )
+include_directories( ${LEMS_SOURCE_DIR}/db3p )
 
 set( vox_detect_shock_patches_sources
   vox_detect_shock_patches_params.h 

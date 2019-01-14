@@ -1,9 +1,9 @@
 # This is brcv/seg/dbdet/pro/CMakeLists.txt
 # Brown Detection Processing library
 
-include_directories( ${lems_SOURCE_DIR}/breye1 )
-include_directories( ${lems_SOURCE_DIR}/basic )
-include_directories( ${lems_SOURCE_DIR}/brcv/seg/dbdet )
+include_directories( ${LEMS_SOURCE_DIR}/breye1 )
+include_directories( ${LEMS_SOURCE_DIR}/basic )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/seg/dbdet )
 
 set(dbdet_pro_sources
    dbdet_lowe_keypoint_process.cxx    dbdet_lowe_keypoint_process.h

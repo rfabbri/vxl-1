@@ -8,7 +8,7 @@ include_directories( ${VXL_BRL_INCLUDE_DIR}/bpro/bprb )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
 include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc/vpgl )
 include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
-include_directories( ${lems_SOURCE_DIR}/contrib/dec )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/dec )
 
 set(psm_camera_opt_pro_sources
    psm_camera_opt_processes.h

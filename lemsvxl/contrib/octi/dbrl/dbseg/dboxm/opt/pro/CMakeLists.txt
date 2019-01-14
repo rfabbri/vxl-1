@@ -8,9 +8,9 @@ if(EXPAT_FOUND)
   include_directories( ${BRL_INCLUDE_DIR}/bseg )
   include_directories( ${GEL_INCLUDE_DIR}/mrc/vpgl )
   include_directories( ${GEL_INCLUDE_DIR}/mrc )
- if(lems_SOURCE_DIR)
-  include_directories( ${lems_SOURCE_DIR}/contrib/dec )
- endif(lems_SOURCE_DIR)
+ if(LEMS_SOURCE_DIR)
+  include_directories( ${LEMS_SOURCE_DIR}/contrib/dec )
+ endif(LEMS_SOURCE_DIR)
 
   set(boxm_opt_pro_sources
       boxm_opt_processes.h

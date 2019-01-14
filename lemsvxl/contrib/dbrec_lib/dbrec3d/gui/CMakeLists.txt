@@ -6,7 +6,7 @@ include(${CMAKE_ROOT}/Modules/FindGLUT.cmake)
 include(${CMAKE_ROOT}/Modules/FindQt.cmake)
 include(${LEMS_CMAKE_DIR}/Modules/FindQGLViewer.cmake)
 include(${LEMS_CMAKE_DIR}/Modules/FindQWT.cmake)
-include_directories( ${lems_SOURCE_DIR}/contrib/dbrec_lib/dbrec3d )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/dbrec_lib/dbrec3d )
 
 
 if(QT4_INSTALLED)

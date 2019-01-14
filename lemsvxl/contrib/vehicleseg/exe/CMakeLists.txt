@@ -9,12 +9,12 @@ include_directories(${VXL_OXL_INCLUDE_DIR} )
 include_directories(${VXL_MUL_INCLUDE_DIR} )
 
 
-include_directories( ${lems_SOURCE_DIR}/contrib)
-include_directories( ${lems_SOURCE_DIR}/brcv/seg )
-include_directories( ${lems_SOURCE_DIR}/brcv/mvg )
-include_directories( ${lems_SOURCE_DIR}/brcv/trk )
-include_directories( ${lems_SOURCE_DIR}/brcv/rec )
-include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${LEMS_SOURCE_DIR}/contrib)
+include_directories( ${LEMS_SOURCE_DIR}/brcv/seg )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/mvg )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/trk )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/rec )
+include_directories( ${LEMS_SOURCE_DIR}/basic )
 
 set( seg_exe_sources
 aerial_vehicle_segmentation.h aerial_vehicle_segmentation.cxx

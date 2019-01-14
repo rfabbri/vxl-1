@@ -1,10 +1,10 @@
 # contrib/Manifold_extraction/CMakeLists.txt
 # Developement for : pradeep
 
-include_directories( ${lems_SOURCE_DIR}/breye)
-include_directories( ${lems_SOURCE_DIR}/brcv/rec)
-include_directories( ${lems_SOURCE_DIR}/contrib)
-include_directories( ${lems_SOURCE_DIR}/basic)
+include_directories( ${LEMS_SOURCE_DIR}/breye)
+include_directories( ${LEMS_SOURCE_DIR}/brcv/rec)
+include_directories( ${LEMS_SOURCE_DIR}/contrib)
+include_directories( ${LEMS_SOURCE_DIR}/basic)
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
 include_directories(${VXL_BRL_INCLUDE_DIR}/bbas )
 include_directories( ${VXL_GEL_INCLUDE_DIR} )

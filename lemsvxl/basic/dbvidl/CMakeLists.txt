@@ -2,8 +2,8 @@
 # Development Brown Video Library
 
 
-include_directories( ${lems_SOURCE_DIR}/breye1 )
-include_directories( ${lems_SOURCE_DIR}/breye1/basic )
+include_directories( ${LEMS_SOURCE_DIR}/breye1 )
+include_directories( ${LEMS_SOURCE_DIR}/breye1/basic )
 
 set(dbvidl_sources 
     dbvidl_boulder_video_codec.cxx    dbvidl_boulder_video_codec.h      dbvidl_boulder_video_codec_sptr.h

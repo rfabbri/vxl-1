@@ -3,7 +3,7 @@
 
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 include_directories( ${VXL_RPL_INCLUDE_DIR} )
-include_directories( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/shp )
 include_directories(${VXD_B3PD_INCLUDE_DIR})
 
 

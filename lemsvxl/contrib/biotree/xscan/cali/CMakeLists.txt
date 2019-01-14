@@ -6,8 +6,8 @@ ${VXL_GEL_INCLUDE_DIR}/mrc
 ${biotree_SOURCE_DIR}
 ${biotree_SOURCE_DIR}/resc
 ${biotree_SOURCE_DIR}/xscan
-${lems_SOURCE_DIR}/brcv/mvg
-${lems_SOURCE_DIR}/basic/
+${LEMS_SOURCE_DIR}/brcv/mvg
+${LEMS_SOURCE_DIR}/basic/
 ${VXL_BRL_INCLUDE_DIR}
 ${VXL_GEL_INCLUDE_DIR}
 ${VXL_BRL_INCLUDE_DIR}/bseg 

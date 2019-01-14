@@ -8,7 +8,7 @@ include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
 include_directories( ${VXL_GEL_INCLUDE_DIR} )
 
 # local repository paths
-include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/seg )
 
 set(levelset_seg_gui_sources
    levelset_seg_menu.cxx          levelset_seg_menu.h

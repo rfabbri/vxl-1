@@ -1,6 +1,6 @@
 # This is contrib/world_model/exe/CMakeLists.txt
 # World Modeling GUI executables
-include_directories(${lems_SOURCE_DIR}/contrib )
+include_directories(${LEMS_SOURCE_DIR}/contrib )
 
 add_executable( world_modeler world_modeler.cxx )
 target_link_libraries( world_modeler world_model vgui vil )

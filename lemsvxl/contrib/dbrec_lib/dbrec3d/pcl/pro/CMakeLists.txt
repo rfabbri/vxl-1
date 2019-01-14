@@ -7,7 +7,7 @@ include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg/boxm )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg/bvpl )
 
 
-include_directories( ${lems_SOURCE_DIR}/contrib/dbrec_lib/dbrec3d )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/dbrec_lib/dbrec3d )
 
 set(dbrec3d_pcl_pro_sources
     pcl_register.h      pcl_register.cxx

@@ -2,7 +2,7 @@
 # Brown 3D segmentation
 
 include_directories( ${VXL_CORE_INCLUDE_DIR} )
-include_directories( ${lems_SOURCE_DIR}/contrib/isabel )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/isabel )
 include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
   
 set(bseg3d_algo_sources

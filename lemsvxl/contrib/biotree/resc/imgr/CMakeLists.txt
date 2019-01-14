@@ -6,8 +6,8 @@ include_directories(
 ${VXL_GEL_INCLUDE_DIR}/mrc
 ${biotree_SOURCE_DIR}
 ${biotree_SOURCE_DIR}/resc
-${lems_SOURCE_DIR}/brcv/mvg
-${lems_SOURCE_DIR}/basic/
+${LEMS_SOURCE_DIR}/brcv/mvg
+${LEMS_SOURCE_DIR}/basic/
 
 #pnk added:
 /usr/X11R6/include/

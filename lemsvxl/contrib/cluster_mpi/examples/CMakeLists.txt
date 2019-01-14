@@ -1,9 +1,9 @@
 # /contrib/ozge/cluster/examples/CMakeLists.txt
 
-include_directories( ${lems_SOURCE_DIR}/brcv/rec/ )
-include_directories( ${lems_SOURCE_DIR}/contrib )
-#include_directories( ${lems_SOURCE_DIR}/db3p/expatpp/expat/lib )
-#include_directories( ${lems_SOURCE_DIR}/db3p/expatpp/src_pp )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/rec/ )
+include_directories( ${LEMS_SOURCE_DIR}/contrib )
+#include_directories( ${LEMS_SOURCE_DIR}/db3p/expatpp/expat/lib )
+#include_directories( ${LEMS_SOURCE_DIR}/db3p/expatpp/src_pp )
 
 add_executable (cluster_shock_matching cluster_shock_matching.cxx)
 #add_executable (cluster_simple cluster_simple.cxx)

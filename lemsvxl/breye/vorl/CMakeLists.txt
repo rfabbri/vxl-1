@@ -4,7 +4,7 @@
 include_directories( ${VXL_BRL_INCLUDE_DIR} )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/b3p )
 include_directories( ${VXL_EXPAT_INCLUDE_DIR} )
-include_directories( ${lems_SOURCE_DIR}/db3p )
+include_directories( ${LEMS_SOURCE_DIR}/db3p )
 
 set(vorl_sources
                                    vorl.h

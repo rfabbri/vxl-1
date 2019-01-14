@@ -2,7 +2,7 @@
 # brl/bmvl/bcal/CMakeLists.txt
 
 include_directories(${VXL_BRL_INCLUDE_DIR})
-include_directories(${lems_SOURCE_DIR}/brcv/mvg/bmvl )
+include_directories(${LEMS_SOURCE_DIR}/brcv/mvg/bmvl )
 
 set(bcal_sources
     bcal_camera.h                   bcal_camera.cxx

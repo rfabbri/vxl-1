@@ -2,9 +2,9 @@
 # contrib/dbsk3dapp/CMakeLists.txt
 
 
-include_directories( ${lems_SOURCE_DIR}/brcv/shp )
-include_directories( ${lems_SOURCE_DIR}/brcv/rec )
-include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/shp )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/rec )
+include_directories( ${LEMS_SOURCE_DIR}/basic )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 include_directories( ${VXL_RPL_INCLUDE_DIR} )
 include_directories( ${VXL_GEL_INCLUDE_DIR} )
@@ -14,7 +14,7 @@ include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
 # This is to produce a VOX executable.
 
 #Need this because dborl_utilities.h use bpro1
-include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${LEMS_SOURCE_DIR}/breye1 )
 
 set(dbsk3dappvox_sources
   dborl_shock3d_match_params.h
@@ -41,8 +41,8 @@ include( ${VXL_CMAKE_DIR}/UseBGUI3D.cmake )
 
 # copy the qvoronoi.exe file to the running directory
 #configure_file(
-#  ${lems_SOURCE_DIR}/contrib/dbsk3dappw/qvoronoi.exe
-#  ${lems_BINARY_DIR}/contrib/dbsk3dappw/qvoronoi.exe COPYONLY
+#  ${LEMS_SOURCE_DIR}/contrib/dbsk3dappw/qvoronoi.exe
+#  ${LEMS_BINARY_DIR}/contrib/dbsk3dappw/qvoronoi.exe COPYONLY
 #)
 
 if (HAS_BGUI3D)

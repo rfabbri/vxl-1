@@ -4,8 +4,8 @@ include(${CMAKE_ROOT}/Modules/FindOpenGL.cmake)
 include(${CMAKE_ROOT}/Modules/FindGLUT.cmake)
 include(${CMAKE_ROOT}/Modules/FindQt.cmake)
 include(${LEMS_CMAKE_DIR}/Modules/UseVTK.cmake)
-include_directories( ${lems_SOURCE_DIR}/brcv/seg/ )
-include_directories( ${lems_SOURCE_DIR}/contrib/dbrec_lib/dbrec3d )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/seg/ )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/dbrec_lib/dbrec3d )
 
 find_package( PCL 1.0 )
 

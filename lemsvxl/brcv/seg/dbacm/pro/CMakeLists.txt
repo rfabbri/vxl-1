@@ -1,7 +1,7 @@
 # This is brcv/seg/dbacm/pro/CMakeLists.txt
 # Brown Active Contour Models Processing library
 
-include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${LEMS_SOURCE_DIR}/breye1 )
 
 set(dbacm_pro_sources
   dbacm_geodesic_active_contour_process.h dbacm_geodesic_active_contour_process.cxx

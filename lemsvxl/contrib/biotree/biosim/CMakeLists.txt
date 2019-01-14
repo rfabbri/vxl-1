@@ -1,4 +1,4 @@
-include_directories(${BIOTREE_SOURCE_DIR} ${lems_SOURCE_DIR}/brcv/mvg ${lems_SOURCE_DIR}/basic/dbsta2)
+include_directories(${BIOTREE_SOURCE_DIR} ${LEMS_SOURCE_DIR}/brcv/mvg ${LEMS_SOURCE_DIR}/basic/dbsta2)
 include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc ${VXL_MUL_INCLUDE_DIR})
 
 set(biosim_src

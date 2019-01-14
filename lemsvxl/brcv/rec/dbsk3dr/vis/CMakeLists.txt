@@ -2,7 +2,7 @@
 # visualization package for dbskr.
 
 include_directories(${VXL_RPL_INCLUDE_DIR} )
-include_directories( ${lems_SOURCE_DIR}/brcv/shp)
+include_directories( ${LEMS_SOURCE_DIR}/brcv/shp)
 
 
 include( ${VXL_CMAKE_DIR}/UseBGUI3D.cmake )

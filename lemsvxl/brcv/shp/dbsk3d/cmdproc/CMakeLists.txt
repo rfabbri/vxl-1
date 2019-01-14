@@ -1,7 +1,7 @@
 # This is brcv/shp/dbsk3d/cmdproc/CMakeLists.txt
 # Brown Shock3D Command-Line Processing Library
 
-include_directories( ${lems_SOURCE_DIR}/brcv/shp)
+include_directories( ${LEMS_SOURCE_DIR}/brcv/shp)
 
 include( ${VXL_CMAKE_DIR}/UseBGUI3D.cmake )
 

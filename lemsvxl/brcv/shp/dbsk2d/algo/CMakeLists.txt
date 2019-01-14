@@ -2,7 +2,7 @@
 # The Development Brown Shock 2D Library - Specific Algorithms
 
 include_directories( ${VXL_GEL_INCLUDE_DIR} )
-include_directories( ${lems_SOURCE_DIR}/brcv/shp)
+include_directories( ${LEMS_SOURCE_DIR}/brcv/shp)
 include_directories(${VXL_BRL_INCLUDE_DIR}/bbas )
 
 

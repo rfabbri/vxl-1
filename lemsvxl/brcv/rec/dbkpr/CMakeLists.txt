@@ -1,7 +1,7 @@
 # brcv/rec/dbkpr/CMakeLists.txt
 # Brown Keypoint Recognition Library
 
-include_directories( ${lems_SOURCE_DIR}/brcv/seg)
+include_directories( ${LEMS_SOURCE_DIR}/brcv/seg)
 include_directories( ${VXL_OXL_INCLUDE_DIR} )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 

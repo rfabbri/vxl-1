@@ -1,7 +1,7 @@
 # This is brcv/mvg/dbmrf/pro/CMakeLists.txt
 # Brown Markov Random Field Track Processing Library
 
-include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${LEMS_SOURCE_DIR}/breye1 )
 
 set(dbmrf_pro_sources
    dbmrf_network_builder_process.cxx    dbmrf_network_builder_process.h

@@ -1,7 +1,7 @@
 # basic/dbsta/CMakeLists.txt
 # Brown statistics Library.
 
-include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${LEMS_SOURCE_DIR}/basic )
 include_directories( ${VCL_INCLUDE_DIR} )
 
 set(dbsta_sources

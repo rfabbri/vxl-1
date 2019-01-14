@@ -2,8 +2,8 @@
 # contrib/knee_cartilage/vis/CMakeLists.txt
 
 
-include_directories( ${lems_SOURCE_DIR}/basic )
-include_directories( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories( ${LEMS_SOURCE_DIR}/basic )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/shp )
 
 include( ${VXL_CMAKE_DIR}/UseBGUI3D.cmake )
 #include( ${VXL_BRL_INCLUDE_DIR}/bmods/UseBGUI3D.cmake )

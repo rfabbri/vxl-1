@@ -1,10 +1,10 @@
 # This is brcv/rec/dber/vis/CMakeLists.txt
 # Brown edge-based recognition library
 
-include_directories( ${lems_SOURCE_DIR}/breye1 )
-include_directories( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories( ${LEMS_SOURCE_DIR}/breye1 )
+include_directories( ${LEMS_SOURCE_DIR}/brcv/shp )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
-include_directories( ${lems_SOURCE_DIR}/contrib/Gregistration )
+include_directories( ${LEMS_SOURCE_DIR}/contrib/Gregistration )
 
 if (VXL_VGUI_FOUND)
 find_package(OpenGL)
