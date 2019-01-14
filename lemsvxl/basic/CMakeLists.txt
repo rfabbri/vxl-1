@@ -3,7 +3,7 @@
 
 project(basic)
 
-include_directories( ${lEMS_SOURCE_DIR}/basic )
+include_directories( ${LEMS_SOURCE_DIR}/basic )
 include_directories( ${LEMS_SOURCE_DIR}/db3p )
 include_directories( ${basic_BINARY_DIR} )
 
