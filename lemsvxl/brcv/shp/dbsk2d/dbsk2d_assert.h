@@ -43,11 +43,7 @@ extern void dbsk2d_assert_failure(char const *, int, char const *);
 
 #else // i.e., not _WIN32
 
-#if !VCL_CXX_HAS_HEADER_CASSERT
-# include <assert.h>
-#else
 # include <cassert>
-#endif
 
 //don't know how to handle this properly yet
 //just define it as the standard assert
