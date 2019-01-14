@@ -94,7 +94,7 @@ bool rgrl_rigid_icp_register (const std::vector<rgrl_feature_sptr>& fixedFV,
 
   //Weighter
   std::unique_ptr<rrel_m_est_obj>  m_est_obj( new rrel_tukey_obj(4) );
-  rgrl_weighter_sptr wgter = new rgrl_weighter_m_est(m_est_obj, false, false);
+  rgrl_weighter_sptr wgter = new rgrl_weighter_m_est(std::move(m_est_obj), false, false);
 
   //Scale estimator
   int max_set_size = 1000;  //maximum expected number of features
@@ -103,7 +103,7 @@ bool rgrl_rigid_icp_register (const std::vector<rgrl_feature_sptr>& fixedFV,
   rgrl_scale_estimator_unwgted_sptr unwgted_scale_est;
   rgrl_scale_estimator_wgted_sptr wgted_scale_est;
 
-  unwgted_scale_est = new rgrl_scale_est_closest( muset_obj );
+  unwgted_scale_est = new rgrl_scale_est_closest( std::move(muset_obj) );
   wgted_scale_est = new rgrl_scale_est_all_weights();
 
   //convergence tester

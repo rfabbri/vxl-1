@@ -388,7 +388,7 @@ SoSeparator* dbmsh3d_pro_vis::vis_list_file (std::string filename,
   std::ifstream  in;
   std::string    linestr;
   in.open (filename.c_str());
-  if (in == false) {
+  if (in.fail()) {
     vul_printf (std::cout, "Can't open listfile %s\n", filename.c_str());
     return root; 
   }
