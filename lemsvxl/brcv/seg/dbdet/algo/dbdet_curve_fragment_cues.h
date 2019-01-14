@@ -110,9 +110,9 @@ private:
   //vxl_uint_32 visited_id_;
   vbl_array_2d<bool> mask;
   const dbdet_edgemap &em_;
-  static unsigned const local_dist_ = 2; // distance used for local sampling
-  static unsigned const nbr_width_ = 3;  // distance used for lateral edge sparsity
-  static double const epsilon = 1e-10;
+  static unsigned constexpr local_dist_ = 2; // distance used for local sampling
+  static unsigned constexpr nbr_width_ = 3;  // distance used for lateral edge sparsity
+  static double constexpr epsilon = 1e-10;
 };
 
 
