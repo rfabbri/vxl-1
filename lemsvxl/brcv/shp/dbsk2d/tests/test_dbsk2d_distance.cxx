@@ -67,7 +67,7 @@ void test_dbsk2d_distance_functions()
 
   // test 3 - partial line edge, closest point is at end-point
   min_dist = dbsk2d_distance::point_to_bnd_edge(pt, contour->bnd_edge(1), -1, 0.3, 0.6);
-  double d = vnl_math_hypot((double)0.9, 1.0);
+  double d = vnl_math::hypot((double)0.9, 1.0);
 
   TEST_NEAR("Distance from pt to partial line bnd_edge(2)", min_dist, d, 1e-7);
 }

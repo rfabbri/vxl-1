@@ -1588,7 +1588,7 @@ double dbsk2d_transform_manager::transform_probability(
     double gamma_norm, double k0_norm,double length)
 {
 
-    if ( dist_volume_ == 0 )
+    if ( dist_volume_.size() == 0 )
     {
         return 0.0;
     }

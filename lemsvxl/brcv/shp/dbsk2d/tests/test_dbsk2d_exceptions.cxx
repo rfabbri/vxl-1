@@ -11,7 +11,6 @@ void test_exceptions()
            << "  Testing dbsk2d exceptions \n"
            << "****************************\n";
 
-#if VCL_HAS_EXCEPTIONS
   {
     bool caught_error = false;
     try
@@ -43,11 +42,6 @@ void test_exceptions()
     }
     TEST("Caught Exception 2", caught_error, true);
   }
-#else
-  // No exceptions - all we can do is check that dbsk2d_exception_warning doesn't abort.
-  dbsk2d_exception_warning(dbsk2d_exception_abort("This is just a test"));
-#endif
-
 }
 
 MAIN( test_dbsk2d_exceptions )

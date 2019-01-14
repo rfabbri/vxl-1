@@ -82,7 +82,7 @@ void test_dbsk2d_closest_point_functions()
   // test 4 - closest point is mid-point of edge (2)
   pt.set(4.5, 0);
   arclength = dbsk2d_closest_point::point_to_bnd_contour(pt, contour, 1.5, 5);
-  double d = vnl_math_hypot((double)0.5, 1.0) + 2;
+  double d = vnl_math::hypot((double)0.5, 1.0) + 2;
   TEST_NEAR("Closest point on polyline contour (test 4)", arclength, d, 1e-7);
 
 }
