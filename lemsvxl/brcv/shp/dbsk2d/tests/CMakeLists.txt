@@ -2,8 +2,8 @@
 
 # Copy the test files to the LEMSVXL build folder
 configure_file (
-  ${lems_SOURCE_DIR}/brcv/shp/dbsk2d/tests/file_io_data/test_file1.bnd
-  ${lems_BINARY_DIR}/brcv/shp/dbsk2d/tests/file_io_data/test_file1.bnd COPYONLY
+  ${LEMS_SOURCE_DIR}/brcv/shp/dbsk2d/tests/file_io_data/test_file1.bnd
+  ${LEMS_BINARY_DIR}/brcv/shp/dbsk2d/tests/file_io_data/test_file1.bnd COPYONLY
 )  
 
 add_executable( dbsk2d_test_all

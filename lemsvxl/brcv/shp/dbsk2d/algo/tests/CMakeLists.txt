@@ -3,8 +3,8 @@
 
 # Copy the test files to the LEMSVXL build folder
 configure_file (
-  ${lems_SOURCE_DIR}/brcv/shp/dbsk2d/algo/tests/test_bnd_files/test_file2.bnd
-  ${lems_BINARY_DIR}/brcv/shp/dbsk2d/algo/tests/test_bnd_files/test_file2.bnd COPYONLY
+  ${LEMS_SOURCE_DIR}/brcv/shp/dbsk2d/algo/tests/test_bnd_files/test_file2.bnd
+  ${LEMS_BINARY_DIR}/brcv/shp/dbsk2d/algo/tests/test_bnd_files/test_file2.bnd COPYONLY
 )
 
 add_executable( dbsk2d_algo_test_all

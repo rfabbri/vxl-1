@@ -15,12 +15,18 @@
 #
 
 # Copied over from VXL:
+cmake_minimum_required(VERSION 3.10.2 FATAL_ERROR)
 if( "${CMAKE_CXX_STANDARD}" MATCHES "(11|14|17|20)")
    # If building for modern C++ language standards,
    # require use of newer cmake version
-   cmake_minimum_required(VERSION 3.9.5 FATAL_ERROR)
 else()
-   cmake_minimum_required(VERSION 3.3.0 FATAL_ERROR)
+   set(CMAKE_CXX_STANDARD "11")
+endif()
+if(NOT CMAKE_CXX_STANDARD_REQUIRED)
+  set(CMAKE_CXX_STANDARD_REQUIRED ON)
+endif()
+if(NOT CMAKE_CXX_EXTENSIONS)
+  set(CMAKE_CXX_EXTENSIONS OFF)
 endif()
 # Set policies consistent with newer versions of cmake
 # to ease integration with projects that require newer
@@ -36,24 +42,23 @@ foreach(p
     ##----- Policies Introduced by CMake 3.10
     CMP0071  #: Let AUTOMOC and AUTOUIC process GENERATED files.
     CMP0070  #: Define file(GENERATE) behavior for relative paths.
-    ##----- Policies Introduced by CMake 3.9
-    CMP0069  #: INTERPROCEDURAL_OPTIMIZATION is enforced when enabled.
-    CMP0068  #: RPATH settings on macOS do not affect install_name.
-    ##----- Policies Introduced by CMake 3.8
-    CMP0067  #: Honor language standard in try_compile() source-file signature.
-    ##----- Policies Introduced by CMake 3.7
-    CMP0066  #: Honor per-config flags in try_compile() source-file signature.
-    ##----- Policies Introduced by CMake 3.4
-    CMP0065  #: Do not add flags to export symbols from executables without the ENABLE_EXPORTS target property.
-    CMP0064  #: Support new TEST if() operator.
     )
   if(POLICY ${p})
     cmake_policy(SET ${p} NEW)
   endif()
 endforeach()
 
-
-project(lems)
+project(LEMS #Project name must be all caps to have properly generated VXL_VERSION_* variables
+    VERSION 1
+    DESCRIPTION "Experimental C++ libraries for Computer Vision"
+    LANGUAGES CXX C)
+include(CMakeDependentOption)
+include(${CMAKE_CURRENT_SOURCE_DIR}/config/cmake/LEMSInitializeBuildType.cmake)
+include(CheckCXXCompilerFlag)
+CHECK_CXX_COMPILER_FLAG(-Wno-undefined-var-template HAS_NO_UNDEFINED_VAR_TEMPLATE)
+if( HAS_NO_UNDEFINED_VAR_TEMPLATE )
+  add_definitions( -Wno-undefined-var-template )
+endif()
 
 #-----------------------------------------------------------------------------
 if(NOT COMMAND SETIFEMPTY)
@@ -94,15 +99,16 @@ set(LEMS_ROOT_SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR})
 set(LEMS_CMAKE_DIR ${CMAKE_CURRENT_LIST_DIR}/config/cmake/Modules)
 
 include(${LEMS_CMAKE_DIR}/LEMSStandardOptions.cmake)
+include( GenerateExportHeader )
 include(${CMAKE_CURRENT_LIST_DIR}/config/cmake/doxygen/doxygen.cmake)
-include( ${CMAKE_CURRENT_LIST_DIR}/config/cmake/config/vxl_utils.cmake )
+include(${CMAKE_CURRENT_LIST_DIR}/config/cmake/config/vxl_utils.cmake )
 # Only include these if we have vxd-specific cmake utilities. We currently use VXL's:
 #include(${CMAKE_CURRENT_LIST_DIR}/config/cmake/config/vxd_utils.cmake)
 
 # Location of VXD's FindXXX.cmake CMake modules.
 # This is identical to VXD_CMAKE_DIR.  Perhaps we should eliminate MODULE_PATH?
 set( MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/config/cmake/Modules CACHE STATIC "VXD module path" )
-set (LIBRARY_OUTPUT_PATH ${lems_BINARY_DIR}/lib CACHE PATH "Single output directory for building all libraries.")
+set (LIBRARY_OUTPUT_PATH ${LEMS_BINARY_DIR}/lib CACHE PATH "Single output directory for building all libraries.")
 
 find_package(VXL PATHS "../vxl-bin")
 if(VXL_FOUND)
@@ -216,13 +222,13 @@ TEST_BIG_ENDIAN(MY_BIG_ENDIAN)
 # the UseLEMS.cmake from the lemsvxl binary directory, and determine the
 # lemsvxl source directory by loading the cache.
 configure_file( ${LEMS_CMAKE_DIR}/UseLEMS.cmake
-                ${lems_BINARY_DIR}/UseLEMS.cmake COPYONLY )
+                ${LEMS_BINARY_DIR}/UseLEMS.cmake COPYONLY )
 # For use in client projects that call UseLEMS.cmake
 set(LEMS_LIBRARY_PATH ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} CACHE STATIC "Where all the lemsvxl libraries are, for clients to use." )
 
 # Copy CTestCustom.cmake to top of build tree
 #configure_file( ${LEMS_CMAKE_DIR}/CTestCustom.cmake
-#  ${lems_BINARY_DIR}/CTestCustom.cmake COPYONLY )
+#  ${LEMS_BINARY_DIR}/CTestCustom.cmake COPYONLY )
 
 # This command must be the last command in this file
 if(NOT LEMS_NO_EXPORT)

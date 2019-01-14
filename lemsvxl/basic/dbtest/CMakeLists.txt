@@ -3,8 +3,8 @@
 
 # Set up dbtest_where_root_dir.h to have a macro set to $DBTEST_SOURCE_ROOT_DIR
 configure_file(
-  ${lems_SOURCE_DIR}/basic/dbtest/dbtest_where_root_dir.h.in
-  ${lems_BINARY_DIR}/basic/dbtest/dbtest_where_root_dir.h ESCAPE_QUOTES
+  ${LEMS_SOURCE_DIR}/basic/dbtest/dbtest_where_root_dir.h.in
+  ${LEMS_BINARY_DIR}/basic/dbtest/dbtest_where_root_dir.h ESCAPE_QUOTES
 )
 
 

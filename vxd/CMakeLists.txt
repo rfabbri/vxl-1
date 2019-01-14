@@ -38,8 +38,7 @@ foreach(p
   endif()
 endforeach()
 
-
-project(VXD
+project(VXD #Project name must be all caps to have properly generated VXL_VERSION_* variables
     VERSION 1
     DESCRIPTION "Experimental C++ libraries for Computer Vision"
     LANGUAGES CXX C)
@@ -50,7 +49,6 @@ CHECK_CXX_COMPILER_FLAG(-Wno-undefined-var-template HAS_NO_UNDEFINED_VAR_TEMPLAT
 if( HAS_NO_UNDEFINED_VAR_TEMPLATE )
   add_definitions( -Wno-undefined-var-template )
 endif()
-
 
 #-----------------------------------------------------------------------------
 if(NOT COMMAND SETIFEMPTY)
